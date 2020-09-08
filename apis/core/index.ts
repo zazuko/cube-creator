@@ -17,6 +17,10 @@ async function main() {
 
   app.use(authentication())
 
+  app.get('/authenticated', (req, res) => {
+    return res.status(200).end()
+  })
+
   app.get('/protected', guard().check('scope'), (req, res) => {
     return res.status(200).end()
   })

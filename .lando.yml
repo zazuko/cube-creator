@@ -34,6 +34,15 @@ services:
         ENABLE_UPLOAD: "true"
       volumes:
         - ./fuseki/config.ttl:/data/fuseki/config/config.ttl
+  dex:
+    type: compose
+    ssl: true
+    services:
+      image: quay.io/dexidp/dex:v2.24.0
+      command: dex serve /config.yaml
+      volumes:
+        - dex-data:/data
+        - ./dex/config.yaml:/config.yaml:ro
 proxy:
   store:
     - db.cube-creator.lndo.site:3030
@@ -41,3 +50,5 @@ proxy:
     - cube-creator.lndo.site:45670
   ui:
     - app.cube-creator.lndo.site:8080
+  dex:
+    - auth.cube-creator.lndo.site:5556

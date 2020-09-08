@@ -1,6 +1,6 @@
 .DS_Store
 node_modules
-/ui/dist
+dist/
 
 # local env files
 .env.local
@@ -21,3 +21,5 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+dex-data/

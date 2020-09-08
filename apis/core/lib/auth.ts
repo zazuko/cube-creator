@@ -20,7 +20,7 @@ const createJwtHandler = (credentialsRequired: boolean) => jwt({
     cache: true,
     rateLimit: true,
     jwksRequestsPerMinute: 5,
-    jwksUri: `${env.AUTH_ISSUER}/.well-known/jwks.json`,
+    jwksUri: `${env.AUTH_JWKS_URI}`,
   }),
 
   // Validate the audience and the issuer.
