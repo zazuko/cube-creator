@@ -1,11 +1,12 @@
 import express from 'express'
 import { error, log } from './lib/log'
 import authentication from './lib/auth'
+import env from './lib/env'
 
 import guard = require('express-jwt-permissions')
 
 async function main() {
-  log('Starting Core API. Environment %s', process.env.NODE_ENV ?? 'production')
+  log('Starting Core API. Environment %s', env.production ? 'production' : 'development')
 
   const app = express()
 

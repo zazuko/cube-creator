@@ -2,6 +2,9 @@
   "name": "@cube-creator/core-api",
   "version": "0.0.0",
   "private": true,
+  "scripts": {
+    "build": "tsc"
+  },
   "dependencies": {
     "commander": "^6.1.0",
     "debug": "^4.1.1",
