@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'SignOutButton',
@@ -17,9 +17,10 @@ export default {
   },
 
   methods: {
-    ...mapActions({
-      signOut: 'auth/signOutOidc',
-    })
+    async signOut () {
+      await this.$store.dispatch('auth/signOutOidcSilent')
+      window.location.reload()
+    },
   },
 }
 </script>
