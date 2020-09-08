@@ -1,0 +1,23 @@
+<template>
+  <b-navbar>
+    <template slot="brand">
+      <b-navbar-item tag="router-link" :to="{ name: 'Home' }">
+        Cube Creator
+      </b-navbar-item>
+    </template>
+    <template slot="end">
+      <b-navbar-item>
+        <SignOutButton />
+      </b-navbar-item>
+    </template>
+  </b-navbar>
+</template>
+
+<script>
+import SignOutButton from './auth/SignOutButton.vue'
+
+export default {
+  name: 'NavBar',
+  components: { SignOutButton },
+}
+</script>
