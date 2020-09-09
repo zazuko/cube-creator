@@ -14,10 +14,11 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import SignOutButton from './auth/SignOutButton.vue'
 
-export default {
+export default Vue.extend({
   name: 'NavBar',
   components: { SignOutButton },
-}
+})
 </script>

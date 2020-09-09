@@ -1,4 +1,5 @@
-import { VuexOidcClientSettings, vuexOidcCreateStoreModule } from 'vuex-oidc'
+import { Module } from 'vuex'
+import { VuexOidcClientSettings, VuexOidcState, vuexOidcCreateStoreModule } from 'vuex-oidc'
 
 const oidc = window.oidc
 
@@ -8,7 +9,9 @@ const oidcSettings: VuexOidcClientSettings = {
   ...oidc,
 }
 
-export const auth = () => vuexOidcCreateStoreModule(oidcSettings, {
-  namespaced: true,
-  publicRoutePaths: ['/oidc-error'],
-})
+export function auth (): Module<VuexOidcState, any> {
+  return vuexOidcCreateStoreModule(oidcSettings, {
+    namespaced: true,
+    publicRoutePaths: ['/oidc-error'],
+  })
+}

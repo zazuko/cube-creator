@@ -5,9 +5,10 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import { mapGetters } from 'vuex'
 
-export default {
+export default Vue.extend({
   name: 'SignOutButton',
 
   computed: {
@@ -22,5 +23,5 @@ export default {
       window.location.reload()
     },
   },
-}
+})
 </script>

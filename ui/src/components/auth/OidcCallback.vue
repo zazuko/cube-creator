@@ -3,7 +3,9 @@
 </template>
 
 <script>
-export default {
+import Vue from 'vue'
+
+export default Vue.extend({
   name: 'OidcCallback',
 
   async mounted () {
@@ -15,5 +17,5 @@ export default {
       this.$router.push({ name: 'OidcError' })
     }
   },
-}
+})
 </script>
