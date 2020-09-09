@@ -19,8 +19,7 @@ services:
       - 45671
   ui:
     type: node:13
-    command: (cd ui; yarn serve --public app.cube-creator.lndo.site)
-    scanner: false
+    command: (cd ui; yarn serve --public app.cube-creator.lndo.site --hostname 0.0.0.0 --port 80)
     ssl: true
   store:
     type: compose
@@ -40,4 +39,4 @@ proxy:
   core:
     - cube-creator.lndo.site:45670
   ui:
-    - app.cube-creator.lndo.site:8080
+    - app.cube-creator.lndo.site

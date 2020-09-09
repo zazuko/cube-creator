@@ -8,6 +8,7 @@ import { fas } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 import 'buefy/dist/buefy.css'
+import store from './store'
 
 iconsLibrary.add(fas)
 Vue.component('FontAwesomeIcon', FontAwesomeIcon)
@@ -21,5 +22,6 @@ Vue.config.productionTip = false
 
 new Vue({
   router,
+  store,
   render: h => h(App)
 }).$mount('#app')
