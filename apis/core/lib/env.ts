@@ -23,6 +23,7 @@ const handler = {
 type ENV_VARS =
   'AUTH_ISSUER'
   | 'AUTH_AUDIENCE'
+  | 'AUTH_CONFIG_FILE'
 
 export default new Proxy(process.env, handler) as typeof process['env'] & Record<ENV_VARS, string> & {
   has(name: ENV_VARS): boolean

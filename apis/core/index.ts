@@ -2,6 +2,7 @@ import express from 'express'
 import { error, log } from './lib/log'
 import authentication from './lib/auth'
 import env from './lib/env'
+import { uiConfig } from './frontend'
 
 import guard = require('express-jwt-permissions')
 
@@ -15,6 +16,8 @@ async function main() {
   app.get('/', (req, res) => {
     return res.status(200).end()
   })
+
+  app.get('/env-config.js', uiConfig)
 
   app.use(authentication())
 

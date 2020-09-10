@@ -12,6 +12,7 @@
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "baseUrl": ".",
+    "typeRoots": ["./types", "./node_modules/@types"],
     "types": [
       "webpack-env",
       "jest"
@@ -28,6 +29,9 @@
       "scripthost"
     ]
   },
+  "files": [
+    "types/global.d.ts"
+  ],
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
@@ -36,6 +40,7 @@
     "tests/**/*.tsx"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "types"
   ]
 }
