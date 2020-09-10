@@ -1,13 +1,7 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "module": "CommonJS",
-    "target": "ESNext",
-    "esModuleInterop": true,
-    "strict": true,
-    "noImplicitAny": true,
-    "noImplicitThis": true,
-    "noImplicitReturns": true,
-    "strictNullChecks": true,
-    "allowSyntheticDefaultImports": true
+    "target": "ESNext"
   }
 }
