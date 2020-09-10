@@ -18,9 +18,13 @@ async function main() {
 
   app.get('/env-config.js', uiConfig)
 
-  app.use(authentication())
+  app.use(await authentication())
 
-  app.get('/protected', guard().check('scope'), (req, res) => {
+  app.get('/authenticated', (req, res) => {
+    return res.status(200).end()
+  })
+
+  app.get('/protected', guard().check('pipelines:read'), (req, res) => {
     return res.status(200).end()
   })
 

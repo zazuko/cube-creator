@@ -1,6 +1,8 @@
 import { Router, Request, Response, NextFunction } from 'express'
 import env from './env'
-import jwt = require('express-jwt');
+import { log, warning } from './log'
+import fetch from 'node-fetch'
+import jwt = require('express-jwt')
 import jwksRsa = require('jwks-rsa')
 
 declare module 'express-serve-static-core' {
@@ -12,7 +14,7 @@ declare module 'express-serve-static-core' {
   }
 }
 
-const createJwtHandler = (credentialsRequired: boolean) => jwt({
+const createJwtHandler = (credentialsRequired: boolean, jwksUri: string) => jwt({
   // Dynamically provide a signing key
   // based on the kid in the header and
   // the signing keys provided by the JWKS endpoint.
@@ -20,7 +22,7 @@ const createJwtHandler = (credentialsRequired: boolean) => jwt({
     cache: true,
     rateLimit: true,
     jwksRequestsPerMinute: 5,
-    jwksUri: `${env.AUTH_ISSUER}/.well-known/jwks.json`,
+    jwksUri,
   }),
 
   // Validate the audience and the issuer.
@@ -46,14 +48,22 @@ function devAuthHandler(req: Request, res: Response, next: NextFunction) {
   next()
 }
 
-export default () => {
+export default async () => {
   const router = Router()
 
   if (env.has('AUTH_ISSUER')) {
-    router.use(createJwtHandler(true))
+    log('Setting up OIDC')
+    const response = await fetch(`${env.AUTH_ISSUER}/.well-known/openid-configuration`)
+    if (response.ok) {
+      const oidcConfig = await response.json()
+      router.use(createJwtHandler(true, oidcConfig.jwks_uri))
+    } else {
+      warning('Failed to load OpenID Connect settings from issuer')
+    }
   }
 
   if (!env.production) {
+    log('Enabling dev authentication backdoor')
     router.use(devAuthHandler)
   }
 
