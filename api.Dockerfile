@@ -10,7 +10,6 @@ ADD ./ui/package.json ./ui/
 #ADD ./packages/foo/package.json ./packages/foo/
 
 # install and build backend
-ENV NODE_ENV=
 RUN yarn install --ci
 
 COPY . .
