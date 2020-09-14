@@ -13,6 +13,7 @@ WORKDIR /app/ui
 
 ENV NODE_ENV=production
 ENV VUE_APP_API_URL=/
+ENV BASE_URL=/app/
 RUN yarn build
 
 FROM nginx:1.16.0-alpine
