@@ -10,6 +10,7 @@ The easiest way it to start a local dockerized environment which will run the da
 
 1. Download and install [lando](https://github.com/lando/lando/releases)
    * it will install docker desktop if necessary
+2. Run `yarn` to install packages 
 2. Run `lando start` inside the repo
    * Docker daemon is also started automatically
 
