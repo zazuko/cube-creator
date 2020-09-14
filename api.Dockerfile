@@ -1,7 +1,7 @@
 # First step: build the assets
 FROM node:lts-alpine AS builder
 
-WORKDIR /
+WORKDIR /app
 ADD package.json yarn.lock ./
 ADD ./apis/core/package.json ./apis/core/
 ADD ./ui/package.json ./ui/
@@ -28,8 +28,8 @@ ADD ./ui/package.json ./ui/
 #ADD ./packages/foo/package.json ./packages/foo/
 
 RUN yarn install --production
-COPY --from=builder dist/apis ./apis/
-#COPY --from=builder dist/packages/ ./packages/
+COPY --from=builder /app/dist/apis ./apis/
+#COPY --from=builder /app/dist/packages/ ./packages/
 
 RUN apk add --no-cache tini
 ENTRYPOINT ["tini", "--", "node"]
