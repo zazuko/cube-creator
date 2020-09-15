@@ -6,6 +6,7 @@
     "build": "tsc"
   },
   "dependencies": {
+    "@cube-creator/core": "*",
     "@hydrofoil/labyrinth": "^0.1.2",
     "@rdfjs/parser-n3": "^1.1.4",
     "@tpluscode/rdf-string": "^0.2.18",
