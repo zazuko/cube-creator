@@ -7,7 +7,7 @@
     </template>
     <template slot="end">
       <b-navbar-item>
-        <SignOutButton />
+        <sign-out-button />
       </b-navbar-item>
     </template>
   </b-navbar>

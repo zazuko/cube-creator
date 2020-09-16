@@ -4,7 +4,7 @@
     "node": true
   },
   "extends": [
-    "plugin:vue/essential",
+    "plugin:vue/strongly-recommended",
     "@vue/standard",
     "@vue/typescript/recommended"
   ],
@@ -12,7 +12,15 @@
     "ecmaVersion": 2020
   },
   "rules": {
-    "comma-dangle": "off"
+    "comma-dangle": "off",
+    "vue/max-attributes-per-line": "off",
+    "vue/component-name-in-template-casing": [
+      "error",
+      "kebab-case",
+      {
+        "registeredComponentsOnly": true
+      }
+    ]
   },
   "overrides": [
     {
