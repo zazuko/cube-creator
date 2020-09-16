@@ -1,0 +1,39 @@
+@prefix hydra: <http://www.w3.org/ns/hydra/core#> .
+@prefix code:  <https://code.described.at/> .
+
+<api>
+  a
+    hydra:ApiDocumentation ;
+  hydra:entrypoint
+    <> ;
+  hydra:supportedClass
+    hydra:Resource,
+    hydra:Collection .
+
+hydra:Resource
+  hydra:supportedOperation
+    [
+      hydra:method
+        "GET" ;
+      code:implementedBy
+        [
+          a
+            code:EcmaScript ;
+          code:link
+            <node:@hydrofoil/labyrinth/resource#get>
+        ]
+    ] .
+
+hydra:Collection
+  hydra:supportedOperation
+    [
+      hydra:method
+        "GET" ;
+      code:implementedBy
+        [
+          a
+            code:EcmaScript ;
+          code:link
+            <node:@hydrofoil/labyrinth/collection#get>
+        ]
+    ] .

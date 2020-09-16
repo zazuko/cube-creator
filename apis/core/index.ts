@@ -1,10 +1,15 @@
 import express from 'express'
+import * as path from 'path'
+import { hydraBox } from '@hydrofoil/labyrinth'
 import { error, log } from './lib/log'
 import authentication from './lib/auth'
 import env from './lib/env'
 import { uiConfig } from './frontend'
+import { bootstrap } from './bootstrap'
 
-import guard = require('express-jwt-permissions')
+const apiPath = path.resolve(__dirname, 'hydra')
+const codePath = path.resolve(__dirname, 'lib')
+const baseUri = env.API_CORE_BASE
 
 async function main() {
   log('Starting Core API. Environment %s', env.production ? 'production' : 'development')
@@ -13,21 +18,21 @@ async function main() {
 
   app.enable('trust proxy')
 
-  app.get('/', (req, res) => {
-    return res.status(200).end()
-  })
-
   app.get('/env-config.js', uiConfig)
 
   app.use(await authentication())
-
-  app.get('/authenticated', (req, res) => {
-    return res.status(200).end()
+  await hydraBox(app, {
+    apiPath,
+    codePath,
+    baseUri,
+    sparql: {
+      endpointUrl: env.STORE_QUERY_ENDPOINT,
+      updateUrl: env.STORE_UPDATE_ENDPOINT,
+      storeUrl: env.STORE_GRAPH_ENDPOINT,
+    },
   })
 
-  app.get('/protected', guard().check('pipelines:read'), (req, res) => {
-    return res.status(200).end()
-  })
+  await bootstrap(env.STORE_GRAPH_ENDPOINT, baseUri)
 
   app.listen(45670, () => log('Api ready'))
 }

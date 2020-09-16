@@ -14,7 +14,7 @@ services:
         - '45671:45671'
       environment:
         TS_NODE_PROJECT: apis/core/tsconfig.json
-        DEBUG: creator*,hydra*,hydra-box*
+        DEBUG: creator*,hydra*,hydra-box*,labyrinth*
     moreHttpPorts:
       - 45671
   ui:
