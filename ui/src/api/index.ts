@@ -28,7 +28,7 @@ export const api = {
   async fetchResource (url: string): Promise<HydraResource> {
     const response = await Hydra.loadResource(url)
 
-    if (response?.response?.xhr.status !== 200) {
+    if (response.response?.xhr.status !== 200) {
       throw await APIError.fromResponse(response)
     }
 
