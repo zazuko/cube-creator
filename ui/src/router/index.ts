@@ -7,6 +7,7 @@ import OidcError from '@/components/auth/OidcError.vue'
 import store from '@/store'
 import Authenticated from '@/views/Authenticated.vue'
 import CubeProjects from '@/views/CubeProjects.vue'
+import CubeProject from '@/views/CubeProject.vue'
 
 Vue.use(VueRouter)
 
@@ -20,6 +21,11 @@ const routes: Array<RouteConfig> = [
         path: '/cube-projects',
         name: 'CubeProjects',
         component: CubeProjects,
+      },
+      {
+        path: '/cube-projects/:id',
+        name: 'CubeProject',
+        component: CubeProject,
       }
     ],
   },

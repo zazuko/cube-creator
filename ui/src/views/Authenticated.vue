@@ -1,6 +1,6 @@
 <template>
   <router-view v-if="apiEntrypoint" />
-  <b-loading v-else active />
+  <b-loading v-else active :is-full-page="false" />
 </template>
 
 <script>
