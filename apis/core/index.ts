@@ -1,6 +1,7 @@
 import express from 'express'
 import * as path from 'path'
 import { hydraBox } from '@hydrofoil/labyrinth'
+import cors from 'cors'
 import { error, log } from './lib/log'
 import authentication from './lib/auth'
 import env from './lib/env'
@@ -17,6 +18,8 @@ async function main() {
   const app = express()
 
   app.enable('trust proxy')
+
+  app.use(cors())
 
   app.get('/env-config.js', uiConfig)
   app.get('/ping', (req, res) => res.status(204).end())

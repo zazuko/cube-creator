@@ -5,7 +5,8 @@ import { vuexOidcCreateRouterMiddleware } from 'vuex-oidc'
 import OidcCallback from '@/components/auth/OidcCallback.vue'
 import OidcError from '@/components/auth/OidcError.vue'
 import store from '@/store'
-import Home from '@/views/Home.vue'
+import Authenticated from '@/views/Authenticated.vue'
+import CubeProjects from '@/views/CubeProjects.vue'
 
 Vue.use(VueRouter)
 
@@ -13,7 +14,14 @@ const routes: Array<RouteConfig> = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Authenticated,
+    children: [
+      {
+        path: '/cube-projects',
+        name: 'CubeProjects',
+        component: CubeProjects,
+      }
+    ],
   },
   {
     path: '/oidc-callback',
