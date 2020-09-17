@@ -1,5 +1,6 @@
 import { Module } from 'vuex'
 import { VuexOidcClientSettings, VuexOidcState, vuexOidcCreateStoreModule } from 'vuex-oidc'
+import { RootState } from '../types'
 
 const oidc = window.oidc
 
@@ -9,7 +10,7 @@ const oidcSettings: VuexOidcClientSettings = {
   ...oidc,
 }
 
-export function auth (): Module<VuexOidcState, any> {
+export function auth (): Module<VuexOidcState, RootState> {
   return vuexOidcCreateStoreModule(oidcSettings, {
     namespaced: true,
     publicRoutePaths: ['/oidc-error'],
