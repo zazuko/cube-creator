@@ -1,0 +1,19 @@
+PREFIX api: <https://cube-creator.zazuko.com/vocab#>
+PREFIX hydra: <http://www.w3.org/ns/hydra/core#>
+PREFIX cc: <https://cube-creator.zazuko.com/vocab#>
+
+HEADERS {
+  x-user "john-doe"
+  x-permission "pipelines:read"
+}
+
+With Class api:EntryPoint {
+    Expect Property hydra:title
+    Expect Link cc:projects
+
+    Expect Property cc:projects {
+        Expect Property hydra:title
+        Expect Operation cc:CreateProjectAction
+        Expect Type hydra:Collection
+    }
+}
