@@ -24,7 +24,7 @@ jobs:
         run: sh .ci/start-lando.sh
       - run: docker-compose -f docker-compose.yml -f docker-compose.posix.yml run analyser
 
-   e2e-tests:
+  e2e-tests:
     runs-on: [ubuntu-latest]
     steps:
       - uses: actions/checkout@v2
