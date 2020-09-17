@@ -1,13 +1,11 @@
 <template>
-  <div>
-    Hi, this is the homepage and you should only see it if logged in
-    <router-view />
-  </div>
+  <router-view v-if="apiEntrypoint" />
+  <b-loading v-else active />
 </template>
 
 <script>
 import Vue from 'vue'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 
 export default Vue.extend({
   name: 'Authenticated',
@@ -21,7 +19,10 @@ export default Vue.extend({
     ...mapGetters({
       token: 'auth/oidcAccessToken',
       user: 'auth/oidcUser',
-    })
+    }),
+    ...mapState({
+      apiEntrypoint: (state) => state.api.entrypoint,
+    }),
   },
 })
 </script>
