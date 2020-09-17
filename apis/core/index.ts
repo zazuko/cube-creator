@@ -19,6 +19,7 @@ async function main() {
   app.enable('trust proxy')
 
   app.get('/env-config.js', uiConfig)
+  app.get('/ping', (req, res) => res.status(204).end())
 
   app.use(await authentication())
   await hydraBox(app, {
