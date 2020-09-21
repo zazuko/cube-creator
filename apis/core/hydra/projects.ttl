@@ -1,5 +1,9 @@
+BASE          <urn:hydra-box:api>
 PREFIX cc:    <https://cube-creator.zazuko.com/vocab#>
 prefix hydra: <http://www.w3.org/ns/hydra/core#>
+prefix code:  <https://code.described.at/>
+
+cc:CubeProject a hydra:Class .
 
 cc:ProjectsCollection
   a
@@ -8,9 +12,19 @@ cc:ProjectsCollection
     [
       a
         hydra:Operation,
-        cc:CreateProjectAction ; ;
+        cc:CreateProjectAction ;
       hydra:title
         "New project" ;
       hydra:method
-        "POST"
+        "POST" ;
+      hydra:expects
+        cc:CubeProject,
+        <shape/cube-project/create> ;
+      code:implementedBy
+        [
+          a
+            code:EcmaScript ;
+          code:link
+            <file:handlers/cube-projects#post> ;
+        ] ;
     ] .

@@ -1,0 +1,34 @@
+PREFIX api: <https://cube-creator.zazuko.com/vocab#>
+PREFIX hydra: <http://www.w3.org/ns/hydra/core#>
+PREFIX cc: <https://cube-creator.zazuko.com/vocab#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+HEADERS {
+  x-user "john-doe"
+  x-permission "pipelines:write"
+}
+
+With Class api:EntryPoint {
+    Expect Property cc:projects {
+        With Operation cc:CreateProjectAction {
+            Invoke {
+                Content-Type "text/turtle"
+
+                ```
+                prefix cc: <https://cube-creator.zazuko.com/vocab#>
+                prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+                <> cc:projectSourceKind "CSV" ; rdfs:label "Test Project" .
+                ```
+            } => {
+                Expect Status 201
+
+                Expect Type <https://cube-creator.zazuko.com/vocab#CubeProject>
+                Expect Property rdfs:label "Test Project"
+                Expect Link cc:csvMapping {
+                    Expect Type <https://cube-creator.zazuko.com/vocab#CsvMapping>
+                }
+            }
+        }
+    }
+}

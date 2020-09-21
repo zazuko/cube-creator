@@ -3,5 +3,14 @@
   "extends": [ "@tpluscode" ],
   "parserOptions": {
     "project": "./tsconfig.json"
-  }
+  },
+  "rules": {
+    "import/no-extraneous-dependencies": ["error", {"devDependencies": ["**/test/**/*.ts"]}]
+  },
+  "overrides": [{
+    "files": ["*.test.ts"],
+    "rules": {
+      "no-unused-expressions": "off"
+    }
+  }]
 }

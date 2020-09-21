@@ -8,6 +8,10 @@
     "noImplicitReturns": true,
     "strictNullChecks": true,
     "allowSyntheticDefaultImports": true,
+    "typeRoots": [
+      "node_modules/@types",
+      "apis/core/types"
+    ]
     "skipLibCheck": true
   },
   "include": [
