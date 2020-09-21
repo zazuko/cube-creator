@@ -1,0 +1,16 @@
+PREFIX cc:    <https://cube-creator.zazuko.com/vocab#>
+prefix hydra: <http://www.w3.org/ns/hydra/core#>
+
+cc:ProjectsCollection
+  a
+    hydra:Class ;
+  hydra:supportedOperation
+    [
+      a
+        hydra:Operation,
+        cc:CreateProjectAction ; ;
+      hydra:title
+        "New project" ;
+      hydra:method
+        "POST"
+    ] .

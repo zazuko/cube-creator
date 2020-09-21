@@ -1,0 +1,5 @@
+version: "3"
+services:
+  e2e-tests:
+    volumes:
+      - ~/.lando/certs/lndo.site.crt:/lndo.site.crt

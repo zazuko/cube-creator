@@ -1,0 +1,18 @@
+PREFIX cc:    <https://cube-creator.zazuko.com/vocab#>
+prefix hydra: <http://www.w3.org/ns/hydra/core#>
+prefix query: <http://hypermedia.app/query#>
+
+<api>
+  hydra:supportedClass
+    cc:EntryPoint .
+
+cc:EntryPoint
+  query:include
+    cc:projects ;
+  hydra:supportedProperty
+    [ hydra:property
+        cc:projects ] .
+
+cc:projects
+  a
+    hydra:Link .

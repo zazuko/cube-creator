@@ -1,4 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express'
+import error from 'http-errors'
 import env from './env'
 import { log, warning } from './log'
 import fetch from 'node-fetch'
@@ -35,7 +36,11 @@ const createJwtHandler = (credentialsRequired: boolean, jwksUri: string) => jwt(
 function devAuthHandler(req: Request, res: Response, next: NextFunction) {
   const sub = req.header('X-User')
 
-  if (!req.user && sub) {
+  if (req.user) {
+    return next()
+  }
+
+  if (sub) {
     const permissionHeader = req.headers['x-permission']
     const permissions = typeof permissionHeader === 'string' ? permissionHeader.split(',').map(s => s.trim()) : permissionHeader || []
 
@@ -43,9 +48,11 @@ function devAuthHandler(req: Request, res: Response, next: NextFunction) {
       sub,
       permissions,
     }
+
+    return next()
   }
 
-  next()
+  next(new error.Unauthorized())
 }
 
 export default async () => {
@@ -56,7 +63,7 @@ export default async () => {
     const response = await fetch(`${env.AUTH_ISSUER}/.well-known/openid-configuration`)
     if (response.ok) {
       const oidcConfig = await response.json()
-      router.use(createJwtHandler(true, oidcConfig.jwks_uri))
+      router.use(createJwtHandler(env.production, oidcConfig.jwks_uri))
     } else {
       warning('Failed to load OpenID Connect settings from issuer')
     }
