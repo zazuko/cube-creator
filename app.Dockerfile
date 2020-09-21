@@ -5,7 +5,7 @@ WORKDIR /app
 ADD package.json yarn.lock ./
 ADD ./ui/package.json ./ui/
 # install and build backend
-RUN yarn install --ci
+RUN yarn install --frozen-lockfile
 
 COPY . .
 
