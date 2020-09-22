@@ -4,8 +4,8 @@ import env from './env'
 import { log, warning } from './log'
 import fetch from 'node-fetch'
 import $rdf from 'rdf-ext'
-import jwt = require('express-jwt')
-import jwksRsa = require('jwks-rsa')
+import jwt from 'express-jwt'
+import jwksRsa from 'jwks-rsa'
 
 declare module '@hydrofoil/labyrinth' {
   export interface User {
