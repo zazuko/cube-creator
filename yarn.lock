@@ -1445,10 +1445,10 @@
   dependencies:
     defer-to-connect "^1.0.1"
 
-"@tpluscode/eslint-config@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@tpluscode/eslint-config/-/eslint-config-0.1.0.tgz#c768e289229ae512e6b897ed5b1e6613717ca21f"
-  integrity sha512-y5CgQPRVpNLTRo+KmQ7IBD48W/W+xugwHdPzV8mZk7zAQMZTywsatkMfzRBHIXxWIu6G0uAsIyQmzw9zPy6GrA==
+"@tpluscode/eslint-config@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@tpluscode/eslint-config/-/eslint-config-0.1.1.tgz#5562e9753d4a4e9bd6ee4785baeaf9e6c7f42bfc"
+  integrity sha512-gv7CE+3iQ6YNoEofgzMKWUgOHxY7Kozq06M4ls0PkOScOmvCoHTFD2XvPtqmADmXezQsMcZyM6VsHEilgHoasw==
 
 "@tpluscode/rdf-ns-builders@0.1.0", "@tpluscode/rdf-ns-builders@^0.1.0":
   version "0.1.0"

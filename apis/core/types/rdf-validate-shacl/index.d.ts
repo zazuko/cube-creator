@@ -1,5 +1,5 @@
 declare module 'rdf-validate-shacl' {
-  import {DatasetCore} from 'rdf-js';
+  import { DatasetCore } from 'rdf-js'
 
   interface ValidationResult {
     message: string

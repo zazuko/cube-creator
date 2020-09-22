@@ -11,7 +11,7 @@
     "packages/*"
   ],
   "devDependencies": {
-    "@tpluscode/eslint-config": "^0.1.0",
+    "@tpluscode/eslint-config": "^0.1.1",
     "@typescript-eslint/eslint-plugin": "^4.0.1",
     "@typescript-eslint/parser": "^4.0.1",
     "dotenv": "^8.2.0",
