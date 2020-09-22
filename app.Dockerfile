@@ -13,7 +13,6 @@ WORKDIR /app/ui
 
 ENV NODE_ENV=production
 ENV VUE_APP_API_URL=/
-ENV BASE_URL=/app/
 RUN yarn build
 
 FROM nginx:1.16.0-alpine
@@ -22,4 +21,4 @@ HEALTHCHECK --timeout=1s --retries=99 \
          || exit 1
 
 ADD ./nginx/default.conf /etc/nginx/conf.d/default.conf
-COPY --from=builder /app/ui/dist /usr/share/nginx/html
+COPY --from=builder /app/ui/dist /usr/share/nginx/html/app
