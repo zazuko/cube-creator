@@ -36,7 +36,9 @@ RUN apk add --no-cache tini
 ENTRYPOINT ["tini", "--", "node"]
 
 EXPOSE 45670
-USER nobody
+# USER nobody. Needs to be a numeric UID, else the "runAsNonRoot" security
+# directive in Kubernetes does not work.
+USER 65534
 
 WORKDIR /app/apis
 CMD ["core"]
