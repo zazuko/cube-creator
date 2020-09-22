@@ -3,7 +3,7 @@ import $rdf from 'rdf-ext'
 import { rdfs, rdf, hydra } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import { ResourceStore } from '../../ResourceStore'
-import * as id from '../indentifiers'
+import * as id from '../identifiers'
 
 interface CreateProjectCommand {
   resource: GraphPointer

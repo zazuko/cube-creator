@@ -7,7 +7,7 @@ import { cc } from '@cube-creator/core/namespace'
 import clownface from 'clownface'
 import { turtle } from '@tpluscode/rdf-string'
 import { shaclValidate } from '../../lib/middleware/shacl'
-import { appMock, mockResourceStore } from '../support/middleware'
+import { appMock, mockResourceMiddleware } from '../support/middleware'
 import { ex } from '../support/namespace'
 
 describe('middleware/shacl', () => {
@@ -17,7 +17,7 @@ describe('middleware/shacl', () => {
     app.use(appMock(api => {
       api.operation.addOut(hydra.expects, ex.NotShape)
     }))
-    app.use(mockResourceStore([
+    app.use(mockResourceMiddleware([
       clownface({ dataset: $rdf.dataset() }).namedNode(ex.NotShape).addOut(rdf.type, hydra.Class),
     ]))
     app.use(shaclValidate)
@@ -41,7 +41,7 @@ describe('middleware/shacl', () => {
       .addOut(rdf.type, sh.NodeShape)
       .addOut(sh.targetClass, cc.CubeProject)
 
-    app.use(mockResourceStore([shape]))
+    app.use(mockResourceMiddleware([shape]))
     app.use(shaclValidate)
     app.use((req, res) => res.status(204).end())
 
@@ -67,7 +67,7 @@ describe('middleware/shacl', () => {
       .addOut(sh.targetClass, cc.CubeProject)
       .addOut(sh.property, prop => prop.addOut(sh.path, rdfs.label).addOut(sh.minCount, 1))
 
-    app.use(mockResourceStore([shape]))
+    app.use(mockResourceMiddleware([shape]))
     app.use(shaclValidate)
     app.use((req, res) => res.status(204).end())
 
@@ -93,7 +93,7 @@ describe('middleware/shacl', () => {
       .addOut(sh.targetClass, cc.CubeProject)
       .addOut(sh.property, prop => prop.addOut(sh.path, rdfs.label).addOut(sh.minCount, 1))
 
-    app.use(mockResourceStore([shape]))
+    app.use(mockResourceMiddleware([shape]))
     app.use(shaclValidate)
     app.use((req, res) => res.status(204).end())
 

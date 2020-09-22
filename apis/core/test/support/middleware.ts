@@ -3,6 +3,7 @@ import express from 'express'
 import cf, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import { NamedNode } from 'rdf-js'
+import clownface from 'clownface'
 import rdfHandler from '@rdfjs/express-handler'
 import { TestResourceStore } from './TestResourceStore'
 
@@ -23,9 +24,11 @@ export function appMock(prepare?: (hydra: HydraBox) => void): express.RequestHan
   }
 }
 
-export function mockResourceStore(resources: GraphPointer<NamedNode>[] = []): express.RequestHandler {
+export function mockResourceMiddleware(resources: GraphPointer<NamedNode>[] = []): express.RequestHandler {
   return (req, res, next) => {
     req.app.resources = () => new TestResourceStore(resources)
+
+    req.resource = async () => clownface({ dataset: await req.dataset() }).namedNode('')
 
     next()
   }
