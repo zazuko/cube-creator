@@ -4,6 +4,12 @@ FROM node:lts-alpine AS builder
 WORKDIR /app
 ADD package.json yarn.lock ./
 ADD ./ui/package.json ./ui/
+ADD ./apis/core/package.json ./apis/core/
+ADD ./packages/core/package.json ./packages/core/
+
+# for every new package foo add:
+# ADD ./packages/foo/package.json ./packages/foo/
+
 # install and build backend
 RUN yarn install --frozen-lockfile
 
