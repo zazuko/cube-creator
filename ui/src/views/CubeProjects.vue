@@ -7,7 +7,7 @@
       <router-link
         v-for="project in projects"
         :key="project.id.value"
-        :to="{ name: 'CubeProject', params: { id: project.id.value } }"
+        :to="{ name: 'CubeProject', params: { id: project.clientPath } }"
         class="panel-block"
       >
         {{ project.title }}
