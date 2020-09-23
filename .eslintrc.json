@@ -3,5 +3,11 @@
   "extends": [ "@tpluscode" ],
   "parserOptions": {
     "project": "./tsconfig.json"
-  }
+  },
+  "overrides": [{
+    "files": ["*.test.ts"],
+    "rules": {
+      "no-unused-expressions": "off"
+    }
+  }]
 }

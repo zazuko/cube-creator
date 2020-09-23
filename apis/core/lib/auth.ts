@@ -3,15 +3,14 @@ import error from 'http-errors'
 import env from './env'
 import { log, warning } from './log'
 import fetch from 'node-fetch'
-import jwt = require('express-jwt')
-import jwksRsa = require('jwks-rsa')
+import $rdf from 'rdf-ext'
+import jwt from 'express-jwt'
+import jwksRsa from 'jwks-rsa'
 
-declare module 'express-serve-static-core' {
-  export interface Request {
-    user: {
-      sub: string
-      permissions: string[]
-    }
+declare module '@hydrofoil/labyrinth' {
+  export interface User {
+    sub: string
+    permissions: string[]
   }
 }
 
@@ -45,6 +44,7 @@ function devAuthHandler(req: Request, res: Response, next: NextFunction) {
     const permissions = typeof permissionHeader === 'string' ? permissionHeader.split(',').map(s => s.trim()) : permissionHeader || []
 
     req.user = {
+      id: $rdf.namedNode(sub),
       sub,
       permissions,
     }

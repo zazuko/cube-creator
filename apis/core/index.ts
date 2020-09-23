@@ -7,6 +7,7 @@ import authentication from './lib/auth'
 import env from './lib/env'
 import { uiConfig } from './frontend'
 import { bootstrap } from './bootstrap'
+import { resource } from './lib/middleware/resource'
 
 const apiPath = path.resolve(__dirname, 'hydra')
 const codePath = path.resolve(__dirname, 'lib')
@@ -24,6 +25,7 @@ async function main() {
   app.get('/env-config.js', uiConfig)
   app.get('/ping', (req, res) => res.status(204).end())
 
+  app.use(resource)
   app.use(await authentication())
   await hydraBox(app, {
     apiPath,

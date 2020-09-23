@@ -31,6 +31,7 @@ ADD ./packages/core/package.json ./packages/core/
 RUN yarn install --production --frozen-lockfile
 COPY --from=builder /app/dist/apis ./apis/
 COPY --from=builder /app/dist/packages/ ./packages/
+ADD apis/core/hydra/*.ttl ./apis/core/hydra/
 
 RUN apk add --no-cache tini
 ENTRYPOINT ["tini", "--", "node"]

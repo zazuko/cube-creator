@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     "rootDir": ".",
+    "target": "ES2017",
+    "moduleResolution": "node",
     "esModuleInterop": true,
     "strict": true,
     "noImplicitAny": true,
