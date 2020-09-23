@@ -34,6 +34,6 @@ To trust the CA, follow the steps on <https://docs.lando.dev/config/security.htm
 
 ## Workflow
 
-This repository is using the [GitHub-Flow](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/github-flow). Hence all changes should integrated using pull requests.
+This repository is using the [GitHub-Flow](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/github-flow). Hence all changes should be integrated using pull requests.
 
 To submit a bug or a feature request please create an issue in this repository.
