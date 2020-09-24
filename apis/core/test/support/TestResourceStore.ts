@@ -24,7 +24,11 @@ export class TestResourceStore implements ResourceStore {
     return Promise.resolve(resource)
   }
 
-  put(pointer: GraphPointer<NamedNode>): Promise<void> {
+  create(id: NamedNode): GraphPointer<NamedNode> {
+    return clownface({ dataset: $rdf.dataset() }).namedNode(id)
+  }
+
+  save(): Promise<void> {
     return Promise.resolve()
   }
 }
