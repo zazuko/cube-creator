@@ -1,9 +1,13 @@
-BASE          <urn:hydra-box:api>
-PREFIX cc:    <https://cube-creator.zazuko.com/vocab#>
-prefix hydra: <http://www.w3.org/ns/hydra/core#>
-prefix code:  <https://code.described.at/>
+BASE           <urn:hydra-box:api>
+PREFIX cc:     <https://cube-creator.zazuko.com/vocab#>
+prefix hydra:  <http://www.w3.org/ns/hydra/core#>
+prefix code:   <https://code.described.at/>
+prefix auth:   <http://hypermedia.app/auth#>
+PREFIX scopes: <https://cube-creator.zazuko.com/scopes#>
 
-cc:CubeProject a hydra:Class .
+cc:CubeProject
+  a
+    hydra:Class .
 
 cc:ProjectsCollection
   a
@@ -27,4 +31,6 @@ cc:ProjectsCollection
           code:link
             <file:handlers/cube-projects#post> ;
         ] ;
+      auth:scopes
+        scopes:pipelines-write
     ] .

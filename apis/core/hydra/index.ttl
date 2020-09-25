@@ -1,5 +1,7 @@
-@prefix hydra: <http://www.w3.org/ns/hydra/core#> .
-@prefix code:  <https://code.described.at/> .
+prefix hydra:  <http://www.w3.org/ns/hydra/core#>
+prefix code:   <https://code.described.at/>
+prefix auth:   <http://hypermedia.app/auth#>
+PREFIX scopes: <https://cube-creator.zazuko.com/scopes#>
 
 <api>
   a
@@ -8,9 +10,12 @@
     <> ;
   hydra:supportedClass
     hydra:Resource,
-    hydra:Collection .
+    hydra:Collection
+.
 
 hydra:Resource
+  auth:scopes
+    scopes:pipelines-read ;
   hydra:supportedOperation
     [
       hydra:method
@@ -25,6 +30,8 @@ hydra:Resource
     ] .
 
 hydra:Collection
+  auth:scopes
+    scopes:pipelines-read ;
   hydra:supportedOperation
     [
       hydra:method

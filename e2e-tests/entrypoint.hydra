@@ -4,7 +4,7 @@ PREFIX cc: <https://cube-creator.zazuko.com/vocab#>
 
 HEADERS {
   x-user "john-doe"
-  x-permission "pipelines:read"
+  x-scope "pipelines:read"
 }
 
 With Class api:EntryPoint {

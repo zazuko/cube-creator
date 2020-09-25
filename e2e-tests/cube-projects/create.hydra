@@ -5,7 +5,7 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 HEADERS {
   x-user "john-doe"
-  x-permission "pipelines:write"
+  x-scope "pipelines:read, pipelines:write"
 }
 
 With Class api:EntryPoint {
