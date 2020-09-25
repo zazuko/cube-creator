@@ -41,6 +41,7 @@
     "@babel/register": "^7.11.5",
     "@types/absolute-url": "^1.2.0",
     "@types/chai": "^4.2.12",
+    "@types/chai-snapshot-matcher": "^1.0.0",
     "@types/sinon-chai": "^3.2.4",
     "@types/clownface": "^1.0.0",
     "@types/commander": "^2.12.2",

@@ -1595,6 +1595,14 @@
     "@types/connect" "*"
     "@types/node" "*"
 
+"@types/chai-snapshot-matcher@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@types/chai-snapshot-matcher/-/chai-snapshot-matcher-1.0.0.tgz#a8045f8351aabd3c5165110eb5df7cb9724851f7"
+  integrity sha512-zBmWLCS5uopWaiXRtxdeYIa3DKXLy0hpTj2Z89WkECw7eh7BxD9NuWiEUMB6cImsRfgR5D1MfMtMkl8TrUWDrA==
+  dependencies:
+    "@types/chai" "*"
+    "@types/mocha" "*"
+
 "@types/chai@*", "@types/chai@^4.2.12":
   version "4.2.12"
   resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.2.12.tgz#6160ae454cd89dae05adc3bb97997f488b608201"
@@ -1780,7 +1788,7 @@
   resolved "https://registry.yarnpkg.com/@types/minimist/-/minimist-1.2.0.tgz#69a23a3ad29caf0097f06eda59b361ee2f0639f6"
   integrity sha1-aaI6OtKcrwCX8G7aWbNh7i8GOfY=
 
-"@types/mocha@^8.0.3":
+"@types/mocha@*", "@types/mocha@^8.0.3":
   version "8.0.3"
   resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-8.0.3.tgz#51b21b6acb6d1b923bbdc7725c38f9f455166402"
   integrity sha512-vyxR57nv8NfcU0GZu8EUXZLTbCMupIUwy95LJ6lllN+JRPG25CwMHoB1q5xKh8YKhQnHYRAn4yW2yuHbf/5xgg==
