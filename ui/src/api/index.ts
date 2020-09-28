@@ -4,7 +4,7 @@ import store from '@/store'
 import { APIError } from './errors'
 import { apiResourceMixin } from './mixins/ApiResource'
 
-const rootURL = process.env.VUE_APP_API_URL
+const rootURL = new URL(process.env.VUE_APP_API_URL || '/', window.location.toString()).toString() // Resolve based on window.location
 const segmentSeparator = '!!' // used to replace slash in URI to prevent escaping
 
 if (!rootURL) {
