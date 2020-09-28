@@ -15,7 +15,7 @@ RUN yarn install --frozen-lockfile
 COPY . .
 RUN rm -rf ./ui
 
-RUN yarn tsc --outDir dist
+RUN yarn tsc --outDir dist --module CommonJS
 
 FROM node:14-alpine
 
