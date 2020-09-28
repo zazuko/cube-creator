@@ -1,0 +1,27 @@
+BASE          <urn:hydra-box:api>
+PREFIX cc:    <https://cube-creator.zazuko.com/vocab#>
+prefix hydra: <http://www.w3.org/ns/hydra/core#>
+prefix code:  <https://code.described.at/>
+
+cc:CSVMappingsCollection a hydra:Class .
+
+cc:CSVMappingsCollection
+  a
+    hydra:Class ;
+  hydra:supportedOperation
+    [
+      a
+        hydra:Operation,
+        cc:CreateCSVMappingAction ;
+      hydra:title
+        "New CSV Mapping" ;
+      hydra:method
+        "POST" ;
+      code:implementedBy
+        [
+          a
+            code:EcmaScript ;
+          code:link
+            <file:handlers/csv-mapping#post> ;
+        ] ;
+    ] .
