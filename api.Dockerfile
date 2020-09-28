@@ -36,6 +36,9 @@ ADD apis/core/hydra/*.ttl ./apis/core/hydra/
 RUN apk add --no-cache tini
 ENTRYPOINT ["tini", "--", "node"]
 
+# Have some logs by default
+ENV DEBUG creator
+
 EXPOSE 45670
 # USER nobody. Needs to be a numeric UID, else the "runAsNonRoot" security
 # directive in Kubernetes does not work.
