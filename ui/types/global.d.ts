@@ -4,4 +4,5 @@ interface Window {
     clientId: string
     scope: string
   }
+  BASE_URL: string
 }
