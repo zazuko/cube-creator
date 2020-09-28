@@ -36,4 +36,6 @@ To trust the CA, follow the steps on <https://docs.lando.dev/config/security.htm
 
 This repository is using the [GitHub-Flow](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/github-flow). Hence all changes should be integrated using pull requests.
 
+Commit messages usually follow the guidelines from [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#summary) with the types in lower case.
+
 To submit a bug or a feature request please create an issue in this repository.
