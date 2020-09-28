@@ -5,7 +5,7 @@ export class APIError extends Error {
   response: HydraResponse;
 
   constructor (details: any, response: HydraResponse) {
-    const message = details.title || 'Unknown error'
+    const message = details?.title || 'Unknown error'
 
     super(message)
 
