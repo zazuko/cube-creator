@@ -11,7 +11,7 @@ export const shaclValidate = asyncMiddleware(async (req, res, next) => {
   await Promise.all(req.hydra.operation.out(hydra.expects).map(async (expects) => {
     if (expects.term.termType !== 'NamedNode') return
 
-    const pointer = await resources.get(expects.term, false)
+    const pointer = await resources.get(expects.term)
     if (pointer.has(rdf.type, [sh.NodeShape]).values.length) {
       await shapes.addAll([...pointer.dataset])
     }
