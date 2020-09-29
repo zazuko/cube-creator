@@ -2,10 +2,11 @@ import { Module } from 'vuex'
 import { VuexOidcClientSettings, VuexOidcState, vuexOidcCreateStoreModule } from 'vuex-oidc'
 import { RootState } from '../types'
 
-const oidc = window.oidc
+const oidc = window.APP_CONFIG.oidc
+const base = new URL(process.env.BASE_URL || '/', window.location.toString())
 
 const oidcSettings: VuexOidcClientSettings = {
-  redirectUri: window.location.origin + '/oidc-callback',
+  redirectUri: new URL('oidc-callback', base).toString(),
   responseType: 'code',
   ...oidc,
 }
@@ -14,5 +15,6 @@ export function auth (): Module<VuexOidcState, RootState> {
   return vuexOidcCreateStoreModule(oidcSettings, {
     namespaced: true,
     publicRoutePaths: ['/oidc-error'],
+    routeBase: process.env.BASE_URL,
   })
 }

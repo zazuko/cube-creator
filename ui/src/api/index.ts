@@ -4,11 +4,11 @@ import store from '@/store'
 import { APIError } from './errors'
 import { apiResourceMixin } from './mixins/ApiResource'
 
-const rootURL = process.env.VUE_APP_API_URL
+const rootURL = window.APP_CONFIG.apiCoreBase
 const segmentSeparator = '!!' // used to replace slash in URI to prevent escaping
 
 if (!rootURL) {
-  throw new Error('Missing VUE_APP_API_URL setting')
+  throw new Error('Missing API_CORE_BASE setting')
 }
 
 // Tells Hydra to use the API root URI as base URI for relative URIs

@@ -6,7 +6,21 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <title>Cube Creator</title>
-    <script src="<%= VUE_APP_API_URL %>env-config.js"></script>
+    <% if (NODE_ENV == "production") { %>
+    <script src="<%= BASE_URL %>config.js"></script>
+    <% } else { %>
+    <!-- Keep this in sync with .env.local, ui/public/config.js.template and ui/types/global.d.ts -->
+    <script type="text/javascript">
+      window.APP_CONFIG = {
+        oidc: {
+          authority: "<%= VUE_APP_AUTH_ISSUER %>",
+          clientId: "<%= VUE_APP_AUTH_CLIENT_ID %>",
+          scope: "openid email profile pipelines:read pipelines:write",
+        },
+        apiCoreBase: "<%= VUE_APP_API_CORE_BASE %>",
+      };
+    </script>
+    <% } %>
   </head>
   <body>
     <noscript>
