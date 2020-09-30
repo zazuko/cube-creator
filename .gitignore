@@ -22,3 +22,9 @@ pnpm-debug.log*
 *.sln
 *.sw?
 *.js
+
+# Minio files except README to keep bucket alive
+minio/*
+!minio/cube-creator/
+minio/cube-creator/*
+!minio/cube-creator/README.md
