@@ -35,6 +35,19 @@ services:
         ENABLE_UPLOAD: "true"
       volumes:
         - ./fuseki/config.ttl:/data/fuseki/config/config.ttl
+  s3:
+    type: compose
+    ssl: true
+    services: 
+      image: minio/minio
+      ports:
+        - '9000:9000'
+      command: usr/bin/docker-entrypoint.sh server /data
+      environment: 
+        MINIO_ACCESS_KEY: minio
+        MINIO_SECRET_KEY: password
+      volumes:
+        - ./minio:/data/
 proxy:
   store:
     - db.cube-creator.lndo.site:3030
@@ -42,3 +55,5 @@ proxy:
     - cube-creator.lndo.site:45670
   ui:
     - app.cube-creator.lndo.site
+  s3: 
+    - s3.cube-creator.lndo.site:9000
