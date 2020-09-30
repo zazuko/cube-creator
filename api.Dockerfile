@@ -36,6 +36,10 @@ ADD apis/core/hydra/*.ttl ./apis/core/hydra/
 RUN apk add --no-cache tini
 ENTRYPOINT ["tini", "--", "node"]
 
+# Have some logs by default
+# This should be kept in sync with .lando.yml
+ENV DEBUG creator*,hydra*,hydra-box*,labyrinth*
+
 EXPOSE 45670
 # USER nobody. Needs to be a numeric UID, else the "runAsNonRoot" security
 # directive in Kubernetes does not work.
