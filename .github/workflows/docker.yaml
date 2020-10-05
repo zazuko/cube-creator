@@ -139,6 +139,8 @@ jobs:
           cache-to: type=local,dest=/tmp/.buildx-cache
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.prep.outputs.tags }}
+          build-args: |
+            PUBLIC_PATH=/app/
           labels: |
             org.opencontainers.image.created=${{ steps.prep.outputs.created }}
             org.opencontainers.image.source=${{ github.repositoryUrl }}

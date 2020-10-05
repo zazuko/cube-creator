@@ -1,0 +1,8 @@
+window.APP_CONFIG = {
+  oidc: {
+    authority: "$AUTH_ISSUER",
+    clientId: "$AUTH_CLIENT_ID",
+    scope: "openid email profile pipelines:read pipelines:write",
+  },
+  apiCoreBase: "$API_CORE_BASE",
+};
