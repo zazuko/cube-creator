@@ -5,12 +5,15 @@ type CubeCreatorClass =
   'CubeProject' |
   'ProjectsCollection' |
   'CsvMapping' |
-  'EntryPoint'
+  'EntryPoint' |
+  'CSVSource' |
+  'CSVSourceCollection'
 
 type CubeCreatorProperty =
   'projectSourceKind' |
   'projects' |
-  'csvMapping'
+  'csvMapping' |
+  'csvSource'
 
 type CubeCreatorNamespace = Record<CubeCreatorClass | CubeCreatorProperty, NamedNode>
 
