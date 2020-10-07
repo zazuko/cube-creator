@@ -23,12 +23,20 @@ The easiest way it to start a local dockerized environment which will run the da
 
 Docker containers will start and the services will be available under the these URLs:
 
-| Service | URL                                 |
-| --      | --                                  |
-| API     | https://cube-creator.lndo.site/     |
-| UI      | https://app.cube-creator.lndo.site/ |
-| Fuseki  | https://db.cube-creator.lndo.site/  |
+| Service | URL                                   |
+| ------- | ------------------------------------- |
+| API     | <https://cube-creator.lndo.site/>     |
+| UI      | <https://app.cube-creator.lndo.site/> |
+| Fuseki  | <https://db.cube-creator.lndo.site/>  |
 | Minio   | <https://s3.cube-creator.lndo.site/>  |
 
 Lando uses its own Certificate Authority and it won't be trusted by your system.
-To trust the CA, follow the steps on https://docs.lando.dev/config/security.html#trusting-the-ca
+To trust the CA, follow the steps on <https://docs.lando.dev/config/security.html#trusting-the-ca>
+
+## Workflow
+
+This repository is using the [GitHub-Flow](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/github-flow). Hence all changes should be integrated using pull requests.
+
+Commit messages usually follow the guidelines from [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#summary) with the types in lower case.
+
+To submit a bug or a feature request please create an issue in this repository.

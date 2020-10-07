@@ -1,0 +1,2 @@
+exports["ResourceStore save stores resources in individual named graphs"] = "<http://example.com/Bar> <http://example.com/bar> \"bar\" <http://example.com/Bar> .\n<http://example.com/Foo> <http://example.com/foo> \"foo\" <http://example.com/Foo> .\n";
+

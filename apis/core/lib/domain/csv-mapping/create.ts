@@ -1,5 +1,4 @@
-import clownface, { GraphPointer } from 'clownface'
-import $rdf from 'rdf-ext'
+import { GraphPointer } from 'clownface'
 import { rdf, hydra, dbo } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import { ResourceStore } from '../../ResourceStore'
@@ -16,11 +15,10 @@ export async function createCSVMapping({ resource, store }: CreateCSVMappingComm
 
   await saveFile(filename.value, 'hello')
 
-  const csvMapping = clownface({ dataset: $rdf.dataset() })
-    .namedNode(id.csvMapping(filename.value))
+  const csvMapping = store.create(id.csvMapping(filename.value))
     .addOut(dbo.filename, filename)
     .addOut(rdf.type, [cc.CsvMapping, hydra.Resource])
+  await store.save()
 
-  await store.put(csvMapping)
   return csvMapping
 }

@@ -5,7 +5,6 @@ import cors from 'cors'
 import { error, log } from './lib/log'
 import authentication from './lib/auth'
 import env from './lib/env'
-import { uiConfig } from './frontend'
 import { bootstrap } from './bootstrap'
 import { resource } from './lib/middleware/resource'
 
@@ -22,7 +21,6 @@ async function main() {
 
   app.use(cors())
 
-  app.get('/env-config.js', uiConfig)
   app.get('/ping', (req, res) => res.status(204).end())
 
   app.use(resource)
