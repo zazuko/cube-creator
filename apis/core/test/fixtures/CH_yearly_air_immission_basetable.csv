@@ -1,6 +1,8 @@
 "station_id","pollutant_id","aggregation_id","limitvalue","year","value","unit_id","value_remark"
 "blBAS","so2","annualmean",30,1984,31.9,"µg/m3","incomplete series"
 "blBAS","so2","annualmean",30,1985,40.2,"µg/m3","incomplete series"
+"blBAS","so2","annualmean",30,1985,40.2,"µg/m3","incomplete series"
+"blBAS","so2","annualmean",30,1985,40.2,"µg/m3","incomplete series"
 "blBAS","so2","annualmean",30,1986,33.6,"µg/m3","incomplete series"
 "blBAS","so2","annualmean",30,1987,33,"µg/m3","incomplete series"
 "blBAS","so2","annualmean",30,1988,17.4,"µg/m3",
