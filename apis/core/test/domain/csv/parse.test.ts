@@ -9,9 +9,10 @@ describe('domain/csv/parse', () => {
   it('sniffs and parses', async () => {
     const path = resolve(__dirname, '../../fixtures/CH_yearly_air_immission_aggregation_id.csv')
     const input = await fs.readFile(path)
-    const { header, rows } = await sniffParse(input.toString())
+    const { dialect, header, rows } = await sniffParse(input.toString())
     const [lastRow] = rows.slice(-1)
 
+    expect(dialect).to.deep.eq({ delimiter: ',', quote: '"' })
     expect(header).to.deep.eq(['aggregation_id', 'aggregation_name_de', 'aggregation_name_fr', 'aggregation_name_it', 'aggregation_name_en'])
     expect(lastRow).to.deep.eq(['dosisaot40f', 'Dosis AOT40f', 'Dose AOT40f', 'Dose AOT40f', 'Dosis AOT40f'])
   })

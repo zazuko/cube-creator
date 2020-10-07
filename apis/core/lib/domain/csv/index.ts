@@ -1,6 +1,5 @@
 import CSVparse from 'csv-parse'
 import CSVSniffer from 'csv-sniffer'
-import { saveFile } from '../../storage/s3'
 
 const csvDelimiters = [',', ';', '\t']
 const sniffer = new (CSVSniffer())(csvDelimiters)
@@ -15,7 +14,7 @@ function parse(csv: string, options: CSVparse.Options): Promise<Array<Array<any>
   }))
 }
 
-export async function sniffParse(csv: string): Promise<{ header: any[]; rows: any[] }> {
+export async function sniffParse(csv: string): Promise<{ dialect: {delimiter: string; quote: string}; header: any[]; rows: any[] }> {
   const detectedCsvFormat = sniffer.sniff(csv)
   const csvDialect = {
     delimiter: detectedCsvFormat.delimiter,
@@ -31,6 +30,7 @@ export async function sniffParse(csv: string): Promise<{ header: any[]; rows: an
   const [columns, ...fileSample] = records
 
   return {
+    dialect: csvDialect,
     header: columns,
     rows: fileSample,
   }
