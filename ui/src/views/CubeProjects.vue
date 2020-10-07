@@ -1,8 +1,20 @@
 <template>
   <div>
-    <h2 class="title">
-      Cube projects
-    </h2>
+    <div class="level">
+      <div class="level-left">
+        <div class="level-item">
+          <h2 class="title">
+            Cube projects
+          </h2>
+        </div>
+        <div v-if="projectsCollection" class="level-item">
+          <router-link v-if="projectsCollection.actions.create" :to="{ name: 'CubeProjectNew' }" class="button">
+            <b-icon icon="plus" />
+            <span>{{ projectsCollection.actions.create.title }}</span>
+          </router-link>
+        </div>
+      </div>
+    </div>
     <div v-if="projects && projects.length > 0" class="panel">
       <router-link
         v-for="project in projects"
@@ -17,6 +29,8 @@
       No projects yet
     </p>
     <b-loading v-else active :is-full-page="false" />
+
+    <router-view v-if="projectsCollection" />
   </div>
 </template>
 
@@ -27,6 +41,7 @@ import { mapState } from 'vuex'
 
 export default Vue.extend({
   name: 'CubeProjects',
+  components: {},
 
   async mounted () {
     await this.$store.dispatch('cubeProjects/fetchCollection')

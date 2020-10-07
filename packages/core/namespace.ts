@@ -5,7 +5,8 @@ type CubeCreatorClass =
   'CubeProject' |
   'ProjectsCollection' |
   'CsvMapping' |
-  'EntryPoint'
+  'EntryPoint' |
+  'CreateProjectAction'
 
 type CubeCreatorProperty =
   'projectSourceKind' |
