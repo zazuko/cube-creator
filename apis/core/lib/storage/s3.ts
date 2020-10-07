@@ -9,6 +9,7 @@ const logError = log.extend('s3').extend('error')
 
 const s3 = new aws.S3({
   endpoint: env.AWS_S3_ENDPOINT,
+  s3ForcePathStyle: true,
 })
 
 const defaultS3Options = {
@@ -32,11 +33,15 @@ export async function deleteFile(path: string): Promise<PromiseResult<aws.S3.Del
   }).promise()
 }
 
-export async function loadFile(path: string): Promise<Readable | null> {
+export async function loadFile(path: string, stream?: true): Promise<Readable | string | null> {
   const file = await s3.getObject({
     ...defaultS3Options,
     Key: path,
   }).promise()
+
+  if (file.Body && !stream) {
+    return Promise.resolve(file.Body.toString())
+  }
 
   if (file.Body instanceof Buffer) {
     const readable = new Readable()
