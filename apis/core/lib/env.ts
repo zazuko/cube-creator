@@ -28,6 +28,10 @@ type ENV_VARS =
   | 'STORE_UPDATE_ENDPOINT'
   | 'STORE_GRAPH_ENDPOINT'
   | 'API_CORE_BASE'
+  | 'AWS_S3_ENDPOINT'
+  | 'AWS_S3_BUCKET'
+  | 'AWS_ACCESS_KEY_ID'
+  | 'AWS_SECRET_ACCESS_KEY'
 
 export default new Proxy(process.env, handler) as typeof process['env'] & Record<ENV_VARS, string> & {
   has(name: ENV_VARS): boolean

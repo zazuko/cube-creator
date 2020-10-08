@@ -2,8 +2,7 @@ import { GraphPointer } from 'clownface'
 import { rdfs, rdf, hydra } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import { ResourceStore } from '../../ResourceStore'
-import { cubeProject, csvMapping } from '../identifiers'
-import $rdf from 'rdf-ext'
+import { cubeProject, csvMapping, csvSourceCollection } from '../identifiers'
 
 interface CreateProjectCommand {
   resource: GraphPointer
@@ -29,11 +28,19 @@ export async function createProject({
     project.addOut(cc.csvMapping, mapping)
 
     store
-      .create($rdf.namedNode(mapping.value + '/source'))
+      .create(csvSourceCollection(mapping))
       .addOut(rdf.type, [cc.CSVSourceCollection, hydra.Collection])
       .addOut(hydra.title, 'CSV-Sources')
+      .addOut(cc.csvMapping, mapping)
       .addOut(hydra.manages, manages => {
-        manages.addOut([hydra.property, rdf.type], [rdf.type, cc.CSVSource])
+        // ?member rdf:type cc:CSVSource
+        manages.addOut([hydra.property], [rdf.type])
+        manages.addOut([hydra.object], [cc.CSVSource])
+      })
+      .addOut(hydra.manages, manages => {
+        // ?member cc:csvMapping <mapping>
+        manages.addOut([hydra.object], mapping)
+        manages.addOut([hydra.property], [cc.csvMapping])
       })
   }
 
