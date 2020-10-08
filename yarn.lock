@@ -1000,10 +1000,10 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
-"@hydrofoil/labyrinth@^0.1.4":
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/@hydrofoil/labyrinth/-/labyrinth-0.1.4.tgz#c9c7e8bbf01dfcbcb39da61eb653f59b0b543736"
-  integrity sha512-3C8lYS6Dck3PrOdKTuQkkphGes2Q4CL0ahZs2xZi9GMcYOg9TX4w11+c7fOcdHBF6gx8AWKmykdwMRxjdSAAzQ==
+"@hydrofoil/labyrinth@^0.1.9":
+  version "0.1.9"
+  resolved "https://registry.yarnpkg.com/@hydrofoil/labyrinth/-/labyrinth-0.1.9.tgz#eed459b1fa53e0a6df1e5bad166047610486a52e"
+  integrity sha512-wucIDMOdAJjdR9f6L4En/lK05D1lkBwntQX9Iw2qqslm1D47mufwKmBwp0xfneZzjT70qKU8Dy+nMNLgyt/lkA==
   dependencies:
     "@fcostarodrigo/walk" "^5.0.0"
     "@rdfine/hydra" "^0.3.12"

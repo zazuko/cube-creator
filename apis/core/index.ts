@@ -33,6 +33,8 @@ async function main() {
       endpointUrl: env.STORE_QUERY_ENDPOINT,
       updateUrl: env.STORE_UPDATE_ENDPOINT,
       storeUrl: env.STORE_GRAPH_ENDPOINT,
+      user: env.maybe.STORE_ENDPOINTS_USERNAME,
+      password: env.maybe.STORE_ENDPOINTS_PASSWORD,
     },
   })
 
