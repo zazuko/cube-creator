@@ -1,5 +1,5 @@
 import { Hydra } from 'alcaeus/web'
-import { HydraResource } from 'alcaeus'
+import { Resource } from 'alcaeus'
 import store from '@/store'
 import { APIError } from './errors'
 import { apiResourceMixin } from './mixins/ApiResource'
@@ -29,7 +29,7 @@ Hydra.defaultHeaders = () => {
 }
 
 export const api = {
-  async fetchResource (url: string): Promise<HydraResource> {
+  async fetchResource (url: string): Promise<Resource> {
     const response = await Hydra.loadResource(url.replace(segmentSeparator, '/'))
 
     if (response.response?.xhr.status !== 200) {

@@ -1,10 +1,10 @@
-import { HydraResource } from 'alcaeus'
+import { Resource } from 'alcaeus'
 import { ActionTree, MutationTree, GetterTree } from 'vuex'
 import { api } from '@/api'
 import { RootState } from '../types'
 
 export interface APIState {
-  entrypoint: null | HydraResource,
+  entrypoint: null | Resource,
 }
 
 const initialState = {

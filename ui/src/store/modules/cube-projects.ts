@@ -1,11 +1,11 @@
-import { HydraResource } from 'alcaeus'
+import { Collection } from 'alcaeus'
 import { ActionTree, MutationTree, GetterTree } from 'vuex'
 import { api } from '@/api'
 import { RootState } from '../types'
 import * as ns from '@cube-creator/core/namespace'
 
 export interface CubeProjectsState {
-  collection: null | HydraResource,
+  collection: null | Collection,
 }
 
 const initialState = {

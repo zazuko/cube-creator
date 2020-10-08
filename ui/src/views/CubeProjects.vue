@@ -20,7 +20,8 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { Collection } from 'alcaeus'
 import Vue from 'vue'
 import { mapState } from 'vuex'
 
@@ -33,13 +34,13 @@ export default Vue.extend({
 
   computed: {
     ...mapState({
-      projectsCollection: (state) => state.cubeProjects.collection
+      projectsCollection: (state: any): Collection => state.cubeProjects.collection
     }),
 
     projects () {
       if (!this.projectsCollection) return null
 
-      return this.projectsCollection.members
+      return this.projectsCollection.member
     }
   }
 })
