@@ -1,12 +1,12 @@
-import { Collection } from 'alcaeus'
 import { ActionTree, MutationTree, GetterTree } from 'vuex'
 import { api } from '@/api'
 import { RootState } from '../types'
 import { rdfs } from '@tpluscode/rdf-ns-builders'
 import * as ns from '@cube-creator/core/namespace'
+import { ProjectsCollection } from '@/types'
 
 export interface CubeProjectsState {
-  collection: null | Collection,
+  collection: null | ProjectsCollection,
 }
 
 const initialState = {
@@ -28,7 +28,7 @@ const actions: ActionTree<CubeProjectsState, RootState> = {
   },
 
   async create (context, formData) {
-    const operation = context.state.collection?.actions?.create
+    const operation = context.state.collection?.actions?.create ?? null
     // TODO: Move this close to the resource definition
     const data = {
       '@context': {
