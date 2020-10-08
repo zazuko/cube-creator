@@ -1,12 +1,12 @@
 import { GraphPointer } from 'clownface'
-import { rdf, hydra, dbo, schema } from '@tpluscode/rdf-ns-builders'
+import { rdf, hydra, schema } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import { ResourceStore } from '../../ResourceStore'
 import { Readable } from 'stream'
 import * as id from '../identifiers'
 import { saveFile } from '../../storage/s3'
 import { NamedNode } from 'rdf-js'
-import { namedNode } from 'rdf-ext'
+import $rdf from 'rdf-ext'
 import env from '../../env'
 
 interface UploadCSVCommand {
@@ -29,7 +29,7 @@ export async function uploadFile({
   const csvSource = store
     .create(id.csvSource(csvMapping, fileName))
     .addOut(schema.name, fileName)
-    .addOut(schema.contentUrl, namedNode(upload.Location))
+    .addOut(schema.contentUrl, $rdf.namedNode(upload.Location))
     .addOut(rdf.type, [cc.CSVSource, hydra.Resource])
     .addOut(cc.csvMapping, csvMapping)
 
