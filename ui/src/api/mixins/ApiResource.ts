@@ -1,8 +1,8 @@
 import { Constructor } from '@tpluscode/rdfine'
 import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 
-declare module 'alcaeus/Resources' {
-  export interface HydraResource {
+declare module '@tpluscode/rdfine' {
+  export interface RdfResource {
     clientPath: string
   }
 }

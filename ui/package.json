@@ -14,7 +14,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@fortawesome/vue-fontawesome": "^2.0.0",
     "@tpluscode/rdfine": "^0.5.9",
-    "alcaeus": "1.0.0-beta.18",
+    "alcaeus": "1.0.0-RC.0",
     "buefy": "^0.9.2",
     "core-js": "^3.6.5",
     "oidc-client": "^1.11.0-beta.2",
