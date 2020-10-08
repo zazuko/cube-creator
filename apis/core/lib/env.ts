@@ -6,6 +6,10 @@ const handler = {
       }
     }
 
+    if (prop === 'maybe') {
+      return env
+    }
+
     if (prop === 'production') {
       return env.NODE_ENV !== 'development'
     }
@@ -27,9 +31,16 @@ type ENV_VARS =
   | 'STORE_QUERY_ENDPOINT'
   | 'STORE_UPDATE_ENDPOINT'
   | 'STORE_GRAPH_ENDPOINT'
+  | 'STORE_ENDPOINTS_USERNAME'
+  | 'STORE_ENDPOINTS_PASSWORD'
   | 'API_CORE_BASE'
 
-export default new Proxy(process.env, handler) as typeof process['env'] & Record<ENV_VARS, string> & {
+type KnownVariables = {
+  [P in ENV_VARS]: string
+}
+
+export default new Proxy(process.env, handler) as typeof process['env'] & KnownVariables & {
   has(name: ENV_VARS): boolean
   production: boolean
+  maybe: Partial<KnownVariables>
 }
