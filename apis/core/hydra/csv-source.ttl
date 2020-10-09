@@ -3,8 +3,6 @@ PREFIX cc:    <https://cube-creator.zazuko.com/vocab#>
 prefix hydra: <http://www.w3.org/ns/hydra/core#>
 prefix code:  <https://code.described.at/>
 
-cc:CSVSourceCollection a hydra:Class .
-
 cc:CSVSourceCollection
   a
     hydra:Class ;

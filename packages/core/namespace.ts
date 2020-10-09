@@ -13,7 +13,8 @@ type CubeCreatorProperty =
   'projectSourceKind' |
   'projects' |
   'csvMapping' |
-  'csvSource'
+  'csvSource' |
+  'csvSourceCollection'
 
 type CubeCreatorNamespace = Record<CubeCreatorClass | CubeCreatorProperty, NamedNode>
 

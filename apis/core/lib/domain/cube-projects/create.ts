@@ -27,7 +27,7 @@ export async function createProject({
 
     project.addOut(cc.csvMapping, mapping)
 
-    store
+    const collection = store
       .create(csvSourceCollection(mapping))
       .addOut(rdf.type, [cc.CSVSourceCollection, hydra.Collection])
       .addOut(hydra.title, 'CSV-Sources')
@@ -42,6 +42,8 @@ export async function createProject({
         manages.addOut([hydra.object], mapping)
         manages.addOut([hydra.property], [cc.csvMapping])
       })
+
+    mapping.addOut(cc.csvSourceCollection, collection)
   }
 
   await store.save()
