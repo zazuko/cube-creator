@@ -6,6 +6,12 @@ import ToQuadsTransform from 'rdf-transform-triple-to-quad'
 import { CONSTRUCT } from '@tpluscode/sparql-builder'
 import TermMap from '@rdfjs/term-map'
 import mergeStreams from 'merge-stream'
+import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
+import { warn } from '@hydrofoil/labyrinth/lib/logger'
+
+interface ResourceCreationOptions {
+  implicitlyDereferencable?: boolean
+}
 
 /**
  * Represents an in-memory resource store where each resource is a graph pointer.
@@ -24,7 +30,12 @@ export interface ResourceStore {
   /**
    * Creates a new resource a puts in the in-memory store
    */
-  create(id: NamedNode): GraphPointer<NamedNode>
+  create(id: NamedNode, options?: ResourceCreationOptions): GraphPointer<NamedNode>
+
+  /**
+   * Create a new collection member, initialized according to `hydra:manages` entries
+   */
+  createMember(collection: NamedNode, id: NamedNode, options?: ResourceCreationOptions): Promise<GraphPointer<NamedNode>>
 
   /**
    * Replaces the resources in the triple store by inserting default graph
@@ -71,13 +82,42 @@ export default class implements ResourceStore {
     return this.__client.store.put(mergeStreams(streams) as any)
   }
 
-  create(id: NamedNode): GraphPointer<NamedNode> {
+  create(id: NamedNode, { implicitlyDereferencable = true }: ResourceCreationOptions = {}): GraphPointer<NamedNode> {
     if (this.__resources.has(id)) {
       throw new Error('Resource')
     }
 
     const pointer = cf({ dataset: $rdf.dataset(), term: id })
+
+    if (implicitlyDereferencable) {
+      pointer.addOut(rdf.type, hydra.Resource)
+    }
+
     this.__resources.set(id, pointer)
     return pointer
+  }
+
+  async createMember(collectionId: NamedNode, id: NamedNode, options?: ResourceCreationOptions): Promise<GraphPointer<NamedNode>> {
+    const member = this.create(id, options)
+    const collection = await this.get(collectionId)
+
+    collection.out(hydra.manages).forEach((manages) => {
+      const property = manages.out(hydra.property).term
+      const subject = manages.out(hydra.subject).term
+      const object = manages.out(hydra.object).term
+
+      if (object && subject) {
+        warn('hydra:manages cannot have both subject and object. Got %s and %s respectively', subject.value, object.value)
+        return
+      }
+
+      if (property && object) {
+        member.addOut(property, object)
+      } else if (property && subject) {
+        member.addIn(property, subject)
+      }
+    })
+
+    return member
   }
 }
