@@ -1,27 +1,28 @@
-import { NamedNode } from 'rdf-js'
 import { GraphPointer } from 'clownface'
-import { rdfs, rdf, hydra, dcterms } from '@tpluscode/rdf-ns-builders'
+import { NamedNode } from 'rdf-js'
+import { rdfs, rdf, dcterms } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import { ResourceStore } from '../../ResourceStore'
 import { cubeProject, csvMapping } from '../identifiers'
 
 interface CreateProjectCommand {
+  projectsCollection: NamedNode
   resource: GraphPointer
   store: ResourceStore
   user: NamedNode
 }
 
-export async function createProject({ resource, store, user }: CreateProjectCommand): Promise<GraphPointer> {
+export async function createProject({ projectsCollection, resource, store, user }: CreateProjectCommand): Promise<GraphPointer> {
   const label = resource.out(rdfs.label).term!
 
-  const project = store.create(cubeProject(label.value))
-    .addOut(rdfs.label, label)
-    .addOut(rdf.type, [cc.CubeProject, hydra.Resource])
+  const project = await store.createMember(projectsCollection, cubeProject(label.value))
+
+  project.addOut(rdfs.label, label)
     .addOut(dcterms.creator, user)
 
   if (resource.out(cc.projectSourceKind).value === 'CSV') {
     const mapping = store.create(csvMapping(project))
-      .addOut(rdf.type, [cc.CsvMapping, hydra.Resource])
+      .addOut(rdf.type, cc.CsvMapping)
 
     project.addOut(cc.csvMapping, mapping)
   }

@@ -7,6 +7,8 @@ import StreamQuery from 'sparql-http-client/StreamQuery'
 import StreamStore from 'sparql-http-client/StreamStore'
 import ResourceStore from '../lib/ResourceStore'
 import { ex } from './support/namespace'
+import { hydra, rdf, schema } from '@tpluscode/rdf-ns-builders'
+import { manages } from '../lib/resources/hydraManages'
 
 describe('ResourceStore', () => {
   let client: StreamClient
@@ -73,6 +75,77 @@ describe('ResourceStore', () => {
 
       // then
       expect(() => store.create(ex.Foo)).to.throw
+    })
+
+    it('adds hydra:Resource type by default', () => {
+      // given
+      const store = new ResourceStore(client)
+
+      // when
+      const foo = store.create(ex.Foo)
+
+      // then
+      expect(foo.out(rdf.type).term).to.deep.eq(hydra.Resource)
+    })
+
+    it('does not add hydra:Resource type when flag is false', () => {
+      // given
+      const store = new ResourceStore(client)
+
+      // when
+      const foo = store.create(ex.Foo, {
+        implicitlyDereferencable: false,
+      })
+
+      // then
+      expect(foo.out(rdf.type).terms).to.have.length(0)
+    })
+  })
+
+  describe('createMember', () => {
+    it('asserts triples using hydra:manages patterns', async () => {
+      // given
+      const store = new ResourceStore(client)
+      store.create($rdf.namedNode('people'))
+        .addOut(...manages({
+          property: rdf.type,
+          object: schema.Person,
+        }))
+        .addOut(...manages({
+          property: schema.employee,
+          subject: ex.Company,
+        }))
+
+      // when
+      const person = await store.createMember($rdf.namedNode('people'), ex.Foo)
+
+      // then
+      expect(person.out(rdf.type).terms).to.deep.contain(schema.Person)
+      expect(person.in(schema.employee).term).to.deep.equal(ex.Company)
+    })
+
+    it('does not assert anything when hydra:manages are malformed', async () => {
+      // given
+      const store = new ResourceStore(client)
+      store.create($rdf.namedNode('people'))
+        .addOut(hydra.manages, manages => {
+          manages.addOut(hydra.property, rdf.type)
+        })
+        .addOut(hydra.manages, manages => {
+          manages
+            .addOut(hydra.subject, ex.Company)
+            .addOut(hydra.property, schema.employee)
+            .addOut(hydra.object, ex.Bogus)
+        })
+
+      // when
+      const person = await store.createMember($rdf.namedNode('people'), ex.Foo, {
+        implicitlyDereferencable: false,
+      })
+
+      // then
+      expect(person.out().terms).to.have.length(0)
+      expect(person.in().terms).to.have.length(0)
     })
   })
 

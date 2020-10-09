@@ -13,6 +13,7 @@ export const post = protectedResource(
     }
 
     const project = await createProject({
+      projectsCollection: req.hydra.resource.term,
       resource: await req.resource(),
       store: req.app.resources(),
       user,

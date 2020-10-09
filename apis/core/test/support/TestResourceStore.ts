@@ -2,7 +2,7 @@ import { NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import clownface, { GraphPointer } from 'clownface'
 import TermMap from '@rdfjs/term-map'
-import { ResourceStore } from '../../lib/ResourceStore'
+import Impl, { ResourceStore } from '../../lib/ResourceStore'
 
 export class TestResourceStore implements ResourceStore {
   private readonly resources: TermMap<NamedNode, GraphPointer<NamedNode>>
@@ -26,6 +26,10 @@ export class TestResourceStore implements ResourceStore {
 
   create(id: NamedNode): GraphPointer<NamedNode> {
     return clownface({ dataset: $rdf.dataset() }).namedNode(id)
+  }
+
+  async createMember(collection: NamedNode, id: NamedNode): Promise<GraphPointer<NamedNode>> {
+    return Impl.prototype.createMember.call(this, collection, id)
   }
 
   save(): Promise<void> {
