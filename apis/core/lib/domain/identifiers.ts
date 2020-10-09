@@ -13,3 +13,7 @@ export function cubeProject(label: string): NamedNode {
 export function csvMapping(project: GraphPointer<NamedNode>): NamedNode {
   return $rdf.namedNode(`${project.value}/csv-mapping`)
 }
+
+export function creatorUser(user: string): NamedNode {
+  return $rdf.namedNode(`${env.API_CORE_BASE}user/${user}`)
+}
