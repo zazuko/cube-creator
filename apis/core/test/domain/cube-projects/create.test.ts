@@ -9,7 +9,7 @@ import { TestResourceStore } from '../../support/TestResourceStore'
 
 describe('domain/cube-projects/create', () => {
   let store: TestResourceStore
-  const user = 'userId'
+  const user = $rdf.namedNode('userId')
 
   beforeEach(() => {
     store = new TestResourceStore([])
@@ -27,7 +27,7 @@ describe('domain/cube-projects/create', () => {
     // then
     expect(project.out(rdfs.label).value).to.eq('Foo bar project')
     expect(project.term.value).to.match(/\/cube-project\/foo-bar-project-(.+)$/)
-    expect(project.out(dcterms.creator).value).to.match(new RegExp(`/user/${user}$`))
+    expect(project.out(dcterms.creator).term).to.deep.eq(user)
   })
 
   it('creates resource with correct rdf types', async () => {

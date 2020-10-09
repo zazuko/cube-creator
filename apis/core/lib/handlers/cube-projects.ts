@@ -6,7 +6,7 @@ import { createProject } from '../domain/cube-projects/create'
 export const post = protectedResource(
   shaclValidate,
   asyncMiddleware(async (req, res) => {
-    const user = req.user
+    const user = req.user?.id
 
     if (!user) {
       throw new Error('User is not defined')
@@ -15,7 +15,7 @@ export const post = protectedResource(
     const project = await createProject({
       resource: await req.resource(),
       store: req.app.resources(),
-      user: user.sub,
+      user,
     })
 
     res.status(201)
