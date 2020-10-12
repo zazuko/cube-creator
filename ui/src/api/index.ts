@@ -54,8 +54,7 @@ export const api = {
     const serializedData = data instanceof File ? data : JSON.stringify(data)
     const response = await operation.invoke(serializedData, headers)
 
-    const status = response.response?.xhr.status ?? 0
-    if (![200, 201].includes(status)) {
+    if (!response.response?.xhr.ok) {
       throw await APIError.fromResponse(response)
     }
 
