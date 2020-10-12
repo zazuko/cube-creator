@@ -16,6 +16,4 @@ export default function Mixin<Base extends Constructor> (base: Base) {
   }
 }
 
-Mixin.shouldApply = function (resource: RdfResource): boolean {
-  return resource.types.has(ns.cc.ProjectsCollection)
-}
+Mixin.appliesTo = ns.cc.ProjectsCollection
