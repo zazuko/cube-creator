@@ -9,6 +9,8 @@ import Authenticated from '@/views/Authenticated.vue'
 import CubeProjects from '@/views/CubeProjects.vue'
 import CubeProject from '@/views/CubeProject.vue'
 import CubeProjectNew from '@/views/CubeProjectNew.vue'
+import CSVMapping from '@/views/CSVMapping.vue'
+import CubeDesigner from '@/views/CubeDesigner.vue'
 import PageNotFound from '@/views/PageNotFound.vue'
 import Logout from '@/views/Logout.vue'
 
@@ -37,7 +39,19 @@ const routes: Array<RouteConfig> = [
         path: '/cube-projects/:id',
         name: 'CubeProject',
         component: CubeProject,
-      }
+        children: [
+          {
+            path: 'csv-mapping',
+            name: 'CSVMapping',
+            component: CSVMapping,
+          },
+          {
+            path: 'metadata',
+            name: 'CubeDesigner',
+            component: CubeDesigner,
+          },
+        ],
+      },
     ],
   },
   {
