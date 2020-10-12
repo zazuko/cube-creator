@@ -44,6 +44,8 @@ With Class cc:CubeProject {
                     ```
                 } => {
                     Expect Status 201
+                    Expect Type <https://cube-creator.zazuko.com/vocab#CSVSource>
+                    Expect Property <http://schema.org/associatedMedia>
                 }
             }
         }

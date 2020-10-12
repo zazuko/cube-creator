@@ -1,4 +1,4 @@
-import { cc } from '@cube-creator/core/namespace'
+import { schema } from '@tpluscode/rdf-ns-builders'
 import { NamedNode } from 'rdf-js'
 import { ResourceStore } from '../../ResourceStore'
 import { loadFileHeadString } from '../../storage/s3'
@@ -13,11 +13,12 @@ export async function getCSVHead({
   store,
 }: GetCSVHeadCommand): Promise<string> {
   const csvSource = await store.get(resource)
-  const s3Key = csvSource.out(cc.s3Key).term?.value
+  const path = csvSource.out(schema.associatedMedia).out(schema.identifier).term
+    ?.value
 
-  if (!s3Key) {
+  if (!path) {
     throw new Error('Key to file on S3 not defined')
   }
 
-  return loadFileHeadString(s3Key)
+  return loadFileHeadString(path)
 }
