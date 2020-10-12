@@ -30,6 +30,7 @@ export async function uploadFile({
     .create(id.csvSource(csvMapping, fileName))
     .addOut(schema.name, fileName)
     .addOut(schema.contentUrl, $rdf.namedNode(upload.Location))
+    .addOut(cc.s3Key, key)
     .addOut(rdf.type, [cc.CSVSource, hydra.Resource])
     .addOut(cc.csvMapping, csvMapping)
 

@@ -50,3 +50,22 @@ With Class cc:CubeProject {
     }
 }
 
+
+With Class cc:CSVSource {
+    Expect Operation cc:GetCSVSourceAction {
+        Invoke {
+            Content-Type "text/csv"
+
+        } => {
+            Expect Status 200
+            Expect Header Content-Type 'text/csv; charset=utf-8' 
+        }
+        Invoke { 
+            Content-Type "application/ld+json"
+        } => {
+            Expect Status 200
+            Expect Header Content-Type "application/ld+json; charset=utf-8"
+            Expect Type <https://cube-creator.zazuko.com/vocab#CSVSource>
+        }
+    }
+}

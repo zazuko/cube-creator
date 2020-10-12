@@ -1,12 +1,13 @@
 import asyncMiddleware from 'middleware-async'
-import { protectedResource } from '@hydrofoil/labyrinth/resource'
+import * as labyrinth from '@hydrofoil/labyrinth/resource'
 import { shaclValidate } from '../middleware/shacl'
 import { uploadFile } from '../domain/csv-source/upload'
 import clownface from 'clownface'
 import { cc } from '@cube-creator/core/namespace'
 import { parse } from 'content-disposition'
+import { getCSVHead } from '../domain/csv-source/get-head'
 
-export const post = protectedResource(
+export const post = labyrinth.protectedResource(
   shaclValidate,
   asyncMiddleware(async (req, res) => {
     const csvMapping = clownface(req.hydra.resource).out(cc.csvMapping).term
@@ -20,7 +21,9 @@ export const post = protectedResource(
     }
 
     const contentDisposition = req.headers['content-disposition']
-    const fileName = contentDisposition ? parse(contentDisposition).parameters.filename : new Date().toISOString()
+    const fileName = contentDisposition
+      ? parse(contentDisposition).parameters.filename
+      : new Date().toISOString()
 
     const fileLocation = await uploadFile({
       file: req.read(),
@@ -33,3 +36,25 @@ export const post = protectedResource(
     await res.dataset(fileLocation.dataset)
   }),
 )
+
+export const getCSVSource = labyrinth.protectedResource(
+  shaclValidate,
+  asyncMiddleware(async (req, res, next) => {
+    if (req.headers['content-type'] !== 'text/csv') {
+      next()
+      return
+    }
+
+    const csvSource = req.hydra.resource.term
+
+    const head = await getCSVHead({
+      resource: csvSource,
+      store: req.app.resources(),
+    })
+
+    res.type('text/csv')
+    res.send(head)
+  }),
+)
+
+export const get = labyrinth.protectedResource(getCSVSource, labyrinth.get)
