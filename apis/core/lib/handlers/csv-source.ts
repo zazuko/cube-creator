@@ -37,7 +37,7 @@ export const post = labyrinth.protectedResource(
   }),
 )
 
-export const getCSVSource = labyrinth.protectedResource(
+const getCSVSource = labyrinth.protectedResource(
   shaclValidate,
   asyncMiddleware(async (req, res, next) => {
     if (req.headers['content-type'] !== 'text/csv') {
