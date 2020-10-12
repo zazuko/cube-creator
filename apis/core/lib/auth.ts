@@ -35,6 +35,10 @@ const createJwtHandler = (credentialsRequired: boolean, jwksUri: string) => jwt(
 function devAuthHandler(req: Request, res: Response, next: NextFunction) {
   const sub = req.header('X-User')
 
+  if (req.user) {
+    return next()
+  }
+
   if (sub) {
     const permissionHeader = req.headers['x-permission']
     const permissions = typeof permissionHeader === 'string' ? permissionHeader.split(',').map(s => s.trim()) : permissionHeader || []
