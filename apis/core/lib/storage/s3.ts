@@ -16,10 +16,7 @@ const defaultS3Options = {
   Bucket: String(env.AWS_S3_BUCKET),
 }
 
-export async function saveFile(
-  path: string,
-  contents: Readable | string
-): Promise<aws.S3.ManagedUpload.SendData> {
+export async function saveFile(path: string, contents: Readable | string): Promise<aws.S3.ManagedUpload.SendData> {
   const upload = s3.upload({
     ...defaultS3Options,
     Body: contents,

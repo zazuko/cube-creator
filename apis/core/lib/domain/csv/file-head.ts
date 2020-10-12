@@ -47,7 +47,7 @@ export function loadFileHeadString(
     }
   })
 
-  return new Promise<string>(function(resolve, reject) {
+  return new Promise<string>(function (resolve, reject) {
     stream.on('close', () => resolve(lines.join('\n')))
     stream.on('error', reject)
   })
