@@ -34,6 +34,7 @@
 
 <script>
 import Vue from 'vue'
+import { mapState } from 'vuex'
 import SidePane from '@/components/SidePane.vue'
 
 export default Vue.extend({
@@ -55,9 +56,9 @@ export default Vue.extend({
   },
 
   computed: {
-    operation () {
-      return this.$parent.projectsCollection.actions.create
-    },
+    ...mapState({
+      operation: (state) => state.cubeProjects.collection?.actions.create,
+    }),
 
     title () {
       return this.operation?.title
