@@ -1,7 +1,8 @@
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { NamedNode } from 'rdf-js'
 import { ResourceStore } from '../../ResourceStore'
-import { loadFileHeadString } from '../../storage/s3'
+import { loadFile } from '../../storage/s3'
+import { loadFileHeadString } from '../csv/file-head'
 
 interface GetCSVHeadCommand {
   resource: NamedNode
@@ -20,5 +21,11 @@ export async function getCSVHead({
     throw new Error('Key to file on S3 not defined')
   }
 
-  return loadFileHeadString(path)
+  const stream = await loadFile(path)
+
+  if (!stream) {
+    throw new Error(`Can not load file stream for ${path}`)
+  }
+
+  return loadFileHeadString(stream)
 }
