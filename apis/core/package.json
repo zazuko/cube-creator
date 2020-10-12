@@ -39,6 +39,7 @@
     "rdf-validate-shacl": "^0.2.3",
     "sparql-http-client": "^2.2.2",
     "string-to-stream": "^3.0.1",
+    "type-is": "^1.6.18",
     "url-slugify": "^1.0.6"
   },
   "devDependencies": {
