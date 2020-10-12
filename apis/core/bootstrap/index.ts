@@ -6,6 +6,7 @@ import { cubeProjects } from './cube-projects'
 import { log } from '../lib/log'
 import { entrypoint } from './entrypoint'
 import shapes from './shapes'
+import env from '../lib/env'
 
 const parser = new Parser()
 const initialResources = [cubeProjects, entrypoint, ...shapes]
@@ -13,6 +14,8 @@ const initialResources = [cubeProjects, entrypoint, ...shapes]
 export async function bootstrap(storeUrl: string, base: string) {
   const client = new StreamClient({
     storeUrl,
+    user: env.maybe.STORE_ENDPOINTS_USERNAME,
+    password: env.maybe.STORE_ENDPOINTS_PASSWORD,
   })
 
   const dataset = await initialResources.reduce((previous, turtle) => {
