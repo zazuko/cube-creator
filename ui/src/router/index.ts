@@ -8,6 +8,8 @@ import store from '@/store'
 import Authenticated from '@/views/Authenticated.vue'
 import CubeProjects from '@/views/CubeProjects.vue'
 import CubeProject from '@/views/CubeProject.vue'
+import CubeProjectNew from '@/views/CubeProjectNew.vue'
+import PageNotFound from '@/views/PageNotFound.vue'
 
 Vue.use(VueRouter)
 
@@ -21,6 +23,13 @@ const routes: Array<RouteConfig> = [
         path: '/cube-projects',
         name: 'CubeProjects',
         component: CubeProjects,
+        children: [
+          {
+            path: 'new',
+            name: 'CubeProjectNew',
+            component: CubeProjectNew,
+          },
+        ],
       },
       {
         path: '/cube-projects/:id',
@@ -39,6 +48,11 @@ const routes: Array<RouteConfig> = [
     name: 'OidcError',
     component: OidcError,
   },
+  {
+    path: '*',
+    name: 'PageNotFound',
+    component: PageNotFound,
+  }
 ]
 
 const router = new VueRouter({
