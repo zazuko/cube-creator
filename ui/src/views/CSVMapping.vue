@@ -83,7 +83,7 @@ export default Vue.extend({
       sourcesCollection: (state: any): SourcesCollection | null => state.cubeProjects.sourcesCollection,
     }),
 
-    sources (): Source[] {
+    sources () {
       return this.sourcesCollection?.member || []
     },
 
