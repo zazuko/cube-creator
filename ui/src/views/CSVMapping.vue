@@ -44,9 +44,7 @@
     </div>
 
     <div v-if="sources.length > 0" class="sources">
-      <div v-for="source in sources" :key="source.id.value" class="source">
-        {{ source.name }}
-      </div>
+      <csv-source-mapping v-for="source in sources" :key="source.id.value" :source="source" />
     </div>
     <p v-else>
       You haven't uploaded any CSV file yet.
@@ -67,9 +65,11 @@
 import Vue from 'vue'
 import { mapState } from 'vuex'
 import { CSVMapping, Source, SourcesCollection } from '@/types'
+import CsvSourceMapping from '@/components/CsvSourceMapping.vue'
 
 export default Vue.extend({
   name: 'CSVMapping',
+  components: { CsvSourceMapping },
 
   async mounted () {
     const project = this.$store.state.cubeProjects.project
