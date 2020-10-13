@@ -4,6 +4,7 @@ import store from '@/store'
 import { APIError } from './errors'
 import { apiResourceMixin } from './mixins/ApiResource'
 import ProjectsCollectionMixin from './mixins/ProjectsCollection'
+import ProjectMixin from './mixins/Project'
 
 const rootURL = window.APP_CONFIG.apiCoreBase
 const segmentSeparator = '!!' // used to replace slash in URI to prevent escaping
@@ -17,6 +18,7 @@ Hydra.baseUri = rootURL
 
 Hydra.resources.factory.addMixin(apiResourceMixin(rootURL, segmentSeparator))
 Hydra.resources.factory.addMixin(ProjectsCollectionMixin)
+Hydra.resources.factory.addMixin(ProjectMixin)
 
 // Inject the access token in all requests if present
 Hydra.defaultHeaders = () => {
