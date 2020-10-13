@@ -50,7 +50,7 @@ export default Vue.extend({
       error: null,
       projectSourceKinds: [
         { value: 'CSV', label: 'CSV file(s)' },
-        { value: 'Existing Cube', label: 'Existing cube' },
+        { value: 'Existing cube', label: 'Existing cube' },
       ],
     }
   },
