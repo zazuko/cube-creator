@@ -6,7 +6,7 @@
       </p>
       <p>
         <router-link :to="{ name: 'Home' }">
-          Back to home
+          Log in again
         </router-link>
       </p>
     </b-message>
