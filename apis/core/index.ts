@@ -23,6 +23,14 @@ async function main() {
 
   app.get('/ping', (req, res) => res.status(204).end())
 
+  app.get('/', (req, res, next) => {
+    if (req.accepts('text/html')) {
+      res.redirect('/app')
+    } else {
+      next()
+    }
+  })
+
   app.use(resource)
   app.use(await authentication())
   await hydraBox(app, {
