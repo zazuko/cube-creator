@@ -32,7 +32,7 @@ export async function uploadFile({
     .addOut(rdf.type, [cc.CSVSource, hydra.Resource])
     .addOut(cc.csvMapping, csvMapping)
     .addOut(schema.associatedMedia, mediaObject => {
-      mediaObject.addOut(rdf.type, [schema.MediaObject, hydra.Resource])
+      mediaObject.addOut(rdf.type, schema.MediaObject)
         .addOut(schema.identifier, key)
         .addOut(schema.contentUrl, $rdf.namedNode(upload.Location))
     })

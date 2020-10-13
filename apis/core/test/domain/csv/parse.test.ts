@@ -1,6 +1,6 @@
 import { describe, it } from 'mocha'
 import { expect } from 'chai'
-import fss, { promises as fs } from 'fs'
+import { createReadStream, promises as fs } from 'fs'
 import { resolve } from 'path'
 import { sniffParse } from '../../../lib/domain/csv'
 import { loadFileHeadString } from '../../../lib/domain/csv/file-head'
@@ -21,8 +21,8 @@ describe('domain/csv/parse', () => {
     const path = resolve(__dirname, '../../fixtures/CH_yearly_air_immission_basetable.csv')
     const fileContent = await fs.readFile(path)
 
-    const input1 = fileContent.toString()// await loadFileString('test/CH_yearly_air_immission_basetable.csv')
-    const input2 = await loadFileHeadString(fss.createReadStream(path))
+    const input1 = fileContent.toString()
+    const input2 = await loadFileHeadString(createReadStream(path))
 
     expect(input1).not.to.eq(input2)
 
