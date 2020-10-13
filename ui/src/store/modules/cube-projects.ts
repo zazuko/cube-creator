@@ -82,7 +82,10 @@ const actions: ActionTree<CubeProjectsState, RootState> = {
 
   async uploadCSVs (context, files) {
     const operation = context.state.csvMapping?.sourcesCollection.actions.upload ?? null
-    const uploads = files.map((file: File) => api.invokeSaveOperation(operation, file))
+    const uploads = files.map((file: File) => {
+      const headers = { 'content-disposition': `file; filename=${file.name}` }
+      return api.invokeSaveOperation(operation, file, headers)
+    })
 
     return Promise.all(uploads)
   },
