@@ -29,9 +29,13 @@ export async function uploadFile({
   const csvSource = store
     .create(id.csvSource(csvMapping, fileName))
     .addOut(schema.name, fileName)
-    .addOut(schema.contentUrl, $rdf.namedNode(upload.Location))
     .addOut(rdf.type, [cc.CSVSource, hydra.Resource])
     .addOut(cc.csvMapping, csvMapping)
+    .addOut(schema.associatedMedia, mediaObject => {
+      mediaObject.addOut(rdf.type, schema.MediaObject)
+        .addOut(schema.identifier, key)
+        .addOut(schema.contentUrl, $rdf.namedNode(upload.Location))
+    })
 
   csvMapping.addOut(cc.csvSource, csvSource)
 

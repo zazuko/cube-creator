@@ -6793,9 +6793,9 @@ human-signals@^1.1.1:
   resolved "https://registry.yarnpkg.com/human-signals/-/human-signals-1.1.1.tgz#c5b1cd14f50aeae09ab6c59fe63ba3395fe4dfa3"
   integrity sha512-SEQu7vl8KjNL2eoGBLF3+wAjpsNfA9XMlXAYj/3EdaNfAlxKthD1xjEQfGOUhllCGGJVNY34bRr6lPINhNjyZw==
 
-hydra-box@zazuko/hydra-box#load-request-access:
-  version "0.5.0"
-  resolved "https://codeload.github.com/zazuko/hydra-box/tar.gz/1ffbf2bc52444b09e7b9301120258083bebc4739"
+hydra-box@zazuko/hydra-box#api-handler-errors:
+  version "0.5.1"
+  resolved "https://codeload.github.com/zazuko/hydra-box/tar.gz/abb2bd9724df6816f28bb8ce5852ef16b3de0d35"
   dependencies:
     "@rdfjs/data-model" "^1.1.2"
     "@rdfjs/dataset" "^1.0.1"
@@ -6807,6 +6807,7 @@ hydra-box@zazuko/hydra-box#load-request-access:
     clownface "^0.12.1"
     debug "^4.1.1"
     express "^4.17.1"
+    http-errors "^1.8.0"
     middleware-async "^1.2.6"
     promise-the-world "^1.0.1"
     rdf-dataset-ext "^1.0.0"
