@@ -3,9 +3,9 @@ import error from 'http-errors'
 import env from './env'
 import { log, warning } from './log'
 import fetch from 'node-fetch'
-import $rdf from 'rdf-ext'
 import jwt from 'express-jwt'
 import jwksRsa from 'jwks-rsa'
+import * as idOf from './domain/identifiers'
 
 declare module '@hydrofoil/labyrinth' {
   export interface User {
@@ -44,7 +44,6 @@ function devAuthHandler(req: Request, res: Response, next: NextFunction) {
     const permissions = typeof permissionHeader === 'string' ? permissionHeader.split(',').map(s => s.trim()) : permissionHeader || []
 
     req.user = {
-      id: $rdf.namedNode(sub),
       sub,
       permissions,
     }
@@ -53,6 +52,14 @@ function devAuthHandler(req: Request, res: Response, next: NextFunction) {
   }
 
   next(new error.Unauthorized())
+}
+
+function setUserId(req: Request, res: Response, next: NextFunction) {
+  if (req.user && req.user.sub) {
+    req.user.id = idOf.user(req.user.sub)
+  }
+
+  return next()
 }
 
 export default async () => {
@@ -73,6 +80,8 @@ export default async () => {
     log('Enabling dev authentication backdoor')
     router.use(devAuthHandler)
   }
+
+  router.use(setUserId)
 
   return router
 }

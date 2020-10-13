@@ -8,6 +8,9 @@ import store from '@/store'
 import Authenticated from '@/views/Authenticated.vue'
 import CubeProjects from '@/views/CubeProjects.vue'
 import CubeProject from '@/views/CubeProject.vue'
+import CubeProjectNew from '@/views/CubeProjectNew.vue'
+import PageNotFound from '@/views/PageNotFound.vue'
+import Logout from '@/views/Logout.vue'
 
 Vue.use(VueRouter)
 
@@ -16,11 +19,19 @@ const routes: Array<RouteConfig> = [
     path: '/',
     name: 'Home',
     component: Authenticated,
+    redirect: { name: 'CubeProjects' },
     children: [
       {
         path: '/cube-projects',
         name: 'CubeProjects',
         component: CubeProjects,
+        children: [
+          {
+            path: 'new',
+            name: 'CubeProjectNew',
+            component: CubeProjectNew,
+          },
+        ],
       },
       {
         path: '/cube-projects/:id',
@@ -38,6 +49,16 @@ const routes: Array<RouteConfig> = [
     path: '/oidc-error',
     name: 'OidcError',
     component: OidcError,
+  },
+  {
+    path: '*',
+    name: 'PageNotFound',
+    component: PageNotFound,
+  },
+  {
+    path: '/logout',
+    name: 'Logout',
+    component: Logout,
   },
 ]
 

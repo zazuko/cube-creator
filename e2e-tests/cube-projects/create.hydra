@@ -2,6 +2,7 @@ PREFIX api: <https://cube-creator.zazuko.com/vocab#>
 PREFIX hydra: <http://www.w3.org/ns/hydra/core#>
 PREFIX cc: <https://cube-creator.zazuko.com/vocab#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
 
 HEADERS {
   x-user "john-doe"
@@ -28,6 +29,7 @@ With Class api:EntryPoint {
                 Expect Link cc:csvMapping {
                     Expect Type <https://cube-creator.zazuko.com/vocab#CsvMapping>
                 }
+                Expect Property dcterms:creator 
             }
         }
     }

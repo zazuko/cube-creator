@@ -21,3 +21,7 @@ export function csvSourceCollection(csvMapping:GraphPointer<NamedNode>): NamedNo
 export function csvSource(project: GraphPointer<NamedNode>, fileName: string): NamedNode {
   return $rdf.namedNode(`${project.value}/csv-source/${url.slugify(fileName)}`)
 }
+
+export function user(user: string): NamedNode {
+  return $rdf.namedNode(`${env.API_CORE_BASE}user/${user}`)
+}

@@ -7,6 +7,7 @@ const base = new URL(process.env.BASE_URL || '/', window.location.toString())
 
 const oidcSettings: VuexOidcClientSettings = {
   redirectUri: new URL('oidc-callback', base).toString(),
+  postLogoutRedirectUri: new URL('logout', base).toString(),
   responseType: 'code',
   ...oidc,
 }
@@ -14,7 +15,7 @@ const oidcSettings: VuexOidcClientSettings = {
 export function auth (): Module<VuexOidcState, RootState> {
   return vuexOidcCreateStoreModule(oidcSettings, {
     namespaced: true,
-    publicRoutePaths: ['/oidc-error'],
+    publicRoutePaths: ['/oidc-error', '/logout'],
     routeBase: process.env.BASE_URL,
   })
 }

@@ -7,7 +7,8 @@ type CubeCreatorClass =
   'CsvMapping' |
   'EntryPoint' |
   'CSVSource' |
-  'CSVSourceCollection'
+  'CSVSourceCollection' |
+  'CreateProjectAction'
 
 type CubeCreatorProperty =
   'projectSourceKind' |

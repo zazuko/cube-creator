@@ -23,6 +23,14 @@ async function main() {
 
   app.get('/ping', (req, res) => res.status(204).end())
 
+  app.get('/', (req, res, next) => {
+    if (req.accepts('text/html')) {
+      res.redirect('/app')
+    } else {
+      next()
+    }
+  })
+
   app.use(resource)
   app.use(await authentication())
   await hydraBox(app, {
@@ -33,6 +41,8 @@ async function main() {
       endpointUrl: env.STORE_QUERY_ENDPOINT,
       updateUrl: env.STORE_UPDATE_ENDPOINT,
       storeUrl: env.STORE_GRAPH_ENDPOINT,
+      user: env.maybe.STORE_ENDPOINTS_USERNAME,
+      password: env.maybe.STORE_ENDPOINTS_PASSWORD,
     },
   })
 
