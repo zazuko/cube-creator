@@ -18,6 +18,7 @@ const routes: Array<RouteConfig> = [
     path: '/',
     name: 'Home',
     component: Authenticated,
+    redirect: { name: 'CubeProjects' },
     children: [
       {
         path: '/cube-projects',
