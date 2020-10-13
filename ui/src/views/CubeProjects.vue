@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <page-content>
     <div class="level">
       <div class="level-left">
         <div class="level-item">
@@ -31,17 +31,18 @@
     <b-loading v-else active :is-full-page="false" />
 
     <router-view v-if="projectsCollection" />
-  </div>
+  </page-content>
 </template>
 
 <script lang="ts">
 import { Collection } from 'alcaeus'
 import Vue from 'vue'
 import { mapState } from 'vuex'
+import PageContent from '@/components/PageContent.vue'
 
 export default Vue.extend({
   name: 'CubeProjects',
-  components: {},
+  components: { PageContent },
 
   async mounted () {
     await this.$store.dispatch('cubeProjects/fetchCollection')

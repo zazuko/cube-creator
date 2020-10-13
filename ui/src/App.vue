@@ -16,9 +16,3 @@ export default Vue.extend({
   components: { NavBar },
 })
 </script>
-
-<style scoped>
-.main {
-  padding: 0 0.75em;
-}
-</style>

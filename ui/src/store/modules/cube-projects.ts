@@ -3,14 +3,16 @@ import { api } from '@/api'
 import { RootState } from '../types'
 import { rdfs } from '@tpluscode/rdf-ns-builders'
 import * as ns from '@cube-creator/core/namespace'
-import { ProjectsCollection } from '@/types'
+import { Project, ProjectsCollection } from '@/types'
 
 export interface CubeProjectsState {
   collection: null | ProjectsCollection,
+  project: null | Project,
 }
 
 const initialState = {
   collection: null,
+  project: null,
 }
 
 const getters: GetterTree<CubeProjectsState, RootState> = {
@@ -25,6 +27,16 @@ const actions: ActionTree<CubeProjectsState, RootState> = {
 
     const collection = await api.fetchResource(collectionURI.value)
     context.commit('storeCollection', collection)
+  },
+
+  async fetchProject (context, id) {
+    context.commit('storeProject', null)
+
+    const project = await api.fetchResource(id)
+
+    context.commit('storeProject', project)
+
+    return project
   },
 
   async create (context, formData) {
@@ -48,6 +60,10 @@ const actions: ActionTree<CubeProjectsState, RootState> = {
 const mutations: MutationTree<CubeProjectsState> = {
   storeCollection (state, collection) {
     state.collection = collection
+  },
+
+  storeProject (state, project) {
+    state.project = project
   },
 }
 
