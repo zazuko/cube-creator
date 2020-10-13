@@ -8,7 +8,8 @@ type CubeCreatorClass =
   'EntryPoint' |
   'CSVSource' |
   'CSVSourceCollection' |
-  'CreateProjectAction'
+  'CreateProjectAction' |
+  'UploadCSVAction'
 
 type CubeCreatorProperty =
   'projectSourceKind' |

@@ -3,16 +3,20 @@ import { api } from '@/api'
 import { RootState } from '../types'
 import { rdfs } from '@tpluscode/rdf-ns-builders'
 import * as ns from '@cube-creator/core/namespace'
-import { Project, ProjectsCollection } from '@/types'
+import { Project, ProjectsCollection, CSVMapping, SourcesCollection } from '@/types'
 
 export interface CubeProjectsState {
   collection: null | ProjectsCollection,
   project: null | Project,
+  csvMapping: null | CSVMapping,
+  sourcesCollection: null | SourcesCollection,
 }
 
 const initialState = {
   collection: null,
   project: null,
+  csvMapping: null,
+  sourcesCollection: null,
 }
 
 const getters: GetterTree<CubeProjectsState, RootState> = {
@@ -39,6 +43,26 @@ const actions: ActionTree<CubeProjectsState, RootState> = {
     return project
   },
 
+  async fetchCSVMapping (context, id) {
+    context.commit('storeCSVMapping', null)
+
+    const mapping = await api.fetchResource(id)
+
+    context.commit('storeCSVMapping', mapping)
+
+    return mapping
+  },
+
+  async fetchSourcesCollection (context, id) {
+    context.commit('storeSourcesCollection', null)
+
+    const collection = await api.fetchResource(id)
+
+    context.commit('storeSourcesCollection', collection)
+
+    return collection
+  },
+
   async create (context, formData) {
     const operation = context.state.collection?.actions?.create ?? null
     // TODO: Move this close to the resource definition
@@ -55,6 +79,13 @@ const actions: ActionTree<CubeProjectsState, RootState> = {
 
     return api.invokeSaveOperation(operation, data)
   },
+
+  async uploadCSVs (context, files) {
+    const operation = context.state.csvMapping?.sourcesCollection.actions.upload ?? null
+    const uploads = files.map((file: File) => api.invokeSaveOperation(operation, file))
+
+    return Promise.all(uploads)
+  },
 }
 
 const mutations: MutationTree<CubeProjectsState> = {
@@ -64,6 +95,14 @@ const mutations: MutationTree<CubeProjectsState> = {
 
   storeProject (state, project) {
     state.project = project
+  },
+
+  storeCSVMapping (state, mapping) {
+    state.csvMapping = mapping
+  },
+
+  storeSourcesCollection (state, collection) {
+    state.sourcesCollection = collection
   },
 }
 
