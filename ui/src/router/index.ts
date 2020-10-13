@@ -10,6 +10,7 @@ import CubeProjects from '@/views/CubeProjects.vue'
 import CubeProject from '@/views/CubeProject.vue'
 import CubeProjectNew from '@/views/CubeProjectNew.vue'
 import PageNotFound from '@/views/PageNotFound.vue'
+import Logout from '@/views/Logout.vue'
 
 Vue.use(VueRouter)
 
@@ -53,7 +54,12 @@ const routes: Array<RouteConfig> = [
     path: '*',
     name: 'PageNotFound',
     component: PageNotFound,
-  }
+  },
+  {
+    path: '/logout',
+    name: 'Logout',
+    component: Logout,
+  },
 ]
 
 const router = new VueRouter({

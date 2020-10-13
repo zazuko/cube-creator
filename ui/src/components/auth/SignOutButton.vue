@@ -8,7 +8,7 @@
 
 <script>
 import Vue from 'vue'
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default Vue.extend({
   name: 'SignOutButton',
@@ -20,10 +20,9 @@ export default Vue.extend({
   },
 
   methods: {
-    async signOut () {
-      await this.$store.dispatch('auth/signOutOidcSilent')
-      window.location.reload()
-    },
+    ...mapActions({
+      signOut: 'auth/signOutOidc'
+    }),
   },
 })
 </script>
