@@ -34,6 +34,10 @@ type ENV_VARS =
   | 'STORE_ENDPOINTS_USERNAME'
   | 'STORE_ENDPOINTS_PASSWORD'
   | 'API_CORE_BASE'
+  | 'AWS_S3_ENDPOINT'
+  | 'AWS_S3_BUCKET'
+  | 'AWS_ACCESS_KEY_ID'
+  | 'AWS_SECRET_ACCESS_KEY'
 
 type KnownVariables = {
   [P in ENV_VARS]: string

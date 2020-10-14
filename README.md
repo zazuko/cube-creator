@@ -23,11 +23,12 @@ The easiest way it to start a local dockerized environment which will run the da
 
 Docker containers will start and the services will be available under the these URLs:
 
-| Service | URL                                 |
-| --      | --                                  |
+| Service | URL                                   |
+| ------- | ------------------------------------- |
 | API     | <https://cube-creator.lndo.site/>     |
 | UI      | <https://app.cube-creator.lndo.site/> |
 | Fuseki  | <https://db.cube-creator.lndo.site/>  |
+| Minio   | <https://s3.cube-creator.lndo.site/>  |
 
 Lando uses its own Certificate Authority and it won't be trusted by your system.
 To trust the CA, follow the steps on <https://docs.lando.dev/config/security.html#trusting-the-ca>

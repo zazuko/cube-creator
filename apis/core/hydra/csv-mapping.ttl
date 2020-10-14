@@ -1,0 +1,9 @@
+BASE          <urn:hydra-box:api>
+PREFIX cc:    <https://cube-creator.zazuko.com/vocab#>
+prefix hydra: <http://www.w3.org/ns/hydra/core#>
+prefix code:  <https://code.described.at/>
+prefix query: <http://hypermedia.app/query#>
+
+cc:CsvMapping a hydra:Class ;
+  query:include cc:csvSourceCollection ;
+.
