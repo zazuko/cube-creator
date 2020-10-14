@@ -3,6 +3,24 @@
 
 $body-size: 14px;
 
+$panel-shadow: none;
+$panel-heading-size: 1rem;
+$panel-radius: 0;
+
 // Import Bulma and Buefy styles
 @import "~bulma";
 @import "~buefy/src/scss/buefy";
+
+.panel-block,
+.panel-heading,
+.panel-tabs {
+    border-bottom: 1px solid $grey-lighter;
+    border-left: 1px solid $grey-lighter;
+    border-right: 1px solid $grey-lighter;
+}
+
+.panel-block:first-child,
+.panel-heading:first-child,
+.panel-tabs:first-child {
+    border-top: 1px solid $grey-lighter;
+}
