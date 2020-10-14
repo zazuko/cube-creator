@@ -40,3 +40,7 @@ This repository is using the [GitHub-Flow](https://docs.github.com/en/github/col
 Commit messages usually follow the guidelines from [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#summary) with the types in lower case.
 
 To submit a bug or a feature request please create an issue in this repository.
+
+## E2E tests
+
+Running the E2E tests can be done using: `docker-compose run --rm e2e-tests`, and `docker-compose run --rm e2e-tests -- --grep pattern` lets you select which tests to run.
