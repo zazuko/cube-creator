@@ -8,8 +8,10 @@
               <h3 class="title is-6">
                 Input CSVs
               </h3>
-              <b-tooltip v-if="canUploadSource" label="Upload new CSV file" type="is-light" :delay="200" size="is-small">
-                <b-button tag="router-link" :to="{ name: 'CSVUpload' }" type="is-white" class="has-text-grey" size="is-small" icon-left="plus" />
+            </div>
+            <div class="level-item">
+              <b-tooltip v-if="canUploadSource" label="Upload new CSV file">
+                <b-button tag="router-link" :to="{ name: 'CSVUpload' }" size="is-small" icon-left="plus" />
               </b-tooltip>
             </div>
           </div>

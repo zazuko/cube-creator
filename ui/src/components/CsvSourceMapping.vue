@@ -17,29 +17,28 @@
         <div
           v-for="column in source.columns"
           :key="column.id.value"
-          class="panel-block"
+          class="source-column panel-block"
         >
           <b-checkbox v-model="selectedColumns" :native-value="column.id.value">
             {{ column.title }}
             <span class="has-text-grey"> ({{ column.data.join(", ") }}) </span>
           </b-checkbox>
-          <div class="column-mapped-attributes">
+          <div>
             <b-tooltip
-              v-for="attribute in getMappedAttributes(column)"
-              :key="attribute.uri"
-              class="column-mapped-attribute"
-              :style="{ 'background-color': attribute.table.color }"
-              :label="getLabel(attribute.table) + ' -> ' + getLabel(attribute)"
-              type="is-light"
-              :delay="200"
-              size="is-small"
+              v-for="columnMapping in getColumnMappings(column)"
+              :key="columnMapping.id.value"
+              class="source-column-mapping"
+              :style="{ 'background-color': columnMapping.table.color }"
+              :label="columnMapping.table.title + ' -> ' + columnMapping.title"
             />
           </div>
         </div>
       </div>
     </div>
-    <div class="column is-1"></div>
-    <div class="column"></div>
+    <div class="column is-1" />
+    <div class="column">
+      -- The tables --
+    </div>
   </div>
 </template>
 
@@ -59,5 +58,32 @@ export default Vue.extend({
       selectedColumns: [],
     }
   },
+
+  methods: {
+    getColumnMappings () {
+      return []
+    },
+  },
 })
 </script>
+
+<style scoped>
+.source-mapping:not(:last-child) {
+  margin-bottom: 2rem;
+}
+
+.source-column {
+  display: flex;
+  justify-content: space-between;
+}
+
+.source-column-mapping {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 0.6rem;
+}
+
+.source-column-mapping:not(:last-child) {
+  margin-right: 0.15rem;
+}
+</style>
