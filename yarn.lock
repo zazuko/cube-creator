@@ -981,19 +981,19 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
-"@hydrofoil/labyrinth@^0.1.9":
-  version "0.1.9"
-  resolved "https://registry.yarnpkg.com/@hydrofoil/labyrinth/-/labyrinth-0.1.9.tgz#eed459b1fa53e0a6df1e5bad166047610486a52e"
-  integrity sha512-wucIDMOdAJjdR9f6L4En/lK05D1lkBwntQX9Iw2qqslm1D47mufwKmBwp0xfneZzjT70qKU8Dy+nMNLgyt/lkA==
+"@hydrofoil/labyrinth@^0.1.11":
+  version "0.1.11"
+  resolved "https://registry.yarnpkg.com/@hydrofoil/labyrinth/-/labyrinth-0.1.11.tgz#ff4c8fa24a3bdbf76003f7ca52bd6c81cb19f250"
+  integrity sha512-CRfLNtmsGPLRGi16bMnE1e7+KG++BdAu4ThZqXn3516YAGA9pk3dqAKQd7Yke+D/YfkZo+r2F0IxfxNfFmk1UQ==
   dependencies:
     "@fcostarodrigo/walk" "^5.0.0"
-    "@rdfine/hydra" "^0.3.12"
+    "@rdfine/hydra" "^0.5.1"
     "@rdfjs/data-model" "^1.2"
     "@rdfjs/namespace" "^1.1.0"
     "@rdfjs/term-set" "^1.0.1"
     "@tpluscode/rdf-ns-builders" "^0.4.0"
     "@tpluscode/rdf-string" "^0.2.18"
-    "@tpluscode/rdfine" "^0.5.4"
+    "@tpluscode/rdfine" "^0.5.9"
     "@tpluscode/sparql-builder" "^0.3.9"
     clownface "^1.0.0"
     cors "^2.8.5"
@@ -1003,7 +1003,7 @@
     express-jwt-permissions "^1.3.3"
     http-errors "^1.8.0"
     http-problem-details "^0.1.5"
-    http-problem-details-mapper "^0.1.6"
+    http-problem-details-mapper "^0.1.7"
     middleware-async "^1.2.7"
     rdf-ext "^1.3.0"
     rdf-loader-code "^0.3.1"
@@ -1266,18 +1266,6 @@
   resolved "https://registry.yarnpkg.com/@rdf-esm/to-ntriples/-/to-ntriples-0.5.0.tgz#4a2c294e6d740509571e3b0efde8277c4824b928"
   integrity sha512-VIcqRv68V/s0NS6bFy58CcsHwV0UCM/DHhAc1MYLB/yue1nyhKsX4uyu/SB5gbbY2r4BIH4G6O+arxf59KzgwQ==
 
-"@rdfine/hydra@^0.3.12":
-  version "0.3.12"
-  resolved "https://registry.yarnpkg.com/@rdfine/hydra/-/hydra-0.3.12.tgz#0e46e34d69c256d00c4e4ef5217c8c1912a9495c"
-  integrity sha512-yLMCcCT55QLLlZ8CE8KofYI2AgCLV6yGGI8q+5fNWRB2VF0xVVAqY16AMdPO8qx5nXCfBZVh3ZMylFogpGt8VQ==
-  dependencies:
-    "@rdf-esm/data-model" "^0.5.3"
-    "@rdfine/rdf" "^0.3.9"
-    "@rdfine/rdfs" "^0.3.9"
-    "@tpluscode/rdf-ns-builders" "^0.3.6"
-    "@tpluscode/rdfine" "^0.5.4"
-    es6-url-template "^1.0.4"
-
 "@rdfine/hydra@^0.5.1":
   version "0.5.1"
   resolved "https://registry.yarnpkg.com/@rdfine/hydra/-/hydra-0.5.1.tgz#e5c14b6995939847052adf905873424df2c6ad91"
@@ -1290,14 +1278,6 @@
     "@tpluscode/rdfine" "^0.5.9"
     es6-url-template "^1.0.4"
 
-"@rdfine/rdf@^0.3.9":
-  version "0.3.9"
-  resolved "https://registry.yarnpkg.com/@rdfine/rdf/-/rdf-0.3.9.tgz#96c018640869d697f096f40158dbafbe2941611a"
-  integrity sha512-6/q9giXPZ3fIRp2StnokNVAP3eMcb2JtlBzHRbhbNo5OT5gR/GSnVAYNipch/DWGUNuNXn11CVKoX/5kNuwdww==
-  dependencies:
-    "@tpluscode/rdf-ns-builders" "^0.3.6"
-    "@tpluscode/rdfine" "^0.5.0"
-
 "@rdfine/rdf@^0.4.1":
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/@rdfine/rdf/-/rdf-0.4.1.tgz#1e73e26ddfbe09a3cdc85cf3ef2ce3a9c8541a4c"
@@ -1306,15 +1286,6 @@
     "@rdf-esm/data-model" "^0.5.3"
     "@tpluscode/rdf-ns-builders" "^0.4"
     "@tpluscode/rdfine" "^0.5.7"
-
-"@rdfine/rdfs@^0.3.9":
-  version "0.3.9"
-  resolved "https://registry.yarnpkg.com/@rdfine/rdfs/-/rdfs-0.3.9.tgz#86656fc5ed55dd715d185373b46905280482710d"
-  integrity sha512-JZzM/prhwYuJlqwLyArBb+B3gvflpwna+pqyTBtCjiRshtTDt3xdbsMp6v0zNYf/vu5HOlMrXNH1Z/Q7x4PhQA==
-  dependencies:
-    "@rdfine/rdf" "^0.3.9"
-    "@tpluscode/rdf-ns-builders" "^0.3.6"
-    "@tpluscode/rdfine" "^0.5.0"
 
 "@rdfine/rdfs@^0.5.0":
   version "0.5.0"
@@ -1551,7 +1522,7 @@
     "@tpluscode/rdf-ns-builders" "^0.4"
     "@zazuko/rdf-vocabularies" "^2020.6.29"
 
-"@tpluscode/rdfine@^0.5.0", "@tpluscode/rdfine@^0.5.4", "@tpluscode/rdfine@^0.5.7", "@tpluscode/rdfine@^0.5.9":
+"@tpluscode/rdfine@^0.5.7", "@tpluscode/rdfine@^0.5.9":
   version "0.5.9"
   resolved "https://registry.yarnpkg.com/@tpluscode/rdfine/-/rdfine-0.5.9.tgz#9c3b207f820bfdb606f3da4004147278390a368b"
   integrity sha512-pq+ipTwUKsCSTyHSK0hHpVBD3mzZNDAqOib2qoyuLwCtEEAXKB+TXv9v5KXHRM2hECf4ZsIu2fj0DcbjpgBebQ==
@@ -6879,10 +6850,10 @@ http-parser-js@>=0.5.1:
   resolved "https://registry.yarnpkg.com/http-parser-js/-/http-parser-js-0.5.2.tgz#da2e31d237b393aae72ace43882dd7e270a8ff77"
   integrity sha512-opCO9ASqg5Wy2FNo7A0sxy71yGbbkJJXLdgMK04Tcypw9jr2MgWbyubb0+WdmDmGnFflO7fRbqbaihh/ENDlRQ==
 
-http-problem-details-mapper@^0.1.4, http-problem-details-mapper@^0.1.6:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/http-problem-details-mapper/-/http-problem-details-mapper-0.1.6.tgz#39dc3101330e71326357023b97108d432636f956"
-  integrity sha512-ILTTZE8GTAV+/7imDyYc0ZO/ROoUNAJ+QeoO0jH23lr6dgm8oOOCZQLzKu9ijABVpYwscbOBjV9s0B2AoSOnCA==
+http-problem-details-mapper@^0.1.4, http-problem-details-mapper@^0.1.6, http-problem-details-mapper@^0.1.7:
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/http-problem-details-mapper/-/http-problem-details-mapper-0.1.7.tgz#e119e28abfa0832c0249c48b1ce2f80a334fd318"
+  integrity sha512-M0rXE8hQxwLduUy+eqmZi2exbrTDxNHUrpaEbyMhYgn1arCnrqxOlIB7ovBkTyvT+e3WZw12RqbwtQDyfKjD+g==
 
 http-problem-details@^0.1.2, http-problem-details@^0.1.5:
   version "0.1.5"
