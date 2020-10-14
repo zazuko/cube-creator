@@ -2,8 +2,8 @@ PREFIX api: <https://cube-creator.zazuko.com/vocab#>
 PREFIX hydra: <http://www.w3.org/ns/hydra/core#>
 PREFIX cc: <https://cube-creator.zazuko.com/vocab#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX query:     <http://hypermedia.app/query#> 
-
+PREFIX query: <http://hypermedia.app/query#>
+PREFIX csvw: <http://www.w3.org/ns/csvw#>
 
 HEADERS {
   x-user "john-doe"
@@ -41,6 +41,37 @@ With Class cc:CubeProject {
                     ```
                     A,B,C
                     1,2,test
+                    1,2,test
+                    1,2,test
+                    1,2,test
+                    ```
+                } => {
+                    Expect Status 201
+                    Expect Type <https://cube-creator.zazuko.com/vocab#CSVSource>
+                    Expect Property <http://schema.org/associatedMedia>
+                    Expect Property csvw:dialect {
+                        Expect Property csvw:quoteChar
+                        Expect Property csvw:delimiter
+                        Expect Property csvw:header
+                        Expect Property csvw:headerRowCount
+                    }
+                }
+            }
+        }
+    }
+}
+
+With Class cc:CubeProject {
+    Expect Link cc:csvMapping {
+        Expect Property cc:csvSourceCollection {
+            Expect Operation cc:UploadCSVAction {
+                Invoke {
+                    Content-Type "text/csv"
+                    Content-Disposition "file; filename='test.jpg'"
+
+                    ```
+                    A,B,C
+                    1,2,test
                     ```
                 } => {
                     Expect Status 201
@@ -57,18 +88,21 @@ With Class cc:CSVSource {
     Expect Operation cc:GetCSVSourceAction {
         Invoke {
             Accept "text/csv"
-
         } => {
             Expect Status 200
-            Expect Header Content-Type 'text/csv; charset=utf-8' 
+            Expect Header Content-Type 'text/csv; charset=utf-8'
         }
 
-        Invoke { 
+        Invoke {
             Accept "application/ld+json"
         } => {
             Expect Status 200
             Expect Header Content-Type "application/ld+json; charset=utf-8"
             Expect Type <https://cube-creator.zazuko.com/vocab#CSVSource>
+            Expect Property csvw:quoteChar
+            Expect Property csvw:delimiter
+            Expect Property csvw:header
+            Expect Property csvw:headerRowCount
         }
     }
 }

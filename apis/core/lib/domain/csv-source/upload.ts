@@ -1,13 +1,16 @@
 import { GraphPointer } from 'clownface'
-import { rdf, hydra, schema } from '@tpluscode/rdf-ns-builders'
+import { rdf, hydra, schema, csvw } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
-import { ResourceStore } from '../../ResourceStore'
 import { Readable } from 'stream'
-import * as id from '../identifiers'
-import { saveFile } from '../../storage/s3'
 import { NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
+import { loadFile, saveFile } from '../../storage/s3'
+import { error } from '../../log'
 import env from '../../env'
+import { ResourceStore } from '../../ResourceStore'
+import * as id from '../identifiers'
+import { loadFileHeadString } from '../csv/file-head'
+import { sniffParse } from '../csv'
 
 interface UploadCSVCommand {
   file: Readable
@@ -36,6 +39,22 @@ export async function uploadFile({
         .addOut(schema.identifier, key)
         .addOut(schema.contentUrl, $rdf.namedNode(upload.Location))
     })
+
+  try {
+    const fileStream = await loadFile(key) as Readable
+    const head = await loadFileHeadString(fileStream)
+    const { dialect, header } = await sniffParse(head)
+
+    csvSource
+      .addOut(csvw.dialect, csvDialect => {
+        csvDialect.addOut(csvw.quoteChar, dialect.quote)
+          .addOut(csvw.delimiter, dialect.delimiter)
+          .addOut(csvw.header, true)
+          .addOut(csvw.headerRowCount, header.length)
+      })
+  } catch (err) {
+    error(err)
+  }
 
   csvMapping.addOut(cc.csvSource, csvSource)
 
