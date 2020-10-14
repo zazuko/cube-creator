@@ -17,6 +17,9 @@ services:
         TS_NODE_PROJECT: apis/core/tsconfig.json
         # This should be kept in sync with api.Dockerfile
         DEBUG: creator*,hydra*,hydra-box*,labyrinth*
+      depends_on: 
+        store:
+          condition: service_healthy
     moreHttpPorts:
       - 45671
   ui:
@@ -35,6 +38,11 @@ services:
         ENABLE_UPLOAD: "true"
       volumes:
         - ./fuseki/config.ttl:/data/fuseki/config/config.ttl
+      healthcheck:
+        test: wget --no-verbose --tries=1 --spider http://localhost:3030 || exit 1
+        interval: 5s
+        timeout: 3s
+        retries: 3    
   s3:
     type: compose
     ssl: false
