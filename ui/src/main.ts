@@ -16,6 +16,8 @@ Vue.component('FontAwesomeIcon', FontAwesomeIcon)
 Vue.use(Buefy, {
   defaultIconPack: 'fas',
   defaultIconComponent: 'FontAwesomeIcon',
+  defaultTooltipType: 'is-light',
+  defaultTooltipDelay: 200,
 })
 
 Vue.config.productionTip = false
