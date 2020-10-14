@@ -63,23 +63,6 @@ const actions: ActionTree<CubeProjectsState, RootState> = {
     return collection
   },
 
-  async create (context, formData) {
-    const operation = context.state.collection?.actions?.create ?? null
-    // TODO: Move this close to the resource definition
-    const data = {
-      '@context': {
-        '@vocab': 'https://cube-creator.zazuko.com/vocab#',
-      },
-      '@type': 'CubeProject',
-      // Must pass this ID for now because of a bug in rdfjs/express-handler
-      '@id': '',
-      [rdfs.label.value]: formData.label,
-      projectSourceKind: formData.projectSourceKind,
-    }
-
-    return api.invokeSaveOperation(operation, data)
-  },
-
   async uploadCSVs (context, files) {
     const operation = context.state.csvMapping?.sourcesCollection.actions.upload ?? null
     const uploads = files.map((file: File) => {

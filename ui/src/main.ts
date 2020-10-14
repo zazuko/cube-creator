@@ -10,6 +10,8 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import './bulma.scss'
 import store from './store'
 
+import './forms'
+
 iconsLibrary.add(fas)
 Vue.component('FontAwesomeIcon', FontAwesomeIcon)
 

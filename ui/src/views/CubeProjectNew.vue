@@ -1,25 +1,10 @@
 <template>
   <side-pane :is-open="true" :title="title" @close="onCancel">
+    <b-message v-if="error" type="is-danger">
+      {{ error }}
+    </b-message>
+    <cc-form :resource.prop="resource" :shapes.prop="shapes" />
     <form @submit.prevent="onSubmit">
-      <b-message v-if="error" type="is-danger">
-        {{ error }}
-      </b-message>
-
-      <b-field label="Project name">
-        <b-input v-model="project.label" />
-      </b-field>
-
-      <b-field label="Start project from:" :message="projectTypeMessage">
-        <b-radio-button
-          v-for="option in projectSourceKinds"
-          :key="option.value"
-          v-model="project.projectSourceKind"
-          :native-value="option.value"
-        >
-          {{ option.label }}
-        </b-radio-button>
-      </b-field>
-
       <b-field>
         <button type="submit" class="button is-primary">
           Create project
@@ -35,7 +20,11 @@
 <script>
 import Vue from 'vue'
 import { mapState } from 'vuex'
+import clownface from 'clownface'
+import { dataset } from '@rdf-esm/dataset'
+import { quad } from '@rdf-esm/data-model'
 import SidePane from '@/components/SidePane.vue'
+import { sh } from '@tpluscode/rdf-ns-builders'
 
 export default Vue.extend({
   name: 'CubeProjectNew',
@@ -43,15 +32,9 @@ export default Vue.extend({
 
   data () {
     return {
-      project: {
-        projectSourceKind: 'CSV',
-        label: '',
-      },
-      error: null,
-      projectSourceKinds: [
-        { value: 'CSV', label: 'CSV file(s)' },
-        { value: 'Existing cube', label: 'Existing cube' },
-      ],
+      resource: Object.freeze(clownface({ dataset: dataset() }).namedNode('')),
+      shapes: null,
+      error: null
     }
   },
 
@@ -63,14 +46,19 @@ export default Vue.extend({
     title () {
       return this.operation?.title
     },
+  },
 
-    projectTypeMessage () {
-      if (this.project.projectSourceKind === 'CSV') {
-        return 'Map CSV files to a new Cube'
-      } else {
-        return 'Add metadata to a Cube resulting of another pipeline'
+  async mounted () {
+    for (const expects of this.operation?.expects) {
+      if ('load' in expects && expects.types.has(sh.Shape)) {
+        const { representation } = await expects.load()
+        const { root: shape } = representation
+        this.shapes = Object.freeze(dataset([...shape?.pointer.dataset
+          .match(null, null, null, shape.id)]
+          .map(({ subject, predicate, object }) => quad(subject, predicate, object))))
+        break
       }
-    },
+    }
   },
 
   methods: {
@@ -78,7 +66,10 @@ export default Vue.extend({
       this.error = null
 
       try {
-        const project = await this.$store.dispatch('cubeProjects/create', this.project)
+        const project = await this.$store.dispatch('api/invokeSaveOperation', {
+          operation: this.operation,
+          resource: this.resource,
+        })
         this.$router.push({ name: 'CubeProject', params: { id: project.clientPath } })
       } catch (e) {
         console.error(e)

@@ -18,7 +18,10 @@ type CubeCreatorProperty =
   'csvSource' |
   'csvSourceCollection'
 
-type CubeCreatorNamespace = Record<CubeCreatorClass | CubeCreatorProperty, NamedNode>
+type OtherTerms =
+  'dash'
+
+type CubeCreatorNamespace = Record<CubeCreatorClass | CubeCreatorProperty | OtherTerms, NamedNode>
 
 export const cube = namespace('http://ns.bergnet.org/cube/')
 export const cc: CubeCreatorNamespace = namespace('https://cube-creator.zazuko.com/vocab#') as any
