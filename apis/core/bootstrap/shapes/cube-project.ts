@@ -12,10 +12,11 @@ export const CubeProjectShape = turtle`
       ${sh.path} ${rdfs.label} ;
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
+      ${sh.minLength} 1 ;
       ${sh.order} 0 ;
     ] ;
     ${sh.property} [
-      ${sh.name} "Project source" ;
+      ${sh.name} "Start project from" ;
       ${sh.path} ${cc.projectSourceKind} ;
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
