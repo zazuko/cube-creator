@@ -7,6 +7,7 @@ import authentication from './lib/auth'
 import env from './lib/env'
 import { bootstrap } from './bootstrap'
 import { resource } from './lib/middleware/resource'
+import { errorMappers } from './lib/errors'
 
 const apiPath = path.resolve(__dirname, 'hydra')
 const codePath = path.resolve(__dirname, 'lib')
@@ -44,6 +45,7 @@ async function main() {
       user: env.maybe.STORE_ENDPOINTS_USERNAME,
       password: env.maybe.STORE_ENDPOINTS_PASSWORD,
     },
+    errorMappers,
   })
 
   await bootstrap(env.STORE_GRAPH_ENDPOINT, baseUri)
