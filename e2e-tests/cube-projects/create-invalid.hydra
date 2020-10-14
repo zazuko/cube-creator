@@ -20,6 +20,18 @@ With Class api:EntryPoint {
             } => {
                 Expect Status 400
             }
+
+            Invoke {
+                Content-Type "text/turtle"
+
+                ```
+                prefix cc: <https://cube-creator.zazuko.com/vocab#>
+                prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                <> cc:projectSourceKind "CSV" ; rdfs:label "" .
+                ```
+            } => {
+                Expect Status 400
+            }
         }
     }
 }
