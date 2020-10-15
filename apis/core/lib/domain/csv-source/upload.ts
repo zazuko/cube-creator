@@ -1,5 +1,5 @@
 import { GraphPointer } from 'clownface'
-import { rdf, hydra, schema, csvw } from '@tpluscode/rdf-ns-builders'
+import { rdf, hydra, schema, csvw, dtype } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import { Readable } from 'stream'
 import { NamedNode } from 'rdf-js'
@@ -43,7 +43,7 @@ export async function uploadFile({
   try {
     const fileStream = await loadFile(key) as Readable
     const head = await loadFileHeadString(fileStream)
-    const { dialect, header } = await sniffParse(head)
+    const { dialect, header, rows } = await sniffParse(head)
 
     csvSource
       .addOut(csvw.dialect, id.dialect(csvSource), csvDialect => {
@@ -52,6 +52,20 @@ export async function uploadFile({
           .addOut(csvw.header, true)
           .addOut(csvw.headerRowCount, header.length)
       })
+
+    for (let index = 0; index < header.length; index++) {
+      const columnName = header[index]
+      csvSource.addOut(csvw.column, id.column(csvSource, columnName), column => {
+        column.addOut(rdf.type, [csvw.Column, hydra.Resource])
+          .addOut(schema.name, columnName)
+          .addOut(dtype.order, index)
+        rows.forEach(row => {
+          if (row.length() > index) {
+            column.addOut(cc.csvColumnSample, row[index])
+          }
+        })
+      })
+    }
   } catch (err) {
     error(err)
   }
