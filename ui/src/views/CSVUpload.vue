@@ -40,6 +40,7 @@
 <script>
 import Vue from 'vue'
 import SidePane from '@/components/SidePane.vue'
+import { APIErrorConflict, APIErrorValidation } from '@/api/errors'
 
 export default Vue.extend({
   name: 'CSVUpload',
@@ -65,9 +66,14 @@ export default Vue.extend({
 
         this.$router.push({ name: 'CSVMapping' })
       } catch (e) {
-        console.error(e)
-        // TODO: Improve error display
-        this.error = e
+        if (e instanceof APIErrorConflict) {
+          this.error = 'Cannot upload a file with the same name twice'
+        } else if (e instanceof APIErrorValidation) {
+          this.error = e.details.title
+        } else {
+          console.error(e)
+          this.error = e.toString()
+        }
       } finally {
         loader.close()
       }
