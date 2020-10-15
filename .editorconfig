@@ -1,10 +1,10 @@
-[*.{js,jsx,ts,tsx,vue}]
+[*.{js,jsx,ts,tsx,vue,yml}]
 indent_style = space
 indent_size = 2
 trim_trailing_whitespace = true
 insert_final_newline = true
 
-[{*.nq,*.nt,*.trig,*.ttl}]
+[*.{nq,nt,trig,ttl}]
 indent_size = 2
 max_line_length = 500
 tab_width = 2
