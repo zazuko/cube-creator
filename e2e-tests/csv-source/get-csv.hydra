@@ -45,31 +45,33 @@ With Class cc:CubeProject {
                     1,2,test
                     1,2,test
                     ```
-                } => {
-                    Expect Status 201
-                    Expect Type <https://cube-creator.zazuko.com/vocab#CSVSource>
-                    Expect Property <http://schema.org/associatedMedia>
-                    Expect Property csvw:dialect {
-                        Expect Property csvw:quoteChar
-                        Expect Property csvw:delimiter
-                        Expect Property csvw:header
-                        Expect Property csvw:headerRowCount
-                    }
-                }
+                } => { }
+            }
+        }
+    }
+}
 
-                Invoke {
-                    Content-Type "text/csv"
-                    Content-Disposition "file; filename='test.jpg'"
 
-                    ```
-                    A,B,C
-                    1,2,test
-                    ```
-                } => {
-                    Expect Status 201
-                    Expect Type <https://cube-creator.zazuko.com/vocab#CSVSource>
-                    Expect Property <http://schema.org/associatedMedia>
-                }
+With Class cc:CSVSource {
+    Expect Operation cc:GetCSVSourceAction {
+        Invoke {
+            Accept "text/csv"
+        } => {
+            Expect Status 200
+            Expect Header Content-Type 'text/csv; charset=utf-8'
+        }
+
+        Invoke {
+            Accept "application/ld+json"
+        } => {
+            Expect Status 200
+            Expect Header Content-Type "application/ld+json; charset=utf-8"
+            Expect Type <https://cube-creator.zazuko.com/vocab#CSVSource>
+            Expect Property csvw:dialect {
+                Expect Property csvw:quoteChar
+                Expect Property csvw:delimiter
+                Expect Property csvw:header
+                Expect Property csvw:headerRowCount
             }
         }
     }
