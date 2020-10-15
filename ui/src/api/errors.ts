@@ -1,10 +1,12 @@
 import { HydraResponse } from 'alcaeus'
 
+type ErrorDetails = Record<string, any>
+
 export class APIError extends Error {
-  details: any;
+  details: ErrorDetails | null;
   response: HydraResponse;
 
-  constructor (details: any, response: HydraResponse) {
+  constructor (details: ErrorDetails, response: HydraResponse) {
     const message = details?.title || 'Unknown error'
 
     super(message)
@@ -28,6 +30,8 @@ export class APIError extends Error {
         return new APIErrorNotFound(details, response)
       case 400:
         return new APIErrorValidation(details, response)
+      case 409:
+        return new APIErrorConflict(details, response)
       default:
         return new APIError(details, response)
     }
@@ -36,3 +40,4 @@ export class APIError extends Error {
 
 export class APIErrorNotFound extends APIError {}
 export class APIErrorValidation extends APIError {}
+export class APIErrorConflict extends APIError {}
