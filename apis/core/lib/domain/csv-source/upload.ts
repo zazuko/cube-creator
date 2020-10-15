@@ -11,6 +11,8 @@ import { ResourceStore } from '../../ResourceStore'
 import * as id from '../identifiers'
 import { loadFileHeadString } from '../csv/file-head'
 import { sniffParse } from '../csv'
+import { sourceWithFilenameExists } from '../queries/csv-source'
+import { Conflict } from 'http-errors'
 
 interface UploadCSVCommand {
   file: Readable
@@ -26,6 +28,11 @@ export async function uploadFile({
   store,
 }: UploadCSVCommand): Promise<GraphPointer> {
   const csvMapping = await store.get(resource)
+
+  if (await sourceWithFilenameExists(csvMapping.term, fileName)) {
+    throw new Conflict(`A file with ${fileName} has already been added to the project`)
+  }
+
   const key = `${csvMapping.value.replace(env.API_CORE_BASE, '')}/${fileName}`
   const upload = await saveFile(key, file)
 
