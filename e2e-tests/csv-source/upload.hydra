@@ -57,6 +57,20 @@ With Class cc:CubeProject {
                     }
                 }
 
+                                Invoke {
+                    Content-Type "text/csv"
+                    Content-Disposition "file; filename='test2.jpg'"
+
+                    ```
+                    C,D,E
+                    1,2,test
+                    ```
+                } => {
+                    Expect Status 201
+                    Expect Type <https://cube-creator.zazuko.com/vocab#CSVSource>
+                    Expect Property <http://schema.org/associatedMedia>
+                }
+
                 Invoke {
                     Content-Type "text/csv"
                     Content-Disposition "file; filename='test.jpg'"
@@ -66,9 +80,7 @@ With Class cc:CubeProject {
                     1,2,test
                     ```
                 } => {
-                    Expect Status 201
-                    Expect Type <https://cube-creator.zazuko.com/vocab#CSVSource>
-                    Expect Property <http://schema.org/associatedMedia>
+                    Expect Status 409
                 }
             }
         }
