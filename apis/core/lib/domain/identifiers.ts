@@ -14,12 +14,16 @@ export function csvMapping(project: GraphPointer<NamedNode>): NamedNode {
   return $rdf.namedNode(`${project.value}/csv-mapping`)
 }
 
-export function csvSourceCollection(csvMapping:GraphPointer<NamedNode>): NamedNode {
+export function csvSourceCollection(csvMapping: GraphPointer<NamedNode>): NamedNode {
   return $rdf.namedNode(`${csvMapping.value}/sources`)
 }
 
 export function csvSource(project: GraphPointer<NamedNode>, fileName: string): NamedNode {
   return $rdf.namedNode(`${project.value}/csv-source/${url.slugify(fileName)}`)
+}
+
+export function dialect(csvSource: GraphPointer<NamedNode>): NamedNode {
+  return $rdf.namedNode(`${csvSource}/dialect`)
 }
 
 export function user(user: string): NamedNode {

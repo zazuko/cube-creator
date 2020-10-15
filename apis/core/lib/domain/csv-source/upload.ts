@@ -46,7 +46,7 @@ export async function uploadFile({
     const { dialect, header } = await sniffParse(head)
 
     csvSource
-      .addOut(csvw.dialect, csvDialect => {
+      .addOut(csvw.dialect, id.dialect(csvSource), csvDialect => {
         csvDialect.addOut(csvw.quoteChar, dialect.quote)
           .addOut(csvw.delimiter, dialect.delimiter)
           .addOut(csvw.header, true)
