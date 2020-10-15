@@ -5,7 +5,7 @@ import { schema } from '@tpluscode/rdf-ns-builders'
 import { client } from './query-client'
 
 export async function sourceWithFilenameExists(csvMapping: NamedNode, fileName: string): Promise<boolean> {
-  return await ASK`
+  return ASK`
       GRAPH ${csvMapping} 
       {
         ${csvMapping} ${cc.csvSource} ?source
