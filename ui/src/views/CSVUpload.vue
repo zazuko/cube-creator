@@ -71,6 +71,7 @@ export default Vue.extend({
         } else if (e instanceof APIErrorValidation) {
           this.error = e.details.title
         } else {
+          console.error(e)
           this.error = e.toString()
         }
       } finally {
