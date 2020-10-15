@@ -67,7 +67,7 @@ export async function uploadFile({
           .addOut(schema.name, columnName)
           .addOut(dtype.order, index)
         rows.forEach(row => {
-          if (row.length() > index) {
+          if (row.length > index) {
             column.addOut(cc.csvColumnSample, row[index])
           }
         })
