@@ -57,7 +57,7 @@ With Class cc:CubeProject {
                     }
                 }
 
-                                Invoke {
+                Invoke {
                     Content-Type "text/csv"
                     Content-Disposition "file; filename='test2.jpg'"
 
