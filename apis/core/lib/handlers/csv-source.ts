@@ -30,7 +30,7 @@ export const post = labyrinth.protectedResource(
       fileName: fileName,
       resource: csvMapping,
       store: req.app.resources(),
-      client: req.app.sparql
+      client: req.app.sparql,
     })
     res.status(201)
     res.header('Location', fileLocation.value)
