@@ -63,7 +63,7 @@ export async function uploadFile({
     for (let index = 0; index < header.length; index++) {
       const columnName = header[index]
       csvSource.addOut(csvw.column, id.column(csvSource, columnName), column => {
-        column.addOut(rdf.type, [csvw.Column, hydra.Resource])
+        column.addOut(rdf.type, [csvw.Column])
           .addOut(schema.name, columnName)
           .addOut(dtype.order, index)
         rows.forEach(row => {
