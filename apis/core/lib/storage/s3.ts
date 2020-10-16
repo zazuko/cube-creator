@@ -2,7 +2,7 @@ import aws from 'aws-sdk'
 import { isReadable } from 'isstream'
 import { Readable } from 'stream'
 import { PromiseResult } from 'aws-sdk/lib/request'
-import env from '../env'
+import env from '@cube-creator/core/env'
 import { log } from '../log'
 
 const logError = log.extend('s3').extend('error')

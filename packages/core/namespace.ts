@@ -1,5 +1,7 @@
-import namespace from '@rdfjs/namespace'
+import namespace from '@rdf-esm/namespace'
 import { NamedNode } from 'rdf-js'
+
+export { shape } from './namespaces/shapes'
 
 type CubeCreatorClass =
   'CubeProject' |

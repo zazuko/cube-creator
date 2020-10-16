@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "dependencies": {
-    "@rdfjs/namespace": "^1.1.0"
+    "@rdf-esm/namespace": "^0.5.1"
   },
   "devDependencies": {
     "@types/rdf-js": "^4.0.0"

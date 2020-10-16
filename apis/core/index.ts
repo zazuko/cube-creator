@@ -4,7 +4,7 @@ import { hydraBox } from '@hydrofoil/labyrinth'
 import cors from 'cors'
 import { error, log } from './lib/log'
 import authentication from './lib/auth'
-import env from './lib/env'
+import env from '@cube-creator/core/env'
 import { bootstrap } from './bootstrap'
 import { resource } from './lib/middleware/resource'
 

@@ -1,5 +1,5 @@
 import ParsingClient from 'sparql-http-client/ParsingClient'
-import env from '../../env'
+import env from '@cube-creator/core/env'
 
 export const client = new ParsingClient({
   endpointUrl: env.STORE_QUERY_ENDPOINT,

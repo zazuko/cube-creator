@@ -19,7 +19,7 @@ With Class api:EntryPoint {
                 prefix cc: <https://cube-creator.zazuko.com/vocab#>
                 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-                <> cc:projectSourceKind "CSV" ; rdfs:label "Test Project" .
+                <> cc:projectSourceKind </shape/cube-project/create#CSV> ; rdfs:label "Test Project" .
                 ```
             } => {
                 Expect Status 201
