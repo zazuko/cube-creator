@@ -13,12 +13,14 @@ import { loadFileHeadString } from '../csv/file-head'
 import { sniffParse } from '../csv'
 import { sourceWithFilenameExists } from '../queries/csv-source'
 import { Conflict } from 'http-errors'
+import StreamClient from 'sparql-http-client'
 
 interface UploadCSVCommand {
   file: Readable
   fileName: string
   resource: NamedNode
   store: ResourceStore
+  client: StreamClient
 }
 
 export async function uploadFile({
@@ -26,10 +28,11 @@ export async function uploadFile({
   fileName,
   resource,
   store,
+  client,
 }: UploadCSVCommand): Promise<GraphPointer> {
   const csvMapping = await store.get(resource)
 
-  if (await sourceWithFilenameExists(csvMapping.term, fileName)) {
+  if (await sourceWithFilenameExists(client, csvMapping.term, fileName)) {
     throw new Conflict(`A file with ${fileName} has already been added to the project`)
   }
 
