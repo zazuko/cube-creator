@@ -3,7 +3,7 @@
     <b-message v-if="error" type="is-danger">
       {{ error }}
     </b-message>
-    <cc-form :resource.prop="resource" :shapes.prop="shapes" />
+    <cc-form :resource.prop="resource" :shapes.prop="shapes" no-editor-switches />
     <form @submit.prevent="onSubmit">
       <b-field>
         <button type="submit" class="button is-primary">
