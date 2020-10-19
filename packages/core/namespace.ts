@@ -16,7 +16,8 @@ type CubeCreatorProperty =
   'projects' |
   'csvMapping' |
   'csvSource' |
-  'csvSourceCollection'
+  'csvSourceCollection' |
+  'csvColumnSample'
 
 type CubeCreatorNamespace = Record<CubeCreatorClass | CubeCreatorProperty, NamedNode>
 
