@@ -25,22 +25,22 @@ cc:CSVSourceCollection
     ] .
 
 cc:CSVSource
-  a 
+  a
     hydra:Class ;
-    hydra:supportedOperation
+  hydra:supportedOperation
     [
       a
         hydra:Operation,
         cc:GetCSVSourceAction ;
-      hydra:title 
+      hydra:title
         "Get CSV Source" ;
       hydra:method
-        "GET";
+        "GET" ;
       code:implementedBy
-      [
-        a
-          code:EcmaScript ;
+        [
+          a
+            code:EcmaScript ;
           code:link
             <file:handlers/csv-source#get> ;
-      ]
+        ]
     ] .

@@ -22,6 +22,10 @@ export function csvSource(project: GraphPointer<NamedNode>, fileName: string): N
   return $rdf.namedNode(`${project.value}/csv-source/${url.slugify(fileName)}`)
 }
 
+export function csvSourceCsvw(csvSource: GraphPointer<NamedNode>): NamedNode {
+  return $rdf.namedNode(`${csvSource}/csvw`)
+}
+
 export function dialect(csvSource: GraphPointer<NamedNode>): NamedNode {
   return $rdf.namedNode(`${csvSource}/dialect`)
 }

@@ -5,6 +5,7 @@ WORKDIR /app
 ADD package.json yarn.lock ./
 ADD ./apis/core/package.json ./apis/core/
 ADD ./packages/core/package.json ./packages/core/
+ADD ./packages/model/package.json ./packages/model/
 
 # for every new package foo add:
 # ADD ./packages/foo/package.json ./packages/foo/
@@ -24,6 +25,7 @@ WORKDIR /app
 ADD package.json yarn.lock ./
 ADD ./apis/core/package.json ./apis/core/
 ADD ./packages/core/package.json ./packages/core/
+ADD ./packages/model/package.json ./packages/model/
 
 # for every new package foo add
 #ADD ./packages/foo/package.json ./packages/foo/

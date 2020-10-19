@@ -10,11 +10,13 @@
     "noImplicitReturns": true,
     "strictNullChecks": true,
     "allowSyntheticDefaultImports": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "experimentalDecorators": true
   },
   "include": [
     "packages",
     "apis",
+    "cli",
     "ui"
   ],
   "exclude": [
