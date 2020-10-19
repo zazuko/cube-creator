@@ -26,6 +26,10 @@ export function dialect(csvSource: GraphPointer<NamedNode>): NamedNode {
   return $rdf.namedNode(`${csvSource}/dialect`)
 }
 
+export function column(csvSource: GraphPointer<NamedNode>, columnName: string): NamedNode {
+  return $rdf.namedNode(`${csvSource}/column/${url.slugify(columnName)}`)
+}
+
 export function user(user: string): NamedNode {
   return $rdf.namedNode(`${env.API_CORE_BASE}user/${user}`)
 }

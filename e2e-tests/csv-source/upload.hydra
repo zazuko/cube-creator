@@ -4,6 +4,7 @@ PREFIX cc: <https://cube-creator.zazuko.com/vocab#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX query: <http://hypermedia.app/query#>
 PREFIX csvw: <http://www.w3.org/ns/csvw#>
+PREFIX schema: <http://schema.org/>
 
 HEADERS {
   x-user "john-doe"
@@ -36,14 +37,15 @@ With Class cc:CubeProject {
             Expect Operation cc:UploadCSVAction {
                 Invoke {
                     Content-Type "text/csv"
-                    Content-Disposition "file; filename='test.jpg'"
+                    Content-Disposition "file; filename=test.jpg"
 
                     ```
                     A,B,C
                     1,2,test
                     1,2,test
-                    1,2,test
-                    1,2,test
+                    1,2,test1
+                    1,2,test2
+                    .
                     ```
                 } => {
                     Expect Status 201
@@ -55,11 +57,18 @@ With Class cc:CubeProject {
                         Expect Property csvw:header
                         Expect Property csvw:headerRowCount
                     }
+                    Expect Property csvw:column {
+                        Expect Type csvw:Column
+                        Expect Property schema:name "C"
+                        Expect Property <https://cube-creator.zazuko.com/vocab#csvColumnSample> "test"
+                        Expect Property <https://cube-creator.zazuko.com/vocab#csvColumnSample> "test1"
+                        Expect Property <https://cube-creator.zazuko.com/vocab#csvColumnSample> "test2"
+                    }
                 }
 
                 Invoke {
                     Content-Type "text/csv"
-                    Content-Disposition "file; filename='test2.jpg'"
+                    Content-Disposition "file; filename=test2.jpg"
 
                     ```
                     C,D,E
@@ -73,7 +82,7 @@ With Class cc:CubeProject {
 
                 Invoke {
                     Content-Type "text/csv"
-                    Content-Disposition "file; filename='test.jpg'"
+                    Content-Disposition "file; filename=test.jpg"
 
                     ```
                     A,B,C

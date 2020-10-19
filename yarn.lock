@@ -1832,7 +1832,19 @@
   resolved "https://registry.yarnpkg.com/@rdf-esm/to-ntriples/-/to-ntriples-0.5.0.tgz#4a2c294e6d740509571e3b0efde8277c4824b928"
   integrity sha512-VIcqRv68V/s0NS6bFy58CcsHwV0UCM/DHhAc1MYLB/yue1nyhKsX4uyu/SB5gbbY2r4BIH4G6O+arxf59KzgwQ==
 
-"@rdfine/hydra@^0.5.1", "@rdfine/hydra@^0.5.3":
+"@rdfine/hydra@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@rdfine/hydra/-/hydra-0.5.1.tgz#e5c14b6995939847052adf905873424df2c6ad91"
+  integrity sha512-hplqmlmBx49kTW1/b1fqJb/ZSi155YROjM33vwcGRdN+7U65wamJ0wAPDLuh6sNVs5kkngO06nTRKlPkJ7rhMQ==
+  dependencies:
+    "@rdf-esm/data-model" "^0.5.3"
+    "@rdfine/rdf" "^0.4.1"
+    "@rdfine/rdfs" "^0.5.0"
+    "@tpluscode/rdf-ns-builders" "^0.4"
+    "@tpluscode/rdfine" "^0.5.9"
+    es6-url-template "^1.0.4"
+
+"@rdfine/hydra@^0.5.3":
   version "0.5.3"
   resolved "https://registry.yarnpkg.com/@rdfine/hydra/-/hydra-0.5.3.tgz#63f21e066efb7c322575b982daf00cdde7467cd5"
   integrity sha512-cSJQVffrtLafRfM9S0FmkbTEDxjup9wmrQebnxFHRf8A9cWrX2MXeDUb2UkNfjmFovrEvBt30Dn9LXigW4lQTg==
@@ -5909,6 +5921,11 @@ es-to-primitive@^1.2.1:
     is-date-object "^1.0.1"
     is-symbol "^1.0.2"
 
+es6-url-template@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/es6-url-template/-/es6-url-template-1.0.4.tgz#86a0e6816f5a0e280465a5f589d4eb48f3f36253"
+  integrity sha512-mrXD5HjnIGiV5KRgfo8aLvNIPgAzTSxi13O2BvWEZpCvMYJffgmRqKOkL6GmYwjaajVK5O7MQR+ORPt5/LmC7Q==
+
 es6-url-template@^3:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/es6-url-template/-/es6-url-template-3.0.2.tgz#99632e854cd1c5a88fffaf3e4dca8e2f72d89995"
@@ -7468,12 +7485,7 @@ http-parser-js@>=0.5.1:
   resolved "https://registry.yarnpkg.com/http-parser-js/-/http-parser-js-0.5.2.tgz#da2e31d237b393aae72ace43882dd7e270a8ff77"
   integrity sha512-opCO9ASqg5Wy2FNo7A0sxy71yGbbkJJXLdgMK04Tcypw9jr2MgWbyubb0+WdmDmGnFflO7fRbqbaihh/ENDlRQ==
 
-http-problem-details-mapper@^0.1.4:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/http-problem-details-mapper/-/http-problem-details-mapper-0.1.6.tgz#39dc3101330e71326357023b97108d432636f956"
-  integrity sha512-ILTTZE8GTAV+/7imDyYc0ZO/ROoUNAJ+QeoO0jH23lr6dgm8oOOCZQLzKu9ijABVpYwscbOBjV9s0B2AoSOnCA==
-
-http-problem-details-mapper@^0.1.7:
+http-problem-details-mapper@^0.1.4, http-problem-details-mapper@^0.1.6, http-problem-details-mapper@^0.1.7:
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/http-problem-details-mapper/-/http-problem-details-mapper-0.1.7.tgz#e119e28abfa0832c0249c48b1ce2f80a334fd318"
   integrity sha512-M0rXE8hQxwLduUy+eqmZi2exbrTDxNHUrpaEbyMhYgn1arCnrqxOlIB7ovBkTyvT+e3WZw12RqbwtQDyfKjD+g==

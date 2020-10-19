@@ -18,7 +18,8 @@ type CubeCreatorProperty =
   'projects' |
   'csvMapping' |
   'csvSource' |
-  'csvSourceCollection'
+  'csvSourceCollection' |
+  'csvColumnSample'
 
 type OtherTerms =
   'dash'
