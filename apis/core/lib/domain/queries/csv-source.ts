@@ -2,11 +2,11 @@ import { NamedNode } from 'rdf-js'
 import { ASK } from '@tpluscode/sparql-builder'
 import { cc } from '@cube-creator/core/namespace'
 import { schema } from '@tpluscode/rdf-ns-builders'
-import { client } from './query-client'
+import { streamClient } from '../../query-client'
 
-export async function sourceWithFilenameExists(csvMapping: NamedNode, fileName: string): Promise<boolean> {
+export async function sourceWithFilenameExists(csvMapping: NamedNode, fileName: string, client = streamClient): Promise<boolean> {
   return ASK`
-      GRAPH ${csvMapping} 
+      GRAPH ${csvMapping}
       {
         ${csvMapping} ${cc.csvSource} ?source
       }

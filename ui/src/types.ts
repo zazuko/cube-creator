@@ -22,7 +22,15 @@ export interface Project extends Resource {
   csvMapping: null | CSVMapping;
 }
 
+export interface CSVColumn extends Resource {
+  actions: Record<string, unknown>;
+  name: string;
+  order: number;
+  sampleValues: string[];
+}
+
 export interface Source extends Resource {
   actions: Record<string, unknown>;
   name: string;
+  columns: CSVColumn[];
 }

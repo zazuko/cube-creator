@@ -13,19 +13,20 @@ import { loadFileHeadString } from '../csv/file-head'
 import { sniffParse } from '../csv'
 import { sourceWithFilenameExists } from '../queries/csv-source'
 import { Conflict } from 'http-errors'
+import { resourceStore } from '../resources'
 
 interface UploadCSVCommand {
   file: Readable
   fileName: string
   resource: NamedNode
-  store: ResourceStore
+  store?: ResourceStore
 }
 
 export async function uploadFile({
   file,
   fileName,
   resource,
-  store,
+  store = resourceStore(),
 }: UploadCSVCommand): Promise<GraphPointer> {
   const csvMapping = await store.get(resource)
 
