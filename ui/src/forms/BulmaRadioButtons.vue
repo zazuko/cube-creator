@@ -28,10 +28,12 @@ export default class extends Vue {
     return this.options?.terms
   }
 
-  message = ''
+  get message () {
+    if (this.value) {
+      return this.options?.node(this.value).out(rdfs.comment).values[0] || ''
+    }
 
-  mounted () {
-    this.message = this.value?.out(rdfs.comment).value || ''
+    return ''
   }
 
   label (value: Term) {
@@ -39,7 +41,6 @@ export default class extends Vue {
   }
 
   emit (value: string) {
-    this.message = this.options?.namedNode(value).out(rdfs.comment).values[0] || ''
     this.update(value)
   }
 }

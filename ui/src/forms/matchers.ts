@@ -1,8 +1,7 @@
-import { cc } from '@cube-creator/core/namespace'
 import type { SingleEditor } from '@hydrofoil/shaperone-core'
 import { editor } from '@/forms/bulma'
 
-export const projectKindSelector: SingleEditor = {
+export const radioButtons: SingleEditor = {
   term: editor.RadioButtons,
   match (shape) {
     const { in: choices, path } = shape
@@ -12,8 +11,7 @@ export const projectKindSelector: SingleEditor = {
     if (choices.length > 5) {
       return null
     }
-    const prop = Array.isArray(path) ? path[0] : path
 
-    return prop?.equals(cc.projectSourceKind) ? 50 : null
+    return 50
   }
 }
