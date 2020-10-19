@@ -3,9 +3,10 @@ import $rdf from 'rdf-ext'
 import { hydra, rdf, sh } from '@tpluscode/rdf-ns-builders'
 import SHACLValidator from 'rdf-validate-shacl'
 import error from 'http-errors'
+import { resourceStore } from '../domain/resources'
 
-export const shaclValidate = asyncMiddleware(async (req, res, next) => {
-  const resources = req.app.resources()
+export const shaclMiddleware = (createResourceStore: typeof resourceStore) => asyncMiddleware(async (req, res, next) => {
+  const resources = createResourceStore()
 
   const shapes = $rdf.dataset()
   await Promise.all(req.hydra.operation.out(hydra.expects).map(async (expects) => {
@@ -37,3 +38,5 @@ export const shaclValidate = asyncMiddleware(async (req, res, next) => {
 
   return next(new error.BadRequest())
 })
+
+export const shaclValidate = shaclMiddleware(resourceStore)

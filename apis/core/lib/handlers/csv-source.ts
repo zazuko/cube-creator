@@ -29,8 +29,6 @@ export const post = labyrinth.protectedResource(
       file: req.read(),
       fileName: fileName,
       resource: csvMapping,
-      store: req.app.resources(),
-      client: req.app.sparql,
     })
     res.status(201)
     res.header('Location', fileLocation.value)
@@ -47,7 +45,6 @@ const getCSVSource = asyncMiddleware(async (req, res, next) => {
 
   const head = await getCSVHead({
     resource: csvSource,
-    store: req.app.resources(),
   })
 
   res.type('text/csv')
