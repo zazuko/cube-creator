@@ -1,7 +1,6 @@
 import { ActionTree, MutationTree, GetterTree } from 'vuex'
 import { api } from '@/api'
 import { RootState } from '../types'
-import { rdfs } from '@tpluscode/rdf-ns-builders'
 import * as ns from '@cube-creator/core/namespace'
 import { Project, ProjectsCollection, CSVMapping, SourcesCollection } from '@/types'
 
