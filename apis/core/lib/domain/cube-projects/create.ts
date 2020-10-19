@@ -4,18 +4,19 @@ import { rdfs, rdf, hydra, dcterms } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import { ResourceStore } from '../../ResourceStore'
 import { cubeProject, csvMapping, csvSourceCollection } from '../identifiers'
+import { resourceStore } from '../resources'
 
 interface CreateProjectCommand {
   projectsCollection: NamedNode
   resource: GraphPointer
-  store: ResourceStore
+  store?: ResourceStore
   user: NamedNode
 }
 
 export async function createProject({
   projectsCollection,
   resource,
-  store,
+  store = resourceStore(),
   user,
 }: CreateProjectCommand): Promise<GraphPointer> {
   const label = resource.out(rdfs.label).term!
