@@ -8,6 +8,7 @@ import ProjectMixin from './mixins/Project'
 import CSVMappingMixin from './mixins/CSVMapping'
 import CSVSourceCollectionMixin from './mixins/CSVSourceCollection'
 import CSVSourceMixin from './mixins/CSVSource'
+import CSVColumnMixin from './mixins/CSVColumn'
 
 const rootURL = window.APP_CONFIG.apiCoreBase
 const segmentSeparator = '!!' // used to replace slash in URI to prevent escaping
@@ -25,6 +26,7 @@ Hydra.resources.factory.addMixin(ProjectMixin)
 Hydra.resources.factory.addMixin(CSVMappingMixin)
 Hydra.resources.factory.addMixin(CSVSourceCollectionMixin)
 Hydra.resources.factory.addMixin(CSVSourceMixin)
+Hydra.resources.factory.addMixin(CSVColumnMixin)
 
 // Inject the access token in all requests if present
 Hydra.defaultHeaders = () => {

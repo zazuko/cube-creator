@@ -20,8 +20,10 @@
           class="source-column panel-block"
         >
           <b-checkbox v-model="selectedColumns" :native-value="column.id.value">
-            {{ column.title }}
-            <span class="has-text-grey"> ({{ column.data.join(", ") }}) </span>
+            {{ column.name }}
+            <span class="has-text-grey" v-if="column.sampleValues.length > 0">
+              &nbsp;({{ column.sampleValues.slice(0, 3).join(", ") }})
+            </span>
           </b-checkbox>
           <div>
             <b-tooltip
