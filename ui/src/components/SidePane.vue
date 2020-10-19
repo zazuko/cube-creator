@@ -12,14 +12,7 @@
   </div>
 </template>
 
-<style scoped>
-  .quickview-body {
-    padding: 1rem;
-  }
-</style>
-
-<script>
-import Quickview from 'bulma-quickview/dist/js/bulma-quickview'
+<script lang="ts">
 import 'bulma-quickview/dist/css/bulma-quickview.min.css'
 
 export default {
@@ -28,17 +21,11 @@ export default {
     isOpen: Boolean,
     title: { type: String, required: true },
   },
-
-  data () {
-    return {
-      quickview: null
-    }
-  },
-
-  mounted () {
-    this.$nextTick(() => {
-      this.quickview = new Quickview(this.$el, {})
-    })
-  }
 }
 </script>
+
+<style scoped>
+.quickview-body {
+  padding: 1rem;
+}
+</style>
