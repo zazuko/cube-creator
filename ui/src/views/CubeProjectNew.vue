@@ -53,10 +53,10 @@ export default Vue.extend({
       if ('load' in expects && expects.types.has(sh.Shape)) {
         const { representation } = await expects.load()
         const { root: shape } = representation
-        this.shapes = Object.freeze(dataset([...shape?.pointer.dataset
-          .match(null, null, null, shape.id)]
-          .map(({ subject, predicate, object }) => quad(subject, predicate, object))))
-        break
+        if (shape) {
+          this.shapes = shape.pointer
+          break
+        }
       }
     }
   },
