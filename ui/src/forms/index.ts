@@ -8,8 +8,8 @@ import { Metadata } from './metadata'
 
 renderer.setStrategy({
   ...DefaultStrategy,
-  ...MaterialRenderStrategy,
-  focusNode: MaterialRenderStrategy.focusNode(DefaultStrategy.focusNode),
+  property: MaterialRenderStrategy.property,
+  object: MaterialRenderStrategy.object,
 })
 components.pushComponents(Components)
 
