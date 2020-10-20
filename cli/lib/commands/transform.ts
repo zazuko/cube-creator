@@ -5,8 +5,8 @@ import $rdf from 'rdf-ext'
 import { fileToDataset } from 'barnard59'
 import { Debugger } from 'debug'
 import { AuthConfig, setupAuthentication } from '../auth'
-import Runner = require('barnard59/lib/runner')
-import bufferDebug = require('barnard59/lib/bufferDebug')
+import Runner from 'barnard59/lib/runner'
+import bufferDebug from 'barnard59/lib/bufferDebug'
 
 interface RunOptions extends Command {
   debug: boolean
