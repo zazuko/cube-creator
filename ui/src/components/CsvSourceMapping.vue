@@ -5,7 +5,14 @@
         <div class="panel-heading">
           <div class="level">
             <div class="level-left">
-              {{ source.name }}
+              <div class="level-item">
+                {{ source.name }}
+              </div>
+              <div class="level-item">
+                <b-tooltip v-if="source.actions.delete" :label="source.actions.delete.title">
+                  <b-button icon-left="trash" @click="deleteSource(source)" type="is-text" />
+                </b-tooltip>
+              </div>
             </div>
             <div class="level-right">
               <b-button :disabled="selectedColumns.length === 0">
