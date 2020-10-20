@@ -76,6 +76,7 @@ export async function uploadFile({
     }
   } catch (err) {
     error(err)
+    csvSource.addOut(schema.error, err.message)
   }
 
   csvMapping.addOut(cc.csvSource, csvSource)

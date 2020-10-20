@@ -91,6 +91,18 @@ With Class cc:CubeProject {
                 } => {
                     Expect Status 409
                 }
+
+                Invoke {
+                    Content-Type "text/csv"
+                    Content-Disposition "file; filename=invalid-csv.csv"
+
+                    <<< "invalid-csv.csv"
+                } => {
+                    Expect Status 201
+                    Expect Type <https://cube-creator.zazuko.com/vocab#CSVSource>
+                    Expect Property <http://schema.org/associatedMedia>
+                    Expect Property <http://schema.org/error> "Invalid Record Length: expect 1, got 2 on line 3"
+                }
             }
         }
     }
