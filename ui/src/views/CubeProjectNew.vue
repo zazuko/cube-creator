@@ -49,14 +49,14 @@ export default Vue.extend({
   },
 
   async mounted () {
-    for (const expects of this.operation?.expects) {
-      if ('load' in expects && expects.types.has(sh.Shape)) {
-        const { representation } = await expects.load()
-        const { root: shape } = representation
-        if (shape) {
-          this.shapes = shape.pointer
-          break
-        }
+    const expects = this.operation?.expects
+      .find(expects => 'load' in expects && expects.types.has(sh.Shape))
+
+    if (expects) {
+      const { representation } = await expects.load()
+      const { root: shape } = representation
+      if (shape) {
+        this.shapes = shape.pointer
       }
     }
   },
