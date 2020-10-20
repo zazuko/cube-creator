@@ -14,6 +14,7 @@ import { sniffParse } from '../csv'
 import { sourceWithFilenameExists } from '../queries/csv-source'
 import { Conflict } from 'http-errors'
 import { resourceStore } from '../resources'
+import { sampleValues } from '../csv/sample-values'
 
 interface UploadCSVCommand {
   file: Readable
@@ -50,8 +51,9 @@ export async function uploadFile({
 
   try {
     const fileStream = await loadFile(key) as Readable
-    const head = await loadFileHeadString(fileStream)
+    const head = await loadFileHeadString(fileStream, 500)
     const { dialect, header, rows } = await sniffParse(head)
+    const sampleCol = sampleValues(header, rows)
 
     csvSource
       .addOut(csvw.dialect, id.dialect(csvSource), csvDialect => {
@@ -67,10 +69,8 @@ export async function uploadFile({
         column.addOut(rdf.type, [csvw.Column])
           .addOut(schema.name, columnName)
           .addOut(dtype.order, index)
-        rows.forEach(row => {
-          if (row.length > index) {
-            column.addOut(cc.csvColumnSample, row[index])
-          }
+        sampleCol[index].forEach(value => {
+          column.addOut(cc.csvColumnSample, value)
         })
       })
     }
