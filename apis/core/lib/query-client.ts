@@ -1,5 +1,5 @@
 import StreamClient from 'sparql-http-client'
-import env from './env'
+import env from '@cube-creator/core/env'
 
 export const streamClient = new StreamClient({
   endpointUrl: env.STORE_QUERY_ENDPOINT,

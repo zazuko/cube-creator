@@ -1,5 +1,7 @@
-import namespace from '@rdfjs/namespace'
+import namespace from '@rdf-esm/namespace'
 import { NamedNode } from 'rdf-js'
+
+export { shape } from './namespaces/shapes'
 
 type CubeCreatorClass =
   'CubeProject' |
@@ -19,7 +21,10 @@ type CubeCreatorProperty =
   'csvSourceCollection' |
   'csvColumnSample'
 
-type CubeCreatorNamespace = Record<CubeCreatorClass | CubeCreatorProperty, NamedNode>
+type OtherTerms =
+  'dash'
+
+type CubeCreatorNamespace = Record<CubeCreatorClass | CubeCreatorProperty | OtherTerms, NamedNode>
 
 export const cube = namespace('http://ns.bergnet.org/cube/')
 export const cc: CubeCreatorNamespace = namespace('https://cube-creator.zazuko.com/vocab#') as any

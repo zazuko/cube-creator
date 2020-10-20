@@ -6,7 +6,7 @@ import { cubeProjects } from './cube-projects'
 import { log } from '../lib/log'
 import { entrypoint } from './entrypoint'
 import shapes from './shapes'
-import env from '../lib/env'
+import env from '@cube-creator/core/env'
 
 const parser = new Parser()
 const initialResources = [cubeProjects, entrypoint, ...shapes]

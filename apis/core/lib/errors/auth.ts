@@ -1,7 +1,7 @@
 import { ErrorMapper } from 'http-problem-details-mapper'
 import { ProblemDocument } from 'http-problem-details'
 import httpError from 'http-errors'
-import env from '../env'
+import env from '@cube-creator/core/env'
 
 class AuthErrorMapper extends ErrorMapper {
   private readonly status: number;

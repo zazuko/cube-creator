@@ -1,5 +1,5 @@
 import { Hydra } from 'alcaeus/web'
-import { Resource, RuntimeOperation } from 'alcaeus'
+import { RdfResource, Resource, RuntimeOperation } from 'alcaeus'
 import store from '@/store'
 import { APIError } from './errors'
 import { apiResourceMixin } from './mixins/ApiResource'
@@ -58,10 +58,10 @@ export const api = {
     return resource
   },
 
-  async invokeSaveOperation<T extends Resource = Resource> (operation: RuntimeOperation | null, data: Record<string, any> | File, headers: Record<string, any> = {}): Promise<T> {
+  async invokeSaveOperation<T extends Resource = Resource> (operation: RuntimeOperation | null, data: RdfResource | File, headers: Record<string, any> = {}): Promise<T> {
     if (!operation) throw new Error('Operation does not exist')
 
-    const serializedData = data instanceof File ? data : JSON.stringify(data)
+    const serializedData = data instanceof File ? data : JSON.stringify(data.toJSON())
     const response = await operation.invoke(serializedData, headers)
 
     if (!response.response?.xhr.ok) {

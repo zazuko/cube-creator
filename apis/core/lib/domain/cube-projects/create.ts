@@ -1,7 +1,7 @@
 import { GraphPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'
 import { rdfs, rdf, hydra, dcterms } from '@tpluscode/rdf-ns-builders'
-import { cc } from '@cube-creator/core/namespace'
+import { cc, shape } from '@cube-creator/core/namespace'
 import { ResourceStore } from '../../ResourceStore'
 import { cubeProject, csvMapping, csvSourceCollection } from '../identifiers'
 import { resourceStore } from '../resources'
@@ -27,7 +27,7 @@ export async function createProject({
   project.addOut(rdfs.label, label)
     .addOut(dcterms.creator, user)
 
-  if (resource.out(cc.projectSourceKind).value === 'CSV') {
+  if (shape('cube-project/create#CSV').equals(resource.out(cc.projectSourceKind).term)) {
     const mapping = store
       .create(csvMapping(project))
       .addOut(rdf.type, cc.CsvMapping)

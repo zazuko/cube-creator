@@ -1,7 +1,6 @@
 import { ActionTree, MutationTree, GetterTree } from 'vuex'
 import { api } from '@/api'
 import { RootState } from '../types'
-import { rdfs } from '@tpluscode/rdf-ns-builders'
 import * as ns from '@cube-creator/core/namespace'
 import { Project, ProjectsCollection, CSVMapping, SourcesCollection } from '@/types'
 
@@ -61,23 +60,6 @@ const actions: ActionTree<CubeProjectsState, RootState> = {
     context.commit('storeSourcesCollection', collection)
 
     return collection
-  },
-
-  async create (context, formData) {
-    const operation = context.state.collection?.actions?.create ?? null
-    // TODO: Move this close to the resource definition
-    const data = {
-      '@context': {
-        '@vocab': 'https://cube-creator.zazuko.com/vocab#',
-      },
-      '@type': 'CubeProject',
-      // Must pass this ID for now because of a bug in rdfjs/express-handler
-      '@id': '',
-      [rdfs.label.value]: formData.label,
-      projectSourceKind: formData.projectSourceKind,
-    }
-
-    return api.invokeSaveOperation(operation, data)
   },
 
   async uploadCSVs (context, files) {

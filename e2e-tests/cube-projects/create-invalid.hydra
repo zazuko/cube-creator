@@ -15,7 +15,18 @@ With Class api:EntryPoint {
 
                 ```
                 prefix cc: <https://cube-creator.zazuko.com/vocab#>
-                <> cc:projectSourceKind "CSV" .
+                <> cc:projectSourceKind <https://cube-creator.lndo.site/shape/cube-project/create#CSV> .
+                ```
+            } => {
+                Expect Status 400
+            }
+
+            Invoke {
+                Content-Type "text/turtle"
+
+                ```
+                prefix cc: <https://cube-creator.zazuko.com/vocab#>
+                <> cc:projectSourceKind <https://cube-creator.lndo.site/shape/cube-project/create#Foo> .
                 ```
             } => {
                 Expect Status 400
@@ -27,7 +38,7 @@ With Class api:EntryPoint {
                 ```
                 prefix cc: <https://cube-creator.zazuko.com/vocab#>
                 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-                <> cc:projectSourceKind "CSV" ; rdfs:label "" .
+                <> cc:projectSourceKind <https://cube-creator.lndo.site/shape/cube-project/create#CSV> ; rdfs:label "" .
                 ```
             } => {
                 Expect Status 400

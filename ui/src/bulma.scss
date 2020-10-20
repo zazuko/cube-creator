@@ -24,3 +24,8 @@ $panel-radius: 0;
 .panel-tabs:first-child {
     border-top: 1px solid $grey-lighter;
 }
+
+cc-form {
+    margin: 0 -16px;
+    display: block;
+}
