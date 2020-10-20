@@ -47,7 +47,7 @@ const getMetadata = once(async (config: AuthConfig) => {
 const getToken = async function (config: AuthConfig, log: Debugger) {
   const metadata = await getMetadata(config)
 
-  const params = {
+  const params: Record<string, string> = {
     grant_type: 'client_credentials',
     client_id: config.clientId,
     client_secret: config.clientSecret,

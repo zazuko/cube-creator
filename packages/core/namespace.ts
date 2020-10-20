@@ -22,7 +22,9 @@ type CubeCreatorProperty =
   'csvSource' |
   'csvSourceCollection' |
   'csvColumnSample' |
-  'csvw'
+  'csvw' |
+  'project' |
+  'tables'
 
 type OtherTerms =
   'dash'

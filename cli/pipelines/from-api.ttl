@@ -3,14 +3,14 @@
 @prefix code: <https://code.described.at/> .
 
 <#LoadCsv>
-  :steps [ :stepList ( _:openCsvFromFilesystem ) ] ;
+  :steps [ :stepList ( _:openCsvFromApi ) ] ;
   :variables [ :variable <#sourceDir> ].
 
-_:openCsvFromFilesystem
+_:openCsvFromApi
   a                  :Step ;
   code:implementedBy [ code:link <file:../lib/csv#openFromCsvw> ;
                        a         code:EcmaScript ] ;
-  code:arguments     ( "csvw"^^:VariableName "sourceDir"^^:VariableName ) .
+  code:arguments     ( "csvw"^^:VariableName ) .
 
 
 <#LoadDatacubeMetadata>

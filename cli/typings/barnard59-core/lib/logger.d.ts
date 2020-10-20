@@ -1,10 +1,8 @@
 declare module 'barnard59-core/lib/logger' {
 
-  import { Transform } from 'readable-stream'
-
   type LogDetails = Record<string, any> & { name: string }
 
-  class Logger extends Transform {
+  class Logger {
     writeLog(level, message, { name, ...details })
 
     trace(message: string, details?: LogDetails);

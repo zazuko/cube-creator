@@ -5,6 +5,7 @@
   "dependencies": {
     "@cube-creator/core": "*",
     "@rdfine/csvw": "^0.5.1",
+    "@rdfine/hydra": "^0.5.4",
     "@rdfine/rdfs": "^0.5.0",
     "@rdfine/schema": "^0.5.2",
     "@tpluscode/rdfine": "^0.5.10",

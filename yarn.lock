@@ -1847,10 +1847,10 @@
     "@tpluscode/rdf-ns-builders" "^0.4"
     "@tpluscode/rdfine" "^0.5.7"
 
-"@rdfine/hydra@^0.5.1", "@rdfine/hydra@^0.5.3":
-  version "0.5.4"
-  resolved "https://registry.yarnpkg.com/@rdfine/hydra/-/hydra-0.5.4.tgz#50f4ba79a925a6a09e9ca7549dc196cd6f066956"
-  integrity sha512-fCeXuv2r42P8WpBhKSLOxuhoZiHZFPw/xfQpHyLXDUHGkwYffiowWoDFwfomo4tq9jXu68L4N768Cm9cyQa3mg==
+"@rdfine/hydra@^0.5.1", "@rdfine/hydra@^0.5.4", "@rdfine/hydra@^0.5.5":
+  version "0.5.5"
+  resolved "https://registry.yarnpkg.com/@rdfine/hydra/-/hydra-0.5.5.tgz#80e74ef361e637c4d65f6d8ddae5a503c403bb6d"
+  integrity sha512-jonKQOdzO79EnvrURpPuyiX6c2IwXASO92M+UpkaaRpvlYxU1cz6qNh3/P45g7sM1Z0qiIfSaldxIsFXd1hswA==
   dependencies:
     "@rdf-esm/data-model" "^0.5.3"
     "@rdfine/rdf" "^0.4.1"
@@ -2142,20 +2142,7 @@
     "@tpluscode/rdf-ns-builders" "^0.4"
     "@zazuko/rdf-vocabularies" "^2020.6.29"
 
-"@tpluscode/rdfine@^0.5.10", "@tpluscode/rdfine@^0.5.7", "@tpluscode/rdfine@^0.5.9":
-  version "0.5.10"
-  resolved "https://registry.yarnpkg.com/@tpluscode/rdfine/-/rdfine-0.5.10.tgz#2d6cdc854c0c3f7c7d76699f38e02846c37a0ef3"
-  integrity sha512-zqag/ZxjePUfBFKbux0pcQTy+IDVYHkOIqhNc3KzpXxEBTRzNA87rQvJ/5oR5SezQdDAG8aa1Attza8xkvpgXw==
-  dependencies:
-    "@rdf-esm/data-model" "^0.5.3"
-    "@rdf-esm/namespace" "^0.5.1"
-    "@rdf-esm/term-map" "^0.5.0"
-    "@rdf-esm/term-set" "^0.5.0"
-    "@tpluscode/rdf-ns-builders" "^0.4"
-    clownface "^1"
-    once "^1.4.0"
-
-"@tpluscode/rdfine@^0.5.11", "@tpluscode/rdfine@^0.5.6":
+"@tpluscode/rdfine@^0.5.10", "@tpluscode/rdfine@^0.5.11", "@tpluscode/rdfine@^0.5.6", "@tpluscode/rdfine@^0.5.7", "@tpluscode/rdfine@^0.5.9":
   version "0.5.11"
   resolved "https://registry.yarnpkg.com/@tpluscode/rdfine/-/rdfine-0.5.11.tgz#fc632e950e724c4db9c4046e8bd2030385fd0d94"
   integrity sha512-ZwB0SXh9A78AdB+fpEDrki+t2fqW3jjkXwOZs35CiCocYOfV9VthMhQJeIO4aZYbWV/TzHT9NvoMJpXYcEHiOg==
@@ -3418,17 +3405,17 @@ ajv@^6.12.5:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
-alcaeus@1.0.0-RC.1, alcaeus@^1.0.0-RC.1:
-  version "1.0.0-RC.1"
-  resolved "https://registry.yarnpkg.com/alcaeus/-/alcaeus-1.0.0-RC.1.tgz#850810e9f28bcf3ae05a30bf00b14f8c474581f9"
-  integrity sha512-JsbrsvaHMfvLCa47Xu7ZOwVVVMJTCp057UkoB6lp5hznGU0eKWDU/SzTqgDi9CzvDa4KTf7fmQ4QeMVz6wn8gQ==
+alcaeus@1.0.0-RC.2, alcaeus@^1.0.0-RC.2:
+  version "1.0.0-RC.2"
+  resolved "https://registry.yarnpkg.com/alcaeus/-/alcaeus-1.0.0-RC.2.tgz#8a376fda678dad3ce5bbc83dc92a6d195b5a8b19"
+  integrity sha512-Suf9K+y82c9Iyj+o6//py9js4t47qB/AHhVqJQWgWNjvYJQ2I+dY8EaMBJoF7rH/78hkDbdXr4kPuH7yJL543Q==
   dependencies:
     "@rdf-esm/data-model" "^0.5.3"
     "@rdf-esm/formats-common" "^0.5.3"
     "@rdf-esm/sink-map" "^0.5.0"
     "@rdf-esm/term-map" "^0.5.0"
     "@rdf-esm/term-set" "^0.5.0"
-    "@rdfine/hydra" "^0.5.3"
+    "@rdfine/hydra" "^0.5.5"
     "@rdfine/rdf" "^0.4.1"
     "@rdfjs/formats-common" "^2.1"
     "@tpluscode/rdf-ns-builders" "^0.4"
