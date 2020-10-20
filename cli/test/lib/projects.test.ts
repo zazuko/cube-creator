@@ -2,7 +2,6 @@
 import { describe, before, it } from 'mocha'
 import { expect } from 'chai'
 import { Hydra } from 'alcaeus/node'
-import $rdf from 'rdf-ext'
 import env from '@cube-creator/core/env'
 import { ProjectIterator } from '../../lib/project'
 import { insertTestData } from '../support/testData'
