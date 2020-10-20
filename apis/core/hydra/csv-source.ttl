@@ -25,14 +25,14 @@ cc:CSVSourceCollection
     ] .
 
 cc:CSVSource
-  a 
+  a
     hydra:Class ;
-    hydra:supportedOperation
+  hydra:supportedOperation
     [
       a
         hydra:Operation,
         cc:GetCSVSourceAction ;
-      hydra:title 
+      hydra:title
         "Get CSV Source" ;
       hydra:method
         "GET";
@@ -42,5 +42,20 @@ cc:CSVSource
           code:EcmaScript ;
           code:link
             <file:handlers/csv-source#get> ;
+      ]
+    ] , [
+      a
+        hydra:Operation,
+        cc:DeleteCSVSourceAction ;
+      hydra:title
+        "Delete CSV Source" ;
+      hydra:method
+        "DELETE";
+      code:implementedBy
+      [
+        a
+          code:EcmaScript ;
+          code:link
+            <file:handlers/csv-source#delete> ;
       ]
     ] .

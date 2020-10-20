@@ -71,6 +71,12 @@ const actions: ActionTree<CubeProjectsState, RootState> = {
 
     return Promise.all(uploads)
   },
+
+  async deleteSource (context, source) {
+    const operation = source.actions.delete
+    await api.invokeDeleteOperation(operation)
+    await context.dispatch('fetchSourcesCollection')
+  },
 }
 
 const mutations: MutationTree<CubeProjectsState> = {
