@@ -53,7 +53,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { Source } from '@/types'
+import { Source } from '../types'
 
 export default Vue.extend({
   name: 'CsvSourceMapping',
@@ -75,8 +75,8 @@ export default Vue.extend({
 
     async deleteSource (source: Source): Promise<void> {
       this.$buefy.dialog.confirm({
-        title: source.actions.delete.title,
-        message: 'Are you sure you want to delete this source?',
+        title: source.actions.delete?.title,
+        message: 'Are you sure you want to delete this CSV source?',
         confirmText: 'Delete',
         type: 'is-danger',
         hasIcon: true,
