@@ -25,6 +25,7 @@ ${shape('cube-project/create')} {
         ${shape('cube-project/create#CSV')}
         ${shape('cube-project/create#ExistingCube')}
       ) ;
+      ${sh.defaultValue} ${shape('cube-project/create#CSV')} ;
       ${sh.order} 1 ;
     ] ;
   .
