@@ -15,7 +15,7 @@
           </div>
         </div>
         <b-message v-if="source.error" type="is-danger" class="content">
-          <p>An error occured while parsing the CSV file:</p>
+          <p>An error occurred while parsing the CSV file:</p>
           <pre>{{ source.error }}</pre>
           <p v-if="source.actions.delete">
             Fix your file, <a @click="deleteSource(source)">delete this one</a> and upload your file again.
