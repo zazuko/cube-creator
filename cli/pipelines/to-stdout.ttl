@@ -1,0 +1,13 @@
+@base         <urn:pipeline:data-cube-curation> .
+@prefix :     <https://pipeline.described.at/> .
+@prefix code: <https://code.described.at/> .
+
+<#Main> a :Readable .
+
+<#StreamOutput> a :Readable ;
+  :steps     [ :stepList ( _:serialize ) ] .
+
+_:serialize
+  a                  :Step ;
+  code:implementedBy [ code:link <node:barnard59-formats#ntriples.serialize> ;
+                       a         code:EcmaScript ] .

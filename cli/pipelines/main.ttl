@@ -1,0 +1,83 @@
+@base <urn:pipeline:data-cube-curation> .
+@prefix : <https://pipeline.described.at/> .
+@prefix code: <https://code.described.at/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+<#Main> a :Pipeline ;
+  :steps [ :stepList ( <#TransformFiles> <#streamOutputStep> ) ] .
+
+<#StreamOutput>
+  a :Pipeline, :WritableObjectMode .
+
+<#streamOutputStep>
+  a                  :Step ;
+  code:implementedBy [ code:link <file:../lib/pipeline#asStep> ;
+                       a         code:EcmaScript ] ;
+  code:arguments     ( <#StreamOutput> ) .
+
+# ------------------------------
+#
+# Transform pipeline
+#
+# One-by-one parses and transforms the source csv files to RDF
+#
+# ------------------------------
+
+<#TransformFiles>
+  a      :Pipeline, :ReadableObjectMode ;
+  :steps [ :stepList ( <#loadMetadata> <#doTransform> ) ] .
+
+<#loadMetadata>
+  a                  :Step ;
+  code:implementedBy [ code:link <file:../lib/project#loadCsvMappings> ;
+                       a         code:EcmaScript ] ;
+  code:arguments     ( "projectUri"^^:VariableName ) .
+
+<#doTransform>
+  a                  :Step ;
+  code:implementedBy [ code:link <node:barnard59-core#forEach> ;
+                       a         code:EcmaScript ] ;
+  code:arguments     ( <#TransformCsv>
+                       "(p, csvwResource) => { p.variables.set('csvw', csvwResource) }"^^code:EcmaScript ) .
+
+# ------------------------------
+#
+# Transforms individual files
+#
+# ------------------------------
+
+<#TransformCsv>
+  a      :Pipeline, :ReadableObjectMode ;
+  :steps [ :stepList ( <#loadCsvStep> <#parse> <#filterNotCsvw> ) ] .
+
+<#LoadCsv>
+  a :Pipeline, :ReadableObjectMode .
+
+<#loadCsvStep>
+  a                  :Step ;
+  code:implementedBy [ code:link <file:../lib/pipeline#asStep> ;
+                       a         code:EcmaScript ] ;
+  code:arguments     ( <#LoadCsv> ) .
+
+<#parse>
+  a                  :Step ;
+  code:implementedBy [ code:link <node:barnard59-formats#csvw.parse> ;
+                       a         code:EcmaScript ] ;
+  code:arguments     ( <#parseMetadata> ) .
+
+<#parseMetadata>
+  a      :Pipeline, :ReadableObjectMode ;
+  :steps [ :stepList ( <#getCsvwGraph> ) ] .
+
+<#getCsvwGraph>
+  a                  :Step ;
+  code:implementedBy [ code:link <file:../lib/csv#getCsvwTriples> ;
+                       a         code:EcmaScript ] ;
+  code:arguments     ( "csvw"^^:VariableName ) .
+
+<#filterNotCsvw>
+  a                  :Step ;
+  code:implementedBy [ a         code:EcmaScript ;
+                       code:link <node:barnard59-base#filter> ] ;
+  code:arguments     ( [ code:link <file:../lib/output-filter#removeCsvwTriples> ;
+                         a         code:EcmaScript ] ) .

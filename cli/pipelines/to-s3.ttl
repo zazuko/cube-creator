@@ -1,0 +1,31 @@
+@base         <urn:pipeline:data-cube-curation> .
+@prefix :     <https://pipeline.described.at/> .
+@prefix code: <https://code.described.at/> .
+
+<#StreamOutput>
+  :steps     [ :stepList ( _:serialize _:save _:devNull ) ] ;
+  :variables [ :variable [ a     :Variable ;
+                           :name "s3endpoint" ] ;
+               :variable [ a     :Variable ;
+                           :name "s3bucket" ] ;
+               :variable [ a      :Variable ;
+                           :name  "targetFile" ;
+                           :value "transformed.nt" ] ] .
+
+_:serialize
+  a                  :Step ;
+  code:implementedBy [ code:link <node:barnard59-formats#ntriples.serialize> ;
+                       a         code:EcmaScript ] .
+
+_:save
+  a                  :Step ;
+  code:implementedBy [ code:link <file:../lib/s3#uploadFile> ;
+                       a         code:EcmaScript ] ;
+  code:arguments     ( "targetFile"^^:VariableName
+                       "s3endpoint"^^:VariableName
+                       "s3bucket"^^:VariableName ) .
+
+_:devNull
+  a                  :Step ;
+  code:implementedBy [ code:link <file:../lib/s3#devNull> ;
+                       a         code:EcmaScript ] .

@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "es2019",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "typeRoots" : ["./typings", "./node_modules/@types"],
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "dist",
+    "inlineSourceMap": true,
+    "strictNullChecks": true,
+    "noImplicitThis": true,
+    "noImplicitReturns": true,
+    "pretty": true,
+    "noUnusedLocals": true,
+    "experimentalDecorators": true
+  },
+  "exclude": ["test"]
+}

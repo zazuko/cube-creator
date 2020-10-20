@@ -6,6 +6,7 @@
     "test": "mocha --recursive apis/*/test/*.test.ts"
   },
   "workspaces": [
+    "cli",
     "ui",
     "apis/*",
     "packages/*"
