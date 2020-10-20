@@ -30,7 +30,9 @@ export interface CSVColumn extends Resource {
 }
 
 export interface Source extends Resource {
-  actions: Record<string, unknown>;
+  actions: {
+    delete: RuntimeOperation | null,
+  };
   name: string;
   columns: CSVColumn[];
 }

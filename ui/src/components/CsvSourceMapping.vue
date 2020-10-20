@@ -87,13 +87,12 @@ export default Vue.extend({
         confirmText: 'Delete',
         type: 'is-danger',
         hasIcon: true,
-        onConfirm: async () => {
-          const loading = this.$buefy.loading.open({})
-          try {
-            await this.$store.dispatch('cubeProjects/deleteSource', source)
-          } finally {
-            loading.close()
-          }
+        onConfirm: () => {
+          this.$store.dispatch('api/invokeDeleteOperation', {
+            operation: source.actions.delete,
+            successMessage: 'CSV source deleted successfully',
+            callbackAction: 'cubeProjects/refreshSourcesCollection',
+          })
         },
       })
     },
