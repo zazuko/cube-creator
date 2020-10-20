@@ -74,14 +74,21 @@ export default Vue.extend({
     },
 
     async deleteSource (source: Source): Promise<void> {
-      const loader = this.$buefy.loading.open({})
-
-      try {
-        await this.$store.dispatch('cubeProjects/deleteSource', source)
-        // TODO: Handle errors
-      } finally {
-        loader.close()
-      }
+      this.$buefy.dialog.confirm({
+        title: source.actions.delete.title,
+        message: 'Are you sure you want to delete this source?',
+        confirmText: 'Delete',
+        type: 'is-danger',
+        hasIcon: true,
+        onConfirm: async () => {
+          const loading = this.$buefy.loading.open({})
+          try {
+            await this.$store.dispatch('cubeProjects/deleteSource', source)
+          } finally {
+            loading.close()
+          }
+        },
+      })
     },
   },
 })
