@@ -43,4 +43,20 @@ cc:CSVSource
           code:link
             <file:handlers/csv-source#get> ;
         ]
+    ],
+    [
+      a
+        hydra:Operation,
+        cc:DeleteCSVSourceAction ;
+      hydra:title
+        "Delete CSV Source" ;
+      hydra:method
+        "DELETE" ;
+      code:implementedBy
+        [
+          a
+            code:EcmaScript ;
+          code:link
+            <file:handlers/csv-source#delete> ;
+        ]
     ] .
