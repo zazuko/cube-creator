@@ -27,8 +27,8 @@ jobs:
       - run: yarn install --ci
       - run: yarn test:cli
       - name: logs on fail
-          if: ${{ failure() }}
-          run: lando logs -s core
+        if: ${{ failure() }}
+        run: lando logs -s core
 
   lint:
     runs-on: ubuntu-latest
