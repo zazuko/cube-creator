@@ -15,8 +15,14 @@
               </div>
             </div>
             <div class="level-right">
-              <b-button :disabled="selectedColumns.length === 0">
-                Create resource from selected columns
+              <b-button
+                :disabled="selectedColumns.length === 0"
+                tag="router-link"
+                :to="{ name: 'TableCreate', query: createTableQueryParams }"
+                size="is-small"
+                icon-left="plus"
+              >
+                Create table from selected columns
               </b-button>
             </div>
           </div>
@@ -33,7 +39,7 @@
           :key="column.id.value"
           class="source-column panel-block"
         >
-          <b-checkbox v-model="selectedColumns" :native-value="column.id.value">
+          <b-checkbox v-model="selectedColumns" :native-value="column">
             {{ column.name }}
             <span class="has-text-grey" v-if="column.sampleValues.length > 0">
               &nbsp;({{ column.sampleValues.slice(0, 3).join(", ") }})
@@ -56,20 +62,32 @@
       <div v-for="table in sourceTables" :key="table.id.value">
         {{ table.toJSON() }}
       </div>
+      <div v-if="isFirstSource && sourceTables.length === 0" class="content">
+        <p>You haven't mapped any table yet.</p>
+        <p>The first step is to define which columns of your CSV will be dimensions of your cube:</p>
+        <ol>
+          <li>Select columns that will be dimensions of your cube on the CSV file (left column)</li>
+          <li>Click "Create table from selected columns"</li>
+          <li>Select the type "Observation table" in the form. The Observation table represents the structure of your cube.</li>
+          <li>After submitting the form, you should already be able to see a first version of your cube in the "Cube Preview" (bottom of the screen).</li>
+        </ol>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import { Source, Table } from '../types'
+import { Source, Table, TableCollection } from '../types'
 
 export default Vue.extend({
   name: 'CsvSourceMapping',
 
   props: {
+    isFirstSource: { type: Boolean, default: false },
     source: { type: Object as () => Source, required: true },
     tables: { type: Array as () => Table[], required: true },
+    tableCollection: { type: Object as () => TableCollection, required: true },
   },
 
   data () {
@@ -81,6 +99,15 @@ export default Vue.extend({
   computed: {
     sourceTables () {
       return this.tables.filter(({ source }) => source.id.equals(this.source.id))
+    },
+
+    createTableQueryParams () {
+      return {
+        source: this.source.clientPath,
+        columns: this.selectedColumns
+          .map(({ clientPath }) => clientPath)
+          .join(',')
+      }
     },
   },
 

@@ -4,6 +4,7 @@ prefix hydra: <http://www.w3.org/ns/hydra/core#>
 prefix code:  <https://code.described.at/>
 prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix schema:   <http://schema.org/>
+prefix sh:    <http://www.w3.org/ns/shacl#>
 
 cc:TableCollection
   a
@@ -17,6 +18,9 @@ cc:TableCollection
         "Create table" ;
       hydra:method
         "POST" ;
+      hydra:expects
+        cc:Table,
+        <shape/table/create> ;
       code:implementedBy
         [
           a
@@ -25,6 +29,8 @@ cc:TableCollection
             <file:handlers/table#post> ;
         ] ;
     ] .
+
+<shape/table/create> a sh:Shape .
 
 cc:Table
   a

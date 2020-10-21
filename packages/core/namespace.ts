@@ -24,8 +24,9 @@ type CubeCreatorProperty =
   'csvSourceCollection' |
   'csvColumnSample' |
   'csvw' |
-  'project' |
   'tables' |
+  'identifierTemplate' |
+  'project' |
   'cube'
 
 type OtherTerms =

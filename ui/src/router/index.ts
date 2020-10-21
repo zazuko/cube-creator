@@ -11,6 +11,7 @@ import CubeProject from '@/views/CubeProject.vue'
 import CubeProjectNew from '@/views/CubeProjectNew.vue'
 import CSVMapping from '@/views/CSVMapping.vue'
 import CSVUpload from '@/views/CSVUpload.vue'
+import TableCreate from '@/views/TableCreate.vue'
 import CubeDesigner from '@/views/CubeDesigner.vue'
 import PageNotFound from '@/views/PageNotFound.vue'
 import Logout from '@/views/Logout.vue'
@@ -51,6 +52,11 @@ const routes: Array<RouteConfig> = [
                 path: 'csv-upload',
                 name: 'CSVUpload',
                 component: CSVUpload,
+              },
+              {
+                path: 'tables/create',
+                name: 'TableCreate',
+                component: TableCreate,
               },
             ],
           },
