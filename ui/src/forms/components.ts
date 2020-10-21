@@ -1,6 +1,7 @@
 import { html, SingleEditorComponent } from '@hydrofoil/shaperone-wc'
+import * as ns from '@cube-creator/core/namespace'
 import { dash } from '@tpluscode/rdf-ns-builders'
-import { editor, createCustomElement } from '@/forms/bulma'
+import { createCustomElement } from '@/forms/bulma'
 
 export const textField: SingleEditorComponent = {
   editor: dash.TextFieldEditor,
@@ -15,7 +16,7 @@ export const textField: SingleEditorComponent = {
 }
 
 export const radioButtons: SingleEditorComponent = {
-  editor: editor.RadioButtons,
+  editor: ns.editor.RadioButtons,
   render ({ property, value }, { update }) {
     const items = property.shape.pointer.node(property.shape.in)
 

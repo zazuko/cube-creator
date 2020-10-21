@@ -35,3 +35,4 @@ type CubeCreatorNamespace = Record<CubeCreatorClass | CubeCreatorProperty | Othe
 
 export const cube = namespace('http://ns.bergnet.org/cube/')
 export const cc: CubeCreatorNamespace = namespace('https://cube-creator.zazuko.com/vocab#') as any
+export const editor = namespace(cc.dash.value)

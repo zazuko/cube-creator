@@ -1,8 +1,4 @@
-import ns from '@rdf-esm/namespace'
 import Vue from 'vue'
-import { cc } from '@cube-creator/core/namespace'
-
-export const editor = ns(cc.dash.value)
 
 export function createCustomElement (tag: string) {
   return async function (Component: any) {

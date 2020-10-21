@@ -1,8 +1,8 @@
 import type { SingleEditor } from '@hydrofoil/shaperone-core'
-import { editor } from '@/forms/bulma'
+import * as ns from '@cube-creator/core/namespace'
 
 export const radioButtons: SingleEditor = {
-  term: editor.RadioButtons,
+  term: ns.editor.RadioButtons,
   match (shape) {
     const { in: choices } = shape
     if (choices.length === 0) {
