@@ -2,13 +2,14 @@ import { ActionTree, MutationTree, GetterTree } from 'vuex'
 import { api } from '@/api'
 import { RootState } from '../types'
 import * as ns from '@cube-creator/core/namespace'
-import { Project, ProjectsCollection, CSVMapping, SourcesCollection } from '@/types'
+import { Project, ProjectsCollection, CSVMapping, SourcesCollection, TableCollection } from '@/types'
 
 export interface CubeProjectsState {
   collection: null | ProjectsCollection,
   project: null | Project,
   csvMapping: null | CSVMapping,
   sourcesCollection: null | SourcesCollection,
+  tableCollection: null | TableCollection,
 }
 
 const initialState = {
@@ -16,9 +17,17 @@ const initialState = {
   project: null,
   csvMapping: null,
   sourcesCollection: null,
+  tableCollection: null,
 }
 
 const getters: GetterTree<CubeProjectsState, RootState> = {
+  sources (state) {
+    return state.sourcesCollection?.member || []
+  },
+
+  tables (state) {
+    return state.tableCollection?.member || []
+  },
 }
 
 const actions: ActionTree<CubeProjectsState, RootState> = {
@@ -44,22 +53,19 @@ const actions: ActionTree<CubeProjectsState, RootState> = {
 
   async fetchCSVMapping (context, id) {
     context.commit('storeCSVMapping', null)
+    context.commit('storeSourcesCollection', null)
+    context.commit('storeTableCollection', null)
 
-    const mapping = await api.fetchResource(id)
-
+    const mapping = await api.fetchResource<CSVMapping>(id)
     context.commit('storeCSVMapping', mapping)
 
+    const sourcesCollection = await api.fetchResource(mapping.sourcesCollection.id.value)
+    context.commit('storeSourcesCollection', sourcesCollection)
+
+    const tableCollection = await api.fetchResource(mapping.tableCollection.id.value)
+    context.commit('storeTableCollection', tableCollection)
+
     return mapping
-  },
-
-  async fetchSourcesCollection (context, id) {
-    context.commit('storeSourcesCollection', null)
-
-    const collection = await api.fetchResource(id)
-
-    context.commit('storeSourcesCollection', collection)
-
-    return collection
   },
 
   async refreshSourcesCollection (context) {
@@ -99,6 +105,10 @@ const mutations: MutationTree<CubeProjectsState> = {
 
   storeSourcesCollection (state, collection) {
     state.sourcesCollection = collection
+  },
+
+  storeTableCollection (state, collection) {
+    state.tableCollection = collection
   },
 }
 

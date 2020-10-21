@@ -61,8 +61,7 @@ export default Vue.extend({
       try {
         await this.$store.dispatch('cubeProjects/uploadCSVs', this.files)
 
-        const sourcesCollection = this.$store.state.cubeProjects.sourcesCollection
-        await this.$store.dispatch('cubeProjects/fetchSourcesCollection', sourcesCollection.id.value)
+        await this.$store.dispatch('cubeProjects/refreshSourcesCollection')
 
         this.$router.push({ name: 'CSVMapping' })
       } catch (e) {

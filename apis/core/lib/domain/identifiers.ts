@@ -18,6 +18,10 @@ export function csvSourceCollection(csvMapping: GraphPointer<NamedNode>): NamedN
   return $rdf.namedNode(`${csvMapping.value}/sources`)
 }
 
+export function tableCollection(csvMapping: GraphPointer<NamedNode>): NamedNode {
+  return $rdf.namedNode(`${csvMapping.value}/tables`)
+}
+
 export function csvSource(project: GraphPointer<NamedNode>, fileName: string): NamedNode {
   return $rdf.namedNode(`${project.value}/csv-source/${url.slugify(fileName)}`)
 }

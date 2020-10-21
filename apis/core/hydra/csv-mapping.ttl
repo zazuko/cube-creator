@@ -6,4 +6,5 @@ prefix query: <http://hypermedia.app/query#>
 
 cc:CsvMapping a hydra:Class ;
   query:include cc:csvSourceCollection ;
+  query:include cc:tables ;
 .
