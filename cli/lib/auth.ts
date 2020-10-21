@@ -9,7 +9,7 @@ export type AuthConfig = {
   issuer: string
   clientId: string
   clientSecret: string
-  params: Map<string, string>
+  params?: Map<string, string>
 }
 
 type Metadata = {
@@ -53,7 +53,7 @@ const getToken = async function (config: AuthConfig, log: Debugger) {
     client_secret: config.clientSecret,
   }
 
-  config.params.forEach((value, key) => (params[key] = value))
+  config.params?.forEach((value, key) => (params[key] = value))
 
   const response = await fetch(metadata.token_endpoint, {
     method: 'POST',
@@ -78,12 +78,20 @@ const getToken = async function (config: AuthConfig, log: Debugger) {
   }
 }
 
-export function setupAuthentication(config: AuthConfig, log: Debugger) {
+function defaultAuthConfig(): AuthConfig {
+  return {
+    clientId: process.env.AUTH_CLIENT_ID!,
+    clientSecret: process.env.AUTH_CLIENT_SECRET!,
+    issuer: process.env.AUTH_ISSUER!,
+  }
+}
+
+export function setupAuthentication(config: Partial<AuthConfig>, log: Debugger) {
   let token: LiveToken | undefined
 
   Hydra.defaultHeaders = async () => {
     if (!token || !isValid(token)) {
-      token = await getToken(config, log)
+      token = await getToken({ ...defaultAuthConfig(), ...config }, log)
     }
 
     return {

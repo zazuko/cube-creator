@@ -5,24 +5,24 @@ import { Hydra } from 'alcaeus/node'
 import env from '@cube-creator/core/env'
 import { ProjectIterator } from '../../lib/project'
 import { insertTestData } from '../support/testData'
+import { setupEnv, logger } from '../support/env'
 import { Table } from '@rdfine/csvw'
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
-
 Hydra.baseUri = env.API_CORE_BASE
-Hydra.defaultHeaders = {
-  'x-user': 'cli test',
-}
 
-describe('lib/projects', () => {
-  const logger: any = {
-    debug: console.log,
-    info: console.log,
-    warn: console.warn,
-    error: console.error,
+describe('lib/projects', function () {
+  this.timeout(20000)
+
+  let variables: Map<string, string>
+  const log = {
+    debug: logger.extend('debug'),
+    info: logger.extend('info'),
+    warn: logger.extend('warn'),
+    error: logger.extend('error'),
   }
 
   before(async () => {
+    setupEnv()
     await insertTestData()
   })
 

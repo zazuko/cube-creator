@@ -14,9 +14,6 @@ interface RunOptions extends Command {
   project: string
   variable: Map<string, string>
   enableBufferMonitor: boolean
-  authIssuer?: string
-  authClientId: string
-  authClientSecret: string
   authParam: Map<string, string>
 }
 
@@ -37,7 +34,7 @@ export default function (pipelineId: NamedNode, basePath: string, log: Debugger)
       setupAuthentication(authConfig, log)
     }
 
-    const pipelinePath = filename => path.join(basePath, `./pipelines/${filename}.ttl`)
+    const pipelinePath = (filename: string) => path.join(basePath, `./pipelines/${filename}.ttl`)
     const dataset = $rdf.dataset()
       .merge(await fileToDataset('text/turtle', pipelinePath('main')))
       .merge(await fileToDataset('text/turtle', pipelinePath('from-api')))
