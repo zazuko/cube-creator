@@ -26,6 +26,9 @@ jobs:
         run: sh e2e-tests/start-lando.sh
       - run: yarn install --ci
       - run: yarn test:cli
+      - name: logs on fail
+          if: ${{ failure() }}
+          run: lando logs -s core
 
   lint:
     runs-on: ubuntu-latest
