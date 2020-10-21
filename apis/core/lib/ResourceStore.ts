@@ -8,6 +8,7 @@ import TermMap from '@rdfjs/term-map'
 import mergeStreams from 'merge-stream'
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 import { warn } from '@hydrofoil/labyrinth/lib/logger'
+import { ResourceIdentifier } from '@tpluscode/rdfine'
 
 interface ResourceCreationOptions {
   implicitlyDereferencable?: boolean
@@ -25,7 +26,7 @@ export interface ResourceStore {
    *
    * @param id
    */
-  get(id: string | NamedNode): Promise<GraphPointer<NamedNode>>
+  get(id: string | ResourceIdentifier): Promise<GraphPointer<NamedNode>>
 
   /**
    * Creates a new resource a puts in the in-memory store

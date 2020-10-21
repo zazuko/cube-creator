@@ -1,0 +1,13 @@
+exports["domain/table/csvw createCsvw copies csvw:dialect from CsvSource"] = {
+	"id": "_:b3",
+	"type": [
+		"http://www.w3.org/ns/csvw#Dialect"
+	],
+	"quoteChar": "\"\"",
+	"@context": {
+		"id": "@id",
+		"type": "@type",
+		"quoteChar": "http://www.w3.org/ns/csvw#quoteChar"
+	}
+};
+

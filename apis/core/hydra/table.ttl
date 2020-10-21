@@ -1,0 +1,39 @@
+BASE          <urn:hydra-box:api>
+PREFIX cc:    <https://cube-creator.zazuko.com/vocab#>
+prefix hydra: <http://www.w3.org/ns/hydra/core#>
+prefix code:  <https://code.described.at/>
+prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+cc:Table
+  a
+    hydra:Class ;
+  hydra:supportedProperty
+    [
+      a
+        hydra:SupportedProperty ;
+      hydra:property
+        cc:csvw ;
+    ] ;
+.
+
+cc:csvw
+  a
+    rdf:Property,
+    hydra:Link ;
+  hydra:supportedOperation
+    [
+      a
+        hydra:Operation ;
+      hydra:title
+        "Get Table's CSVW mappings" ;
+      hydra:method
+        "GET" ;
+      code:implementedBy
+        [
+          a
+            code:EcmaScript ;
+          code:link
+            <file:handlers/table/csvw#get> ;
+        ]
+    ]
+.
