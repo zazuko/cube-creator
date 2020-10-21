@@ -41,13 +41,13 @@ export async function createProject({
       .addOut(cc.csvMapping, mapping)
       .addOut(hydra.manages, manages => {
         // ?member rdf:type cc:CSVSource
-        manages.addOut([hydra.property], [rdf.type])
-        manages.addOut([hydra.object], [cc.CSVSource])
+        manages.addOut(hydra.property, rdf.type)
+        manages.addOut(hydra.object, cc.CSVSource)
       })
       .addOut(hydra.manages, manages => {
         // ?member cc:csvMapping <mapping>
-        manages.addOut([hydra.object], mapping)
-        manages.addOut([hydra.property], [cc.csvMapping])
+        manages.addOut(hydra.object, mapping)
+        manages.addOut(hydra.property, cc.csvMapping)
       })
 
     mapping.addOut(cc.csvSourceCollection, sourceCollection)
@@ -59,13 +59,13 @@ export async function createProject({
       .addOut(cc.csvMapping, mapping)
       .addOut(hydra.manages, manages => {
         // ?member rdf:type cc:Table
-        manages.addOut([hydra.property], [rdf.type])
-        manages.addOut([hydra.object], [cc.Table])
+        manages.addOut(hydra.property, rdf.type)
+        manages.addOut(hydra.object, cc.Table)
       })
       .addOut(hydra.manages, manages => {
         // ?member cc:csvMapping <mapping>
-        manages.addOut([hydra.object], mapping)
-        manages.addOut([hydra.property], [cc.csvMapping])
+        manages.addOut(hydra.object, mapping)
+        manages.addOut(hydra.property, cc.csvMapping)
       })
 
     mapping.addOut(cc.tables, tableCollection)

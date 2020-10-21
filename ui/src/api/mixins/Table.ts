@@ -1,12 +1,11 @@
 import { Resource } from 'alcaeus'
+import { Constructor } from '@tpluscode/rdfine'
 import * as ns from '@cube-creator/core/namespace'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { Table, Source } from '@/types'
 import { findOperation } from '../common'
 
-export type Constructor = new (...args: any[]) => Resource;
-
-export default function Mixin<Base extends Constructor> (base: Base) {
+export default function Mixin<Base extends Constructor<Resource>> (base: Base) {
   return class extends base implements Table {
     get actions () {
       return {
