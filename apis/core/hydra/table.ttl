@@ -3,6 +3,28 @@ PREFIX cc:    <https://cube-creator.zazuko.com/vocab#>
 prefix hydra: <http://www.w3.org/ns/hydra/core#>
 prefix code:  <https://code.described.at/>
 prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix schema:   <http://schema.org/>
+
+cc:TableCollection
+  a
+    hydra:Class ;
+  hydra:supportedOperation
+    [
+      a
+        hydra:Operation,
+        schema:CreateAction ;
+      hydra:title
+        "Create table" ;
+      hydra:method
+        "POST" ;
+      code:implementedBy
+        [
+          a
+            code:EcmaScript ;
+          code:link
+            <file:handlers/table#post> ;
+        ] ;
+    ] .
 
 cc:Table
   a

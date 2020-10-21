@@ -13,7 +13,8 @@ type CubeCreatorClass =
   'DeleteCSVSourceAction' |
   'CreateProjectAction' |
   'UploadCSVAction' |
-  'Table'
+  'Table' |
+  'TableCollection'
 
 type CubeCreatorProperty =
   'projectSourceKind' |
@@ -22,7 +23,8 @@ type CubeCreatorProperty =
   'csvSource' |
   'csvSourceCollection' |
   'csvColumnSample' |
-  'csvw'
+  'csvw' |
+  'tables'
 
 type OtherTerms =
   'dash'
