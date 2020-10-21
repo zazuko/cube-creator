@@ -1,5 +1,6 @@
 import { Hydra } from 'alcaeus/web'
 import { RdfResource, Resource, RuntimeOperation } from 'alcaeus'
+import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import store from '@/store'
 import { APIError } from './errors'
 import { apiResourceMixin } from './mixins/ApiResource'
@@ -47,8 +48,8 @@ Hydra.defaultHeaders = () => {
 }
 
 export const api = {
-  async fetchResource (url: string): Promise<Resource> {
-    const response = await Hydra.loadResource(url.replace(segmentSeparator, '/'))
+  async fetchResource <T extends RdfResourceCore = Resource>(url: string): Promise<Resource & T> {
+    const response = await Hydra.loadResource<T>(url.replace(segmentSeparator, '/'))
 
     if (response.response?.xhr.status !== 200) {
       throw await APIError.fromResponse(response)

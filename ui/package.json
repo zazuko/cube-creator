@@ -20,7 +20,7 @@
     "@rdf-esm/dataset": "^0.5.1",
     "@tpluscode/rdf-ns-builders": "^0.4",
     "@tpluscode/rdfine": "^0.5.10",
-    "alcaeus": "1.0.0-RC.1",
+    "alcaeus": "1.0.0-RC.2",
     "buefy": "^0.9.2",
     "bulma-quickview": "^2.0.0",
     "core-js": "^3.6.5",

@@ -56,8 +56,7 @@ const actions: ActionTree<CubeProjectsState, RootState> = {
     context.commit('storeSourcesCollection', null)
     context.commit('storeTableCollection', null)
 
-    // TODO: Bad Typescript hack
-    const mapping = await api.fetchResource(id) as CSVMapping
+    const mapping = await api.fetchResource<CSVMapping>(id)
     context.commit('storeCSVMapping', mapping)
 
     const sourcesCollection = await api.fetchResource(mapping.sourcesCollection.id.value)
