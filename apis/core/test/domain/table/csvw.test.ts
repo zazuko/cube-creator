@@ -25,7 +25,7 @@ describe('domain/table/csvw', () => {
           })
           .addOut(csvw.dialect, dialect => {
             dialect.addOut(csvw.quoteChar, '""')
-            dialect.addOut(csvw.separator, '-')
+            dialect.addOut(csvw.delimiter, '-')
           }),
       ])
 
@@ -36,9 +36,8 @@ describe('domain/table/csvw', () => {
       })
 
       // then
-      const dialect = table.dialect!.toJSON()
-      delete dialect.id
-      expect(dialect).to.matchSnapshot(this)
+      expect(table.dialect?.quoteChar).to.eq('""')
+      expect(table.dialect?.delimiter).to.eq('-')
     })
 
     it('copies sources url to csvw:url', async function () {
