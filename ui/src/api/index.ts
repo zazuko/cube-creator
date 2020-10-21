@@ -48,7 +48,7 @@ Hydra.defaultHeaders = () => {
 }
 
 export const api = {
-  async fetchResource <T extends RdfResourceCore = Resource>(url: string): Promise<Resource & T> {
+  async fetchResource <T extends RdfResourceCore = Resource> (url: string): Promise<Resource & T> {
     const response = await Hydra.loadResource<T>(url.replace(segmentSeparator, '/'))
 
     if (response.response?.xhr.status !== 200) {
