@@ -65,7 +65,7 @@ export async function createProject({
       .addOut(hydra.manages, manages => {
         // ?member cc:csvMapping <mapping>
         manages.addOut([hydra.object], mapping)
-        manages.addOut([hydra.property], [cc.csvSource])
+        manages.addOut([hydra.property], [cc.csvMapping])
       })
 
     mapping.addOut(cc.tables, tableCollection)
