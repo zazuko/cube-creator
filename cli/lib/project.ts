@@ -8,12 +8,24 @@ import * as Models from '@cube-creator/model'
 Hydra.resources.factory.addMixin(...Object.values(Models))
 Hydra.resources.factory.addMixin(...Object.values(Csvw))
 
-async function loadProject(projectUri: string, log: any): Promise<Project> {
+interface Params {
+  projectUri: string
+  log: Record<string, (msg: string) => void>
+  variables: Map<string, string>
+}
+
+async function loadProject(projectUri: string, log: Params['log'], variables: Params['variables']): Promise<Project> {
   log.debug(`Loading project ${projectUri}`)
   const { representation, response } = await Hydra.loadResource<Project>(projectUri)
   if (!representation || !representation.root) {
     throw new Error(`Did not find representation of project ${projectUri}. Server responded ${response?.xhr.status}`)
   }
+
+  if (!representation.root.cube) {
+    throw new Error('Cannot transform project. Missing output cube id')
+  }
+
+  variables.set('graph', representation.root.cube.value)
 
   return representation.root
 }
@@ -38,14 +50,14 @@ async function loadTables(project: Project, log: any): Promise<Table[]> {
 }
 
 export class ProjectIterator extends stream.Readable {
-  constructor(projectUri: string, log: any) {
+  constructor({ projectUri, log, variables }: Params) {
     super({
       objectMode: true,
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       read: () => {},
     })
 
-    loadProject(projectUri, log)
+    loadProject(projectUri, log, variables)
       .then(project => loadTables(project, log))
       .then(tables => {
         const loadMetadata = tables.reduce((metadata, table) => {
@@ -92,5 +104,5 @@ export class ProjectIterator extends stream.Readable {
 }
 
 export function loadCsvMappings(this: any, projectUri: string) {
-  return new ProjectIterator(projectUri, this.log)
+  return new ProjectIterator({ projectUri, log: this.log, variables: this.variables })
 }

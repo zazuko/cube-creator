@@ -12,8 +12,8 @@ const clientOptions = {
   base: env.API_CORE_BASE,
 }
 
-export const insertTestData = async () => {
-  await DELETE`graph ?g { ?s ?p ?o }`
+function removeTestGraphs() {
+  return DELETE`graph ?g { ?s ?p ?o }`
     .WHERE`VALUES ?g {
       </project/cli-test>
       </project/cli-test/mapping>
@@ -23,12 +23,17 @@ export const insertTestData = async () => {
     }`
     .WHERE`graph ?g { ?s ?p ?o }`
     .execute(client.query, clientOptions)
+}
+
+export const insertTestData = async () => {
+  await removeTestGraphs()
 
   return INSERT.DATA`
   graph </project/cli-test> {
       </project/cli-test>
           a ${hydra.Resource} , ${cc.CubeProject} ;
           ${cc.csvMapping} </project/cli-test/mapping> ;
+          ${cc.cube}       </cube/cli-test>
     .
   }
 
@@ -46,8 +51,8 @@ export const insertTestData = async () => {
               ${hydra.property} ${rdf.type} ;
               ${hydra.object}   ${cc.Table} ;
           ] , [
-              ${hydra.property} ${cc.project} ;
-              ${hydra.object}   </project/cli-test>
+              ${hydra.property} ${cc.csvMapping} ;
+              ${hydra.object}   </project/cli-test/mapping>
           ];
       .
   }
@@ -55,10 +60,10 @@ export const insertTestData = async () => {
   graph </project/cli-test/mapping/table/foo> {
       </project/cli-test/mapping/table/foo>
           a ${hydra.Collection}, ${cc.Table} ;
-          ${cc.csvw}      </project/cli-test/mapping/table/foo/csvw> ;
-          ${cc.project}   </project/cli-test> ;
-          ${cc.csvSource} </project/cli-test/source/foo> ;
-          ${schema.name}  "Foo table" ;
+          ${cc.csvw}       </project/cli-test/mapping/table/foo/csvw> ;
+          ${cc.csvMapping} </project/cli-test/mapping> ;
+          ${cc.csvSource}  </project/cli-test/source/foo> ;
+          ${schema.name}   "Foo table" ;
       .
   }
 

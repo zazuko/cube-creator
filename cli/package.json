@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "postinstall": "mkdir -p output",
-    "transform": "dotenv -e ../.local.env -- yarn start",
-    "start": "ts-node index.ts transform --project \"$TRANSFORM_PROJECT\" --debug --enable-buffer-monitor -v s3endpoint=$S3_ENDPOINT -v s3bucket=$S3_BUCKET -v graph-store-endpoint=$GRAPH_STORE_ENDPOINT -v graph-store-user=$GRAPH_STORE_USER -v graph-store-password=$GRAPH_STORE_PASSWORD -v graph=$TRANSFORM_GRAPH --auth-issuer $AUTH_ISSUER --auth-client-id $AUTH_CLIENT_ID --auth-client-secret $AUTH_CLIENT_SECRET",
+    "transform": "dotenv -e .env -e .test.env -e ../.local.env -- yarn start",
+    "start": "ts-node index.ts transform --project \"$TRANSFORM_PROJECT\" --debug --enable-buffer-monitor -v graph-store-endpoint=$GRAPH_STORE_ENDPOINT -v graph-store-user=$GRAPH_STORE_USER -v graph-store-password=$GRAPH_STORE_PASSWORD",
     "build": "tsc"
   },
   "dependencies": {
@@ -53,6 +53,7 @@
     "@types/rdfjs__sink-map": "^1.0.0",
     "@types/readable-stream": "^2.3.9",
     "chai": "^4.2.0",
+    "dotenv": "^8.2.0",
     "dotenv-cli": "^3.1.0",
     "mocha": "^8.1.3",
     "sparql-http-client": "^2.2.2"

@@ -14,7 +14,7 @@ const pipelines = {
   TransformFiles: ns.pipeline('#Main'),
 }
 
-function parseVariables(str, all) {
+function parseVariables(str: string, all: Map<string, string>) {
   return str
     .split(',')
     .reduce((vars, nameValue) => {
@@ -32,13 +32,10 @@ async function main() {
     .command('transform')
     .description('Transforms source files to RDF')
     .requiredOption('--to <targetName>', "(required) Target to write triples (built-in: 'stdout', 'filesystem', 's3', 'graph-store')")
-    .requiredOption('--project <project>', '(required) URL of a Data Cube Curation project')
+    .requiredOption('--project <project>', '(required) URL of a Cube Creator project')
     .option('-v, --variable <name=value>', 'Pipeline variables', parseVariables, new Map())
     .option('--debug', 'Print diagnostic information to standard output')
     .option('--enable-buffer-monitor', 'enable histogram of buffer usage')
-    .option('--auth-issuer <url>', 'OpenID Connect provider to authenticate against')
-    .option('--auth-client-id <clientId>', 'Client ID to use to authenticate API calls')
-    .option('--auth-client-secret <clientSecret>', 'Client secret to use to authenticate API calls')
     .option('--auth-param <name=value>', 'Additional variables to pass to the token endpoint', parseVariables, new Map())
     .action(transform(pipelines.TransformFiles, __dirname, log))
 

@@ -12,7 +12,7 @@
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "experimentalDecorators": true,
-    "typeRoots": ["./cli/typings", "./node_modules/@types"]
+    "typeRoots": ["./typings", "./node_modules/@types"]
   },
   "include": [
     "packages",

@@ -1,5 +1,4 @@
-/* eslint-disable no-console */
-import { describe, before, it } from 'mocha'
+import { describe, before, beforeEach, it } from 'mocha'
 import { expect } from 'chai'
 import { Hydra } from 'alcaeus/node'
 import env from '@cube-creator/core/env'
@@ -26,11 +25,14 @@ describe('lib/projects', function () {
     await insertTestData()
   })
 
+  beforeEach(() => {
+    variables = new Map()
+  })
+
   describe('ProjectIterator', () => {
-    it('streams csv table objects from project', async function () {
+    it('streams csv table objects from project', async () => {
       // given
-      this.timeout(5000)
-      const iteratorStream = new ProjectIterator('/project/cli-test', logger)
+      const iteratorStream = new ProjectIterator({ projectUri: '/project/cli-test', log, variables })
 
       // when
       const results: Table[] = []
@@ -43,6 +45,22 @@ describe('lib/projects', function () {
       expect(results[0].id.value).to.match(new RegExp('/project/cli-test/mapping/table/foo/csvw$'))
       expect(results[0].dialect?.quoteChar).to.equal("'")
       expect(results[0].dialect?.delimiter).to.equal('--')
+    })
+
+    it('sets cube URI as pipeline variable "graph"', async () => {
+      // given
+      const iteratorStream = new ProjectIterator({ projectUri: '/project/cli-test', log, variables })
+
+      // when
+      await new Promise((resolve, reject) => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        iteratorStream.on('data', () => {})
+        iteratorStream.on('end', resolve)
+        iteratorStream.on('error', reject)
+      })
+
+      // then
+      expect(variables.get('graph')).to.eq(`${env.API_CORE_BASE}cube/cli-test`)
     })
   })
 })
