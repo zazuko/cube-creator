@@ -1,5 +1,5 @@
 <template>
-  <div v-if="mapping">
+  <div v-if="mapping && sourcesCollection && tableCollection">
     <div class="columns">
       <div class="column">
         <div class="level">
@@ -10,7 +10,7 @@
               </h3>
             </div>
             <div class="level-item">
-              <b-tooltip v-if="canUploadSource" label="Upload new CSV file">
+              <b-tooltip v-if="sourcesCollection.actions.upload" :label="sourcesCollection.actions.upload.title">
                 <b-button tag="router-link" :to="{ name: 'CSVUpload' }" size="is-small" icon-left="plus" />
               </b-tooltip>
             </div>
@@ -40,17 +40,35 @@
       </div>
       <div class="column">
         <h3 class="title is-6">
-          Output tables
+          <div class="level">
+            <div class="level-left">
+              <div class="level-item">
+                Output tables
+              </div>
+              <div class="level-item">
+                <b-tooltip v-if="tableCollection.actions.create" :label="tableCollection.actions.create.title">
+                  <b-button tag="router-link" :to="{ name: 'TableCreate' }" size="is-small" icon-left="plus" />
+                </b-tooltip>
+              </div>
+            </div>
+          </div>
         </h3>
       </div>
     </div>
 
     <div v-if="sources.length > 0" class="sources">
-      <csv-source-mapping v-for="source in sources" :key="source.id.value" :source="source" :tables="tables" />
+      <csv-source-mapping
+        v-for="(source, index) in sources"
+        :key="source.id.value"
+        :source="source"
+        :is-first-source="index === 0"
+        :table-collection="tableCollection"
+        :tables="tables"
+      />
     </div>
     <p v-else>
       You haven't uploaded any CSV file yet.
-      <span v-if="canUploadSource">
+      <span v-if="sourcesCollection.actions.upload">
         Do you want to
         <router-link :to="{ name: 'CSVUpload' }">
           upload one
@@ -88,10 +106,6 @@ export default Vue.extend({
       sources: 'cubeProjects/sources',
       tables: 'cubeProjects/tables',
     }),
-
-    canUploadSource (): boolean {
-      return !!this.sourcesCollection?.actions.upload
-    },
   },
 })
 </script>
