@@ -3,7 +3,7 @@ import { expect } from 'chai'
 import clownface from 'clownface'
 import $rdf from 'rdf-ext'
 import { dcterms, rdfs } from '@tpluscode/rdf-ns-builders'
-import {cc, shape} from '@cube-creator/core/namespace'
+import { cc, shape } from '@cube-creator/core/namespace'
 import { createProject } from '../../../lib/domain/cube-projects/create'
 import { TestResourceStore } from '../../support/TestResourceStore'
 
