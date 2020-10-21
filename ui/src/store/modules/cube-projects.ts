@@ -62,6 +62,16 @@ const actions: ActionTree<CubeProjectsState, RootState> = {
     return collection
   },
 
+  async refreshSourcesCollection (context) {
+    const collection = context.state.sourcesCollection
+
+    if (!collection) {
+      throw new Error('Sources collection not loaded')
+    }
+
+    return context.dispatch('fetchSourcesCollection', collection.id.value)
+  },
+
   async uploadCSVs (context, files) {
     const operation = context.state.csvMapping?.sourcesCollection.actions.upload ?? null
     const uploads = files.map((file: File) => {
@@ -71,6 +81,7 @@ const actions: ActionTree<CubeProjectsState, RootState> = {
 
     return Promise.all(uploads)
   },
+
 }
 
 const mutations: MutationTree<CubeProjectsState> = {

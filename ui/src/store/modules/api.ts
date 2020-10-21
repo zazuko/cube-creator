@@ -22,11 +22,36 @@ const actions: ActionTree<APIState, RootState> = {
     context.commit('storeEntrypoint', entrypoint)
     return entrypoint
   },
+
   async invokeSaveOperation (context, { operation, resource }: {operation: RuntimeOperation; resource: RdfResource | GraphPointer<ResourceIdentifier>}) {
     const data = 'toJSON' in resource ? resource : RdfResourceImpl.factory.createEntity(resource) as RdfResource
 
     return api.invokeSaveOperation(operation, data)
-  }
+  },
+
+  async invokeDeleteOperation (context, { operation, successMessage, callbackAction }): Promise<void> {
+    context.commit('app/setLoading', true, { root: true })
+
+    try {
+      await api.invokeDeleteOperation(operation)
+
+      context.commit('app/pushMessage', {
+        title: operation.title,
+        message: successMessage,
+        type: 'is-success',
+      }, { root: true })
+
+      context.dispatch(callbackAction, {}, { root: true })
+    } catch (e) {
+      context.commit('app/pushMessage', {
+        title: 'An error occurred',
+        message: `${e}`,
+        type: 'is-danger',
+      }, { root: true })
+    } finally {
+      context.commit('app/setLoading', false, { root: true })
+    }
+  },
 }
 
 const mutations: MutationTree<APIState> = {
