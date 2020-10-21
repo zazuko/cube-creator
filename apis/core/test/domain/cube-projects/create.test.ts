@@ -3,7 +3,7 @@ import { expect } from 'chai'
 import clownface from 'clownface'
 import $rdf from 'rdf-ext'
 import { dcterms, rdfs } from '@tpluscode/rdf-ns-builders'
-import { cc } from '@cube-creator/core/namespace'
+import {cc, shape} from '@cube-creator/core/namespace'
 import { createProject } from '../../../lib/domain/cube-projects/create'
 import { TestResourceStore } from '../../support/TestResourceStore'
 
@@ -50,7 +50,7 @@ describe('domain/cube-projects/create', () => {
     const resource = clownface({ dataset: $rdf.dataset() })
       .namedNode('')
       .addOut(rdfs.label, 'Foo bar project')
-      .addOut(cc.projectSourceKind, 'CSV')
+      .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
 
     // when
     const project = await createProject({ resource, store, projectsCollection, user })

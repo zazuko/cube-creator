@@ -27,8 +27,9 @@ describe('lib/projects', () => {
   })
 
   describe('ProjectIterator', () => {
-    it('streams csv table objects from project', async () => {
+    it('streams csv table objects from project', async function () {
       // given
+      this.timeout(5000)
       const iteratorStream = new ProjectIterator('/project/cli-test', logger)
 
       // when

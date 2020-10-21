@@ -3,7 +3,8 @@
   "private": true,
   "scripts": {
     "lint": "eslint . --ext .ts,.vue,.tsx --quiet --ignore-path .gitignore",
-    "test": "mocha --recursive apis/*/test/*.test.ts"
+    "test": "mocha --recursive apis/**/*.test.ts",
+    "test:cli": "mocha --recursive cli/**/*.test.ts"
   },
   "workspaces": [
     "cli",
@@ -32,6 +33,8 @@
     "@rdfjs/express-handler": "tpluscode/express-handler#dataset-multiple-times"
   },
   "mocha": {
+    "extension": "ts",
+    "recursive": true,
     "watch-files": [
       "./**/*.ts"
     ],
