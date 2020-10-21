@@ -28,3 +28,15 @@ export const radioButtons: SingleEditorComponent = {
     ]
   }
 }
+
+export const colorPicker: SingleEditorComponent = {
+  editor: ns.editor.ColorPicker,
+  render ({ value }, { update }) {
+    return html`<color-picker .value="${value.object.value}" .update="${update}"></color-picker>`
+  },
+  loadDependencies () {
+    return [
+      import('./ColorPicker.vue').then(createCustomElement('color-picker'))
+    ]
+  }
+}
