@@ -36,7 +36,7 @@ describe('domain/table/csvw', () => {
       })
 
       // then
-      const dialect = table.dialect?.toJSON()
+      const dialect = table.dialect!.toJSON()
       delete dialect.id
       expect(dialect).to.matchSnapshot(this)
     })
