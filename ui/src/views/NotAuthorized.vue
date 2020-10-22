@@ -1,5 +1,5 @@
 <template>
-  <page-content>
+  <div>
     <h2 class="title">
       Missing Authorization
     </h2>
@@ -7,7 +7,7 @@
       You have not the right to access this site. Please request access it via
       <a :href="link"> {{ link }}</a>
     </p>
-  </page-content>
+  </div>
 </template>
 
 <script>
