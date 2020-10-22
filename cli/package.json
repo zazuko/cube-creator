@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "postinstall": "mkdir -p output",
-    "transform": "dotenv -e ./.env -e ./.test.env -e ../.local.env -- yarn start",
+    "transform": "dotenv -e ./.env -e ./.test.env -- yarn start",
     "start": "ts-node index.ts transform --project \"$TRANSFORM_PROJECT\" --to stdout --debug --enable-buffer-monitor",
     "build": "tsc"
   },

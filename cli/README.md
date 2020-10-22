@@ -38,20 +38,11 @@ Streams transformed triples as n-triples to a single file
 * `targetFile`
   * default: `/output/transformed.nt`
 
-### `--to s3`
-
-Streams transformed triples to an S3 bucket.
-
-#### Arguments
-
-Same as for [`--from s3`](#--from-s3) above, and:
-
-* `targetFile`
-  * default: `transformed.nt`
-
 ### `--to graph-store`
 
-Streams transformed triples to a store using the graph protocol
+Streams transformed triples to a store using the graph protocol.
+
+Does not require additional configuration, in which case will save to a graph provided by the Cube Project resource.
 
 #### Arguments
 
@@ -59,7 +50,7 @@ Streams transformed triples to a store using the graph protocol
 * `graph-store-user`
 * `graph-store-password`
 
-Can also be configured with env variables. Check `.test.env`
+Can also be configured with env variables. Check `.test.env` for example.
 
 ## Run from locally-built image
 
@@ -75,7 +66,6 @@ Here's an example of converting local files using a locally-built image:
 
     ```
     docker-compose run --rm cli transform \ 
-        --from filesystem \
         --to filesystem \
         --project <URI>
         --debug

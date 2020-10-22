@@ -80,9 +80,9 @@ const getToken = async function (config: AuthConfig, log: Debugger) {
 
 function defaultAuthConfig(): AuthConfig {
   return {
-    clientId: process.env.AUTH_CLIENT_ID!,
-    clientSecret: process.env.AUTH_CLIENT_SECRET!,
-    issuer: process.env.AUTH_ISSUER!,
+    clientId: process.env.AUTH_RUNNER_CLIENT_ID!,
+    clientSecret: process.env.AUTH_RUNNER_CLIENT_SECRET!,
+    issuer: process.env.AUTH_RUNNER_ISSUER!,
   }
 }
 
