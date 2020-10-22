@@ -1,5 +1,5 @@
 <template>
-  <b-field v-if="property" :label="property.name">
+  <b-field v-if="property" :label="property.name" :message="property.shape.description">
     <b-field v-if="property.selectedEditor">
       <render-wc-func :f="renderMultiEditor" :args="[null]" />
     </b-field>
