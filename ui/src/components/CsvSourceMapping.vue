@@ -77,63 +77,52 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Source, Table, TableCollection } from '../types'
+import { Prop, Component, Vue } from 'vue-property-decorator'
+import { Source, Table, TableCollection, CSVColumn } from '../types'
 
-export default Vue.extend({
-  name: 'CsvSourceMapping',
+@Component
+export default class CsvSourceMapping extends Vue {
+  @Prop({ default: false }) readonly isFirstSource!: boolean;
+  @Prop() readonly source!: Source;
+  @Prop() readonly tables!: Table[];
+  @Prop() readonly tableCollection!: TableCollection;
 
-  props: {
-    isFirstSource: { type: Boolean, default: false },
-    source: { type: Object as () => Source, required: true },
-    tables: { type: Array as () => Table[], required: true },
-    tableCollection: { type: Object as () => TableCollection, required: true },
-  },
+  selectedColumns: CSVColumn[] = []
 
-  data () {
+  get sourceTables (): Table[] {
+    return this.tables.filter(({ source }) => source.id.equals(this.source.id))
+  }
+
+  get createTableQueryParams (): Record<string, string> {
     return {
-      selectedColumns: [],
+      source: this.source.clientPath,
+      columns: this.selectedColumns
+        .map(({ clientPath }) => clientPath)
+        .join(',')
     }
-  },
+  }
 
-  computed: {
-    sourceTables () {
-      return this.tables.filter(({ source }) => source.id.equals(this.source.id))
-    },
+  getColumnMappings (): unknown[] {
+    return []
+  }
 
-    createTableQueryParams () {
-      return {
-        source: this.source.clientPath,
-        columns: this.selectedColumns
-          .map(({ clientPath }) => clientPath)
-          .join(',')
-      }
-    },
-  },
-
-  methods: {
-    getColumnMappings () {
-      return []
-    },
-
-    async deleteSource (source: Source): Promise<void> {
-      this.$buefy.dialog.confirm({
-        title: source.actions.delete?.title,
-        message: 'Are you sure you want to delete this CSV source?',
-        confirmText: 'Delete',
-        type: 'is-danger',
-        hasIcon: true,
-        onConfirm: () => {
-          this.$store.dispatch('api/invokeDeleteOperation', {
-            operation: source.actions.delete,
-            successMessage: 'CSV source deleted successfully',
-            callbackAction: 'cubeProjects/refreshSourcesCollection',
-          })
-        },
-      })
-    },
-  },
-})
+  async deleteSource (source: Source): Promise<void> {
+    this.$buefy.dialog.confirm({
+      title: source.actions.delete?.title,
+      message: 'Are you sure you want to delete this CSV source?',
+      confirmText: 'Delete',
+      type: 'is-danger',
+      hasIcon: true,
+      onConfirm: () => {
+        this.$store.dispatch('api/invokeDeleteOperation', {
+          operation: source.actions.delete,
+          successMessage: 'CSV source deleted successfully',
+          callbackAction: 'cubeProjects/refreshSourcesCollection',
+        })
+      },
+    })
+  }
+}
 </script>
 
 <style scoped>
