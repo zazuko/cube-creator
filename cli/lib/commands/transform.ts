@@ -18,7 +18,12 @@ interface RunOptions {
   debug: boolean
   to: string
   project: string
-  variable: Map<string, string>
+  variable: Map<string, string | undefined>
+  graphStore?: {
+    endpoint: string
+    user: string
+    password: string
+  }
   enableBufferMonitor: boolean
   authParam: Map<string, string>
 }
@@ -27,7 +32,7 @@ export default function (pipelineId: NamedNode, log: Debugger) {
   const basePath = path.resolve(__dirname, '../../')
 
   return async function (command: RunOptions) {
-    const { to, project, debug, enableBufferMonitor, variable } = command
+    const { to, project, debug, enableBufferMonitor, variable, graphStore } = command
 
     log.enabled = debug
 
@@ -45,9 +50,14 @@ export default function (pipelineId: NamedNode, log: Debugger) {
     log('Running project %s', project)
     const pipeline = clownface({ dataset }).namedNode(pipelineId)
     variable.set('projectUri', project)
+    variable.set('graph-store-endpoint', graphStore?.endpoint || process.env.GRAPH_STORE_ENDPOINT)
+    variable.set('graph-store-user', graphStore?.user || process.env.GRAPH_STORE_USER)
+    variable.set('graph-store-password', graphStore?.password || process.env.GRAPH_STORE_PASSWORD)
 
     pipeline.addOut(ns.pipelines.variables, set => {
       variable.forEach((value, key) => {
+        if (!value) return
+
         set.addOut(ns.pipelines.variable, variable => {
           variable.addOut(rdf.type, ns.pipelines.Variable)
             .addOut(ns.pipelines('name'), key)

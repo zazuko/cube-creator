@@ -19,14 +19,7 @@ describe('lib/commands/transform', function () {
   it('produces triples', async function () {
     // given
     const runner = transform($rdf.namedNode('urn:pipeline:cube-creator#Main'), log.debug)
-    const variable = new Map<string, string>([
-      ['graph-store-endpoint', 'http://db.cube-creator.lndo.site/cube-creator/data'],
-      ['graph-store-user', 'admin'],
-      ['graph-store-password', 'password'],
-    ])
-    const authParam = new Map([
-      ['client_id', process.env.AUTH_RUNNER_CLIENT_ID!],
-    ])
+    const authParam = new Map()
 
     // when
     await runner({
@@ -34,7 +27,7 @@ describe('lib/commands/transform', function () {
       debug: true,
       enableBufferMonitor: false,
       project: `${env.API_CORE_BASE}project/cli-test`,
-      variable,
+      variable: new Map(),
       authParam,
     })
 

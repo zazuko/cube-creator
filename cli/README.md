@@ -14,7 +14,6 @@ Transforms source files to RDF
 Options:
   --to <targetName>            Target to write triples (built-in: 'stdout', 'filesystem', 'graph-store')
   --project <project>          URL of a Data Cube Curation project
-  -v, --variable <name=value>  Pipeline variables (default: {})
   --debug                      Print diagnostic information to standard output
   -h, --help                   output usage information
 ```
@@ -56,10 +55,11 @@ Streams transformed triples to a store using the graph protocol
 
 #### Arguments
 
-* `graph`
 * `graph-store-endpoint`
 * `graph-store-user`
 * `graph-store-password`
+
+Can also be configured with env variables. Check `.test.env`
 
 ## Run from locally-built image
 
@@ -99,3 +99,14 @@ npm run transform -- --to stdout
 
 Note the additional double dash which `npm` needs.
 Also note that `yarn` has to be installed on the system in both cases.
+
+
+## Tests
+
+To run tests a OIDC secret must be added to `.env` as
+
+```
+AUTH_CLIENT_SECRET=foo-bar
+```
+
+It is obtained from [keycloak](https://keycloak.zazukoians.org/admin/master/console/#/realms/zazuko-dev/clients/64f92868-71e3-48e1-9d8b-7bfaf5fac2bd/credentials)

@@ -18,7 +18,5 @@ export function setupEnv() {
     path: path.resolve(__dirname, '../../../.local.env'),
   })
 
-  setupAuthentication({
-    clientId: process.env.AUTH_RUNNER_CLIENT_ID,
-  }, logger)
+  setupAuthentication({}, logger)
 }

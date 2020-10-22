@@ -7,7 +7,7 @@ const log = debug('cube-creator')
 log.enabled = false
 
 const ns = {
-  pipeline: namespace('urn:pipeline:data-cube-curation'),
+  pipeline: namespace('urn:pipeline:cube-creator'),
 }
 
 const pipelines = {
@@ -26,13 +26,14 @@ function parseVariables(str: string, all: Map<string, string>) {
 
 async function main() {
   program
-    .name('docker run --rm zazuko/datacube-cli')
+    .name('docker run --rm zazuko/cube-creator-cli')
 
   program
     .command('transform')
     .description('Transforms source files to RDF')
     .requiredOption('--to <targetName>', "(required) Target to write triples (built-in: 'stdout', 'filesystem', 's3', 'graph-store')")
     .requiredOption('--project <project>', '(required) URL of a Cube Creator project')
+    .option('-v, --variable <name=value>', 'Pipeline variables', parseVariables, new Map())
     .option('--debug', 'Print diagnostic information to standard output')
     .option('--enable-buffer-monitor', 'enable histogram of buffer usage')
     .option('--auth-param <name=value>', 'Additional variables to pass to the token endpoint', parseVariables, new Map())
