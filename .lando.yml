@@ -5,7 +5,9 @@ env_file:
 services:
   core:
     type: node:custom
-    command: yarn nodemon -w packages -w apis --verbose --ext ts,ttl,js,trig --ignore **/*.spec.ts --ignore **/*.spec-graphs.ts --exec node --inspect=0.0.0.0:45671 -r ts-node/register --inspect apis/core/index.ts
+    build:
+      - npm i -g nodemon
+    command: nodemon -w packages -w apis --verbose --ext ts,ttl,js,trig --ignore **/*.spec.ts --ignore **/*.spec-graphs.ts --exec node --inspect=0.0.0.0:45671 -r ts-node/register --inspect apis/core/index.ts
     port: 45670
     ssl: true
     overrides:

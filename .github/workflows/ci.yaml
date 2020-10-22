@@ -20,11 +20,11 @@ jobs:
       - uses: actions/setup-node@v1.4.2
         with:
           node-version: 14
+      - run: yarn install --ci
       - name: Install lando
         run: sh e2e-tests/install-lando.sh
       - name: Start site
         run: sh e2e-tests/start-lando.sh
-      - run: yarn install --ci
       - run: yarn test:cli
       - name: logs on fail
         if: ${{ failure() }}
