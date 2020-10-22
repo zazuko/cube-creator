@@ -5,6 +5,7 @@ import DatasetExt from 'rdf-ext/lib/Dataset'
 import { Stream } from 'rdf-js'
 import * as Csvw from '@rdfine/csvw'
 import { Hydra } from 'alcaeus/node'
+import { readable } from 'duplex-to'
 
 export function openFromCsvw(csvw: Csvw.Table) {
   const csvStream = new PassThrough()
@@ -21,7 +22,7 @@ export function openFromCsvw(csvw: Csvw.Table) {
     }
   })
 
-  return csvStream
+  return readable(csvStream)
 }
 
 export function getCsvwTriples(csvw: RdfResource<DatasetExt>): Stream {

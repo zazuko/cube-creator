@@ -1,10 +1,10 @@
-@base <urn:pipeline:data-cube-curation> .
+@base <urn:pipeline:cube-creator> .
 @prefix : <https://pipeline.described.at/> .
 @prefix code: <https://code.described.at/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 
 <#Main> a :Pipeline ;
-  :steps [ :stepList ( <#TransformFiles> <#streamOutputStep> ) ] .
+  :steps [ :stepList ( <#loadMetadata> <#doTransform> <#streamOutputStep> ) ] .
 
 <#StreamOutput>
   a :Pipeline, :WritableObjectMode .
@@ -22,10 +22,6 @@
 # One-by-one parses and transforms the source csv files to RDF
 #
 # ------------------------------
-
-<#TransformFiles>
-  a      :Pipeline, :ReadableObjectMode ;
-  :steps [ :stepList ( <#loadMetadata> <#doTransform> ) ] .
 
 <#loadMetadata>
   a                  :Step ;

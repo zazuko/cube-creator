@@ -1,14 +1,20 @@
-import { Command } from 'commander'
 import path from 'path'
 import { NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import { fileToDataset } from 'barnard59'
 import { Debugger } from 'debug'
-import { AuthConfig, setupAuthentication } from '../auth'
+import { setupAuthentication } from '../auth'
 import Runner from 'barnard59/lib/runner'
 import bufferDebug from 'barnard59/lib/bufferDebug'
+import clownface from 'clownface'
+import namespace from '@rdfjs/namespace'
+import { rdf } from '@tpluscode/rdf-ns-builders'
 
-interface RunOptions extends Command {
+const ns = {
+  pipelines: namespace('https://pipeline.described.at/'),
+}
+
+interface RunOptions {
   debug: boolean
   to: string
   project: string
@@ -17,28 +23,38 @@ interface RunOptions extends Command {
   authParam: Map<string, string>
 }
 
-export default function (pipelineId: NamedNode, basePath: string, log: Debugger) {
+export default function (pipelineId: NamedNode, log: Debugger) {
+  const basePath = path.resolve(__dirname, '../../')
+
   return async function (command: RunOptions) {
-    const { to, project, debug, enableBufferMonitor } = command
+    const { to, project, debug, enableBufferMonitor, variable } = command
 
     log.enabled = debug
 
-    if (command.authIssuer) {
-      const authConfig: AuthConfig = {
-        issuer: command.authIssuer,
-        clientId: command.authClientId,
-        clientSecret: command.authClientSecret,
-        params: command.authParam,
-      }
-
-      setupAuthentication(authConfig, log)
+    const authConfig = {
+      params: command.authParam,
     }
+    setupAuthentication(authConfig, log)
 
     const pipelinePath = (filename: string) => path.join(basePath, `./pipelines/${filename}.ttl`)
     const dataset = $rdf.dataset()
       .merge(await fileToDataset('text/turtle', pipelinePath('main')))
       .merge(await fileToDataset('text/turtle', pipelinePath('from-api')))
       .merge(await fileToDataset('text/turtle', pipelinePath(`to-${to}`)))
+
+    log('Running project %s', project)
+    const pipeline = clownface({ dataset }).namedNode(pipelineId)
+    variable.set('projectUri', project)
+
+    pipeline.addOut(ns.pipelines.variables, set => {
+      variable.forEach((value, key) => {
+        set.addOut(ns.pipelines.variable, variable => {
+          variable.addOut(rdf.type, ns.pipelines.Variable)
+            .addOut(ns.pipelines('name'), key)
+            .addOut(ns.pipelines.value, value)
+        })
+      })
+    })
 
     const run = Runner.create({
       basePath: path.resolve(basePath, 'pipelines'),
@@ -48,8 +64,6 @@ export default function (pipelineId: NamedNode, basePath: string, log: Debugger)
     })
 
     Runner.log.enabled = debug
-
-    log('Running project %s', project)
 
     if (enableBufferMonitor) {
       bufferDebug(run.pipeline)

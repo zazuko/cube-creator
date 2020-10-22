@@ -4,13 +4,14 @@ import { DELETE, INSERT } from '@tpluscode/sparql-builder'
 import StreamClient from 'sparql-http-client/StreamClient'
 import env from '@cube-creator/core/env'
 
-const client = new StreamClient({
+export const client = new StreamClient({
   updateUrl: 'http://db.cube-creator.lndo.site/cube-creator/update',
+  endpointUrl: 'http://db.cube-creator.lndo.site/cube-creator/query',
 })
 
-const clientOptions = {
+const clientOptions = () => ({
   base: env.API_CORE_BASE,
-}
+})
 
 function removeTestGraphs() {
   return DELETE`graph ?g { ?s ?p ?o }`
@@ -22,7 +23,7 @@ function removeTestGraphs() {
       </project/cli-test/source/foo>
     }`
     .WHERE`graph ?g { ?s ?p ?o }`
-    .execute(client.query, clientOptions)
+    .execute(client.query, clientOptions())
 }
 
 export const insertTestData = async () => {
@@ -71,10 +72,14 @@ export const insertTestData = async () => {
       </project/cli-test/source/foo>
           a ${hydra.Resource} , ${cc.CSVSource} ;
           ${csvw.dialect} [
-              ${csvw.quoteChar} "'" ;
-              ${csvw.delimiter} "--" ;
+              ${csvw.quoteChar} "\\"" ;
+              ${csvw.delimiter} "," ;
+              ${csvw.header}    true ;
+          ] ;
+          ${schema.associatedMedia} [
+              ${schema.identifier} "test-data/ubd28/input_CH_yearly_air_immission_basetable.csv"
           ]
       .
   }
-  `.execute(client.query, clientOptions)
+  `.execute(client.query, clientOptions())
 }

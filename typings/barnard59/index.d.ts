@@ -1,7 +1,13 @@
+declare module 'barnard59' {
+  export const fileToDataset: any
+}
+
+declare module 'barnard59/lib/bufferDebug'
+
 declare module 'barnard59/lib/runner' {
   import { DatasetCore } from 'rdf-js'
   import { Writable } from 'stream'
-  import { Debugger } from 'debug'
+  import type { Debugger } from 'debug'
 
   type Runner = {
     pipeline: any

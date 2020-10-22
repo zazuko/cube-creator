@@ -4,8 +4,9 @@ import { Hydra } from 'alcaeus/node'
 import env from '@cube-creator/core/env'
 import { ProjectIterator } from '../../lib/project'
 import { insertTestData } from '../support/testData'
-import { setupEnv, logger } from '../support/env'
+import { setupEnv } from '../support/env'
 import { Table } from '@rdfine/csvw'
+import { log } from '../support/logger'
 
 Hydra.baseUri = env.API_CORE_BASE
 
@@ -13,12 +14,6 @@ describe('lib/projects', function () {
   this.timeout(20000)
 
   let variables: Map<string, string>
-  const log = {
-    debug: logger.extend('debug'),
-    info: logger.extend('info'),
-    warn: logger.extend('warn'),
-    error: logger.extend('error'),
-  }
 
   before(async () => {
     setupEnv()
@@ -43,8 +38,9 @@ describe('lib/projects', function () {
       // then
       expect(results).to.have.length(1)
       expect(results[0].id.value).to.match(new RegExp('/project/cli-test/mapping/table/foo/csvw$'))
-      expect(results[0].dialect?.quoteChar).to.equal("'")
-      expect(results[0].dialect?.delimiter).to.equal('--')
+      expect(results[0].dialect?.quoteChar).to.equal('"')
+      expect(results[0].dialect?.delimiter).to.equal(',')
+      expect(results[0].dialect?.header).to.equal(true)
     })
 
     it('sets cube URI as pipeline variable "graph"', async () => {

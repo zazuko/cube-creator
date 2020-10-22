@@ -1,10 +1,9 @@
-@base         <urn:pipeline:data-cube-curation> .
+@base         <urn:pipeline:cube-creator> .
 @prefix :     <https://pipeline.described.at/> .
 @prefix code: <https://code.described.at/> .
 
 <#LoadCsv>
-  :steps [ :stepList ( _:openCsvFromApi ) ] ;
-  :variables [ :variable <#sourceDir> ].
+  :steps [ :stepList ( _:openCsvFromApi ) ] .
 
 _:openCsvFromApi
   a                  :Step ;
@@ -12,8 +11,3 @@ _:openCsvFromApi
                        a         code:EcmaScript ] ;
   code:arguments     ( "csvw"^^:VariableName ) .
 
-
-<#LoadDatacubeMetadata>
-  a :Pipeline, :ReadableObjectMode ;
-  :steps [ :stepList ( <#loadDatacubeMetadata> ) ] ;
-  :variables [ :variable <#sourceDir> ].
