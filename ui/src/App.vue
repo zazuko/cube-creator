@@ -27,6 +27,7 @@
 import Vue from 'vue'
 import NavBar from '@/components/NavBar.vue'
 import { mapState } from 'vuex'
+import { APIErrorAuthorization } from './api/errors'
 
 export default Vue.extend({
   name: 'App',
@@ -44,6 +45,12 @@ export default Vue.extend({
       this.$store.dispatch('app/dismissMessage', message)
     },
   },
+  errorCaptured (err) {
+    if (err instanceof APIErrorAuthorization) {
+      this.$router.push({ name: 'NotAuthorized', params: { link: err.details.link.href } })
+    }
+    return false
+  }
 })
 </script>
 
