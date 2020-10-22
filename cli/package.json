@@ -6,7 +6,7 @@
   "scripts": {
     "postinstall": "mkdir -p output",
     "transform": "dotenv -e .env -e .test.env -e ../.local.env -- yarn start",
-    "start": "ts-node index.ts transform --project \"$TRANSFORM_PROJECT\" --debug --enable-buffer-monitor -v graph-store-endpoint=$GRAPH_STORE_ENDPOINT -v graph-store-user=$GRAPH_STORE_USER -v graph-store-password=$GRAPH_STORE_PASSWORD",
+    "start": "ts-node index.ts transform --project \"$TRANSFORM_PROJECT\" --debug --enable-buffer-monitor",
     "build": "tsc"
   },
   "dependencies": {
