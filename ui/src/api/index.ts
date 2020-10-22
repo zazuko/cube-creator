@@ -1,5 +1,6 @@
 import { Hydra } from 'alcaeus/web'
 import { RdfResource, Resource, RuntimeOperation } from 'alcaeus'
+import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import store from '@/store'
 import { APIError } from './errors'
 import { apiResourceMixin } from './mixins/ApiResource'
@@ -9,6 +10,8 @@ import CSVMappingMixin from './mixins/CSVMapping'
 import CSVSourceCollectionMixin from './mixins/CSVSourceCollection'
 import CSVSourceMixin from './mixins/CSVSource'
 import CSVColumnMixin from './mixins/CSVColumn'
+import TableCollectionMixin from './mixins/TableCollection'
+import TableMixin from './mixins/Table'
 
 const rootURL = window.APP_CONFIG.apiCoreBase
 const segmentSeparator = '!!' // used to replace slash in URI to prevent escaping
@@ -27,6 +30,8 @@ Hydra.resources.factory.addMixin(CSVMappingMixin)
 Hydra.resources.factory.addMixin(CSVSourceCollectionMixin)
 Hydra.resources.factory.addMixin(CSVSourceMixin)
 Hydra.resources.factory.addMixin(CSVColumnMixin)
+Hydra.resources.factory.addMixin(TableCollectionMixin)
+Hydra.resources.factory.addMixin(TableMixin)
 
 // Inject the access token in all requests if present
 Hydra.defaultHeaders = () => {
@@ -43,8 +48,8 @@ Hydra.defaultHeaders = () => {
 }
 
 export const api = {
-  async fetchResource (url: string): Promise<Resource> {
-    const response = await Hydra.loadResource(url.replace(segmentSeparator, '/'))
+  async fetchResource <T extends RdfResourceCore = Resource> (url: string): Promise<Resource & T> {
+    const response = await Hydra.loadResource<T>(url.replace(segmentSeparator, '/'))
 
     if (response.response?.xhr.status !== 200) {
       throw await APIError.fromResponse(response)

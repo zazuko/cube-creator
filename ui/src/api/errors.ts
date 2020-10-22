@@ -15,7 +15,7 @@ export class APIError extends Error {
     this.response = response
   }
 
-  static async fromResponse (response: HydraResponse): Promise<APIError> {
+  static async fromResponse (response: HydraResponse<any, any>): Promise<APIError> {
     const httpResponse = response?.response
 
     let details

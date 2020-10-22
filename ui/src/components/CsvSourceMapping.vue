@@ -53,26 +53,35 @@
     </div>
     <div class="column is-1" />
     <div class="column">
-      -- The tables --
+      <div v-for="table in sourceTables" :key="table.id.value">
+        {{ table.toJSON() }}
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import { Source } from '../types'
+import { Source, Table } from '../types'
 
 export default Vue.extend({
   name: 'CsvSourceMapping',
 
   props: {
     source: { type: Object as () => Source, required: true },
+    tables: { type: Array as () => Table[], required: true },
   },
 
   data () {
     return {
       selectedColumns: [],
     }
+  },
+
+  computed: {
+    sourceTables () {
+      return this.tables.filter(({ source }) => source.id.equals(this.source.id))
+    },
   },
 
   methods: {

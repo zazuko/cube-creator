@@ -12,9 +12,16 @@ export interface SourcesCollection extends Collection {
   };
 }
 
+export interface TableCollection extends Collection {
+  actions: {
+    create: RuntimeOperation | null,
+  };
+}
+
 export interface CSVMapping extends Resource {
   actions: Record<string, unknown>;
-  sourcesCollection: SourcesCollection,
+  sourcesCollection: SourcesCollection;
+  tableCollection: TableCollection;
 }
 
 export interface Project extends Resource {
@@ -35,4 +42,12 @@ export interface Source extends Resource {
   };
   name: string;
   columns: CSVColumn[];
+}
+
+export interface Table extends Resource {
+  actions: {
+    delete: RuntimeOperation | null,
+  };
+  name: string;
+  source: Source;
 }

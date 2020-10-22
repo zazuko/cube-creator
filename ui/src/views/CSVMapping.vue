@@ -46,7 +46,7 @@
     </div>
 
     <div v-if="sources.length > 0" class="sources">
-      <csv-source-mapping v-for="source in sources" :key="source.id.value" :source="source" />
+      <csv-source-mapping v-for="source in sources" :key="source.id.value" :source="source" :tables="tables" />
     </div>
     <p v-else>
       You haven't uploaded any CSV file yet.
@@ -65,29 +65,29 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { mapState } from 'vuex'
-import { CSVMapping, Source, SourcesCollection } from '@/types'
+import { mapGetters, mapState } from 'vuex'
 import CsvSourceMapping from '@/components/CsvSourceMapping.vue'
+import { CSVMapping, SourcesCollection, TableCollection } from '../types'
 
 export default Vue.extend({
   name: 'CSVMapping',
   components: { CsvSourceMapping },
 
-  async mounted () {
+  mounted () {
     const project = this.$store.state.cubeProjects.project
-    const mapping = await this.$store.dispatch('cubeProjects/fetchCSVMapping', project.csvMapping.id.value)
-    await this.$store.dispatch('cubeProjects/fetchSourcesCollection', mapping.sourcesCollection.id.value)
+    this.$store.dispatch('cubeProjects/fetchCSVMapping', project.csvMapping.id.value)
   },
 
   computed: {
     ...mapState({
       mapping: (state: any): CSVMapping | null => state.cubeProjects.csvMapping,
       sourcesCollection: (state: any): SourcesCollection | null => state.cubeProjects.sourcesCollection,
+      tableCollection: (state: any): TableCollection | null => state.cubeProjects.tableCollection,
     }),
-
-    sources () {
-      return this.sourcesCollection?.member || []
-    },
+    ...mapGetters({
+      sources: 'cubeProjects/sources',
+      tables: 'cubeProjects/tables',
+    }),
 
     canUploadSource (): boolean {
       return !!this.sourcesCollection?.actions.upload

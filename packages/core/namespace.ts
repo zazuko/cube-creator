@@ -13,7 +13,8 @@ type CubeCreatorClass =
   'DeleteCSVSourceAction' |
   'CreateProjectAction' |
   'UploadCSVAction' |
-  'Table'
+  'Table' |
+  'TableCollection'
 
 type CubeCreatorProperty =
   'projectSourceKind' |
