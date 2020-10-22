@@ -47,9 +47,9 @@ export default Vue.extend({
   },
   errorCaptured (err) {
     if (err instanceof APIErrorAuthorization) {
-      this.$router.push({ name: 'NotAuthorized', params: { link: err.details.link.href } })
+      this.$router.push({ name: 'NotAuthorized', params: { link: err.details?.link.href } })
+      return false
     }
-    return false
   }
 })
 </script>
