@@ -21,6 +21,7 @@ function removeTestGraphs() {
       </project/cli-test/tables>
       </project/cli-test/mapping/table/foo>
       </project/cli-test/source/foo>
+      </cube/cli-test>
     }`
     .WHERE`graph ?g { ?s ?p ?o }`
     .execute(client.query, clientOptions())

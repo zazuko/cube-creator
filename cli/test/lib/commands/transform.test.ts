@@ -26,6 +26,9 @@ describe('lib/commands/transform', function () {
       debug: true,
       project: `${env.API_CORE_BASE}project/cli-test`,
     })
+    await new Promise((resolve) =>
+      setTimeout(resolve, 100),
+    )
 
     // then
     const expectedGraph = $rdf.namedNode(`${env.API_CORE_BASE}cube/cli-test`)
