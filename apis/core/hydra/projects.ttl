@@ -9,7 +9,24 @@ cc:CubeProject
   a
     hydra:Class ;
   query:include
-    cc:csvMapping .
+    cc:csvMapping ;
+  hydra:supportedOperation
+  [
+    a 
+      hydra:Operation, 
+      cc:DeleteProjectAction ;
+      hydra:title 
+        "Delete Project" ;
+      hydra:method
+        "DELETE" ;
+      code:implementedBy
+        [
+          a
+            code:EcmaScript ;
+          code:link
+            <file:handlers/cube-projects#remove> ;
+        ] ;
+  ] .
 
 cc:ProjectsCollection
   a
