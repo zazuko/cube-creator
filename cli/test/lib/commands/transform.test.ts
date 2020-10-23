@@ -19,16 +19,12 @@ describe('lib/commands/transform', function () {
   it('produces triples', async function () {
     // given
     const runner = transform($rdf.namedNode('urn:pipeline:cube-creator#Main'), log.debug)
-    const authParam = new Map()
 
     // when
     await runner({
       to: 'graph-store',
       debug: true,
-      enableBufferMonitor: false,
       project: `${env.API_CORE_BASE}project/cli-test`,
-      variable: new Map(),
-      authParam,
     })
 
     // then

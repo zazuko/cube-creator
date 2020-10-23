@@ -16,23 +16,23 @@ const ns = {
 
 interface RunOptions {
   debug: boolean
-  to: string
+  to: 'stdout' | 'filesystem' | 'graph-store'
   project: string
-  variable: Map<string, string | undefined>
+  variable?: Map<string, string | undefined>
   graphStore?: {
     endpoint: string
     user: string
     password: string
   }
-  enableBufferMonitor: boolean
-  authParam: Map<string, string>
+  enableBufferMonitor?: boolean
+  authParam?: Map<string, string>
 }
 
 export default function (pipelineId: NamedNode, log: Debugger) {
   const basePath = path.resolve(__dirname, '../../')
 
   return async function (command: RunOptions) {
-    const { to, project, debug, enableBufferMonitor, variable, graphStore } = command
+    const { to, project, debug = false, enableBufferMonitor = false, variable = new Map(), graphStore } = command
 
     log.enabled = debug
 
