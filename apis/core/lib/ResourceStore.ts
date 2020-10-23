@@ -9,6 +9,8 @@ import mergeStreams from 'merge-stream'
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 import { warn } from '@hydrofoil/labyrinth/lib/logger'
 import { ResourceIdentifier } from '@tpluscode/rdfine'
+import { turtle } from '@tpluscode/rdf-string'
+import TermSet from '@rdfjs/term-set'
 
 interface ResourceCreationOptions {
   implicitlyDereferencable?: boolean
@@ -44,15 +46,22 @@ export interface ResourceStore {
    * graph pointer
    */
   save(): Promise<void>
+
+  /**
+   * Removes the named graph from the triple store
+   */
+  delete(id: string | ResourceIdentifier): Promise<void>
 }
 
 export default class implements ResourceStore {
   private readonly __client: StreamClient
   private readonly __resources: TermMap<NamedNode, GraphPointer<NamedNode>>
+  private readonly __termSet: TermSet
 
   constructor(client: StreamClient) {
     this.__client = client
     this.__resources = new TermMap()
+    this.__termSet = new TermSet()
   }
 
   async get(id: string | NamedNode): Promise<GraphPointer<NamedNode>> {
@@ -70,7 +79,7 @@ export default class implements ResourceStore {
     return this.__resources.get(term)!
   }
 
-  save(): Promise<void> {
+  async save(): Promise<void> {
     const streams = [...this.__resources.values()].map(pointer => {
       const defaultGraphTriples = [
         ...pointer.dataset
@@ -80,7 +89,14 @@ export default class implements ResourceStore {
       return $rdf.dataset(defaultGraphTriples).toStream().pipe(new ToQuadsTransform(pointer.term))
     })
 
-    return this.__client.store.put(mergeStreams(streams) as any)
+    await this.__client.store.put(mergeStreams(streams) as any)
+
+    let deleteQuery = ''
+    this.__termSet.forEach(id => {
+      deleteQuery += turtle`DROP GRAPH ${id}; `.toString()
+    })
+    await this.__client.query.update(deleteQuery)
+    this.__termSet.clear()
   }
 
   create(id: NamedNode, { implicitlyDereferencable = true }: ResourceCreationOptions = {}): GraphPointer<NamedNode> {
@@ -120,5 +136,12 @@ export default class implements ResourceStore {
     })
 
     return member
+  }
+
+  async delete(id: NamedNode): Promise<void> {
+    if (!this.__resources.has(id)) {
+      throw new Error('Resource does not exist')
+    }
+    this.__termSet.add(id)
   }
 }

@@ -2552,6 +2552,13 @@
   dependencies:
     "@types/rdf-js" "*"
 
+"@types/rdfjs__term-set@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@types/rdfjs__term-set/-/rdfjs__term-set-1.0.2.tgz#977ff77d71a76bbb1e56fb1ca974bea7cc370f92"
+  integrity sha512-xRSPtnuBdSBC8cMxGDBUEG8LTAVG9gjuK7q/JjDOTSWMTFUcfjDMntMgqqF/82MBTfDiCwJ0bFTS3iQrZb3ANw==
+  dependencies:
+    "@types/rdf-js" "*"
+
 "@types/serve-static@*":
   version "1.13.5"
   resolved "https://registry.yarnpkg.com/@types/serve-static/-/serve-static-1.13.5.tgz#3d25d941a18415d3ab092def846e135a08bbcf53"
