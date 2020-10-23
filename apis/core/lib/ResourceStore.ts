@@ -50,18 +50,18 @@ export interface ResourceStore {
   /**
    * Removes the named graph from the triple store
    */
-  delete(id: string | ResourceIdentifier): Promise<void>
+  delete(id: NamedNode): void
 }
 
 export default class implements ResourceStore {
   private readonly __client: StreamClient
   private readonly __resources: TermMap<NamedNode, GraphPointer<NamedNode>>
-  private readonly __termSet: TermSet
+  private readonly __deletedGraphs: TermSet
 
   constructor(client: StreamClient) {
     this.__client = client
     this.__resources = new TermMap()
-    this.__termSet = new TermSet()
+    this.__deletedGraphs = new TermSet()
   }
 
   async get(id: string | NamedNode): Promise<GraphPointer<NamedNode>> {
@@ -91,12 +91,15 @@ export default class implements ResourceStore {
 
     await this.__client.store.put(mergeStreams(streams) as any)
 
-    let deleteQuery = ''
-    this.__termSet.forEach(id => {
-      deleteQuery += turtle`DROP GRAPH ${id}; `.toString()
-    })
-    await this.__client.query.update(deleteQuery)
-    this.__termSet.clear()
+    if (this.__deletedGraphs.size > 0) {
+      let deleteQuery = ''
+      this.__deletedGraphs.forEach(id => {
+        deleteQuery += turtle`DROP GRAPH ${id}; `.toString()
+      })
+
+      await this.__client.query.update(deleteQuery)
+      this.__deletedGraphs.clear()
+    }
   }
 
   create(id: NamedNode, { implicitlyDereferencable = true }: ResourceCreationOptions = {}): GraphPointer<NamedNode> {
@@ -138,10 +141,10 @@ export default class implements ResourceStore {
     return member
   }
 
-  async delete(id: NamedNode): Promise<void> {
+  delete(id: NamedNode): void {
     if (!this.__resources.has(id)) {
       throw new Error('Resource does not exist')
     }
-    this.__termSet.add(id)
+    this.__deletedGraphs.add(id)
   }
 }
