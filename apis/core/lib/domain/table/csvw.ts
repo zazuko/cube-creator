@@ -1,5 +1,4 @@
 import * as Csvw from '@rdfine/csvw'
-import { TableMixin as CsvwTable } from '@rdfine/csvw'
 import { CsvSourceMixin, TableMixin } from '@cube-creator/model'
 import RdfResource from '@tpluscode/rdfine'
 import cf from 'clownface'
@@ -19,24 +18,15 @@ interface Command {
 export async function createCsvw({
   tableResource,
   resources = resourceStore(),
-}: Command): Promise<Csvw.Table> {
+}: Command) {
   const table = new TableMixin.Class(await resources!.get(tableResource))
   const source = new CsvSourceMixin.Class(await resources!.get(table.csvSource.id))
 
-  const {
-    dialect: {
-      quoteChar, delimiter, encoding, doubleQuote,
-    },
-  } = source
-
-  return new CsvwTable.Class(cf({ dataset: $rdf.dataset(), term: table.csvw }), {
+  return new Csvw.TableMixin.Class(cf({ dataset: $rdf.dataset(), term: table.csvw }), {
     url: source.id.value,
     dialect: {
+      ...source.dialect.toJSON(),
       types: [csvw.Dialect],
-      quoteChar,
-      delimiter,
-      encoding,
-      doubleQuote,
     },
     tableSchema: {
       types: [csvw.Schema],
