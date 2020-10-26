@@ -27,4 +27,5 @@ pnpm-debug.log*
 minio/*
 !minio/cube-creator/
 minio/cube-creator/*
+!minio/cube-creator/test-data/
 !minio/cube-creator/README.md
