@@ -28,6 +28,7 @@ import * as ns from '@cube-creator/core/namespace'
 import SidePane from '@/components/SidePane.vue'
 import { APIErrorValidation } from '@/api/errors'
 import { mapGetters, mapState } from 'vuex'
+import $rdf from '@rdfjs/data-model'
 
 export default Vue.extend({
   name: 'TableCreate',
@@ -36,12 +37,30 @@ export default Vue.extend({
   data () {
     const resource = clownface({ dataset: dataset() }).namedNode('')
 
+    // Initialize data based on URL query params
     const sourceId = this.$router.currentRoute.query.source
+    let columns = this.$router.currentRoute.query.columns || []
+    if (!Array.isArray(columns)) {
+      columns = [columns]
+    }
+
     if (sourceId) {
       const source = this.findSource()(sourceId)
       if (source) {
-        console.log(source)
         resource.addOut(ns.cc.csvSource, source.id)
+
+        columns.forEach((columnId) => {
+          const column = source.columns.find((column) => column.clientPath === columnId)
+          if (column) {
+            resource.addOut(ns.cc.columnMapping, $rdf.blankNode(), (columnMapping) => {
+              columnMapping.addOut(ns.cc.column, column.id)
+            })
+          } else {
+            console.error(`Column not found: ${columnId}`)
+          }
+        })
+      } else {
+        console.error(`Source not found: ${sourceId}`)
       }
     }
 

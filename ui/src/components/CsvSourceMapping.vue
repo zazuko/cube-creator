@@ -94,12 +94,10 @@ export default class CsvSourceMapping extends Vue {
     return this.tables.filter(({ source }) => source.id.equals(this.source.id))
   }
 
-  get createTableQueryParams (): Record<string, string> {
+  get createTableQueryParams (): Record<string, string | string[]> {
     return {
       source: this.source.clientPath,
-      columns: this.selectedColumns
-        .map(({ clientPath }) => clientPath)
-        .join(',')
+      columns: this.selectedColumns.map(({ clientPath }) => clientPath),
     }
   }
 

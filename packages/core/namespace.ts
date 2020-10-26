@@ -27,7 +27,8 @@ type CubeCreatorProperty =
   'tables' |
   'identifierTemplate' |
   'project' |
-  'cube'
+  'cube' |
+  'columnMapping'
 
 type OtherTerms =
   'dash'
