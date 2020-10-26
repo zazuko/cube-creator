@@ -15,12 +15,18 @@ export async function deleteSource({
   resource,
   store = resourceStore(),
 }: DeleteSourceCommand): Promise<void> {
+  await deleteSourceWithoutSave(resource, store)
+
+  // Save changes
+  await store.save()
+}
+
+export async function deleteSourceWithoutSave(resource: NamedNode<string>, store: ResourceStore): Promise<void> {
   const csvSource = await store.get(resource)
 
   // TODO: Delete Tables or prevent it
   // Find related tables
   // Delete them
-
   // Delete S3 resource
   const path = csvSource.out(schema.associatedMedia).out(schema.identifier).term
     ?.value
@@ -37,7 +43,4 @@ export async function deleteSource({
 
   // Delete Graph
   store.delete(resource)
-
-  // Save changes
-  await store.save()
 }
