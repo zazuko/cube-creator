@@ -10,6 +10,9 @@
     "@rdfine/schema": "^0.5.2",
     "@tpluscode/rdfine": "^0.5.10",
     "@tpluscode/rdf-ns-builders": "^0.4.0",
+    "alcaeus": "^1.0.0-RC.2"
+  },
+  "devDependencies": {
     "@types/rdf-js": "^4.0.0"
   }
 }

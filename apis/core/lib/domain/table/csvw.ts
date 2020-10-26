@@ -22,7 +22,7 @@ export async function createCsvw({
   const table = new TableMixin.Class(await resources!.get(tableResource))
   const source = new CsvSourceMixin.Class(await resources!.get(table.csvSource.id))
 
-  return new Csvw.TableMixin.Class(cf({ dataset: $rdf.dataset(), term: table.csvw }), {
+  return new Csvw.TableMixin.Class(cf({ dataset: $rdf.dataset(), term: table.csvw.id }), {
     url: source.id.value,
     dialect: {
       ...source.dialect.toJSON(),

@@ -2130,7 +2130,7 @@
     "@tpluscode/rdf-ns-builders" "^0.4"
     "@zazuko/rdf-vocabularies" "^2020.6.29"
 
-"@tpluscode/rdfine@^0.5.10", "@tpluscode/rdfine@^0.5.6", "@tpluscode/rdfine@^0.5.7", "@tpluscode/rdfine@^0.5.9", "@tpluscode/rdfine@^0.5.12":
+"@tpluscode/rdfine@^0.5.10", "@tpluscode/rdfine@^0.5.12", "@tpluscode/rdfine@^0.5.6", "@tpluscode/rdfine@^0.5.7", "@tpluscode/rdfine@^0.5.9":
   version "0.5.12"
   resolved "https://registry.yarnpkg.com/@tpluscode/rdfine/-/rdfine-0.5.12.tgz#00c9a6e3d908d33857a4f465f0484c4ce955112f"
   integrity sha512-ObERFg9pQE3OJJnUXcyOrtUNri3396chKKCwxYkvhpZc6HZAifmuT4Gtncx7w5tGLkVeeYGWw0xtUQ1ybUEsnQ==
@@ -2225,17 +2225,10 @@
   resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.2.13.tgz#8a3801f6655179d1803d81e94a2e4aaf317abd16"
   integrity sha512-o3SGYRlOpvLFpwJA6Sl1UPOwKFEvE4FxTEB/c9XHI2whdnd4kmPVkNLL8gY4vWGBxWWDumzLbKsAhEH5SKn37Q==
 
-"@types/clownface@^1":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@types/clownface/-/clownface-1.0.2.tgz#b92a62e0caa09651ff976cdd349c7c8dbdbb6660"
-  integrity sha512-hrYu6KQOtv6ILjDjRNF0FMaZ1om2Yj15bYXHgLIBF7L2j3N5CBUByvIzFQIK6y6GFZn+5rRvkqqpQnJRB2+wqA==
-  dependencies:
-    "@types/rdf-js" "*"
-
-"@types/clownface@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@types/clownface/-/clownface-1.0.1.tgz#fd1bdda2dd19b287c1543b548ab19e1155e627d4"
-  integrity sha512-p2QlI4tF9DgS3GG7YGI3k0HRWSdIzKfRO6MQA8I1ODyMFqmCITOip89NNCagiEZXpOdr2d8TBYqrsPAfnwo2ag==
+"@types/clownface@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@types/clownface/-/clownface-1.0.3.tgz#8abe4c7e1b3226851a83af33d774f94eb915fdd2"
+  integrity sha512-s2VLKhvwYJbzL/+r12fuv6gu8J/MVcuBk2K6CPsnRygcL5hTwahBPkYS4ROmthKB4+zP1f1oWYTZYAKnNs1ogw==
   dependencies:
     "@types/rdf-js" "*"
 

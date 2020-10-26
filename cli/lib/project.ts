@@ -36,9 +36,9 @@ async function loadTables(project: Project, log: any): Promise<Table[]> {
     return []
   }
 
-  if (project.csvMapping.tables.load) {
+  if (project.csvMapping.tableCollection.load) {
     log.info(`Will transform project ${project.label}`)
-    const { representation } = await project.csvMapping.tables.load<Collection<Table>>()
+    const { representation } = await project.csvMapping.tableCollection.load()
 
     if (representation?.root) {
       return representation?.root.member
@@ -61,12 +61,17 @@ export class ProjectIterator extends stream.Readable {
       .then(project => loadTables(project, log))
       .then(tables => {
         const loadMetadata = tables.reduce((metadata, table) => {
+          if (!table.csvw.load) {
+            log.warn(`Skipping table '${table.name}'. Is it dereferencable?`)
+            return metadata
+          }
+
           log.debug(`Loading csvw for table '${table.name}'`)
-          const promise = Hydra.loadResource<Csvw.Table>(table.csvw)
+          const promise = table.csvw.load()
             .then(({ representation }) => representation?.root)
             .then((csvwResource) => {
               if (!csvwResource) {
-                log.warn(`Skipping table '${table.name}'. Failed to dereference ${table.csvw.value}`)
+                log.warn(`Skipping table '${table.name}'. Failed to dereference ${table.csvw.id.value}`)
                 return
               }
 
@@ -85,7 +90,7 @@ export class ProjectIterator extends stream.Readable {
               this.push(csvwResource)
             })
             .catch(e => {
-              log.error(`Failed to load ${table.csvw.value}`)
+              log.error(`Failed to load ${table.csvw.id.value}`)
               log.error(e.message)
             })
 
