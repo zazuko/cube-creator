@@ -15,6 +15,7 @@ RUN yarn install --frozen-lockfile
 
 COPY . .
 RUN rm -rf ./ui
+RUN rm -rf ./cli
 
 RUN yarn tsc --outDir dist --module CommonJS
 

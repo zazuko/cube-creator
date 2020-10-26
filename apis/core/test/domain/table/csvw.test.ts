@@ -25,7 +25,7 @@ describe('domain/table/csvw', () => {
           })
           .addOut(csvw.dialect, dialect => {
             dialect.addOut(csvw.quoteChar, '""')
-            dialect.addOut(csvw.separator, '-')
+            dialect.addOut(csvw.delimiter, '-')
           }),
       ])
 
@@ -36,10 +36,11 @@ describe('domain/table/csvw', () => {
       })
 
       // then
-      expect(table.dialect?.toJSON()).to.matchSnapshot(this)
+      expect(table.dialect?.quoteChar).to.eq('""')
+      expect(table.dialect?.delimiter).to.eq('-')
     })
 
-    it('copies sources contentUrl to csvw:url', async function () {
+    it('copies sources url to csvw:url', async function () {
       // given
       const tableResource = $rdf.namedNode('cc:table')
       const sourceId = $rdf.namedNode('cc:source')
@@ -50,9 +51,6 @@ describe('domain/table/csvw', () => {
           .addOut(cc.csvw, $rdf.namedNode('cc:table/csvw')),
         clownface({ dataset: $rdf.dataset() })
           .node(sourceId)
-          .addOut(schema.associatedMedia, media => {
-            media.addOut(schema.contentUrl, $rdf.namedNode('content url'))
-          })
           .addOut(csvw.dialect),
       ])
 
@@ -63,7 +61,7 @@ describe('domain/table/csvw', () => {
       })
 
       // then
-      expect(table.url).to.equal('content url')
+      expect(table.url).to.equal(sourceId.value)
     })
   })
 })

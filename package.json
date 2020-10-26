@@ -3,9 +3,11 @@
   "private": true,
   "scripts": {
     "lint": "eslint . --ext .ts,.vue,.tsx --quiet --ignore-path .gitignore",
-    "test": "mocha --recursive apis/*/test/*.test.ts"
+    "test": "mocha --recursive apis/**/*.test.ts",
+    "test:cli": "mocha --recursive cli/**/*.test.ts"
   },
   "workspaces": [
+    "cli",
     "ui",
     "apis/*",
     "packages/*"
@@ -22,7 +24,6 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "eslint-plugin-vue": "^7.1.0",
-    "nodemon": "^2.0.5",
     "standard": "^14.3.4",
     "ts-node": "^9.0.0",
     "typescript": "^4.0.3"
@@ -31,6 +32,8 @@
     "@rdfjs/express-handler": "tpluscode/express-handler#dataset-multiple-times"
   },
   "mocha": {
+    "extension": "ts",
+    "recursive": true,
     "watch-files": [
       "./**/*.ts"
     ],
