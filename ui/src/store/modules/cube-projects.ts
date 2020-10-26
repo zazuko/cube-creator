@@ -80,10 +80,23 @@ const actions: ActionTree<CubeProjectsState, RootState> = {
       throw new Error('Sources collection not loaded')
     }
 
-    const sourcesCollection = await api.fetchResource(collection.id.value)
-    context.commit('storeSourcesCollection', sourcesCollection)
+    const freshCollection = await api.fetchResource(collection.id.value)
+    context.commit('storeSourcesCollection', freshCollection)
 
-    return sourcesCollection
+    return freshCollection
+  },
+
+  async refreshTableCollection (context) {
+    const collection = context.state.tableCollection
+
+    if (!collection) {
+      throw new Error('Table collection not loaded')
+    }
+
+    const freshCollection = await api.fetchResource<TableCollection>(collection.id.value)
+    context.commit('storeTableCollection', freshCollection)
+
+    return freshCollection
   },
 
   async uploadCSVs (context, files) {
