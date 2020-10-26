@@ -20,7 +20,8 @@ export const instanceSelect: SingleEditorComponent = {
   editor: dash.InstancesSelectEditor,
   render ({ property, value }, { update }) {
     return html`<b-select .collection="${property.shape.get(hashi.collection)}"
-                          .update="${update}"></b-select>`
+                          .update="${update}"
+                          .value="${value.object.term}"></b-select>`
   },
   loadDependencies () {
     return [
