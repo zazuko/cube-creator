@@ -55,7 +55,6 @@ const getCSVSource = asyncMiddleware(async (req, res, next) => {
 export const get = labyrinth.protectedResource(getCSVSource, labyrinth.get)
 
 export const remove = labyrinth.protectedResource(
-  shaclValidate,
   asyncMiddleware(async (req, res) => {
     const csvSource = req.hydra.resource.term
     await deleteSource({
