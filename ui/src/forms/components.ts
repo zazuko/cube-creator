@@ -2,7 +2,7 @@ import { html, SingleEditorComponent } from '@hydrofoil/shaperone-wc'
 import * as ns from '@cube-creator/core/namespace'
 import { dash } from '@tpluscode/rdf-ns-builders'
 import { createCustomElement } from '@/forms/bulma'
-import {hashi} from '@cube-creator/core/namespace';
+import { hashi } from '@cube-creator/core/namespace'
 
 export const textField: SingleEditorComponent = {
   editor: dash.TextFieldEditor,
