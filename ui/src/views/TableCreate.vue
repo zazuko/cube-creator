@@ -60,6 +60,9 @@ export default Vue.extend({
       const { representation } = await expects.load()
       const { root: shape } = representation
       if (shape) {
+        const sourceProperty = shape.property.find(p => p.class?.equals(ns.cc.CSVSource))
+        sourceProperty[ns.hashi.collection.value] = this.sourcesCollection
+
         this.shapes = shape.pointer
       }
     }
@@ -67,6 +70,7 @@ export default Vue.extend({
 
   computed: {
     ...mapState({
+      sourcesCollection: (state) => state.cubeProjects.sourcesCollection,
       operation: (state) => state.cubeProjects.tableCollection?.actions.create,
     }),
   },

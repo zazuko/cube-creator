@@ -32,6 +32,7 @@ type OtherTerms =
 
 type CubeCreatorNamespace = Record<CubeCreatorClass | CubeCreatorProperty | OtherTerms, NamedNode>
 
+export const hashi = namespace('http://hypermedia.app/shapes#')
 export const cube = namespace('http://ns.bergnet.org/cube/')
 export const cc: CubeCreatorNamespace = namespace('https://cube-creator.zazuko.com/vocab#') as any
 export const editor = namespace(cc.dash.value)

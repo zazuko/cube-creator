@@ -14,6 +14,7 @@ ${shape('table/create')} {
       ${sh.maxCount} 1 ;
       ${sh.class} ${cc.CSVSource} ;
       ${sh.order} 10 ;
+      ${dash.editor} ${dash.InstancesSelectEditor} ;
     ] ;
     ${sh.property} [
       ${sh.name} "Table name" ;
