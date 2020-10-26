@@ -25,7 +25,12 @@ $panel-radius: 0;
     border-top: 1px solid $grey-lighter;
 }
 
-cc-form {
-    margin: 0 -16px;
+form-property {
     display: block;
+    margin-bottom: 0.75rem;
+}
+
+form-object {
+    display: block;
+    margin-bottom: 0.25rem;
 }
