@@ -35,7 +35,9 @@ export class TestResourceStore implements ResourceStore {
   }
 
   save(): Promise<void> {
+    this.__deletedGraphs.forEach((id: NamedNode<string>) => this.resources.delete(id))
     this.__deletedGraphs.clear()
+
     return Promise.resolve()
   }
 
