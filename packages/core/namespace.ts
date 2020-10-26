@@ -24,7 +24,9 @@ type CubeCreatorProperty =
   'csvSourceCollection' |
   'csvColumnSample' |
   'csvw' |
-  'tables'
+  'project' |
+  'tables' |
+  'cube'
 
 type OtherTerms =
   'dash'

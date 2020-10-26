@@ -11,11 +11,13 @@
     "strictNullChecks": true,
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "typeRoots": ["./typings", "./node_modules/@types"]
   },
   "include": [
     "packages",
     "apis",
+    "cli",
     "ui"
   ],
   "exclude": [
