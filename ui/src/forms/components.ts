@@ -2,6 +2,7 @@ import { html, SingleEditorComponent } from '@hydrofoil/shaperone-wc'
 import * as ns from '@cube-creator/core/namespace'
 import { dash } from '@tpluscode/rdf-ns-builders'
 import { createCustomElement } from '@/forms/bulma'
+import {hashi} from '@cube-creator/core/namespace';
 
 export const textField: SingleEditorComponent = {
   editor: dash.TextFieldEditor,
@@ -11,6 +12,19 @@ export const textField: SingleEditorComponent = {
   loadDependencies () {
     return [
       import('./BulmaTextBox.vue').then(createCustomElement('b-textbox'))
+    ]
+  }
+}
+
+export const instanceSelect: SingleEditorComponent = {
+  editor: dash.InstancesSelectEditor,
+  render ({ property, value }, { update }) {
+    return html`<b-select .collection="${property.shape.get(hashi.collection)}"
+                          .update="${update}"></b-select>`
+  },
+  loadDependencies () {
+    return [
+      import('./BulmaSelect.vue').then(createCustomElement('b-select'))
     ]
   }
 }
