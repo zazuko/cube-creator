@@ -15,6 +15,7 @@ import TableCreate from '@/views/TableCreate.vue'
 import CubeDesigner from '@/views/CubeDesigner.vue'
 import PageNotFound from '@/views/PageNotFound.vue'
 import Logout from '@/views/Logout.vue'
+import NotAuthorized from '@/views/NotAuthorized.vue'
 
 Vue.use(VueRouter)
 
@@ -87,6 +88,11 @@ const routes: Array<RouteConfig> = [
     path: '/logout',
     name: 'Logout',
     component: Logout,
+  },
+  {
+    path: '/unauthorized',
+    name: 'NotAuthorized',
+    component: NotAuthorized,
   },
 ]
 

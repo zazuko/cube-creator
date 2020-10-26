@@ -17,7 +17,6 @@ export class APIError extends Error {
 
   static async fromResponse (response: HydraResponse<any, any>): Promise<APIError> {
     const httpResponse = response?.response
-
     let details
     try {
       details = await httpResponse?.xhr.json()
@@ -32,6 +31,9 @@ export class APIError extends Error {
         return new APIErrorValidation(details, response)
       case 409:
         return new APIErrorConflict(details, response)
+      case 401:
+      case 403:
+        return new APIErrorAuthorization(details, response)
       default:
         return new APIError(details, response)
     }
@@ -41,3 +43,4 @@ export class APIError extends Error {
 export class APIErrorNotFound extends APIError {}
 export class APIErrorValidation extends APIError {}
 export class APIErrorConflict extends APIError {}
+export class APIErrorAuthorization extends APIError {}
