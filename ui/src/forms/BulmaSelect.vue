@@ -1,5 +1,5 @@
 <template>
-  <b-select placeholder="Select" @input="emit">
+  <b-select placeholder="Select" @input="emit" :value="value">
     <option
       v-for="option in options"
       :value="option.id"
@@ -23,6 +23,7 @@ const labelProperty = schema.name
 export default class extends Vue {
   @Prop() collection?: RdfResource
   @Prop() update!: (newValue: string | NamedNode) => void
+  @Prop() value?: NamedNode;
 
   options: RdfResource[] = []
 
