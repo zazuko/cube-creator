@@ -16,6 +16,7 @@
             </div>
             <div class="level-right">
               <b-button
+                v-if="tableCollection.actions.create"
                 :disabled="selectedColumns.length === 0"
                 tag="router-link"
                 :to="{ name: 'TableCreate', query: createTableQueryParams }"
