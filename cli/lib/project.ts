@@ -1,6 +1,5 @@
 import stream from 'readable-stream'
 import { Hydra } from 'alcaeus/node'
-import { Collection } from 'alcaeus'
 import { Project, Table } from '@cube-creator/model'
 import * as Csvw from '@rdfine/csvw'
 import * as Models from '@cube-creator/model'
