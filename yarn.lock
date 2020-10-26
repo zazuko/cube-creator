@@ -3367,10 +3367,10 @@ ajv@^6.12.5:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
-alcaeus@1.0.0-RC.2:
-  version "1.0.0-RC.2"
-  resolved "https://registry.yarnpkg.com/alcaeus/-/alcaeus-1.0.0-RC.2.tgz#8a376fda678dad3ce5bbc83dc92a6d195b5a8b19"
-  integrity sha512-Suf9K+y82c9Iyj+o6//py9js4t47qB/AHhVqJQWgWNjvYJQ2I+dY8EaMBJoF7rH/78hkDbdXr4kPuH7yJL543Q==
+alcaeus@1.0.0-RC.4:
+  version "1.0.0-RC.4"
+  resolved "https://registry.yarnpkg.com/alcaeus/-/alcaeus-1.0.0-RC.4.tgz#bd9c5fb6d00278049eb1b85537e71652818fdc73"
+  integrity sha512-J38XYTbgfYm7OnEpf5g/xzOEmLeUtK05olqZlHzZ6gEC9Jvr6L6IH6TRnzBDwqkV21bWXY8LEGff2AgMEi/fKg==
   dependencies:
     "@rdf-esm/data-model" "^0.5.3"
     "@rdf-esm/formats-common" "^0.5.3"
