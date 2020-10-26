@@ -2050,6 +2050,13 @@
   dependencies:
     "@types/rdf-js" "*"
 
+"@types/rdfjs__term-set@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@types/rdfjs__term-set/-/rdfjs__term-set-1.0.2.tgz#977ff77d71a76bbb1e56fb1ca974bea7cc370f92"
+  integrity sha512-xRSPtnuBdSBC8cMxGDBUEG8LTAVG9gjuK7q/JjDOTSWMTFUcfjDMntMgqqF/82MBTfDiCwJ0bFTS3iQrZb3ANw==
+  dependencies:
+    "@types/rdf-js" "*"
+    
 "@types/readable-stream@^2.3.9":
   version "2.3.9"
   resolved "https://registry.yarnpkg.com/@types/readable-stream/-/readable-stream-2.3.9.tgz#40a8349e6ace3afd2dd1b6d8e9b02945de4566a9"

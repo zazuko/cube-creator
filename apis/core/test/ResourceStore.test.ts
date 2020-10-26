@@ -165,4 +165,33 @@ describe('ResourceStore', () => {
       expect(savedDataset.toCanonical()).to.matchSnapshot(this)
     })
   })
+
+  describe('delete', () => {
+    it('delete is not executed without save', async function () {
+      // given
+      const resourceStore = new ResourceStore(client)
+      resourceStore.create(ex.Foo)
+      await resourceStore.save()
+
+      // when
+      resourceStore.delete(ex.Foo)
+
+      // then
+      expect(client.query.update).to.not.have.been.called
+    })
+
+    it('delete is executed on save', async function () {
+      // given
+      const resourceStore = new ResourceStore(client)
+      resourceStore.create(ex.Foo)
+      await resourceStore.save()
+      resourceStore.delete(ex.Foo)
+
+      // when
+      await resourceStore.save()
+
+      // then
+      expect(client.query.update).to.have.been.calledOnce
+    })
+  })
 })
