@@ -3383,6 +3383,29 @@ alcaeus@1.0.0-RC.3:
     rdf-transform-triple-to-quad "^1.0.2"
     readable-stream "^3.6.0"
 
+alcaeus@1.0.0-RC.4:
+  version "1.0.0-RC.4"
+  resolved "https://registry.yarnpkg.com/alcaeus/-/alcaeus-1.0.0-RC.4.tgz#bd9c5fb6d00278049eb1b85537e71652818fdc73"
+  integrity sha512-J38XYTbgfYm7OnEpf5g/xzOEmLeUtK05olqZlHzZ6gEC9Jvr6L6IH6TRnzBDwqkV21bWXY8LEGff2AgMEi/fKg==
+  dependencies:
+    "@rdf-esm/data-model" "^0.5.3"
+    "@rdf-esm/formats-common" "^0.5.3"
+    "@rdf-esm/sink-map" "^0.5.0"
+    "@rdf-esm/term-map" "^0.5.0"
+    "@rdf-esm/term-set" "^0.5.0"
+    "@rdfine/hydra" "^0.5.5"
+    "@rdfine/rdf" "^0.4.1"
+    "@rdfjs/formats-common" "^2.1"
+    "@tpluscode/rdf-ns-builders" "^0.4"
+    "@tpluscode/rdfine" "^0.5.10"
+    clownface "^1"
+    isomorphic-fetch "^2.2.1"
+    isomorphic-form-data "^2.0.0"
+    parse-link-header "^1.0.1"
+    rdf-dataset-indexed "^0.4.0"
+    rdf-transform-triple-to-quad "^1.0.2"
+    readable-stream "^3.6.0"
+
 alphanum-sort@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/alphanum-sort/-/alphanum-sort-1.0.2.tgz#97a1119649b211ad33691d9f9f486a8ec9fbe0a3"
