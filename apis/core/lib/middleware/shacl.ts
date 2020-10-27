@@ -4,6 +4,7 @@ import { hydra, rdf, sh } from '@tpluscode/rdf-ns-builders'
 import SHACLValidator from 'rdf-validate-shacl'
 import error from 'http-errors'
 import { resourceStore } from '../domain/resources'
+import { ProblemDocument } from 'http-problem-details'
 
 export const shaclMiddleware = (createResourceStore: typeof resourceStore) => asyncMiddleware(async (req, res, next) => {
   const resources = createResourceStore()
@@ -31,12 +32,25 @@ export const shaclMiddleware = (createResourceStore: typeof resourceStore) => as
     return next(new error.BadRequest('Resource cannot be empty'))
   }
 
-  const validationResult = new SHACLValidator(shapes).validate(resource.dataset)
-  if (validationResult.conforms) {
+  const validationReport = new SHACLValidator(shapes).validate(resource.dataset)
+  if (validationReport.conforms) {
     return next()
   }
 
-  return next(new error.BadRequest())
+  const responseReport = validationReport.results.map((r) => ({
+    message: r.message.map((message) => message.value),
+    path: r.path?.value,
+  }))
+  const response = new ProblemDocument({
+    status: 400,
+    title: 'Request validation error',
+    detail: 'The request payload does not conform to the SHACL description of this endpoint.',
+    type: 'http://tempuri.org/BadRequest',
+  }, {
+    report: responseReport,
+  })
+
+  res.status(400).send(response)
 })
 
 export const shaclValidate = shaclMiddleware(resourceStore)

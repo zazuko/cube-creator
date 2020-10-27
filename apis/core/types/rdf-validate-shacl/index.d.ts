@@ -1,13 +1,19 @@
 declare module 'rdf-validate-shacl' {
-  import { DatasetCore } from 'rdf-js'
+  import { DatasetCore, Term } from 'rdf-js'
 
-  interface ValidationResult {
-    message: string
+  export interface ValidationResult {
+    message: Term[]
+    path: Term | null
+    focusNode: Term | null
+    severity: Term | null
+    sourceConstraintComponent: Term | null
+    sourceShape: Term | null
   }
 
-  interface ValidationReport {
+  export interface ValidationReport {
     conforms: boolean
     results: ValidationResult[]
+    dataset: DatasetCore
   }
 
   class SHACLValidator {
