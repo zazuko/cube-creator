@@ -57,6 +57,6 @@ cc:CSVSource
           a
             code:EcmaScript ;
           code:link
-            <file:handlers/csv-source#delete> ;
+            <file:handlers/csv-source#remove> ;
         ]
     ] .

@@ -3,13 +3,15 @@ import $rdf from 'rdf-ext'
 import clownface, { GraphPointer } from 'clownface'
 import TermMap from '@rdfjs/term-map'
 import Impl, { ResourceStore } from '../../lib/ResourceStore'
+import TermSet from '@rdfjs/term-set'
 
 export class TestResourceStore implements ResourceStore {
   private readonly resources: TermMap<NamedNode, GraphPointer<NamedNode>>
+  private readonly __deletedGraphs: TermSet
 
   constructor(pointers: GraphPointer<NamedNode>[]) {
     this.resources = new TermMap()
-
+    this.__deletedGraphs = new TermSet()
     for (const pointer of pointers) {
       this.resources.set(pointer.term, pointer)
     }
@@ -33,6 +35,13 @@ export class TestResourceStore implements ResourceStore {
   }
 
   save(): Promise<void> {
+    this.__deletedGraphs.forEach((id) => this.resources.delete(id as NamedNode))
+    this.__deletedGraphs.clear()
+
     return Promise.resolve()
+  }
+
+  delete(id: NamedNode): void {
+    this.__deletedGraphs.add(id)
   }
 }

@@ -6,6 +6,7 @@ import { shaclValidate } from '../middleware/shacl'
 import { uploadFile } from '../domain/csv-source/upload'
 import { cc } from '@cube-creator/core/namespace'
 import { getCSVHead } from '../domain/csv-source/get-head'
+import { deleteSource } from '../domain/csv-source/delete'
 
 export const post = labyrinth.protectedResource(
   shaclValidate,
@@ -52,3 +53,13 @@ const getCSVSource = asyncMiddleware(async (req, res, next) => {
 })
 
 export const get = labyrinth.protectedResource(getCSVSource, labyrinth.get)
+
+export const remove = labyrinth.protectedResource(
+  asyncMiddleware(async (req, res) => {
+    const csvSource = req.hydra.resource.term
+    await deleteSource({
+      resource: csvSource,
+    })
+    res.sendStatus(204)
+  }),
+)

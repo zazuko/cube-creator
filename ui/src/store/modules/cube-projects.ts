@@ -80,7 +80,7 @@ const actions: ActionTree<CubeProjectsState, RootState> = {
       throw new Error('Sources collection not loaded')
     }
 
-    const freshCollection = await api.fetchResource(collection.id.value)
+    const freshCollection = await api.fetchResource<SourcesCollection>(collection.id.value)
     context.commit('storeSourcesCollection', freshCollection)
 
     return freshCollection
