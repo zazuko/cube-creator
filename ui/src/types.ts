@@ -1,4 +1,5 @@
 import { Collection, Resource, RuntimeOperation } from 'alcaeus'
+import { Term } from 'rdf-js'
 
 export interface ProjectsCollection extends Collection {
   actions: {
@@ -44,10 +45,19 @@ export interface Source extends Resource {
   columns: CSVColumn[];
 }
 
+export interface ColumnMapping extends Resource {
+  sourceColumn: CSVColumn;
+  targetProperty: Term;
+  datatype: Term | null;
+  language: string | null;
+}
+
 export interface Table extends Resource {
   actions: {
     delete: RuntimeOperation | null,
   };
   name: string;
   source: Source;
+  color: string;
+  columnMappings: ColumnMapping[];
 }

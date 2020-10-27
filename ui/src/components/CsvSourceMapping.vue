@@ -60,9 +60,7 @@
     </div>
     <div class="column is-1" />
     <div class="column">
-      <div v-for="table in sourceTables" :key="table.id.value">
-        {{ table.toJSON() }}
-      </div>
+      <mapper-table v-for="table in sourceTables" :key="table.id.value" :table="table" />
       <div v-if="isFirstSource && sourceTables.length === 0" class="content">
         <p>You haven't mapped any table yet.</p>
         <p>The first step is to define which columns of your CSV will be dimensions of your cube:</p>
@@ -80,8 +78,13 @@
 <script lang="ts">
 import { Prop, Component, Vue } from 'vue-property-decorator'
 import { Source, Table, TableCollection, CSVColumn } from '../types'
+import MapperTable from './MapperTable.vue'
 
-@Component
+@Component({
+  components: {
+    MapperTable,
+  },
+})
 export default class CsvSourceMapping extends Vue {
   @Prop({ default: false }) readonly isFirstSource!: boolean;
   @Prop() readonly source!: Source;

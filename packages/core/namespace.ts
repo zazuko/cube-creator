@@ -14,7 +14,8 @@ type CubeCreatorClass =
   'CreateProjectAction' |
   'UploadCSVAction' |
   'Table' |
-  'TableCollection'
+  'TableCollection' |
+  'ObservationTable'
 
 type CubeCreatorProperty =
   'projectSourceKind' |
