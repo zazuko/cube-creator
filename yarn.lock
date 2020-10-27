@@ -1390,7 +1390,7 @@
     "@tpluscode/rdf-ns-builders" "^0.4"
     "@tpluscode/rdfine" "^0.5.7"
 
-"@rdfjs/data-model@^1.0.1", "@rdfjs/data-model@^1.1.0", "@rdfjs/data-model@^1.1.1", "@rdfjs/data-model@^1.1.2", "@rdfjs/data-model@^1.2":
+"@rdfjs/data-model@^1.0.1", "@rdfjs/data-model@^1.1.0", "@rdfjs/data-model@^1.1.1", "@rdfjs/data-model@^1.1.2", "@rdfjs/data-model@^1.2", "@rdfjs/data-model@^1.2.0":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@rdfjs/data-model/-/data-model-1.2.0.tgz#1daa39f26d48e0ec4d6a60fc4150db7d7ef1bab2"
   integrity sha512-6ITWcu2sr9zJqXUPDm1XJ8DRpea7PotWBIkTzuO1MCSruLOWH2ICoQOAtlJy30cT+GqH9oAQKPR+CHXejsdizA==
@@ -2056,7 +2056,7 @@
   integrity sha512-xRSPtnuBdSBC8cMxGDBUEG8LTAVG9gjuK7q/JjDOTSWMTFUcfjDMntMgqqF/82MBTfDiCwJ0bFTS3iQrZb3ANw==
   dependencies:
     "@types/rdf-js" "*"
-    
+
 "@types/readable-stream@^2.3.9":
   version "2.3.9"
   resolved "https://registry.yarnpkg.com/@types/readable-stream/-/readable-stream-2.3.9.tgz#40a8349e6ace3afd2dd1b6d8e9b02945de4566a9"
@@ -3462,6 +3462,20 @@ barnard59-core@0.0.4:
     rdf-loaders-registry "^0.1.0"
     readable-stream "^3.0.6"
 
+barnard59-formats@^0.0.6:
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/barnard59-formats/-/barnard59-formats-0.0.6.tgz#d24e7315711edd0e270082d2fea1be45718e01bc"
+  integrity sha512-6mu+hrPH+Hxv8v8W2GNnMJ9jkC7cQ0Rb7U5nF4a9VxqoLeQoVx2ISg348sp9ED2ghrJyIlqPJbS6tCYRTB6McQ==
+  dependencies:
+    "@rdfjs/parser-jsonld" "^1.1.1"
+    "@rdfjs/parser-n3" "^1.1.2"
+    "@rdfjs/serializer-jsonld" "^1.2.0"
+    "@rdfjs/serializer-ntriples" "^1.0.1"
+    "@rdfjs/sink-to-duplex" "^1.0.0"
+    barnard59-base "0.0.1"
+    rdf-parser-csvw "^0.13.0"
+    rdfxml-streaming-parser "^1.2.0"
+
 barnard59-formats@^0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/barnard59-formats/-/barnard59-formats-0.0.7.tgz#b2b2849487296474e1a30768c9e7f2b1ef8561c6"
@@ -3486,6 +3500,16 @@ barnard59-graph-store@^0.0.6:
     promise-the-world "^1.0.1"
     readable-stream "^3.6.0"
     sparql-http-client "^2.2.2"
+
+"barnard59-rdf@git://github.com/zazuko/barnard59-rdf.git#cube-to-observation":
+  version "0.0.1"
+  resolved "git://github.com/zazuko/barnard59-rdf.git#a2a62ef512730fe7e6c61f871ac1f1402a52f018"
+  dependencies:
+    "@rdfjs/namespace" "^1.1.0"
+    "@rdfjs/term-set" "^1.0.1"
+    clownface "^1.0.0"
+    rdf-ext "^1.3.0"
+    readable-stream "^3.6.0"
 
 barnard59@^0.1.0:
   version "0.1.0"
@@ -4115,6 +4139,13 @@ chrome-trace-event@^1.0.2:
   integrity sha512-9e/zx1jw7B4CO+c/RXoCsfg/x1AfUBioy4owYH0bJprEYAx5hRFLRhWBqHAG57D0ZM4H7vxbP7bPe0VwhQRYDQ==
   dependencies:
     tslib "^1.9.0"
+
+chunkify-stream@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/chunkify-stream/-/chunkify-stream-1.0.0.tgz#4ef3450353639d0ef86c5abe2b1137ef69893e87"
+  integrity sha512-LTzfbDrGyMglcGijQtHCTr6uzQIz7VAtvpitKzzIZeDZbBDZzSEhrpu0lH8eyL4/1LO10Oy9kUcXbQtVXlZUMw==
+  dependencies:
+    readable-stream "^3.4.0"
 
 ci-info@^1.5.0:
   version "1.6.0"
@@ -5841,6 +5872,11 @@ eslint@~6.8.0:
     table "^5.2.3"
     text-table "^0.2.0"
     v8-compile-cache "^2.0.3"
+
+esm@^3.2.25:
+  version "3.2.25"
+  resolved "https://registry.yarnpkg.com/esm/-/esm-3.2.25.tgz#342c18c29d56157688ba5ce31f8431fbb795cc10"
+  integrity sha512-U1suiZ2oDVWv4zPO56S0NcR5QriEahGtdN2OR6FiOG4WJvcjBVFB0qI4+eKoWFH483PKGuLuu6V8Z4T5g63UVA==
 
 espree@^6.1.2, espree@^6.2.1:
   version "6.2.1"
@@ -10783,6 +10819,19 @@ rdf-normalize@^1.0.0:
   resolved "https://registry.yarnpkg.com/rdf-normalize/-/rdf-normalize-1.0.0.tgz#53496baf362cce9d9fca1f2216c6c30007f99cca"
   integrity sha1-U0lrrzYszp2fyh8iFsbDAAf5nMo=
 
+rdf-parser-csvw@^0.13.0:
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/rdf-parser-csvw/-/rdf-parser-csvw-0.13.0.tgz#467bd5a09d39556c5c8024d3f7e4888a59f9cbea"
+  integrity sha512-jTUiFP4JU47kUWXg069kNjOIJCUSYpbTLJpwFdBHebZ6mcLe85HJ7qaTFSzNlh3uWZ0CB0PxFpStPnt3SsMqEA==
+  dependencies:
+    "@rdfjs/data-model" "^1.1.2"
+    commander "^3.0.1"
+    csv-parse "^4.4.5"
+    lodash "^4.17.15"
+    luxon "^1.17.3"
+    readable-stream "^3.4.0"
+    uri-templates "^0.2.0"
+
 rdf-parser-csvw@^0.14.0:
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/rdf-parser-csvw/-/rdf-parser-csvw-0.14.0.tgz#c7c7f7675cce51626aae2d6d9213ee677364b9a2"
@@ -10795,6 +10844,15 @@ rdf-parser-csvw@^0.14.0:
     luxon "^1.17.3"
     readable-stream "^3.4.0"
     uri-templates "^0.2.0"
+
+rdf-stream-to-dataset-stream@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/rdf-stream-to-dataset-stream/-/rdf-stream-to-dataset-stream-1.0.0.tgz#20a354a5caf7e6f21852ba0b37c270136ac40a91"
+  integrity sha512-ogWBAsrc92B2tJkKw7Q3aIim2EOA4OvFn/PQilQ/ovs0pAbrDU+f6PfqS08JGxmdLcUsP8rCOztdualeVyf+vw==
+  dependencies:
+    "@rdfjs/data-model" "^1.1.2"
+    "@rdfjs/dataset" "^1.0.1"
+    chunkify-stream "^1.0.0"
 
 rdf-transform-triple-to-quad@^1.0.1, rdf-transform-triple-to-quad@^1.0.2:
   version "1.0.2"
@@ -11816,6 +11874,26 @@ ssri@^7.0.0, ssri@^7.1.0:
   dependencies:
     figgy-pudding "^3.5.1"
     minipass "^3.1.1"
+
+ssz-data@StatistikStadtZuerich/ld-data#barnard59:
+  version "0.99.0"
+  resolved "https://codeload.github.com/StatistikStadtZuerich/ld-data/tar.gz/4be2c3a637e484ee17175223a20796ea561bf431"
+  dependencies:
+    "@rdfjs/data-model" "^1.2.0"
+    "@rdfjs/term-map" "^1.0.0"
+    "@tpluscode/rdf-ns-builders" "^0.3.6"
+    barnard59 "^0.1.0"
+    barnard59-base "^0.0.4"
+    barnard59-formats "^0.0.6"
+    barnard59-graph-store "^0.0.6"
+    barnard59-rdf "git://github.com/zazuko/barnard59-rdf.git#cube-to-observation"
+    clownface "^1.0.0"
+    dotenv "^8.2.0"
+    dotenv-cli "^3.1.0"
+    esm "^3.2.25"
+    rdf-ext "^1.3.0"
+    rdf-stream-to-dataset-stream "^1.0.0"
+    readable-stream "^3.6.0"
 
 stable@^0.1.8:
   version "0.1.8"

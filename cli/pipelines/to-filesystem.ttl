@@ -6,7 +6,7 @@
   :steps     [ :stepList ( _:serialize _:save ) ] ;
   :variables [ :variable [ a      :Variable ;
                            :name  "targetFile" ;
-                           :value "/output/transformed.nt" ] ] .
+                           :value "./output/transformed.nt" ] ] .
 
 _:serialize
   a                  :Step ;
