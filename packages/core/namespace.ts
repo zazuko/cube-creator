@@ -10,7 +10,6 @@ type CubeCreatorClass =
   'EntryPoint' |
   'CSVSource' |
   'CSVSourceCollection' |
-  'DeleteCSVSourceAction' |
   'CreateProjectAction' |
   'UploadCSVAction' |
   'Table' |

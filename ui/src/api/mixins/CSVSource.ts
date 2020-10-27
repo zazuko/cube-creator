@@ -3,15 +3,12 @@ import { Constructor } from '@tpluscode/rdfine'
 import * as ns from '@cube-creator/core/namespace'
 import { schema, csvw } from '@tpluscode/rdf-ns-builders'
 import { Source, CSVColumn } from '@/types'
-import { commonActions, findOperation } from '../common'
+import { commonActions } from '../common'
 
 export default function Mixin<Base extends Constructor<Resource>> (base: Base) {
   return class extends base implements Source {
     get actions () {
-      return {
-        ...commonActions(this),
-        delete: findOperation(this, ns.cc.DeleteCSVSourceAction),
-      }
+      return commonActions(this)
     }
 
     get name (): string {
