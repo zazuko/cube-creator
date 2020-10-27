@@ -3,8 +3,11 @@ import $rdf from 'rdf-ext'
 import { hydra, rdf, sh } from '@tpluscode/rdf-ns-builders'
 import SHACLValidator from 'rdf-validate-shacl'
 import error from 'http-errors'
+import clownface from 'clownface'
 import { resourceStore } from '../domain/resources'
 import { ProblemDocument } from 'http-problem-details'
+import { loadResourcesTypes } from '../domain/queries/resources-types'
+
 
 export const shaclMiddleware = (createResourceStore: typeof resourceStore) => asyncMiddleware(async (req, res, next) => {
   const resources = createResourceStore()
@@ -32,7 +35,17 @@ export const shaclMiddleware = (createResourceStore: typeof resourceStore) => as
     return next(new error.BadRequest('Resource cannot be empty'))
   }
 
-  const validationReport = new SHACLValidator(shapes).validate(resource.dataset)
+  // Load data from linked instances to be able to validate their type
+  const classProperties = clownface({ dataset: shapes })
+    .out(sh.property)
+    .has(sh.class)
+    .out(sh.path)
+  const linkedInstancesIds = resource.out(classProperties).terms
+  const linkedInstancesQuads = await loadResourcesTypes(linkedInstancesIds)
+
+  const dataset = $rdf.dataset([...resource.dataset, ...linkedInstancesQuads])
+
+  const validationReport = new SHACLValidator(shapes).validate(dataset)
   if (validationReport.conforms) {
     return next()
   }
