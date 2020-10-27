@@ -4,6 +4,7 @@ import { hydra, rdf, sh } from '@tpluscode/rdf-ns-builders'
 import SHACLValidator from 'rdf-validate-shacl'
 import error from 'http-errors'
 import { resourceStore } from '../domain/resources'
+import { ValidationError } from '../errors/validation'
 
 export const shaclMiddleware = (createResourceStore: typeof resourceStore) => asyncMiddleware(async (req, res, next) => {
   const resources = createResourceStore()
@@ -36,7 +37,7 @@ export const shaclMiddleware = (createResourceStore: typeof resourceStore) => as
     return next()
   }
 
-  return next(new error.BadRequest())
+  return next(new ValidationError(validationResult))
 })
 
 export const shaclValidate = shaclMiddleware(resourceStore)
