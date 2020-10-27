@@ -1,5 +1,7 @@
 import { Resource, RuntimeOperation } from 'alcaeus'
 import { NamedNode } from 'rdf-js'
+import { schema } from '@tpluscode/rdf-ns-builders'
+import { CommonActions } from '@/types'
 
 export function findOperation (resource: Resource, idOrType: NamedNode): RuntimeOperation | null {
   const matches = resource.findOperations({
@@ -22,3 +24,9 @@ export function getOperation (resource: Resource, idOrType: NamedNode): RuntimeO
 
   return operation
 }
+
+export const commonActions = (resource: Resource): CommonActions => ({
+  create: findOperation(resource, schema.CreateAction),
+  edit: findOperation(resource, schema.UpdateAction),
+  delete: findOperation(resource, schema.DeleteAction),
+})

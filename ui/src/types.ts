@@ -1,53 +1,51 @@
 import { Collection, Resource, RuntimeOperation } from 'alcaeus'
 
+export interface CommonActions {
+  create: RuntimeOperation | null,
+  edit: RuntimeOperation | null,
+  delete: RuntimeOperation | null,
+}
+
 export interface ProjectsCollection extends Collection {
-  actions: {
-    create: RuntimeOperation | null,
-  };
+  actions: CommonActions;
 }
 
 export interface SourcesCollection extends Collection {
-  actions: {
+  actions: CommonActions & {
     upload: RuntimeOperation | null,
   };
 }
 
 export interface TableCollection extends Collection {
-  actions: {
-    create: RuntimeOperation | null,
-  };
+  actions: CommonActions;
 }
 
 export interface CSVMapping extends Resource {
-  actions: Record<string, unknown>;
+  actions: CommonActions;
   sourcesCollection: SourcesCollection;
   tableCollection: TableCollection;
 }
 
 export interface Project extends Resource {
-  actions: Record<string, unknown>;
+  actions: CommonActions;
   csvMapping: null | CSVMapping;
 }
 
 export interface CSVColumn extends Resource {
-  actions: Record<string, unknown>;
+  actions: CommonActions;
   name: string;
   order: number;
   sampleValues: string[];
 }
 
 export interface Source extends Resource {
-  actions: {
-    delete: RuntimeOperation | null,
-  };
+  actions: CommonActions;
   name: string;
   columns: CSVColumn[];
 }
 
 export interface Table extends Resource {
-  actions: {
-    delete: RuntimeOperation | null,
-  };
+  actions: CommonActions;
   name: string;
   source: Source;
 }
