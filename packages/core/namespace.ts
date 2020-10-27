@@ -26,7 +26,8 @@ type CubeCreatorProperty =
   'csvw' |
   'project' |
   'tables' |
-  'cube'
+  'cube' |
+  'cubeGraph'
 
 type OtherTerms =
   'dash'

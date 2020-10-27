@@ -6,7 +6,7 @@ import { NamedNode } from 'rdf-js'
 
 export interface Project extends Rdfs.Resource {
   csvMapping?: CsvMapping
-  cube?: NamedNode
+  cubeGraph?: NamedNode
 }
 
 export function ProjectMixin<Base extends Constructor<RdfResource>>(base: Base) {
@@ -16,7 +16,7 @@ export function ProjectMixin<Base extends Constructor<RdfResource>>(base: Base) 
     csvMapping?: CsvMapping
 
     @property()
-    cube?: NamedNode
+    cubeGraph?: NamedNode
   }
 
   return Impl

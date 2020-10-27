@@ -35,7 +35,7 @@ export const insertTestData = async () => {
       </project/cli-test>
           a ${hydra.Resource} , ${cc.CubeProject} ;
           ${cc.csvMapping} </project/cli-test/mapping> ;
-          ${cc.cube}       </cube/cli-test>
+          ${cc.cubeGraph}  </cube/cli-test>
     .
   }
 
