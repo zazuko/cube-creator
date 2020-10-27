@@ -44,7 +44,16 @@
 
 <#TransformCsv>
   a      :Pipeline, :ReadableObjectMode ;
-  :steps [ :stepList ( <#loadCsvStep> <#parse> <#filterNotCsvw> ) ] .
+  :steps [ :stepList (
+                       <#loadCsvStep>
+                       <#parse>
+                       <#filterNotCsvw>
+                       <#toDataset>
+                       <#toObservation>
+                       <#toCubeShape>
+                       <#flatten>
+                       <#filterCubeLinks>
+                     ) ] .
 
 <#LoadCsv>
   a :Pipeline, :ReadableObjectMode .
@@ -76,4 +85,51 @@
   code:implementedBy [ a         code:EcmaScript ;
                        code:link <node:barnard59-base#filter> ] ;
   code:arguments     ( [ code:link <file:../lib/output-filter#removeCsvwTriples> ;
+                         a         code:EcmaScript ] ) .
+
+<#toDataset> a :Step;
+  code:implementedBy [ a code:EcmaScript;
+                       code:link <node:rdf-stream-to-dataset-stream/bySubject.js>
+                     ] .
+
+<#toObservation> a :Step;
+  code:implementedBy [ a code:EcmaScript;
+                       code:link <node:barnard59-rdf/cube.js#toObservation>
+                     ] ;
+  code:arguments [
+                   code:name "observer";
+                   code:value "https://ld.stadt-zuerich.ch/"
+                 ], [
+                      code:name "observations";
+                                code:value [
+                                             a code:EcmaScript ;
+                                             code:link <file:../lib/cube#getObservationSetId>
+                                         ]
+
+                    ], [
+                         code:name "observation";
+                         code:value "({ dataset, observations }) => ([...dataset][0].subject)"^^code:EcmaScript
+                       ] .
+
+<#toCubeShape> a :Step;
+  code:implementedBy [ a code:EcmaScript;
+  code:link <node:ssz-data/lib/toCubeShape>
+                     ];
+  code:arguments [
+                   code:name "excludeValuesOf";
+                   code:value (
+                                "http://www.w3.org/2004/02/skos/core#notation"
+                              )
+                 ] .
+
+<#flatten> a :Step;
+  code:implementedBy [ a code:EcmaScript;
+                       code:link <node:barnard59-base#flatten>;
+                     ] .
+
+<#filterCubeLinks>
+  a                  :Step ;
+  code:implementedBy [ a         code:EcmaScript ;
+  code:link <node:barnard59-base#filter> ] ;
+  code:arguments     ( [ code:link <file:../lib/output-filter#removeCubeLinks> ;
                          a         code:EcmaScript ] ) .

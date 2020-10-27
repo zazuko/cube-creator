@@ -5,6 +5,7 @@ import cf from 'clownface'
 import $rdf from 'rdf-ext'
 import { csvw, xsd } from '@tpluscode/rdf-ns-builders'
 import { NamedNode } from 'rdf-js'
+import { cc } from '@cube-creator/core/namespace'
 import { ResourceStore } from '../../ResourceStore'
 import { resourceStore } from '../resources'
 import { NotFoundError } from '../../errors'
@@ -47,6 +48,11 @@ export async function createCsvw({
         title: 'unit_id',
         datatype: xsd.string,
         propertyUrl: 'https://environment.ld.admin.ch/foen/ubd/28/unit-id',
+      }, {
+        types: [csvw.Column],
+        virtual: true,
+        propertyUrl: cc.cube.value,
+        valueUrl: 'https://environment.ld.admin.ch/foen/ubd/28/{pollutant_id}/',
       }, {
         types: [csvw.Column],
         title: 'aggregation_id',
