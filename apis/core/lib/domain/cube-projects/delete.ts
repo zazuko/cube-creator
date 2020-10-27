@@ -26,4 +26,3 @@ export async function deleteProject({
   store.delete(project.term)
   await store.save()
 }
-
