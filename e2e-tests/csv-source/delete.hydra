@@ -14,7 +14,7 @@ HEADERS {
 
 With Class api:EntryPoint {
     Expect Property cc:projects {
-        With Operation cc:CreateProjectAction {
+        With Operation schema:CreateAction {
             Invoke {
                 Content-Type "text/turtle"
 
