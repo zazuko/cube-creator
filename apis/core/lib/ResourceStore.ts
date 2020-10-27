@@ -142,9 +142,6 @@ export default class implements ResourceStore {
   }
 
   delete(id: NamedNode): void {
-    if (!this.__resources.has(id)) {
-      throw new Error('Resource does not exist')
-    }
     this.__deletedGraphs.add(id)
   }
 }

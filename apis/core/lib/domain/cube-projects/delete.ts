@@ -17,8 +17,8 @@ export async function deleteProject({
 }: DeleteProjectCommand): Promise<void> {
   const project = await store.get(resource)
   const csvMapping = clownface(project).out(cc.csvMapping).term
-  // Find csv sources
 
+  // Find csv sources
   if (csvMapping?.termType === 'NamedNode') {
     const sources = await getSourcesFromMapping(csvMapping)
     for (const source of sources) {
