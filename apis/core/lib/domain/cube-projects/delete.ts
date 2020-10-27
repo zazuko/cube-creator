@@ -1,10 +1,9 @@
 import { NamedNode } from 'rdf-js'
 import { ResourceStore } from '../../ResourceStore'
 import { resourceStore } from '../resources'
-import { getSourcesFromMapping } from '../queries/csv-source'
 import clownface from 'clownface'
 import { cc } from '@cube-creator/core/namespace'
-import { deleteSourceWithoutSave } from '../csv-source/delete'
+import { deleteMapping } from '../csv-mapping/delete'
 
 interface DeleteProjectCommand {
   resource: NamedNode
@@ -20,14 +19,11 @@ export async function deleteProject({
 
   // Find csv sources
   if (csvMapping?.termType === 'NamedNode') {
-    const sources = await getSourcesFromMapping(csvMapping)
-    for (const source of sources) {
-      await deleteSourceWithoutSave(source, store)
-    }
-    store.delete(csvMapping)
+    await deleteMapping(csvMapping, store)
   }
 
   // delete project graph
   store.delete(project.term)
   await store.save()
 }
+
