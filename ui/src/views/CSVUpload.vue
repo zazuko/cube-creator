@@ -37,54 +37,48 @@
   </side-pane>
 </template>
 
-<script>
-import Vue from 'vue'
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator'
 import SidePane from '@/components/SidePane.vue'
 import { APIErrorConflict, APIErrorValidation } from '@/api/errors'
 
-export default Vue.extend({
-  name: 'CSVUpload',
+@Component({
   components: { SidePane },
-
-  data () {
-    return {
-      files: [],
-      error: null,
-    }
-  },
-
-  methods: {
-    async onSubmit () {
-      this.error = null
-      const loader = this.$buefy.loading.open({})
-
-      try {
-        await this.$store.dispatch('project/uploadCSVs', this.files)
-
-        await this.$store.dispatch('project/refreshSourcesCollection')
-
-        this.$router.push({ name: 'CSVMapping' })
-      } catch (e) {
-        if (e instanceof APIErrorConflict) {
-          this.error = 'Cannot upload a file with the same name twice'
-        } else if (e instanceof APIErrorValidation) {
-          this.error = e.details.title
-        } else {
-          console.error(e)
-          this.error = e.toString()
-        }
-      } finally {
-        loader.close()
-      }
-    },
-
-    onCancel () {
-      this.$router.push({ name: 'CSVMapping' })
-    },
-
-    removeFile (index) {
-      this.files.splice(index, 1)
-    },
-  },
 })
+export default class CSVUploadView extends Vue {
+  files: File[] = []
+  error: string | null = null
+
+  async onSubmit (): Promise<void> {
+    this.error = null
+    const loader = this.$buefy.loading.open({})
+
+    try {
+      await this.$store.dispatch('project/uploadCSVs', this.files)
+
+      await this.$store.dispatch('project/refreshSourcesCollection')
+
+      this.$router.push({ name: 'CSVMapping' })
+    } catch (e) {
+      if (e instanceof APIErrorConflict) {
+        this.error = 'Cannot upload a file with the same name twice'
+      } else if (e instanceof APIErrorValidation) {
+        this.error = e.details?.title ?? null
+      } else {
+        console.error(e)
+        this.error = e.toString()
+      }
+    } finally {
+      loader.close()
+    }
+  }
+
+  onCancel (): void {
+    this.$router.push({ name: 'CSVMapping' })
+  }
+
+  removeFile (index: number): void {
+    this.files.splice(index, 1)
+  }
+}
 </script>

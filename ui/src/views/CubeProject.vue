@@ -35,16 +35,18 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { mapState } from 'vuex'
+import { Component, Vue } from 'vue-property-decorator'
+import { State } from 'vuex-class'
 import { Project } from '@/types'
 import PageContent from '@/components/PageContent.vue'
 
-export default Vue.extend({
-  name: 'CubeProject',
+@Component({
   components: { PageContent },
+})
+export default class CubeProjectView extends Vue {
+  @State('project', { namespace: 'project' }) project!: Project | null;
 
-  async mounted () {
+  async mounted (): Promise<void> {
     const id = this.$router.currentRoute.params.id
     await this.$store.dispatch('project/fetchProject', id)
 
@@ -55,18 +57,12 @@ export default Vue.extend({
         this.$router.push({ name: 'CubeDesigner' })
       }
     }
-  },
-
-  computed: {
-    ...mapState({
-      project: (state: any): Project => state.project.project,
-    }),
-
-    hasCSVMapping () {
-      return this.project?.csvMapping
-    },
   }
-})
+
+  get hasCSVMapping (): boolean {
+    return !!this.project?.csvMapping
+  }
+}
 </script>
 
 <style scoped>

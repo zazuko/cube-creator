@@ -82,30 +82,26 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { mapGetters, mapState } from 'vuex'
+import { Component, Vue } from 'vue-property-decorator'
+import { namespace } from 'vuex-class'
 import CsvSourceMapping from '@/components/CsvSourceMapping.vue'
-import { CSVMapping, SourcesCollection, TableCollection } from '../types'
+import { CSVMapping, SourcesCollection, TableCollection, Table, Source } from '../types'
 
-export default Vue.extend({
-  name: 'CSVMapping',
+const projectNS = namespace('project')
+
+@Component({
   components: { CsvSourceMapping },
+})
+export default class CSVMappingView extends Vue {
+  @projectNS.State('csvMapping') mapping!: CSVMapping | null;
+  @projectNS.State('sourcesCollection') sourcesCollection!: SourcesCollection | null;
+  @projectNS.State('tableCollection') tableCollection!: TableCollection | null;
+  @projectNS.Getter('sources') sources!: Source[];
+  @projectNS.Getter('tables') tables!: Table[];
 
-  mounted () {
+  mounted (): void {
     const project = this.$store.state.project.project
     this.$store.dispatch('project/fetchCSVMapping', project.csvMapping.id.value)
-  },
-
-  computed: {
-    ...mapState({
-      mapping: (state: any): CSVMapping | null => state.project.csvMapping,
-      sourcesCollection: (state: any): SourcesCollection | null => state.project.sourcesCollection,
-      tableCollection: (state: any): TableCollection | null => state.project.tableCollection,
-    }),
-    ...mapGetters({
-      sources: 'project/sources',
-      tables: 'project/tables',
-    }),
-  },
-})
+  }
+}
 </script>

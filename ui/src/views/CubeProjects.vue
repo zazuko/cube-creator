@@ -35,29 +35,25 @@
 </template>
 
 <script lang="ts">
-import { Collection } from 'alcaeus'
-import Vue from 'vue'
-import { mapState } from 'vuex'
+import { Component, Vue } from 'vue-property-decorator'
+import { State } from 'vuex-class'
 import PageContent from '@/components/PageContent.vue'
+import { ProjectsCollection, Project } from '../types'
 
-export default Vue.extend({
-  name: 'CubeProjects',
+@Component({
   components: { PageContent },
-
-  async mounted () {
-    await this.$store.dispatch('projects/fetchCollection')
-  },
-
-  computed: {
-    ...mapState({
-      projectsCollection: (state: any): Collection => state.projects.collection
-    }),
-
-    projects () {
-      if (!this.projectsCollection) return null
-
-      return this.projectsCollection.member
-    }
-  }
 })
+export default class CubeProjectsView extends Vue {
+  @State('collection', { namespace: 'projects' }) projectsCollection!: ProjectsCollection | null;
+
+  async mounted (): Promise<void> {
+    await this.$store.dispatch('projects/fetchCollection')
+  }
+
+  get projects (): Project[] | null {
+    if (!this.projectsCollection) return null
+
+    return this.projectsCollection.member
+  }
+}
 </script>

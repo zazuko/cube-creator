@@ -1,10 +1,11 @@
 import { Collection } from 'alcaeus'
 import { Constructor } from '@tpluscode/rdfine'
+import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import * as ns from '@cube-creator/core/namespace'
-import { SourcesCollection } from '@/types'
+import { SourcesCollection, Source } from '@/types'
 import { commonActions, findOperation } from '../common'
 
-export default function Mixin<Base extends Constructor<Collection>> (base: Base) {
+export default function mixin<Base extends Constructor<Collection<Source>>> (base: Base): Mixin {
   return class extends base implements SourcesCollection {
     get actions () {
       return {
@@ -15,4 +16,4 @@ export default function Mixin<Base extends Constructor<Collection>> (base: Base)
   }
 }
 
-Mixin.appliesTo = ns.cc.CSVSourceCollection
+mixin.appliesTo = ns.cc.CSVSourceCollection

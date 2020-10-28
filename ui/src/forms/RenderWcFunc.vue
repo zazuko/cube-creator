@@ -2,28 +2,26 @@
   <div />
 </template>
 
-<script>
-import Vue from 'vue'
+<script lang="ts">
+import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
 import { render } from 'lit-html'
 
-export default Vue.extend({
-  name: 'RenderWc',
-  props: ['f', 'args'],
+@Component
+export default class RenderWc extends Vue {
+  @Prop() f!: (...args: unknown[]) => unknown
+  @Prop() args!: unknown[]
 
-  mounted () {
+  mounted (): void {
     this.renderComponent()
-  },
-
-  watch: {
-    args () {
-      this.renderComponent()
-    }
-  },
-
-  methods: {
-    renderComponent () {
-      render(this.f(...this.args), this.$el)
-    }
   }
-})
+
+  @Watch('args')
+  onArgsChange (): void {
+    this.renderComponent()
+  }
+
+  renderComponent (): void {
+    render(this.f(...this.args), this.$el)
+  }
+}
 </script>

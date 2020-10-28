@@ -1,10 +1,11 @@
 import { Resource } from 'alcaeus'
 import { Constructor } from '@tpluscode/rdfine'
+import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import * as ns from '@cube-creator/core/namespace'
 import { Project, CSVMapping } from '@/types'
 import { commonActions } from '../common'
 
-export default function Mixin<Base extends Constructor<Resource>> (base: Base) {
+export default function mixin<Base extends Constructor<Resource>> (base: Base): Mixin {
   return class extends base implements Project {
     get actions () {
       return commonActions(this)
@@ -16,4 +17,4 @@ export default function Mixin<Base extends Constructor<Resource>> (base: Base) {
   }
 }
 
-Mixin.appliesTo = ns.cc.CubeProject
+mixin.appliesTo = ns.cc.CubeProject
