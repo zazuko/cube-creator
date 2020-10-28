@@ -19,7 +19,7 @@ export async function sourceWithFilenameExists(csvMapping: NamedNode, fileName: 
 }
 
 export async function getSourcesFromMapping(csvMapping: NamedNode, client = streamClient): Promise<any> {
-  const results = await SELECT.DISTINCT`?source`
+  const stream = await SELECT.DISTINCT`?source`
     .WHERE`      
     GRAPH ${csvMapping}
     {
@@ -31,15 +31,15 @@ export async function getSourcesFromMapping(csvMapping: NamedNode, client = stre
   return new Promise((resolve, reject) => {
     const sources: string[] = []
 
-    results.on('data', row => {
-      Object.entries(row).forEach(([key, value]) => {
-        if (value instanceof String) {
-          sources.push(value.toString())
+    stream.on('data', row => {
+      Object.entries(row).forEach(([, value]) => {
+        if (value) {
+          sources.push(value as string)
         }
       })
     })
 
-    results.on('end', () => resolve(sources))
-    results.on('error', error => reject(error))
+    stream.on('end', () => resolve(sources))
+    stream.on('error', error => reject(error))
   })
 }
