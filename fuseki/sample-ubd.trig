@@ -2,18 +2,20 @@ base <https://cube-creator.lndo.site/>
 prefix schema: <http://schema.org/>
 prefix dcterms: <http://purl.org/dc/terms/>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 prefix hydra: <http://www.w3.org/ns/hydra/core#>
 prefix csvw: <http://www.w3.org/ns/csvw#>
 prefix dtype: <http://www.linkedmodel.org/schema/dtype#>
-PREFIX cc: <https://cube-creator.zazuko.com/vocab#>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix cc: <https://cube-creator.zazuko.com/vocab#>
 
 graph <cube-project/ubd> {
   <cube-project/ubd>
     a cc:CubeProject, hydra:Resource ;
     cc:dataset <foen/ubd/28/pm1> ;
     cc:csvMapping <cube-project/ubd/csv-mapping> ;
-    dcterms:creator <user>
+    dcterms:creator <user> ;
+    rdfs:label "UBD28 Project" ;
   .
 }
 
@@ -22,12 +24,13 @@ graph <cube-project/ubd/csv-mapping> {
     a cc:CsvMapping , hydra:Resource ;
     cc:csvSource <cube-project/ubd/csv-source/ubd> ;
     cc:csvSourceCollection <cube-project/ubd/csv-mapping/sources> ;
+    cc:tables <cube-project/ubd/csv-mapping/tables> ;
   .
 }
 
 graph <cube-project/ubd/csv-mapping/sources> {
   <cube-project/ubd/csv-mapping/sources>
-    a cc:CSVSourceCollection , hydra:Resource , hydra:Collection ;
+    a cc:CSVSourceCollection , hydra:Collection ;
     hydra:manages  [ hydra:object    <cube-project/ubd/csv-mapping> ;
                      hydra:property  cc:csvMapping
                    ] ;
@@ -35,7 +38,7 @@ graph <cube-project/ubd/csv-mapping/sources> {
                      hydra:property  rdf:type
                    ] ;
     hydra:title    "CSV-Sources" ;
-    cc:csvMapping  <cube-project/ubd/csv-mapping>
+    cc:csvMapping  <cube-project/ubd/csv-mapping> ;
   .
 }
 
@@ -138,5 +141,113 @@ graph <cube-project/ubd/csv-source/stations> {
     cc:csvColumnSample "ABK" ;
     cc:csvColumnSample "DEF" ;
     cc:csvColumnSample "GHI" ;
+  .
+}
+
+graph <cube-project/ubd/csv-mapping/tables> {
+  <cube-project/ubd/csv-mapping/tables>
+    a cc:TableCollection, hydra:Collection ;
+    hydra:title "Tables" ;
+    hydra:manages [ hydra:property rdf:type ;
+                    hydra:object   cc:Table
+                  ] ;
+    hydra:manages [ hydra:property cc:csvMapping ;
+                    hydra:object   <cube-project/ubd/csv-mapping>
+                  ] ;
+    cc:csvMapping <cube-project/ubd/csv-mapping> ;
+  .
+}
+
+graph <project/ubd/csv-mapping/table-observation> {
+  <project/ubd/csv-mapping/table-observation>
+    a cc:Table, cc:ObservationTable, hydra:Resource ;
+    cc:csvMapping <cube-project/ubd/csv-mapping> ;
+    cc:csvSource <cube-project/ubd/csv-source/ubd> ;
+    schema:name "Observations" ;
+    schema:color "#AAAAAA" ;
+    cc:identifierTemplate "ammonia/observation/{STATION}-{YEAR}-annualmean" ;
+    cc:columnMapping <project/ubd/csv-mapping/table-observation/column-mapping-1> ;
+    cc:columnMapping <project/ubd/csv-mapping/table-observation/column-mapping-2> ;
+    cc:columnMapping <project/ubd/csv-mapping/table-observation/column-mapping-3> ;
+    cc:columnMapping <project/ubd/csv-mapping/table-observation/column-mapping-4> ;
+  .
+}
+
+graph <project/ubd/csv-mapping/table-observation/column-mapping-1> {
+  <project/ubd/csv-mapping/table-observation/column-mapping-1> a cc:ColumnMapping ;
+    cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/year> ;
+    cc:targetProperty <dimension/year> ;
+    cc:datatype xsd:gYear ;
+    # -- Other possible ColumnMapping properties
+    # cc:language
+    # cc:default
+    # cc:datatype/params TBD
+  .
+}
+
+graph <table-observation/column-mapping-2> {
+  <table-observation/column-mapping-2> a cc:ColumnMapping ;
+    cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/station> ;
+    cc:targetProperty <station> ;
+    cc:referencedTable <project/ubd/csv-mapping/table-station> ;
+    cc:identifierMapping [
+      cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/station> ;
+      cc:referencedColumn <cube-project/ubd/csv-source/stations/column/station-id> ;
+    ] ;
+  .
+}
+
+graph <project/ubd/csv-mapping/table-observation/column-mapping-3> {
+  <project/ubd/csv-mapping/table-observation/column-mapping-3> a cc:ColumnMapping ;
+    cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/value> ;
+    cc:targetProperty <dimension/value> ;
+    cc:datatype xsd:float ;
+  .
+}
+
+graph <project/ubd/csv-mapping/table-observation/column-mapping-4> {
+  <project/ubd/csv-mapping/table-observation/column-mapping-4> a cc:ColumnMapping ;
+    cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/aggregation> ;
+    cc:targetProperty <project/ubd/csv-mapping/aggregation> ;
+    cc:datatype xsd:float ;
+  .
+}
+
+graph <project/ubd/csv-mapping/table-station> {
+  <project/ubd/csv-mapping/table-station> a cc:Table, hydra:Resource ;
+    cc:csvMapping <cube-project/ubd/csv-mapping> ;
+    cc:csvSource <cube-project/ubd/csv-source/stations> ;
+    schema:name "Station" ;
+    schema:color "#BBBBBB" ;
+    cc:identifierTemplate "station/{STATION_ID}" ;
+    cc:columnMapping <project/ubd/csv-mapping/table-station/column-mapping-1> ;
+    cc:columnMapping <project/ubd/csv-mapping/table-station/column-mapping-2> ;
+    cc:columnMapping <project/ubd/csv-mapping/table-station/column-mapping-3> ;
+  .
+}
+
+graph <project/ubd/csv-mapping/table-station/column-mapping-1> {
+  <project/ubd/csv-mapping/table-station/column-mapping-1> a cc:ColumnMapping ;
+    cc:sourceColumn <cube-project/ubd/csv-source/stations/column/station-id> ;
+    cc:targetProperty schema:identifier ;
+    cc:datatype xsd:string ;
+  .
+}
+
+graph <project/ubd/csv-mapping/table-station/column-mapping-2> {
+  <project/ubd/csv-mapping/table-station/column-mapping-2> a cc:ColumnMapping ;
+    cc:sourceColumn <cube-project/ubd/csv-source/stations/column/station-name-fr> ;
+    cc:targetProperty rdfs:label ;
+    cc:datatype xsd:langString ;
+    cc:language "fr" ;
+  .
+}
+
+graph <project/ubd/csv-mapping/table-station/column-mapping-3> {
+  <project/ubd/csv-mapping/table-station/column-mapping-3> a cc:ColumnMapping ;
+    cc:sourceColumn <cube-project/ubd/csv-source/stations/column/station-name-de> ;
+    cc:targetProperty rdfs:label ;
+    cc:datatype xsd:langString ;
+    cc:language "de" ;
   .
 }
