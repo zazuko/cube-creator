@@ -68,6 +68,19 @@ const actions: ActionTree<CubeProjectsState, RootState> = {
     return mapping
   },
 
+  async refreshProjectsCollection (context) {
+    const collection = context.state.collection
+
+    if (!collection) {
+      throw new Error('Projects collection not loaded')
+    }
+
+    const freshCollection = await api.fetchResource<ProjectsCollection>(collection.id.value)
+    context.commit('storeCollection', freshCollection)
+
+    return collection
+  },
+
   async refreshSourcesCollection (context) {
     const collection = context.state.sourcesCollection
 

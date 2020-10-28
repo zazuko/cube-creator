@@ -12,6 +12,14 @@
             <a :href="href" @click="navigate">Cube Designer</a>
           </li>
         </router-link>
+        <router-link :to="{ name: 'CubeProjectEdit' }" v-slot="{ href, isActive, navigate }" v-if="project.actions.delete || project.actions.edit">
+          <li :class="{ 'is-active': isActive }" class="tab-right">
+            <a :href="href" @click="navigate">
+              <b-icon icon="cog" />
+              Project settings
+            </a>
+          </li>
+        </router-link>
       </ul>
     </div>
 
@@ -64,5 +72,13 @@ export default Vue.extend({
 <style scoped>
 .tabs.project-tabs {
   margin-bottom: 0;
+}
+
+.tab-right {
+  margin-left: auto;
+}
+
+.tab-right ~ .tab-right {
+  margin-left: 0;
 }
 </style>

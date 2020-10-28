@@ -30,6 +30,7 @@
     "vue-property-decorator": "^9.0.2",
     "vue-router": "^3.4.7",
     "vuex": "^3.4.0",
+    "vuex-class": "^0.3.2",
     "vuex-oidc": "^3.10.1"
   },
   "devDependencies": {
