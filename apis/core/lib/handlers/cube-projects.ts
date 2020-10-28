@@ -26,7 +26,6 @@ export const post = protectedResource(
 )
 
 export const remove = protectedResource(
-  shaclValidate,
   asyncMiddleware(async (req, res) => {
     const project = req.hydra.resource.term
     await deleteProject({ resource: project })
