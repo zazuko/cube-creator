@@ -13,9 +13,14 @@ export async function deleteMapping(csvMapping: NamedNode, store: ResourceStore)
   }
 
   const graph = await store.get(csvMapping)
-  const collection = graph.out(cc.csvSourceCollection).term
-  if (collection?.termType === 'NamedNode') {
-    store.delete(collection)
+  const sourceCollection = graph.out(cc.csvSourceCollection).term
+  if (sourceCollection?.termType === 'NamedNode') {
+    store.delete(sourceCollection)
+  }
+
+  const tableCollection = graph.out(cc.tables).term
+  if (tableCollection?.termType === 'NamedNode') {
+    store.delete(tableCollection)
   }
 
   store.delete(csvMapping)
