@@ -22,7 +22,6 @@ import Vue from 'vue'
 import { mapState } from 'vuex'
 import clownface from 'clownface'
 import { dataset } from '@rdf-esm/dataset'
-import { quad } from '@rdf-esm/data-model'
 import SidePane from '@/components/SidePane.vue'
 import { sh } from '@tpluscode/rdf-ns-builders'
 
