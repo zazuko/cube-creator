@@ -26,7 +26,7 @@ cc:TableCollection
           a
             code:EcmaScript ;
           code:link
-            <file:handlers/table#post> ;
+            <file:handlers/table/create#post> ;
         ] ;
     ] .
 

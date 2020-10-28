@@ -1,6 +1,6 @@
 import UrlSlugify from 'url-slugify'
 import $rdf from 'rdf-ext'
-import { NamedNode } from 'rdf-js'
+import { NamedNode, Term } from 'rdf-js'
 import { GraphPointer } from 'clownface'
 import env from '@cube-creator/core/env'
 
@@ -20,6 +20,10 @@ export function csvSourceCollection(csvMapping: GraphPointer<NamedNode>): NamedN
 
 export function tableCollection(csvMapping: GraphPointer<NamedNode>): NamedNode {
   return $rdf.namedNode(`${csvMapping.value}/tables`)
+}
+
+export function table(csvMapping: Term, label: string): NamedNode {
+  return $rdf.namedNode(`${csvMapping.value}/table/${url.slugify(label)}`)
 }
 
 export function csvSource(project: GraphPointer<NamedNode>, fileName: string): NamedNode {
