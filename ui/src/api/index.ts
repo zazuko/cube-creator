@@ -1,6 +1,7 @@
 import { Hydra } from 'alcaeus/web'
 import { RdfResource, Resource, RuntimeOperation } from 'alcaeus'
 import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
+import { ShapeBundle } from '@rdfine/shacl/bundles'
 import store from '@/store'
 import { APIError } from './errors'
 import { apiResourceMixin } from './mixins/ApiResource'
@@ -32,6 +33,7 @@ Hydra.resources.factory.addMixin(CSVSourceMixin)
 Hydra.resources.factory.addMixin(CSVColumnMixin)
 Hydra.resources.factory.addMixin(TableCollectionMixin)
 Hydra.resources.factory.addMixin(TableMixin)
+Hydra.resources.factory.addMixin(...ShapeBundle)
 
 // Inject the access token in all requests if present
 Hydra.defaultHeaders = () => {

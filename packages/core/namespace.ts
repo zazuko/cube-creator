@@ -12,7 +12,8 @@ type CubeCreatorClass =
   'CSVSourceCollection' |
   'UploadCSVAction' |
   'Table' |
-  'TableCollection'
+  'TableCollection' |
+  'ObservationTable'
 
 type CubeCreatorProperty =
   'projectSourceKind' |
@@ -22,14 +23,18 @@ type CubeCreatorProperty =
   'csvSourceCollection' |
   'csvColumnSample' |
   'csvw' |
-  'project' |
   'tables' |
-  'cube'
+  'identifierTemplate' |
+  'project' |
+  'cube' |
+  'columnMapping'
 
 type OtherTerms =
   'dash'
 
 type CubeCreatorNamespace = Record<CubeCreatorClass | CubeCreatorProperty | OtherTerms, NamedNode>
 
+export const hashi = namespace('http://hypermedia.app/shapes#')
 export const cube = namespace('http://ns.bergnet.org/cube/')
 export const cc: CubeCreatorNamespace = namespace('https://cube-creator.zazuko.com/vocab#') as any
+export const editor = namespace(cc.dash.value)

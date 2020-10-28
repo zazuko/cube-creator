@@ -15,8 +15,15 @@
               </div>
             </div>
             <div class="level-right">
-              <b-button :disabled="selectedColumns.length === 0">
-                Create resource from selected columns
+              <b-button
+                v-if="tableCollection.actions.create"
+                :disabled="selectedColumns.length === 0"
+                tag="router-link"
+                :to="{ name: 'TableCreate', query: createTableQueryParams }"
+                size="is-small"
+                icon-left="plus"
+              >
+                Create table from selected columns
               </b-button>
             </div>
           </div>
@@ -33,7 +40,7 @@
           :key="column.id.value"
           class="source-column panel-block"
         >
-          <b-checkbox v-model="selectedColumns" :native-value="column.id.value">
+          <b-checkbox v-model="selectedColumns" :native-value="column">
             {{ column.name }}
             <span class="has-text-grey" v-if="column.sampleValues.length > 0">
               &nbsp;({{ column.sampleValues.slice(0, 3).join(", ") }})
@@ -53,60 +60,71 @@
     </div>
     <div class="column is-1" />
     <div class="column">
-      <div v-for="table in sourceTables" :key="table.id.value">
-        {{ table.toJSON() }}
+      <mapper-table v-for="table in sourceTables" :key="table.id.value" :table="table" />
+      <div v-if="isFirstSource && sourceTables.length === 0" class="content">
+        <p>You haven't mapped any table yet.</p>
+        <p>The first step is to define which columns of your CSV will be dimensions of your cube:</p>
+        <ol>
+          <li>Select columns that will be dimensions of your cube on the CSV file (left column)</li>
+          <li>Click "Create table from selected columns"</li>
+          <li>Select the type "Observation table" in the form. The Observation table represents the structure of your cube.</li>
+          <li>After submitting the form, you should already be able to see a first version of your cube in the "Cube Preview" (bottom of the screen).</li>
+        </ol>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Source, Table } from '../types'
+import { Prop, Component, Vue } from 'vue-property-decorator'
+import { Source, Table, TableCollection, CSVColumn } from '../types'
+import MapperTable from './MapperTable.vue'
 
-export default Vue.extend({
-  name: 'CsvSourceMapping',
-
-  props: {
-    source: { type: Object as () => Source, required: true },
-    tables: { type: Array as () => Table[], required: true },
-  },
-
-  data () {
-    return {
-      selectedColumns: [],
-    }
-  },
-
-  computed: {
-    sourceTables () {
-      return this.tables.filter(({ source }) => source.id.equals(this.source.id))
-    },
-  },
-
-  methods: {
-    getColumnMappings () {
-      return []
-    },
-
-    async deleteSource (source: Source): Promise<void> {
-      this.$buefy.dialog.confirm({
-        title: source.actions.delete?.title,
-        message: 'Are you sure you want to delete this CSV source?',
-        confirmText: 'Delete',
-        type: 'is-danger',
-        hasIcon: true,
-        onConfirm: () => {
-          this.$store.dispatch('api/invokeDeleteOperation', {
-            operation: source.actions.delete,
-            successMessage: 'CSV source deleted successfully',
-            callbackAction: 'cubeProjects/refreshSourcesCollection',
-          })
-        },
-      })
-    },
+@Component({
+  components: {
+    MapperTable,
   },
 })
+export default class CsvSourceMapping extends Vue {
+  @Prop({ default: false }) readonly isFirstSource!: boolean;
+  @Prop() readonly source!: Source;
+  @Prop() readonly tables!: Table[];
+  @Prop() readonly tableCollection!: TableCollection;
+
+  selectedColumns: CSVColumn[] = []
+
+  get sourceTables (): Table[] {
+    return this.tables.filter(({ source }) => source.id.equals(this.source.id))
+  }
+
+  get createTableQueryParams (): Record<string, string | string[]> {
+    return {
+      source: this.source.clientPath,
+      columns: this.selectedColumns.map(({ clientPath }) => clientPath),
+    }
+  }
+
+  getColumnMappings (): unknown[] {
+    return []
+  }
+
+  async deleteSource (source: Source): Promise<void> {
+    this.$buefy.dialog.confirm({
+      title: source.actions.delete?.title,
+      message: 'Are you sure you want to delete this CSV source?',
+      confirmText: 'Delete',
+      type: 'is-danger',
+      hasIcon: true,
+      onConfirm: () => {
+        this.$store.dispatch('api/invokeDeleteOperation', {
+          operation: source.actions.delete,
+          successMessage: 'CSV source deleted successfully',
+          callbackAction: 'cubeProjects/refreshSourcesCollection',
+        })
+      },
+    })
+  }
+}
 </script>
 
 <style scoped>

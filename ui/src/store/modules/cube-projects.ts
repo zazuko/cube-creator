@@ -28,6 +28,11 @@ const getters: GetterTree<CubeProjectsState, RootState> = {
   tables (state) {
     return state.tableCollection?.member || []
   },
+
+  findSource (_state, getters) {
+    return (id: string) =>
+      getters.sources.find(({ clientPath }: { clientPath: string}) => clientPath === id)
+  },
 }
 
 const actions: ActionTree<CubeProjectsState, RootState> = {
@@ -91,7 +96,20 @@ const actions: ActionTree<CubeProjectsState, RootState> = {
     const freshCollection = await api.fetchResource<SourcesCollection>(collection.id.value)
     context.commit('storeSourcesCollection', freshCollection)
 
-    return collection
+    return freshCollection
+  },
+
+  async refreshTableCollection (context) {
+    const collection = context.state.tableCollection
+
+    if (!collection) {
+      throw new Error('Table collection not loaded')
+    }
+
+    const freshCollection = await api.fetchResource<TableCollection>(collection.id.value)
+    context.commit('storeTableCollection', freshCollection)
+
+    return freshCollection
   },
 
   async uploadCSVs (context, files) {
