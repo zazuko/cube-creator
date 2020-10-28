@@ -2,6 +2,7 @@ BASE          <urn:hydra-box:api>
 PREFIX cc:    <https://cube-creator.zazuko.com/vocab#>
 prefix hydra: <http://www.w3.org/ns/hydra/core#>
 prefix code:  <https://code.described.at/>
+prefix schema:   <http://schema.org/>
 
 cc:CSVSourceCollection
   a
@@ -47,7 +48,7 @@ cc:CSVSource
     [
       a
         hydra:Operation,
-        cc:DeleteCSVSourceAction ;
+        schema:DeleteAction ;
       hydra:title
         "Delete CSV Source" ;
       hydra:method

@@ -14,7 +14,7 @@ HEADERS {
 
 With Class api:EntryPoint {
     Expect Property cc:projects {
-        With Operation cc:CreateProjectAction {
+        With Operation schema:CreateAction {
             Invoke {
                 Content-Type "text/turtle"
 
@@ -49,20 +49,20 @@ With Class cc:CubeProject {
                     ```
                 } => {
                     Expect Status 201
-                    
+
                 }
-              
+
             }
         }
     }
 }
 
 With Class cc:CSVSource {
-    Expect Operation cc:DeleteCSVSourceAction {
+    Expect Operation schema:DeleteAction {
         Invoke {
         } => {
             Expect Status 204
-        }     
+        }
     }
     Expect Operation cc:GetCSVSourceAction {
         Invoke {
