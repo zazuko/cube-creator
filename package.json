@@ -4,7 +4,8 @@
   "scripts": {
     "lint": "eslint . --ext .ts,.vue,.tsx --quiet --ignore-path .gitignore",
     "test": "mocha --recursive apis/**/*.test.ts",
-    "test:cli": "mocha --recursive cli/**/*.test.ts"
+    "test:cli": "mocha --recursive cli/**/*.test.ts",
+    "seed-data": "dotenv -e .local.env -- bash -c \"ts-node packages/testing/index.ts -i fuseki/sample-ubd.trig\""
   },
   "workspaces": [
     "cli",

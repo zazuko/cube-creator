@@ -6,14 +6,14 @@ import { CONSTRUCT } from '@tpluscode/sparql-builder'
 import transform from '../../../lib/commands/transform'
 import { log } from '../../support/logger'
 import { setupEnv } from '../../support/env'
-import { client, insertTestData } from '../../support/testData'
+import { client, insertTestData } from '@cube-creator/testing/lib'
 
 describe('lib/commands/transform', function () {
   this.timeout(200000)
 
   before(async () => {
     setupEnv()
-    await insertTestData()
+    await insertTestData('fuseki/sample-ubd.trig')
   })
 
   it('produces triples', async function () {
@@ -24,7 +24,7 @@ describe('lib/commands/transform', function () {
     await runner({
       to: 'graph-store',
       debug: true,
-      project: `${env.API_CORE_BASE}project/cli-test`,
+      project: `${env.API_CORE_BASE}cube-project/ubd`,
     })
     await new Promise((resolve) =>
       setTimeout(resolve, 100),

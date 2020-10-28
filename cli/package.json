@@ -6,7 +6,7 @@
   "scripts": {
     "postinstall": "mkdir -p output",
     "transform": "dotenv -e ./.env -e ./.test.env -- yarn start",
-    "start": "ts-node index.ts transform --project \"$TRANSFORM_PROJECT\" --to stdout --debug --enable-buffer-monitor",
+    "start": "ts-node index.ts transform --project \"$TRANSFORM_PROJECT\" --to filesystem --debug --enable-buffer-monitor",
     "build": "tsc"
   },
   "dependencies": {
@@ -38,6 +38,7 @@
   },
   "devDependencies": {
     "@cube-creator/core": "*",
+    "@cube-creator/testing": "*",
     "@tpluscode/rdf-ns-builders": "^0.4",
     "@tpluscode/rdf-string": "^0.2.20",
     "@tpluscode/sparql-builder": "^0.3.9",
