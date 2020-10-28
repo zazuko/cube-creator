@@ -1,9 +1,10 @@
-BASE          <urn:hydra-box:api>
-PREFIX cc:    <https://cube-creator.zazuko.com/vocab#>
-prefix hydra: <http://www.w3.org/ns/hydra/core#>
-prefix code:  <https://code.described.at/>
-prefix query: <http://hypermedia.app/query#>
-prefix sh:    <http://www.w3.org/ns/shacl#>
+BASE            <urn:hydra-box:api>
+PREFIX cc:      <https://cube-creator.zazuko.com/vocab#>
+prefix hydra:   <http://www.w3.org/ns/hydra/core#>
+prefix code:    <https://code.described.at/>
+prefix query:   <http://hypermedia.app/query#>
+prefix sh:      <http://www.w3.org/ns/shacl#>
+prefix schema:  <http://schema.org/>
 
 cc:CubeProject
   a
@@ -14,7 +15,7 @@ cc:CubeProject
   [
     a 
       hydra:Operation, 
-      cc:DeleteProjectAction ;
+      schema:DeleteAction ;
       hydra:title 
         "Delete Project" ;
       hydra:method

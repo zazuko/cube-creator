@@ -3,6 +3,7 @@ PREFIX hydra: <http://www.w3.org/ns/hydra/core#>
 PREFIX cc: <https://cube-creator.zazuko.com/vocab#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX schema: <http://schema.org/>
 
 HEADERS {
   x-user "john-doe"
@@ -51,7 +52,7 @@ With Class cc:CubeProject {
             }
         }
     }
-    Expect Operation cc:DeleteProjectAction {
+    Expect Operation schema:DeleteAction {
         Invoke {
         } => {
             Expect Status 204
