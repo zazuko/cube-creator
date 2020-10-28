@@ -13,7 +13,8 @@ type CubeCreatorClass =
   'UploadCSVAction' |
   'Table' |
   'TableCollection' |
-  'ObservationTable'
+  'ObservationTable' |
+  'ColumnMapping'
 
 type CubeCreatorProperty =
   'projectSourceKind' |
@@ -27,7 +28,11 @@ type CubeCreatorProperty =
   'identifierTemplate' |
   'project' |
   'cube' |
-  'columnMapping'
+  'columnMapping' |
+  'sourceColumn' |
+  'targetProperty' |
+  'datatype' |
+  'language'
 
 type OtherTerms =
   'dash'

@@ -1,5 +1,5 @@
 import { cc, shape, editor } from '@cube-creator/core/namespace'
-import { dash, hydra, rdfs, sh, schema } from '@tpluscode/rdf-ns-builders'
+import { csvw, dash, hydra, rdfs, sh, schema } from '@tpluscode/rdf-ns-builders'
 import { turtle } from '@tpluscode/rdf-string'
 
 export const TableShape = turtle`
@@ -40,6 +40,14 @@ ${shape('table/create')} {
       ${sh.minLength} 1 ;
       ${sh.order} 40 ;
       ${dash.editor} ${editor.ColorPicker} ;
+    ] ;
+    ${sh.property} [
+      ${sh.name} "Columns to map" ;
+      ${sh.descriptin} "These columns will be mapped in the new table with default parameters that you can change later.";
+      ${sh.path} ${csvw.column} ;
+      ${sh.class} ${csvw.Column} ;
+      ${dash.hidden} ${true} ;
+      ${sh.order} 50 ;
     ] ;
   .
 }

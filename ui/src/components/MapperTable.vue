@@ -18,7 +18,9 @@
       </div>
     </div>
     <div v-for="columnMapping in table.columnMappings" :key="columnMapping.id.value" class="panel-block">
-      {{ columnMapping.sourceColumn }} / {{ columnMapping.targetProperty }}
+      {{ columnMapping.sourceColumn.id.value }}<br>
+      -><br>
+      {{ columnMapping.targetProperty.value }}
     </div>
   </div>
 </template>

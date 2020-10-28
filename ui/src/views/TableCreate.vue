@@ -25,7 +25,7 @@ import { namespace } from 'vuex-class'
 import clownface, { GraphPointer } from 'clownface'
 import { RuntimeOperation, RdfResource } from 'alcaeus'
 import { dataset } from '@rdf-esm/dataset'
-import { sh } from '@tpluscode/rdf-ns-builders'
+import { csvw, sh } from '@tpluscode/rdf-ns-builders'
 import { Shape } from '@rdfine/shacl'
 import * as ns from '@cube-creator/core/namespace'
 import SidePane from '@/components/SidePane.vue'
@@ -69,7 +69,7 @@ export default class TableCreateView extends Vue {
         columns.forEach((columnId) => {
           const column = source.columns.find((column) => column.clientPath === columnId)
           if (column) {
-            // TODO: Attach column to table
+            resource.addOut(csvw.column, column.id)
           } else {
             console.error(`Column not found: ${columnId}`)
           }

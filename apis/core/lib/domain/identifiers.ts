@@ -26,6 +26,10 @@ export function table(csvMapping: Term, label: string): NamedNode {
   return $rdf.namedNode(`${csvMapping.value}/table/${url.slugify(label)}`)
 }
 
+export function columnMapping(table: GraphPointer<NamedNode>, columnName: string): NamedNode {
+  return $rdf.namedNode(`${table.value}/column-mapping/${url.slugify(columnName)}`)
+}
+
 export function csvSource(project: GraphPointer<NamedNode>, fileName: string): NamedNode {
   return $rdf.namedNode(`${project.value}/csv-source/${url.slugify(fileName)}`)
 }
