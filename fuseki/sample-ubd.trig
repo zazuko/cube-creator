@@ -7,18 +7,24 @@ prefix hydra: <http://www.w3.org/ns/hydra/core#>
 prefix csvw: <http://www.w3.org/ns/csvw#>
 prefix dtype: <http://www.linkedmodel.org/schema/dtype#>
 prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix void: <http://rdfs.org/ns/void#>
 prefix cc: <https://cube-creator.zazuko.com/vocab#>
 
+<ubd-example> a void:Dataset .
+
+<cube-project/ubd> void:inDataset <ubd-example> .
 graph <cube-project/ubd> {
   <cube-project/ubd>
     a cc:CubeProject, hydra:Resource ;
     cc:dataset <foen/ubd/28/pm1> ;
+    cc:cube   </cube/cli-test> ;
     cc:csvMapping <cube-project/ubd/csv-mapping> ;
     dcterms:creator <user> ;
     rdfs:label "UBD28 Project" ;
   .
 }
 
+<cube-project/ubd/csv-mapping> void:inDataset <ubd-example> .
 graph <cube-project/ubd/csv-mapping> {
   <cube-project/ubd/csv-mapping>
     a cc:CsvMapping , hydra:Resource ;
@@ -28,6 +34,7 @@ graph <cube-project/ubd/csv-mapping> {
   .
 }
 
+<cube-project/ubd/csv-mapping/sources> void:inDataset <ubd-example> .
 graph <cube-project/ubd/csv-mapping/sources> {
   <cube-project/ubd/csv-mapping/sources>
     a cc:CSVSourceCollection , hydra:Collection ;
@@ -42,6 +49,7 @@ graph <cube-project/ubd/csv-mapping/sources> {
   .
 }
 
+<cube-project/ubd/csv-source/ubd> void:inDataset <ubd-example> .
 graph <cube-project/ubd/csv-source/ubd> {
   <cube-project/ubd/csv-source/ubd>
     a cc:CSVSource, hydra:Resource ;
@@ -61,6 +69,7 @@ graph <cube-project/ubd/csv-source/ubd> {
   <cube-project/ubd/csv-source/ubd/dialect>
     csvw:quoteChar "\"" ;
     csvw:delimiter "," ;
+    csvw:header    true ;
   .
 
   <cube-project/ubd/csv-source/ubd/column/year>
@@ -100,10 +109,15 @@ graph <cube-project/ubd/csv-source/ubd> {
   .
 }
 
+<cube-project/ubd/csv-source/stations> void:inDataset <ubd-example> .
 graph <cube-project/ubd/csv-source/stations> {
   <cube-project/ubd/csv-source/stations>
     a cc:CSVSource, hydra:Resource ;
     cc:csvMapping <cube-project/ubd/csv-mapping> ;
+    schema:associatedMedia  [ a  schema:MediaObject ;
+                              schema:contentUrl <http://s3:9000/cube-creator/test-data/ubd28/input_CH_yearly_air_immission_basetable.csv> ;
+                              schema:identifier "test-data/ubd28/input_CH_yearly_air_immission_basetable.csv";
+                            ] ;
     schema:name "stations.csv" ;
     csvw:dialect <cube-project/ubd/csv-source/stations/dialect> ;
     csvw:column <cube-project/ubd/csv-source/ubd/column/year> ;
@@ -114,6 +128,7 @@ graph <cube-project/ubd/csv-source/stations> {
   <cube-project/ubd/csv-source/stations/dialect>
     csvw:quoteChar "\"" ;
     csvw:delimiter "," ;
+    csvw:header    true ;
   .
 
   <cube-project/ubd/csv-source/stations/column/station-id>
@@ -144,6 +159,7 @@ graph <cube-project/ubd/csv-source/stations> {
   .
 }
 
+<cube-project/ubd/csv-mapping/tables> void:inDataset <ubd-example> .
 graph <cube-project/ubd/csv-mapping/tables> {
   <cube-project/ubd/csv-mapping/tables>
     a cc:TableCollection, hydra:Collection ;
@@ -158,9 +174,11 @@ graph <cube-project/ubd/csv-mapping/tables> {
   .
 }
 
+<project/ubd/csv-mapping/table-observation> void:inDataset <ubd-example> .
 graph <project/ubd/csv-mapping/table-observation> {
   <project/ubd/csv-mapping/table-observation>
     a cc:Table, cc:ObservationTable, hydra:Resource ;
+    cc:csvw <project/ubd/csv-mapping/table-observation/csvw> ;
     cc:csvMapping <cube-project/ubd/csv-mapping> ;
     cc:csvSource <cube-project/ubd/csv-source/ubd> ;
     schema:name "Observations" ;
@@ -173,6 +191,7 @@ graph <project/ubd/csv-mapping/table-observation> {
   .
 }
 
+<project/ubd/csv-mapping/table-observation/column-mapping-1> void:inDataset <ubd-example> .
 graph <project/ubd/csv-mapping/table-observation/column-mapping-1> {
   <project/ubd/csv-mapping/table-observation/column-mapping-1> a cc:ColumnMapping ;
     cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/year> ;
@@ -185,6 +204,7 @@ graph <project/ubd/csv-mapping/table-observation/column-mapping-1> {
   .
 }
 
+<table-observation/column-mapping-2> void:inDataset <ubd-example> .
 graph <table-observation/column-mapping-2> {
   <table-observation/column-mapping-2> a cc:ColumnMapping ;
     cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/station> ;
@@ -197,6 +217,7 @@ graph <table-observation/column-mapping-2> {
   .
 }
 
+<project/ubd/csv-mapping/table-observation/column-mapping-3> void:inDataset <ubd-example> .
 graph <project/ubd/csv-mapping/table-observation/column-mapping-3> {
   <project/ubd/csv-mapping/table-observation/column-mapping-3> a cc:ColumnMapping ;
     cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/value> ;
@@ -205,6 +226,7 @@ graph <project/ubd/csv-mapping/table-observation/column-mapping-3> {
   .
 }
 
+<project/ubd/csv-mapping/table-observation/column-mapping-4> void:inDataset <ubd-example> .
 graph <project/ubd/csv-mapping/table-observation/column-mapping-4> {
   <project/ubd/csv-mapping/table-observation/column-mapping-4> a cc:ColumnMapping ;
     cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/aggregation> ;
@@ -213,10 +235,12 @@ graph <project/ubd/csv-mapping/table-observation/column-mapping-4> {
   .
 }
 
+<project/ubd/csv-mapping/table-station> void:inDataset <ubd-example> .
 graph <project/ubd/csv-mapping/table-station> {
   <project/ubd/csv-mapping/table-station> a cc:Table, hydra:Resource ;
     cc:csvMapping <cube-project/ubd/csv-mapping> ;
     cc:csvSource <cube-project/ubd/csv-source/stations> ;
+    cc:csvw <project/ubd/csv-mapping/table-station/csvw> ;
     schema:name "Station" ;
     schema:color "#BBBBBB" ;
     cc:identifierTemplate "station/{STATION_ID}" ;
@@ -226,6 +250,7 @@ graph <project/ubd/csv-mapping/table-station> {
   .
 }
 
+<project/ubd/csv-mapping/table-station/column-mapping-1> void:inDataset <ubd-example> .
 graph <project/ubd/csv-mapping/table-station/column-mapping-1> {
   <project/ubd/csv-mapping/table-station/column-mapping-1> a cc:ColumnMapping ;
     cc:sourceColumn <cube-project/ubd/csv-source/stations/column/station-id> ;
@@ -234,6 +259,7 @@ graph <project/ubd/csv-mapping/table-station/column-mapping-1> {
   .
 }
 
+<project/ubd/csv-mapping/table-station/column-mapping-2> void:inDataset <ubd-example> .
 graph <project/ubd/csv-mapping/table-station/column-mapping-2> {
   <project/ubd/csv-mapping/table-station/column-mapping-2> a cc:ColumnMapping ;
     cc:sourceColumn <cube-project/ubd/csv-source/stations/column/station-name-fr> ;
@@ -243,6 +269,7 @@ graph <project/ubd/csv-mapping/table-station/column-mapping-2> {
   .
 }
 
+<project/ubd/csv-mapping/table-station/column-mapping-3> void:inDataset <ubd-example> .
 graph <project/ubd/csv-mapping/table-station/column-mapping-3> {
   <project/ubd/csv-mapping/table-station/column-mapping-3> a cc:ColumnMapping ;
     cc:sourceColumn <cube-project/ubd/csv-source/stations/column/station-name-de> ;

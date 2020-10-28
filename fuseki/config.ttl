@@ -7,6 +7,7 @@
 @prefix dc:      <http://purl.org/dc/elements/1.1/> .
 
 [] rdf:type fuseki:Server ;
+  ja:context [ ja:cxtName "arq:queryTimeout" ;  ja:cxtValue "10000,600000" ] ;
    fuseki:services (
                      <#cube-creator>
                    ) .
