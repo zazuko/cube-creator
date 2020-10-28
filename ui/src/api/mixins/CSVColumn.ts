@@ -3,11 +3,12 @@ import { Constructor } from '@tpluscode/rdfine'
 import * as ns from '@cube-creator/core/namespace'
 import { schema, csvw, dtype } from '@tpluscode/rdf-ns-builders'
 import { CSVColumn } from '@/types'
+import { commonActions } from '../common'
 
 export default function Mixin<Base extends Constructor<Resource>> (base: Base) {
   return class extends base implements CSVColumn {
     get actions () {
-      return {}
+      return commonActions(this)
     }
 
     get name (): string {

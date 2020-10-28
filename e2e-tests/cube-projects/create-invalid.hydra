@@ -1,6 +1,7 @@
 PREFIX api: <https://cube-creator.zazuko.com/vocab#>
 PREFIX hydra: <http://www.w3.org/ns/hydra/core#>
 PREFIX cc: <https://cube-creator.zazuko.com/vocab#>
+PREFIX schema: <http://schema.org/>
 
 HEADERS {
   x-user "john-doe"
@@ -9,7 +10,7 @@ HEADERS {
 
 With Class api:EntryPoint {
     Expect Property cc:projects {
-        With Operation cc:CreateProjectAction {
+        With Operation schema:CreateAction {
             Invoke {
                 Content-Type "text/turtle"
 
