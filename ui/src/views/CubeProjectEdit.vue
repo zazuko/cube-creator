@@ -14,7 +14,7 @@ import { namespace } from 'vuex-class'
 import { Project } from '@/types'
 import SidePane from '@/components/SidePane.vue'
 
-const projectNS = namespace('cubeProjects')
+const projectNS = namespace('projects')
 
 @Component({
   components: { SidePane },
@@ -33,7 +33,7 @@ export default class CubeProjectEditView extends Vue {
         await this.$store.dispatch('api/invokeDeleteOperation', {
           operation: this.project.actions.delete,
           successMessage: `Project ${this.project.title} successfully deleted`,
-          callbackAction: 'cubeProjects/refreshProjectsCollection',
+          callbackAction: 'projects/fetchCollection',
         })
         this.$router.push({ name: 'CubeProjects' })
       },

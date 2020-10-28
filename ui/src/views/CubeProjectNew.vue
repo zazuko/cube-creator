@@ -39,7 +39,7 @@ export default Vue.extend({
 
   computed: {
     ...mapState({
-      operation: (state) => state.cubeProjects.collection?.actions.create,
+      operation: (state) => state.projects.collection?.actions.create,
     }),
 
     title () {

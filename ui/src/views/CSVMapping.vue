@@ -92,19 +92,19 @@ export default Vue.extend({
   components: { CsvSourceMapping },
 
   mounted () {
-    const project = this.$store.state.cubeProjects.project
-    this.$store.dispatch('cubeProjects/fetchCSVMapping', project.csvMapping.id.value)
+    const project = this.$store.state.project.project
+    this.$store.dispatch('project/fetchCSVMapping', project.csvMapping.id.value)
   },
 
   computed: {
     ...mapState({
-      mapping: (state: any): CSVMapping | null => state.cubeProjects.csvMapping,
-      sourcesCollection: (state: any): SourcesCollection | null => state.cubeProjects.sourcesCollection,
-      tableCollection: (state: any): TableCollection | null => state.cubeProjects.tableCollection,
+      mapping: (state: any): CSVMapping | null => state.project.csvMapping,
+      sourcesCollection: (state: any): SourcesCollection | null => state.project.sourcesCollection,
+      tableCollection: (state: any): TableCollection | null => state.project.tableCollection,
     }),
     ...mapGetters({
-      sources: 'cubeProjects/sources',
-      tables: 'cubeProjects/tables',
+      sources: 'project/sources',
+      tables: 'project/tables',
     }),
   },
 })

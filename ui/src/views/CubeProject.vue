@@ -46,7 +46,7 @@ export default Vue.extend({
 
   async mounted () {
     const id = this.$router.currentRoute.params.id
-    await this.$store.dispatch('cubeProjects/fetchProject', id)
+    await this.$store.dispatch('project/fetchProject', id)
 
     if (this.$router.currentRoute.name === 'CubeProject') {
       if (this.hasCSVMapping) {
@@ -59,7 +59,7 @@ export default Vue.extend({
 
   computed: {
     ...mapState({
-      project: (state: any): Project => state.cubeProjects.project,
+      project: (state: any): Project => state.project.project,
     }),
 
     hasCSVMapping () {

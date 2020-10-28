@@ -42,7 +42,7 @@ export default class MapperTable extends Vue {
         this.$store.dispatch('api/invokeDeleteOperation', {
           operation: table.actions.delete,
           successMessage: `Table ${table.name} deleted successfully`,
-          callbackAction: 'cubeProjects/refreshTableCollection',
+          callbackAction: 'project/refreshTableCollection',
         })
       },
     })

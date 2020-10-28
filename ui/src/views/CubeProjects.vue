@@ -45,12 +45,12 @@ export default Vue.extend({
   components: { PageContent },
 
   async mounted () {
-    await this.$store.dispatch('cubeProjects/fetchCollection')
+    await this.$store.dispatch('projects/fetchCollection')
   },
 
   computed: {
     ...mapState({
-      projectsCollection: (state: any): Collection => state.cubeProjects.collection
+      projectsCollection: (state: any): Collection => state.projects.collection
     }),
 
     projects () {

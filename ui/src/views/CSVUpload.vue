@@ -59,9 +59,9 @@ export default Vue.extend({
       const loader = this.$buefy.loading.open({})
 
       try {
-        await this.$store.dispatch('cubeProjects/uploadCSVs', this.files)
+        await this.$store.dispatch('project/uploadCSVs', this.files)
 
-        await this.$store.dispatch('cubeProjects/refreshSourcesCollection')
+        await this.$store.dispatch('project/refreshSourcesCollection')
 
         this.$router.push({ name: 'CSVMapping' })
       } catch (e) {

@@ -87,14 +87,14 @@ export default Vue.extend({
 
   computed: {
     ...mapState({
-      sourcesCollection: (state) => state.cubeProjects.sourcesCollection,
-      operation: (state) => state.cubeProjects.tableCollection?.actions.create,
+      sourcesCollection: (state) => state.project.sourcesCollection,
+      operation: (state) => state.project.tableCollection?.actions.create,
     }),
   },
 
   methods: {
     ...mapGetters({
-      findSource: 'cubeProjects/findSource',
+      findSource: 'project/findSource',
     }),
 
     async onSubmit () {
@@ -107,7 +107,7 @@ export default Vue.extend({
           resource: this.resource,
         })
 
-        this.$store.dispatch('cubeProjects/refreshTableCollection')
+        this.$store.dispatch('project/refreshTableCollection')
 
         this.$store.dispatch('app/showMessage', {
           message: `Table ${table.name} was successfully created`,

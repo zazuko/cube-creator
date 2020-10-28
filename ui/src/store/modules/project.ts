@@ -1,11 +1,9 @@
 import { ActionTree, MutationTree, GetterTree } from 'vuex'
 import { api } from '@/api'
 import { RootState } from '../types'
-import * as ns from '@cube-creator/core/namespace'
-import { Project, ProjectsCollection, CSVMapping, SourcesCollection, TableCollection } from '@/types'
+import { Project, CSVMapping, SourcesCollection, TableCollection } from '@/types'
 
-export interface CubeProjectsState {
-  collection: null | ProjectsCollection,
+export interface ProjectState {
   project: null | Project,
   csvMapping: null | CSVMapping,
   sourcesCollection: null | SourcesCollection,
@@ -13,14 +11,13 @@ export interface CubeProjectsState {
 }
 
 const initialState = {
-  collection: null,
   project: null,
   csvMapping: null,
   sourcesCollection: null,
   tableCollection: null,
 }
 
-const getters: GetterTree<CubeProjectsState, RootState> = {
+const getters: GetterTree<ProjectState, RootState> = {
   sources (state) {
     return state.sourcesCollection?.member || []
   },
@@ -35,17 +32,7 @@ const getters: GetterTree<CubeProjectsState, RootState> = {
   },
 }
 
-const actions: ActionTree<CubeProjectsState, RootState> = {
-  async fetchCollection (context) {
-    const entrypoint = context.rootState.api.entrypoint
-    const collectionURI = entrypoint?.get(ns.cc.projects)?.id
-
-    if (!collectionURI) throw new Error('Missing projects collection in entrypoint')
-
-    const collection = await api.fetchResource(collectionURI.value)
-    context.commit('storeCollection', collection)
-  },
-
+const actions: ActionTree<ProjectState, RootState> = {
   async fetchProject (context, id) {
     context.commit('storeProject', null)
 
@@ -71,19 +58,6 @@ const actions: ActionTree<CubeProjectsState, RootState> = {
     context.commit('storeTableCollection', tableCollection)
 
     return mapping
-  },
-
-  async refreshProjectsCollection (context) {
-    const collection = context.state.collection
-
-    if (!collection) {
-      throw new Error('Projects collection not loaded')
-    }
-
-    const freshCollection = await api.fetchResource<ProjectsCollection>(collection.id.value)
-    context.commit('storeCollection', freshCollection)
-
-    return collection
   },
 
   async refreshSourcesCollection (context) {
@@ -124,11 +98,7 @@ const actions: ActionTree<CubeProjectsState, RootState> = {
 
 }
 
-const mutations: MutationTree<CubeProjectsState> = {
-  storeCollection (state, collection) {
-    state.collection = collection
-  },
-
+const mutations: MutationTree<ProjectState> = {
   storeProject (state, project) {
     state.project = project
   },
