@@ -111,7 +111,7 @@ export default Vue.extend({
 
         this.$store.dispatch('cubeProjects/refreshTableCollection')
 
-        this.$store.dispatch('app/pushMessage', {
+        this.$store.dispatch('app/showMessage', {
           message: `Table ${table.name} was successfully created`,
           type: 'is-success',
         })
