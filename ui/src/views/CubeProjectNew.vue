@@ -3,8 +3,8 @@
     <b-message v-if="error" type="is-danger">
       {{ error }}
     </b-message>
-    <cc-form :resource.prop="resource" :shapes.prop="shapes" no-editor-switches />
     <form @submit.prevent="onSubmit">
+      <cc-form :resource.prop="resource" :shapes.prop="shapes" no-editor-switches />
       <b-field>
         <button type="submit" class="button is-primary">
           Create project
