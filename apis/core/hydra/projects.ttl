@@ -1,10 +1,10 @@
-BASE            <urn:hydra-box:api>
-PREFIX cc:      <https://cube-creator.zazuko.com/vocab#>
-prefix hydra:   <http://www.w3.org/ns/hydra/core#>
-prefix code:    <https://code.described.at/>
-prefix query:   <http://hypermedia.app/query#>
-prefix sh:      <http://www.w3.org/ns/shacl#>
-prefix schema:  <http://schema.org/>
+BASE           <urn:hydra-box:api>
+PREFIX cc:     <https://cube-creator.zazuko.com/vocab#>
+prefix hydra:  <http://www.w3.org/ns/hydra/core#>
+prefix code:   <https://code.described.at/>
+prefix query:  <http://hypermedia.app/query#>
+prefix sh:     <http://www.w3.org/ns/shacl#>
+PREFIX schema: <http://schema.org/>
 
 cc:CubeProject
   a
@@ -36,7 +36,7 @@ cc:ProjectsCollection
     [
       a
         hydra:Operation,
-        cc:CreateProjectAction ;
+        schema:CreateAction ;
       hydra:title
         "New project" ;
       hydra:method

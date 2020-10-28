@@ -3,6 +3,7 @@ PREFIX hydra: <http://www.w3.org/ns/hydra/core#>
 PREFIX cc: <https://cube-creator.zazuko.com/vocab#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX schema: <http://schema.org/>
 
 HEADERS {
   x-user "john-doe"
@@ -11,7 +12,7 @@ HEADERS {
 
 With Class api:EntryPoint {
     Expect Property cc:projects {
-        With Operation cc:CreateProjectAction {
+        With Operation schema:CreateAction {
             Invoke {
                 Content-Type "text/turtle"
 
@@ -29,7 +30,7 @@ With Class api:EntryPoint {
                 Expect Link cc:csvMapping {
                     Expect Type <https://cube-creator.zazuko.com/vocab#CsvMapping>
                 }
-                Expect Property dcterms:creator 
+                Expect Property dcterms:creator
             }
         }
     }

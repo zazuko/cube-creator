@@ -14,6 +14,7 @@ import { TestResourceStore } from '../support/TestResourceStore'
 
 describe('middleware/shacl', () => {
   const testResourceStore = (resources: GraphPointer<NamedNode>[]) => () => new TestResourceStore(resources)
+  const loadResourcesTypes = async () => []
 
   it('calls next middleware when operation does not expect shape', async () => {
     // given
@@ -22,9 +23,12 @@ describe('middleware/shacl', () => {
       api.operation.addOut(hydra.expects, ex.NotShape)
     }))
     app.use(mockResourceMiddleware())
-    app.use(shaclMiddleware(testResourceStore([
-      clownface({ dataset: $rdf.dataset() }).namedNode(ex.NotShape).addOut(rdf.type, hydra.Class),
-    ])))
+    app.use(shaclMiddleware({
+      createResourceStore: testResourceStore([
+        clownface({ dataset: $rdf.dataset() }).namedNode(ex.NotShape).addOut(rdf.type, hydra.Class),
+      ]),
+      loadResourcesTypes,
+    }))
     app.use((req, res) => res.status(204).end())
 
     // when
@@ -46,7 +50,10 @@ describe('middleware/shacl', () => {
       .addOut(sh.targetClass, cc.CubeProject)
 
     app.use(mockResourceMiddleware())
-    app.use(shaclMiddleware(testResourceStore([shape])))
+    app.use(shaclMiddleware({
+      createResourceStore: testResourceStore([shape]),
+      loadResourcesTypes,
+    }))
     app.use((req, res) => res.status(204).end())
 
     // when
@@ -72,7 +79,10 @@ describe('middleware/shacl', () => {
       .addOut(sh.property, prop => prop.addOut(sh.path, rdfs.label).addOut(sh.minCount, 1))
 
     app.use(mockResourceMiddleware())
-    app.use(shaclMiddleware(testResourceStore([shape])))
+    app.use(shaclMiddleware({
+      createResourceStore: testResourceStore([shape]),
+      loadResourcesTypes,
+    }))
     app.use((req, res) => res.status(204).end())
 
     // when
@@ -98,7 +108,10 @@ describe('middleware/shacl', () => {
       .addOut(sh.property, prop => prop.addOut(sh.path, rdfs.label).addOut(sh.minCount, 1))
 
     app.use(mockResourceMiddleware())
-    app.use(shaclMiddleware(testResourceStore([shape])))
+    app.use(shaclMiddleware({
+      createResourceStore: testResourceStore([shape]),
+      loadResourcesTypes,
+    }))
     app.use((req, res) => res.status(204).end())
 
     // when
