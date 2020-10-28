@@ -41,12 +41,6 @@ ${shape('table/create')} {
       ${sh.order} 40 ;
       ${dash.editor} ${editor.ColorPicker} ;
     ] ;
-    ${sh.property} [
-      ${sh.name} "Column mapping" ;
-      ${sh.path} ${cc.columnMapping} ;
-      ${dash.hidden} ${true} ;
-      ${sh.order} 9999 ;
-    ] ;
   .
 }
 `

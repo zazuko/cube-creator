@@ -52,9 +52,7 @@ export default Vue.extend({
         columns.forEach((columnId) => {
           const column = source.columns.find((column) => column.clientPath === columnId)
           if (column) {
-            resource.addOut(ns.cc.columnMapping, $rdf.blankNode(), (columnMapping) => {
-              columnMapping.addOut(ns.cc.column, column.id)
-            })
+            // TODO: Attach column to table
           } else {
             console.error(`Column not found: ${columnId}`)
           }
