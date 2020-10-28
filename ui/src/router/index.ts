@@ -9,6 +9,7 @@ import Authenticated from '@/views/Authenticated.vue'
 import CubeProjects from '@/views/CubeProjects.vue'
 import CubeProject from '@/views/CubeProject.vue'
 import CubeProjectNew from '@/views/CubeProjectNew.vue'
+import CubeProjectEdit from '@/views/CubeProjectEdit.vue'
 import CSVMapping from '@/views/CSVMapping.vue'
 import CSVUpload from '@/views/CSVUpload.vue'
 import CubeDesigner from '@/views/CubeDesigner.vue'
@@ -42,6 +43,11 @@ const routes: Array<RouteConfig> = [
         name: 'CubeProject',
         component: CubeProject,
         children: [
+          {
+            path: 'edit',
+            name: 'CubeProjectEdit',
+            component: CubeProjectEdit,
+          },
           {
             path: 'csv-mapping',
             name: 'CSVMapping',
