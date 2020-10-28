@@ -1,0 +1,142 @@
+base <https://cube-creator.lndo.site/>
+prefix schema: <http://schema.org/>
+prefix dcterms: <http://purl.org/dc/terms/>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix hydra: <http://www.w3.org/ns/hydra/core#>
+prefix csvw: <http://www.w3.org/ns/csvw#>
+prefix dtype: <http://www.linkedmodel.org/schema/dtype#>
+PREFIX cc: <https://cube-creator.zazuko.com/vocab#>
+
+graph <cube-project/ubd> {
+  <cube-project/ubd>
+    a cc:CubeProject, hydra:Resource ;
+    cc:dataset <foen/ubd/28/pm1> ;
+    cc:csvMapping <cube-project/ubd/csv-mapping> ;
+    dcterms:creator <user>
+  .
+}
+
+graph <cube-project/ubd/csv-mapping> {
+  <cube-project/ubd/csv-mapping>
+    a cc:CsvMapping , hydra:Resource ;
+    cc:csvSource <cube-project/ubd/csv-source/ubd> ;
+    cc:csvSourceCollection <cube-project/ubd/csv-mapping/sources> ;
+  .
+}
+
+graph <cube-project/ubd/csv-mapping/sources> {
+  <cube-project/ubd/csv-mapping/sources>
+    a cc:CSVSourceCollection , hydra:Resource , hydra:Collection ;
+    hydra:manages  [ hydra:object    <cube-project/ubd/csv-mapping> ;
+                     hydra:property  cc:csvMapping
+                   ] ;
+    hydra:manages  [ hydra:object    cc:CSVSource ;
+                     hydra:property  rdf:type
+                   ] ;
+    hydra:title    "CSV-Sources" ;
+    cc:csvMapping  <cube-project/ubd/csv-mapping>
+  .
+}
+
+graph <cube-project/ubd/csv-source/ubd> {
+  <cube-project/ubd/csv-source/ubd>
+    a cc:CSVSource, hydra:Resource ;
+    schema:associatedMedia  [ a  schema:MediaObject ;
+                              schema:contentUrl <http://s3:9000/cube-creator/test-data/ubd28/input_CH_yearly_air_immission_basetable.csv> ;
+                              schema:identifier "test-data/ubd28/input_CH_yearly_air_immission_basetable.csv";
+                            ] ;
+    schema:name "ubd.csv" ;
+    cc:csvMapping <cube-project/ubd/csv-mapping> ;
+    csvw:dialect <cube-project/ubd/csv-source/ubd/dialect> ;
+    csvw:column <cube-project/ubd/csv-source/ubd/column/year> ;
+    csvw:column <cube-project/ubd/csv-source/ubd/column/station> ;
+    csvw:column <cube-project/ubd/csv-source/ubd/column/value> ;
+    csvw:column <cube-project/ubd/csv-source/ubd/column/aggregation> ;
+  .
+
+  <cube-project/ubd/csv-source/ubd/dialect>
+    csvw:quoteChar "\"" ;
+    csvw:delimiter "," ;
+  .
+
+  <cube-project/ubd/csv-source/ubd/column/year>
+    a csvw:Column ;
+    schema:name "YEAR" ;
+    dtype:order 0 ;
+    cc:csvColumnSample "2010" ;
+    cc:csvColumnSample "2020" ;
+    cc:csvColumnSample "2021" ;
+  .
+
+  <cube-project/ubd/csv-source/ubd/column/station>
+    a csvw:Column ;
+    schema:name "STATION" ;
+    dtype:order 1 ;
+    cc:csvColumnSample "1" ;
+    cc:csvColumnSample "2" ;
+    cc:csvColumnSample "3" ;
+  .
+
+  <cube-project/ubd/csv-source/ubd/column/value>
+    a csvw:Column ;
+    schema:name "VALUE" ;
+    dtype:order 2 ;
+    cc:csvColumnSample "3.4" ;
+    cc:csvColumnSample "2.1" ;
+    cc:csvColumnSample "2.9" ;
+  .
+
+  <cube-project/ubd/csv-source/ubd/column/aggregation>
+    a csvw:Column ;
+    schema:name "AGGREGATION" ;
+    dtype:order 3 ;
+    cc:csvColumnSample "13.4" ;
+    cc:csvColumnSample "14.4" ;
+    cc:csvColumnSample "18.0" ;
+  .
+}
+
+graph <cube-project/ubd/csv-source/stations> {
+  <cube-project/ubd/csv-source/stations>
+    a cc:CSVSource, hydra:Resource ;
+    cc:csvMapping <cube-project/ubd/csv-mapping> ;
+    schema:name "stations.csv" ;
+    csvw:dialect <cube-project/ubd/csv-source/stations/dialect> ;
+    csvw:column <cube-project/ubd/csv-source/ubd/column/year> ;
+    csvw:column <cube-project/ubd/csv-source/stations/column/station-name-fr> ;
+    csvw:column <cube-project/ubd/csv-source/stations/column/station-name-de> ;
+  .
+
+  <cube-project/ubd/csv-source/stations/dialect>
+    csvw:quoteChar "\"" ;
+    csvw:delimiter "," ;
+  .
+
+  <cube-project/ubd/csv-source/stations/column/station-id>
+    a csvw:Column ;
+    schema:name "STATION_ID" ;
+    dtype:order 0 ;
+    cc:csvColumnSample "1" ;
+    cc:csvColumnSample "2" ;
+    cc:csvColumnSample "3" ;
+  .
+
+  <cube-project/ubd/csv-source/stations/column/station-name-fr>
+    a csvw:Column ;
+    schema:name "STATION_NAME_FR" ;
+    dtype:order 1 ;
+    cc:csvColumnSample "ABC" ;
+    cc:csvColumnSample "DEF" ;
+    cc:csvColumnSample "GHI" ;
+  .
+
+  <cube-project/ubd/csv-source/stations/column/station-name-de>
+    a csvw:Column ;
+    schema:name "STATION_NAME_DE" ;
+    dtype:order 2 ;
+    cc:csvColumnSample "ABK" ;
+    cc:csvColumnSample "DEF" ;
+    cc:csvColumnSample "GHI" ;
+  .
+}
