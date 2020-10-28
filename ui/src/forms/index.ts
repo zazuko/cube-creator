@@ -1,12 +1,19 @@
 import { renderer, components, editors } from '@hydrofoil/shaperone-wc/configure'
 import { html } from 'lit-element'
+import { repeat } from 'lit-html/directives/repeat'
 import { DefaultStrategy } from '@hydrofoil/shaperone-wc/renderer/DefaultStrategy'
-import { PropertyRenderStrategy, ObjectRenderStrategy } from '@hydrofoil/shaperone-wc/lib/renderer'
+import { PropertyRenderStrategy, ObjectRenderStrategy, FocusNodeRenderStrategy } from '@hydrofoil/shaperone-wc/lib/renderer'
 import { ShaperoneForm } from '@hydrofoil/shaperone-wc/ShaperoneForm'
 import * as Components from './components'
 import * as Matchers from './matchers'
 import { Metadata } from './metadata'
 import { createCustomElement } from '@/forms/bulma'
+
+export const focusNodeStrategy: FocusNodeRenderStrategy = ({ focusNode, renderGroup }) => html`
+  <div class="fieldset" part="focus-node">
+    ${repeat(focusNode.groups, renderGroup)}
+  </div>
+`
 
 const propertyStrategy: PropertyRenderStrategy = ({ property, actions, renderObject, renderMultiEditor }) => {
   return html`<form-property
@@ -36,6 +43,7 @@ objectStrategy.loadDependencies = () => [
 
 renderer.setStrategy({
   ...DefaultStrategy,
+  focusNode: focusNodeStrategy,
   property: propertyStrategy,
   object: objectStrategy,
 })
