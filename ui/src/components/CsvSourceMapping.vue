@@ -119,7 +119,7 @@ export default class CsvSourceMapping extends Vue {
         this.$store.dispatch('api/invokeDeleteOperation', {
           operation: source.actions.delete,
           successMessage: 'CSV source deleted successfully',
-          callbackAction: 'cubeProjects/refreshSourcesCollection',
+          callbackAction: 'project/refreshSourcesCollection',
         })
       },
     })

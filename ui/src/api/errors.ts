@@ -1,12 +1,20 @@
 import { HydraResponse } from 'alcaeus'
+import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
+import { DatasetCore } from 'rdf-js'
 
-type ErrorDetails = Record<string, any>
+type ErrorDetails = {
+  title?: string
+  link?: {
+    href: string
+  },
+  [key: string]: unknown
+}
 
 export class APIError extends Error {
   details: ErrorDetails | null;
-  response: HydraResponse;
+  response: HydraResponse<DatasetCore, RdfResourceCore>;
 
-  constructor (details: ErrorDetails, response: HydraResponse) {
+  constructor (details: ErrorDetails, response: HydraResponse<DatasetCore, RdfResourceCore>) {
     const message = details?.title || 'Unknown error'
 
     super(message)
@@ -15,7 +23,7 @@ export class APIError extends Error {
     this.response = response
   }
 
-  static async fromResponse (response: HydraResponse<any, any>): Promise<APIError> {
+  static async fromResponse (response: HydraResponse<DatasetCore, RdfResourceCore>): Promise<APIError> {
     const httpResponse = response?.response
     let details
     try {

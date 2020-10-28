@@ -1,11 +1,12 @@
 import { Resource } from 'alcaeus'
 import { Constructor } from '@tpluscode/rdfine'
+import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import * as ns from '@cube-creator/core/namespace'
 import { schema, csvw, dtype } from '@tpluscode/rdf-ns-builders'
 import { CSVColumn } from '@/types'
 import { commonActions } from '../common'
 
-export default function Mixin<Base extends Constructor<Resource>> (base: Base) {
+export default function mixin<Base extends Constructor<Resource>> (base: Base): Mixin {
   return class extends base implements CSVColumn {
     get actions () {
       return commonActions(this)
@@ -28,4 +29,4 @@ export default function Mixin<Base extends Constructor<Resource>> (base: Base) {
   }
 }
 
-Mixin.appliesTo = csvw.Column
+mixin.appliesTo = csvw.Column

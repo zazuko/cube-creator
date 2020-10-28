@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <page-content>
     <h2 class="title">
       Missing Authorization
     </h2>
@@ -7,16 +7,19 @@
       You have not the right to access this site. Please request access it via
       <a :href="link"> {{ link }}</a>
     </p>
-  </div>
+  </page-content>
 </template>
 
-<script>
-import Vue from 'vue'
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator'
+import PageContent from '@/components/PageContent.vue'
 
-export default Vue.extend({
-  name: 'NotAuthorized',
-  computed: {
-    link: function () { return this.$router.currentRoute.params.link }
-  },
+@Component({
+  components: { PageContent },
 })
+export default class NotAuthorizedView extends Vue {
+  get link (): string | null {
+    return this.$router.currentRoute.params.link
+  }
+}
 </script>

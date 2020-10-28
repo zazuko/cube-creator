@@ -65,7 +65,7 @@ export const api = {
     return resource
   },
 
-  async invokeSaveOperation<T extends Resource = Resource> (operation: RuntimeOperation | null, data: RdfResource | File, headers: Record<string, any> = {}): Promise<T> {
+  async invokeSaveOperation<T extends Resource = Resource> (operation: RuntimeOperation | null, data: RdfResource | File, headers: Record<string, string> = {}): Promise<T> {
     if (!operation) throw new Error('Operation does not exist')
 
     const serializedData = data instanceof File ? data : JSON.stringify(data.toJSON())

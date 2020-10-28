@@ -27,11 +27,11 @@ export default class extends Vue {
 
   options: RdfResource[] = []
 
-  label (option: RdfResource) {
+  label (option: RdfResource): string {
     return option.getString(labelProperty, { strict: false }) || option.id.value
   }
 
-  async mounted () {
+  async mounted (): Promise<void> {
     if (this.collection && this.collection.id.termType === 'NamedNode') {
       const { representation } = await Hydra.loadResource(this.collection.id)
       this.options = representation?.root?.member || []

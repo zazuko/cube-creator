@@ -4,10 +4,10 @@
   </div>
 </template>
 
-<script>
-import Vue from 'vue'
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator'
 
-export default Vue.extend({
-  name: 'CubeDesigner',
-})
+@Component
+export default class CubeDesignerView extends Vue {
+}
 </script>

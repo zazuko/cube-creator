@@ -14,22 +14,19 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { mapGetters } from 'vuex'
+import { Component, Vue } from 'vue-property-decorator'
+import { namespace } from 'vuex-class'
 
-export default Vue.extend({
-  name: 'Logout',
+const authNS = namespace('auth')
 
-  mounted () {
+@Component
+export default class LogoutView extends Vue {
+  @authNS.Getter('oidcisAuthenticated') isAuthenticated!: boolean
+
+  mounted (): void {
     if (this.isAuthenticated) {
       this.$router.push({ name: 'Home' })
     }
-  },
-
-  computed: {
-    ...mapGetters({
-      isAuthenticated: 'auth/oidcIsAuthenticated',
-    })
-  },
-})
+  }
+}
 </script>

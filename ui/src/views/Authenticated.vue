@@ -3,26 +3,19 @@
   <b-loading v-else active :is-full-page="false" />
 </template>
 
-<script>
-import Vue from 'vue'
-import { mapGetters, mapState } from 'vuex'
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator'
+import { namespace } from 'vuex-class'
+import { Resource } from 'alcaeus'
 
-export default Vue.extend({
-  name: 'Authenticated',
-  components: {},
+const apiNS = namespace('api')
 
-  async mounted () {
+@Component
+export default class AuthenticatedView extends Vue {
+  @apiNS.State('entrypoint') apiEntrypoint!: Resource
+
+  async mounted (): Promise<void> {
     await this.$store.dispatch('api/fetchEntrypoint')
-  },
-
-  computed: {
-    ...mapGetters({
-      token: 'auth/oidcAccessToken',
-      user: 'auth/oidcUser',
-    }),
-    ...mapState({
-      apiEntrypoint: (state) => state.api.entrypoint,
-    }),
-  },
-})
+  }
+}
 </script>
