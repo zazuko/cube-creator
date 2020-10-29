@@ -993,10 +993,10 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
-"@hydrofoil/labyrinth@^0.1.11":
-  version "0.1.11"
-  resolved "https://registry.yarnpkg.com/@hydrofoil/labyrinth/-/labyrinth-0.1.11.tgz#ff4c8fa24a3bdbf76003f7ca52bd6c81cb19f250"
-  integrity sha512-CRfLNtmsGPLRGi16bMnE1e7+KG++BdAu4ThZqXn3516YAGA9pk3dqAKQd7Yke+D/YfkZo+r2F0IxfxNfFmk1UQ==
+"@hydrofoil/labyrinth@^0.1.12":
+  version "0.1.12"
+  resolved "https://registry.yarnpkg.com/@hydrofoil/labyrinth/-/labyrinth-0.1.12.tgz#c612c3f6c79e75d50856a8fc5804226bc428bdd1"
+  integrity sha512-PHULQx7UD5DYu8wRtHs52E5d9WXuoQKAwR28Y2lJuIE62hdzfOlVtcPS4lH9jTENjSACAmY/FQKNmmJQBtyaYQ==
   dependencies:
     "@fcostarodrigo/walk" "^5.0.0"
     "@rdfine/hydra" "^0.5.1"
@@ -1007,7 +1007,7 @@
     "@tpluscode/rdf-string" "^0.2.18"
     "@tpluscode/rdfine" "^0.5.9"
     "@tpluscode/sparql-builder" "^0.3.9"
-    clownface "^1.0.0"
+    clownface "^1.1.0"
     cors "^2.8.5"
     debug "^4.1.1"
     express "^4.17.1"

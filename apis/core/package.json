@@ -8,7 +8,7 @@
   "dependencies": {
     "@cube-creator/core": "*",
     "@cube-creator/model": "*",
-    "@hydrofoil/labyrinth": "^0.1.11",
+    "@hydrofoil/labyrinth": "^0.1.12",
     "@rdfine/csvw": "^0.5.1",
     "@rdfjs/express-handler": "tpluscode/express-handler#dataset-multiple-times",
     "@rdfjs/namespace": "^1.1.0",

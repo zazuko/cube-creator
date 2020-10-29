@@ -5,6 +5,7 @@ prefix code:  <https://code.described.at/>
 prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix schema:   <http://schema.org/>
 prefix sh:    <http://www.w3.org/ns/shacl#>
+prefix query: <http://hypermedia.app/query#>
 
 cc:TableCollection
   a
@@ -35,6 +36,8 @@ cc:TableCollection
 cc:Table
   a
     hydra:Class ;
+  query:include
+    cc:columnMapping ;
   hydra:supportedProperty
     [
       a
