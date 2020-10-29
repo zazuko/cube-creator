@@ -9,9 +9,7 @@
                 {{ source.name }}
               </div>
               <div class="level-item">
-                <b-tooltip v-if="source.actions.delete" :label="source.actions.delete.title">
-                  <b-button icon-left="trash" @click="deleteSource(source)" type="is-text" />
-                </b-tooltip>
+                <hydra-operation-button :operation="source.actions.delete" @click="deleteSource(source)" />
               </div>
             </div>
             <div class="level-right">
@@ -79,10 +77,12 @@
 import { Prop, Component, Vue } from 'vue-property-decorator'
 import { Source, Table, TableCollection, CSVColumn } from '../types'
 import MapperTable from './MapperTable.vue'
+import HydraOperationButton from './HydraOperationButton.vue'
 
 @Component({
   components: {
     MapperTable,
+    HydraOperationButton,
   },
 })
 export default class CsvSourceMapping extends Vue {
