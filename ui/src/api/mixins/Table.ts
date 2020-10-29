@@ -28,6 +28,10 @@ export default function mixin<Base extends Constructor<Resource>> (base: Base): 
       return this.get<Source>(ns.cc.csvSource)
     }
 
+    get identifierTemplate (): string {
+      return this.getString(ns.cc.identifierTemplate)
+    }
+
     get columnMappings (): ColumnMapping[] {
       return this.getArray<ColumnMapping>(ns.cc.columnMapping)
     }

@@ -22,9 +22,10 @@
         </div>
       </div>
     </div>
+    <div class="panel-block">
+      Identifier template: <code>{{ table.identifierTemplate }}</code>
+    </div>
     <div v-for="columnMapping in table.columnMappings" :key="columnMapping.id.value" class="panel-block">
-      {{ columnMapping.sourceColumn.id.value }}<br>
-      -><br>
       {{ columnMapping.targetProperty.value }}
     </div>
   </div>
