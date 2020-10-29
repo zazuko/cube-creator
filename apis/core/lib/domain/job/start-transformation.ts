@@ -4,6 +4,7 @@ import { NamedNode } from 'rdf-js'
 import { ResourceStore } from '../../ResourceStore'
 import { resourceStore } from '../resources'
 import * as id from '../identifiers'
+import { rdfs } from '@tpluscode/rdf-ns-builders'
 
 interface StartTransformationCommand {
   resource: NamedNode
@@ -34,6 +35,7 @@ export async function startTransformation({
 
   job.addOut(cc.cubeGraph, cubeGraph)
     .addOut(cc.tables, csvMappingResource.out(cc.tables))
+    .addOut(rdfs.label, projectResource.out(rdfs.label))
 
   return job
 }
