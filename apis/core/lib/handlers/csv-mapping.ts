@@ -12,5 +12,3 @@ export const post = protectedResource(shaclValidate, asyncMiddleware(async (req,
   res.header('Location', project.value)
   await res.dataset(project.dataset)
 }))
-
-
