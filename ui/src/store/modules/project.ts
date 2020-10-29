@@ -1,7 +1,7 @@
 import { ActionTree, MutationTree, GetterTree } from 'vuex'
 import { api } from '@/api'
 import { RootState } from '../types'
-import { Project, CSVMapping, SourcesCollection, TableCollection } from '@/types'
+import { Project, CSVMapping, SourcesCollection, TableCollection, Table } from '@/types'
 
 export interface ProjectState {
   project: null | Project,
@@ -29,6 +29,15 @@ const getters: GetterTree<ProjectState, RootState> = {
   findSource (_state, getters) {
     return (id: string) =>
       getters.sources.find(({ clientPath }: { clientPath: string}) => clientPath === id)
+  },
+
+  columnMappings (state, getters) {
+    return getters.tables.map((table: Table) => table.columnMappings).flat()
+  },
+
+  findColumnMapping (_state, getters) {
+    return (id: string) =>
+      getters.columnMappings.find(({ clientPath }: { clientPath: string}) => clientPath === id)
   },
 }
 

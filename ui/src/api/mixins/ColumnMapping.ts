@@ -20,8 +20,8 @@ export default function mixin<Base extends Constructor<Resource>> (base: Base): 
       return this.get(ns.cc.targetProperty).id
     }
 
-    get datatype (): Term {
-      return this.get(ns.cc.datatype).id
+    get datatype (): Term | null {
+      return this.get(ns.cc.datatype)?.id ?? null
     }
 
     get language (): string {

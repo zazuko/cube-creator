@@ -39,7 +39,7 @@
         <div class="level-item">
           <hydra-operation-button
             :operation="columnMapping.actions.edit"
-            :to="{ name: 'ColumnMappingEdit' }"
+            :to="{ name: 'ColumnMappingEdit', params: { columnMappingId: columnMapping.clientPath } }"
           />
           <hydra-operation-button
             :operation="columnMapping.actions.delete"
