@@ -11,10 +11,10 @@ interface StartTransformationCommand {
   store?: ResourceStore
 }
 
-export async function startTransformation({
+export async function create({
   resource,
   store = resourceStore(),
-}: StartTransformationCommand): Promise<GraphPointer> {
+}: StartTransformationCommand): Promise<GraphPointer<NamedNode>> {
   const jobCollection = await store.get(resource)
   const csvMapping = jobCollection.out(cc.csvMapping).term
 
