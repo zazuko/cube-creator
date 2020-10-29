@@ -1,4 +1,4 @@
-import { csvw, hydra, rdf, schema } from '@tpluscode/rdf-ns-builders'
+import { csvw, hydra, rdf, schema, dcterms } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import { DELETE, INSERT } from '@tpluscode/sparql-builder'
 import StreamClient from 'sparql-http-client/StreamClient'
@@ -106,6 +106,7 @@ export const insertTestData = async () => {
         ${cc.tables} </project/cli-test/tables> ;
         ${schema.label} "cli-test" ;
         ${cc.cubeGraph}  </cube/cli-test> ;
+        ${dcterms.created} "2020-10-29 12:01:54"
     .
   }
   `.execute(client.query, clientOptions())
