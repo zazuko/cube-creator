@@ -9,9 +9,7 @@
                 {{ source.name }}
               </div>
               <div class="level-item">
-                <b-tooltip v-if="source.actions.delete" :label="source.actions.delete.title">
-                  <b-button icon-left="trash" @click="deleteSource(source)" type="is-text" />
-                </b-tooltip>
+                <hydra-operation-button :operation="source.actions.delete" @click="deleteSource(source)" />
               </div>
             </div>
             <div class="level-right">
@@ -48,11 +46,11 @@
           </b-checkbox>
           <div>
             <b-tooltip
-              v-for="columnMapping in getColumnMappings(column)"
+              v-for="{table, columnMapping} in getColumnMappings(column)"
               :key="columnMapping.id.value"
               class="source-column-mapping"
-              :style="{ 'background-color': columnMapping.table.color }"
-              :label="columnMapping.table.title + ' -> ' + columnMapping.title"
+              :style="{ 'background-color': table.color }"
+              :label="table.name + ' / ' + columnMapping.targetProperty.value"
             />
           </div>
         </div>
@@ -77,12 +75,14 @@
 
 <script lang="ts">
 import { Prop, Component, Vue } from 'vue-property-decorator'
-import { Source, Table, TableCollection, CSVColumn } from '../types'
+import { Source, Table, TableCollection, CSVColumn, ColumnMapping } from '../types'
 import MapperTable from './MapperTable.vue'
+import HydraOperationButton from './HydraOperationButton.vue'
 
 @Component({
   components: {
     MapperTable,
+    HydraOperationButton,
   },
 })
 export default class CsvSourceMapping extends Vue {
@@ -104,8 +104,14 @@ export default class CsvSourceMapping extends Vue {
     }
   }
 
-  getColumnMappings (): unknown[] {
-    return []
+  getColumnMappings (column: CSVColumn): {table: Table, columnMapping: ColumnMapping}[] {
+    return this.tables
+      .map((table) => {
+        return table.columnMappings
+          .filter((columnMapping) => columnMapping.sourceColumn.id.equals(column.id))
+          .map((columnMapping) => ({ table, columnMapping }))
+      })
+      .flat()
   }
 
   async deleteSource (source: Source): Promise<void> {

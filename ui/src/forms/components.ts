@@ -1,6 +1,7 @@
 import { html, SingleEditorComponent } from '@hydrofoil/shaperone-wc'
 import * as ns from '@cube-creator/core/namespace'
-import { dash } from '@tpluscode/rdf-ns-builders'
+import { dash, xsd } from '@tpluscode/rdf-ns-builders'
+import $rdf from '@rdfjs/data-model'
 import { createCustomElement } from '@/forms/bulma'
 import { hashi } from '@cube-creator/core/namespace'
 
@@ -52,6 +53,21 @@ export const colorPicker: SingleEditorComponent = {
   loadDependencies () {
     return [
       import('./ColorPicker.vue').then(createCustomElement('color-picker'))
+    ]
+  }
+}
+
+const trueTerm = $rdf.literal('true', xsd.boolean)
+
+export const checkBox: SingleEditorComponent = {
+  editor: ns.editor.Checkbox,
+  render ({ value }, { update }) {
+    const booleanValue = trueTerm.equals(value.object.term)
+    return html`<cc-checkbox .value="${booleanValue}" .update="${update}"></cc-checkbox>`
+  },
+  loadDependencies () {
+    return [
+      import('./BulmaCheckbox.vue').then(createCustomElement('cc-checkbox'))
     ]
   }
 }

@@ -10,9 +10,7 @@
               </h3>
             </div>
             <div class="level-item">
-              <b-tooltip v-if="sourcesCollection.actions.upload" :label="sourcesCollection.actions.upload.title">
-                <b-button tag="router-link" :to="{ name: 'CSVUpload' }" size="is-small" icon-left="plus" />
-              </b-tooltip>
+              <hydra-operation-button :operation="sourcesCollection.actions.upload" :to="{ name: 'CSVUpload' }" />
             </div>
           </div>
           <div class="level-right">
@@ -46,9 +44,7 @@
                 Output tables
               </div>
               <div class="level-item">
-                <b-tooltip v-if="tableCollection.actions.create" :label="tableCollection.actions.create.title">
-                  <b-button tag="router-link" :to="{ name: 'TableCreate' }" size="is-small" icon-left="plus" />
-                </b-tooltip>
+                <hydra-operation-button :operation="tableCollection.actions.create" :to="{ name: 'TableCreate' }" />
               </div>
             </div>
           </div>
@@ -85,12 +81,13 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
 import CsvSourceMapping from '@/components/CsvSourceMapping.vue'
+import HydraOperationButton from '@/components/HydraOperationButton.vue'
 import { CSVMapping, SourcesCollection, TableCollection, Table, Source } from '../types'
 
 const projectNS = namespace('project')
 
 @Component({
-  components: { CsvSourceMapping },
+  components: { CsvSourceMapping, HydraOperationButton },
 })
 export default class CSVMappingView extends Vue {
   @projectNS.State('csvMapping') mapping!: CSVMapping | null;

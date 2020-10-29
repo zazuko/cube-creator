@@ -6,28 +6,59 @@
           <div class="level-item">
             {{ table.name }}
           </div>
+          <div class="level-item" v-if="table.isObservationTable">
+            <b-tooltip label="Observation table">
+              <b-icon icon="eye" />
+            </b-tooltip>
+          </div>
+        </div>
+        <div class="level-right">
           <div class="level-item">
-            <b-tooltip v-if="table.actions.delete" :label="table.actions.delete.title">
-              <b-button icon-left="trash" @click="deleteTable(table)" type="is-text" />
-            </b-tooltip>
-            <b-tooltip v-if="table.actions.edit" :label="table.actions.edit.title">
-              <b-button icon-left="pencil-alt" @click="editTable(table)" type="is-text" />
-            </b-tooltip>
+            <hydra-operation-button
+              :operation="table.actions.edit"
+              @click="editTable(table)"
+            />
+            <hydra-operation-button
+              :operation="table.actions.delete"
+              @click="deleteTable(table)"
+            />
           </div>
         </div>
       </div>
     </div>
+    <div class="panel-block">
+      Identifier template: <code>{{ table.identifierTemplate }}</code>
+    </div>
     <div v-for="columnMapping in table.columnMappings" :key="columnMapping.id.value" class="panel-block">
-      {{ columnMapping.sourceColumn }} / {{ columnMapping.targetProperty }}
+      <div class="level-left">
+        <div class="level-item">
+          {{ columnMapping.targetProperty.value }}
+        </div>
+      </div>
+      <div class="level-right">
+        <div class="level-item">
+          <hydra-operation-button
+            :operation="columnMapping.actions.edit"
+            :to="{ name: 'ColumnMappingEdit' }"
+          />
+          <hydra-operation-button
+            :operation="columnMapping.actions.delete"
+            @click="deleteColumnMapping(columnMapping)"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Prop, Component, Vue } from 'vue-property-decorator'
-import { Table } from '@/types'
+import { ColumnMapping, Table } from '../types'
+import HydraOperationButton from './HydraOperationButton.vue'
 
-@Component
+@Component({
+  components: { HydraOperationButton },
+})
 export default class MapperTable extends Vue {
   @Prop() readonly table!: Table;
 
@@ -49,6 +80,10 @@ export default class MapperTable extends Vue {
   }
 
   editTable (table: Table): void {
+    this.$buefy.toast.open({ message: 'Not implemented yet', type: 'is-info' })
+  }
+
+  deleteColumnMapping (columnMapping: ColumnMapping): void {
     this.$buefy.toast.open({ message: 'Not implemented yet', type: 'is-info' })
   }
 }
