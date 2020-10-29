@@ -37,5 +37,7 @@ export async function startTransformation({
     .addOut(cc.tables, csvMappingResource.out(cc.tables))
     .addOut(rdfs.label, projectResource.out(rdfs.label))
 
+  await store.save()
+
   return job
 }
