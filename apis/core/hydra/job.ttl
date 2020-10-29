@@ -1,0 +1,28 @@
+BASE          <urn:hydra-box:api>
+PREFIX cc:    <https://cube-creator.zazuko.com/vocab#>
+prefix hydra: <http://www.w3.org/ns/hydra/core#>
+prefix code:  <https://code.described.at/>
+prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix schema:   <http://schema.org/>
+
+cc:JobCollection
+    a
+        hydra:Class ;
+    hydra:supportedOperation
+    [
+      a
+        hydra:Operation,
+        cc:TransformAction ;
+      hydra:title
+        "Start transformation" ;
+      hydra:method
+        "POST" ;
+      code:implementedBy
+        [
+          a
+            code:EcmaScript ;
+          code:link
+            <file:handlers/csv-mapping#transform> ;
+        ] ;
+    ]
+.

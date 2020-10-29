@@ -69,6 +69,23 @@ export async function createProject({
       })
 
     mapping.addOut(cc.tables, tableCollection)
+
+    const jobCollection = store.create(id.jobCollection(mapping))
+      .addOut(rdf.type, [cc.JobCollection, hydra.Collection])
+      .addOut(hydra.title, 'Jobs')
+      .addOut(cc.csvMapping, mapping)
+      .addOut(hydra.manages, manages => {
+      // ?member rdf:type cc:Table
+        manages.addOut(hydra.property, rdf.type)
+        manages.addOut(hydra.object, cc.Job)
+      })
+      .addOut(hydra.manages, manages => {
+      // ?member cc:csvMapping <mapping>
+        manages.addOut(hydra.object, mapping)
+        manages.addOut(hydra.property, cc.csvMapping)
+      })
+
+    mapping.addOut(cc.jobCollection, jobCollection)
   }
 
   await store.save()

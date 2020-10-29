@@ -14,7 +14,9 @@ type CubeCreatorClass =
   'CreateProjectAction' |
   'UploadCSVAction' |
   'Table' |
-  'TableCollection'
+  'TableCollection' |
+  'Job' |
+  'JobCollection'
 
 type CubeCreatorProperty =
   'projectSourceKind' |
@@ -27,7 +29,8 @@ type CubeCreatorProperty =
   'project' |
   'tables' |
   'cube' |
-  'cubeGraph'
+  'cubeGraph' |
+  'jobCollection'
 
 type OtherTerms =
   'dash'
