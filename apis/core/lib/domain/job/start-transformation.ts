@@ -1,7 +1,6 @@
 import { cc } from '@cube-creator/core/namespace'
 import { GraphPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'
-import { rdfs } from '@tpluscode/rdf-ns-builders'
 import { ResourceStore } from '../../ResourceStore'
 import { resourceStore } from '../resources'
 import * as id from '../identifiers'
