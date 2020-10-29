@@ -13,6 +13,7 @@
     "alcaeus": "^1.0.0-RC.2"
   },
   "devDependencies": {
+    "@types/clownface": "^1",
     "@types/rdf-js": "^4.0.0"
   }
 }

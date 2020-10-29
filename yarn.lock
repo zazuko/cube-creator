@@ -1705,7 +1705,7 @@
   resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.2.13.tgz#8a3801f6655179d1803d81e94a2e4aaf317abd16"
   integrity sha512-o3SGYRlOpvLFpwJA6Sl1UPOwKFEvE4FxTEB/c9XHI2whdnd4kmPVkNLL8gY4vWGBxWWDumzLbKsAhEH5SKn37Q==
 
-"@types/clownface@^1.0.3":
+"@types/clownface@^1", "@types/clownface@^1.0.3":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/@types/clownface/-/clownface-1.0.3.tgz#8abe4c7e1b3226851a83af33d774f94eb915fdd2"
   integrity sha512-s2VLKhvwYJbzL/+r12fuv6gu8J/MVcuBk2K6CPsnRygcL5hTwahBPkYS4ROmthKB4+zP1f1oWYTZYAKnNs1ogw==

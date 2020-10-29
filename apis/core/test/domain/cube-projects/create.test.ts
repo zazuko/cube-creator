@@ -6,6 +6,7 @@ import { dcterms, rdfs } from '@tpluscode/rdf-ns-builders'
 import { cc, shape } from '@cube-creator/core/namespace'
 import { createProject } from '../../../lib/domain/cube-projects/create'
 import { TestResourceStore } from '../../support/TestResourceStore'
+import '../../../lib/domain'
 
 describe('domain/cube-projects/create', () => {
   let store: TestResourceStore
