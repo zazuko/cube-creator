@@ -21,6 +21,8 @@ function removeTestGraphs() {
       </project/cli-test/tables>
       </project/cli-test/mapping/table/foo>
       </project/cli-test/source/foo>
+      </project/cli-test/mapping/jobs>
+      </project/cli-test/mapping/jobs/test-job>
       </cube/cli-test>
     }`
     .WHERE`graph ?g { ?s ?p ?o }`
@@ -42,7 +44,8 @@ export const insertTestData = async () => {
   graph </project/cli-test/mapping> {
       </project/cli-test/mapping>
           a ${hydra.Resource}, ${cc.CsvMapping} ;
-          ${cc.tables} </project/cli-test/tables>
+          ${cc.tables} </project/cli-test/tables> ;
+          ${cc.jobCollection} </project/cli-test/mapping/jobs>
       .
   }
 
@@ -81,6 +84,29 @@ export const insertTestData = async () => {
               ${schema.identifier} "test-data/ubd28/input_CH_yearly_air_immission_basetable.csv"
           ]
       .
+  }
+
+
+  graph </project/cli-test/mapping/jobs> {
+    </project/cli-test/mapping/jobs>
+        a ${hydra.Collection} ;
+        ${hydra.manages} [
+            ${hydra.property} ${rdf.type} ;
+            ${hydra.object}   ${cc.Job} ;
+        ] , [
+            ${hydra.property} ${cc.csvMapping} ;
+            ${hydra.object}   </project/cli-test/mapping>
+        ];
+    .
+}
+
+  graph </project/cli-test/mapping/jobs/test-job> {
+    </project/cli-test/mapping/jobs/test-job>
+        a ${hydra.Resource} , ${cc.Job} ;
+        ${cc.tables} </project/cli-test/tables> ;
+        ${schema.label} "cli-test" ;
+        ${cc.cubeGraph}  </cube/cli-test> ;
+    .
   }
   `.execute(client.query, clientOptions())
 }

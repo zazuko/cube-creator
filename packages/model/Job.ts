@@ -18,7 +18,7 @@ export function JobMixin<Base extends Constructor>(base: Base) {
     @property.resource({ path: cc.tables })
     tableCollection!: Link<Collection<Table>>
 
-    @property()
+    @property({ path: cc.cubeGraph })
     cubeGraph?: NamedNode
 
     @property.literal({ path: schema.label })
