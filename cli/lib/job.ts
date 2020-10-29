@@ -8,7 +8,7 @@ Hydra.resources.factory.addMixin(...Object.values(Models))
 Hydra.resources.factory.addMixin(...Object.values(Csvw))
 
 interface Params {
-  projectUri: string
+  jobUri: string
   log: Record<string, (msg: string) => void>
   variables: Map<string, string>
 }
@@ -43,8 +43,8 @@ async function loadTables(job: Job, log: any): Promise<Table[]> {
   return []
 }
 
-export class ProjectIterator extends stream.Readable {
-  constructor({ projectUri: jobUri, log, variables }: Params) {
+export class JobIterator extends stream.Readable {
+  constructor({ jobUri, log, variables }: Params) {
     super({
       objectMode: true,
       // eslint-disable-next-line @typescript-eslint/no-empty-function
