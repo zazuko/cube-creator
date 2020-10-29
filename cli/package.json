@@ -6,7 +6,7 @@
   "scripts": {
     "postinstall": "mkdir -p output",
     "transform": "dotenv -e ./.env -e ./.test.env -- yarn start",
-    "start": "ts-node index.ts transform --project \"$TRANSFORM_PROJECT\" --to filesystem --debug",
+    "start": "ts-node index.ts transform --job \"$TRANSFORM_JOB\" --to filesystem --debug",
     "build": "tsc"
   },
   "dependencies": {

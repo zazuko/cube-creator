@@ -32,7 +32,7 @@ async function main() {
     .command('transform')
     .description('Transforms source files to RDF')
     .requiredOption('--to <targetName>', "(required) Target to write triples (built-in: 'stdout', 'filesystem', 's3', 'graph-store')")
-    .requiredOption('--project <project>', '(required) URL of a Cube Creator project')
+    .requiredOption('--job <job>', '(required) URL of a Cube Creator project job')
     .option('-v, --variable <name=value>', 'Pipeline variables', parseVariables, new Map())
     .option('--debug', 'Print diagnostic information to standard output')
     .option('--enable-buffer-monitor', 'enable histogram of buffer usage')

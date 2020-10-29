@@ -39,7 +39,7 @@ async function loadTables(job: Job, log: any): Promise<Table[]> {
     }
   }
 
-  log.warn('Tables not found for project')
+  log.warn('Tables not found for job')
   return []
 }
 

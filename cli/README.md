@@ -13,7 +13,7 @@ Transforms source files to RDF
 
 Options:
   --to <targetName>            Target to write triples (built-in: 'stdout', 'filesystem', 'graph-store')
-  --project <project>          URL of a Data Cube Curation project
+  --job <job>                  URL of a Data Cube Curation project job
   --debug                      Print diagnostic information to standard output
   -h, --help                   output usage information
 ```
@@ -67,7 +67,7 @@ Here's an example of converting local files using a locally-built image:
     ```
     docker-compose run --rm cli transform \ 
         --to filesystem \
-        --project <URI>
+        --job <URI>
         --debug
     ```
 
