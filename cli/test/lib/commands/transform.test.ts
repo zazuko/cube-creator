@@ -24,7 +24,7 @@ describe('lib/commands/transform', function () {
     await runner({
       to: 'graph-store',
       debug: true,
-      project: `${env.API_CORE_BASE}project/cli-test`,
+      job: `${env.API_CORE_BASE}project/cli-test/mapping/jobs/test-job`,
     })
     await new Promise((resolve) =>
       setTimeout(resolve, 100),

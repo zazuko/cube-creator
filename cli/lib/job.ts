@@ -101,3 +101,7 @@ export class JobIterator extends stream.Readable {
       })
   }
 }
+
+export function loadCsvMappings(this: any, jobUri: string) {
+  return new JobIterator({ jobUri, log: this.log, variables: this.variables })
+}
