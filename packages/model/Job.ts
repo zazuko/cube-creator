@@ -23,6 +23,9 @@ export function JobMixin<Base extends Constructor>(base: Base) {
 
     @property.literal({ path: schema.label })
     label!: string
+    
+    @property.literal({ path: dcterms.created, type: Date })
+    create!: Date
   }
 
   return Impl
