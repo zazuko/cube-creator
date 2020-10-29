@@ -5,10 +5,12 @@ import { cc } from '@cube-creator/core/namespace'
 import { Table } from './Table'
 import { Link } from './lib/Link'
 import { NamedNode } from 'rdf-js'
+import { schema } from '@tpluscode/rdf-ns-builders'
 
 export interface Job extends RdfResourceCore {
   tableCollection: Link<Collection<Table>>
   cubeGraph?: NamedNode
+  label: string
 }
 
 export function JobMixin<Base extends Constructor>(base: Base) {
@@ -18,6 +20,9 @@ export function JobMixin<Base extends Constructor>(base: Base) {
 
     @property()
     cubeGraph?: NamedNode
+
+    @property.literal({ path: schema.label })
+    label!: string
   }
 
   return Impl
