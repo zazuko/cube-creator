@@ -1,5 +1,6 @@
 import type { SingleEditor } from '@hydrofoil/shaperone-core'
 import * as ns from '@cube-creator/core/namespace'
+import { xsd } from '@tpluscode/rdf-ns-builders'
 
 export const radioButtons: SingleEditor = {
   term: ns.editor.RadioButtons,
@@ -13,5 +14,18 @@ export const radioButtons: SingleEditor = {
     }
 
     return 50
+  }
+}
+
+export const checkBox: SingleEditor = {
+  term: ns.editor.Checkbox,
+  match (shape) {
+    const { datatype } = shape
+
+    if (xsd.boolean.equals(datatype?.id)) {
+      return 10
+    }
+
+    return 0
   }
 }

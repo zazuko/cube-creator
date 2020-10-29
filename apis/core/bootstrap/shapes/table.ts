@@ -1,5 +1,5 @@
 import { cc, shape, editor } from '@cube-creator/core/namespace'
-import { csvw, dash, hydra, rdfs, sh, schema } from '@tpluscode/rdf-ns-builders'
+import { csvw, dash, hydra, rdfs, sh, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import { turtle } from '@tpluscode/rdf-string'
 
 export const TableShape = turtle`
@@ -23,6 +23,16 @@ ${shape('table/create')} {
       ${sh.maxCount} 1 ;
       ${sh.minLength} 1 ;
       ${sh.order} 20 ;
+    ] ;
+    ${sh.property} [
+      ${sh.name} "Observation table?" ;
+      ${sh.description} "The observation table defines the structure of the cube" ;
+      ${sh.path} ${cc.isObservationTable} ;
+      ${sh.datatype} ${xsd.boolean} ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+      ${sh.defaultValue} ${false} ;
+      ${sh.order} 25 ;
     ] ;
     ${sh.property} [
       ${sh.name} "Identifier template" ;

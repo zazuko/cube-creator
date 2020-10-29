@@ -6,6 +6,11 @@
           <div class="level-item">
             {{ table.name }}
           </div>
+          <div class="level-item" v-if="table.isObservationTable">
+            <b-tooltip label="Observation table">
+              <b-icon icon="eye" />
+            </b-tooltip>
+          </div>
           <div class="level-item">
             <b-tooltip v-if="table.actions.delete" :label="table.actions.delete.title">
               <b-button icon-left="trash" @click="deleteTable(table)" type="is-text" />

@@ -1,11 +1,13 @@
 import { GraphPointer } from 'clownface'
-import { csvw, schema, rdf } from '@tpluscode/rdf-ns-builders'
+import { csvw, schema, rdf, xsd } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import { ResourceStore } from '../../ResourceStore'
 import * as id from '../identifiers'
 import { resourceStore } from '../resources'
 import { NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
+
+const trueTerm = $rdf.literal('true', xsd.boolean)
 
 interface CreateTableCommand {
   tableCollection: GraphPointer<NamedNode>
@@ -40,6 +42,10 @@ export async function createTable({
   table.addOut(schema.name, label)
   table.addOut(cc.identifierTemplate, resource.out(cc.identifierTemplate))
   table.addOut(schema.color, resource.out(schema.color))
+
+  if (trueTerm.equals(resource.out(cc.isObservationTable).term)) {
+    table.addOut(rdf.type, cc.ObservationTable)
+  }
 
   // Create default column mappings for provided columns
   resource.out(csvw.column)
