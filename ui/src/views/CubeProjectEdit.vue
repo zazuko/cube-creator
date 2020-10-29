@@ -14,7 +14,7 @@ import { namespace } from 'vuex-class'
 import { Project } from '../types'
 import SidePane from '@/components/SidePane.vue'
 
-const projectNS = namespace('projects')
+const projectNS = namespace('project')
 
 @Component({
   components: { SidePane },
