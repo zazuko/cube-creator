@@ -1,5 +1,10 @@
 <template>
-  <b-field v-if="property && !isHidden" :label="property.name" :message="property.shape.description">
+  <b-field v-if="property && !isHidden" :label="property.name" :addons="false">
+    <b-field v-if="property.shape.description">
+      <p class="help">
+        {{ property.shape.description }}
+      </p>
+    </b-field>
     <b-field v-if="property.selectedEditor">
       <render-wc-func :f="renderMultiEditor" :args="[null]" />
     </b-field>
