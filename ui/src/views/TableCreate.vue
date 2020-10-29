@@ -7,6 +7,18 @@
 
       <cc-form :resource.prop="resource" :shapes.prop="shapes" no-editor-switches />
 
+      <b-field label="Mapped columns" v-if="preselectedColumns.length > 0" class="content" :addons="false">
+        <p class="help">
+          The following columns will be mapped with default values.
+          They can be edited once the table is created.
+        </p>
+        <ul>
+          <li v-for="column in preselectedColumns" :key="column.id.value">
+            {{ column.name }}
+          </li>
+        </ul>
+      </b-field>
+
       <b-field>
         <button type="submit" class="button is-primary">
           {{ operation.title }}
@@ -30,7 +42,7 @@ import { Shape } from '@rdfine/shacl'
 import * as ns from '@cube-creator/core/namespace'
 import SidePane from '@/components/SidePane.vue'
 import { APIErrorValidation } from '@/api/errors'
-import { SourcesCollection, Source } from '../types'
+import { SourcesCollection, Source, CSVColumn } from '../types'
 
 const projectNS = namespace('project')
 
@@ -55,29 +67,14 @@ export default class TableCreateView extends Vue {
     const resource = clownface({ dataset: dataset() }).namedNode('')
 
     // Initialize data based on URL query params
-    const sourceId = this.$router.currentRoute.query.source
-    let columns = this.$router.currentRoute.query.columns || []
-    if (!Array.isArray(columns)) {
-      columns = [columns]
+    const source = this.preselectedSource
+    if (source) {
+      resource.addOut(ns.cc.csvSource, source.id)
     }
 
-    if (sourceId && !Array.isArray(sourceId)) {
-      const source = this.findSource(sourceId)
-      if (source) {
-        resource.addOut(ns.cc.csvSource, source.id)
-
-        columns.forEach((columnId) => {
-          const column = source.columns.find((column) => column.clientPath === columnId)
-          if (column) {
-            resource.addOut(csvw.column, column.id)
-          } else {
-            console.error(`Column not found: ${columnId}`)
-          }
-        })
-      } else {
-        console.error(`Source not found: ${sourceId}`)
-      }
-    }
+    this.preselectedColumns.forEach((column) => {
+      resource.addOut(csvw.column, column.id)
+    })
 
     return resource
   }
@@ -100,6 +97,39 @@ export default class TableCreateView extends Vue {
     }
 
     return shapes
+  }
+
+  get preselectedSource (): Source | null {
+    const sourceId = this.$router.currentRoute.query.source
+
+    if (sourceId && !Array.isArray(sourceId)) {
+      return this.findSource(sourceId)
+    } else {
+      return null
+    }
+  }
+
+  get preselectedColumns (): CSVColumn[] {
+    const source = this.preselectedSource
+
+    if (!source) return []
+
+    let columnIds = this.$router.currentRoute.query.columns || []
+    if (!Array.isArray(columnIds)) {
+      columnIds = [columnIds]
+    }
+
+    return columnIds
+      .map((columnId) => {
+        const column = source.columns.find((column) => column.clientPath === columnId)
+        if (column) {
+          return column
+        } else {
+          console.error(`Column not found: ${columnId}`)
+          return null
+        }
+      })
+      .filter((column): column is CSVColumn => column !== null)
   }
 
   async onSubmit (): Promise<void> {
