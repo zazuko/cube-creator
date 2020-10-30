@@ -23,7 +23,7 @@ export async function create({
   }
 
   const csvMappingResource = await store.get(csvMapping)
-  const project = csvMappingResource.out(csvMapping).term
+  const project = csvMappingResource.out(cc.csvMapping).term
   if (project?.termType !== 'NamedNode') {
     throw new Error('Project is missing')
   }

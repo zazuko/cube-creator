@@ -22,7 +22,7 @@ cc:JobCollection
           a
             code:EcmaScript ;
           code:link
-            <file:handlers/csv-mapping#transform> ;
+            <file:handlers/jobs#transform> ;
         ] ;
     ]
 .

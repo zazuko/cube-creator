@@ -31,6 +31,7 @@ export async function createProject({
     const mapping = store
       .create(id.csvMapping(project))
       .addOut(rdf.type, cc.CsvMapping)
+      .addOut(cc.csvMapping, project)
 
     project.addOut(cc.csvMapping, mapping)
 
