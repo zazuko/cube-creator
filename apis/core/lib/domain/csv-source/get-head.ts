@@ -15,7 +15,7 @@ export async function getCSVHead({
   store = resourceStore(),
 }: GetCSVHeadCommand): Promise<string> {
   const csvSource = await store.get(resource)
-  const path = csvSource.out(schema.associatedMedia).out(schema.identifier).term
+  const path = csvSource?.out(schema.associatedMedia).out(schema.identifier).term
     ?.value
 
   if (!path) {

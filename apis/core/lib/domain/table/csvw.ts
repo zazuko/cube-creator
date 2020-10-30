@@ -7,6 +7,7 @@ import { csvw, xsd } from '@tpluscode/rdf-ns-builders'
 import { NamedNode } from 'rdf-js'
 import { ResourceStore } from '../../ResourceStore'
 import { resourceStore } from '../resources'
+import { NotFoundError } from '../../errors'
 
 RdfResource.factory.addMixin(...Object.values(Csvw))
 
@@ -19,8 +20,18 @@ export async function createCsvw({
   tableResource,
   resources = resourceStore(),
 }: Command) {
-  const table = new TableMixin.Class(await resources!.get(tableResource))
-  const source = new CsvSourceMixin.Class(await resources!.get(table.csvSource.id))
+  const tablePointer = await resources.get(tableResource)
+  if (!tablePointer) {
+    throw new Error(`Resource <${tableResource}> not found`)
+  }
+
+  const table = new TableMixin.Class(tablePointer)
+  const sourcePointer = await resources.get(table.csvSource.id)
+  if (!sourcePointer) {
+    throw new NotFoundError(table.csvSource.pointer)
+  }
+
+  const source = new CsvSourceMixin.Class(sourcePointer)
 
   return new Csvw.TableMixin.Class(cf({ dataset: $rdf.dataset(), term: table.csvw.id }), {
     url: source.id.value,

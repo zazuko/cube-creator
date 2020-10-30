@@ -12,7 +12,9 @@ describe('domain/table/create', () => {
   const tableCollection = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('tables') }).addOut(cc.csvMapping, $rdf.namedNode('myCsvMapping'))
 
   beforeEach(() => {
-    store = new TestResourceStore([])
+    store = new TestResourceStore([
+      tableCollection,
+    ])
   })
 
   it('creates identifier by slugifying schema:name', async () => {

@@ -23,6 +23,7 @@ export async function deleteSource({
 
 export async function deleteSourceWithoutSave(resource: NamedNode<string>, store: ResourceStore): Promise<void> {
   const csvSource = await store.get(resource)
+  if (!csvSource) return
 
   // TODO: Delete Tables or prevent it
   // Find related tables
@@ -38,7 +39,9 @@ export async function deleteSourceWithoutSave(resource: NamedNode<string>, store
   const csvMapping = csvSource.out(cc.csvMapping).term
   if (csvMapping) {
     const csvMappingGraph = await store.get(csvMapping.value)
-    csvMappingGraph.dataset.delete($rdf.quad(csvMappingGraph.term, cc.csvSource, csvSource.term))
+    if (csvMappingGraph) {
+      csvMappingGraph.dataset.delete($rdf.quad(csvMappingGraph.term, cc.csvSource, csvSource.term))
+    }
   }
 
   // Delete Graph

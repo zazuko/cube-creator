@@ -2,6 +2,7 @@ import { describe, it } from 'mocha'
 import express from 'express'
 import request from 'supertest'
 import $rdf from 'rdf-ext'
+import DatasetExt from 'rdf-ext/lib/Dataset'
 import { NamedNode } from 'rdf-js'
 import { hydra, rdf, rdfs, sh } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
@@ -13,7 +14,7 @@ import { ex } from '../support/namespace'
 import { TestResourceStore } from '../support/TestResourceStore'
 
 describe('middleware/shacl', () => {
-  const testResourceStore = (resources: GraphPointer<NamedNode>[]) => () => new TestResourceStore(resources)
+  const testResourceStore = (resources: GraphPointer<NamedNode, DatasetExt>[]) => () => new TestResourceStore(resources)
   const loadResourcesTypes = async () => []
 
   it('calls next middleware when operation does not expect shape', async () => {

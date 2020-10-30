@@ -1,47 +1,35 @@
-import { NamedNode } from 'rdf-js'
-import $rdf from 'rdf-ext'
-import clownface, { GraphPointer } from 'clownface'
+import { NamedNode, Stream } from 'rdf-js'
+import DatasetExt from 'rdf-ext/lib/Dataset'
+import { GraphPointer } from 'clownface'
 import TermMap from '@rdfjs/term-map'
-import Impl, { ResourceStore } from '../../lib/ResourceStore'
-import TermSet from '@rdfjs/term-set'
+import ResourceStore from '../../lib/ResourceStore'
 
-export class TestResourceStore implements ResourceStore {
-  private readonly resources: TermMap<NamedNode, GraphPointer<NamedNode>>
-  private readonly __deletedGraphs: TermSet
+class InMemoryStorage {
+  private readonly __resources: TermMap<NamedNode, GraphPointer<NamedNode, DatasetExt>>
 
-  constructor(pointers: GraphPointer<NamedNode>[]) {
-    this.resources = new TermMap()
-    this.__deletedGraphs = new TermSet()
+  constructor(pointers: GraphPointer<NamedNode, DatasetExt>[]) {
+    this.__resources = new TermMap()
     for (const pointer of pointers) {
-      this.resources.set(pointer.term, pointer)
+      this.__resources.set(pointer.term, pointer)
     }
   }
 
-  get(id: string | NamedNode): Promise<GraphPointer<NamedNode>> {
-    const resource = this.resources.get(typeof id === 'string' ? $rdf.namedNode(id) : id)
-    if (!resource) {
-      return Promise.resolve(clownface({ dataset: $rdf.dataset() }).namedNode(id))
+  async loadResource(term: NamedNode): Promise<GraphPointer<NamedNode, DatasetExt> | undefined> {
+    return this.__resources.get(term)
+  }
+
+  async writeResources(stream: Stream): Promise<void> {}
+
+  deleteResources(terms: Iterable<NamedNode>): Promise<void> {
+    for (const id of terms) {
+      this.__resources.delete(id)
     }
-
-    return Promise.resolve(resource)
-  }
-
-  create(id: NamedNode): GraphPointer<NamedNode> {
-    return clownface({ dataset: $rdf.dataset() }).namedNode(id)
-  }
-
-  async createMember(collection: NamedNode, id: NamedNode): Promise<GraphPointer<NamedNode>> {
-    return Impl.prototype.createMember.call(this, collection, id)
-  }
-
-  save(): Promise<void> {
-    this.__deletedGraphs.forEach((id) => this.resources.delete(id as NamedNode))
-    this.__deletedGraphs.clear()
-
     return Promise.resolve()
   }
+}
 
-  delete(id: NamedNode): void {
-    this.__deletedGraphs.add(id)
+export class TestResourceStore extends ResourceStore {
+  constructor(pointers: GraphPointer<NamedNode, DatasetExt>[]) {
+    super(new InMemoryStorage(pointers))
   }
 }
