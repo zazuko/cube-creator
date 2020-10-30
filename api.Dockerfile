@@ -6,6 +6,7 @@ ADD package.json yarn.lock ./
 ADD ./apis/core/package.json ./apis/core/
 ADD ./packages/core/package.json ./packages/core/
 ADD ./packages/model/package.json ./packages/model/
+ADD ./packages/testing/package.json ./packages/testing/
 
 # for every new package foo add:
 # ADD ./packages/foo/package.json ./packages/foo/
@@ -27,6 +28,7 @@ ADD package.json yarn.lock ./
 ADD ./apis/core/package.json ./apis/core/
 ADD ./packages/core/package.json ./packages/core/
 ADD ./packages/model/package.json ./packages/model/
+ADD ./packages/testing/package.json ./packages/testing/
 
 # for every new package foo add
 #ADD ./packages/foo/package.json ./packages/foo/

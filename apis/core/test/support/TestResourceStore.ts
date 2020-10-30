@@ -18,6 +18,7 @@ class InMemoryStorage {
     return this.__resources.get(term)
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   async writeResources(stream: Stream): Promise<void> {}
 
   deleteResources(terms: Iterable<NamedNode>): Promise<void> {
