@@ -3,10 +3,9 @@ import { NamedNode } from 'rdf-js'
 import fetch from 'node-fetch'
 import env from '@cube-creator/core/env'
 
-
 const pipelineURI = env.PIPELINE_URI
 
-export async function triggerPipeline(job: NamedNode) {
+export async function triggerPipeline(job: NamedNode): Promise<void> {
   if (!job) {
     throw new Error('Job URI missing')
   }
@@ -14,8 +13,13 @@ export async function triggerPipeline(job: NamedNode) {
     JOB_URI: job.value,
   })
 
-  return fetch(pipelineURI, {
+  const res = await fetch(pipelineURI, {
     method: 'POST',
     body: form,
   })
+
+  if (res.status !== 201) {
+    const message = await res.text()
+    throw new Error(`Pipeline failed: ${message}`)
+  }
 }

@@ -12,6 +12,7 @@ export const transform = protectedResource(
     })
 
     await triggerPipeline(job.term)
+
     res.status(201)
     res.header('Location', job.value)
     await res.dataset(job.dataset)
