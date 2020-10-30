@@ -17,7 +17,7 @@ import { resourceStore } from '../resources'
 import { sampleValues } from '../csv/sample-values'
 
 interface UploadCSVCommand {
-  file: Readable
+  file: Readable | Buffer
   fileName: string
   resource: NamedNode
   store?: ResourceStore
