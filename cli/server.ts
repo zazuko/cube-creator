@@ -34,15 +34,10 @@ async function main() {
       res.status(400)
       return res.send('No job definded')
     }
-    try {
-      await tranform({ to: 'graph-store', job, debug: true })
-    } catch (error) {
-      res.status(500)
-      return res.send(error.message)
-    }
 
-    res.status(201)
-    return res.send()
+    tranform({ to: 'graph-store', job, debug: true }).catch((e) => log(e))
+
+    return res.status(202).end()
   })
 
   app.listen(45680, () => log('Api ready'))
