@@ -26,7 +26,7 @@ export function loadFileHeadString(
         string = string.substring(0, string.lastIndexOf('\n'))
       }
 
-      const newLines = string.split('\n')
+      const newLines = string.trim().split('\n')
       // always keep the 1st line
       if (lines.length === 0) {
         lines.push(newLines.shift() as string)
