@@ -27,7 +27,7 @@ export const post = labyrinth.protectedResource(
       : new Date().toISOString()
 
     const fileLocation = await uploadFile({
-      file: req.read(),
+      file: req,
       fileName: fileName,
       resource: csvMapping,
     })
