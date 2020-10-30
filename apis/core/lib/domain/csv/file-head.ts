@@ -8,7 +8,7 @@ export function loadFileHeadString(
   let partialLine = ''
   stream.on('readable', () => {
     let chunk
-    while ((chunk = stream.read()) !== null) {
+    while ((chunk = stream.read(1000)) !== null) {
       let string = chunk.toString()
       if (!string.includes('\n')) {
         // continue reading until we reach the first \n
