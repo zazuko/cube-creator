@@ -6,6 +6,7 @@ import * as id from '../identifiers'
 import { resourceStore } from '../resources'
 import { NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
+import { NotFoundError } from '../../errors'
 
 const trueTerm = $rdf.literal('true', xsd.boolean)
 
@@ -35,6 +36,9 @@ export async function createTable({
 
   const csvSourceId = resource.out(cc.csvSource).term! as NamedNode
   const csvSource = await store.get(csvSourceId)
+  if (!csvSource) {
+    throw new NotFoundError(csvSourceId)
+  }
 
   table.addOut(rdf.type, cc.Table)
   table.addOut(cc.csvSource, csvSourceId)
