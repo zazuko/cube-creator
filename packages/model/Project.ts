@@ -6,12 +6,14 @@ import { cc } from '@cube-creator/core/namespace'
 import { NamedNode } from 'rdf-js'
 import { dcterms } from '@tpluscode/rdf-ns-builders'
 import { initializer } from './lib/initializer'
+import { childResource } from './lib/resourceIdentifiers'
 
 export interface Project extends RdfResourceCore {
   csvMapping?: CsvMapping
-  cube?: NamedNode
+  dataset: NamedNode
+  cubeGraph: NamedNode
   creator: NamedNode
-  label?: string
+  label: string
 }
 
 export function ProjectMixin<Base extends Constructor>(base: Base) {
@@ -20,8 +22,11 @@ export function ProjectMixin<Base extends Constructor>(base: Base) {
     @property.resource({ as: [CsvMappingMixin] })
     csvMapping?: CsvMapping
 
-    @property()
-    cube?: NamedNode
+    @property({ initial: childResource('dataset') })
+    dataset!: NamedNode
+
+    @property({ initial: childResource('cube-data') })
+    cubeGraph!: NamedNode
 
     @property({ path: dcterms.creator })
     creator!: NamedNode

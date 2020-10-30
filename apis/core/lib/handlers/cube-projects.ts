@@ -1,4 +1,5 @@
 import asyncMiddleware from 'middleware-async'
+import clownface from 'clownface'
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
 import { shaclValidate } from '../middleware/shacl'
 import { createProject } from '../domain/cube-projects/create'
@@ -13,8 +14,8 @@ export const post = protectedResource(
       throw new Error('User is not defined')
     }
 
-    const project = await createProject({
-      projectsCollection: req.hydra.resource.term,
+    const { pointer: project } = await createProject({
+      projectsCollection: clownface(req.hydra.resource),
       resource: await req.resource(),
       user,
     })

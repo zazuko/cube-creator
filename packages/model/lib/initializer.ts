@@ -11,12 +11,14 @@ type OptionalFields<T, TOptional extends Extract<keyof T, string>> = Pick<Initia
 type InitializerFunction<T, TRequired extends Extract<keyof T, string> = never, TOptional extends Extract<keyof T, string> = never> =
     (pointer: GraphPointer<NamedNode>, init: MandatoryFields<T, TRequired> & OptionalFields<T, TOptional> & Omit<Initializer<T>, keyof TRequired | keyof TOptional>) => T
 
-export function initializer<T>(mixin: Mixin): (pointer: GraphPointer<NamedNode>) => T
-export function initializer<T, TRequired extends Extract<keyof T, string>>(mixin: Mixin): (pointer: GraphPointer<NamedNode>, init: MandatoryFields<T, TRequired>) => T
-export function initializer<T, TRequired extends Extract<keyof T, string>, TOptional extends Extract<keyof T, string>>(mixin: Mixin): InitializerFunction<T, TRequired, TOptional>
-export function initializer<T, TRequired extends Extract<keyof T, string>, TOptional extends Extract<keyof T, string>>(mixin: Mixin): InitializerFunction<T, TRequired, TOptional> {
+export function initializer<T>(mixin: Mixin, defaults?: Initializer<T>): (pointer: GraphPointer<NamedNode>) => T
+export function initializer<T, TRequired extends Extract<keyof T, string>>(mixin: Mixin, defaults?: Initializer<T>): (pointer: GraphPointer<NamedNode>, init: MandatoryFields<T, TRequired>) => T
+export function initializer<T, TRequired extends Extract<keyof T, string>, TOptional extends Extract<keyof T, string>>(mixin: Mixin, defaults?: Initializer<T>): InitializerFunction<T, TRequired, TOptional>
+export function initializer<T, TRequired extends Extract<keyof T, string>, TOptional extends Extract<keyof T, string>>(mixin: Mixin, defaults?: Initializer<T>): InitializerFunction<T, TRequired, TOptional> {
   return (pointer, init): T => {
-    const resource = new (mixin(RdfResourceImpl))(pointer, init || {})
+    const combinedInit = { ...(defaults || {}), ...(init || {}) }
+
+    const resource = new (mixin(RdfResourceImpl))(pointer, combinedInit)
     if (mixin.appliesTo) {
       resource.types.add(mixin.appliesTo)
     }

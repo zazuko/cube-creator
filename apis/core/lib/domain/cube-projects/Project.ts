@@ -1,13 +1,14 @@
-import { Project } from '@cube-creator/model'
+import { Project, CsvMapping } from '@cube-creator/model'
 import { Constructor } from '@tpluscode/rdfine'
-import * as CsvMapping from '@cube-creator/model/CsvMapping'
+import { NamedNode } from 'rdf-js'
+import { create as createMapping } from '@cube-creator/model/CsvMapping'
 import { ResourceStore } from '../../ResourceStore'
 import * as id from '../identifiers'
 import '../csv-mapping/CsvMapping'
 import { cc } from '@cube-creator/core/namespace'
 
 interface ApiProject {
-  initializeCsvMapping(store: ResourceStore): void
+  initializeCsvMapping(store: ResourceStore, namespace: NamedNode): CsvMapping
 }
 
 declare module '@cube-creator/model' {
@@ -18,17 +19,20 @@ declare module '@cube-creator/model' {
 
 export default function Mixin<Base extends Constructor<Omit<Project, keyof ApiProject>>>(Resource: Base) {
   class Project extends Resource implements ApiProject {
-    initializeCsvMapping(store: ResourceStore) {
+    initializeCsvMapping(store: ResourceStore, namespace: NamedNode) {
       if (this.csvMapping) {
         throw new Error('CSV Mapping already exists')
       }
 
-      const mapping = CsvMapping.create(store.create(id.csvMapping(this)))
+      const mapping = createMapping(store.create(id.csvMapping(this)), {
+        namespace,
+      })
 
       mapping.initializeSourcesCollection(store)
       mapping.initializeTableCollection(store)
 
       this.csvMapping = mapping
+      return mapping
     }
   }
 

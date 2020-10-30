@@ -20,11 +20,11 @@ async function loadProject(projectUri: string, log: Params['log'], variables: Pa
     throw new Error(`Did not find representation of project ${projectUri}. Server responded ${response?.xhr.status}`)
   }
 
-  if (!representation.root.cube) {
+  if (!representation.root.cubeGraph) {
     throw new Error('Cannot transform project. Missing output cube id')
   }
 
-  variables.set('graph', representation.root.cube.value)
+  variables.set('graph', representation.root.cubeGraph.value)
 
   return representation.root
 }

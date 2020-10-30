@@ -1,8 +1,8 @@
 import chai from 'chai'
 import { NodeShape, NodeShapeMixin, ValidationResult } from '@rdfine/shacl'
 import { ShapeBundle, ValidationResultBundle } from '@rdfine/shacl/bundles'
-import RdfResourceImpl, { Initializer, RdfResource } from '@tpluscode/rdfine/RdfResource'
-import { DatasetCore, Term } from 'rdf-js'
+import RdfResourceImpl, { Initializer, RdfResource, ResourceIdentifier } from '@tpluscode/rdfine/RdfResource'
+import { BlankNode, DatasetCore, NamedNode, Term } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import clownface, { MultiPointer } from 'clownface'
 import Validator, * as Validate from 'rdf-validate-shacl'
@@ -22,8 +22,8 @@ function isRdfine(shapeLike: any): shapeLike is RdfResource {
   return 'equals' in shapeLike && typeof shapeLike.equals === 'function'
 }
 
-function isGraphPointer(shapeLike: any): shapeLike is MultiPointer {
-  return '_context' in shapeLike
+function isGraphPointer(shapeLike: any): shapeLike is MultiPointer<NamedNode | BlankNode> {
+  return '_context' in shapeLike && shapeLike.terms.every(({ termType }: Term) => termType === 'BlankNode' || termType === 'NamedNode')
 }
 
 function isDataset(shapeLike: any): shapeLike is DatasetCore {
@@ -43,7 +43,7 @@ function toJSON(result: Validate.ValidationResult) {
 
 chai.Assertion.addMethod('matchShape', function (shapeInit: Initializer<NodeShape>) {
   const obj = this._obj
-  let targetNode: Term[] = []
+  let targetNode: ResourceIdentifier[] = []
   let resourceDataset: DatasetCore
   if (isRdfine(obj)) {
     resourceDataset = obj.pointer.dataset
@@ -64,12 +64,17 @@ chai.Assertion.addMethod('matchShape', function (shapeInit: Initializer<NodeShap
   const validator = new Validator(shape.pointer.dataset)
   const report = validator.validate(resourceDataset)
 
+  let actual: any[] = []
+  if (!report.conforms && targetNode) {
+    actual = targetNode.map(term => new RdfResourceImpl(clownface({ dataset: resourceDataset, term })).toJSON())
+  }
+
   this.assert(
     report.conforms,
-    'Expected graph to conform to the given shape graph',
+    'SHACL Validation errors were found:\n' + JSON.stringify(report.results.map(toJSON), null, 2),
     'Expected graph not to conform to the given shape graph',
-    [],
-    report.results.map(toJSON),
+    shape.toJSON(),
+    actual,
     true,
   )
 })

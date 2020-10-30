@@ -27,7 +27,9 @@ type CubeCreatorProperty =
   'tables' |
   'identifierTemplate' |
   'project' |
-  'cube' |
+  'dataset' |
+  'namespace' |
+  'cubeGraph' |
   'columnMapping' |
   'sourceColumn' |
   'targetProperty' |

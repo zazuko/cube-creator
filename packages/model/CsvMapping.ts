@@ -6,8 +6,10 @@ import { CsvSource } from './CsvSource'
 import { Table } from './Table'
 import { Link } from './lib/Link'
 import { initializer } from './lib/initializer'
+import { NamedNode } from 'rdf-js'
 
 export interface CsvMapping extends RdfResourceCore {
+  namespace: NamedNode
   sources: CsvSource[]
   sourcesCollection: Link<Collection<CsvSource>>
   tableCollection: Link<Collection<Table>>
@@ -15,6 +17,9 @@ export interface CsvMapping extends RdfResourceCore {
 
 export function CsvMappingMixin<Base extends Constructor>(base: Base) {
   class Impl extends base implements Partial<CsvMapping> {
+    @property({ path: cc.namespace })
+    namespace!: NamedNode
+
     @property.resource({ path: cc.csvSource, values: 'array' })
     sources!: CsvSource[]
 
@@ -30,4 +35,6 @@ export function CsvMappingMixin<Base extends Constructor>(base: Base) {
 
 CsvMappingMixin.appliesTo = cc.CsvMapping
 
-export const create = initializer<CsvMapping>(CsvMappingMixin)
+type RequiredProperties = 'namespace'
+
+export const create = initializer<CsvMapping, RequiredProperties>(CsvMappingMixin)
