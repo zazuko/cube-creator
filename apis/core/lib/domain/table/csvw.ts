@@ -49,7 +49,7 @@ export async function createCsvw({
       types: [csvw.Dialect],
     },
     tableSchema: {
-      aboutUrl: `${namespace}{pollutant_id}/observation/{station_id}-{year}-{aggregation_id}`,
+      aboutUrl: `${namespace}observation/{station_id}-{year}-{aggregation_id}`,
       column: [{
         title: 'unit_id',
         datatype: xsd.string,
@@ -58,6 +58,10 @@ export async function createCsvw({
         virtual: true,
         propertyUrl: cc.cube.value,
         valueUrl: namespace,
+      }, {
+        title: 'pollutant_id',
+        valueUrl: `${namespace}pollutant/{pollutant_id}`,
+        propertyUrl: `${namespace}pollutant`,
       }, {
         title: 'aggregation_id',
         valueUrl: `${namespace}aggregation/{aggregation_id}`,
