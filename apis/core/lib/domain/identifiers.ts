@@ -11,6 +11,10 @@ export function cubeProject(label: string): NamedNode {
   return $rdf.namedNode(`${env.API_CORE_BASE}cube-project/${url.slugify(label)}`)
 }
 
+export function cube(project: Project): NamedNode {
+  return $rdf.namedNode(`${env.API_CORE_BASE}cube/${project.identifier}`)
+}
+
 export function csvMapping(project: Project): NamedNode {
   return $rdf.namedNode(`${project.id.value}/csv-mapping`)
 }

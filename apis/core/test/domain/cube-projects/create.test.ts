@@ -8,6 +8,7 @@ import { cc, cube, shape } from '@cube-creator/core/namespace'
 import { createProject } from '../../../lib/domain/cube-projects/create'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import '../../../lib/domain'
+import env from '@cube-creator/core/env'
 
 describe('domain/cube-projects/create', () => {
   let store: TestResourceStore
@@ -145,6 +146,29 @@ describe('domain/cube-projects/create', () => {
           nodeKind: sh.IRI,
           minCount: 1,
           maxCount: 1,
+        }],
+      })
+    })
+
+    it('generates a mapping namespace if none was given', async () => {
+      // given
+      const resource = clownface({ dataset: $rdf.dataset() })
+        .namedNode('')
+        .addOut(rdfs.label, 'Foo bar project')
+        .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
+
+      // when
+      const project = await createProject({ resource, store, projectsCollection, user })
+
+      // then
+      const csvMapping = await store.get(project.csvMapping?.id as NamedNode)
+      expect(csvMapping).to.matchShape({
+        property: [{
+          path: cc.namespace,
+          nodeKind: sh.IRI,
+          minCount: 1,
+          maxCount: 1,
+          pattern: `^${env.API_CORE_BASE}cube/foo-bar-project-.+$`,
         }],
       })
     })
