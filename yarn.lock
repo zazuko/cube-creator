@@ -2476,10 +2476,10 @@
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
-"@zazuko/rdf-vocabularies@^2020.11.2":
-  version "2020.11.2"
-  resolved "https://registry.yarnpkg.com/@zazuko/rdf-vocabularies/-/rdf-vocabularies-2020.11.2.tgz#d82190f4556e47213744bd5d35106f4316ef9adf"
-  integrity sha512-RhTeKHVX0Deb/qHPeoO2JT9uRmN0HTzGUtzUpe7MJQneYA9wHOOROC+lsEmq+YNGJ0oZtiNc0HZofIbMhd6T7g==
+"@zazuko/rdf-vocabularies@^2020.11.2", "@zazuko/rdf-vocabularies@^2020.11.3":
+  version "2020.11.3"
+  resolved "https://registry.yarnpkg.com/@zazuko/rdf-vocabularies/-/rdf-vocabularies-2020.11.3.tgz#9a24b02e5bff395e1288d915d543df581363e46a"
+  integrity sha512-dnpyKzD+3zt9okbfp0vpHdxgXe3FzxFDQuXXdiI7GNErtbZTwwOPALl/951SGKqk5yvnzB5HN1GaP8i8Te52ug==
   dependencies:
     "@rdfjs/parser-n3" "^1.1.2"
     commander "^5.0.0"
