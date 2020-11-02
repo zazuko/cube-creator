@@ -3,7 +3,6 @@ import { ResourceStore } from '../../ResourceStore'
 import { resourceStore } from '../resources'
 import { cc } from '@cube-creator/core/namespace'
 
-
 interface DeleteTableCommand {
   resource: NamedNode
   store?: ResourceStore
