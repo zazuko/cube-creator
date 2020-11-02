@@ -35,7 +35,8 @@ type CubeCreatorProperty =
   'targetProperty' |
   'datatype' |
   'language' |
-  'isObservationTable'
+  'isObservationTable' |
+  'cube'
 
 type OtherTerms =
   'dash'
