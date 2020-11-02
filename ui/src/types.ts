@@ -1,53 +1,65 @@
 import { Collection, Resource, RuntimeOperation } from 'alcaeus'
+import { Term } from 'rdf-js'
 
-export interface ProjectsCollection extends Collection {
-  actions: {
-    create: RuntimeOperation | null,
-  };
+export interface CommonActions {
+  create: RuntimeOperation | null,
+  edit: RuntimeOperation | null,
+  delete: RuntimeOperation | null,
 }
 
-export interface SourcesCollection extends Collection {
-  actions: {
-    upload: RuntimeOperation | null,
-  };
+export interface APIResource extends Resource {
+  clientPath: string;
 }
 
-export interface TableCollection extends Collection {
-  actions: {
-    create: RuntimeOperation | null,
-  };
-}
-
-export interface CSVMapping extends Resource {
-  actions: Record<string, unknown>;
-  sourcesCollection: SourcesCollection;
-  tableCollection: TableCollection;
-}
-
-export interface Project extends Resource {
-  actions: Record<string, unknown>;
-  csvMapping: null | CSVMapping;
-}
-
-export interface CSVColumn extends Resource {
-  actions: Record<string, unknown>;
+export interface CSVColumn extends APIResource {
+  actions: CommonActions;
   name: string;
   order: number;
   sampleValues: string[];
 }
 
-export interface Source extends Resource {
-  actions: {
-    delete: RuntimeOperation | null,
-  };
+export interface Source extends APIResource {
+  actions: CommonActions;
   name: string;
   columns: CSVColumn[];
 }
 
-export interface Table extends Resource {
-  actions: {
-    delete: RuntimeOperation | null,
+export interface SourcesCollection extends Collection<Source> {
+  actions: CommonActions & {
+    upload: RuntimeOperation | null,
   };
+}
+
+export interface ColumnMapping extends APIResource {
+  sourceColumn: CSVColumn;
+  targetProperty: Term;
+  datatype: Term | null;
+  language: string | null;
+}
+
+export interface Table extends APIResource {
+  actions: CommonActions;
   name: string;
   source: Source;
+  color: string;
+  columnMappings: ColumnMapping[];
+}
+
+export interface TableCollection extends Collection<Table> {
+  actions: CommonActions;
+}
+
+export interface CSVMapping extends APIResource {
+  actions: CommonActions;
+  sourcesCollection: SourcesCollection;
+  tableCollection: TableCollection;
+}
+
+export interface Project extends APIResource {
+  actions: CommonActions;
+  csvMapping: null | CSVMapping;
+}
+
+export interface ProjectsCollection extends Collection<Project> {
+  actions: CommonActions;
 }

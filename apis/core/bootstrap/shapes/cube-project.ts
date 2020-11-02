@@ -13,7 +13,7 @@ ${shape('cube-project/create')} {
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
       ${sh.minLength} 1 ;
-      ${sh.order} 0 ;
+      ${sh.order} 10 ;
     ] ;
     ${sh.property} [
       ${sh.name} "Start project from" ;
@@ -26,7 +26,14 @@ ${shape('cube-project/create')} {
         ${shape('cube-project/create#ExistingCube')}
       ) ;
       ${sh.defaultValue} ${shape('cube-project/create#CSV')} ;
-      ${sh.order} 1 ;
+      ${sh.order} 20 ;
+    ] ;
+    ${sh.property} [
+      ${sh.name} "Cube namespace" ;
+      ${sh.path} ${cc.namespace} ;
+      ${sh.maxCount} 1 ;
+      ${sh.nodeKind} ${sh.IRI} ;
+      ${sh.order} 30 ;
     ] ;
   .
 

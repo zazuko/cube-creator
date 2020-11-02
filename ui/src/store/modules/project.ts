@@ -1,11 +1,9 @@
 import { ActionTree, MutationTree, GetterTree } from 'vuex'
 import { api } from '@/api'
 import { RootState } from '../types'
-import * as ns from '@cube-creator/core/namespace'
-import { Project, ProjectsCollection, CSVMapping, SourcesCollection, TableCollection } from '@/types'
+import { Project, CSVMapping, SourcesCollection, TableCollection, Table } from '@/types'
 
-export interface CubeProjectsState {
-  collection: null | ProjectsCollection,
+export interface ProjectState {
   project: null | Project,
   csvMapping: null | CSVMapping,
   sourcesCollection: null | SourcesCollection,
@@ -13,14 +11,13 @@ export interface CubeProjectsState {
 }
 
 const initialState = {
-  collection: null,
   project: null,
   csvMapping: null,
   sourcesCollection: null,
   tableCollection: null,
 }
 
-const getters: GetterTree<CubeProjectsState, RootState> = {
+const getters: GetterTree<ProjectState, RootState> = {
   sources (state) {
     return state.sourcesCollection?.member || []
   },
@@ -28,19 +25,23 @@ const getters: GetterTree<CubeProjectsState, RootState> = {
   tables (state) {
     return state.tableCollection?.member || []
   },
-}
 
-const actions: ActionTree<CubeProjectsState, RootState> = {
-  async fetchCollection (context) {
-    const entrypoint = context.rootState.api.entrypoint
-    const collectionURI = entrypoint?.get(ns.cc.projects)?.id
-
-    if (!collectionURI) throw new Error('Missing projects collection in entrypoint')
-
-    const collection = await api.fetchResource(collectionURI.value)
-    context.commit('storeCollection', collection)
+  findSource (_state, getters) {
+    return (id: string) =>
+      getters.sources.find(({ clientPath }: { clientPath: string}) => clientPath === id)
   },
 
+  columnMappings (state, getters) {
+    return getters.tables.map((table: Table) => table.columnMappings).flat()
+  },
+
+  findColumnMapping (_state, getters) {
+    return (id: string) =>
+      getters.columnMappings.find(({ clientPath }: { clientPath: string}) => clientPath === id)
+  },
+}
+
+const actions: ActionTree<ProjectState, RootState> = {
   async fetchProject (context, id) {
     context.commit('storeProject', null)
 
@@ -75,7 +76,23 @@ const actions: ActionTree<CubeProjectsState, RootState> = {
       throw new Error('Sources collection not loaded')
     }
 
-    return context.dispatch('fetchSourcesCollection', collection.id.value)
+    const freshCollection = await api.fetchResource<SourcesCollection>(collection.id.value)
+    context.commit('storeSourcesCollection', freshCollection)
+
+    return freshCollection
+  },
+
+  async refreshTableCollection (context) {
+    const collection = context.state.tableCollection
+
+    if (!collection) {
+      throw new Error('Table collection not loaded')
+    }
+
+    const freshCollection = await api.fetchResource<TableCollection>(collection.id.value)
+    context.commit('storeTableCollection', freshCollection)
+
+    return freshCollection
   },
 
   async uploadCSVs (context, files) {
@@ -90,11 +107,7 @@ const actions: ActionTree<CubeProjectsState, RootState> = {
 
 }
 
-const mutations: MutationTree<CubeProjectsState> = {
-  storeCollection (state, collection) {
-    state.collection = collection
-  },
-
+const mutations: MutationTree<ProjectState> = {
   storeProject (state, project) {
     state.project = project
   },

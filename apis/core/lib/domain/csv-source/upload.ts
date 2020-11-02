@@ -15,9 +15,10 @@ import { sourceWithFilenameExists } from '../queries/csv-source'
 import { Conflict } from 'http-errors'
 import { resourceStore } from '../resources'
 import { sampleValues } from '../csv/sample-values'
+import { NotFoundError } from '../../errors'
 
 interface UploadCSVCommand {
-  file: Readable
+  file: Readable | Buffer
   fileName: string
   resource: NamedNode
   store?: ResourceStore
@@ -30,6 +31,9 @@ export async function uploadFile({
   store = resourceStore(),
 }: UploadCSVCommand): Promise<GraphPointer> {
   const csvMapping = await store.get(resource)
+  if (!csvMapping) {
+    throw new NotFoundError(resource)
+  }
 
   if (await sourceWithFilenameExists(csvMapping.term, fileName)) {
     throw new Conflict(`A file with ${fileName} has already been added to the project`)

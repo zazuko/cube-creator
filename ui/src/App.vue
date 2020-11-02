@@ -23,35 +23,34 @@
   </div>
 </template>
 
-<script>
-import Vue from 'vue'
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator'
 import NavBar from '@/components/NavBar.vue'
-import { mapState } from 'vuex'
+import { namespace } from 'vuex-class'
 import { APIErrorAuthorization } from './api/errors'
+import { Message } from '@/store/modules/app'
 
-export default Vue.extend({
-  name: 'App',
+const appNS = namespace('app')
+
+@Component({
   components: { NavBar },
+})
+export default class App extends Vue {
+  @appNS.State('loading') isLoading!: boolean
+  @appNS.State('messages') messages!: Message[]
 
-  computed: {
-    ...mapState({
-      isLoading: (state) => state.app.loading,
-      messages: (state) => state.app.messages,
-    }),
-  },
+  dismissMessage (message: Message): void {
+    this.$store.dispatch('app/dismissMessage', message)
+  }
 
-  methods: {
-    dismissMessage (message) {
-      this.$store.dispatch('app/dismissMessage', message)
-    },
-  },
-  errorCaptured (err) {
+  errorCaptured (err: Error): false | void {
     if (err instanceof APIErrorAuthorization) {
-      this.$router.push({ name: 'NotAuthorized', params: { link: err.details?.link.href } })
+      const link = err.details?.link?.href ?? ''
+      this.$router.push({ name: 'NotAuthorized', params: { link } })
       return false
     }
   }
-})
+}
 </script>
 
 <style scoped>

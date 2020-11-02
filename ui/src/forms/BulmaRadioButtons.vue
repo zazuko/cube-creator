@@ -24,11 +24,11 @@ export default class extends Vue {
   @Prop() value?: GraphPointer;
   @Prop() update!: (newValue: Term | string) => void;
 
-  get choices () {
-    return this.options?.terms
+  get choices (): Term[] {
+    return this.options?.terms ?? []
   }
 
-  get message () {
+  get message (): string {
     if (this.value) {
       return this.options?.node(this.value).out(rdfs.comment).values[0] || ''
     }
@@ -36,11 +36,11 @@ export default class extends Vue {
     return ''
   }
 
-  label (value: Term) {
+  label (value: Term): string {
     return this.options?.node(value).out(rdfs.label).values[0] || value.value
   }
 
-  emit (value: string) {
+  emit (value: string): void {
     this.update(value)
   }
 }

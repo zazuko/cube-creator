@@ -1,15 +1,18 @@
 <template>
-  <div>
+  <page-content>
     <h2 class="title">
       Page not found
     </h2>
-  </div>
+  </page-content>
 </template>
 
-<script>
-import Vue from 'vue'
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator'
+import PageContent from '@/components/PageContent.vue'
 
-export default Vue.extend({
-  name: 'PageNotFound',
+@Component({
+  components: { PageContent },
 })
+export default class PageNotFoundView extends Vue {
+}
 </script>

@@ -1,5 +1,5 @@
 import * as Csvw from '@rdfine/csvw'
-import { CsvSourceMixin, TableMixin } from '@cube-creator/model'
+import { CsvMapping, CsvMappingMixin, CsvSourceMixin, TableMixin } from '@cube-creator/model'
 import RdfResource from '@tpluscode/rdfine'
 import cf from 'clownface'
 import $rdf from 'rdf-ext'
@@ -8,8 +8,12 @@ import { NamedNode } from 'rdf-js'
 import { cc } from '@cube-creator/core/namespace'
 import { ResourceStore } from '../../ResourceStore'
 import { resourceStore } from '../resources'
+import { NotFoundError } from '../../errors'
 
-RdfResource.factory.addMixin(...Object.values(Csvw))
+RdfResource.factory.addMixin(
+  ...Object.values(Csvw),
+  CsvMappingMixin,
+)
 
 interface Command {
   tableResource: NamedNode
@@ -20,8 +24,23 @@ export async function createCsvw({
   tableResource,
   resources = resourceStore(),
 }: Command) {
-  const table = new TableMixin.Class(await resources!.get(tableResource))
-  const source = new CsvSourceMixin.Class(await resources!.get(table.csvSource.id))
+  const tablePointer = await resources.get(tableResource)
+  if (!tablePointer) {
+    throw new Error(`Resource <${tableResource}> not found`)
+  }
+
+  const table = new TableMixin.Class(tablePointer)
+  const sourcePointer = await resources.get(table.csvSource.id)
+  if (!sourcePointer) {
+    throw new NotFoundError(table.csvSource.pointer)
+  }
+  const csvMappingPointer = await resources.get(table.csvMapping)
+  if (!csvMappingPointer) {
+    throw new NotFoundError(table.csvMapping)
+  }
+  const { namespace: { value: namespace } } = RdfResource.factory.createEntity<CsvMapping>(csvMappingPointer)
+
+  const source = new CsvSourceMixin.Class(sourcePointer)
 
   return new Csvw.TableMixin.Class(cf({ dataset: $rdf.dataset(), term: table.csvw.id }), {
     url: source.id.value,
@@ -30,48 +49,42 @@ export async function createCsvw({
       types: [csvw.Dialect],
     },
     tableSchema: {
-      types: [csvw.Schema],
-      aboutUrl: 'https://environment.ld.admin.ch/foen/ubd/28/{pollutant_id}/observation/{station_id}-{year}-{aggregation_id}',
+      aboutUrl: `${namespace}observation/{station_id}-{year}-{aggregation_id}`,
       column: [{
-        types: [csvw.Column],
         title: 'unit_id',
         datatype: xsd.string,
-        propertyUrl: 'https://environment.ld.admin.ch/foen/ubd/28/unit-id',
+        propertyUrl: `${namespace}unit-id`,
       }, {
-        types: [csvw.Column],
         virtual: true,
         propertyUrl: cc.cube.value,
-        valueUrl: 'https://environment.ld.admin.ch/foen/ubd/28/{pollutant_id}/',
+        valueUrl: namespace,
       }, {
-        types: [csvw.Column],
+        title: 'pollutant_id',
+        valueUrl: `${namespace}pollutant/{pollutant_id}`,
+        propertyUrl: `${namespace}pollutant`,
+      }, {
         title: 'aggregation_id',
-        valueUrl: 'https://environment.ld.admin.ch/foen/ubd/28/aggregation/{aggregation_id}',
-        propertyUrl: 'https://environment.ld.admin.ch/foen/ubd/28/aggregation',
+        valueUrl: `${namespace}aggregation/{aggregation_id}`,
+        propertyUrl: `${namespace}aggregation`,
       }, {
-        types: [csvw.Column],
         title: 'station_id',
-        valueUrl: 'https://environment.ld.admin.ch/foen/ubd/28/station/{station_id}',
-        propertyUrl: 'https://environment.ld.admin.ch/foen/ubd/28/station',
+        valueUrl: `${namespace}station/{station_id}`,
+        propertyUrl: `${namespace}station`,
       }, {
-        types: [csvw.Column],
         title: 'value',
         datatype: xsd.float,
-        propertyUrl: 'https://environment.ld.admin.ch/foen/ubd/28/dimension/value',
+        propertyUrl: `${namespace}dimension/value`,
       }, {
-        types: [csvw.Column],
         title: 'year',
         datatype: xsd.gYear,
-        propertyUrl: 'https://environment.ld.admin.ch/foen/ubd/28/dimension/year',
+        propertyUrl: `${namespace}dimension/year`,
       }, {
-        types: [csvw.Column],
         suppressOutput: true,
         title: 'pollutant_id',
       }, {
-        types: [csvw.Column],
         suppressOutput: true,
         title: 'limitvalue',
       }, {
-        types: [csvw.Column],
         suppressOutput: true,
         title: 'value_remark',
       }],

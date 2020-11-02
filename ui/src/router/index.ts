@@ -9,8 +9,11 @@ import Authenticated from '@/views/Authenticated.vue'
 import CubeProjects from '@/views/CubeProjects.vue'
 import CubeProject from '@/views/CubeProject.vue'
 import CubeProjectNew from '@/views/CubeProjectNew.vue'
+import CubeProjectEdit from '@/views/CubeProjectEdit.vue'
 import CSVMapping from '@/views/CSVMapping.vue'
 import CSVUpload from '@/views/CSVUpload.vue'
+import TableCreate from '@/views/TableCreate.vue'
+import ColumnMappingEdit from '@/views/ColumnMappingEdit.vue'
 import CubeDesigner from '@/views/CubeDesigner.vue'
 import PageNotFound from '@/views/PageNotFound.vue'
 import Logout from '@/views/Logout.vue'
@@ -43,6 +46,11 @@ const routes: Array<RouteConfig> = [
         component: CubeProject,
         children: [
           {
+            path: 'edit',
+            name: 'CubeProjectEdit',
+            component: CubeProjectEdit,
+          },
+          {
             path: 'csv-mapping',
             name: 'CSVMapping',
             component: CSVMapping,
@@ -51,6 +59,16 @@ const routes: Array<RouteConfig> = [
                 path: 'csv-upload',
                 name: 'CSVUpload',
                 component: CSVUpload,
+              },
+              {
+                path: 'tables/create',
+                name: 'TableCreate',
+                component: TableCreate,
+              },
+              {
+                path: 'column-mappings/:columnMappingId/edit',
+                name: 'ColumnMappingEdit',
+                component: ColumnMappingEdit,
               },
             ],
           },

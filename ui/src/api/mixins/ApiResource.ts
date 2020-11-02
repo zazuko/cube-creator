@@ -11,7 +11,7 @@ export function apiResourceMixin (rootUrl: string, separator: string): Mixin {
   function ApiResourceMixin<Base extends Constructor> (base: Base) {
     class BaseClass extends base {
       get clientPath () {
-        return this.id.value.replace(rootUrl, '').replace('/', separator)
+        return this.id.value.replace(rootUrl, '').replaceAll('/', separator)
       }
     }
 

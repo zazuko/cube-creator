@@ -1,15 +1,46 @@
-BASE          <urn:hydra-box:api>
-PREFIX cc:    <https://cube-creator.zazuko.com/vocab#>
-prefix hydra: <http://www.w3.org/ns/hydra/core#>
-prefix code:  <https://code.described.at/>
-prefix query: <http://hypermedia.app/query#>
-prefix sh:    <http://www.w3.org/ns/shacl#>
+BASE           <urn:hydra-box:api>
+PREFIX cc:     <https://cube-creator.zazuko.com/vocab#>
+prefix hydra:  <http://www.w3.org/ns/hydra/core#>
+prefix code:   <https://code.described.at/>
+prefix query:  <http://hypermedia.app/query#>
+prefix sh:     <http://www.w3.org/ns/shacl#>
+PREFIX schema: <http://schema.org/>
 
 cc:CubeProject
   a
     hydra:Class ;
   query:include
-    cc:csvMapping .
+    cc:csvMapping ;
+  hydra:supportedProperty
+    [ hydra:property
+        cc:dataset ],
+    [ hydra:property
+        cc:csvMapping ] ;
+  hydra:supportedOperation
+    [
+      a
+        hydra:Operation,
+        schema:DeleteAction ;
+      hydra:title
+        "Delete Project" ;
+      hydra:method
+        "DELETE" ;
+      code:implementedBy
+        [
+          a
+            code:EcmaScript ;
+          code:link
+            <file:handlers/cube-projects#remove> ;
+        ] ;
+    ] .
+
+cc:csvMapping
+  a
+    hydra:Link .
+
+cc:dataset
+  a
+    hydra:Link .
 
 cc:ProjectsCollection
   a
@@ -18,7 +49,7 @@ cc:ProjectsCollection
     [
       a
         hydra:Operation,
-        cc:CreateProjectAction ;
+        schema:CreateAction ;
       hydra:title
         "New project" ;
       hydra:method
@@ -35,4 +66,6 @@ cc:ProjectsCollection
         ] ;
     ] .
 
-<shape/cube-project/create> a sh:Shape .
+<shape/cube-project/create>
+  a
+    sh:Shape .

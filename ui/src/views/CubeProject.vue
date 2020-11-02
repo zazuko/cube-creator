@@ -12,6 +12,14 @@
             <a :href="href" @click="navigate">Cube Designer</a>
           </li>
         </router-link>
+        <router-link :to="{ name: 'CubeProjectEdit' }" v-slot="{ href, isActive, navigate }" v-if="project.actions.delete || project.actions.edit">
+          <li :class="{ 'is-active': isActive }" class="tab-right">
+            <a :href="href" @click="navigate">
+              <b-icon icon="cog" />
+              Project settings
+            </a>
+          </li>
+        </router-link>
       </ul>
     </div>
 
@@ -27,18 +35,20 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { mapState } from 'vuex'
+import { Component, Vue } from 'vue-property-decorator'
+import { State } from 'vuex-class'
 import { Project } from '@/types'
 import PageContent from '@/components/PageContent.vue'
 
-export default Vue.extend({
-  name: 'CubeProject',
+@Component({
   components: { PageContent },
+})
+export default class CubeProjectView extends Vue {
+  @State('project', { namespace: 'project' }) project!: Project | null;
 
-  async mounted () {
+  async mounted (): Promise<void> {
     const id = this.$router.currentRoute.params.id
-    await this.$store.dispatch('cubeProjects/fetchProject', id)
+    await this.$store.dispatch('project/fetchProject', id)
 
     if (this.$router.currentRoute.name === 'CubeProject') {
       if (this.hasCSVMapping) {
@@ -47,22 +57,24 @@ export default Vue.extend({
         this.$router.push({ name: 'CubeDesigner' })
       }
     }
-  },
-
-  computed: {
-    ...mapState({
-      project: (state: any): Project => state.cubeProjects.project,
-    }),
-
-    hasCSVMapping () {
-      return this.project?.csvMapping
-    },
   }
-})
+
+  get hasCSVMapping (): boolean {
+    return !!this.project?.csvMapping
+  }
+}
 </script>
 
 <style scoped>
 .tabs.project-tabs {
   margin-bottom: 0;
+}
+
+.tab-right {
+  margin-left: auto;
+}
+
+.tab-right ~ .tab-right {
+  margin-left: 0;
 }
 </style>

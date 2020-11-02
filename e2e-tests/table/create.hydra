@@ -1,0 +1,90 @@
+PREFIX api: <https://cube-creator.zazuko.com/vocab#>
+PREFIX hydra: <http://www.w3.org/ns/hydra/core#>
+PREFIX cc: <https://cube-creator.zazuko.com/vocab#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX schema: <http://schema.org/>
+
+HEADERS {
+  x-user "john-doe"
+  x-permission "pipelines:write"
+}
+
+With Class api:EntryPoint {
+    Expect Property cc:projects {
+        With Operation cc:CreateProjectAction {
+            Invoke {
+                Content-Type "text/turtle"
+
+                ```
+                prefix cc: <https://cube-creator.zazuko.com/vocab#>
+                prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+                <> cc:projectSourceKind <https://cube-creator.lndo.site/shape/cube-project/create#CSV> ;
+                   rdfs:label "Test Project" ;
+                   cc:namespace <http://example.com/test-cube/> .
+                ```
+            } => {
+                Expect Status 201
+                Expect Link cc:csvMapping {
+                    Expect Property cc:csvSourceCollection {
+                        Expect Operation cc:UploadCSVAction {
+                            Invoke {
+                                Content-Type "text/csv"
+                                Content-Disposition "file; filename=test.jpg"
+
+                                ```
+                                A,B,C
+                                1,2,test
+                                1,2,test
+                                1,2,test1
+                                1,2,test2
+                                .
+                                ```
+                            } => {
+                                Expect Status 201
+                                With Operation cc:CreateTableAction {
+                                    Invoke {
+                                        Content-Type "application/ld+json"
+
+                                        ```
+                                        {
+                                            "id": "",
+                                            "https://cube-creator.zazuko.com/vocab#csvSource": {
+                                                "id": "https://cube-creator.lndo.site/cube-project/asd-d5yndl4wykm/csv-mapping/csv-source/chyearlyairimmissionbasetable-csv-awrngqnk8ly",
+                                                "type": [
+                                                    "https://cube-creator.zazuko.com/vocab#CSVSource"
+                                                ]
+                                            },
+                                            "https://cube-creator.zazuko.com/vocab#columnMapping": {
+                                                "id": "_:b1",
+                                                "https://cube-creator.zazuko.com/vocab#column": {
+                                                    "id": "https://cube-creator.lndo.site/cube-project/asd-d5yndl4wykm/csv-mapping/csv-source/chyearlyairimmissionbasetable-csv-awrngqnk8ly/column/value-zkwzlnnpox9"
+                                                }
+                                            },
+                                            "http://schema.org/name": "abc",
+                                            "https://cube-creator.zazuko.com/vocab#identifierTemplate": "def",
+                                            "http://schema.org/color": "#CE93D8",
+                                            "@context": {
+                                                "id": "@id",
+                                                "type": "@type"
+                                            }
+                                        }
+                                        ```
+                                    } => {
+                                        Expect Status 201
+
+                                        Expect Property schema:color "#CE93D8"
+                                        Expect Link cc:csvMapping {
+                                            Expect Type <https://cube-creator.zazuko.com/vocab#CsvMapping>
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

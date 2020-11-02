@@ -1,5 +1,5 @@
 <template>
-  <b-input ref="input" @blur="emit" />
+  <b-input @input="update" />
 </template>
 
 <script lang="ts">
@@ -9,9 +9,5 @@ import { Prop, Component, Vue } from 'vue-property-decorator'
 export default class extends Vue {
   @Prop() value?: string;
   @Prop() update!: (newValue: string) => void
-
-  emit (ev: any): void {
-    this.update(ev.target.value)
-  }
 }
 </script>

@@ -1,6 +1,7 @@
 PREFIX api: <https://cube-creator.zazuko.com/vocab#>
 PREFIX hydra: <http://www.w3.org/ns/hydra/core#>
 PREFIX cc: <https://cube-creator.zazuko.com/vocab#>
+PREFIX schema: <http://schema.org/>
 
 HEADERS {
   x-user "john-doe"
@@ -13,7 +14,7 @@ With Class api:EntryPoint {
 
     Expect Property cc:projects {
         Expect Property hydra:title
-        Expect Operation cc:CreateProjectAction
+        Expect Operation schema:CreateAction
         Expect Type hydra:Collection
     }
 }

@@ -1,11 +1,13 @@
 import { VuexOidcState } from 'vuex-oidc'
 import { AppState } from './modules/app'
 import { APIState } from './modules/api'
-import { CubeProjectsState } from '@/store/modules/cube-projects'
+import { ProjectsState } from '@/store/modules/projects'
+import { ProjectState } from '@/store/modules/project'
 
 export interface RootState {
   app: AppState,
   auth: VuexOidcState,
   api: APIState,
-  cubeProjects: CubeProjectsState,
+  projects: ProjectsState,
+  project: ProjectState,
 }

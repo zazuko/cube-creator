@@ -1,5 +1,10 @@
 <template>
-  <b-field v-if="property" :label="property.name" :message="property.shape.description">
+  <b-field v-if="property && !isHidden" :label="property.name" :addons="false">
+    <b-field v-if="property.shape.description">
+      <p class="help">
+        {{ property.shape.description }}
+      </p>
+    </b-field>
     <b-field v-if="property.selectedEditor">
       <render-wc-func :f="renderMultiEditor" :args="[null]" />
     </b-field>
@@ -18,6 +23,7 @@
 import { Prop, Component, Vue } from 'vue-property-decorator'
 import { PropertyObjectState, PropertyState } from '@hydrofoil/shaperone-core/models/forms'
 import { TemplateResult } from 'lit-element'
+import { dash } from '@tpluscode/rdf-ns-builders'
 import RenderWcFunc from './RenderWcFunc.vue'
 
 @Component({
@@ -30,5 +36,9 @@ export default class extends Vue {
   @Prop() actions!: any;
   @Prop() renderObject!: (object: PropertyObjectState) => TemplateResult;
   @Prop() renderMultiEditor!: () => TemplateResult;
+
+  get isHidden (): boolean {
+    return !!this.property.shape.pointer.out(dash.hidden).value
+  }
 }
 </script>

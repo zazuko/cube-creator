@@ -1,6 +1,7 @@
 import { Hydra } from 'alcaeus/web'
 import { RdfResource, Resource, RuntimeOperation } from 'alcaeus'
 import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
+import { ShapeBundle } from '@rdfine/shacl/bundles'
 import store from '@/store'
 import { APIError } from './errors'
 import { apiResourceMixin } from './mixins/ApiResource'
@@ -12,6 +13,7 @@ import CSVSourceMixin from './mixins/CSVSource'
 import CSVColumnMixin from './mixins/CSVColumn'
 import TableCollectionMixin from './mixins/TableCollection'
 import TableMixin from './mixins/Table'
+import ColumnMappingMixin from './mixins/ColumnMapping'
 
 const rootURL = window.APP_CONFIG.apiCoreBase
 const segmentSeparator = '!!' // used to replace slash in URI to prevent escaping
@@ -32,6 +34,8 @@ Hydra.resources.factory.addMixin(CSVSourceMixin)
 Hydra.resources.factory.addMixin(CSVColumnMixin)
 Hydra.resources.factory.addMixin(TableCollectionMixin)
 Hydra.resources.factory.addMixin(TableMixin)
+Hydra.resources.factory.addMixin(ColumnMappingMixin)
+Hydra.resources.factory.addMixin(...ShapeBundle)
 
 // Inject the access token in all requests if present
 Hydra.defaultHeaders = () => {
@@ -63,7 +67,7 @@ export const api = {
     return resource
   },
 
-  async invokeSaveOperation<T extends Resource = Resource> (operation: RuntimeOperation | null, data: RdfResource | File, headers: Record<string, any> = {}): Promise<T> {
+  async invokeSaveOperation<T extends Resource = Resource> (operation: RuntimeOperation | null, data: RdfResource | File, headers: Record<string, string> = {}): Promise<T> {
     if (!operation) throw new Error('Operation does not exist')
 
     const serializedData = data instanceof File ? data : JSON.stringify(data.toJSON())

@@ -3,7 +3,7 @@ import { expect } from 'chai'
 import { Hydra } from 'alcaeus/node'
 import env from '@cube-creator/core/env'
 import { JobIterator } from '../../lib/job'
-import { insertTestData } from '../support/testData'
+import { insertTestData } from '@cube-creator/testing/lib'
 import { setupEnv } from '../support/env'
 import { Table } from '@rdfine/csvw'
 import { log } from '../support/logger'
@@ -17,7 +17,7 @@ describe('lib/job', function () {
 
   before(async () => {
     setupEnv()
-    await insertTestData()
+    await insertTestData('fuseki/sample-ubd.trig')
   })
 
   beforeEach(() => {
@@ -36,8 +36,8 @@ describe('lib/job', function () {
       }
 
       // then
-      expect(results).to.have.length(1)
-      expect(results[0].id.value).to.match(new RegExp('/project/cli-test/mapping/table/foo/csvw$'))
+      expect(results).to.have.length(2)
+      expect(results[0].id.value).to.match(new RegExp('/project/ubd/csv-mapping/table-\\w+/csvw$'))
       expect(results[0].dialect?.quoteChar).to.equal('"')
       expect(results[0].dialect?.delimiter).to.equal(',')
       expect(results[0].dialect?.header).to.equal(true)
@@ -56,7 +56,7 @@ describe('lib/job', function () {
       })
 
       // then
-      expect(variables.get('graph')).to.eq(`${env.API_CORE_BASE}cube/cli-test`)
+      expect(variables.get('graph')).to.eq(`${env.API_CORE_BASE}cube-project/ubd/cube-data`)
     })
   })
 })

@@ -1,0 +1,329 @@
+base <https://cube-creator.lndo.site/>
+prefix schema: <http://schema.org/>
+prefix dcterms: <http://purl.org/dc/terms/>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix hydra: <http://www.w3.org/ns/hydra/core#>
+prefix csvw: <http://www.w3.org/ns/csvw#>
+prefix dtype: <http://www.linkedmodel.org/schema/dtype#>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix void: <http://rdfs.org/ns/void#>
+prefix cube: <http://ns.bergnet.org/cube/>
+prefix cc: <https://cube-creator.zazuko.com/vocab#>
+
+<ubd-example> a void:Dataset .
+
+<cube-project/ubd> void:inDataset <ubd-example> .
+graph <cube-project/ubd> {
+  <cube-project/ubd>
+    a cc:CubeProject, hydra:Resource ;
+    cc:dataset  <cube-project/ubd/dataset> ;
+    cc:cubeGraph  <cube-project/ubd/cube-data> ;
+    cc:csvMapping <cube-project/ubd/csv-mapping> ;
+    dcterms:creator <user> ;
+    rdfs:label "UBD28 Project" ;
+  .
+}
+
+<cube-project/ubd/dataset> void:inDataset <ubd-example> .
+graph <cube-project/ubd/dataset> {
+  <cube-project/ubd/dataset>
+    a void:Dataset, hydra:Resource , schema:Dataset ;
+    schema:hasPart <https://environment.ld.admin.ch/foen/ubd/28/> ;
+  .
+
+  <https://environment.ld.admin.ch/foen/ubd/28/>
+    a cube:Cube ;
+    schema:dateCreated "2015-08-06"^^xsd:date;
+    dcterms:creator <user> ;
+  .
+}
+
+<cube-project/ubd/cube-data> void:inDataset <ubd-example> .
+graph <cube-project/ubd/cube-data> {
+  <https://environment.ld.admin.ch/foen/ubd/28/>
+    a cube:Cube ;
+  .
+}
+
+<cube-project/ubd/csv-mapping> void:inDataset <ubd-example> .
+graph <cube-project/ubd/csv-mapping> {
+  <cube-project/ubd/csv-mapping>
+    a cc:CsvMapping , hydra:Resource ;
+    cc:csvSource <cube-project/ubd/csv-source/ubd> ;
+    cc:csvSourceCollection <cube-project/ubd/csv-mapping/sources> ;
+    cc:jobCollection <cube-project/ubd/csv-mapping/jobs> ;
+    cc:tables <cube-project/ubd/csv-mapping/tables> ;
+    cc:namespace <https://environment.ld.admin.ch/foen/ubd/28/> ;
+  .
+}
+
+<cube-project/ubd/csv-mapping/sources> void:inDataset <ubd-example> .
+graph <cube-project/ubd/csv-mapping/sources> {
+  <cube-project/ubd/csv-mapping/sources>
+    a cc:CSVSourceCollection , hydra:Collection ;
+    hydra:manages  [ hydra:object    <cube-project/ubd/csv-mapping> ;
+                     hydra:property  cc:csvMapping
+                   ] ;
+    hydra:manages  [ hydra:object    cc:CSVSource ;
+                     hydra:property  rdf:type
+                   ] ;
+    hydra:title    "CSV-Sources" ;
+    cc:csvMapping  <cube-project/ubd/csv-mapping> ;
+  .
+}
+
+<cube-project/ubd/csv-source/ubd> void:inDataset <ubd-example> .
+graph <cube-project/ubd/csv-source/ubd> {
+  <cube-project/ubd/csv-source/ubd>
+    a cc:CSVSource, hydra:Resource ;
+    schema:associatedMedia  [ a  schema:MediaObject ;
+                              schema:contentUrl <http://s3:9000/cube-creator/test-data/ubd28/input_CH_yearly_air_immission_basetable.csv> ;
+                              schema:identifier "test-data/ubd28/input_CH_yearly_air_immission_basetable.csv";
+                            ] ;
+    schema:name "ubd.csv" ;
+    cc:csvMapping <cube-project/ubd/csv-mapping> ;
+    csvw:dialect <cube-project/ubd/csv-source/ubd/dialect> ;
+    csvw:column <cube-project/ubd/csv-source/ubd/column/year> ;
+    csvw:column <cube-project/ubd/csv-source/ubd/column/station> ;
+    csvw:column <cube-project/ubd/csv-source/ubd/column/value> ;
+    csvw:column <cube-project/ubd/csv-source/ubd/column/aggregation> ;
+  .
+
+  <cube-project/ubd/csv-source/ubd/dialect>
+    csvw:quoteChar "\"" ;
+    csvw:delimiter "," ;
+    csvw:header    true ;
+  .
+
+  <cube-project/ubd/csv-source/ubd/column/year>
+    a csvw:Column ;
+    schema:name "YEAR" ;
+    dtype:order 0 ;
+    cc:csvColumnSample "2010" ;
+    cc:csvColumnSample "2020" ;
+    cc:csvColumnSample "2021" ;
+  .
+
+  <cube-project/ubd/csv-source/ubd/column/station>
+    a csvw:Column ;
+    schema:name "STATION" ;
+    dtype:order 1 ;
+    cc:csvColumnSample "1" ;
+    cc:csvColumnSample "2" ;
+    cc:csvColumnSample "3" ;
+  .
+
+  <cube-project/ubd/csv-source/ubd/column/value>
+    a csvw:Column ;
+    schema:name "VALUE" ;
+    dtype:order 2 ;
+    cc:csvColumnSample "3.4" ;
+    cc:csvColumnSample "2.1" ;
+    cc:csvColumnSample "2.9" ;
+  .
+
+  <cube-project/ubd/csv-source/ubd/column/aggregation>
+    a csvw:Column ;
+    schema:name "AGGREGATION" ;
+    dtype:order 3 ;
+    cc:csvColumnSample "13.4" ;
+    cc:csvColumnSample "14.4" ;
+    cc:csvColumnSample "18.0" ;
+  .
+}
+
+<cube-project/ubd/csv-source/stations> void:inDataset <ubd-example> .
+graph <cube-project/ubd/csv-source/stations> {
+  <cube-project/ubd/csv-source/stations>
+    a cc:CSVSource, hydra:Resource ;
+    cc:csvMapping <cube-project/ubd/csv-mapping> ;
+    schema:associatedMedia  [ a  schema:MediaObject ;
+                              schema:contentUrl <http://s3:9000/cube-creator/test-data/ubd28/input_CH_yearly_air_immission_basetable.csv> ;
+                              schema:identifier "test-data/ubd28/input_CH_yearly_air_immission_basetable.csv";
+                            ] ;
+    schema:name "stations.csv" ;
+    csvw:dialect <cube-project/ubd/csv-source/stations/dialect> ;
+    csvw:column <cube-project/ubd/csv-source/ubd/column/year> ;
+    csvw:column <cube-project/ubd/csv-source/stations/column/station-name-fr> ;
+    csvw:column <cube-project/ubd/csv-source/stations/column/station-name-de> ;
+  .
+
+  <cube-project/ubd/csv-source/stations/dialect>
+    csvw:quoteChar "\"" ;
+    csvw:delimiter "," ;
+    csvw:header    true ;
+  .
+
+  <cube-project/ubd/csv-source/stations/column/station-id>
+    a csvw:Column ;
+    schema:name "STATION_ID" ;
+    dtype:order 0 ;
+    cc:csvColumnSample "1" ;
+    cc:csvColumnSample "2" ;
+    cc:csvColumnSample "3" ;
+  .
+
+  <cube-project/ubd/csv-source/stations/column/station-name-fr>
+    a csvw:Column ;
+    schema:name "STATION_NAME_FR" ;
+    dtype:order 1 ;
+    cc:csvColumnSample "ABC" ;
+    cc:csvColumnSample "DEF" ;
+    cc:csvColumnSample "GHI" ;
+  .
+
+  <cube-project/ubd/csv-source/stations/column/station-name-de>
+    a csvw:Column ;
+    schema:name "STATION_NAME_DE" ;
+    dtype:order 2 ;
+    cc:csvColumnSample "ABK" ;
+    cc:csvColumnSample "DEF" ;
+    cc:csvColumnSample "GHI" ;
+  .
+}
+
+<cube-project/ubd/csv-mapping/tables> void:inDataset <ubd-example> .
+graph <cube-project/ubd/csv-mapping/tables> {
+  <cube-project/ubd/csv-mapping/tables>
+    a cc:TableCollection, hydra:Collection ;
+    hydra:title "Tables" ;
+    hydra:manages [ hydra:property rdf:type ;
+                    hydra:object   cc:Table
+                  ] ;
+    hydra:manages [ hydra:property cc:csvMapping ;
+                    hydra:object   <cube-project/ubd/csv-mapping>
+                  ] ;
+    cc:csvMapping <cube-project/ubd/csv-mapping> ;
+  .
+}
+
+<project/ubd/csv-mapping/table-observation> void:inDataset <ubd-example> .
+graph <project/ubd/csv-mapping/table-observation> {
+  <project/ubd/csv-mapping/table-observation>
+    a cc:Table, cc:ObservationTable, hydra:Resource ;
+    cc:csvw <project/ubd/csv-mapping/table-observation/csvw> ;
+    cc:csvMapping <cube-project/ubd/csv-mapping> ;
+    cc:csvSource <cube-project/ubd/csv-source/ubd> ;
+    schema:name "Observations" ;
+    schema:color "#AAAAAA" ;
+    cc:identifierTemplate "ammonia/observation/{STATION}-{YEAR}-annualmean" ;
+    cc:columnMapping <project/ubd/csv-mapping/table-observation/column-mapping-1> ;
+    cc:columnMapping <project/ubd/csv-mapping/table-observation/column-mapping-2> ;
+    cc:columnMapping <project/ubd/csv-mapping/table-observation/column-mapping-3> ;
+    cc:columnMapping <project/ubd/csv-mapping/table-observation/column-mapping-4> ;
+  .
+}
+
+<project/ubd/csv-mapping/table-observation/column-mapping-1> void:inDataset <ubd-example> .
+graph <project/ubd/csv-mapping/table-observation/column-mapping-1> {
+  <project/ubd/csv-mapping/table-observation/column-mapping-1> a cc:ColumnMapping ;
+    cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/year> ;
+    cc:targetProperty <dimension/year> ;
+    cc:datatype xsd:gYear ;
+    # -- Other possible ColumnMapping properties
+    # cc:language
+    # cc:default
+    # cc:datatype/params TBD
+  .
+}
+
+<project/ubd/csv-mapping/table-observation/column-mapping-2> void:inDataset <ubd-example> .
+graph <project/ubd/csv-mapping/table-observation/column-mapping-2> {
+  <project/ubd/csv-mapping/table-observation/column-mapping-2> a cc:ColumnMapping ;
+    cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/station> ;
+    cc:targetProperty <station> ;
+    cc:referencedTable <project/ubd/csv-mapping/table-station> ;
+    cc:identifierMapping [
+      cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/station> ;
+      cc:referencedColumn <cube-project/ubd/csv-source/stations/column/station-id> ;
+    ] ;
+  .
+}
+
+<project/ubd/csv-mapping/table-observation/column-mapping-3> void:inDataset <ubd-example> .
+graph <project/ubd/csv-mapping/table-observation/column-mapping-3> {
+  <project/ubd/csv-mapping/table-observation/column-mapping-3> a cc:ColumnMapping ;
+    cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/value> ;
+    cc:targetProperty <dimension/value> ;
+    cc:datatype xsd:float ;
+  .
+}
+
+<project/ubd/csv-mapping/table-observation/column-mapping-4> void:inDataset <ubd-example> .
+graph <project/ubd/csv-mapping/table-observation/column-mapping-4> {
+  <project/ubd/csv-mapping/table-observation/column-mapping-4> a cc:ColumnMapping ;
+    cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/aggregation> ;
+    cc:targetProperty <project/ubd/csv-mapping/aggregation> ;
+    cc:datatype xsd:float ;
+  .
+}
+
+<project/ubd/csv-mapping/table-station> void:inDataset <ubd-example> .
+graph <project/ubd/csv-mapping/table-station> {
+  <project/ubd/csv-mapping/table-station> a cc:Table, hydra:Resource ;
+    cc:csvMapping <cube-project/ubd/csv-mapping> ;
+    cc:csvSource <cube-project/ubd/csv-source/stations> ;
+    cc:csvw <project/ubd/csv-mapping/table-station/csvw> ;
+    schema:name "Station" ;
+    schema:color "#BBBBBB" ;
+    cc:identifierTemplate "station/{STATION_ID}" ;
+    cc:columnMapping <project/ubd/csv-mapping/table-station/column-mapping-1> ;
+    cc:columnMapping <project/ubd/csv-mapping/table-station/column-mapping-2> ;
+    cc:columnMapping <project/ubd/csv-mapping/table-station/column-mapping-3> ;
+  .
+}
+
+<project/ubd/csv-mapping/table-station/column-mapping-1> void:inDataset <ubd-example> .
+graph <project/ubd/csv-mapping/table-station/column-mapping-1> {
+  <project/ubd/csv-mapping/table-station/column-mapping-1> a cc:ColumnMapping ;
+    cc:sourceColumn <cube-project/ubd/csv-source/stations/column/station-id> ;
+    cc:targetProperty schema:identifier ;
+    cc:datatype xsd:string ;
+  .
+}
+
+<project/ubd/csv-mapping/table-station/column-mapping-2> void:inDataset <ubd-example> .
+graph <project/ubd/csv-mapping/table-station/column-mapping-2> {
+  <project/ubd/csv-mapping/table-station/column-mapping-2> a cc:ColumnMapping ;
+    cc:sourceColumn <cube-project/ubd/csv-source/stations/column/station-name-fr> ;
+    cc:targetProperty rdfs:label ;
+    cc:datatype xsd:langString ;
+    cc:language "fr" ;
+  .
+}
+
+<project/ubd/csv-mapping/table-station/column-mapping-3> void:inDataset <ubd-example> .
+graph <project/ubd/csv-mapping/table-station/column-mapping-3> {
+  <project/ubd/csv-mapping/table-station/column-mapping-3> a cc:ColumnMapping ;
+    cc:sourceColumn <cube-project/ubd/csv-source/stations/column/station-name-de> ;
+    cc:targetProperty rdfs:label ;
+    cc:datatype xsd:langString ;
+    cc:language "de" ;
+  .
+}
+
+<project/ubd/csv-mapping/jobs> void:inDataset <ubd-example> .
+graph <project/ubd/csv-mapping/jobs> {
+  <project/ubd/csv-mapping/jobs>
+    a hydra:Collection, cc:JobCollection ;
+    hydra:manages [
+      hydra:property rdf:type ;
+      hydra:object   cc:Job ;
+    ] , [
+      hydra:property cc:csvMapping ;
+      hydra:object   <cube-project/ubd/csv-mapping> ;
+    ]
+  .
+}
+
+<project/ubd/csv-mapping/jobs/test-job> void:inDataset <ubd-example> .
+graph <project/ubd/csv-mapping/jobs/test-job> {
+  <project/ubd/csv-mapping/jobs/test-job>
+    a hydra:Resource, cc:Job ;
+    cc:tables <cube-project/ubd/csv-mapping/tables> ;
+    schema:label "cli-test" ;
+    cc:cubeGraph <cube-project/ubd/cube-data> ;
+    dcterms:created "2020-10-29T12:01:54"^^xsd:dateTime
+  .
+}

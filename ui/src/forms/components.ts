@@ -1,6 +1,9 @@
 import { html, SingleEditorComponent } from '@hydrofoil/shaperone-wc'
-import { dash } from '@tpluscode/rdf-ns-builders'
-import { editor, createCustomElement } from '@/forms/bulma'
+import * as ns from '@cube-creator/core/namespace'
+import { dash, xsd } from '@tpluscode/rdf-ns-builders'
+import $rdf from '@rdfjs/data-model'
+import { createCustomElement } from '@/forms/bulma'
+import { hashi } from '@cube-creator/core/namespace'
 
 export const textField: SingleEditorComponent = {
   editor: dash.TextFieldEditor,
@@ -14,8 +17,22 @@ export const textField: SingleEditorComponent = {
   }
 }
 
+export const instanceSelect: SingleEditorComponent = {
+  editor: dash.InstancesSelectEditor,
+  render ({ property, value }, { update }) {
+    return html`<b-select .collection="${property.shape.get(hashi.collection)}"
+                          .update="${update}"
+                          .value="${value.object.term}"></b-select>`
+  },
+  loadDependencies () {
+    return [
+      import('./BulmaSelect.vue').then(createCustomElement('b-select'))
+    ]
+  }
+}
+
 export const radioButtons: SingleEditorComponent = {
-  editor: editor.RadioButtons,
+  editor: ns.editor.RadioButtons,
   render ({ property, value }, { update }) {
     const items = property.shape.pointer.node(property.shape.in)
 
@@ -24,6 +41,33 @@ export const radioButtons: SingleEditorComponent = {
   loadDependencies () {
     return [
       import('./BulmaRadioButtons.vue').then(createCustomElement('b-radio'))
+    ]
+  }
+}
+
+export const colorPicker: SingleEditorComponent = {
+  editor: ns.editor.ColorPicker,
+  render ({ value }, { update }) {
+    return html`<color-picker .value="${value.object.value}" .update="${update}"></color-picker>`
+  },
+  loadDependencies () {
+    return [
+      import('./ColorPicker.vue').then(createCustomElement('color-picker'))
+    ]
+  }
+}
+
+const trueTerm = $rdf.literal('true', xsd.boolean)
+
+export const checkBox: SingleEditorComponent = {
+  editor: ns.editor.Checkbox,
+  render ({ value }, { update }) {
+    const booleanValue = trueTerm.equals(value.object.term)
+    return html`<cc-checkbox .value="${booleanValue}" .update="${update}"></cc-checkbox>`
+  },
+  loadDependencies () {
+    return [
+      import('./BulmaCheckbox.vue').then(createCustomElement('cc-checkbox'))
     ]
   }
 }

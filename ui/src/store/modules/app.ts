@@ -24,6 +24,10 @@ const actions: ActionTree<AppState, RootState> = {
   dismissMessage (context, message) {
     context.commit('removeMessage', message)
   },
+
+  showMessage (context, message) {
+    context.commit('pushMessage', message)
+  },
 }
 
 const mutations: MutationTree<AppState> = {
