@@ -4,7 +4,7 @@ import { SELECT } from '@tpluscode/sparql-builder'
 import { parsingClient } from '../../query-client'
 import { cc } from '@cube-creator/core/namespace'
 
-export async function * getTablesFromMapping(csvMapping: NamedNode, client = parsingClient) {
+export async function * getTablesForMapping(csvMapping: NamedNode, client = parsingClient) {
   const results = await SELECT.DISTINCT`?table`
     .WHERE`
       GRAPH ?table
