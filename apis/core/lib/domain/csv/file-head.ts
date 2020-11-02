@@ -8,7 +8,7 @@ export function loadFileHeadString(
   let partialLine = ''
   stream.on('readable', () => {
     let chunk
-    while ((chunk = stream.read(1000)) !== null) {
+    while ((chunk = stream.read(10000)) !== null) {
       let string = chunk.toString()
       if (!string.includes('\n')) {
         // continue reading until we reach the first \n
@@ -26,7 +26,7 @@ export function loadFileHeadString(
         string = string.substring(0, string.lastIndexOf('\n'))
       }
 
-      const newLines = string.trim().split('\n')
+      const newLines = string.split('\n')
       // always keep the 1st line
       if (lines.length === 0) {
         lines.push(newLines.shift() as string)
@@ -34,7 +34,7 @@ export function loadFileHeadString(
 
       // only keep unique lines otherwise
       newLines.forEach((line: string) => {
-        if (!lines.includes(line)) {
+        if (line.length > 0 && !lines.includes(line)) {
           lines.push(line)
         }
       })
