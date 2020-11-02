@@ -3,7 +3,7 @@ import { expect } from 'chai'
 import $rdf from 'rdf-ext'
 import clownface from 'clownface'
 import { cc } from '@cube-creator/core/namespace'
-import { csvw, schema } from '@tpluscode/rdf-ns-builders'
+import { csvw, rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { createCsvw } from '../../../lib/domain/table/csvw'
 import { TestResourceStore } from '../../support/TestResourceStore'
 
@@ -13,11 +13,17 @@ describe('domain/table/csvw', () => {
       // given
       const tableResource = $rdf.namedNode('cc:table')
       const sourceId = $rdf.namedNode('cc:source')
+      const mappingId = $rdf.namedNode('cc:mapping')
       const resources = new TestResourceStore([
         clownface({ dataset: $rdf.dataset() })
           .node(tableResource)
           .addOut(cc.csvSource, sourceId)
-          .addOut(cc.csvw, $rdf.namedNode('cc:table/csvw')),
+          .addOut(cc.csvw, $rdf.namedNode('cc:table/csvw'))
+          .addOut(cc.csvMapping, mappingId),
+        clownface({ dataset: $rdf.dataset() })
+          .namedNode(mappingId)
+          .addOut(rdf.type, cc.CsvMapping)
+          .addOut(cc.namespace, $rdf.namedNode('http://example.com/cube')),
         clownface({ dataset: $rdf.dataset() })
           .node(sourceId)
           .addOut(schema.associatedMedia, media => {
@@ -44,11 +50,17 @@ describe('domain/table/csvw', () => {
       // given
       const tableResource = $rdf.namedNode('cc:table')
       const sourceId = $rdf.namedNode('cc:source')
+      const mappingId = $rdf.namedNode('cc:mapping')
       const resources = new TestResourceStore([
         clownface({ dataset: $rdf.dataset() })
           .node(tableResource)
           .addOut(cc.csvSource, sourceId)
-          .addOut(cc.csvw, $rdf.namedNode('cc:table/csvw')),
+          .addOut(cc.csvw, $rdf.namedNode('cc:table/csvw'))
+          .addOut(cc.csvMapping, mappingId),
+        clownface({ dataset: $rdf.dataset() })
+          .namedNode(mappingId)
+          .addOut(rdf.type, cc.CsvMapping)
+          .addOut(cc.namespace, $rdf.namedNode('http://example.com/cube')),
         clownface({ dataset: $rdf.dataset() })
           .node(sourceId)
           .addOut(csvw.dialect),
