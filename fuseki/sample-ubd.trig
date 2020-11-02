@@ -303,7 +303,7 @@ graph <project/ubd/csv-mapping/table-station/column-mapping-3> {
   .
 }
 
-<project/ubd/csv-mapping/jobs> void:inDataset <ubd-example> .
+<cube-project/ubd/csv-mapping/jobs> void:inDataset <ubd-example> .
 graph <project/ubd/csv-mapping/jobs> {
   <project/ubd/csv-mapping/jobs>
     a hydra:Collection, cc:JobCollection ;

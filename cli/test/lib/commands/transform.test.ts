@@ -6,7 +6,7 @@ import { CONSTRUCT } from '@tpluscode/sparql-builder'
 import transform from '../../../lib/commands/transform'
 import { log } from '../../support/logger'
 import { setupEnv } from '../../support/env'
-import { client, insertTestData } from '@cube-creator/testing/lib'
+import { client, insertTestData } from '../../../../packages/testing/lib'
 
 describe('lib/commands/transform', function () {
   this.timeout(200000)
@@ -24,7 +24,7 @@ describe('lib/commands/transform', function () {
     await runner({
       to: 'graph-store',
       debug: true,
-      job: `${env.API_CORE_BASE}project/cli-test/mapping/jobs/test-job`,
+      job: `${env.API_CORE_BASE}project/ubd/csv-mapping/jobs/test-job`,
     })
     await new Promise((resolve) =>
       setTimeout(resolve, 100),
