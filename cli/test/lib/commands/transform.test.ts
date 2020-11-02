@@ -31,7 +31,7 @@ describe('lib/commands/transform', function () {
     )
 
     // then
-    const expectedGraph = $rdf.namedNode(`${env.API_CORE_BASE}cube/cli-test`)
+    const expectedGraph = $rdf.namedNode(`${env.API_CORE_BASE}cube-project/ubd/cube-data`)
     const dataset = await $rdf.dataset().import(await CONSTRUCT`?s ?p ?o`
       .FROM(expectedGraph)
       .WHERE`?s ?p ?o`

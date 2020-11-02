@@ -1,5 +1,6 @@
 declare module 'rdf-validate-shacl' {
-  import { DatasetCore, Term } from 'rdf-js'
+  import type { DatasetCore, Term } from 'rdf-js'
+  import type { GraphPointer } from 'clownface'
 
   export interface ValidationResult {
     message: Term[]
@@ -8,6 +9,7 @@ declare module 'rdf-validate-shacl' {
     severity: Term | null
     sourceConstraintComponent: Term | null
     sourceShape: Term | null
+    cf: GraphPointer
   }
 
   export interface ValidationReport {

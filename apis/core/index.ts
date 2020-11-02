@@ -8,6 +8,7 @@ import env from '@cube-creator/core/env'
 import { bootstrap } from './bootstrap'
 import { resource } from './lib/middleware/resource'
 import { errorMappers } from './lib/errors'
+import './lib/domain'
 
 const apiPath = path.resolve(__dirname, 'hydra')
 const codePath = path.resolve(__dirname, 'lib')

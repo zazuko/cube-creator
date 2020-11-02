@@ -11,12 +11,17 @@ cc:CubeProject
     hydra:Class ;
   query:include
     cc:csvMapping ;
+  hydra:supportedProperty
+    [ hydra:property
+        cc:dataset ],
+    [ hydra:property
+        cc:csvMapping ] ;
   hydra:supportedOperation
-  [
-    a 
-      hydra:Operation, 
-      schema:DeleteAction ;
-      hydra:title 
+    [
+      a
+        hydra:Operation,
+        schema:DeleteAction ;
+      hydra:title
         "Delete Project" ;
       hydra:method
         "DELETE" ;
@@ -27,7 +32,15 @@ cc:CubeProject
           code:link
             <file:handlers/cube-projects#remove> ;
         ] ;
-  ] .
+    ] .
+
+cc:csvMapping
+  a
+    hydra:Link .
+
+cc:dataset
+  a
+    hydra:Link .
 
 cc:ProjectsCollection
   a
@@ -53,4 +66,6 @@ cc:ProjectsCollection
         ] ;
     ] .
 
-<shape/cube-project/create> a sh:Shape .
+<shape/cube-project/create>
+  a
+    sh:Shape .

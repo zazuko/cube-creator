@@ -10,9 +10,13 @@ import { TestResourceStore } from '../../support/TestResourceStore'
 describe('domain/table/create', () => {
   let store: TestResourceStore
   const tableCollection = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('tables') }).addOut(cc.csvMapping, $rdf.namedNode('myCsvMapping'))
+  const csvSource = clownface({ dataset: $rdf.dataset() }).namedNode('foo')
 
   beforeEach(() => {
-    store = new TestResourceStore([])
+    store = new TestResourceStore([
+      tableCollection,
+      csvSource,
+    ])
   })
 
   it('creates identifier by slugifying schema:name', async () => {

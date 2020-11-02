@@ -8,6 +8,7 @@ prefix csvw: <http://www.w3.org/ns/csvw#>
 prefix dtype: <http://www.linkedmodel.org/schema/dtype#>
 prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 prefix void: <http://rdfs.org/ns/void#>
+prefix cube: <http://ns.bergnet.org/cube/>
 prefix cc: <https://cube-creator.zazuko.com/vocab#>
 
 <ubd-example> a void:Dataset .
@@ -16,11 +17,32 @@ prefix cc: <https://cube-creator.zazuko.com/vocab#>
 graph <cube-project/ubd> {
   <cube-project/ubd>
     a cc:CubeProject, hydra:Resource ;
-    cc:dataset <foen/ubd/28/pm1> ;
-    cc:cube   </cube/cli-test> ;
+    cc:dataset  <cube-project/ubd/dataset> ;
+    cc:cubeGraph  <cube-project/ubd/cube-data> ;
     cc:csvMapping <cube-project/ubd/csv-mapping> ;
     dcterms:creator <user> ;
     rdfs:label "UBD28 Project" ;
+  .
+}
+
+<cube-project/ubd/dataset> void:inDataset <ubd-example> .
+graph <cube-project/ubd/dataset> {
+  <cube-project/ubd/dataset>
+    a void:Dataset, hydra:Resource , schema:Dataset ;
+    schema:hasPart <https://environment.ld.admin.ch/foen/ubd/28/> ;
+  .
+
+  <https://environment.ld.admin.ch/foen/ubd/28/>
+    a cube:Cube ;
+    schema:dateCreated "2015-08-06"^^xsd:date;
+    dcterms:creator <user> ;
+  .
+}
+
+<cube-project/ubd/cube-data> void:inDataset <ubd-example> .
+graph <cube-project/ubd/cube-data> {
+  <https://environment.ld.admin.ch/foen/ubd/28/>
+    a cube:Cube ;
   .
 }
 
@@ -31,6 +53,7 @@ graph <cube-project/ubd/csv-mapping> {
     cc:csvSource <cube-project/ubd/csv-source/ubd> ;
     cc:csvSourceCollection <cube-project/ubd/csv-mapping/sources> ;
     cc:tables <cube-project/ubd/csv-mapping/tables> ;
+    cc:namespace <https://environment.ld.admin.ch/foen/ubd/28/> ;
   .
 }
 

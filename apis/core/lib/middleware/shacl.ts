@@ -22,7 +22,7 @@ export const shaclMiddleware = (options: ShaclMiddlewareOptions) => asyncMiddlew
     if (expects.term.termType !== 'NamedNode') return
 
     const pointer = await resources.get(expects.term)
-    if (pointer.has(rdf.type, [sh.NodeShape]).values.length) {
+    if (pointer?.has(rdf.type, [sh.NodeShape]).values.length) {
       await shapes.addAll([...pointer.dataset])
     }
   }))

@@ -20,11 +20,13 @@ With Class api:EntryPoint {
                 prefix cc: <https://cube-creator.zazuko.com/vocab#>
                 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-                <> cc:projectSourceKind <https://cube-creator.lndo.site/shape/cube-project/create#CSV> ; rdfs:label "Test Project" .
+                <> cc:projectSourceKind <https://cube-creator.lndo.site/shape/cube-project/create#CSV> ;
+                   rdfs:label "Test Project" ;
+                   cc:namespace <http://example.com/test-cube/> .
                 ```
             } => {
                 Expect Status 201
-                
+
             }
         }
     }
@@ -47,7 +49,7 @@ With Class cc:CubeProject {
                     .
                     ```
                 } => {
-                    Expect Status 201   
+                    Expect Status 201
                 }
             }
         }

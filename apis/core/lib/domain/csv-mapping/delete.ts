@@ -7,6 +7,8 @@ import { cc } from '@cube-creator/core/namespace'
 
 export async function deleteMapping(csvMapping: NamedNode, store: ResourceStore): Promise<void> {
   const csvMappingResource = await store.get(csvMapping)
+  if (!csvMappingResource) return
+
   const sources = csvMappingResource.out(cc.csvSource).terms
   for await (const source of sources) {
     if (source.termType === 'NamedNode') {

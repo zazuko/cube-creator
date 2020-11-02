@@ -1,13 +1,15 @@
 import { GraphPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'
-import { rdfs, rdf, hydra, dcterms } from '@tpluscode/rdf-ns-builders'
+import { rdfs } from '@tpluscode/rdf-ns-builders'
 import { cc, shape } from '@cube-creator/core/namespace'
+import * as Project from '@cube-creator/model/Project'
+import * as Dataset from '@cube-creator/model/Dataset'
 import { ResourceStore } from '../../ResourceStore'
 import * as id from '../identifiers'
 import { resourceStore } from '../resources'
 
 interface CreateProjectCommand {
-  projectsCollection: NamedNode
+  projectsCollection: GraphPointer<NamedNode>
   resource: GraphPointer
   store?: ResourceStore
   user: NamedNode
@@ -18,57 +20,28 @@ export async function createProject({
   resource,
   store = resourceStore(),
   user,
-}: CreateProjectCommand): Promise<GraphPointer> {
-  const label = resource.out(rdfs.label).term!
+}: CreateProjectCommand): Promise<Project.Project> {
+  const label = resource.out(rdfs.label).value
+  if (!label) {
+    throw new Error('Missing project name')
+  }
 
-  const project = await store
-    .createMember(projectsCollection, id.cubeProject(label.value))
+  const namespace = resource.out(cc.namespace).term
 
-  project.addOut(rdfs.label, label)
-    .addOut(dcterms.creator, user)
+  const project = Project.create(await store.createMember(projectsCollection.term, id.cubeProject(label)), {
+    creator: user,
+    label,
+  })
+
+  const dataset = Dataset.create(store.create(project.dataset))
 
   if (shape('cube-project/create#CSV').equals(resource.out(cc.projectSourceKind).term)) {
-    const mapping = store
-      .create(id.csvMapping(project))
-      .addOut(rdf.type, cc.CsvMapping)
+    if (!namespace || namespace.termType !== 'NamedNode') {
+      throw new Error('Missing cube namespace')
+    }
 
-    project.addOut(cc.csvMapping, mapping)
-
-    const sourceCollection = store
-      .create(id.csvSourceCollection(mapping))
-      .addOut(rdf.type, [cc.CSVSourceCollection, hydra.Collection])
-      .addOut(hydra.title, 'CSV-Sources')
-      .addOut(cc.csvMapping, mapping)
-      .addOut(hydra.manages, manages => {
-        // ?member rdf:type cc:CSVSource
-        manages.addOut(hydra.property, rdf.type)
-        manages.addOut(hydra.object, cc.CSVSource)
-      })
-      .addOut(hydra.manages, manages => {
-        // ?member cc:csvMapping <mapping>
-        manages.addOut(hydra.object, mapping)
-        manages.addOut(hydra.property, cc.csvMapping)
-      })
-
-    mapping.addOut(cc.csvSourceCollection, sourceCollection)
-
-    const tableCollection = store
-      .create(id.tableCollection(mapping))
-      .addOut(rdf.type, [cc.TableCollection, hydra.Collection])
-      .addOut(hydra.title, 'Tables')
-      .addOut(cc.csvMapping, mapping)
-      .addOut(hydra.manages, manages => {
-        // ?member rdf:type cc:Table
-        manages.addOut(hydra.property, rdf.type)
-        manages.addOut(hydra.object, cc.Table)
-      })
-      .addOut(hydra.manages, manages => {
-        // ?member cc:csvMapping <mapping>
-        manages.addOut(hydra.object, mapping)
-        manages.addOut(hydra.property, cc.csvMapping)
-      })
-
-    mapping.addOut(cc.tables, tableCollection)
+    const csvMapping = project.initializeCsvMapping(store, namespace)
+    dataset.addCube(csvMapping.namespace, user)
   }
 
   await store.save()

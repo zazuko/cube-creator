@@ -56,7 +56,7 @@ describe('lib/projects', function () {
       })
 
       // then
-      expect(variables.get('graph')).to.eq(`${env.API_CORE_BASE}cube/cli-test`)
+      expect(variables.get('graph')).to.eq(`${env.API_CORE_BASE}cube-project/ubd/cube-data`)
     })
   })
 })
