@@ -1,10 +1,8 @@
 import { NamedNode } from 'rdf-js'
 import { ResourceStore } from '../../ResourceStore'
 import { resourceStore } from '../resources'
-import { deleteFile } from '../../storage/s3'
-import { schema } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
-import $rdf from 'rdf-ext'
+
 
 interface DeleteTableCommand {
   resource: NamedNode
