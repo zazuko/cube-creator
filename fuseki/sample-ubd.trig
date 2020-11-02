@@ -204,9 +204,9 @@ graph <project/ubd/csv-mapping/table-observation/column-mapping-1> {
   .
 }
 
-<table-observation/column-mapping-2> void:inDataset <ubd-example> .
-graph <table-observation/column-mapping-2> {
-  <table-observation/column-mapping-2> a cc:ColumnMapping ;
+<project/ubd/csv-mapping/table-observation/column-mapping-2> void:inDataset <ubd-example> .
+graph <project/ubd/csv-mapping/table-observation/column-mapping-2> {
+  <project/ubd/csv-mapping/table-observation/column-mapping-2> a cc:ColumnMapping ;
     cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/station> ;
     cc:targetProperty <station> ;
     cc:referencedTable <project/ubd/csv-mapping/table-station> ;
