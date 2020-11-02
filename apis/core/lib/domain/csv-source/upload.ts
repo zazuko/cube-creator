@@ -1,27 +1,28 @@
 import { GraphPointer } from 'clownface'
-import { rdf, hydra, schema, csvw, dtype } from '@tpluscode/rdf-ns-builders'
-import { cc } from '@cube-creator/core/namespace'
+import { schema } from '@tpluscode/rdf-ns-builders'
 import { Readable } from 'stream'
 import { NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
-import { loadFile, saveFile } from '../../storage/s3'
+import * as s3 from '../../storage/s3'
 import { error } from '../../log'
 import env from '@cube-creator/core/env'
 import { ResourceStore } from '../../ResourceStore'
-import * as id from '../identifiers'
 import { loadFileHeadString } from '../csv/file-head'
 import { sniffParse } from '../csv'
-import { sourceWithFilenameExists } from '../queries/csv-source'
+import * as CsvSourceQueries from '../queries/csv-source'
 import { Conflict } from 'http-errors'
 import { resourceStore } from '../resources'
 import { sampleValues } from '../csv/sample-values'
 import { NotFoundError } from '../../errors'
+import { CsvMapping } from '@cube-creator/model'
 
 interface UploadCSVCommand {
   file: Readable | Buffer
   fileName: string
   resource: NamedNode
   store?: ResourceStore
+  fileStorage?: s3.FileStorage
+  csvSourceQueries?: Pick<typeof CsvSourceQueries, 'sourceWithFilenameExists'>
 }
 
 export async function uploadFile({
@@ -29,63 +30,48 @@ export async function uploadFile({
   fileName,
   resource,
   store = resourceStore(),
+  fileStorage = s3,
+  csvSourceQueries: { sourceWithFilenameExists } = CsvSourceQueries,
 }: UploadCSVCommand): Promise<GraphPointer> {
-  const csvMapping = await store.get(resource)
+  const csvMapping = await store.getResource<CsvMapping>(resource)
   if (!csvMapping) {
     throw new NotFoundError(resource)
   }
 
-  if (await sourceWithFilenameExists(csvMapping.term, fileName)) {
+  if (await sourceWithFilenameExists(csvMapping.id, fileName)) {
     throw new Conflict(`A file with ${fileName} has already been added to the project`)
   }
 
-  const key = `${csvMapping.value.replace(env.API_CORE_BASE, '')}/${fileName}`
-  const upload = await saveFile(key, file)
+  const key = `${csvMapping.id.value.replace(env.API_CORE_BASE, '')}/${fileName}`
+  const upload = await fileStorage.saveFile(key, file)
 
-  const csvSource = store
-    .create(id.csvSource(csvMapping, fileName))
-    .addOut(schema.name, fileName)
-    .addOut(rdf.type, [cc.CSVSource, hydra.Resource])
-    .addOut(cc.csvMapping, csvMapping)
-    .addOut(schema.associatedMedia, mediaObject => {
-      mediaObject.addOut(rdf.type, schema.MediaObject)
-        .addOut(schema.identifier, key)
-        .addOut(schema.contentUrl, $rdf.namedNode(upload.Location))
-    })
+  const csvSource = csvMapping.addSource(store, { fileName })
+  csvSource.setUploadedFile(key, $rdf.namedNode(upload.Location))
 
   try {
-    const fileStream = await loadFile(key) as Readable
+    const fileStream = await fileStorage.loadFile(key) as Readable
     const head = await loadFileHeadString(fileStream, 500)
     const { dialect, header, rows } = await sniffParse(head)
     const sampleCol = sampleValues(header, rows)
 
-    csvSource
-      .addOut(csvw.dialect, id.dialect(csvSource), csvDialect => {
-        csvDialect.addOut(csvw.quoteChar, dialect.quote)
-          .addOut(csvw.delimiter, dialect.delimiter)
-          .addOut(csvw.header, true)
-          .addOut(csvw.headerRowCount, header.length)
-      })
+    csvSource.setDialect({
+      quoteChar: dialect.quote,
+      delimiter: dialect.delimiter,
+      header: true,
+      headerRowCount: header.length,
+    })
 
     for (let index = 0; index < header.length; index++) {
-      const columnName = header[index]
-      csvSource.addOut(csvw.column, id.column(csvSource, columnName), column => {
-        column.addOut(rdf.type, [csvw.Column])
-          .addOut(schema.name, columnName)
-          .addOut(dtype.order, index)
-        sampleCol[index].forEach(value => {
-          column.addOut(cc.csvColumnSample, value)
-        })
-      })
+      const name = header[index]
+      const column = csvSource.appendColumn({ name })
+      column.samples = sampleCol[index]
     }
   } catch (err) {
     error(err)
-    csvSource.addOut(schema.error, err.message)
+    csvSource.pointer.addOut(schema.error, err.message)
   }
-
-  csvMapping.addOut(cc.csvSource, csvSource)
 
   await store.save()
 
-  return csvSource
+  return csvSource.pointer
 }

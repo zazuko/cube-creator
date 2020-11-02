@@ -4,14 +4,20 @@ import { cc } from '@cube-creator/core/namespace'
 import * as Hydra from '@rdfine/hydra'
 import RdfResource from '@tpluscode/rdfine/RdfResource'
 import { CsvMapping } from '@cube-creator/model'
+import * as CsvSource from '@cube-creator/model/CsvSource'
 import { ResourceStore } from '../../ResourceStore'
 import * as id from '../identifiers'
 
 RdfResource.factory.addMixin(...Object.values(Hydra))
 
+interface AddSource {
+  fileName: string
+}
+
 interface ApiCsvMapping {
   initializeSourcesCollection(store: ResourceStore): void
   initializeTableCollection(store: ResourceStore): void
+  addSource(store: ResourceStore, params: AddSource): CsvSource.CsvSource
 }
 
 declare module '@cube-creator/model' {
@@ -61,6 +67,16 @@ export default function Mixin<Base extends Constructor<Omit<CsvMapping, keyof Ap
           property: cc.csvMapping,
         }],
       })
+    }
+
+    addSource(store: ResourceStore, { fileName }: AddSource): CsvSource.CsvSource {
+      const source = CsvSource.create(store.create(id.csvSource(this, fileName)), {
+        name: fileName,
+        csvMapping: this,
+      })
+
+      this.pointer.addOut(cc.csvSource, source.id)
+      return source
     }
   }
 }
