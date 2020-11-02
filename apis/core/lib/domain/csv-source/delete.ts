@@ -1,4 +1,4 @@
-import { NamedNode } from 'rdf-js'
+import { NamedNode, Term } from 'rdf-js'
 import { ResourceStore } from '../../ResourceStore'
 import { resourceStore } from '../resources'
 import { deleteFile } from '../../storage/s3'
@@ -21,8 +21,10 @@ export async function deleteSource({
   await store.save()
 }
 
-export async function deleteSourceWithoutSave(resource: NamedNode<string>, store: ResourceStore): Promise<void> {
-  const csvSource = await store.get(resource)
+export async function deleteSourceWithoutSave(csvSourceTerm: Term, store: ResourceStore): Promise<void> {
+  if (csvSourceTerm.termType !== 'NamedNode') return
+
+  const csvSource = await store.get(csvSourceTerm)
   if (!csvSource) return
 
   // TODO: Delete Tables or prevent it
@@ -45,5 +47,5 @@ export async function deleteSourceWithoutSave(resource: NamedNode<string>, store
   }
 
   // Delete Graph
-  store.delete(resource)
+  store.delete(csvSourceTerm)
 }
