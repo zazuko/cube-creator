@@ -45,6 +45,24 @@ cc:Table
       hydra:property
         cc:csvw ;
     ] ;
+  hydra:supportedOperation
+    [
+      a
+        hydra:Operation,
+        schema:DeleteAction ;
+      hydra:title
+        "Delete Project" ;
+      hydra:method
+        "DELETE" ;
+      code:implementedBy
+        [
+          a
+            code:EcmaScript ;
+          code:link
+            <file:handlers/table/delete#remove> ;
+        ] ;
+    ]
+  
 .
 
 cc:csvw
