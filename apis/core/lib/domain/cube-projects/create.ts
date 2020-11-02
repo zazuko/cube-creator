@@ -26,8 +26,6 @@ export async function createProject({
     throw new Error('Missing project name')
   }
 
-  const namespace = resource.out(cc.namespace).term
-
   const project = Project.create(await store.createMember(projectsCollection.term, id.cubeProject(label)), {
     creator: user,
     label,
@@ -36,8 +34,9 @@ export async function createProject({
   const dataset = Dataset.create(store.create(project.dataset))
 
   if (shape('cube-project/create#CSV').equals(resource.out(cc.projectSourceKind).term)) {
+    let namespace = resource.out(cc.namespace).term
     if (!namespace || namespace.termType !== 'NamedNode') {
-      throw new Error('Missing cube namespace')
+      namespace = id.cube(project)
     }
 
     const csvMapping = project.initializeCsvMapping(store, namespace)
