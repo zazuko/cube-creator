@@ -37,7 +37,6 @@
   },
   "devDependencies": {
     "@types/clownface": "^1.0.3",
-    "@types/jest": "^26.0.14",
     "@types/rdf-js": "^4",
     "@types/rdfjs__dataset": "^1.0.4",
     "@types/vue-color": "^2.4.3",
@@ -47,7 +46,6 @@
     "@vue/cli-plugin-eslint": "~4.5.8",
     "@vue/cli-plugin-router": "~4.5.8",
     "@vue/cli-plugin-typescript": "~4.5.8",
-    "@vue/cli-plugin-unit-jest": "~4.5.8",
     "@vue/cli-plugin-vuex": "^4.5.8",
     "@vue/cli-service": "~4.5.8",
     "@vue/eslint-config-standard": "^5.1.2",

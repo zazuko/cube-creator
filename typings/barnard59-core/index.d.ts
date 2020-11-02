@@ -5,19 +5,19 @@ declare module 'barnard59-core/lib/logger' {
   type LogDetails = Record<string, any> & { name: string }
 
   class Logger {
-    writeLog(level, message, { name, ...details })
+    writeLog(level: string, message: string, { name, ...details }: Record<string, any>): void;
 
-    trace(message: string, details?: LogDetails);
+    trace(message: string, details?: LogDetails): void;
 
-    debug(message: string, details?: LogDetails);
+    debug(message: string, details?: LogDetails): void;
 
-    info(message: string, details?: LogDetails);
+    info(message: string, details?: LogDetails): void;
 
-    warn(message: string, details?: LogDetails);
+    warn(message: string, details?: LogDetails): void;
 
-    error(message: string, details?: LogDetails);
+    error(message: string, details?: LogDetails): void;
 
-    fatal(message: string, details?: LogDetails);
+    fatal(message: string, details?: LogDetails): void;
   }
 
   export = Logger
