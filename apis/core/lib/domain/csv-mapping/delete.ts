@@ -11,9 +11,7 @@ export async function deleteMapping(csvMapping: NamedNode, store: ResourceStore)
 
   const sources = csvMappingResource.out(cc.csvSource).terms
   for await (const source of sources) {
-    if (source.termType === 'NamedNode') {
-      await deleteSourceWithoutSave(source, store)
-    }
+    await deleteSourceWithoutSave(source, store)
   }
 
   const sourceCollection = csvMappingResource.out(cc.csvSourceCollection).term
@@ -23,9 +21,7 @@ export async function deleteMapping(csvMapping: NamedNode, store: ResourceStore)
 
   const tables = getTablesForMapping(csvMapping)
   for await (const table of tables) {
-    if (table.termType === 'NamedNode') {
-      await deleteTableWithoutSave(table, store)
-    }
+    await deleteTableWithoutSave(table, store)
   }
 
   const tableCollection = csvMappingResource.out(cc.tables).term

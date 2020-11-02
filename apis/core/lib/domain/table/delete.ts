@@ -1,4 +1,4 @@
-import { NamedNode } from 'rdf-js'
+import { NamedNode, Term } from 'rdf-js'
 import { ResourceStore } from '../../ResourceStore'
 import { resourceStore } from '../resources'
 import { cc } from '@cube-creator/core/namespace'
@@ -18,22 +18,24 @@ export async function deleteTable({
   await store.save()
 }
 
-export async function deleteTableWithoutSave(resource: NamedNode<string>, store: ResourceStore): Promise<void> {
-  const table = await store.get(resource)
+export async function deleteTableWithoutSave(tableTerm: Term, store: ResourceStore): Promise<void> {
+  if (tableTerm.termType !== 'NamedNode') return
+
+  const table = await store.get(tableTerm)
   if (!table) return
 
   // Delete in columnMappings
   const columnMappings = table.out(cc.columnMapping).terms
   for await (const columnMapping of columnMappings) {
-    if (columnMapping?.termType === 'NamedNode') {
-      await deleteColumnMapping(columnMapping, store)
-    }
+    await deleteColumnMapping(columnMapping, store)
   }
 
   // Delete Graph
-  store.delete(resource)
+  store.delete(tableTerm)
 }
 
-async function deleteColumnMapping(columnMapping: NamedNode<string>, store: ResourceStore) {
-  await store.delete(columnMapping)
+async function deleteColumnMapping(columnMapping: Term, store: ResourceStore) {
+  if (columnMapping?.termType === 'NamedNode') {
+    await store.delete(columnMapping)
+  }
 }
