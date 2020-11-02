@@ -51,7 +51,7 @@ cc:Table
         hydra:Operation,
         schema:DeleteAction ;
       hydra:title
-        "Delete Project" ;
+        "Delete Table" ;
       hydra:method
         "DELETE" ;
       code:implementedBy
