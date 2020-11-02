@@ -1,4 +1,3 @@
-
 import asyncMiddleware from 'middleware-async'
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
 import { deleteTable } from '../../domain/table/delete'

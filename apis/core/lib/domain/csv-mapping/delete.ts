@@ -1,4 +1,3 @@
-
 import { NamedNode } from 'rdf-js'
 import { ResourceStore } from '../../ResourceStore'
 import { deleteSourceWithoutSave } from '../csv-source/delete'
