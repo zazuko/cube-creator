@@ -71,3 +71,15 @@ export const checkBox: SingleEditorComponent = {
     ]
   }
 }
+
+export const uriEditor: SingleEditorComponent = {
+  editor: dash.URIEditor,
+  render ({ value }, { update }) {
+    return html`<cc-uri-input .value="${value.object}" .update="${update}"></cc-uri-input>`
+  },
+  loadDependencies () {
+    return [
+      import('./URIInput.vue').then(createCustomElement('cc-uri-input'))
+    ]
+  }
+}
