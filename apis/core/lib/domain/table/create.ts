@@ -46,6 +46,7 @@ export async function createTable({
   table.addOut(schema.name, label)
   table.addOut(cc.identifierTemplate, resource.out(cc.identifierTemplate))
   table.addOut(schema.color, resource.out(schema.color))
+  table.addOut(cc.csvw, id.csvw(table.term))
 
   if (trueTerm.equals(resource.out(cc.isObservationTable).term)) {
     table.addOut(rdf.type, cc.ObservationTable)

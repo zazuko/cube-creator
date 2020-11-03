@@ -141,7 +141,7 @@ export default class implements ResourceStore {
 
   create(id: NamedNode, { implicitlyDereferencable = true }: ResourceCreationOptions = {}): GraphPointer<NamedNode, DatasetExt> {
     if (this.__resources.has(id)) {
-      throw new Error('Resource')
+      throw new Error(`Resource <${id.value}> already exists`)
     }
 
     const pointer = cf({ dataset: $rdf.dataset(), term: id })
