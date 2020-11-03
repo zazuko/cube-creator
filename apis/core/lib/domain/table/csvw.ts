@@ -49,7 +49,7 @@ export async function createCsvw({
       types: [csvw.Dialect],
     },
     tableSchema: {
-      aboutUrl: `${namespace}observation/{station_id}-{year}-{aggregation_id}`,
+      aboutUrl: `${namespace}observation/${table.identifierTemplate}`,
       column: [{
         title: 'unit_id',
         datatype: xsd.string,
