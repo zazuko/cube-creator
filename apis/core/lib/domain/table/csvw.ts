@@ -34,9 +34,9 @@ export async function createCsvw({
   if (!sourcePointer) {
     throw new NotFoundError(table.csvSource.pointer)
   }
-  const csvMappingPointer = await resources.get(table.csvMapping)
+  const csvMappingPointer = await resources.get(table.csvMapping?.id)
   if (!csvMappingPointer) {
-    throw new NotFoundError(table.csvMapping)
+    throw new NotFoundError(table.csvMapping?.id)
   }
   const { namespace: { value: namespace } } = RdfResource.factory.createEntity<CsvMapping>(csvMappingPointer)
 
