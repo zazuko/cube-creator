@@ -9,11 +9,13 @@
       <b-message
         v-for="(message, index) in messages"
         :key="index"
-        :title="message.title"
+        :title="message.title || ' '"
         :type="message.type"
         has-icon
         aria-close-label="Dismiss"
         @close="dismissMessage(message)"
+        :auto-close="message.type !== 'is-danger'"
+        :duration="7000"
       >
         {{ message.message }}
       </b-message>
