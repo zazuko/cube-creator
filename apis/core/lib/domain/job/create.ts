@@ -11,7 +11,7 @@ interface StartTransformationCommand {
   store?: ResourceStore
 }
 
-export async function create({
+export async function createJob({
   resource,
   store = resourceStore(),
 }: StartTransformationCommand): Promise<GraphPointer<NamedNode>> {

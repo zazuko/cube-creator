@@ -1,7 +1,7 @@
 import asyncMiddleware from 'middleware-async'
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
 import { shaclValidate } from '../middleware/shacl'
-import { create } from '../domain/job/create'
+import { createJob } from '../domain/job/create'
 import * as triggers from '../pipeline/trigger'
 import env from '@cube-creator/core/env'
 import { NamedNode } from 'rdf-js'
@@ -15,7 +15,7 @@ export const transform = protectedResource(
       throw new Error(`Trigger ${env.PIPELINE_TYPE} is not implemented`)
     }
 
-    const job = await create({
+    const job = await createJob({
       resource: req.hydra.resource.term,
     })
 
