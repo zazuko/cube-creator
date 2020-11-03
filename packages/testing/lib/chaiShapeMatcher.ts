@@ -45,14 +45,18 @@ chai.Assertion.addMethod('matchShape', function (shapeInit: Initializer<NodeShap
   const obj = this._obj
   let targetNode: ResourceIdentifier[] = []
   let resourceDataset: DatasetCore
+  let actual: any
   if (isRdfine(obj)) {
     resourceDataset = obj.pointer.dataset
     targetNode.push(obj.id)
+    actual = obj.toJSON()
   } else if (isDataset(obj)) {
     resourceDataset = obj
+    actual = $rdf.dataset([...resourceDataset]).toString()
   } else if (isGraphPointer(obj)) {
     resourceDataset = obj.dataset
     targetNode = [...obj.terms]
+    actual = targetNode.map(term => new RdfResourceImpl(clownface({ dataset: resourceDataset, term })).toJSON())
   } else {
     throw new Error(`Cannot match given object to a SHACL Shape. Expecting a rdfine object, graph pointer or RDF/JS dataset. Got ${obj?.constructor.name}`)
   }
@@ -63,11 +67,6 @@ chai.Assertion.addMethod('matchShape', function (shapeInit: Initializer<NodeShap
 
   const validator = new Validator(shape.pointer.dataset)
   const report = validator.validate(resourceDataset)
-
-  let actual: any[] = []
-  if (!report.conforms && targetNode) {
-    actual = targetNode.map(term => new RdfResourceImpl(clownface({ dataset: resourceDataset, term })).toJSON())
-  }
 
   this.assert(
     report.conforms,

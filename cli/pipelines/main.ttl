@@ -4,7 +4,7 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 
 <#Main> a :Pipeline ;
-  :steps [ :stepList ( <#loadMetadata> <#doTransform> <#streamOutputStep> ) ] .
+  :steps [ :stepList ( <#loadMetadata> <#doTransform> <#streamOutputStep> <#updateJobStatus> ) ] .
 
 <#StreamOutput>
   a :Pipeline, :WritableObjectMode .
@@ -14,6 +14,12 @@
   code:implementedBy [ code:link <file:../lib/pipeline#asStep> ;
                        a         code:EcmaScript ] ;
   code:arguments     ( <#StreamOutput> ) .
+
+<#updateJobStatus>
+  a                  :Step ;
+  code:implementedBy [ code:link <file:../lib/job#updateStatus> ;
+                       a         code:EcmaScript]
+.
 
 # ------------------------------
 #

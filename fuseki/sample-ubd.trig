@@ -326,6 +326,8 @@ graph <project/ubd/csv-mapping/jobs/test-job> {
     cc:tables <cube-project/ubd/csv-mapping/tables> ;
     schema:label "cli-test" ;
     cc:cubeGraph <cube-project/ubd/cube-data> ;
-    dcterms:created "2020-10-29T12:01:54"^^xsd:dateTime
+    dcterms:created "2020-10-29T12:01:54"^^xsd:dateTime ;
+    rdfs:seeAlso <https://github.com/zazuko/cube-creator/actions/runs/345020887> ;
+    schema:actionStatus schema:PotentialActionStatus ;
   .
 }
