@@ -58,6 +58,22 @@ services:
         MINIO_SECRET_KEY: password
       volumes:
         - ./minio:/data/
+  pipeline:
+    type: node:custom
+    build:
+      - npm i -g nodemon
+    command: nodemon -w packages --verbose --ext ts,ttl,js,trig --ignore **/*.spec.ts --ignore **/*.spec-graphs.ts --exec node --inspect=0.0.0.0:45681 -r ts-node/register --inspect cli/server.ts
+    port: 45680
+    ssl: true
+    overrides:
+      image: node:14
+      ports:
+        - '45681:45681'
+      environment:
+        TS_NODE_TRANSPILE_ONLY: "true"
+    moreHttpPorts:
+          - 45681
+
 proxy:
   store:
     - db.cube-creator.lndo.site:3030
@@ -67,3 +83,5 @@ proxy:
     - app.cube-creator.lndo.site
   s3:
     - s3.cube-creator.lndo.site:9000
+  pipeline:
+    - pipeline.cube-creator.lndo.site:45680

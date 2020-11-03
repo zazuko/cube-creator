@@ -24,7 +24,7 @@ describe('lib/commands/transform', function () {
     await runner({
       to: 'graph-store',
       debug: true,
-      project: `${env.API_CORE_BASE}cube-project/ubd`,
+      job: `${env.API_CORE_BASE}project/ubd/csv-mapping/jobs/test-job`,
     })
     await new Promise((resolve) =>
       setTimeout(resolve, 100),

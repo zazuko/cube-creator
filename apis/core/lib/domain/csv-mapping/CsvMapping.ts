@@ -69,6 +69,27 @@ export default function Mixin<Base extends Constructor<Omit<CsvMapping, keyof Ap
       })
     }
 
+    initializeJobCollection(store: ResourceStore) {
+      if (this.jobCollection) {
+        throw new Error('Job collection already exists')
+      }
+
+      this.jobCollection = new Hydra.CollectionMixin.Class(store.create(id.jobCollection(this)), {
+        types: [cc.JobCollection],
+        title: 'Jobs',
+        [cc.csvMapping.value]: this,
+        manages: [{
+          // ?member rdf:type cc:Job
+          property: rdf.type,
+          object: cc.Job,
+        }, {
+          // ?member cc:csvMapping <mapping>
+          object: this,
+          property: cc.csvMapping,
+        }],
+      })
+    }
+
     addSource(store: ResourceStore, { fileName }: AddSource): CsvSource.CsvSource {
       const source = CsvSource.create(store.create(id.csvSource(this, fileName)), {
         name: fileName,

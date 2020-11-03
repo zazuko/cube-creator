@@ -6,7 +6,7 @@
   "scripts": {
     "postinstall": "mkdir -p output",
     "transform": "dotenv -e ./.env -e ./.test.env -- yarn start",
-    "start": "ts-node index.ts transform --project \"$TRANSFORM_PROJECT\" --to filesystem --debug",
+    "start": "ts-node index.ts transform --job \"$TRANSFORM_JOB\" --to filesystem --debug",
     "build": "tsc"
   },
   "dependencies": {
@@ -23,10 +23,13 @@
     "barnard59-base": "^0.0.4",
     "barnard59-formats": "^0.0.7",
     "barnard59-graph-store": "^0.0.6",
+    "body-parser": "^1.19.0",
     "clownface": "^1",
     "commander": "^4.1.1",
+    "cors": "^2.8.5",
     "debug": "^4.1.1",
     "duplex-to": "^1.0.0",
+    "express": "^4.17.1",
     "get-stream": "^5.1.0",
     "isstream": "^0.1.2",
     "node-fetch": "^2.6.1",

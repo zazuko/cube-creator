@@ -2,7 +2,7 @@ import { describe, before, beforeEach, it } from 'mocha'
 import { expect } from 'chai'
 import { Hydra } from 'alcaeus/node'
 import env from '@cube-creator/core/env'
-import { ProjectIterator } from '../../lib/project'
+import { JobIterator } from '../../lib/job'
 import { insertTestData } from '@cube-creator/testing/lib'
 import { setupEnv } from '../support/env'
 import { Table } from '@rdfine/csvw'
@@ -10,7 +10,7 @@ import { log } from '../support/logger'
 
 Hydra.baseUri = env.API_CORE_BASE
 
-describe('lib/projects', function () {
+describe('lib/job', function () {
   this.timeout(20000)
 
   let variables: Map<string, string>
@@ -24,10 +24,10 @@ describe('lib/projects', function () {
     variables = new Map()
   })
 
-  describe('ProjectIterator', () => {
-    it('streams csv table objects from project', async () => {
+  describe('JobIterator', () => {
+    it('streams csv table objects from job', async () => {
       // given
-      const iteratorStream = new ProjectIterator({ projectUri: '/cube-project/ubd', log, variables })
+      const iteratorStream = new JobIterator({ jobUri: `${env.API_CORE_BASE}project/ubd/csv-mapping/jobs/test-job`, log, variables })
 
       // when
       const results: Table[] = []
@@ -45,7 +45,7 @@ describe('lib/projects', function () {
 
     it('sets cube URI as pipeline variable "graph"', async () => {
       // given
-      const iteratorStream = new ProjectIterator({ projectUri: '/cube-project/ubd', log, variables })
+      const iteratorStream = new JobIterator({ jobUri: `${env.API_CORE_BASE}project/ubd/csv-mapping/jobs/test-job`, log, variables })
 
       // when
       await new Promise((resolve, reject) => {

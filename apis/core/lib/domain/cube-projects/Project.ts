@@ -31,6 +31,7 @@ export default function Mixin<Base extends Constructor<Omit<Project, keyof ApiPr
 
       const mapping = createMapping(store.create(id.csvMapping(this)), {
         namespace,
+        project: this,
       })
 
       mapping.initializeSourcesCollection(store)

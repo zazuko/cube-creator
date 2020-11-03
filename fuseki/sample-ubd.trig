@@ -52,6 +52,7 @@ graph <cube-project/ubd/csv-mapping> {
     a cc:CsvMapping , hydra:Resource ;
     cc:csvSource <cube-project/ubd/csv-source/ubd> ;
     cc:csvSourceCollection <cube-project/ubd/csv-mapping/sources> ;
+    cc:jobCollection <cube-project/ubd/csv-mapping/jobs> ;
     cc:tables <cube-project/ubd/csv-mapping/tables> ;
     cc:namespace <https://environment.ld.admin.ch/foen/ubd/28/> ;
   .
@@ -299,5 +300,30 @@ graph <project/ubd/csv-mapping/table-station/column-mapping-3> {
     cc:targetProperty rdfs:label ;
     cc:datatype xsd:langString ;
     cc:language "de" ;
+  .
+}
+
+<cube-project/ubd/csv-mapping/jobs> void:inDataset <ubd-example> .
+graph <project/ubd/csv-mapping/jobs> {
+  <project/ubd/csv-mapping/jobs>
+    a hydra:Collection, cc:JobCollection ;
+    hydra:manages [
+      hydra:property rdf:type ;
+      hydra:object   cc:Job ;
+    ] , [
+      hydra:property cc:csvMapping ;
+      hydra:object   <cube-project/ubd/csv-mapping> ;
+    ]
+  .
+}
+
+<project/ubd/csv-mapping/jobs/test-job> void:inDataset <ubd-example> .
+graph <project/ubd/csv-mapping/jobs/test-job> {
+  <project/ubd/csv-mapping/jobs/test-job>
+    a hydra:Resource, cc:Job ;
+    cc:tables <cube-project/ubd/csv-mapping/tables> ;
+    schema:label "cli-test" ;
+    cc:cubeGraph <cube-project/ubd/cube-data> ;
+    dcterms:created "2020-10-29T12:01:54"^^xsd:dateTime
   .
 }

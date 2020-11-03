@@ -14,7 +14,9 @@ type CubeCreatorClass =
   'Table' |
   'TableCollection' |
   'ObservationTable' |
-  'ColumnMapping'
+  'ColumnMapping' |
+  'Job' |
+  'JobCollection'
 
 type CubeCreatorProperty =
   'projectSourceKind' |
@@ -36,7 +38,8 @@ type CubeCreatorProperty =
   'datatype' |
   'language' |
   'isObservationTable' |
-  'cube'
+  'cube' |
+  'jobCollection'
 
 type OtherTerms =
   'dash'
