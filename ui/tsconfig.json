@@ -15,7 +15,8 @@
     "typeRoots": ["./types", "./node_modules/@types"],
     "types": [
       "webpack-env",
-      "jest"
+      "jest",
+      "cypress"
     ],
     "paths": {
       "@/*": [

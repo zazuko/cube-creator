@@ -48,6 +48,14 @@ Hydra.defaultHeaders = () => {
     headers.set('Authorization', `Bearer ${token}`)
   }
 
+  if (process.env.VUE_APP_X_USER) {
+    headers.set('X-User', process.env.VUE_APP_X_USER)
+  }
+
+  if (process.env.VUE_APP_X_PERMISSION) {
+    headers.set('X-Permission', process.env.VUE_APP_X_PERMISSION)
+  }
+
   return headers
 }
 
