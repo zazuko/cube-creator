@@ -71,3 +71,12 @@ export const checkBox: SingleEditorComponent = {
     ]
   }
 }
+
+export const nestedForm: SingleEditorComponent = {
+  editor: dash.DetailsEditor,
+  render ({ property, value }) {
+    const nestedShape = property.shape?.node?.pointer
+
+    return html`<cc-form .resource="${value.object}" .shapes="${nestedShape}" class="box"></cc-form>`
+  },
+}
