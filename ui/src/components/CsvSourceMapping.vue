@@ -9,7 +9,14 @@
                 {{ source.name }}
               </div>
               <div class="level-item">
-                <hydra-operation-button :operation="source.actions.delete" @click="deleteSource(source)" />
+                <hydra-operation-button
+                  :operation="source.actions.edit"
+                  :to="{ name: 'SourceEdit', params: { sourceId: source.clientPath } }"
+                />
+                <hydra-operation-button
+                  :operation="source.actions.delete"
+                  @click="deleteSource(source)"
+                />
               </div>
             </div>
             <div class="level-right">
