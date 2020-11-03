@@ -45,8 +45,8 @@ type OtherTerms =
   'dash'
 
 type MetaDataProperty =
-  'PublishOnOpendata' |
-  'PublishOnVisualize'
+  'publishOnOpendata' |
+  'publishOnVisualize'
 
 type CubeCreatorNamespace = Record<CubeCreatorClass | CubeCreatorProperty | OtherTerms | MetaDataProperty, NamedNode>
 
