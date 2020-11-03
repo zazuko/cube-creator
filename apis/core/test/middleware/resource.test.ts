@@ -1,4 +1,5 @@
 import { describe, it } from 'mocha'
+import { expect } from 'chai'
 import request from 'supertest'
 import express from 'express'
 import $rdf from 'rdf-ext'
@@ -7,10 +8,9 @@ import { cc } from '@cube-creator/core/namespace'
 import { rdfs } from '@tpluscode/rdf-ns-builders'
 import { resource } from '../../lib/middleware/resource'
 import { appMock } from '../support/middleware'
-import RdfResource from '@tpluscode/rdfine/RdfResource'
 
 describe('middleware/resource', () => {
-  it('returns pointer to empty named node if the request term does not appear in body', async () => {
+  it('returns pointer to empty named node if the request term does not appear in body', async function () {
     // given
     const app = express()
     app.use(appMock(hydra => {
@@ -23,25 +23,21 @@ describe('middleware/resource', () => {
     app.use(resource)
     app.use(async (req, res) => {
       const pointer = await req.resource()
-      res.send(RdfResource.factory.createEntity(pointer).toJSON())
+      const canonicalTriples = $rdf.dataset([...pointer.dataset]).toCanonical()
+      res.send(canonicalTriples)
     })
 
     // when
-    const res = request(app)
+    const res = await request(app)
       .post('/')
       .set('content-type', 'text/turtle')
       .send(turtle`<> a ${cc.CubeProject} ; ${rdfs.label} "Test project" .`.toString())
 
     // then
-    await res.expect({
-      id: '',
-      type: ['https://cube-creator.zazuko.com/vocab#CubeProject'],
-      'http://www.w3.org/2000/01/rdf-schema#label': 'Test project',
-      '@context': { id: '@id', type: '@type' },
-    })
+    expect(res.text).to.matchSnapshot(this)
   })
 
-  it('returns pointer to hydra.request.resource.term if it appears in the body', async () => {
+  it('returns pointer to hydra.request.resource.term if it appears in the body', async function () {
     // given
     const app = express()
     app.use(appMock(hydra => {
@@ -54,24 +50,18 @@ describe('middleware/resource', () => {
     app.use(resource)
     app.use(async (req, res) => {
       const pointer = await req.resource()
-      res.send(RdfResource.factory.createEntity(pointer).toJSON())
+      const canonicalTriples = $rdf.dataset([...pointer.dataset]).toCanonical()
+      res.send(canonicalTriples)
     })
 
     // when
-    const res = request(app)
+    const res = await request(app)
       .post('/foo/bar')
       .set('host', 'example.com')
       .set('content-type', 'text/turtle')
       .send(turtle`<http://example.com/foo/bar> a ${cc.CubeProject} ; ${rdfs.label} "Test project" .`.toString())
 
     // then
-    await res
-      .expect(200)
-      .expect({
-        id: 'http://example.com/foo/bar',
-        type: ['https://cube-creator.zazuko.com/vocab#CubeProject'],
-        'http://www.w3.org/2000/01/rdf-schema#label': 'Test project',
-        '@context': { id: '@id', type: '@type' },
-      })
+    expect(res.text).to.matchSnapshot(this)
   })
 })
