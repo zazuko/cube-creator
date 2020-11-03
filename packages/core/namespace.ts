@@ -41,7 +41,11 @@ type CubeCreatorProperty =
 type OtherTerms =
   'dash'
 
-type CubeCreatorNamespace = Record<CubeCreatorClass | CubeCreatorProperty | OtherTerms, NamedNode>
+type MetaDataProperty =
+  'PublishOnOpendata' |
+  'PublishOnVisualize'
+
+type CubeCreatorNamespace = Record<CubeCreatorClass | CubeCreatorProperty | OtherTerms | MetaDataProperty, NamedNode>
 
 export const hashi = namespace('http://hypermedia.app/shapes#')
 export const cube = namespace('http://ns.bergnet.org/cube/')
