@@ -38,6 +38,5 @@ export function ProjectMixin<Base extends Constructor>(base: Base) {
 ProjectMixin.appliesTo = cc.CubeProject
 
 type MandatoryFields = 'creator' | 'label'
-type OptionalFields = 'csvMapping'
 
-export const create = initializer<Project, MandatoryFields, OptionalFields>(ProjectMixin)
+export const create = initializer<Project, MandatoryFields>(ProjectMixin)

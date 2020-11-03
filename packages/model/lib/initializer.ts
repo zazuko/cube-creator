@@ -6,15 +6,13 @@ import { NamedNode } from 'rdf-js'
 import { Initializer } from '@tpluscode/rdfine/RdfResource'
 
 type MandatoryFields<T, TRequired extends Extract<keyof T, string>> = Pick<Required<Initializer<T>>, TRequired>
-type OptionalFields<T, TOptional extends Extract<keyof T, string>> = Pick<Initializer<T>, TOptional>
 
-type InitializerFunction<T, TRequired extends Extract<keyof T, string> = never, TOptional extends Extract<keyof T, string> = never> =
-    (pointer: GraphPointer<NamedNode>, init: MandatoryFields<T, TRequired> & OptionalFields<T, TOptional> & Omit<Initializer<T>, keyof TRequired | keyof TOptional>) => T
+type InitializerFunction<T, TRequired extends Extract<keyof T, string> = never> =
+    (pointer: GraphPointer<NamedNode>, init: MandatoryFields<T, TRequired> & Initializer<T>) => T
 
 export function initializer<T>(mixin: Mixin, defaults?: Initializer<T>): (pointer: GraphPointer<NamedNode>) => T
-export function initializer<T, TRequired extends Extract<keyof T, string>>(mixin: Mixin, defaults?: Initializer<T>): (pointer: GraphPointer<NamedNode>, init: MandatoryFields<T, TRequired>) => T
-export function initializer<T, TRequired extends Extract<keyof T, string>, TOptional extends Extract<keyof T, string>>(mixin: Mixin, defaults?: Initializer<T>): InitializerFunction<T, TRequired, TOptional>
-export function initializer<T, TRequired extends Extract<keyof T, string>, TOptional extends Extract<keyof T, string>>(mixin: Mixin, defaults?: Initializer<T>): InitializerFunction<T, TRequired, TOptional> {
+export function initializer<T, TRequired extends Extract<keyof T, string>>(mixin: Mixin, defaults?: Initializer<T>): InitializerFunction<T, TRequired>
+export function initializer<T, TRequired extends Extract<keyof T, string>>(mixin: Mixin, defaults?: Initializer<T>): InitializerFunction<T, TRequired> {
   return (pointer, init): T => {
     const combinedInit = { ...(defaults || {}), ...(init || {}) }
 

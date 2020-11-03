@@ -5,8 +5,10 @@ import * as Hydra from '@rdfine/hydra'
 import RdfResource from '@tpluscode/rdfine/RdfResource'
 import { CsvMapping } from '@cube-creator/model'
 import * as CsvSource from '@cube-creator/model/CsvSource'
+import * as Table from '@cube-creator/model/Table'
 import { ResourceStore } from '../../ResourceStore'
 import * as id from '../identifiers'
+import { NamedNode } from 'rdf-js'
 
 RdfResource.factory.addMixin(...Object.values(Hydra))
 
@@ -14,10 +16,19 @@ interface AddSource {
   fileName: string
 }
 
+interface AddTable {
+  name: string
+  csvSource: CsvSource.CsvSource
+  identifierTemplate: string | undefined
+  color: string | undefined
+  isObservationTable: boolean
+}
+
 interface ApiCsvMapping {
   initializeSourcesCollection(store: ResourceStore): void
   initializeTableCollection(store: ResourceStore): void
   addSource(store: ResourceStore, params: AddSource): CsvSource.CsvSource
+  addTable(store: ResourceStore, params: AddTable): Promise<Table.Table>
 }
 
 declare module '@cube-creator/model' {
@@ -98,6 +109,24 @@ export default function Mixin<Base extends Constructor<Omit<CsvMapping, keyof Ap
 
       this.pointer.addOut(cc.csvSource, source.id)
       return source
+    }
+
+    async addTable(store: ResourceStore, { name, csvSource, identifierTemplate, isObservationTable, color }: AddTable): Promise<Table.Table> {
+      if (!identifierTemplate) {
+        throw new Error('Cannot create table without cc:identifierTemplate')
+      }
+
+      const table = await store.createMember(this.tableCollection.id as NamedNode, id.table(this, name))
+      const types = isObservationTable ? [cc.ObservationTable] : []
+
+      return Table.create(table, {
+        types,
+        name,
+        csvMapping: this,
+        csvSource,
+        identifierTemplate,
+        color,
+      })
     }
   }
 }

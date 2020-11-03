@@ -28,16 +28,12 @@ export function tableCollection(csvMapping: CsvMapping): NamedNode {
   return $rdf.namedNode(`${csvMapping.id.value}/tables`)
 }
 
-export function table(csvMapping: Term, label: string): NamedNode {
-  return $rdf.namedNode(`${csvMapping.value}/table/${url.slugify(label)}`)
+export function table(csvMapping: CsvMapping, label: string): NamedNode {
+  return $rdf.namedNode(`${csvMapping.id.value}/table/${url.slugify(label)}`)
 }
 
-export function csvw(table: Term):NamedNode {
-  return $rdf.namedNode(`${table.value}/csvw`)
-}
-
-export function columnMapping(table: GraphPointer<NamedNode>, columnName: string): NamedNode {
-  return $rdf.namedNode(`${table.value}/column-mapping/${url.slugify(columnName)}`)
+export function columnMapping(table: Table, columnName: string): NamedNode {
+  return $rdf.namedNode(`${table.id.value}/column-mapping/${url.slugify(columnName)}`)
 }
 
 export function jobCollection(csvMapping: CsvMapping): NamedNode {
