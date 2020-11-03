@@ -209,5 +209,95 @@ describe('domain/cube-projects/create', () => {
         }],
       })
     })
+
+    it('creates a properly defined sources collection', async () => {
+      // given
+      const resource = clownface({ dataset: $rdf.dataset() })
+        .namedNode('')
+        .addOut(rdfs.label, 'Foo bar project')
+        .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
+
+      // when
+      const project = await createProject({ resource, store, projectsCollection, user })
+      const mapping = await store.get(project.csvMapping?.id as NamedNode)
+      const sourceCollection = await store.get(mapping?.out(cc.csvSourceCollection).term as NamedNode)
+
+      // then
+      expect(sourceCollection).to.matchShape({
+        property: {
+          path: hydra.manages,
+          xone: [{
+            node: {
+              property: [{
+                path: hydra.property,
+                hasValue: rdf.type,
+                minCount: 1,
+              }, {
+                path: hydra.object,
+                hasValue: cc.CSVSource,
+                minCount: 1,
+              }],
+            },
+          }, {
+            node: {
+              property: [{
+                path: hydra.property,
+                hasValue: cc.csvMapping,
+                minCount: 1,
+              }, {
+                path: hydra.object,
+                hasValue: mapping!.term,
+                minCount: 1,
+              }],
+            },
+          }],
+        },
+      })
+    })
+
+    it('creates a properly defined tables collection', async () => {
+      // given
+      const resource = clownface({ dataset: $rdf.dataset() })
+        .namedNode('')
+        .addOut(rdfs.label, 'Foo bar project')
+        .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
+
+      // when
+      const project = await createProject({ resource, store, projectsCollection, user })
+      const mapping = await store.get(project.csvMapping?.id as NamedNode)
+      const tableCollection = await store.get(mapping?.out(cc.tables).term as NamedNode)
+
+      // then
+      expect(tableCollection).to.matchShape({
+        property: {
+          path: hydra.manages,
+          xone: [{
+            node: {
+              property: [{
+                path: hydra.property,
+                hasValue: rdf.type,
+                minCount: 1,
+              }, {
+                path: hydra.object,
+                hasValue: cc.Table,
+                minCount: 1,
+              }],
+            },
+          }, {
+            node: {
+              property: [{
+                path: hydra.property,
+                hasValue: cc.csvMapping,
+                minCount: 1,
+              }, {
+                path: hydra.object,
+                hasValue: mapping!.term,
+                minCount: 1,
+              }],
+            },
+          }],
+        },
+      })
+    })
   })
 })
