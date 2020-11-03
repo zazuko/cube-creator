@@ -1,14 +1,23 @@
 import { Constructor } from '@tpluscode/rdfine'
 import { rdf } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
-import { CollectionMixin } from '@rdfine/hydra'
+import * as Hydra from '@rdfine/hydra'
+import RdfResource from '@tpluscode/rdfine/RdfResource'
 import { CsvMapping } from '@cube-creator/model'
+import * as CsvSource from '@cube-creator/model/CsvSource'
 import { ResourceStore } from '../../ResourceStore'
 import * as id from '../identifiers'
+
+RdfResource.factory.addMixin(...Object.values(Hydra))
+
+interface AddSource {
+  fileName: string
+}
 
 interface ApiCsvMapping {
   initializeSourcesCollection(store: ResourceStore): void
   initializeTableCollection(store: ResourceStore): void
+  addSource(store: ResourceStore, params: AddSource): CsvSource.CsvSource
 }
 
 declare module '@cube-creator/model' {
@@ -23,7 +32,7 @@ export default function Mixin<Base extends Constructor<Omit<CsvMapping, keyof Ap
         throw new Error('Sources collection already exists')
       }
 
-      this.sourcesCollection = new CollectionMixin.Class(store.create(id.csvSourceCollection(this)), {
+      this.sourcesCollection = new Hydra.CollectionMixin.Class(store.create(id.csvSourceCollection(this)), {
         types: [cc.CSVSourceCollection],
         title: 'CSV-Sources',
         [cc.csvMapping.value]: this,
@@ -44,7 +53,7 @@ export default function Mixin<Base extends Constructor<Omit<CsvMapping, keyof Ap
         throw new Error('Tables collection already exists')
       }
 
-      this.tableCollection = new CollectionMixin.Class(store.create(id.tableCollection(this)), {
+      this.tableCollection = new Hydra.CollectionMixin.Class(store.create(id.tableCollection(this)), {
         types: [cc.TableCollection],
         title: 'Tables',
         [cc.csvMapping.value]: this,
@@ -65,7 +74,7 @@ export default function Mixin<Base extends Constructor<Omit<CsvMapping, keyof Ap
         throw new Error('Job collection already exists')
       }
 
-      this.jobCollection = new CollectionMixin.Class(store.create(id.jobCollection(this)), {
+      this.jobCollection = new Hydra.CollectionMixin.Class(store.create(id.jobCollection(this)), {
         types: [cc.JobCollection],
         title: 'Jobs',
         [cc.csvMapping.value]: this,
@@ -79,6 +88,16 @@ export default function Mixin<Base extends Constructor<Omit<CsvMapping, keyof Ap
           property: cc.csvMapping,
         }],
       })
+    }
+
+    addSource(store: ResourceStore, { fileName }: AddSource): CsvSource.CsvSource {
+      const source = CsvSource.create(store.create(id.csvSource(this, fileName)), {
+        name: fileName,
+        csvMapping: this,
+      })
+
+      this.pointer.addOut(cc.csvSource, source.id)
+      return source
     }
   }
 }

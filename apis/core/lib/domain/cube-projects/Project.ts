@@ -8,6 +8,7 @@ import '../csv-mapping/CsvMapping'
 import { cc } from '@cube-creator/core/namespace'
 
 interface ApiProject {
+  identifier: string
   initializeCsvMapping(store: ResourceStore, namespace: NamedNode): CsvMapping
 }
 
@@ -19,6 +20,10 @@ declare module '@cube-creator/model' {
 
 export default function Mixin<Base extends Constructor<Omit<Project, keyof ApiProject>>>(Resource: Base) {
   class Project extends Resource implements ApiProject {
+    get identifier() {
+      return this.id.value.substring(this.id.value.lastIndexOf('/') + 1)
+    }
+
     initializeCsvMapping(store: ResourceStore, namespace: NamedNode) {
       if (this.csvMapping) {
         throw new Error('CSV Mapping already exists')

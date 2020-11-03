@@ -4,12 +4,16 @@ import { NamedNode, Term } from 'rdf-js'
 import { GraphPointer } from 'clownface'
 import env from '@cube-creator/core/env'
 import { nanoid } from 'nanoid'
-import { CsvMapping, Project } from '@cube-creator/model'
+import { CsvMapping, CsvSource, Project } from '@cube-creator/model'
 
 const url = new UrlSlugify()
 
 export function cubeProject(label: string): NamedNode {
   return $rdf.namedNode(`${env.API_CORE_BASE}cube-project/${url.slugify(label)}`)
+}
+
+export function cube(project: Project): NamedNode {
+  return $rdf.namedNode(`${env.API_CORE_BASE}cube/${project.identifier}`)
 }
 
 export function csvMapping(project: Project): NamedNode {
@@ -36,16 +40,16 @@ export function jobCollection(csvMapping: CsvMapping): NamedNode {
   return $rdf.namedNode(`${csvMapping.id.value}/jobs`)
 }
 
-export function csvSource(project: GraphPointer<NamedNode>, fileName: string): NamedNode {
-  return $rdf.namedNode(`${project.value}/csv-source/${url.slugify(fileName)}`)
+export function csvSource(mapping: CsvMapping, fileName: string): NamedNode {
+  return $rdf.namedNode(`${mapping.id.value}/csv-source/${url.slugify(fileName)}`)
 }
 
 export function dialect(csvSource: GraphPointer<NamedNode>): NamedNode {
   return $rdf.namedNode(`${csvSource}/dialect`)
 }
 
-export function column(csvSource: GraphPointer<NamedNode>, columnName: string): NamedNode {
-  return $rdf.namedNode(`${csvSource}/column/${url.slugify(columnName)}`)
+export function column(csvSource: CsvSource, columnName: string): NamedNode {
+  return $rdf.namedNode(`${csvSource.id.value}/column/${url.slugify(columnName)}`)
 }
 
 export function user(user: string): NamedNode {

@@ -8,6 +8,7 @@ import { cc, cube, shape } from '@cube-creator/core/namespace'
 import { createProject } from '../../../lib/domain/cube-projects/create'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import '../../../lib/domain'
+import env from '@cube-creator/core/env'
 
 describe('domain/cube-projects/create', () => {
   let store: TestResourceStore
@@ -149,6 +150,29 @@ describe('domain/cube-projects/create', () => {
       })
     })
 
+    it('generates a mapping namespace if none was given', async () => {
+      // given
+      const resource = clownface({ dataset: $rdf.dataset() })
+        .namedNode('')
+        .addOut(rdfs.label, 'Foo bar project')
+        .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
+
+      // when
+      const project = await createProject({ resource, store, projectsCollection, user })
+
+      // then
+      const csvMapping = await store.get(project.csvMapping?.id as NamedNode)
+      expect(csvMapping).to.matchShape({
+        property: [{
+          path: cc.namespace,
+          nodeKind: sh.IRI,
+          minCount: 1,
+          maxCount: 1,
+          pattern: `^${env.API_CORE_BASE}cube/foo-bar-project-.+$`,
+        }],
+      })
+    })
+
     it("adds cc:namespace value as dataset's cube", async function () {
       // given
       const resource = clownface({ dataset: $rdf.dataset() })
@@ -183,6 +207,96 @@ describe('domain/cube-projects/create', () => {
             }],
           },
         }],
+      })
+    })
+
+    it('creates a properly defined sources collection', async () => {
+      // given
+      const resource = clownface({ dataset: $rdf.dataset() })
+        .namedNode('')
+        .addOut(rdfs.label, 'Foo bar project')
+        .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
+
+      // when
+      const project = await createProject({ resource, store, projectsCollection, user })
+      const mapping = await store.get(project.csvMapping?.id as NamedNode)
+      const sourceCollection = await store.get(mapping?.out(cc.csvSourceCollection).term as NamedNode)
+
+      // then
+      expect(sourceCollection).to.matchShape({
+        property: {
+          path: hydra.manages,
+          xone: [{
+            node: {
+              property: [{
+                path: hydra.property,
+                hasValue: rdf.type,
+                minCount: 1,
+              }, {
+                path: hydra.object,
+                hasValue: cc.CSVSource,
+                minCount: 1,
+              }],
+            },
+          }, {
+            node: {
+              property: [{
+                path: hydra.property,
+                hasValue: cc.csvMapping,
+                minCount: 1,
+              }, {
+                path: hydra.object,
+                hasValue: mapping!.term,
+                minCount: 1,
+              }],
+            },
+          }],
+        },
+      })
+    })
+
+    it('creates a properly defined tables collection', async () => {
+      // given
+      const resource = clownface({ dataset: $rdf.dataset() })
+        .namedNode('')
+        .addOut(rdfs.label, 'Foo bar project')
+        .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
+
+      // when
+      const project = await createProject({ resource, store, projectsCollection, user })
+      const mapping = await store.get(project.csvMapping?.id as NamedNode)
+      const tableCollection = await store.get(mapping?.out(cc.tables).term as NamedNode)
+
+      // then
+      expect(tableCollection).to.matchShape({
+        property: {
+          path: hydra.manages,
+          xone: [{
+            node: {
+              property: [{
+                path: hydra.property,
+                hasValue: rdf.type,
+                minCount: 1,
+              }, {
+                path: hydra.object,
+                hasValue: cc.Table,
+                minCount: 1,
+              }],
+            },
+          }, {
+            node: {
+              property: [{
+                path: hydra.property,
+                hasValue: cc.csvMapping,
+                minCount: 1,
+              }, {
+                path: hydra.object,
+                hasValue: mapping!.term,
+                minCount: 1,
+              }],
+            },
+          }],
+        },
       })
     })
   })

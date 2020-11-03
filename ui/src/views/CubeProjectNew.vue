@@ -56,17 +56,26 @@ export default class CubeProjectNewView extends Vue {
 
   async onSubmit (): Promise<void> {
     this.error = null
+    const loader = this.$buefy.loading.open({})
 
     try {
       const project = await this.$store.dispatch('api/invokeSaveOperation', {
         operation: this.operation,
         resource: this.resource,
       })
+
+      this.$store.dispatch('app/showMessage', {
+        message: `Project ${project.title} successfully created`,
+        type: 'is-success',
+      })
+
       this.$router.push({ name: 'CubeProject', params: { id: project.clientPath } })
     } catch (e) {
       console.error(e)
       // TODO: Improve error display
       this.error = e
+    } finally {
+      loader.close()
     }
   }
 

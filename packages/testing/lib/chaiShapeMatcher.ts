@@ -54,7 +54,7 @@ chai.Assertion.addMethod('matchShape', function (shapeInit: Initializer<NodeShap
     resourceDataset = obj.dataset
     targetNode = [...obj.terms]
   } else {
-    throw new Error('Cannot match given object to a SHACL Shape')
+    throw new Error(`Cannot match given object to a SHACL Shape. Expecting a rdfine object, graph pointer or RDF/JS dataset. Got ${obj?.constructor.name}`)
   }
 
   const shape = new NodeShapeMixin.Class(
