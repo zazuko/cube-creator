@@ -37,6 +37,17 @@ export const post = labyrinth.protectedResource(
   }),
 )
 
+export const put = labyrinth.protectedResource(
+  shaclValidate,
+  asyncMiddleware(async (req, res) => {
+    // TODO
+
+    res.status(200)
+    // await res.dataset(fileLocation.dataset)
+    res.send('')
+  }),
+)
+
 const getCSVSource = asyncMiddleware(async (req, res, next) => {
   if (!req.accepts('text/csv')) {
     return next()
