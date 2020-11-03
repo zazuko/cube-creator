@@ -33,7 +33,7 @@
     <div v-for="columnMapping in table.columnMappings" :key="columnMapping.id.value" class="panel-block">
       <div class="level-left">
         <div class="level-item">
-          {{ columnMapping.targetProperty.value }}
+          <property-display :term="columnMapping.targetProperty" />
         </div>
       </div>
       <div class="level-right">
@@ -63,9 +63,10 @@
 import { Prop, Component, Vue } from 'vue-property-decorator'
 import { ColumnMapping, Table } from '@cube-creator/model'
 import HydraOperationButton from './HydraOperationButton.vue'
+import PropertyDisplay from './PropertyDisplay.vue'
 
 @Component({
-  components: { HydraOperationButton },
+  components: { HydraOperationButton, PropertyDisplay },
 })
 export default class MapperTable extends Vue {
   @Prop() readonly table!: Table;
