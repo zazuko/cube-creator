@@ -6,7 +6,7 @@ import { CONSTRUCT } from '@tpluscode/sparql-builder'
 import transform from '../../../lib/commands/transform'
 import { log } from '../../support/logger'
 import { setupEnv } from '../../support/env'
-import { client, insertTestData } from '../../../../packages/testing/lib'
+import { client, insertTestData } from '@cube-creator/testing/lib'
 
 describe('lib/commands/transform', function () {
   this.timeout(200000)
