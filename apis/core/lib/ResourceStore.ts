@@ -1,5 +1,5 @@
 import type StreamClient from 'sparql-http-client/StreamClient'
-import { NamedNode, Stream } from 'rdf-js'
+import { NamedNode, Stream, Term } from 'rdf-js'
 import cf, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import DatasetExt from 'rdf-ext/lib/Dataset'
@@ -9,7 +9,6 @@ import TermMap from '@rdfjs/term-map'
 import mergeStreams from 'merge-stream'
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 import { warn } from '@hydrofoil/labyrinth/lib/logger'
-import { ResourceIdentifier } from '@tpluscode/rdfine'
 import { turtle } from '@tpluscode/rdf-string'
 import TermSet from '@rdfjs/term-set'
 import RdfResource, { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
@@ -30,8 +29,8 @@ export interface ResourceStore {
    *
    * @param id
    */
-  get(id: string | ResourceIdentifier): Promise<GraphPointer<NamedNode, DatasetExt> | undefined>
-  getResource<T extends RdfResourceCore>(id: string | ResourceIdentifier): Promise<T | undefined>
+  get(id: string | Term | undefined): Promise<GraphPointer<NamedNode, DatasetExt> | undefined>
+  getResource<T extends RdfResourceCore>(id: string | Term | undefined): Promise<T | undefined>
 
   /**
    * Creates a new resource a puts in the in-memory store
@@ -102,8 +101,19 @@ export default class implements ResourceStore {
     this.__deletedGraphs = new TermSet()
   }
 
-  async get(id: string | NamedNode): Promise<GraphPointer<NamedNode, DatasetExt> | undefined> {
-    const term = typeof id === 'string' ? $rdf.namedNode(id) : id
+  async get(id: string | Term | undefined): Promise<GraphPointer<NamedNode, DatasetExt> | undefined> {
+    if (!id) {
+      return undefined
+    }
+
+    let term: NamedNode
+    if (typeof id === 'string') {
+      term = $rdf.namedNode(id)
+    } else if (id.termType === 'NamedNode') {
+      term = id
+    } else {
+      return undefined
+    }
     if (!this.__resources.has(term)) {
       const resource = await this.__storage.loadResource(term)
       if (resource) {
@@ -114,7 +124,7 @@ export default class implements ResourceStore {
     return this.__resources.get(term)
   }
 
-  async getResource<T extends RdfResourceCore>(id: string | NamedNode):Promise<T | undefined> {
+  async getResource<T extends RdfResourceCore>(id: string | Term | undefined):Promise<T | undefined> {
     const pointer = await this.get(id)
     if (!pointer) return undefined
 

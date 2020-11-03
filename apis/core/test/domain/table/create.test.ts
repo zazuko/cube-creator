@@ -7,16 +7,26 @@ import { cc } from '@cube-creator/core/namespace'
 import { createTable } from '../../../lib/domain/table/create'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import { NamedNode } from 'rdf-js'
+import '../../../lib/domain'
 
 describe('domain/table/create', () => {
   let store: TestResourceStore
-  const tableCollection = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('tables') }).addOut(cc.csvMapping, $rdf.namedNode('myCsvMapping'))
-  const csvSource = clownface({ dataset: $rdf.dataset() }).namedNode('foo')
+  const csvMapping = clownface({ dataset: $rdf.dataset() })
+    .namedNode('myCsvMapping')
+    .addOut(rdf.type, cc.CsvMapping)
+    .addOut(cc.tables, $rdf.namedNode('tables'))
+  const tableCollection = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('tables') })
+    .addOut(rdf.type, cc.Table)
+    .addOut(cc.csvMapping, csvMapping)
+  const csvSource = clownface({ dataset: $rdf.dataset() })
+    .namedNode('foo')
+    .addOut(rdf.type, cc.CSVSource)
 
   beforeEach(() => {
     store = new TestResourceStore([
       tableCollection,
       csvSource,
+      csvMapping,
     ])
   })
 
@@ -27,6 +37,7 @@ describe('domain/table/create', () => {
       .addOut(schema.name, 'the name')
       .addOut(schema.color, '#aaa')
       .addOut(cc.csvSource, $rdf.namedNode('foo'))
+      .addOut(cc.identifierTemplate, '{id}')
 
     // when
     const table = await createTable({ resource, store, tableCollection })
