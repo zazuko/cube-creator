@@ -10,11 +10,15 @@ import { createJob } from '../../../lib/domain/job/create'
 
 describe('domain/job/create', () => {
   let store: TestResourceStore
-  const project = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('myProject') }).addOut(cc.csvMapping, $rdf.namedNode('myCsvMapping')).addOut(cc.cubeGraph, $rdf.namedNode('myCubeGraph')).addOut(rdfs.label, 'My Cube Name')
-  
+  const project = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('myProject') })
+    .addOut(cc.csvMapping, $rdf.namedNode('myCsvMapping'))
+    .addOut(cc.cubeGraph, $rdf.namedNode('myCubeGraph'))
+    .addOut(rdfs.label, 'My Cube Name')
   const tableCollection = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('myTables') })
-  const csvMapping = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('myCsvMapping') }).addOut(cc.project, project).addOut(cc.tables, tableCollection)
-  const jobCollection = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('jobs') }).addOut(cc.csvMapping, csvMapping)
+  const csvMapping = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('myCsvMapping') })
+    .addOut(cc.project, project).addOut(cc.tables, tableCollection)
+  const jobCollection = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('jobs') })
+    .addOut(cc.csvMapping, csvMapping)
 
   beforeEach(() => {
     store = new TestResourceStore([
