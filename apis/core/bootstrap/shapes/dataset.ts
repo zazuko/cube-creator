@@ -33,19 +33,11 @@ ${shape('dataset/edit-metadata')} {
     ] ;
     ${sh.property} [
       ${sh.name} "Publish on Swiss Open Data" ;
-      ${sh.path} ${cc.PublishOnOpendata} ;
+      ${sh.path} ${cc.publishOnOpendata} ;
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
       ${sh.datatype} xsd:boolean
       ${sh.order} 40 ;
-    ] ;
-    ${sh.property} [
-      ${sh.name} "Publish on Swiss Open Data" ;
-      ${sh.path} ${cc.PublishOnOpendata} ;
-      ${sh.minCount} 1 ;
-      ${sh.maxCount} 1 ;
-      ${sh.datatype} xsd:boolean
-      ${sh.order} 50 ;
     ] ;
     ${sh.property} [
       ${sh.name} "Publish on Visualize" ;
@@ -53,6 +45,14 @@ ${shape('dataset/edit-metadata')} {
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
       ${sh.datatype} xsd:boolean
+      ${sh.order} 50 ;
+    ] ;
+    ${sh.property} [
+      ${sh.name} "Publisher" ;
+      ${sh.path} ${dcterms.publisher} ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+      ${sh.minLength} 1 ;
       ${sh.order} 60 ;
     ] ;
     ${sh.property} [
@@ -64,10 +64,24 @@ ${shape('dataset/edit-metadata')} {
         ${sh.order} 70 ;
       ] ;
     ${sh.property} [
+        ${sh.name} "Theme" ;
+        ${sh.path} ${dcat.theme} ;
+        ${sh.minLength} 1 ;
+        ${sh.order} 80 ;
+      ] ;
+    ${sh.property} [
       ${sh.name} "Tags" ;
       ${sh.path} ${dcat.keyword} ;
       ${sh.minLength} 1 ;
-      ${sh.order} 80 ;
+      ${sh.order} 90 ;
+    ] ;
+    ${sh.property} [
+      ${sh.name} "Landing page" ;
+      ${sh.path} ${dcat.landingPage} ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+      ${sh.minLength} 1 ;
+      ${sh.order} 100 ;
     ] ;
     ${sh.property} [
       ${sh.name} "Creation Date" ;
@@ -75,7 +89,7 @@ ${shape('dataset/edit-metadata')} {
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
       ${sh.datatype} xsd:date
-      ${sh.order} 90 ;
+      ${sh.order} 110 ;
     ] ;
     ${sh.property} [
       ${sh.name} "Last Update" ;
@@ -83,7 +97,7 @@ ${shape('dataset/edit-metadata')} {
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
       ${sh.datatype} xsd:date
-      ${sh.order} 100 ;
+      ${sh.order} 120 ;
     ] ;    
   .
 }
