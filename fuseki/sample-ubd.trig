@@ -206,7 +206,8 @@ graph <project/ubd/csv-mapping/table-observation> {
     cc:csvSource <cube-project/ubd/csv-source/ubd> ;
     schema:name "Observations" ;
     schema:color "#AAAAAA" ;
-    cc:identifierTemplate "ammonia/observation/{STATION}-{YEAR}-annualmean" ;
+    # cc:identifierTemplate "ammonia/observation/{STATION}-{YEAR}-annualmean" ;
+    cc:identifierTemplate "{station_id}-{year}-{aggregation_id}" ;
     cc:columnMapping <project/ubd/csv-mapping/table-observation/column-mapping-1> ;
     cc:columnMapping <project/ubd/csv-mapping/table-observation/column-mapping-2> ;
     cc:columnMapping <project/ubd/csv-mapping/table-observation/column-mapping-3> ;
@@ -266,7 +267,8 @@ graph <project/ubd/csv-mapping/table-station> {
     cc:csvw <project/ubd/csv-mapping/table-station/csvw> ;
     schema:name "Station" ;
     schema:color "#BBBBBB" ;
-    cc:identifierTemplate "station/{STATION_ID}" ;
+    # cc:identifierTemplate "station/{STATION_ID}" ;
+    cc:identifierTemplate "{station_id}-{year}-{aggregation_id}" ;
     cc:columnMapping <project/ubd/csv-mapping/table-station/column-mapping-1> ;
     cc:columnMapping <project/ubd/csv-mapping/table-station/column-mapping-2> ;
     cc:columnMapping <project/ubd/csv-mapping/table-station/column-mapping-3> ;

@@ -12,6 +12,7 @@ export interface Table extends RdfResourceCore {
   csvSource: Link<CsvSource>
   name: string
   csvMapping: NamedNode
+  identifierTemplate: string
 }
 
 export function TableMixin<Base extends Constructor>(base: Base) {
@@ -28,6 +29,9 @@ export function TableMixin<Base extends Constructor>(base: Base) {
 
     @property.literal({ path: schema.name })
     name!: string
+
+    @property.literal()
+    identifierTemplate!: string
   }
 
   return Impl
