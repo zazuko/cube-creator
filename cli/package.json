@@ -42,7 +42,7 @@
     "@cube-creator/core": "*",
     "@cube-creator/testing": "*",
     "@tpluscode/rdf-ns-builders": "^0.4",
-    "@tpluscode/rdf-string": "^0.2.20",
+    "@tpluscode/rdf-string": "^0.2.21",
     "@tpluscode/sparql-builder": "^0.3.9",
     "@types/clownface": "^1.0.3",
     "@types/debug": "^4.1.5",
