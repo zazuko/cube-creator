@@ -1,7 +1,7 @@
 {
   "name": "@cube-creator/model",
+  "version": "0.0.2",
   "private": true,
-  "version": "0.0.0",
   "dependencies": {
     "@cube-creator/core": "*",
     "@rdf-esm/data-model": "^0.5.3",
