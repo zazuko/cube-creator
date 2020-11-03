@@ -5,7 +5,7 @@
 <script lang="ts">
 import { Prop, Component, Vue } from 'vue-property-decorator'
 import { NamedNode } from 'rdf-js'
-import $rdf from '@rdfjs/data-model'
+import * as $rdf from '@rdf-esm/data-model'
 
 @Component
 export default class extends Vue {
