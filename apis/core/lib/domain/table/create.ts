@@ -3,11 +3,10 @@ import { csvw, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import { ResourceStore } from '../../ResourceStore'
 import { resourceStore } from '../resources'
-import { NamedNode, Term } from 'rdf-js'
+import { NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import { NotFoundError } from '../../errors'
 import { CsvMapping, CsvSource } from '@cube-creator/model'
-import TermSet from '@rdfjs/term-set'
 
 const trueTerm = $rdf.literal('true', xsd.boolean)
 
