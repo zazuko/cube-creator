@@ -19,14 +19,7 @@
         </ul>
       </b-field>
 
-      <b-field>
-        <button type="submit" class="button is-primary">
-          {{ operation.title }}
-        </button>
-        <b-button @click="onCancel">
-          Cancel
-        </b-button>
-      </b-field>
+      <form-submit-cancel :submit-label="operation.title" @cancel="onCancel" />
     </form>
   </side-pane>
 </template>
@@ -41,13 +34,14 @@ import { csvw, sh } from '@tpluscode/rdf-ns-builders'
 import { Shape } from '@rdfine/shacl'
 import * as ns from '@cube-creator/core/namespace'
 import SidePane from '@/components/SidePane.vue'
+import FormSubmitCancel from '@/components/FormSubmitCancel.vue'
 import { APIErrorValidation } from '@/api/errors'
 import { SourcesCollection, Source, CSVColumn } from '../types'
 
 const projectNS = namespace('project')
 
 @Component({
-  components: { SidePane },
+  components: { SidePane, FormSubmitCancel },
 })
 export default class TableCreateView extends Vue {
   @projectNS.State('sourcesCollection') sourcesCollection!: SourcesCollection
