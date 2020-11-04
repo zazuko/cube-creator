@@ -18,6 +18,7 @@ const oidcSettings: VuexOidcClientSettings = {
   redirectUri: new URL('oidc-callback', base).toString(),
   postLogoutRedirectUri: new URL('logout', base).toString(),
   responseType: 'code',
+  automaticSilentRenew: true,
   stateStore: new WebStorageStateStore({ store: cookieStorage }),
   ...oidc,
 }
