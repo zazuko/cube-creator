@@ -5,10 +5,11 @@ prefix code:   <https://code.described.at/>
 prefix query:  <http://hypermedia.app/query#>
 prefix sh:     <http://www.w3.org/ns/shacl#>
 PREFIX schema: <http://schema.org/>
+prefix dcat:   <http://www.w3.org/ns/dcat#>
 
 dcat:Dataset
   a
-    hydra:Class
+    hydra:Class ;
   hydra:supportedOperation
     [
       a
@@ -19,7 +20,7 @@ dcat:Dataset
       hydra:method
         "PUT" ;
       hydra:expects
-        cc:Dataset,
+        cc:Dataset ;
 
       code:implementedBy
         [
@@ -28,4 +29,4 @@ dcat:Dataset
           code:link
             <file:handlers/dataset#put> ;
         ] ;
-    ]
+    ] .
