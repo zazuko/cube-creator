@@ -54,6 +54,7 @@ jobs:
         run: sh e2e-tests/install-lando.sh
       - name: Start site
         run: sh e2e-tests/start-lando.sh
+      - run: yarn seed-data
       - run: docker-compose -f docker-compose.yml -f docker-compose.posix.yml run e2e-tests
       - name: logs on fail
         if: ${{ failure() }}
