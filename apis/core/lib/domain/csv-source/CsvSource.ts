@@ -1,10 +1,10 @@
 import { cc } from '@cube-creator/core/namespace'
 import { CsvSource } from '@cube-creator/model'
 import * as CsvColumn from '@cube-creator/model/CsvColumn'
-import { Constructor } from '@tpluscode/rdfine'
+import { Constructor, property } from '@tpluscode/rdfine'
 import { MediaObjectMixin } from '@rdfine/schema'
 import { NamedNode } from 'rdf-js'
-import { csvw } from '@tpluscode/rdf-ns-builders'
+import { csvw, schema } from '@tpluscode/rdf-ns-builders'
 import * as Csvw from '@rdfine/csvw'
 import * as id from '../identifiers'
 import { DialectMixin } from '@rdfine/csvw'
@@ -14,8 +14,13 @@ interface AppendColumn {
 }
 
 interface ApiCsvSource {
+  error?: string
+
   setUploadedFile(key: string, contentUrl: NamedNode): void
-  setDialect(dialect: Partial<Csvw.Dialect>): void
+  /**
+   * Returns true if the dialect has actually changed
+   */
+  setDialect(dialect: Partial<Csvw.Dialect>): boolean
   appendColumn(params: AppendColumn): CsvColumn.CsvColumn
 }
 
@@ -27,6 +32,9 @@ declare module '@cube-creator/model' {
 
 export default function Mixin<Base extends Constructor<Omit<CsvSource, keyof ApiCsvSource>>>(Resource: Base) {
   class Impl extends Resource implements ApiCsvSource {
+    @property.literal({ path: schema.error })
+    error?: string
+
     setUploadedFile(key: string, contentUrl: NamedNode): void {
       if (this.associatedMedia) {
         throw new Error('Source file already exists')
@@ -38,15 +46,23 @@ export default function Mixin<Base extends Constructor<Omit<CsvSource, keyof Api
       }) as any
     }
 
-    setDialect(dialect: Partial<Csvw.Dialect>): void {
-      this.pointer.out(csvw.dialect).deleteOut()
+    setDialect(dialect: Partial<Csvw.Dialect>): boolean {
       if (!this.dialect) {
         this.dialect = this.pointer.blankNode() as any
       }
 
+      if (dialect.pointer && this.dialect.strictEquals(dialect.pointer)) {
+        return false
+      }
+
+      const dialectJson = dialect.toJSON?.() as any || { ...dialect }
+
       this.dialect = new DialectMixin.Class(this.dialect.pointer, {
-        ...dialect,
+        ...dialectJson,
+        header: (dialect.headerRowCount || 0) > 0,
       }) as any
+
+      return true
     }
 
     appendColumn({ name }: AppendColumn): CsvColumn.CsvColumn {
