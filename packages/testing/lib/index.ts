@@ -1,12 +1,20 @@
 import fs from 'fs'
 import path from 'path'
 import { parsers } from '@rdfjs/formats-common'
-import { DELETE } from '@tpluscode/sparql-builder'
+import { SELECT } from '@tpluscode/sparql-builder'
 import StreamClient from 'sparql-http-client/StreamClient'
 import env from '@cube-creator/core/env'
 import { _void } from '@tpluscode/rdf-ns-builders'
+import { sparql } from '@tpluscode/rdf-string'
+import ParsingClient from 'sparql-http-client/ParsingClient'
 
 export const client = new StreamClient({
+  updateUrl: 'http://db.cube-creator.lndo.site/cube-creator/update',
+  endpointUrl: 'http://db.cube-creator.lndo.site/cube-creator/query',
+  storeUrl: 'http://db.cube-creator.lndo.site/cube-creator/data',
+})
+
+const parsingClient = new ParsingClient({
   updateUrl: 'http://db.cube-creator.lndo.site/cube-creator/update',
   endpointUrl: 'http://db.cube-creator.lndo.site/cube-creator/query',
   storeUrl: 'http://db.cube-creator.lndo.site/cube-creator/data',
@@ -16,13 +24,14 @@ const clientOptions = () => ({
   base: env.API_CORE_BASE,
 })
 
-function removeTestGraphs() {
-  return DELETE`graph ?g { ?s ?p ?o }`
+async function removeTestGraphs() {
+  const graphs = await SELECT.DISTINCT`?graph`
     .WHERE`
-      ?g a ${_void.Dataset} .
-    `
-    .WHERE`graph ?g { ?s ?p ?o }`
-    .execute(client.query, clientOptions())
+      ?graph ${_void.inDataset} ?d.
+    `.execute(parsingClient.query, clientOptions())
+
+  const dropGraphs = sparql`${graphs.map(result => sparql`DROP GRAPH ${result.graph};`)}`.toString()
+  return client.query.update(dropGraphs)
 }
 
 export const insertTestData = async (pathName: string) => {
@@ -32,6 +41,6 @@ export const insertTestData = async (pathName: string) => {
   const stream = parsers.import('application/trig', file)
 
   if (stream) {
-    await client.store.put(stream)
+    await client.store.post(stream)
   }
 }
