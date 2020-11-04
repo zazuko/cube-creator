@@ -1,5 +1,5 @@
 import { describe, it, beforeEach } from 'mocha'
-import { assert, expect } from 'chai'
+import { expect } from 'chai'
 import clownface from 'clownface'
 import $rdf from 'rdf-ext'
 import { dcat, dcterms } from '@tpluscode/rdf-ns-builders'
