@@ -28,7 +28,7 @@
     <p v-else-if="projects && projects.length === 0" class="has-text-grey">
       No projects yet
     </p>
-    <b-loading v-else active :is-full-page="false" />
+    <loading-block v-else />
 
     <router-view v-if="projectsCollection" />
   </page-content>
@@ -38,10 +38,11 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { State } from 'vuex-class'
 import PageContent from '@/components/PageContent.vue'
+import LoadingBlock from '@/components/LoadingBlock.vue'
 import { ProjectsCollection, Project } from '../types'
 
 @Component({
-  components: { PageContent },
+  components: { PageContent, LoadingBlock },
 })
 export default class CubeProjectsView extends Vue {
   @State('collection', { namespace: 'projects' }) projectsCollection!: ProjectsCollection | null;

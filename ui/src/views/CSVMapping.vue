@@ -74,7 +74,7 @@
 
     <router-view />
   </div>
-  <b-loading v-else active :is-full-page="false" />
+  <loading-block v-else />
 </template>
 
 <script lang="ts">
@@ -82,12 +82,13 @@ import { Component, Vue } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
 import CsvSourceMapping from '@/components/CsvSourceMapping.vue'
 import HydraOperationButton from '@/components/HydraOperationButton.vue'
+import LoadingBlock from '@/components/LoadingBlock.vue'
 import { CSVMapping, SourcesCollection, TableCollection, Table, Source } from '../types'
 
 const projectNS = namespace('project')
 
 @Component({
-  components: { CsvSourceMapping, HydraOperationButton },
+  components: { CsvSourceMapping, HydraOperationButton, LoadingBlock },
 })
 export default class CSVMappingView extends Vue {
   @projectNS.State('csvMapping') mapping!: CSVMapping | null;
