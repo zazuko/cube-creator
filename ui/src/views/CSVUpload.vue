@@ -25,14 +25,7 @@
         </span>
       </div>
 
-      <b-field>
-        <button type="submit" class="button is-primary" :disabled="files.length === 0">
-          Upload
-        </button>
-        <b-button @click="onCancel">
-          Cancel
-        </b-button>
-      </b-field>
+      <form-submit-cancel submit-label="Upload" @cancel="onCancel" :disabled="files.length === 0" />
     </form>
   </side-pane>
 </template>
@@ -40,10 +33,11 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import SidePane from '@/components/SidePane.vue'
+import FormSubmitCancel from '@/components/FormSubmitCancel.vue'
 import { APIErrorConflict, APIErrorValidation } from '@/api/errors'
 
 @Component({
-  components: { SidePane },
+  components: { SidePane, FormSubmitCancel },
 })
 export default class CSVUploadView extends Vue {
   files: File[] = []

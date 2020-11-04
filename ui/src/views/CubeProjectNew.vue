@@ -5,14 +5,7 @@
     </b-message>
     <form @submit.prevent="onSubmit">
       <cc-form :resource.prop="resource" :shapes.prop="shapes" no-editor-switches />
-      <b-field>
-        <button type="submit" class="button is-primary">
-          Create project
-        </button>
-        <b-button @click="onCancel">
-          Cancel
-        </b-button>
-      </b-field>
+      <form-submit-cancel submit-label="Create project" @cancel="onCancel" />
     </form>
   </side-pane>
 </template>
@@ -23,11 +16,12 @@ import { State } from 'vuex-class'
 import clownface, { GraphPointer } from 'clownface'
 import { dataset } from '@rdf-esm/dataset'
 import SidePane from '@/components/SidePane.vue'
+import FormSubmitCancel from '@/components/FormSubmitCancel.vue'
 import { sh } from '@tpluscode/rdf-ns-builders'
 import { RuntimeOperation, RdfResource } from 'alcaeus'
 
 @Component({
-  components: { SidePane },
+  components: { SidePane, FormSubmitCancel },
 })
 export default class CubeProjectNewView extends Vue {
   @State((state) => state.projects.collection.actions.create)
