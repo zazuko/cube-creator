@@ -94,5 +94,5 @@ function createColumnMapping({
 
 function defaultProperty(columnName: string) {
   // TODO: How do we define the default target property for a column?
-  return $rdf.namedNode(columnName)
+  return $rdf.literal(columnName)
 }

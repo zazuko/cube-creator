@@ -17,7 +17,7 @@ export default function mixin<Base extends Constructor<Resource>> (base: Base): 
     }
 
     get targetProperty (): Term {
-      return this.get(ns.cc.targetProperty).id
+      return this.pointer.out(ns.cc.targetProperty).term!
     }
 
     get datatype (): Term | null {
