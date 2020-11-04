@@ -25,9 +25,9 @@
 
 <#loadMetadata>
   a                  :Step ;
-  code:implementedBy [ code:link <file:../lib/project#loadCsvMappings> ;
+  code:implementedBy [ code:link <file:../lib/job#loadCsvMappings> ;
                        a         code:EcmaScript ] ;
-  code:arguments     ( "projectUri"^^:VariableName ) .
+  code:arguments     ( "jobUri"^^:VariableName ) .
 
 <#doTransform>
   a                  :Step ;

@@ -6,15 +6,21 @@ import { csvw, schema } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import { MediaObjectMixin } from '@rdfine/schema'
 import { DialectMixin } from '@rdfine/csvw'
+import { initializer } from './lib/initializer'
+import { Link } from './lib/Link'
+import { CsvMapping } from './CsvMapping'
+import { CsvColumn, CsvColumnMixin } from './CsvColumn'
 
 export interface CsvSource extends RdfResourceCore {
   associatedMedia: Schema.MediaObject
   name: string
   dialect: Csvw.Dialect
+  csvMapping: Link<CsvMapping>
+  columns: CsvColumn[]
 }
 
 export function CsvSourceMixin<Base extends Constructor>(base: Base) {
-  class Impl extends base implements CsvSource {
+  class Impl extends base implements Partial<CsvSource> {
     @property.resource({ path: schema.associatedMedia, as: [MediaObjectMixin] })
     associatedMedia!: Schema.MediaObject
 
@@ -23,6 +29,12 @@ export function CsvSourceMixin<Base extends Constructor>(base: Base) {
 
     @property.resource({ path: csvw.dialect, as: [DialectMixin] })
     dialect!: Csvw.Dialect
+
+    @property.resource({ path: cc.csvMapping })
+    csvMapping!: Link<CsvMapping>
+
+    @property.resource({ path: csvw.column, values: 'array', as: [CsvColumnMixin] })
+    columns!: CsvColumn[]
   }
 
   return Impl
@@ -30,3 +42,9 @@ export function CsvSourceMixin<Base extends Constructor>(base: Base) {
 
 CsvSourceMixin.appliesTo = cc.CSVSource
 CsvSourceMixin.Class = CsvSourceMixin(RdfResourceImpl)
+
+type RequireProperties = 'name' | 'csvMapping'
+
+export const create = initializer<CsvSource, RequireProperties>(CsvSourceMixin, {
+  types: [cc.CSVSource],
+})

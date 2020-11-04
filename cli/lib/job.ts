@@ -1,6 +1,6 @@
 import stream from 'readable-stream'
 import { Hydra } from 'alcaeus/node'
-import { Project, Table } from '@cube-creator/model'
+import { Job, Table } from '@cube-creator/model'
 import * as Csvw from '@rdfine/csvw'
 import * as Models from '@cube-creator/model'
 
@@ -8,16 +8,16 @@ Hydra.resources.factory.addMixin(...Object.values(Models))
 Hydra.resources.factory.addMixin(...Object.values(Csvw))
 
 interface Params {
-  projectUri: string
+  jobUri: string
   log: Record<string, (msg: string) => void>
   variables: Map<string, string>
 }
 
-async function loadProject(projectUri: string, log: Params['log'], variables: Params['variables']): Promise<Project> {
-  log.debug(`Loading project ${projectUri}`)
-  const { representation, response } = await Hydra.loadResource<Project>(projectUri)
+async function loadJob(jobUri: string, log: Params['log'], variables: Params['variables']): Promise<Job> {
+  log.debug(`Loading job ${jobUri}`)
+  const { representation, response } = await Hydra.loadResource<Job>(jobUri)
   if (!representation || !representation.root) {
-    throw new Error(`Did not find representation of project ${projectUri}. Server responded ${response?.xhr.status}`)
+    throw new Error(`Did not find representation of job ${jobUri}. Server responded ${response?.xhr.status}`)
   }
 
   if (!representation.root.cubeGraph) {
@@ -29,35 +29,30 @@ async function loadProject(projectUri: string, log: Params['log'], variables: Pa
   return representation.root
 }
 
-async function loadTables(project: Project, log: any): Promise<Table[]> {
-  if (!project.csvMapping) {
-    log.warn('CSV Mapping resource not found. Is this a CSV mapping project?')
-    return []
-  }
-
-  if (project.csvMapping.tableCollection.load) {
-    log.info(`Will transform project ${project.label}`)
-    const { representation } = await project.csvMapping.tableCollection.load()
+async function loadTables(job: Job, log: any): Promise<Table[]> {
+  if (job.tableCollection.load) {
+    log.info(`Will transform project ${job.label}`)
+    const { representation } = await job.tableCollection.load()
 
     if (representation?.root) {
       return representation?.root.member
     }
   }
 
-  log.warn('Tables not found for project')
+  log.warn('Tables not found for job')
   return []
 }
 
-export class ProjectIterator extends stream.Readable {
-  constructor({ projectUri, log, variables }: Params) {
+export class JobIterator extends stream.Readable {
+  constructor({ jobUri, log, variables }: Params) {
     super({
       objectMode: true,
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       read: () => {},
     })
 
-    loadProject(projectUri, log, variables)
-      .then(project => loadTables(project, log))
+    loadJob(jobUri, log, variables)
+      .then(job => loadTables(job, log))
       .then(tables => {
         const loadMetadata = tables.reduce((metadata, table) => {
           if (!table.csvw.load) {
@@ -107,6 +102,6 @@ export class ProjectIterator extends stream.Readable {
   }
 }
 
-export function loadCsvMappings(this: any, projectUri: string) {
-  return new ProjectIterator({ projectUri, log: this.log, variables: this.variables })
+export function loadCsvMappings(this: any, jobUri: string) {
+  return new JobIterator({ jobUri, log: this.log, variables: this.variables })
 }

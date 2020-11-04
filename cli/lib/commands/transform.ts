@@ -17,7 +17,7 @@ const ns = {
 interface RunOptions {
   debug: boolean
   to: 'stdout' | 'filesystem' | 'graph-store'
-  project: string
+  job: string
   variable?: Map<string, string | undefined>
   graphStore?: {
     endpoint: string
@@ -32,7 +32,7 @@ export default function (pipelineId: NamedNode, log: Debugger) {
   const basePath = path.resolve(__dirname, '../../')
 
   return async function (command: RunOptions) {
-    const { to, project, debug = false, enableBufferMonitor = false, variable = new Map(), graphStore } = command
+    const { to, job, debug = false, enableBufferMonitor = false, variable = new Map(), graphStore } = command
 
     log.enabled = debug
 
@@ -47,9 +47,9 @@ export default function (pipelineId: NamedNode, log: Debugger) {
       .merge(await fileToDataset('text/turtle', pipelinePath('from-api')))
       .merge(await fileToDataset('text/turtle', pipelinePath(`to-${to}`)))
 
-    log('Running project %s', project)
+    log('Running job %s', job)
     const pipeline = clownface({ dataset }).namedNode(pipelineId)
-    variable.set('projectUri', project)
+    variable.set('jobUri', job)
     variable.set('graph-store-endpoint', graphStore?.endpoint || process.env.GRAPH_STORE_ENDPOINT)
     variable.set('graph-store-user', graphStore?.user || process.env.GRAPH_STORE_USER)
     variable.set('graph-store-password', graphStore?.password || process.env.GRAPH_STORE_PASSWORD)

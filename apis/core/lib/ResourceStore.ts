@@ -12,6 +12,7 @@ import { warn } from '@hydrofoil/labyrinth/lib/logger'
 import { ResourceIdentifier } from '@tpluscode/rdfine'
 import { turtle } from '@tpluscode/rdf-string'
 import TermSet from '@rdfjs/term-set'
+import RdfResource, { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 
 interface ResourceCreationOptions {
   implicitlyDereferencable?: boolean
@@ -30,6 +31,7 @@ export interface ResourceStore {
    * @param id
    */
   get(id: string | ResourceIdentifier): Promise<GraphPointer<NamedNode, DatasetExt> | undefined>
+  getResource<T extends RdfResourceCore>(id: string | ResourceIdentifier): Promise<T | undefined>
 
   /**
    * Creates a new resource a puts in the in-memory store
@@ -110,6 +112,13 @@ export default class implements ResourceStore {
     }
 
     return this.__resources.get(term)
+  }
+
+  async getResource<T extends RdfResourceCore>(id: string | NamedNode):Promise<T | undefined> {
+    const pointer = await this.get(id)
+    if (!pointer) return undefined
+
+    return RdfResource.factory.createEntity<T>(pointer)
   }
 
   async save(): Promise<void> {
