@@ -1,5 +1,5 @@
 import { cc, shape } from '@cube-creator/core/namespace'
-import { hydra, rdfs, sh, dcat, dcterms, schema } from '@tpluscode/rdf-ns-builders'
+import { hydra, rdfs, sh, dcat, dcterms, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import { turtle } from '@tpluscode/rdf-string'
 
 export const DatasetShape = turtle`
@@ -36,7 +36,7 @@ ${shape('dataset/edit-metadata')} {
       ${sh.path} ${cc.publishOnOpendata} ;
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
-      ${sh.datatype} xsd:boolean
+      ${sh.datatype} ${xsd.boolean}
       ${sh.order} 40 ;
     ] ;
     ${sh.property} [
@@ -44,7 +44,7 @@ ${shape('dataset/edit-metadata')} {
       ${sh.path} ${dcterms.publishOnVisualize} ;
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
-      ${sh.datatype} xsd:boolean
+      ${sh.datatype} ${xsd.boolean}
       ${sh.order} 50 ;
     ] ;
     ${sh.property} [
@@ -88,7 +88,7 @@ ${shape('dataset/edit-metadata')} {
       ${sh.path} ${dcterms.issued} ;
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
-      ${sh.datatype} xsd:date
+      ${sh.datatype} ${xsd.date}
       ${sh.order} 110 ;
     ] ;
     ${sh.property} [
@@ -96,7 +96,7 @@ ${shape('dataset/edit-metadata')} {
       ${sh.path} ${dcterms.modified} ;
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
-      ${sh.datatype} xsd:date
+      ${sh.datatype} ${xsd.date}
       ${sh.order} 120 ;
     ] ;    
   .
