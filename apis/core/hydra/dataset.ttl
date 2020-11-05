@@ -19,6 +19,9 @@ void:Dataset
         "Update dataset" ;
       hydra:method
         "PUT" ;
+      hydra:expects
+        void:Dataset,
+        <shape/dataset/edit-metadata> ;
       code:implementedBy
         [
           a
@@ -27,3 +30,7 @@ void:Dataset
             <file:handlers/dataset#put> ;
         ] ;
     ] .
+
+<shape/dataset/edit-metadata>
+  a
+    sh:Shape .

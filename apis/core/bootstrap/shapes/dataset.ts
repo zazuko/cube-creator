@@ -20,7 +20,7 @@ ${shape('dataset/edit-metadata')} {
       ${sh.minCount} 1 ;
       ${sh.minLength} 1 ;
       ${sh.datatype} ${rdf.langString} ;
-      ${sh.languageIn} (en, de, fr, it) ;
+      ${sh.languageIn} ("en" "de" "fr" "it") ;
       ${sh.order} 10 ;
     ] ;
     ${sh.property} [
@@ -29,7 +29,7 @@ ${shape('dataset/edit-metadata')} {
       ${sh.minCount} 1 ;
       ${sh.minLength} 1 ;
       ${sh.datatype} ${rdf.langString} ;
-      ${sh.languageIn} (en, de, fr, it) ;
+      ${sh.languageIn} ("en" "de" "fr" "it") ;
       ${sh.order} 20 ;
     ] ;
     ${sh.property} [
@@ -38,9 +38,9 @@ ${shape('dataset/edit-metadata')} {
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
       ${sh.datatype} ${schema.DefinedTerm} ;
-      ${sh.in} ("Draft", "Published")
+      ${sh.in} ("Draft" "Published") ;
       ${sh.order} 30 ;
-    ] ;   
+    ] ;
     ${sh.property} [
       ${sh.name} "Publish on Swiss Open Data" ;
       ${sh.path} ${cc.publishOnOpendata} ;
@@ -54,7 +54,7 @@ ${shape('dataset/edit-metadata')} {
       ${sh.path} ${dcterms.publishOnVisualize} ;
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
-      ${sh.datatype} ${xsd.boolean}
+      ${sh.datatype} ${xsd.boolean} ;
       ${sh.order} 50 ;
     ] ;
     ${sh.property} [
@@ -127,7 +127,7 @@ ${shape('dataset/edit-metadata')} {
       ${sh.path} ${dcterms.issued} ;
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
-      ${sh.datatype} ${xsd.date}
+      ${sh.datatype} ${xsd.date} ;
       ${sh.order} 150 ;
     ] ;
     ${sh.property} [
@@ -135,9 +135,9 @@ ${shape('dataset/edit-metadata')} {
       ${sh.path} ${dcterms.modified} ;
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
-      ${sh.datatype} ${xsd.date}
+      ${sh.datatype} ${xsd.date} ;
       ${sh.order} 160 ;
-    ] ;    
+    ] ;
   .
 }
 `
