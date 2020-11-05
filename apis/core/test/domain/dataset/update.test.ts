@@ -2,7 +2,7 @@ import { describe, it, beforeEach } from 'mocha'
 import { expect } from 'chai'
 import clownface from 'clownface'
 import $rdf from 'rdf-ext'
-import { dcat, dcterms } from '@tpluscode/rdf-ns-builders'
+import { dcat, dcterms, rdf, schema, sh, _void } from '@tpluscode/rdf-ns-builders'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import { update } from '../../../lib/domain/dataset/update'
 
@@ -33,5 +33,11 @@ describe('domain/dataset/update', () => {
     expect(result.out(dcterms.title).value).to.eq(title)
     expect(result.out(dcterms.description).value).to.eq(description)
     expect(result.out(dcat.keyword).value).is.undefined
+    expect(dataset).to.matchShape({
+      property: {
+        path: rdf.type,
+        [sh.hasValue.value]: [schema.Dataset, _void.Dataset, dcat.Dataset],
+      },
+    })
   })
 })

@@ -1,3 +1,4 @@
+import { dcat, hydra, rdf, schema, _void } from '@tpluscode/rdf-ns-builders'
 import { GraphPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'
 import { NotFoundError } from '../../errors'
@@ -25,6 +26,12 @@ export async function update({
   datasetResource.deleteOut()
 
   datasetResource.dataset.addAll([...resource.dataset])
+
+  // Make sure the type is correct
+  datasetResource.addOut(rdf.type, hydra.Resource)
+    .addOut(rdf.type, schema.Dataset)
+    .addOut(rdf.type, _void.Dataset)
+    .addOut(rdf.type, dcat.Dataset)
 
   await store.save()
 
