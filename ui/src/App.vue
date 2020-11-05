@@ -41,10 +41,6 @@ export default class App extends Vue {
   @appNS.State('loading') isLoading!: boolean
   @appNS.State('messages') messages!: Message[]
 
-  mounted () {
-    console.log(process.env)
-  }
-
   dismissMessage (message: Message): void {
     this.$store.dispatch('app/dismissMessage', message)
   }
