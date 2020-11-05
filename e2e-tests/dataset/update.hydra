@@ -1,0 +1,47 @@
+PREFIX api: <https://cube-creator.zazuko.com/vocab#>
+PREFIX hydra: <http://www.w3.org/ns/hydra/core#>
+PREFIX cc: <https://cube-creator.zazuko.com/vocab#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX schema: <http://schema.org/>
+PREFIX dcat: <http://www.w3.org/ns/dcat#>
+PREFIX void:   <http://rdfs.org/ns/void#>
+
+
+ENTRYPOINT "cube-project/ubd/dataset" 
+
+HEADERS {
+  x-user "john-doe"
+  x-permission "pipelines:write"
+}
+
+
+With Class void:Dataset {
+    Expect Operation schema:UpdateAction {
+        Invoke {
+            Content-Type "text/turtle"
+            ```
+            PREFIX dcterms: <http://purl.org/dc/terms/>
+            PREFIX schema: <http://schema.org/>
+            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+            
+            <https://cube-creator.lndo.site/cube-project/ubd/dataset>	
+                schema:hasPart <https://environment.ld.admin.ch/foen/ubd/28/> ;
+                rdf:type <http://schema.org/Dataset> ;
+                rdf:type <http://rdfs.org/ns/void#Dataset> ;
+                rdf:type <http://www.w3.org/ns/hydra/core#Resource> ;                
+                dcterms:title "Some Title" ;
+                dcterms:description "Some description" .
+
+            ```
+        } => {
+            Expect Status 200
+            Expect Property dcterms:title "Some Title"
+            Expect Property dcterms:description "Some description"   
+            Expect Property schema:hasPart
+            Expect Type <http://schema.org/Dataset>
+            Expect Type <http://rdfs.org/ns/void#Dataset>
+            Expect Type <http://www.w3.org/ns/hydra/core#Resource>
+        }
+    }
+}
