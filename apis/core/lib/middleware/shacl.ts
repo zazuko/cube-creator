@@ -24,6 +24,10 @@ export const shaclMiddleware = (options: ShaclMiddlewareOptions) => asyncMiddlew
     const pointer = await resources.get(expects.term)
     if (pointer?.has(rdf.type, [sh.NodeShape]).values.length) {
       await shapes.addAll([...pointer.dataset])
+
+      if (pointer.out([sh.targetClass, sh.targetNode, sh.targetObjectsOf, sh.targetSubjectsOf]).values.length === 0) {
+        shapes.add($rdf.quad(pointer.term, sh.targetNode, req.hydra.term))
+      }
     }
   }))
 

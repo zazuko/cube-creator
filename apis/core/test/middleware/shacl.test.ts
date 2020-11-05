@@ -96,6 +96,36 @@ describe('middleware/shacl', () => {
     await response.expect(400)
   })
 
+  it('applies targetNode to request URI when shape has no other target', async () => {
+    // given
+    const app = express()
+    app.use(appMock(api => {
+      api.operation.addOut(hydra.expects, ex.Shape)
+      api.term = ex.resource
+    }))
+    const shape = clownface({ dataset: $rdf.dataset() })
+      .namedNode(ex.Shape)
+      .addOut(rdf.type, sh.NodeShape)
+      .addOut(sh.property, prop => prop.addOut(sh.path, rdfs.label).addOut(sh.minCount, 1))
+
+    app.use(mockResourceMiddleware())
+    app.use(shaclMiddleware({
+      createResourceStore: testResourceStore([shape]),
+      loadResourcesTypes,
+    }))
+    app.use((req, res) => res.status(204).end())
+
+    // when
+    const response = request(app)
+      .put('/')
+      .set('content-type', 'text/turtle')
+      .send(turtle`${ex.resource} a ${cc.Job} .`.toString())
+
+    // then
+    // it should mark invalid based on targetNode
+    await response.expect(400)
+  })
+
   it('return 400 when request has no body', async () => {
     // given
     const app = express()
