@@ -7,6 +7,7 @@ import { resourceStore } from '../resources'
 import { NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import { NotFoundError } from '../../errors'
+import { createColumnMappingFromColumn } from '../column-mapping/create'
 
 const trueTerm = $rdf.literal('true', xsd.boolean)
 
@@ -61,38 +62,10 @@ export async function createTable({
         throw new Error(`Column ${columnId} not found`)
       }
 
-      const columnMapping = createColumnMapping({ table, column, store })
+      const columnMapping = createColumnMappingFromColumn({ table, column, store })
       table.addOut(cc.columnMapping, columnMapping)
     })
 
   await store.save()
   return table
-}
-
-interface CreateColumnMappingCommand {
-  table: GraphPointer<NamedNode>
-  column: GraphPointer
-  store?: ResourceStore
-}
-
-function createColumnMapping({
-  table,
-  column,
-  store = resourceStore(),
-}: CreateColumnMappingCommand): GraphPointer {
-  const columnName = column.out(schema.name).value!
-
-  const columnMapping = store.create(id.columnMapping(table, columnName))
-
-  columnMapping
-    .addOut(rdf.type, cc.ColumnMapping)
-    .addOut(cc.sourceColumn, column)
-    .addOut(cc.targetProperty, defaultProperty(columnName))
-
-  return columnMapping
-}
-
-function defaultProperty(columnName: string) {
-  // TODO: How do we define the default target property for a column?
-  return $rdf.literal(columnName)
 }

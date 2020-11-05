@@ -1,0 +1,33 @@
+PREFIX api: <https://cube-creator.zazuko.com/vocab#>
+PREFIX hydra: <http://www.w3.org/ns/hydra/core#>
+PREFIX cc: <https://cube-creator.zazuko.com/vocab#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX schema: <http://schema.org/>
+
+ENTRYPOINT "project/ubd/csv-mapping/table-observation"
+
+HEADERS {
+  x-user "john-doe"
+  x-permission "pipelines:write"
+}
+
+With Class api:Table {
+    Expect Operation cc:CreateColumnMappingAction {
+        Invoke {
+            Content-Type "text/turtle"
+
+            ```
+            prefix cc: <https://cube-creator.zazuko.com/vocab#>
+            prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+            prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+
+            <>  cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/year> ;
+                cc:targetProperty <dimension/year> ;
+                cc:datatype xsd:gYear .
+            ```
+        } => {
+            Expect Status 201
+        }
+    }
+}
