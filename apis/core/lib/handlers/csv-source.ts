@@ -7,6 +7,7 @@ import { uploadFile } from '../domain/csv-source/upload'
 import { cc } from '@cube-creator/core/namespace'
 import { getCSVHead } from '../domain/csv-source/get-head'
 import { deleteSource } from '../domain/csv-source/delete'
+import { update } from '../domain/csv-mapping/update'
 
 export const post = labyrinth.protectedResource(
   shaclValidate,
@@ -40,11 +41,11 @@ export const post = labyrinth.protectedResource(
 export const put = labyrinth.protectedResource(
   shaclValidate,
   asyncMiddleware(async (req, res) => {
-    // TODO
+    const { dataset } = await update({
+      resource: await req.resource(),
+    })
 
-    res.status(200)
-    // await res.dataset(fileLocation.dataset)
-    res.send('')
+    return res.dataset(dataset)
   }),
 )
 
