@@ -43,4 +43,22 @@ To submit a bug or a feature request please create an issue in this repository.
 
 ## E2E tests
 
+There are two types of e2e tests:
+- API (Hydra): e2e tests that take the API as entrypoint
+- UI (Cypress): browser-based e2e tests
+
+### API e2e tests
+
 Running the E2E tests can be done using: `docker-compose run --rm e2e-tests`, and `docker-compose run --rm e2e-tests -- --grep pattern` lets you select which tests to run.
+
+### UI e2e tests
+
+We use Cypress to run UI e2e tests.
+
+We need a running instance of the app to test. The easiest way is to start lando: `lando start`
+
+Then the following command can be used to run the tests interactively:
+
+`VUE_APP_E2E=true VUE_APP_X_USER=john-doe VUE_APP_X_PERMISSION=pipelines:read,pipelines:write yarn --cwd ui test:e2e --url https://app.cube-creator.lndo.site`
+
+The `--headless` option allows running the tests without seeing the browser.
