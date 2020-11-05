@@ -36,9 +36,20 @@
         <b-message v-if="source.error" type="is-danger" class="content">
           <p>An error occurred while parsing the CSV file:</p>
           <pre>{{ source.error }}</pre>
-          <p v-if="source.actions.delete">
-            Fix your file, <a @click="deleteSource(source)">delete this one</a> and upload your file again.
-          </p>
+          <div class="content" v-if="source.actions.delete || source.actions.edit">
+            <p>To fix the issue, you can:</p>
+            <ul>
+              <li v-if="source.actions.edit">
+                <router-link :to="{ name: 'SourceEdit', params: { sourceId: source.clientPath }}">
+                  Adjust the CSV settings
+                </router-link>
+              </li>
+              <li>or</li>
+              <li v-if="source.actions.delete">
+                <a @click="deleteSource(source)">Delete this file</a>, fix it and upload it again
+              </li>
+            </ul>
+          </div>
         </b-message>
         <div
           v-for="column in source.columns"
