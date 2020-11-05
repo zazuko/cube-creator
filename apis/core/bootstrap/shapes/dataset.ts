@@ -1,42 +1,52 @@
 import { cc, shape } from '@cube-creator/core/namespace'
-import { hydra, rdfs, sh, dcat, dcterms, schema, xsd } from '@tpluscode/rdf-ns-builders'
+import { hydra, rdfs, sh, dcat, dcterms, xsd, rdf, vcard, schema, _void } from '@tpluscode/rdf-ns-builders'
 import { turtle } from '@tpluscode/rdf-string'
 
 export const DatasetShape = turtle`
 ${shape('dataset/edit-metadata')} {
   ${shape('dataset/edit-metadata')} a ${sh.NodeShape}, ${hydra.Resource} ;
-    ${sh.targetClass} ${dcat.DataSet} ;
+    ${sh.targetClass} ${_void.Dataset} ;
     ${rdfs.label} "Cube Metadata" ;
+    ${sh.property} [
+      ${sh.name} "Identifier" ;
+      ${sh.path} ${dcterms.identifier} ;
+      ${sh.minCount} 1 ;
+      ${sh.minLength} 1 ;
+      ${sh.order} 0 ;
+    ] ;
     ${sh.property} [
       ${sh.name} "Title" ;
       ${sh.path} ${dcterms.title} ;
       ${sh.minCount} 1 ;
-      ${sh.maxCount} 1 ;
       ${sh.minLength} 1 ;
+      ${sh.datatype} ${rdf.langString} ;
+      ${sh.languageIn} (en, de, fr, it) ;
       ${sh.order} 10 ;
     ] ;
     ${sh.property} [
       ${sh.name} "Description" ;
       ${sh.path} ${dcterms.comment} ;
       ${sh.minCount} 1 ;
-      ${sh.maxCount} 1 ;
       ${sh.minLength} 1 ;
+      ${sh.datatype} ${rdf.langString} ;
+      ${sh.languageIn} (en, de, fr, it) ;
       ${sh.order} 20 ;
     ] ;
     ${sh.property} [
-      ${sh.name} "Version" ;
-      ${sh.path} ${schema.version} ;
+      ${sh.name} "Status" ;
+      ${sh.path} ${schema.creativeWorkStatus} ;
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
-      ${sh.minLength} 1 ;
+      ${sh.datatype} ${schema.DefinedTerm} ;
+      ${sh.in} ("Draft", "Published")
       ${sh.order} 30 ;
-    ] ;
+    ] ;   
     ${sh.property} [
       ${sh.name} "Publish on Swiss Open Data" ;
       ${sh.path} ${cc.publishOnOpendata} ;
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
-      ${sh.datatype} ${xsd.boolean}
+      ${sh.datatype} ${xsd.boolean} ;
       ${sh.order} 40 ;
     ] ;
     ${sh.property} [
@@ -48,32 +58,49 @@ ${shape('dataset/edit-metadata')} {
       ${sh.order} 50 ;
     ] ;
     ${sh.property} [
-      ${sh.name} "Publisher" ;
-      ${sh.path} ${dcterms.publisher} ;
-      ${sh.minCount} 1 ;
-      ${sh.maxCount} 1 ;
+      ${sh.name} "Data refresh interval" ;
+      ${sh.path} ${dcterms.accrualPeriodicity} ;
+      ${sh.minCount} 0 ;
       ${sh.minLength} 1 ;
+      ${sh.datatype} ${dcterms.PeriodOfTime} ;
       ${sh.order} 60 ;
     ] ;
     ${sh.property} [
-        ${sh.name} "Contact Point" ;
-        ${sh.path} ${dcat.contactPoint} ;
-        ${sh.minCount} 1 ;
-        ${sh.maxCount} 1 ;
-        ${sh.minLength} 1 ;
-        ${sh.order} 70 ;
-      ] ;
+      ${sh.name} "Data period" ;
+      ${sh.path} ${dcterms.accrualPeriodicity} ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+      ${sh.minLength} 1 ;
+      ${sh.datatype} ${dcat.temporal} ;
+      ${sh.order} 70 ;
+    ] ;
+    ${sh.property} [
+      ${sh.name} "Publisher" ;
+      ${sh.path} ${dcterms.publisher} ;
+      ${sh.minCount} 1 ;
+      ${sh.minLength} 1 ;
+      ${sh.datatype} ${rdf.Description} ;
+      ${sh.order} 80 ;
+    ] ;
+    ${sh.property} [
+      ${sh.name} "Contact Point" ;
+      ${sh.path} ${dcat.contactPoint} ;
+      ${sh.minCount} 1 ;
+      ${sh.minLength} 1 ;
+      ${sh.datatype} ${vcard.Organization} ;
+      ${sh.order} 90 ;
+    ] ;
     ${sh.property} [
         ${sh.name} "Theme" ;
         ${sh.path} ${dcat.theme} ;
         ${sh.minLength} 1 ;
-        ${sh.order} 80 ;
+        ${sh.order} 100 ;
       ] ;
     ${sh.property} [
       ${sh.name} "Tags" ;
       ${sh.path} ${dcat.keyword} ;
       ${sh.minLength} 1 ;
-      ${sh.order} 90 ;
+      ${sh.order} 110 ;
     ] ;
     ${sh.property} [
       ${sh.name} "Landing page" ;
@@ -81,7 +108,19 @@ ${shape('dataset/edit-metadata')} {
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
       ${sh.minLength} 1 ;
-      ${sh.order} 100 ;
+      ${sh.order} 120 ;
+    ] ;
+    ${sh.property} [
+      ${sh.name} "Relation" ;
+      ${sh.path} ${dcterms.relation} ;
+      ${sh.minLength} 1 ;
+      ${sh.order} 130 ;
+    ] ;
+    ${sh.property} [
+      ${sh.name} "See also" ;
+      ${sh.path} ${rdfs.seeAlso} ;
+      ${sh.minLength} 1 ;
+      ${sh.order} 140 ;
     ] ;
     ${sh.property} [
       ${sh.name} "Creation Date" ;
@@ -89,7 +128,7 @@ ${shape('dataset/edit-metadata')} {
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
       ${sh.datatype} ${xsd.date}
-      ${sh.order} 110 ;
+      ${sh.order} 150 ;
     ] ;
     ${sh.property} [
       ${sh.name} "Last Update" ;
@@ -97,7 +136,7 @@ ${shape('dataset/edit-metadata')} {
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
       ${sh.datatype} ${xsd.date}
-      ${sh.order} 120 ;
+      ${sh.order} 160 ;
     ] ;    
   .
 }
