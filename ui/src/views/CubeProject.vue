@@ -31,7 +31,7 @@
       <router-view />
     </page-content>
   </div>
-  <b-loading v-else active :is-full-page="false" />
+  <loading-block v-else />
 </template>
 
 <script lang="ts">
@@ -39,9 +39,10 @@ import { Component, Vue } from 'vue-property-decorator'
 import { State } from 'vuex-class'
 import { Project } from '@/types'
 import PageContent from '@/components/PageContent.vue'
+import LoadingBlock from '@/components/LoadingBlock.vue'
 
 @Component({
-  components: { PageContent },
+  components: { PageContent, LoadingBlock },
 })
 export default class CubeProjectView extends Vue {
   @State('project', { namespace: 'project' }) project!: Project | null;

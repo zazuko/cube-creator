@@ -120,6 +120,8 @@ const router = new VueRouter({
   routes
 })
 
-router.beforeEach(vuexOidcCreateRouterMiddleware(store, 'auth'))
+if (!process.env.VUE_APP_E2E) {
+  router.beforeEach(vuexOidcCreateRouterMiddleware(store, 'auth'))
+}
 
 export default router

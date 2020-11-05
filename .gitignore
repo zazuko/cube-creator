@@ -2,6 +2,8 @@
 node_modules
 dist/
 cli/output/
+ui/tests/e2e/videos/
+ui/tests/e2e/screenshots/
 
 # local env files
 .env.local
@@ -22,7 +24,6 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
-*.js
 
 # Minio files except README to keep bucket alive
 minio/*
