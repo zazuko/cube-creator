@@ -1,10 +1,10 @@
 import { ForbiddenMapper, UnauthorizedMapper } from './auth'
-import { NamedNode } from 'rdf-js'
+import { Term } from 'rdf-js'
 import { GraphPointer } from 'clownface'
 
 export class NotFoundError extends Error {
-  constructor(id: NamedNode | GraphPointer) {
-    super(`Resource <${id.value}> not found`)
+  constructor(id: Term | GraphPointer | undefined) {
+    super(`Resource <${id?.value}> not found`)
   }
 }
 
