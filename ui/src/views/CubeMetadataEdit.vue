@@ -2,7 +2,7 @@
   <side-pane :is-open="true" :title="title" @close="onCancel">
     <form @submit.prevent="onSubmit">
       <cc-form :resource.prop="cubeMetadata.pointer" :shapes.prop="shapes" />
-      <form-submit-cancel submit-label="Save metadata" />
+      <form-submit-cancel submit-label="Save metadata" @cancel="onCancel" />
     </form>
   </side-pane>
 </template>
