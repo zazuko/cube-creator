@@ -13,7 +13,7 @@ export const put = protectedResource(
       resource: await req.resource(),
     })
 
-    res.status(201)
+    res.status(200)
     res.header('Location', dataset.term.value)
     await res.dataset(dataset.dataset)
   }),

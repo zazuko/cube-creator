@@ -22,10 +22,6 @@ export async function update({
     throw new NotFoundError(dataset)
   }
 
-  if (dataset.value !== resource.value) {
-    throw new Error(`Try to update resource ${dataset.term} with different ${resource.term}`)
-  }
-
   datasetResource.deleteOut()
 
   datasetResource.dataset.addAll([...resource.dataset])

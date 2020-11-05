@@ -5,9 +5,9 @@ prefix code:   <https://code.described.at/>
 prefix query:  <http://hypermedia.app/query#>
 prefix sh:     <http://www.w3.org/ns/shacl#>
 PREFIX schema: <http://schema.org/>
-prefix dcat:   <http://www.w3.org/ns/dcat#>
+PREFIX void:   <http://rdfs.org/ns/void#>
 
-dcat:Dataset
+void:Dataset
   a
     hydra:Class ;
   hydra:supportedOperation
@@ -19,9 +19,6 @@ dcat:Dataset
         "Update dataset" ;
       hydra:method
         "PUT" ;
-      hydra:expects
-        cc:Dataset ;
-
       code:implementedBy
         [
           a
