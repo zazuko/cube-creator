@@ -3,6 +3,7 @@ PREFIX cc:    <https://cube-creator.zazuko.com/vocab#>
 prefix hydra: <http://www.w3.org/ns/hydra/core#>
 prefix code:  <https://code.described.at/>
 prefix schema:   <http://schema.org/>
+prefix sh:     <http://www.w3.org/ns/shacl#>
 
 cc:CSVSourceCollection
   a
@@ -50,7 +51,7 @@ cc:CSVSource
         hydra:Operation,
         schema:DeleteAction ;
       hydra:title
-        "Delete CSV Source" ;
+        "Delete CSV" ;
       hydra:method
         "DELETE" ;
       code:implementedBy
@@ -60,4 +61,28 @@ cc:CSVSource
           code:link
             <file:handlers/csv-source#remove> ;
         ]
-    ] .
+    ] ,
+    [
+      a
+        hydra:Operation,
+        schema:UpdateAction ;
+      hydra:title
+        "Edit CSV settings" ;
+      hydra:method
+        "PUT" ;
+      hydra:expects
+        cc:CSVSource,
+        <shape/csv-source/update> ;
+      code:implementedBy
+        [
+          a
+            code:EcmaScript ;
+          code:link
+            <file:handlers/csv-source#put> ;
+        ]
+    ] ;
+.
+
+<shape/csv-source/update>
+  a
+    sh:Shape .

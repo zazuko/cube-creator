@@ -1,5 +1,5 @@
 <template>
-  <b-input @input="update" />
+  <b-input :value="value" @input="update" />
 </template>
 
 <script lang="ts">
