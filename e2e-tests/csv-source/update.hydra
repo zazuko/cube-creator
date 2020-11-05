@@ -21,11 +21,9 @@ With Class cc:CSVSource {
 
             <cube-project/ubd/csv-source/ubd>
                 a cc:CSVSource ;
-                schema:name "Changed by hypertest" ;
                 csvw:dialect [
                     csvw:delimiter "-" ;
                     csvw:quoteChar "'" ;
-                    csvw:headerRowCount 2 ;
                 ] .
             ```
         } => {
@@ -44,28 +42,6 @@ With Class cc:CSVSource {
 
             <cube-project/ubd/csv-source/ubd>
                 a cc:CSVSource ;
-                csvw:dialect [
-                    csvw:delimiter "-" ;
-                    csvw:quoteChar "'" ;
-                    csvw:headerRowCount 2 ;
-                ] .
-            ```
-        } => {
-            Expect Status 400
-        }
-
-        Invoke {
-            Content-Type "text/turtle"
-
-            ```
-            base <https://cube-creator.lndo.site/>
-            prefix schema: <http://schema.org/>
-            prefix csvw: <http://www.w3.org/ns/csvw#>
-            PREFIX cc: <https://cube-creator.zazuko.com/vocab#>
-
-            <cube-project/ubd/csv-source/ubd>
-                a cc:CSVSource ;
-                schema:name "Should be because incomplete dialect" ;
                 csvw:dialect [
                     csvw:delimiter "-" ;
                 ] .
