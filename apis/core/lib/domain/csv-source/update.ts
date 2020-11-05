@@ -33,6 +33,8 @@ export async function update({
   csvSource.name = changed.name
   if (csvSource.setDialect(changed.dialect) && csvSource.associatedMedia.identifierLiteral) {
     try {
+      csvSource.pointer.deleteOut(schema.error)
+
       const fileStream = await fileStorage.loadFile(csvSource.associatedMedia.identifierLiteral) as Readable
       const head = await loadFileHeadString(fileStream, 500)
       const { header, rows } = await parse(head, {
