@@ -50,6 +50,7 @@
       "node_modules",
       "ui",
       "typings",
+      "apis/*/test",
       "cli/test"
     ]
   }
