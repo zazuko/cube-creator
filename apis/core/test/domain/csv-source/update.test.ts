@@ -13,7 +13,7 @@ import { TestResourceStore } from '../../support/TestResourceStore'
 import clownface, { GraphPointer } from 'clownface'
 import type { FileStorage } from '../../../lib/storage/s3'
 import '../../../lib/domain'
-import { update } from '../../../lib/domain/csv-mapping/update'
+import { update } from '../../../lib/domain/csv-source/update'
 
 describe('domain/csv-sources/upload', () => {
   let fileStorage: FileStorage
