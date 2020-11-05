@@ -59,7 +59,7 @@ jobs:
       - run: yarn seed-data
 
       - name: Hydra e2e tests
-      - run: docker-compose -f docker-compose.yml -f docker-compose.posix.yml run e2e-tests
+        run: docker-compose -f docker-compose.yml -f docker-compose.posix.yml run e2e-tests
       - name: logs on fail
         if: ${{ failure() }}
         run: lando logs -s core
