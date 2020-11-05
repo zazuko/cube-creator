@@ -58,8 +58,17 @@ export interface CSVMapping extends APIResource {
 export interface Project extends APIResource {
   actions: CommonActions;
   csvMapping: null | CSVMapping;
+  cubeMetadataId: string | null;
 }
 
 export interface ProjectsCollection extends Collection<Project> {
   actions: CommonActions;
+}
+
+export interface Cube extends APIResource {
+}
+
+export interface CubeMetadata extends APIResource {
+  actions: CommonActions;
+  cube: Cube;
 }

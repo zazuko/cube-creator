@@ -14,6 +14,8 @@ import CSVColumnMixin from './mixins/CSVColumn'
 import TableCollectionMixin from './mixins/TableCollection'
 import TableMixin from './mixins/Table'
 import ColumnMappingMixin from './mixins/ColumnMapping'
+import CubeMixin from './mixins/Cube'
+import CubeMetadataMixin from './mixins/CubeMetadata'
 
 const rootURL = window.APP_CONFIG.apiCoreBase
 const segmentSeparator = '!!' // used to replace slash in URI to prevent escaping
@@ -35,6 +37,8 @@ Hydra.resources.factory.addMixin(CSVColumnMixin)
 Hydra.resources.factory.addMixin(TableCollectionMixin)
 Hydra.resources.factory.addMixin(TableMixin)
 Hydra.resources.factory.addMixin(ColumnMappingMixin)
+Hydra.resources.factory.addMixin(CubeMixin)
+Hydra.resources.factory.addMixin(CubeMetadataMixin)
 Hydra.resources.factory.addMixin(...ShapeBundle)
 
 // Inject the access token in all requests if present

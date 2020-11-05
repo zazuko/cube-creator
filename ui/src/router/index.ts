@@ -15,6 +15,7 @@ import CSVUpload from '@/views/CSVUpload.vue'
 import TableCreate from '@/views/TableCreate.vue'
 import ColumnMappingEdit from '@/views/ColumnMappingEdit.vue'
 import CubeDesigner from '@/views/CubeDesigner.vue'
+import CubeMetadataEdit from '@/views/CubeMetadataEdit.vue'
 import PageNotFound from '@/views/PageNotFound.vue'
 import Logout from '@/views/Logout.vue'
 import NotAuthorized from '@/views/NotAuthorized.vue'
@@ -76,6 +77,13 @@ const routes: Array<RouteConfig> = [
             path: 'metadata',
             name: 'CubeDesigner',
             component: CubeDesigner,
+            children: [
+              {
+                path: 'edit',
+                name: 'CubeMetadataEdit',
+                component: CubeMetadataEdit,
+              }
+            ],
           },
         ],
       },

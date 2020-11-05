@@ -1,13 +1,14 @@
 import { ActionTree, MutationTree, GetterTree } from 'vuex'
 import { api } from '@/api'
 import { RootState } from '../types'
-import { Project, CSVMapping, SourcesCollection, TableCollection, Table } from '@/types'
+import { Project, CSVMapping, SourcesCollection, TableCollection, Table, CubeMetadata } from '@/types'
 
 export interface ProjectState {
   project: null | Project,
   csvMapping: null | CSVMapping,
   sourcesCollection: null | SourcesCollection,
   tableCollection: null | TableCollection,
+  cubeMetadata: null | CubeMetadata,
 }
 
 const initialState = {
@@ -15,6 +16,7 @@ const initialState = {
   csvMapping: null,
   sourcesCollection: null,
   tableCollection: null,
+  cubeMetadata: null,
 }
 
 const getters: GetterTree<ProjectState, RootState> = {
@@ -105,6 +107,22 @@ const actions: ActionTree<ProjectState, RootState> = {
     return Promise.all(uploads)
   },
 
+  async fetchCubeMetadata (context) {
+    const project = context.state.project
+
+    if (!project) {
+      throw new Error('Project not loaded')
+    }
+
+    if (!project.cubeMetadataId) {
+      throw new Error('Project does not have a cc:dataset')
+    }
+
+    const cubeMetadata = await api.fetchResource<CubeMetadata>(project.cubeMetadataId)
+    context.commit('storeCubeMetadata', cubeMetadata)
+
+    return cubeMetadata
+  },
 }
 
 const mutations: MutationTree<ProjectState> = {
@@ -122,6 +140,10 @@ const mutations: MutationTree<ProjectState> = {
 
   storeTableCollection (state, collection) {
     state.tableCollection = collection
+  },
+
+  storeCubeMetadata (state, cubeMetadata) {
+    state.cubeMetadata = cubeMetadata
   },
 }
 
