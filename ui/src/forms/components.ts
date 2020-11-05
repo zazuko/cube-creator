@@ -17,6 +17,22 @@ export const textField: SingleEditorComponent = {
   }
 }
 
+export const textFieldWithLang: SingleEditorComponent = {
+  editor: dash.TextFieldWithLangEditor,
+  render ({ value, property }, { update }) {
+    return html`<cc-text-field-with-lang
+      .value="${value.object.term}"
+      .property="${property}"
+      .update="${update}"
+    ></cc-text-field-with-lang>`
+  },
+  loadDependencies () {
+    return [
+      import('./TextFieldWithLangEditor.vue').then(createCustomElement('cc-text-field-with-lang'))
+    ]
+  }
+}
+
 export const instanceSelect: SingleEditorComponent = {
   editor: dash.InstancesSelectEditor,
   render ({ property, value }, { update }) {
