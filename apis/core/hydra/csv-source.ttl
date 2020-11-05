@@ -51,7 +51,7 @@ cc:CSVSource
         hydra:Operation,
         schema:DeleteAction ;
       hydra:title
-        "Delete CSV Source" ;
+        "Delete CSV" ;
       hydra:method
         "DELETE" ;
       code:implementedBy
@@ -67,7 +67,7 @@ cc:CSVSource
         hydra:Operation,
         schema:UpdateAction ;
       hydra:title
-        "Edit CSV file settings" ;
+        "Edit CSV settings" ;
       hydra:method
         "PUT" ;
       hydra:expects
