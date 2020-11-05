@@ -1,5 +1,5 @@
 import { cc, shape } from '@cube-creator/core/namespace'
-import { csvw, dash, hydra, rdfs, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
+import { csvw, dash, hydra, rdfs, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import { turtle } from '@tpluscode/rdf-string'
 import $rdf from 'rdf-ext'
 
@@ -16,14 +16,6 @@ ${shape('csv-source/update')} {
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
       ${sh.order} 0 ;
-    ] ;
-    ${sh.property} [
-      ${sh.name} "Source name" ;
-      ${sh.path} ${schema.name} ;
-      ${sh.minCount} 1 ;
-      ${sh.maxCount} 1 ;
-      ${sh.minLength} 1 ;
-      ${sh.datatype} ${xsd.string} ;
     ] ;
   .
 
@@ -46,16 +38,6 @@ ${shape('csv-source/update')} {
       ${sh.maxCount} 1 ;
       ${sh.minLength} 1 ;
       ${sh.order} 20 ;
-    ] ;
-    ${sh.property} [
-      ${sh.name} "Header rows" ;
-      ${sh.path} ${csvw.headerRowCount} ;
-      ${sh.datatype} ${xsd.integer} ;
-      ${sh.minCount} 1 ;
-      ${sh.maxCount} 1 ;
-      ${sh.default} 1 ;
-      ${sh.minInclusive} 0 ;
-      ${sh.order} 30 ;
     ] ;
   .
 }
