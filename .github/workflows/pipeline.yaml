@@ -2,7 +2,7 @@ name: Pipeline
 
 on:
   workflow_dispatch:
-    input:
+    inputs:
       job:
         description: 'Job URL'
         required: true
