@@ -24,7 +24,7 @@ jobs:
         with:
           node-version: 14
       - run: yarn install --ci
-      - run: ts-node cli/index.ts transform \
+      - run: yarn ts-node cli/index.ts transform \
           --job "${{ github.event.inputs.job }}" \
           --execution-url "https://${{ github.repository }}/actions/runs/${{ github.run_id }}" \
           --to graph-store \
