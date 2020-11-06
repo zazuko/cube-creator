@@ -15,12 +15,6 @@
                        a         code:EcmaScript ] ;
   code:arguments     ( <#StreamOutput> ) .
 
-<#updateJobStatus>
-  a                  :Step ;
-  code:implementedBy [ code:link <file:../lib/job#updateStatus> ;
-                       a         code:EcmaScript]
-.
-
 # ------------------------------
 #
 # Transform pipeline

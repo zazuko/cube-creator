@@ -9,7 +9,6 @@ import bufferDebug from 'barnard59/lib/bufferDebug'
 import clownface from 'clownface'
 import namespace from '@rdfjs/namespace'
 import { rdf, schema } from '@tpluscode/rdf-ns-builders'
-import promise from 'promise-the-world'
 import { names } from '../variables'
 import { updateJobStatus } from '../job'
 
@@ -84,29 +83,21 @@ export default function (pipelineId: NamedNode, log: Debugger) {
       bufferDebug(run.pipeline)
     }
 
-    const notified = promise.defer()
-
-    run.promise
-      .then(async () => {
-        await updateJobStatus({
+    return run.promise
+      .then(() =>
+        updateJobStatus({
           log: run.pipeline.context.log,
           jobUri: run.pipeline.context.variables.get(names.jobUri),
           executionUrl: run.pipeline.context.variables.get(names.executionUrl),
           status: schema.CompletedActionStatus,
-        })
-        notified.resolve()
-      })
-      .catch(async (error) => {
-        await updateJobStatus({
+        }))
+      .catch((error) =>
+        updateJobStatus({
           log: run.pipeline.context.log,
           jobUri: run.pipeline.context.variables.get(names.jobUri),
           executionUrl: run.pipeline.context.variables.get(names.executionUrl),
           status: schema.FailedActionStatus,
           error,
-        })
-        notified.resolve()
-      })
-
-    return notified.promise
+        }))
   }
 }
