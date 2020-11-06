@@ -1,6 +1,7 @@
 import { cc, shape } from '@cube-creator/core/namespace'
-import { hydra, rdfs, sh, dcat, dcterms, xsd, rdf, vcard, schema, _void } from '@tpluscode/rdf-ns-builders'
+import { hydra, rdfs, sh, dcat, dcterms, xsd, rdf, vcard, schema, _void, dash } from '@tpluscode/rdf-ns-builders'
 import { turtle } from '@tpluscode/rdf-string'
+import $rdf from 'rdf-ext'
 
 export const DatasetShape = turtle`
 ${shape('dataset/edit-metadata')} {
@@ -11,6 +12,7 @@ ${shape('dataset/edit-metadata')} {
       ${sh.name} "Identifier" ;
       ${sh.path} ${dcterms.identifier} ;
       ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
       ${sh.minLength} 1 ;
       ${sh.order} 0 ;
     ] ;
@@ -67,11 +69,13 @@ ${shape('dataset/edit-metadata')} {
     ] ;
     ${sh.property} [
       ${sh.name} "Data period" ;
-      ${sh.path} ${dcterms.accrualPeriodicity} ;
+      ${sh.path} ${dcterms.temporal} ;
       ${sh.minCount} 1 ;
-      ${sh.maxCount} 1 ;
       ${sh.minLength} 1 ;
-      ${sh.datatype} ${dcat.temporal} ;
+      ${dash.editor} ${dash.DetailsEditor} ;
+      ${sh.class} ${dcterms.PeriodOfTime} ;
+      ${sh.nodeKind} ${sh.BlankNode} ;
+      ${sh.node} ${$rdf.blankNode('temporal-from-to')} ;
       ${sh.order} 70 ;
     ] ;
     ${sh.property} [
@@ -88,6 +92,10 @@ ${shape('dataset/edit-metadata')} {
       ${sh.minCount} 1 ;
       ${sh.minLength} 1 ;
       ${sh.datatype} ${vcard.Organization} ;
+      ${dash.editor} ${dash.DetailsEditor} ;
+      ${sh.nodeKind} ${sh.BlankNode} ;
+      ${sh.class} ${vcard.Organization} ;
+      ${sh.node} ${$rdf.blankNode('vcard-organization')} ;
       ${sh.order} 90 ;
     ] ;
     ${sh.property} [
@@ -139,5 +147,46 @@ ${shape('dataset/edit-metadata')} {
       ${sh.order} 160 ;
     ] ;
   .
+
+  ${$rdf.blankNode('temporal-from-to')} a ${sh.NodeShape} ;
+    ${sh.targetClass} ${dcterms.PeriodOfTime} ;
+    ${rdfs.label} "Data converage" ;
+    ${sh.property} [
+      ${sh.name} "Start date" ;
+      ${sh.path} ${schema.startDate} ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+      ${sh.datatype} ${xsd.date} ;
+      ${sh.order} 10 ;
+      ] ;
+    ${sh.property} [
+      ${sh.name} "End date" ;
+      ${sh.path} ${schema.endDate} ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+      ${sh.datatype} ${xsd.date} ;
+      ${sh.order} 20 ;
+    ] ;
+  .
+
+  ${$rdf.blankNode('vcard-organization')} a ${sh.NodeShape} ;
+  ${sh.targetClass} ${vcard.Organization} ;
+  ${rdfs.label} "Organization" ;
+  ${sh.property} [
+    ${sh.name} "Name" ;
+    ${sh.path} ${vcard.fn} ;
+    ${sh.minCount} 1 ;
+    ${sh.maxCount} 1 ;
+    ${sh.order} 10 ;
+    ] ;
+  ${sh.property} [
+    ${sh.name} "Email " ;
+    ${sh.path} ${vcard.hasEmail} ;
+    ${sh.minCount} 1 ;
+    ${sh.maxCount} 1 ;
+    ${sh.nodeKind} ${sh.IRI} ;
+    ${sh.order} 20 ;
+  ] ;
+.
 }
 `
