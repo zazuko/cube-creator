@@ -5,7 +5,7 @@ import $rdf from 'rdf-ext'
 import { CONSTRUCT } from '@tpluscode/sparql-builder'
 import debug from 'debug'
 import { Hydra } from 'alcaeus/node'
-import { rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
+import { rdfs, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import transform from '../../../lib/commands/transform'
 import { setupEnv } from '../../support/env'
 import { client, insertTestData } from '@cube-creator/testing/lib'
@@ -57,9 +57,6 @@ describe('lib/commands/transform', function () {
       job: jobUri,
       executionUrl,
     })
-    await new Promise((resolve) =>
-      setTimeout(resolve, 100),
-    )
 
     // then
     const job = await Hydra.loadResource(jobUri)
@@ -70,7 +67,7 @@ describe('lib/commands/transform', function () {
         minCount: 1,
         maxCount: 1,
       }, {
-        path: rdf.seeAlso,
+        path: rdfs.seeAlso,
         minCount: 1,
         nodeKind: sh.IRI,
       }],
@@ -79,8 +76,8 @@ describe('lib/commands/transform', function () {
 
   it('updates job when pipeline has errors', async function () {
     // given
-    const jobUri = `${env.API_CORE_BASE}project/ubd/csv-mapping/jobs/test-job`
-    const runner = transform($rdf.namedNode('urn:pipeline:cube-creator#NoSuchPipeline'), debug('test'))
+    const jobUri = `${env.API_CORE_BASE}project/ubd/csv-mapping/jobs/broken-job`
+    const runner = transform($rdf.namedNode('urn:pipeline:cube-creator#Main'), debug('test'))
 
     // when
     await runner({
@@ -102,9 +99,19 @@ describe('lib/commands/transform', function () {
         minCount: 1,
         maxCount: 1,
       }, {
-        path: rdf.seeAlso,
+        path: rdfs.seeAlso,
         minCount: 1,
         nodeKind: sh.IRI,
+      }, {
+        path: schema.error,
+        node: {
+          property: {
+            path: schema.description,
+            datatype: xsd.string,
+            minCount: 1,
+          },
+        },
+        minCount: 1,
       }],
     })
   })

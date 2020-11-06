@@ -1,5 +1,4 @@
 import stream from 'readable-stream'
-import duplexTo from 'duplex-to'
 import { Hydra } from 'alcaeus/node'
 import { Job, Table } from '@cube-creator/model'
 import * as Csvw from '@rdfine/csvw'
@@ -10,9 +9,11 @@ import type Logger from 'barnard59-core/lib/logger'
 import type { Context } from 'barnard59-core/lib/Pipeline'
 import $rdf from 'rdf-ext'
 import { names } from './variables'
+import { ThingMixin } from '@rdfine/schema'
 
 Hydra.resources.factory.addMixin(...Object.values(Models))
 Hydra.resources.factory.addMixin(...Object.values(Csvw))
+Hydra.resources.factory.addMixin(ThingMixin)
 
 interface Params {
   jobUri: string
@@ -36,9 +37,23 @@ async function loadJob(jobUri: string, log: Logger, variables: Params['variables
   return representation.root
 }
 
-async function updateJobStatus({ variables, log, status }: { variables: Map<string, any>; log: Logger; status: Schema.ActionStatusType }) {
+interface JobStatusUpdate {
+  jobUri: string
+  executionUrl: string | undefined
+  log: Logger
+  status: Schema.ActionStatusType
+  error?: Error
+}
+
+export async function updateJobStatus({ jobUri, executionUrl, log, status, error }: JobStatusUpdate) {
   try {
-    const job: Job = variables.get('job')
+    const { representation } = await Hydra.loadResource<Job>(jobUri)
+    const job = representation?.root
+    if (!job) {
+      log.error('Could not load job to update')
+      return
+    }
+
     const [operation] = job.findOperations({
       bySupportedOperation: schema.UpdateAction,
     })
@@ -49,10 +64,18 @@ async function updateJobStatus({ variables, log, status }: { variables: Map<stri
     }
 
     job.actionStatus = status
-    if (variables.has(names.executionUrl)) {
-      job.seeAlso = $rdf.namedNode(variables.get(names.executionUrl)) as any
+    if (executionUrl) {
+      job.seeAlso = $rdf.namedNode(executionUrl) as any
+    }
+    if (error) {
+      job.error = {
+        types: [schema.Thing],
+        name: error.message,
+        description: error.stack,
+      } as any
     }
 
+    log.info(`Updating job status to ${status.value}`)
     await operation.invoke(JSON.stringify(job.toJSON()), {
       'Content-Type': 'application/ld+json',
     })
@@ -86,8 +109,12 @@ export class JobIterator extends stream.Readable {
     Promise.resolve()
       .then(async () => {
         const job = await loadJob(jobUri, log, variables)
-        variables.set('job', job)
-        await updateJobStatus({ variables, log, status: schema.ActiveActionStatus })
+        await updateJobStatus({
+          jobUri,
+          executionUrl: variables.get(names.executionUrl),
+          log,
+          status: schema.ActiveActionStatus,
+        })
 
         const tables = await loadTables(job, log)
 
@@ -141,22 +168,4 @@ export class JobIterator extends stream.Readable {
 
 export function loadCsvMappings(this: Context, jobUri: string) {
   return new JobIterator({ jobUri, log: this.log, variables: this.variables })
-}
-
-export function updateStatus(this: Context) {
-  const passThrough = new stream.PassThrough()
-
-  passThrough.on('end', () => updateJobStatus({
-    log: this.log,
-    variables: this.variables,
-    status: schema.CompletedActionStatus,
-  }))
-
-  passThrough.on('error', () => updateJobStatus({
-    log: this.log,
-    variables: this.variables,
-    status: schema.FailedActionStatus,
-  }))
-
-  return duplexTo.writable(passThrough)
 }

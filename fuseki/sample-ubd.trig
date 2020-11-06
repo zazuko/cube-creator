@@ -331,3 +331,12 @@ graph <project/ubd/csv-mapping/jobs/test-job> {
     schema:actionStatus schema:PotentialActionStatus ;
   .
 }
+
+<project/ubd/csv-mapping/jobs/broken-job> void:inDataset <ubd-example> .
+graph <project/ubd/csv-mapping/jobs/broken-job> {
+  <project/ubd/csv-mapping/jobs/broken-job>
+    a hydra:Resource, cc:Job ;
+    cc:tables <cube-project/ubd/csv-mapping/no-tables> ;
+    schema:label "cli-test" ;
+  .
+}

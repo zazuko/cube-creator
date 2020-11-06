@@ -8,8 +8,10 @@ import Runner from 'barnard59/lib/runner'
 import bufferDebug from 'barnard59/lib/bufferDebug'
 import clownface from 'clownface'
 import namespace from '@rdfjs/namespace'
-import { rdf } from '@tpluscode/rdf-ns-builders'
+import { rdf, schema } from '@tpluscode/rdf-ns-builders'
+import promise from 'promise-the-world'
 import { names } from '../variables'
+import { updateJobStatus } from '../job'
 
 const ns = {
   pipelines: namespace('https://pipeline.described.at/'),
@@ -82,6 +84,29 @@ export default function (pipelineId: NamedNode, log: Debugger) {
       bufferDebug(run.pipeline)
     }
 
-    return run.promise
+    const notified = promise.defer()
+
+    run.promise
+      .then(async () => {
+        await updateJobStatus({
+          log: run.pipeline.context.log,
+          jobUri: run.pipeline.context.variables.get(names.jobUri),
+          executionUrl: run.pipeline.context.variables.get(names.executionUrl),
+          status: schema.CompletedActionStatus,
+        })
+        notified.resolve()
+      })
+      .catch(async (error) => {
+        await updateJobStatus({
+          log: run.pipeline.context.log,
+          jobUri: run.pipeline.context.variables.get(names.jobUri),
+          executionUrl: run.pipeline.context.variables.get(names.executionUrl),
+          status: schema.FailedActionStatus,
+          error,
+        })
+        notified.resolve()
+      })
+
+    return notified.promise
   }
 }
