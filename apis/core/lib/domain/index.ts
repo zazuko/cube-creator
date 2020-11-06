@@ -1,3 +1,4 @@
+import { ThingMixin } from '@rdfine/schema'
 import * as CoreModel from '@cube-creator/model'
 import RdfResourceImpl from '@tpluscode/rdfine'
 import CsvMapping from './csv-mapping/CsvMapping'
@@ -14,3 +15,5 @@ RdfResourceImpl.factory.addMixin(Project)
 RdfResourceImpl.factory.addMixin(Dataset)
 RdfResourceImpl.factory.addMixin(Table)
 RdfResourceImpl.factory.addMixin(Resource)
+
+RdfResourceImpl.factory.addMixin(ThingMixin)

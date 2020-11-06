@@ -8,9 +8,10 @@ declare module 'barnard59/lib/runner' {
   import { DatasetCore } from 'rdf-js'
   import { Writable } from 'stream'
   import type { Debugger } from 'debug'
+  import type Pipeline from 'barnard59-core/lib/Pipeline'
 
   type Runner = {
-    pipeline: any
+    pipeline: Pipeline
     promise: Promise<any>
   }
 
