@@ -23,6 +23,7 @@ jobs:
       - uses: actions/setup-node@v1.4.2
         with:
           node-version: 14
+      - run: yarn install --ci
       - run: ts-node cli/index.ts transform \
           --job "${{ github.event.inputs.job }}" \
           --execution-url "https://${{ github.repository }}/actions/runs/${{ github.run_id }}" \
