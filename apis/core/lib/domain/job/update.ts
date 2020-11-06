@@ -5,6 +5,7 @@ import RdfResource from '@tpluscode/rdfine'
 import { ResourceStore } from '../../ResourceStore'
 import { resourceStore } from '../resources'
 import { NotFoundError } from '../../errors'
+import { schema } from '@tpluscode/rdf-ns-builders'
 
 interface JobUpdateParams {
   resource: GraphPointer<NamedNode>
@@ -29,6 +30,7 @@ export async function update({ resource, store = resourceStore() }: JobUpdatePar
   if (changes.error) {
     job.error = {
       ...changes.error.toJSON(),
+      types: [schema.Thing],
     } as any
   } else {
     job.error?.pointer.deleteOut()

@@ -92,7 +92,7 @@ describe('domain/job/update', () => {
     })
   })
 
-  it('sets error if not in payload', async () => {
+  it('sets error if in payload', async () => {
     // given
     job.addOut(schema.error, error => {
       error.addOut(schema.description, 'Previous error')
