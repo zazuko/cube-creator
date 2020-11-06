@@ -2,18 +2,26 @@ import stream from 'readable-stream'
 import { Hydra } from 'alcaeus/node'
 import { Job, Table } from '@cube-creator/model'
 import * as Csvw from '@rdfine/csvw'
+import * as Schema from '@rdfine/schema'
 import * as Models from '@cube-creator/model'
+import { schema } from '@tpluscode/rdf-ns-builders'
+import type Logger from 'barnard59-core/lib/logger'
+import type { Context } from 'barnard59-core/lib/Pipeline'
+import $rdf from 'rdf-ext'
+import { names } from './variables'
+import { ThingMixin } from '@rdfine/schema'
 
 Hydra.resources.factory.addMixin(...Object.values(Models))
 Hydra.resources.factory.addMixin(...Object.values(Csvw))
+Hydra.resources.factory.addMixin(ThingMixin)
 
 interface Params {
   jobUri: string
-  log: Record<string, (msg: string) => void>
-  variables: Map<string, string>
+  log: Logger
+  variables: Map<string, any>
 }
 
-async function loadJob(jobUri: string, log: Params['log'], variables: Params['variables']): Promise<Job> {
+async function loadJob(jobUri: string, log: Logger, variables: Params['variables']): Promise<Job> {
   log.debug(`Loading job ${jobUri}`)
   const { representation, response } = await Hydra.loadResource<Job>(jobUri)
   if (!representation || !representation.root) {
@@ -29,7 +37,54 @@ async function loadJob(jobUri: string, log: Params['log'], variables: Params['va
   return representation.root
 }
 
-async function loadTables(job: Job, log: any): Promise<Table[]> {
+interface JobStatusUpdate {
+  jobUri: string
+  executionUrl: string | undefined
+  log: Logger
+  status: Schema.ActionStatusType
+  error?: Error
+}
+
+export async function updateJobStatus({ jobUri, executionUrl, log, status, error }: JobStatusUpdate) {
+  try {
+    const { representation } = await Hydra.loadResource<Job>(jobUri)
+    const job = representation?.root
+    if (!job) {
+      log.error('Could not load job to update')
+      return
+    }
+
+    const [operation] = job.findOperations({
+      bySupportedOperation: schema.UpdateAction,
+    })
+
+    if (!operation) {
+      log.warn('Could not find schema:UpdateAction operation on Job')
+      return
+    }
+
+    job.actionStatus = status
+    if (executionUrl) {
+      job.seeAlso = $rdf.namedNode(executionUrl) as any
+    }
+    if (error) {
+      job.error = {
+        types: [schema.Thing],
+        name: error.message,
+        description: error.stack,
+      } as any
+    }
+
+    log.info(`Updating job status to ${status.value}`)
+    await operation.invoke(JSON.stringify(job.toJSON()), {
+      'Content-Type': 'application/ld+json',
+    })
+  } catch (e) {
+    log.warn(`Failed to update job status: ${e.message}`)
+  }
+}
+
+async function loadTables(job: Job, log: Logger): Promise<Table[]> {
   if (job.tableCollection.load) {
     log.info(`Will transform project ${job.label}`)
     const { representation } = await job.tableCollection.load()
@@ -51,9 +106,18 @@ export class JobIterator extends stream.Readable {
       read: () => {},
     })
 
-    loadJob(jobUri, log, variables)
-      .then(job => loadTables(job, log))
-      .then(tables => {
+    Promise.resolve()
+      .then(async () => {
+        const job = await loadJob(jobUri, log, variables)
+        await updateJobStatus({
+          jobUri,
+          executionUrl: variables.get(names.executionUrl),
+          log,
+          status: schema.ActiveActionStatus,
+        })
+
+        const tables = await loadTables(job, log)
+
         const loadMetadata = tables.reduce((metadata, table) => {
           if (!table.csvw.load) {
             log.warn(`Skipping table '${table.name}'. Is it dereferencable?`)
@@ -102,6 +166,6 @@ export class JobIterator extends stream.Readable {
   }
 }
 
-export function loadCsvMappings(this: any, jobUri: string) {
+export function loadCsvMappings(this: Context, jobUri: string) {
   return new JobIterator({ jobUri, log: this.log, variables: this.variables })
 }

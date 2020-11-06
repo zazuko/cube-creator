@@ -2,6 +2,8 @@ import { describe, before, beforeEach, it } from 'mocha'
 import { expect } from 'chai'
 import { Hydra } from 'alcaeus/node'
 import env from '@cube-creator/core/env'
+import { rdfs, schema } from '@tpluscode/rdf-ns-builders'
+import $rdf from 'rdf-ext'
 import { JobIterator } from '../../lib/job'
 import { insertTestData } from '@cube-creator/testing/lib'
 import { setupEnv } from '../support/env'
@@ -21,7 +23,9 @@ describe('lib/job', function () {
   })
 
   beforeEach(() => {
-    variables = new Map()
+    variables = new Map([
+      ['executionUrl', 'http://foo.runner/job/bar'],
+    ])
   })
 
   describe('JobIterator', () => {
@@ -57,6 +61,36 @@ describe('lib/job', function () {
 
       // then
       expect(variables.get('graph')).to.eq(`${env.API_CORE_BASE}cube-project/ubd/cube-data`)
+    })
+
+    it('updates execution URL and sets job status to active', async () => {
+      // given
+      const jobUri = `${env.API_CORE_BASE}project/ubd/csv-mapping/jobs/test-job`
+      const iteratorStream = new JobIterator({ jobUri, log, variables })
+
+      // when
+      await new Promise((resolve, reject) => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        iteratorStream.on('data', () => {})
+        iteratorStream.on('end', resolve)
+        iteratorStream.on('error', reject)
+      })
+
+      // then
+      const job = await Hydra.loadResource(jobUri)
+      expect(job.representation?.root).to.matchShape({
+        property: [{
+          path: schema.actionStatus,
+          hasValue: schema.ActiveActionStatus,
+          minCount: 1,
+          maxCount: 1,
+        }, {
+          path: rdfs.seeAlso,
+          hasValue: $rdf.namedNode('http://foo.runner/job/bar'),
+          minCount: 1,
+          maxCount: 1,
+        }],
+      })
     })
   })
 })

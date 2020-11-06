@@ -1240,7 +1240,7 @@
     "@tpluscode/rdf-ns-builders" "^0.4"
     "@tpluscode/rdfine" "^0.5.7"
 
-"@rdfine/schema@^0.5.2":
+"@rdfine/schema@^0.5.1", "@rdfine/schema@^0.5.2":
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/@rdfine/schema/-/schema-0.5.2.tgz#696b5df8d95ca0627c1570e8e333af0569ff621f"
   integrity sha512-aS5n5SMeGcSiSAN3Cy+I4eG8XOtVwaAcZp1v4PR5ooqsPQU3+yEkcs1/piJd+ZA3gFbqp0uhvG4Q3DvD6XoIwg==
@@ -1481,10 +1481,10 @@
     "@tpluscode/rdf-ns-builders" "^0.4"
     "@zazuko/rdf-vocabularies" "^2020.11.2"
 
-"@tpluscode/rdfine@^0.5.10", "@tpluscode/rdfine@^0.5.12", "@tpluscode/rdfine@^0.5.14", "@tpluscode/rdfine@^0.5.6", "@tpluscode/rdfine@^0.5.7", "@tpluscode/rdfine@^0.5.9":
-  version "0.5.14"
-  resolved "https://registry.yarnpkg.com/@tpluscode/rdfine/-/rdfine-0.5.14.tgz#668e3d464e67ea31f87fcce0c21e53b073b065d0"
-  integrity sha512-NJ34VbML3XJXycrBxluu9fxb1ImsDVq3Tp0prh2Hj5hGHH6+4TEZ0sOp7OpdqSUjVJfWO2gcl9ItU4fCnYr2TQ==
+"@tpluscode/rdfine@^0.5.10", "@tpluscode/rdfine@^0.5.12", "@tpluscode/rdfine@^0.5.14", "@tpluscode/rdfine@^0.5.15", "@tpluscode/rdfine@^0.5.6", "@tpluscode/rdfine@^0.5.7", "@tpluscode/rdfine@^0.5.9":
+  version "0.5.15"
+  resolved "https://registry.yarnpkg.com/@tpluscode/rdfine/-/rdfine-0.5.15.tgz#f7a89931c2ee8429b999a6d0a46c83473fe51545"
+  integrity sha512-QzMRdZZcHHjnKDa0GWC/E1DQ+Z2wugNJF3PVpf5XA2P3oCd15/reBUUMj9YcutXzU48x+Jhu2A4xZyIQkYZiXQ==
   dependencies:
     "@rdf-esm/data-model" "^0.5.3"
     "@rdf-esm/namespace" "^0.5.1"
@@ -1673,11 +1673,6 @@
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@types/is-windows/-/is-windows-1.0.0.tgz#1011fa129d87091e2f6faf9042d6704cdf2e7be0"
   integrity sha512-tJ1rq04tGKuIJoWIH0Gyuwv4RQ3+tIu7wQrC0MV47raQ44kIzXSSFKfrxFUOWVRvesoF7mrTqigXmqoZJsXwTg==
-
-"@types/isstream@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@types/isstream/-/isstream-0.1.0.tgz#f6522f52c0903ad5dc153950a720321928309fa1"
-  integrity sha512-jo6R5XtVMgu1ej3H4o9NXiUE/4ZxyxmDrGslGiBa4/ugJr+Olw2viio/F2Vlc+zrwC9HJzuApOCCVC2g5jqV0w==
 
 "@types/istanbul-lib-coverage@^2.0.1":
   version "2.0.3"
@@ -7328,7 +7323,7 @@ is-stream@^1.0.1, is-stream@^1.1.0:
   resolved "https://registry.yarnpkg.com/is-stream/-/is-stream-1.1.0.tgz#12d4a3dd4e68e0b79ceb8dbc84173ae80d91ca44"
   integrity sha1-EtSj3U5o4Lec6428hBc66A2RykQ=
 
-is-stream@^2.0.0:
+is-stream@^2, is-stream@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/is-stream/-/is-stream-2.0.0.tgz#bde9c32680d6fae04129d6ac9d921ce7815f78e3"
   integrity sha512-XCoy+WlUr7d1+Z8GgSuXmpuUFC9fOhRXglJMx+dwLKTkL44Cjd4W1Z5P+BQZpr+cR93aGP4S/s7Ftw6Nd/kiEw==

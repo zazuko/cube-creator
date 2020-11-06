@@ -1,5 +1,5 @@
 import aws from 'aws-sdk'
-import { isReadable } from 'isstream'
+import { readable } from 'is-stream'
 import { Readable } from 'stream'
 import { PromiseResult } from 'aws-sdk/lib/request'
 import env from '@cube-creator/core/env'
@@ -56,7 +56,7 @@ export async function loadFile(path: string): Promise<Readable | null> {
     return readable
   }
 
-  if (isReadable(file.Body)) {
+  if (readable(file.Body)) {
     return file.Body as Readable
   }
 
