@@ -67,4 +67,62 @@ describe('domain/job/update', () => {
       },
     })
   })
+
+  it('clears error if not in payload', async () => {
+    // given
+    job.addOut(schema.error, error => {
+      error.addOut(schema.description, 'Previous error')
+    })
+    const resource = clownface({ dataset: $rdf.dataset() })
+      .namedNode('job')
+      .addOut(rdfs.seeAlso, $rdf.namedNode('http://gitlab.link/'))
+
+    // when
+    await update({
+      resource,
+      store,
+    })
+
+    // then
+    expect(job).to.matchShape({
+      property: {
+        path: schema.error,
+        maxCount: 0,
+      },
+    })
+  })
+
+  it('sets error if not in payload', async () => {
+    // given
+    job.addOut(schema.error, error => {
+      error.addOut(schema.description, 'Previous error')
+    })
+    const resource = clownface({ dataset: $rdf.dataset() })
+      .namedNode('job')
+      .addOut(rdfs.seeAlso, $rdf.namedNode('http://gitlab.link/'))
+      .addOut(schema.error, error => {
+        error.addOut(schema.description, 'New error')
+      })
+
+    // when
+    await update({
+      resource,
+      store,
+    })
+
+    // then
+    expect(job).to.matchShape({
+      property: {
+        path: schema.error,
+        node: {
+          property: {
+            path: schema.description,
+            hasValue: 'New error',
+            minCount: 1,
+          },
+        },
+        minCount: 1,
+      },
+    })
+  })
 })

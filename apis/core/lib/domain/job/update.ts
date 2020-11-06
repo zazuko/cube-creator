@@ -2,6 +2,7 @@ import { NamedNode } from 'rdf-js'
 import { GraphPointer } from 'clownface'
 import { Job, JobMixin } from '@cube-creator/model'
 import RdfResource from '@tpluscode/rdfine'
+import { ThingMixin } from '@rdfine/schema'
 import { ResourceStore } from '../../ResourceStore'
 import { resourceStore } from '../resources'
 import { NotFoundError } from '../../errors'
@@ -22,8 +23,17 @@ export async function update({ resource, store = resourceStore() }: JobUpdatePar
     job.actionStatus = changes.actionStatus
   }
 
-  if (changes.seeAlso) {
+  if (changes.seeAlso.length) {
     job.seeAlso = changes.seeAlso
+  }
+
+  if (changes.error) {
+    job.error = new ThingMixin.Class(job.pointer.blankNode(), {
+      ...changes.error.toJSON() as any,
+    }) as any
+  } else {
+    job.error?.pointer.deleteOut()
+    job.error = undefined
   }
 
   await store.save()
