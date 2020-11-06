@@ -5,7 +5,12 @@ import env from '../env'
 export const baseUri = env.maybe.API_CORE_BASE || ''
 
 type ShapeTerms =
-  'cube-project/create' | 'cube-project/create#CSV' | 'cube-project/create#ExistingCube' | 'table/create' | 'dataset/edit-metadata'
+  'cube-project/create' |
+  'cube-project/create#CSV' |
+  'cube-project/create#ExistingCube' |
+  'table/create' |
+  'csv-source/update' |
+  'dataset/edit-metadata'
 
 type ShapesNamespace = (term: ShapeTerms) => NamedNode
 

@@ -12,6 +12,7 @@ import CubeProjectNew from '@/views/CubeProjectNew.vue'
 import CubeProjectEdit from '@/views/CubeProjectEdit.vue'
 import CSVMapping from '@/views/CSVMapping.vue'
 import CSVUpload from '@/views/CSVUpload.vue'
+import SourceEdit from '@/views/SourceEdit.vue'
 import TableCreate from '@/views/TableCreate.vue'
 import ColumnMappingEdit from '@/views/ColumnMappingEdit.vue'
 import CubeDesigner from '@/views/CubeDesigner.vue'
@@ -60,6 +61,11 @@ const routes: Array<RouteConfig> = [
                 path: 'csv-upload',
                 name: 'CSVUpload',
                 component: CSVUpload,
+              },
+              {
+                path: 'sources/:sourceId/edit',
+                name: 'SourceEdit',
+                component: SourceEdit,
               },
               {
                 path: 'tables/create',

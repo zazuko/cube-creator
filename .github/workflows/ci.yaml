@@ -12,6 +12,10 @@ jobs:
           node-version: 14
       - run: yarn install --ci
       - run: yarn test
+      - name: Codecov
+        uses: codecov/codecov-action@v1.0.5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   cli-test:
     runs-on: ubuntu-latest
