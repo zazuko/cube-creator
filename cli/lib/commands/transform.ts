@@ -91,13 +91,16 @@ export default function (pipelineId: NamedNode, log: Debugger) {
           executionUrl: run.pipeline.context.variables.get(names.executionUrl),
           status: schema.CompletedActionStatus,
         }))
-      .catch((error) =>
-        updateJobStatus({
+      .catch(async (error) => {
+        await updateJobStatus({
           log: run.pipeline.context.log,
           jobUri: run.pipeline.context.variables.get(names.jobUri),
           executionUrl: run.pipeline.context.variables.get(names.executionUrl),
           status: schema.FailedActionStatus,
           error,
-        }))
+        })
+
+        throw error
+      })
   }
 }
