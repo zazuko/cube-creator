@@ -36,10 +36,6 @@ export function columnMapping(table: Table, columnName: string): NamedNode {
   return $rdf.namedNode(`${table.id.value}/column-mapping/${url.slugify(columnName)}`)
 }
 
-export function jobCollection(csvMapping: CsvMapping): NamedNode {
-  return $rdf.namedNode(`${csvMapping.id.value}/jobs`)
-}
-
 export function csvSource(mapping: CsvMapping, fileName: string): NamedNode {
   return $rdf.namedNode(`${mapping.id.value}/csv-source/${url.slugify(fileName)}`)
 }

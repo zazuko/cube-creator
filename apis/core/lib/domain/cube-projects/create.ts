@@ -31,6 +31,7 @@ export async function createProject({
     label,
   })
 
+  project.initializeJobCollection(store)
   const dataset = Dataset.create(store.create(project.dataset))
 
   if (shape('cube-project/create#CSV').equals(resource.out(cc.projectSourceKind).term)) {
