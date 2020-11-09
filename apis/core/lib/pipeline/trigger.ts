@@ -1,6 +1,6 @@
 import { URLSearchParams } from 'url'
 import { NamedNode } from 'rdf-js'
-import fetch, { RequestInit } from 'node-fetch'
+import nodeFetch, { RequestInit } from 'node-fetch'
 import env from '@cube-creator/core/env'
 import { GraphPointer } from 'clownface'
 import { dcterms } from '@tpluscode/rdf-ns-builders'
@@ -8,7 +8,7 @@ import { dcterms } from '@tpluscode/rdf-ns-builders'
 const pipelineURI = env.PIPELINE_URI
 
 function trigger(triggerRequestInit: (job: NamedNode, params: GraphPointer) => RequestInit) {
-  return async (job: NamedNode, params: GraphPointer) => {
+  return async (job: NamedNode, params: GraphPointer, fetch = nodeFetch) => {
     if (!job) {
       throw new Error('Job URI missing')
     }
