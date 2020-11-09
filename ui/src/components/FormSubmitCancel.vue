@@ -3,11 +3,11 @@
     <hr>
     <b-field class="buttons" :addons="false">
       <div class="control">
-        <button type="submit" class="button is-primary" :disabled="disabled">
+        <b-button native-type="submit" class="button is-primary" :disabled="disabled" :loading="isSubmitting">
           {{ _submitLabel }}
-        </button>
+        </b-button>
       </div>
-      <div class="control">
+      <div class="control" v-if="showCancel">
         <b-button @click="$emit('cancel')">
           Cancel
         </b-button>
@@ -23,6 +23,8 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 export default class FormSubmitCancel extends Vue {
   @Prop() submitLabel?: string
   @Prop() disabled?: boolean
+  @Prop() isSubmitting?: boolean
+  @Prop() showCancel?: boolean
 
   get _submitLabel (): string {
     return this.submitLabel || 'Save'

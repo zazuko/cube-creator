@@ -1,26 +1,27 @@
 <template>
   <side-pane :is-open="true" :title="operation.title" @close="onCancel">
-    <form @submit.prevent="onSubmit">
-      <b-message v-if="error" type="is-danger">
-        {{ error }}
-      </b-message>
+    <hydra-operation-form
+      v-if="operation"
+      :operation="operation"
+      :resource="resource"
+      :shape="shape"
+      :error="error"
+      :is-submitting="isSubmitting"
+      @submit="onSubmit"
+      @cancel="onCancel"
+    />
 
-      <cc-form :resource.prop="resource" :shapes.prop="shapePointer" no-editor-switches />
-
-      <b-field label="Mapped columns" v-if="preselectedColumns.length > 0" class="content" :addons="false">
-        <p class="help">
-          The following columns will be mapped with default values.
-          They can be edited once the table is created.
-        </p>
-        <ul>
-          <li v-for="column in preselectedColumns" :key="column.id.value">
-            {{ column.name }}
-          </li>
-        </ul>
-      </b-field>
-
-      <form-submit-cancel :submit-label="operation.title" @cancel="onCancel" />
-    </form>
+    <b-field label="Mapped columns" v-if="preselectedColumns.length > 0" class="content" :addons="false">
+      <p class="help">
+        The following columns will be mapped with default values.
+        They can be edited once the table is created.
+      </p>
+      <ul>
+        <li v-for="column in preselectedColumns" :key="column.id.value">
+          {{ column.name }}
+        </li>
+      </ul>
+    </b-field>
   </side-pane>
 </template>
 
@@ -34,7 +35,7 @@ import { csvw } from '@tpluscode/rdf-ns-builders'
 import { Shape } from '@rdfine/shacl'
 import * as ns from '@cube-creator/core/namespace'
 import SidePane from '@/components/SidePane.vue'
-import FormSubmitCancel from '@/components/FormSubmitCancel.vue'
+import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import { APIErrorValidation } from '@/api/errors'
 import { api } from '@/api'
 import { SourcesCollection, Source, CSVColumn } from '../types'
@@ -42,7 +43,7 @@ import { SourcesCollection, Source, CSVColumn } from '../types'
 const projectNS = namespace('project')
 
 @Component({
-  components: { SidePane, FormSubmitCancel },
+  components: { SidePane, HydraOperationForm },
 })
 export default class TableCreateView extends Vue {
   @projectNS.State('sourcesCollection') sourcesCollection!: SourcesCollection
@@ -51,6 +52,7 @@ export default class TableCreateView extends Vue {
 
   resource: GraphPointer | null = clownface({ dataset: dataset() }).namedNode('')
   shape: Shape | null = null
+  isSubmitting = false;
   error: string | null = null
 
   async mounted (): Promise<void> {
@@ -89,10 +91,6 @@ export default class TableCreateView extends Vue {
     return shape
   }
 
-  get shapePointer (): GraphPointer | null {
-    return this.shape?.pointer ?? null
-  }
-
   get preselectedSource (): Source | null {
     const sourceId = this.$router.currentRoute.query.source
 
@@ -128,7 +126,7 @@ export default class TableCreateView extends Vue {
 
   async onSubmit (): Promise<void> {
     this.error = null
-    const loader = this.$buefy.loading.open({})
+    this.isSubmitting = true
 
     try {
       const table = await this.$store.dispatch('api/invokeSaveOperation', {
@@ -152,7 +150,7 @@ export default class TableCreateView extends Vue {
         this.error = e.toString()
       }
     } finally {
-      loader.close()
+      this.isSubmitting = false
     }
   }
 

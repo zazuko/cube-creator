@@ -1,21 +1,15 @@
 <template>
   <side-pane :is-open="true" :title="operation.title" @close="onCancel">
-    <form @submit.prevent="onSubmit">
-      <b-message v-if="error" type="is-danger">
-        {{ error }}
-      </b-message>
-
-      <cc-form :resource.prop="resource" :shapes.prop="shapePointer" no-editor-switches />
-
-      <b-field>
-        <button type="submit" class="button is-primary">
-          Save
-        </button>
-        <b-button @click="onCancel">
-          Cancel
-        </b-button>
-      </b-field>
-    </form>
+    <hydra-operation-form
+      v-if="operation"
+      :operation="operation"
+      :resource="resource"
+      :shape="shape"
+      :error="error"
+      :is-submitting="isSubmitting"
+      @submit="onSubmit"
+      @cancel="onCancel"
+    />
   </side-pane>
 </template>
 
@@ -27,19 +21,21 @@ import { RuntimeOperation } from 'alcaeus'
 import { Shape } from '@rdfine/shacl'
 import { Project, Source } from '../types'
 import SidePane from '@/components/SidePane.vue'
+import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import { api } from '@/api'
 import { APIErrorValidation } from '@/api/errors'
 
 const projectNS = namespace('project')
 
 @Component({
-  components: { SidePane },
+  components: { SidePane, HydraOperationForm },
 })
 export default class CubeProjectEditView extends Vue {
   @projectNS.State('project') project!: Project
   @projectNS.Getter('findSource') findSource!: (id: string) => Source
 
   resource: GraphPointer | null = null;
+  isSubmitting = false;
   error: string | null = null;
   shape: Shape | null = null;
 
@@ -54,10 +50,6 @@ export default class CubeProjectEditView extends Vue {
     return this.source.actions.edit
   }
 
-  get shapePointer (): GraphPointer | null {
-    return this.shape?.pointer ?? null
-  }
-
   async mounted (): Promise<void> {
     this.resource = Object.freeze(this.source.pointer)
 
@@ -68,7 +60,7 @@ export default class CubeProjectEditView extends Vue {
 
   async onSubmit (): Promise<void> {
     this.error = null
-    const loader = this.$buefy.loading.open({})
+    this.isSubmitting = true
 
     try {
       await this.$store.dispatch('api/invokeSaveOperation', {
@@ -92,7 +84,7 @@ export default class CubeProjectEditView extends Vue {
         this.error = e.toString()
       }
     } finally {
-      loader.close()
+      this.isSubmitting = false
     }
   }
 
