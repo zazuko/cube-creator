@@ -80,15 +80,13 @@ describe('lib/commands/transform', function () {
     const runner = transform($rdf.namedNode('urn:pipeline:cube-creator#Main'), debug('test'))
 
     // when
-    await runner({
+    const jobRun = runner({
       to: 'graph-store',
       debug: true,
       job: jobUri,
       executionUrl,
     })
-    await new Promise((resolve) =>
-      setTimeout(resolve, 100),
-    )
+    await expect(jobRun).to.have.rejected
 
     // then
     const job = await Hydra.loadResource(jobUri)
