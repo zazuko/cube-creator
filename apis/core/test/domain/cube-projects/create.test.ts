@@ -69,6 +69,52 @@ describe('domain/cube-projects/create', () => {
     })
   })
 
+  it('creates a job collection resource linked to itself', async () => {
+    // given
+    const resource = clownface({ dataset: $rdf.dataset() })
+      .namedNode('')
+      .addOut(rdfs.label, 'Foo bar project')
+
+    // when
+    const project = await createProject({ resource, store, projectsCollection, user })
+
+    // then
+    const jobs = await store.get(project.jobCollection.id)
+    expect(project.jobCollection.id.value).to.match(/project\/.+\/jobs$/)
+    expect(jobs).to.matchShape({
+      property: [{
+        path: rdf.type,
+        [sh.hasValue.value]: [hydra.Collection, cc.JobCollection],
+        minCount: 2,
+      }, {
+        path: hydra.manages,
+        node: {
+          xone: [{
+            property: [{
+              path: hydra.object,
+              hasValue: cc.Job,
+              minCount: 1,
+            }, {
+              path: hydra.property,
+              hasValue: rdf.type,
+              minCount: 1,
+            }],
+          }, {
+            property: [{
+              path: hydra.object,
+              hasValue: project.id,
+              minCount: 1,
+            }, {
+              path: hydra.property,
+              hasValue: cc.project,
+              minCount: 1,
+            }],
+          }],
+        },
+      }],
+    })
+  })
+
   describe('CSV project', () => {
     it('creates a CSV Mapping resource', async () => {
       // given
