@@ -7,7 +7,7 @@ import { library as iconsLibrary } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-import './bulma.scss'
+import './styles/app.scss'
 import store from './store'
 
 import './forms'
