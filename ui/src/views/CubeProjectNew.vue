@@ -4,7 +4,7 @@
       {{ error }}
     </b-message>
     <form @submit.prevent="onSubmit">
-      <cc-form :resource.prop="resource" :shapes.prop="shapes" no-editor-switches />
+      <cc-form :resource.prop="resource" :shapes.prop="shapePointer" no-editor-switches />
       <form-submit-cancel submit-label="Create project" @cancel="onCancel" />
     </form>
   </side-pane>
@@ -13,12 +13,13 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { State } from 'vuex-class'
+import { RuntimeOperation } from 'alcaeus'
 import clownface, { GraphPointer } from 'clownface'
+import { Shape } from '@rdfine/shacl'
 import { dataset } from '@rdf-esm/dataset'
 import SidePane from '@/components/SidePane.vue'
 import FormSubmitCancel from '@/components/FormSubmitCancel.vue'
-import { sh } from '@tpluscode/rdf-ns-builders'
-import { RuntimeOperation, RdfResource } from 'alcaeus'
+import { api } from '@/api'
 
 @Component({
   components: { SidePane, FormSubmitCancel },
@@ -29,22 +30,20 @@ export default class CubeProjectNewView extends Vue {
 
   resource: GraphPointer | null = Object.freeze(clownface({ dataset: dataset() }).namedNode(''));
   error: string | null = null;
+  shape: Shape | null = null;
   shapes: GraphPointer | null = null;
 
   get title (): string {
     return this.operation?.title ?? ''
   }
 
-  async mounted (): Promise<void> {
-    const expects: RdfResource | undefined = this.operation?.expects
-      .find(expects => 'load' in expects && expects.types.has(sh.Shape))
+  get shapePointer (): GraphPointer | null {
+    return this.shape?.pointer ?? null
+  }
 
-    if (expects && expects.load) {
-      const { representation } = await expects.load()
-      if (representation && representation.root) {
-        const shape = representation.root
-        this.shapes = shape.pointer
-      }
+  async mounted (): Promise<void> {
+    if (this.operation) {
+      this.shape = await api.fetchOperationShape(this.operation)
     }
   }
 

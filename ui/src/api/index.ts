@@ -1,7 +1,9 @@
 import { Hydra } from 'alcaeus/web'
 import { RdfResource, Resource, RuntimeOperation } from 'alcaeus'
 import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
+import { sh } from '@tpluscode/rdf-ns-builders'
 import { ShapeBundle } from '@rdfine/shacl/bundles'
+import { Shape } from '@rdfine/shacl'
 import store from '@/store'
 import { APIError } from './errors'
 import { apiResourceMixin } from './mixins/ApiResource'
@@ -73,6 +75,20 @@ export const api = {
     }
 
     return resource
+  },
+
+  async fetchOperationShape (operation: RuntimeOperation): Promise<Shape | null> {
+    const expects: RdfResource | undefined = operation.expects
+      .find(expects => 'load' in expects && expects.types.has(sh.Shape))
+
+    if (expects && expects.load) {
+      const { representation } = await expects.load<Shape>()
+      if (representation && representation.root) {
+        return representation.root
+      }
+    }
+
+    return null
   },
 
   async invokeSaveOperation<T extends Resource = Resource> (operation: RuntimeOperation | null, data: RdfResource | File, headers: Record<string, string> = {}): Promise<T> {

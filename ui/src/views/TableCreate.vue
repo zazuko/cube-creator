@@ -5,7 +5,7 @@
         {{ error }}
       </b-message>
 
-      <cc-form :resource.prop="resource" :shapes.prop="shapes" no-editor-switches />
+      <cc-form :resource.prop="resource" :shapes.prop="shapePointer" no-editor-switches />
 
       <b-field label="Mapped columns" v-if="preselectedColumns.length > 0" class="content" :addons="false">
         <p class="help">
@@ -28,14 +28,15 @@
 import { Vue, Component } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
 import clownface, { GraphPointer } from 'clownface'
-import { RuntimeOperation, RdfResource } from 'alcaeus'
+import { RuntimeOperation } from 'alcaeus'
 import { dataset } from '@rdf-esm/dataset'
-import { csvw, sh } from '@tpluscode/rdf-ns-builders'
+import { csvw } from '@tpluscode/rdf-ns-builders'
 import { Shape } from '@rdfine/shacl'
 import * as ns from '@cube-creator/core/namespace'
 import SidePane from '@/components/SidePane.vue'
 import FormSubmitCancel from '@/components/FormSubmitCancel.vue'
 import { APIErrorValidation } from '@/api/errors'
+import { api } from '@/api'
 import { SourcesCollection, Source, CSVColumn } from '../types'
 
 const projectNS = namespace('project')
@@ -49,12 +50,12 @@ export default class TableCreateView extends Vue {
   @projectNS.Getter('findSource') findSource!: (id: string) => Source | null
 
   resource: GraphPointer | null = clownface({ dataset: dataset() }).namedNode('')
-  shapes: GraphPointer | null = null
+  shape: Shape | null = null
   error: string | null = null
 
   async mounted (): Promise<void> {
     this.resource = this.prepareResourceFromQueryParams()
-    this.shapes = await this.prepareShapes()
+    this.shape = await this.prepareShape()
   }
 
   prepareResourceFromQueryParams (): GraphPointer {
@@ -73,24 +74,23 @@ export default class TableCreateView extends Vue {
     return resource
   }
 
-  async prepareShapes (): Promise<GraphPointer | null> {
-    let shapes = null
-
-    const expects: RdfResource | undefined = this.operation?.expects
-      .find(expects => 'load' in expects && expects.types.has(sh.Shape))
-
-    if (expects && expects.load) {
-      const { representation } = await expects.load<Shape>()
-      if (representation && representation.root) {
-        const shape = representation.root
-        const sourceProperty: any = shape.property.find(p => p.class?.equals(ns.cc.CSVSource))
-        sourceProperty[ns.hashi.collection.value] = this.sourcesCollection
-
-        shapes = shape.pointer
-      }
+  async prepareShape (): Promise<Shape | null> {
+    if (!this.operation) {
+      return null
     }
 
-    return shapes
+    const shape = await api.fetchOperationShape(this.operation)
+
+    if (shape) {
+      const sourceProperty: any = shape.property.find(p => p.class?.equals(ns.cc.CSVSource))
+      sourceProperty[ns.hashi.collection.value] = this.sourcesCollection
+    }
+
+    return shape
+  }
+
+  get shapePointer (): GraphPointer | null {
+    return this.shape?.pointer ?? null
   }
 
   get preselectedSource (): Source | null {

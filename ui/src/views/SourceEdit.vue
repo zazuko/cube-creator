@@ -5,7 +5,7 @@
         {{ error }}
       </b-message>
 
-      <cc-form :resource.prop="resource" :shapes.prop="shapes" no-editor-switches />
+      <cc-form :resource.prop="resource" :shapes.prop="shapePointer" no-editor-switches />
 
       <b-field>
         <button type="submit" class="button is-primary">
@@ -23,10 +23,11 @@
 import { Vue, Component } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
 import clownface, { GraphPointer } from 'clownface'
-import { RuntimeOperation, RdfResource } from 'alcaeus'
-import { sh } from '@tpluscode/rdf-ns-builders'
+import { RuntimeOperation } from 'alcaeus'
+import { Shape } from '@rdfine/shacl'
 import { Project, Source } from '../types'
 import SidePane from '@/components/SidePane.vue'
+import { api } from '@/api'
 import { APIErrorValidation } from '@/api/errors'
 
 const projectNS = namespace('project')
@@ -40,7 +41,7 @@ export default class CubeProjectEditView extends Vue {
 
   resource: GraphPointer | null = null;
   error: string | null = null;
-  shapes: GraphPointer | null = null;
+  shape: Shape | null = null;
 
   get source (): Source {
     const sourceId = this.$router.currentRoute.params.sourceId
@@ -53,19 +54,16 @@ export default class CubeProjectEditView extends Vue {
     return this.source.actions.edit
   }
 
+  get shapePointer (): GraphPointer | null {
+    return this.shape?.pointer ?? null
+  }
+
   async mounted (): Promise<void> {
-    const expects: RdfResource | undefined = this.operation?.expects
-      .find(expects => 'load' in expects && expects.types.has(sh.Shape))
-
-    if (expects && expects.load) {
-      const { representation } = await expects.load()
-      if (representation && representation.root) {
-        const shape = representation.root
-        this.shapes = shape.pointer
-      }
-    }
-
     this.resource = Object.freeze(this.source.pointer)
+
+    if (this.operation) {
+      this.shape = await api.fetchOperationShape(this.operation)
+    }
   }
 
   async onSubmit (): Promise<void> {
