@@ -66,6 +66,7 @@ export interface ProjectsCollection extends Collection<Project> {
 }
 
 export interface Cube extends APIResource {
+  actions: CommonActions;
 }
 
 export interface CubeMetadata extends APIResource {
