@@ -22,6 +22,7 @@ graph <cube-project/ubd> {
     cc:csvMapping <cube-project/ubd/csv-mapping> ;
     dcterms:creator <user> ;
     rdfs:label "UBD28 Project" ;
+    cc:jobCollection <cube-project/jobs> ;
   .
 }
 
@@ -52,7 +53,6 @@ graph <cube-project/ubd/csv-mapping> {
     a cc:CsvMapping , hydra:Resource ;
     cc:csvSource <cube-project/ubd/csv-source/ubd> ;
     cc:csvSourceCollection <cube-project/ubd/csv-mapping/sources> ;
-    cc:jobCollection <cube-project/ubd/csv-mapping/jobs> ;
     cc:tables <cube-project/ubd/csv-mapping/tables> ;
     cc:namespace <https://environment.ld.admin.ch/foen/ubd/28/> ;
   .
@@ -305,16 +305,17 @@ graph <project/ubd/csv-mapping/table-station/column-mapping-3> {
   .
 }
 
-<cube-project/ubd/csv-mapping/jobs> void:inDataset <ubd-example> .
-graph <project/ubd/csv-mapping/jobs> {
-  <project/ubd/csv-mapping/jobs>
+<cube-project/ubd/jobs> void:inDataset <ubd-example> .
+graph <project/ubd/jobs> {
+  <project/ubd/jobs>
     a hydra:Collection, cc:JobCollection ;
+    cc:project <cube-project/ubd> ;
     hydra:manages [
       hydra:property rdf:type ;
       hydra:object   cc:Job ;
     ] , [
-      hydra:property cc:csvMapping ;
-      hydra:object   <cube-project/ubd/csv-mapping> ;
+      hydra:property cc:project ;
+      hydra:object   <cube-project/ubd> ;
     ]
   .
 }
