@@ -4,6 +4,13 @@ import { turtle } from '@tpluscode/rdf-string'
 import $rdf from 'rdf-ext'
 
 export const DatasetShape = turtle`
+@prefix cld: <http://purl.org/cld/terms/> .
+@prefix dcam: <http://purl.org/dc/dcam/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix freq: <http://purl.org/cld/freq/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
 ${shape('dataset/edit-metadata')} {
   ${shape('dataset/edit-metadata')} a ${sh.NodeShape}, ${hydra.Resource} ;
     ${sh.targetClass} ${_void.Dataset} ;
@@ -68,14 +75,22 @@ ${shape('dataset/edit-metadata')} {
       ${sh.datatype} ${dcterms.PeriodOfTime} ;
       ${sh.nodeKind} ${sh.IRI} ;
       ${sh.in} 
-        ( ${freq.triennal} 
-          ${freq.biennal} 
+        ( ${freq.triennial} 
+          ${freq.biennial} 
           ${freq.annual} 
           ${freq.semiannual} 
+          ${freq.threeTimesAYear}
           ${freq.quarterly} 
+          ${freq.bimonthly}
           ${freq.monthly}
+          ${freq.semimonthly}
+          ${freq.biweekly}
+          ${freq.threeTimesAMonth}
           ${freq.weekly}
+          ${freq.semiweekly}
+          ${freq.threeTimesAWeek}
           ${freq.daily} 
+          ${freq.continuous}
           ${freq.irregular} ) ;
       ${sh.order} 60 ;
     ] ;
@@ -191,5 +206,164 @@ ${shape('dataset/edit-metadata')} {
     ${sh.order} 20 ;
   ] ;
 .
+
+
+freq:annual a skos:Concept ;
+    rdfs:label "Annual"@en ;
+    dcam:memberOf cld:Frequency ;
+    rdfs:comment "The event occurs once a year."@en ;
+    rdfs:isDefinedBy freq: ;
+    rdfs:seeAlso <http://www.loc.gov/marc/holdings/echdcapt.html> ;
+    skos:inScheme cld:Frequency ;
+    skos:prefLabel "Annual"@en .
+
+freq:biennial a skos:Concept ;
+    rdfs:label "Biennial"@en ;
+    dcam:memberOf cld:Frequency ;
+    rdfs:comment "The event occurs every two years."@en ;
+    rdfs:isDefinedBy freq: ;
+    rdfs:seeAlso <http://www.loc.gov/marc/holdings/echdcapt.html> ;
+    skos:inScheme cld:Frequency ;
+    skos:prefLabel "Biennial"@en .
+
+freq:bimonthly a skos:Concept ;
+    rdfs:label "Bimonthly"@en ;
+    dcam:memberOf cld:Frequency ;
+    rdfs:comment "The event occurs every two months."@en ;
+    rdfs:isDefinedBy freq: ;
+    rdfs:seeAlso <http://www.loc.gov/marc/holdings/echdcapt.html> ;
+    skos:inScheme cld:Frequency ;
+    skos:prefLabel "Bimonthly"@en .
+
+freq:biweekly a skos:Concept ;
+    rdfs:label "Biweekly"@en ;
+    dcam:memberOf cld:Frequency ;
+    rdfs:comment "The event occurs every two weeks."@en ;
+    rdfs:isDefinedBy freq: ;
+    rdfs:seeAlso <http://www.loc.gov/marc/holdings/echdcapt.html> ;
+    skos:inScheme cld:Frequency ;
+    skos:prefLabel "Biweekly"@en .
+
+freq:continuous a skos:Concept ;
+    rdfs:label "Continuous"@en ;
+    dcam:memberOf cld:Frequency ;
+    rdfs:comment "The event repeats without interruption."@en ;
+    rdfs:isDefinedBy freq: ;
+    rdfs:seeAlso <http://www.loc.gov/marc/holdings/echdcapt.html> ;
+    skos:inScheme cld:Frequency ;
+    skos:prefLabel "Continuous"@en .
+
+freq:daily a skos:Concept ;
+    rdfs:label "Daily"@en ;
+    dcam:memberOf cld:Frequency ;
+    rdfs:comment "The event occurs once a day."@en ;
+    rdfs:isDefinedBy freq: ;
+    rdfs:seeAlso <http://www.loc.gov/marc/holdings/echdcapt.html> ;
+    skos:inScheme cld:Frequency ;
+    skos:prefLabel "Daily"@en .
+
+freq:irregular a skos:Concept ;
+    rdfs:label "Irregular"@en ;
+    dcam:memberOf cld:Frequency ;
+    rdfs:comment "The event occurs at uneven intervals."@en ;
+    rdfs:isDefinedBy freq: ;
+    rdfs:seeAlso <http://www.loc.gov/marc/holdings/echdcapt.html> ;
+    skos:inScheme cld:Frequency ;
+    skos:prefLabel "Irregular"@en .
+
+freq:monthly a skos:Concept ;
+    rdfs:label "Monthly"@en ;
+    dcam:memberOf cld:Frequency ;
+    rdfs:comment "The event occurs once a month."@en ;
+    rdfs:isDefinedBy freq: ;
+    rdfs:seeAlso <http://www.loc.gov/marc/holdings/echdcapt.html> ;
+    skos:inScheme cld:Frequency ;
+    skos:prefLabel "Monthly"@en .
+
+freq:quarterly a skos:Concept ;
+    rdfs:label "Quarterly"@en ;
+    dcam:memberOf cld:Frequency ;
+    rdfs:comment "The event occurs every three months."@en ;
+    rdfs:isDefinedBy freq: ;
+    rdfs:seeAlso <http://www.loc.gov/marc/holdings/echdcapt.html> ;
+    skos:inScheme cld:Frequency ;
+    skos:prefLabel "Quarterly"@en .
+
+freq:semiannual a skos:Concept ;
+    rdfs:label "Semiannual"@en ;
+    dcam:memberOf cld:Frequency ;
+    rdfs:comment "The event occurs twice a year."@en ;
+    rdfs:isDefinedBy freq: ;
+    rdfs:seeAlso <http://www.loc.gov/marc/holdings/echdcapt.html> ;
+    skos:inScheme cld:Frequency ;
+    skos:prefLabel "Semiannual"@en .
+
+freq:semimonthly a skos:Concept ;
+    rdfs:label "Semimonthly"@en ;
+    dcam:memberOf cld:Frequency ;
+    rdfs:comment "The event occurs twice a month."@en ;
+    rdfs:isDefinedBy freq: ;
+    rdfs:seeAlso <http://www.loc.gov/marc/holdings/echdcapt.html> ;
+    skos:inScheme cld:Frequency ;
+    skos:prefLabel "Semimonthly"@en .
+
+freq:semiweekly a skos:Concept ;
+    rdfs:label "Semiweekly"@en ;
+    dcam:memberOf cld:Frequency ;
+    rdfs:comment "The event occurs twice a week."@en ;
+    rdfs:isDefinedBy freq: ;
+    rdfs:seeAlso <http://www.loc.gov/marc/holdings/echdcapt.html> ;
+    skos:inScheme cld:Frequency ;
+    skos:prefLabel "Semiweekly"@en .
+
+freq:threeTimesAMonth a skos:Concept ;
+    rdfs:label "Three times a month"@en ;
+    dcam:memberOf cld:Frequency ;
+    rdfs:comment "The event occurs three times a month."@en ;
+    rdfs:isDefinedBy freq: ;
+    rdfs:seeAlso <http://www.loc.gov/marc/holdings/echdcapt.html> ;
+    skos:inScheme cld:Frequency ;
+    skos:prefLabel "Three times a month"@en .
+
+freq:threeTimesAWeek a skos:Concept ;
+    rdfs:label "Three times a week"@en ;
+    dcam:memberOf cld:Frequency ;
+    rdfs:comment "The event occurs three times a week."@en ;
+    rdfs:isDefinedBy freq: ;
+    rdfs:seeAlso <http://www.loc.gov/marc/holdings/echdcapt.html> ;
+    skos:inScheme cld:Frequency ;
+    skos:prefLabel "Three times a week"@en .
+
+freq:threeTimesAYear a skos:Concept ;
+    rdfs:label "Three times a year"@en ;
+    dcam:memberOf cld:Frequency ;
+    rdfs:comment "The event occurs three times a year."@en ;
+    rdfs:isDefinedBy freq: ;
+    rdfs:seeAlso <http://www.loc.gov/marc/holdings/echdcapt.html> ;
+    skos:inScheme cld:Frequency ;
+    skos:prefLabel "Three times a year"@en .
+
+freq:triennial a skos:Concept ;
+    rdfs:label "Triennial"@en ;
+    dcam:memberOf cld:Frequency ;
+    rdfs:comment "The event occurs every three years."@en ;
+    rdfs:isDefinedBy freq: ;
+    rdfs:seeAlso <http://www.loc.gov/marc/holdings/echdcapt.html> ;
+    skos:inScheme cld:Frequency ;
+    skos:prefLabel "Triennial"@en .
+
+freq:weekly a skos:Concept ;
+    rdfs:label "Weekly"@en ;
+    dcam:memberOf cld:Frequency ;
+    rdfs:comment "The event occurs once a week."@en ;
+    rdfs:isDefinedBy freq: ;
+    rdfs:seeAlso <http://www.loc.gov/marc/holdings/echdcapt.html> ;
+    skos:inScheme cld:Frequency ;
+    skos:prefLabel "Weekly"@en .
+
+freq: dcterms:creator [ rdfs:label "Dublin Core Collection Description Task Group" ] ;
+    dcterms:modified "2013-05-10"^^dcterms:W3CDTF ;
+    dcterms:title "The Collection Description Frequency Namespace"@en .
 }
+
 `
