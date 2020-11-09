@@ -1,4 +1,4 @@
-import { cc, shape } from '@cube-creator/core/namespace'
+import { cc, shape, freq } from '@cube-creator/core/namespace'
 import { hydra, rdfs, sh, dcat, dcterms, xsd, rdf, vcard, schema, _void, dash } from '@tpluscode/rdf-ns-builders'
 import { turtle } from '@tpluscode/rdf-string'
 import $rdf from 'rdf-ext'
@@ -66,6 +66,17 @@ ${shape('dataset/edit-metadata')} {
       ${sh.minCount} 0 ;
       ${sh.minLength} 1 ;
       ${sh.datatype} ${dcterms.PeriodOfTime} ;
+      ${sh.nodeKind} ${sh.IRI} ;
+      ${sh.in} 
+        ( ${freq.triennal} 
+          ${freq.biennal} 
+          ${freq.annual} 
+          ${freq.semiannual} 
+          ${freq.quarterly} 
+          ${freq.monthly}
+          ${freq.weekly}
+          ${freq.daily} 
+          ${freq.irregular} ) ;
       ${sh.order} 60 ;
     ] ;
     ${sh.property} [
@@ -92,11 +103,11 @@ ${shape('dataset/edit-metadata')} {
       ${sh.order} 90 ;
     ] ;
     ${sh.property} [
-        ${sh.name} "Theme" ;
-        ${sh.path} ${dcat.theme} ;
-        ${sh.minLength} 1 ;
-        ${sh.order} 100 ;
-      ] ;
+      ${sh.name} "Theme" ;
+      ${sh.path} ${dcat.theme} ;
+      ${sh.minLength} 1 ;
+      ${sh.order} 100 ;
+    ] ;
     ${sh.property} [
       ${sh.name} "Tags" ;
       ${sh.path} ${dcat.keyword} ;
