@@ -52,12 +52,24 @@ const actions: ActionTree<ProjectState, RootState> = {
     return project
   },
 
-  async fetchCSVMapping (context, id) {
+  async fetchCSVMapping (context) {
+    const project = context.state.project
+
+    if (!project) {
+      throw new Error('Project not loaded')
+    }
+
+    const mappingId = project.csvMapping?.id.value
+
+    if (!mappingId) {
+      throw new Error('Project does not have a csvMapping')
+    }
+
     context.commit('storeCSVMapping', null)
     context.commit('storeSourcesCollection', null)
     context.commit('storeTableCollection', null)
 
-    const mapping = await api.fetchResource<CSVMapping>(id)
+    const mapping = await api.fetchResource<CSVMapping>(mappingId)
     context.commit('storeCSVMapping', mapping)
 
     const sourcesCollection = await api.fetchResource(mapping.sourcesCollection.id.value)
