@@ -1,5 +1,6 @@
 import { Collection, Resource, RuntimeOperation } from 'alcaeus'
 import { Term } from 'rdf-js'
+import { Job as JobModel } from '@cube-creator/model/Job'
 
 export interface CommonActions {
   create: RuntimeOperation | null,
@@ -58,8 +59,18 @@ export interface CSVMapping extends APIResource {
 export interface Project extends APIResource {
   actions: CommonActions;
   csvMapping: null | CSVMapping;
+  jobCollectionId: string | null;
 }
 
 export interface ProjectsCollection extends Collection<Project> {
+  actions: CommonActions;
+}
+
+export type Job = APIResource & JobModel & {
+  actions: CommonActions;
+  name: string;
+}
+
+export interface JobCollection extends Collection<Job> {
   actions: CommonActions;
 }

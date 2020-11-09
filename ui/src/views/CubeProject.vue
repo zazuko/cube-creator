@@ -12,6 +12,13 @@
             <a :href="href" @click="navigate">Cube Designer</a>
           </li>
         </router-link>
+        <router-link :to="{ name: 'Pipeline' }" v-slot="{ href, isActive, navigate }">
+          <li :class="{ 'is-active': isActive }">
+            <a :href="href" @click="navigate">
+              Pipeline
+            </a>
+          </li>
+        </router-link>
         <router-link :to="{ name: 'CubeProjectEdit' }" v-slot="{ href, isActive, navigate }" v-if="project.actions.delete || project.actions.edit">
           <li :class="{ 'is-active': isActive }" class="tab-right">
             <a :href="href" @click="navigate">

@@ -14,6 +14,10 @@ export default function mixin<Base extends Constructor<Resource>> (base: Base): 
     get csvMapping (): CSVMapping | null {
       return this.get<CSVMapping>(ns.cc.csvMapping)
     }
+
+    get jobCollectionId (): string | null {
+      return this.pointer.out(ns.cc.jobCollection).term?.value ?? null
+    }
   }
 }
 

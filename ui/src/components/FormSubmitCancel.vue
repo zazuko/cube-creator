@@ -24,7 +24,7 @@ export default class FormSubmitCancel extends Vue {
   @Prop() submitLabel?: string
   @Prop() disabled?: boolean
   @Prop() isSubmitting?: boolean
-  @Prop() showCancel?: boolean
+  @Prop({ default: true }) showCancel?: boolean
 
   get _submitLabel (): string {
     return this.submitLabel || 'Save'

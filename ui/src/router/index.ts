@@ -16,6 +16,7 @@ import SourceEdit from '@/views/SourceEdit.vue'
 import TableCreate from '@/views/TableCreate.vue'
 import ColumnMappingEdit from '@/views/ColumnMappingEdit.vue'
 import CubeDesigner from '@/views/CubeDesigner.vue'
+import Pipeline from '@/views/Pipeline.vue'
 import PageNotFound from '@/views/PageNotFound.vue'
 import Logout from '@/views/Logout.vue'
 import NotAuthorized from '@/views/NotAuthorized.vue'
@@ -82,6 +83,11 @@ const routes: Array<RouteConfig> = [
             path: 'metadata',
             name: 'CubeDesigner',
             component: CubeDesigner,
+          },
+          {
+            path: 'pipeline',
+            name: 'Pipeline',
+            component: Pipeline,
           },
         ],
       },
