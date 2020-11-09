@@ -98,8 +98,7 @@ export default class CSVMappingView extends Vue {
   @projectNS.Getter('tables') tables!: Table[];
 
   mounted (): void {
-    const project = this.$store.state.project.project
-    this.$store.dispatch('project/fetchCSVMapping', project.csvMapping.id.value)
+    this.$store.dispatch('project/fetchCSVMapping')
   }
 }
 </script>

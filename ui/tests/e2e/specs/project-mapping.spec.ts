@@ -18,7 +18,7 @@ describe('Project creation', () => {
       .find('input')
       .type('My project')
 
-    cy.contains('.button', 'Create project').click()
+    cy.get('form').submit()
 
     cy.contains('.message', 'successfully created').should('be.visible')
     cy.contains('h2', 'My project').should('be.visible')

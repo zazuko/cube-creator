@@ -1,21 +1,15 @@
 <template>
   <side-pane :is-open="true" :title="operation.title" @close="onCancel">
-    <form @submit.prevent="onSubmit">
-      <b-message v-if="error" type="is-danger">
-        {{ error }}
-      </b-message>
-
-      <cc-form :resource.prop="resource" :shapes.prop="shapes" no-editor-switches />
-
-      <b-field>
-        <button type="submit" class="button is-primary">
-          Save
-        </button>
-        <b-button @click="onCancel">
-          Cancel
-        </b-button>
-      </b-field>
-    </form>
+    <hydra-operation-form
+      v-if="operation"
+      :operation="operation"
+      :resource="resource"
+      :shape="shape"
+      :error="error"
+      :is-submitting="isSubmitting"
+      @submit="onSubmit"
+      @cancel="onCancel"
+    />
   </side-pane>
 </template>
 
@@ -23,24 +17,27 @@
 import { Vue, Component } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
 import clownface, { GraphPointer } from 'clownface'
-import { RuntimeOperation, RdfResource } from 'alcaeus'
-import { sh } from '@tpluscode/rdf-ns-builders'
+import { RuntimeOperation } from 'alcaeus'
+import { Shape } from '@rdfine/shacl'
 import { Project, Source } from '../types'
 import SidePane from '@/components/SidePane.vue'
+import HydraOperationForm from '@/components/HydraOperationForm.vue'
+import { api } from '@/api'
 import { APIErrorValidation } from '@/api/errors'
 
 const projectNS = namespace('project')
 
 @Component({
-  components: { SidePane },
+  components: { SidePane, HydraOperationForm },
 })
 export default class CubeProjectEditView extends Vue {
   @projectNS.State('project') project!: Project
   @projectNS.Getter('findSource') findSource!: (id: string) => Source
 
   resource: GraphPointer | null = null;
+  isSubmitting = false;
   error: string | null = null;
-  shapes: GraphPointer | null = null;
+  shape: Shape | null = null;
 
   get source (): Source {
     const sourceId = this.$router.currentRoute.params.sourceId
@@ -54,23 +51,16 @@ export default class CubeProjectEditView extends Vue {
   }
 
   async mounted (): Promise<void> {
-    const expects: RdfResource | undefined = this.operation?.expects
-      .find(expects => 'load' in expects && expects.types.has(sh.Shape))
-
-    if (expects && expects.load) {
-      const { representation } = await expects.load()
-      if (representation && representation.root) {
-        const shape = representation.root
-        this.shapes = shape.pointer
-      }
-    }
-
     this.resource = Object.freeze(this.source.pointer)
+
+    if (this.operation) {
+      this.shape = await api.fetchOperationShape(this.operation)
+    }
   }
 
   async onSubmit (): Promise<void> {
     this.error = null
-    const loader = this.$buefy.loading.open({})
+    this.isSubmitting = true
 
     try {
       await this.$store.dispatch('api/invokeSaveOperation', {
@@ -94,7 +84,7 @@ export default class CubeProjectEditView extends Vue {
         this.error = e.toString()
       }
     } finally {
-      loader.close()
+      this.isSubmitting = false
     }
   }
 
