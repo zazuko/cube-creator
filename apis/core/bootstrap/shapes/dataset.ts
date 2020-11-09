@@ -23,15 +23,17 @@ ${shape('dataset/edit-metadata')} {
       ${sh.minLength} 1 ;
       ${sh.datatype} ${rdf.langString} ;
       ${sh.languageIn} ("en" "de" "fr" "it") ;
+      ${sh.uniqueLang} true ;
       ${sh.order} 10 ;
     ] ;
     ${sh.property} [
       ${sh.name} "Description" ;
       ${sh.path} ${dcterms.comment} ;
-      ${sh.minCount} 1 ;
+      ${sh.minCount} 0 ;
       ${sh.minLength} 1 ;
       ${sh.datatype} ${rdf.langString} ;
       ${sh.languageIn} ("en" "de" "fr" "it") ;
+      ${sh.uniqueLang} true ;
       ${sh.order} 20 ;
     ] ;
     ${sh.property} [
@@ -39,7 +41,6 @@ ${shape('dataset/edit-metadata')} {
       ${sh.path} ${schema.creativeWorkStatus} ;
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
-      ${sh.datatype} ${schema.DefinedTerm} ;
       ${sh.in} ("Draft" "Published") ;
       ${sh.order} 30 ;
     ] ;
@@ -53,7 +54,7 @@ ${shape('dataset/edit-metadata')} {
     ] ;
     ${sh.property} [
       ${sh.name} "Publish on Visualize" ;
-      ${sh.path} ${dcterms.publishOnVisualize} ;
+      ${sh.path} ${cc.publishOnVisualize} ;
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
       ${sh.datatype} ${xsd.boolean} ;
@@ -71,18 +72,14 @@ ${shape('dataset/edit-metadata')} {
       ${sh.name} "Data period" ;
       ${sh.path} ${dcterms.temporal} ;
       ${sh.minCount} 1 ;
-      ${sh.minLength} 1 ;
       ${dash.editor} ${dash.DetailsEditor} ;
-      ${sh.class} ${dcterms.PeriodOfTime} ;
-      ${sh.nodeKind} ${sh.BlankNode} ;
       ${sh.node} ${$rdf.blankNode('temporal-from-to')} ;
       ${sh.order} 70 ;
     ] ;
     ${sh.property} [
       ${sh.name} "Publisher" ;
       ${sh.path} ${dcterms.publisher} ;
-      ${sh.minCount} 1 ;
-      ${sh.minLength} 1 ;
+      ${sh.minCount} 0 ;
       ${sh.datatype} ${rdf.Description} ;
       ${sh.order} 80 ;
     ] ;
@@ -90,11 +87,7 @@ ${shape('dataset/edit-metadata')} {
       ${sh.name} "Contact Point" ;
       ${sh.path} ${dcat.contactPoint} ;
       ${sh.minCount} 1 ;
-      ${sh.minLength} 1 ;
-      ${sh.datatype} ${vcard.Organization} ;
       ${dash.editor} ${dash.DetailsEditor} ;
-      ${sh.nodeKind} ${sh.BlankNode} ;
-      ${sh.class} ${vcard.Organization} ;
       ${sh.node} ${$rdf.blankNode('vcard-organization')} ;
       ${sh.order} 90 ;
     ] ;
@@ -184,7 +177,6 @@ ${shape('dataset/edit-metadata')} {
     ${sh.path} ${vcard.hasEmail} ;
     ${sh.minCount} 1 ;
     ${sh.maxCount} 1 ;
-    ${sh.nodeKind} ${sh.IRI} ;
     ${sh.order} 20 ;
   ] ;
 .

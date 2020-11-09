@@ -21,17 +21,45 @@ With Class void:Dataset {
         Invoke {
             Content-Type "text/turtle"
             ```
+            base <https://cube-creator.lndo.site/>
             PREFIX dcterms: <http://purl.org/dc/terms/>
             PREFIX schema: <http://schema.org/>
             PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+            PREFIX void: <http://rdfs.org/ns/void#>
+            PREFIX hydra: <http://www.w3.org/ns/hydra/core#>
+            PREFIX cc: <https://cube-creator.zazuko.com/vocab#>
+            PREFIX vcard: <http://www.w3.org/2006/vcard/ns#> 
+            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
+            PREFIX dcat: <http://www.w3.org/ns/dcat#>
             
-            <https://cube-creator.lndo.site/cube-project/ubd/dataset>	
+            <cube-project/ubd/dataset>	
                 schema:hasPart <https://environment.ld.admin.ch/foen/ubd/28/> ;
-                rdf:type <http://schema.org/Dataset> ;
-                rdf:type <http://rdfs.org/ns/void#Dataset> ;
-                rdf:type <http://www.w3.org/ns/hydra/core#Resource> ;                
-                dcterms:title "Some Title" ;
-                dcterms:description "Some description" .
+                dcterms:identifier "UBD0028@bafu.admin.ch" ;
+                rdf:type schema:Dataset ;
+                rdf:type void:Dataset ;
+                rdf:type hydra:Resource ;                
+                dcterms:title "Some Title"@en ;
+                dcterms:comment "Some description"@en ;
+                schema:creativeWorkStatus "Draft" ;
+                cc:publishOnOpendata true ;
+                cc:publishOnVisualize true ;
+                dcterms:temporal [
+                    a dcterms:PeriodOfTime ;
+                    schema:startDate "2020-01-01"^^xsd:date ; 
+                    schema:endDate "2020-01-01"^^xsd:date ;
+                    ] ;
+                
+                dcat:contactPoint [
+                    a vcard:Organization ;
+                    vcard:fn "Rudolf Weber, BAFU" ;
+                    vcard:hasEmail "luftreinhaltung@bafu.admin.ch"
+                ] ;
+
+                dcat:landingPage "https://test.lindas.admin.ch/sparql/" ;
+                dcterms:issued "2015-08-06"^^xsd:date;
+                dcterms:modified "2020-10-12"^^xsd:date;
+                .
 
             ```
         } => {
