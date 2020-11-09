@@ -65,7 +65,7 @@ With Class void:Dataset {
         } => {
             Expect Status 200
             Expect Property dcterms:title "Some Title"
-            Expect Property dcterms:description "Some description"   
+            Expect Property dcterms:comment "Some description"   
             Expect Property schema:hasPart
             Expect Type <http://schema.org/Dataset>
             Expect Type <http://rdfs.org/ns/void#Dataset>
