@@ -10,6 +10,7 @@ prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 prefix void: <http://rdfs.org/ns/void#>
 prefix cube: <http://ns.bergnet.org/cube/>
 prefix cc: <https://cube-creator.zazuko.com/vocab#>
+prefix sh: <http://www.w3.org/ns/shacl#>
 
 <ubd-example> a void:Dataset .
 
@@ -44,7 +45,108 @@ graph <cube-project/ubd/dataset> {
 graph <cube-project/ubd/cube-data> {
   <https://environment.ld.admin.ch/foen/ubd/28/>
     a cube:Cube ;
+    cube:observationConstraint  <https://environment.ld.admin.ch/foen/ubd/28/shape/> ;
+    cube:observationSet         <https://environment.ld.admin.ch/foen/ubd/28/observation/> ;
   .
+
+  <https://environment.ld.admin.ch/foen/ubd/28/observation/>
+    a                 cube:ObservationSet ;
+    cube:observation  <https://environment.ld.admin.ch/foen/ubd/28/observation/blBAS-1999-annualmean> ,
+                      <https://environment.ld.admin.ch/foen/ubd/28/observation/blBAS-2002-annualmean> ;
+  .
+
+  <https://environment.ld.admin.ch/foen/ubd/28/observation/blBAS-2002-annualmean>
+    a                cube:Observation ;
+    cube:observedBy  <https://ld.stadt-zuerich.ch/> ;
+    <https://environment.ld.admin.ch/foen/ubd/28/aggregation>     <https://environment.ld.admin.ch/foen/ubd/28/aggregation/annualmean> ;
+    <https://environment.ld.admin.ch/foen/ubd/28/dimension/value> "6.1"^^xsd:float ;
+    <https://environment.ld.admin.ch/foen/ubd/28/dimension/year>  "2002"^^xsd:gYear ;
+    <https://environment.ld.admin.ch/foen/ubd/28/pollutant>       <https://environment.ld.admin.ch/foen/ubd/28/pollutant/so2> ;
+    <https://environment.ld.admin.ch/foen/ubd/28/station>         <https://environment.ld.admin.ch/foen/ubd/28/station/blBAS> ;
+    <https://environment.ld.admin.ch/foen/ubd/28/unit-id>         "µg/m3" ;
+  .
+
+<https://environment.ld.admin.ch/foen/ubd/28/observation/blBAS-1999-annualmean>
+    a                cube:Observation ;
+    cube:observedBy  <https://ld.stadt-zuerich.ch/> ;
+    <https://environment.ld.admin.ch/foen/ubd/28/aggregation>     <https://environment.ld.admin.ch/foen/ubd/28/aggregation/annualmean> ;
+    <https://environment.ld.admin.ch/foen/ubd/28/dimension/value> "5.4"^^xsd:float ;
+    <https://environment.ld.admin.ch/foen/ubd/28/dimension/year>  "1999"^^xsd:gYear ;
+    <https://environment.ld.admin.ch/foen/ubd/28/pollutant>       <https://environment.ld.admin.ch/foen/ubd/28/pollutant/so2> ;
+    <https://environment.ld.admin.ch/foen/ubd/28/station>         <https://environment.ld.admin.ch/foen/ubd/28/station/blBAS> ;
+    <https://environment.ld.admin.ch/foen/ubd/28/unit-id>         "µg/m3" ;
+  .
+
+  <https://environment.ld.admin.ch/foen/ubd/28/shape/>
+    a            sh:NodeShape , cube:Constraint ;
+    sh:closed    true ;
+    sh:property  <https://environment.ld.admin.ch/foen/ubd/28/shape/http%3A%2F%2Fns.bergnet.org%2Fcube%2FobservedBy> ;
+    sh:property  <https://environment.ld.admin.ch/foen/ubd/28/shape/http%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23type> ;
+    sh:property  <https://environment.ld.admin.ch/foen/ubd/28/shape/https%3A%2F%2Fenvironment.ld.admin.ch%2Ffoen%2Fubd%2F28%2Fdimension%2Fyear>;
+    sh:property  <https://environment.ld.admin.ch/foen/ubd/28/shape/https%3A%2F%2Fenvironment.ld.admin.ch%2Ffoen%2Fubd%2F28%2Fstation> ;
+    sh:property  <https://environment.ld.admin.ch/foen/ubd/28/shape/https%3A%2F%2Fenvironment.ld.admin.ch%2Ffoen%2Fubd%2F28%2Faggregation> ;
+    sh:property  <https://environment.ld.admin.ch/foen/ubd/28/shape/https%3A%2F%2Fenvironment.ld.admin.ch%2Ffoen%2Fubd%2F28%2Fpollutant> ;
+    sh:property  <https://environment.ld.admin.ch/foen/ubd/28/shape/https%3A%2F%2Fcube-creator.zazuko.com%2Fvocab%23cube> ;
+    sh:property  <https://environment.ld.admin.ch/foen/ubd/28/shape/https%3A%2F%2Fenvironment.ld.admin.ch%2Ffoen%2Fubd%2F28%2Funit-id> ;
+  .
+
+  <https://environment.ld.admin.ch/foen/ubd/28/shape/https%3A%2F%2Fcube-creator.zazuko.com%2Fvocab%23cube>
+    sh:in        ( <https://environment.ld.admin.ch/foen/ubd/28/> ) ;
+    sh:maxCount  1 ;
+    sh:minCount  1 ;
+    sh:nodeKind  sh:IRI ;
+    sh:path      <https://cube-creator.zazuko.com/vocab#cube> .
+
+  <https://environment.ld.admin.ch/foen/ubd/28/shape/https%3A%2F%2Fenvironment.ld.admin.ch%2Ffoen%2Fubd%2F28%2Faggregation>
+    sh:in        ( <https://environment.ld.admin.ch/foen/ubd/28/aggregation/annualmean> ) ;
+    sh:maxCount  1 ;
+    sh:minCount  1 ;
+    sh:nodeKind  sh:IRI ;
+    sh:path      <https://environment.ld.admin.ch/foen/ubd/28/aggregation> .
+
+  <https://environment.ld.admin.ch/foen/ubd/28/shape/http%3A%2F%2Fns.bergnet.org%2Fcube%2FobservedBy>
+    sh:in        ( <https://ld.stadt-zuerich.ch/> ) ;
+    sh:maxCount  1 ;
+    sh:minCount  1 ;
+    sh:nodeKind  sh:IRI ;
+    sh:path      cube:observedBy .
+
+  <https://environment.ld.admin.ch/foen/ubd/28/shape/https%3A%2F%2Fenvironment.ld.admin.ch%2Ffoen%2Fubd%2F28%2Fpollutant>
+    sh:in        ( <https://environment.ld.admin.ch/foen/ubd/28/pollutant/so2> ) ;
+    sh:maxCount  1 ;
+    sh:minCount  1 ;
+    sh:nodeKind  sh:IRI ;
+    sh:path      <https://environment.ld.admin.ch/foen/ubd/28/pollutant> .
+
+  <https://environment.ld.admin.ch/foen/ubd/28/shape/https%3A%2F%2Fenvironment.ld.admin.ch%2Ffoen%2Fubd%2F28%2Fdimension%2Fyear>
+    sh:datatype  xsd:gYear ;
+    sh:in        ( "1984"^^xsd:gYear "1985"^^xsd:gYear "1986"^^xsd:gYear "1987"^^xsd:gYear "1988"^^xsd:gYear "1989"^^xsd:gYear "1990"^^xsd:gYear "1991"^^xsd:gYear "1992"^^xsd:gYear "1993"^^xsd:gYear "1994"^^xsd:gYear "1995"^^xsd:gYear "1996"^^xsd:gYear "1997"^^xsd:gYear "1998"^^xsd:gYear "1999"^^xsd:gYear "2000"^^xsd:gYear "2001"^^xsd:gYear "2002"^^xsd:gYear "2003"^^xsd:gYear ) ;
+    sh:maxCount  1 ;
+    sh:minCount  1 ;
+    sh:nodeKind  sh:Literal ;
+    sh:path      <https://environment.ld.admin.ch/foen/ubd/28/dimension/year> .
+
+  <https://environment.ld.admin.ch/foen/ubd/28/shape/http%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23type>
+    sh:in        ( cube:Observation ) ;
+    sh:maxCount  1 ;
+    sh:minCount  1 ;
+    sh:nodeKind  sh:IRI ;
+    sh:path      rdf:type .
+
+  <https://environment.ld.admin.ch/foen/ubd/28/shape/https%3A%2F%2Fenvironment.ld.admin.ch%2Ffoen%2Fubd%2F28%2Funit-id>
+    sh:datatype  xsd:string ;
+    sh:in        ( "µg/m3" ) ;
+    sh:maxCount  1 ;
+    sh:minCount  1 ;
+    sh:nodeKind  sh:Literal ;
+    sh:path      <https://environment.ld.admin.ch/foen/ubd/28/unit-id> .
+
+  <https://environment.ld.admin.ch/foen/ubd/28/shape/https%3A%2F%2Fenvironment.ld.admin.ch%2Ffoen%2Fubd%2F28%2Fstation>
+    sh:in        ( <https://environment.ld.admin.ch/foen/ubd/28/station/blBAS> ) ;
+    sh:maxCount  1 ;
+    sh:minCount  1 ;
+    sh:nodeKind  sh:IRI ;
+    sh:path      <https://environment.ld.admin.ch/foen/ubd/28/station> .
 }
 
 <cube-project/ubd/csv-mapping> void:inDataset <ubd-example> .
