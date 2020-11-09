@@ -7,7 +7,6 @@ import { Table } from './Table'
 import { Link } from './lib/Link'
 import { initializer } from './lib/initializer'
 import { NamedNode } from 'rdf-js'
-import { Job } from './Job'
 import { Project } from './Project'
 
 export interface CsvMapping extends RdfResourceCore {
