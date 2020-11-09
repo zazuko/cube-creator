@@ -6,6 +6,7 @@ prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#subClassOf>
 prefix schema: <http://schema.org/>
 prefix query:  <http://hypermedia.app/query#>
+prefix sh:     <http://www.w3.org/ns/shacl#>
 
 cc:Job
   a
@@ -55,3 +56,7 @@ cc:JobCollection
         ] ;
     ]
 .
+
+<shape/job/trigger>
+  a
+    sh:Shape .
