@@ -5,8 +5,11 @@ prefix code:   <https://code.described.at/>
 prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#subClassOf>
 prefix schema: <http://schema.org/>
+prefix query:  <http://hypermedia.app/query#>
 
-cc:Job a hydra:Class ;
+cc:Job
+  a
+    hydra:Class ;
   rdfs:subClassOf
     schema:Action ;
   hydra:supportedOperation
@@ -41,6 +44,8 @@ cc:JobCollection
         "Start transformation" ;
       hydra:method
         "POST" ;
+      hydra:expects
+        <shape/job/trigger> ;
       code:implementedBy
         [
           a
