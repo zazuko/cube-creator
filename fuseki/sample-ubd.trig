@@ -325,7 +325,7 @@ graph <project/ubd/csv-mapping/jobs/test-job> {
   <project/ubd/csv-mapping/jobs/test-job>
     a hydra:Resource, cc:Job ;
     cc:tables <cube-project/ubd/csv-mapping/tables> ;
-    schema:label "cli-test" ;
+    schema:name "cli-test" ;
     cc:cubeGraph <cube-project/ubd/cube-data> ;
     dcterms:created "2020-10-29T12:01:54"^^xsd:dateTime ;
     rdfs:seeAlso <https://github.com/zazuko/cube-creator/actions/runs/345020887> ;
@@ -338,6 +338,6 @@ graph <project/ubd/csv-mapping/jobs/broken-job> {
   <project/ubd/csv-mapping/jobs/broken-job>
     a hydra:Resource, cc:Job ;
     cc:tables <cube-project/ubd/csv-mapping/no-tables> ;
-    schema:label "cli-test" ;
+    schema:name "cli-test" ;
   .
 }
