@@ -1,4 +1,4 @@
-import { Collection, Resource, RuntimeOperation } from 'alcaeus'
+import { Collection, RdfResource, Resource, RuntimeOperation } from 'alcaeus'
 import { Term } from 'rdf-js'
 import { Job as JobModel } from '@cube-creator/model/Job'
 
@@ -8,7 +8,7 @@ export interface CommonActions {
   delete: RuntimeOperation | null,
 }
 
-export interface APIResource extends Resource {
+export interface APIResource extends Resource, RdfResource {
   clientPath: string;
 }
 

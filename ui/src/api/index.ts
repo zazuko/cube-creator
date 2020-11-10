@@ -66,7 +66,7 @@ Hydra.defaultHeaders = () => {
 }
 
 export const api = {
-  async fetchResource <T extends RdfResourceCore = Resource> (url: string): Promise<Resource & T> {
+  async fetchResource <T extends RdfResourceCore = RdfResource> (url: string): Promise<T> {
     const response = await Hydra.loadResource<T>(url.replace(segmentSeparator, '/'))
 
     if (response.response?.xhr.status !== 200) {
@@ -95,7 +95,7 @@ export const api = {
     return null
   },
 
-  async invokeSaveOperation<T extends Resource = Resource> (operation: RuntimeOperation | null, data: RdfResource | File, headers: Record<string, string> = {}): Promise<T> {
+  async invokeSaveOperation<T extends RdfResource = RdfResource> (operation: RuntimeOperation | null, data: RdfResource | File, headers: Record<string, string> = {}): Promise<T> {
     if (!operation) throw new Error('Operation does not exist')
 
     const serializedData = data instanceof File ? data : JSON.stringify(data.toJSON())
@@ -105,12 +105,12 @@ export const api = {
       throw await APIError.fromResponse(response)
     }
 
-    const resource = response.representation?.root
+    // TODO: Is there anything I can do to avoid casting as `unknown`?
+    const resource: unknown = response.representation?.root
     if (!resource) {
       throw new Error('Response does not contain created resource')
     }
 
-    // TODO: We're lying to the compiler
     return resource as T
   },
 
