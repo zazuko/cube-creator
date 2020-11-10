@@ -32,7 +32,7 @@ async function main() {
     const job = await req.body.JOB_URI
     if (!job) {
       res.status(400)
-      return res.send('No job definded')
+      return res.send('No job defined')
     }
 
     tranform({ to: 'graph-store', job, debug: true }).catch((e) => log(e))
