@@ -10,7 +10,8 @@ type ShapeTerms =
   'cube-project/create#ExistingCube' |
   'table/create' |
   'csv-source/update' |
-  'job/update'
+  'job/update' |
+  'job/trigger'
 
 type ShapesNamespace = (term: ShapeTerms) => NamedNode
 
