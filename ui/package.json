@@ -55,6 +55,7 @@
     "@vue/eslint-config-standard": "^5.1.2",
     "@vue/eslint-config-typescript": "^7.0.0",
     "@vue/test-utils": "^1.1.0",
+    "cypress-file-upload": "^4.1.1",
     "eslint": "^7.11.0",
     "node-env-run": "^4.0.2",
     "sass": "^1.27.0",
