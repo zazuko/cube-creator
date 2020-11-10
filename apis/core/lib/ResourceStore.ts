@@ -1,15 +1,13 @@
 import type StreamClient from 'sparql-http-client/StreamClient'
-import { NamedNode, Stream, Term } from 'rdf-js'
+import { NamedNode, Quad, Term } from 'rdf-js'
 import cf, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import DatasetExt from 'rdf-ext/lib/Dataset'
-import ToQuadsTransform from 'rdf-transform-triple-to-quad'
-import { CONSTRUCT } from '@tpluscode/sparql-builder'
+import { CONSTRUCT, INSERT } from '@tpluscode/sparql-builder'
 import TermMap from '@rdfjs/term-map'
-import mergeStreams from 'merge-stream'
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 import { warn } from '@hydrofoil/labyrinth/lib/logger'
-import { turtle } from '@tpluscode/rdf-string'
+import { sparql } from '@tpluscode/rdf-string'
 import TermSet from '@rdfjs/term-set'
 import RdfResource, { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 
@@ -57,8 +55,11 @@ export interface ResourceStore {
 
 interface TripleStoreFacade {
   loadResource(term: NamedNode): Promise<GraphPointer<NamedNode, DatasetExt> | undefined>
-  writeResources(stream: Stream): Promise<void>
-  deleteResources(terms: Iterable<NamedNode>): Promise<void>
+  writeChanges(resources: Map<Term, GraphPointer>, deletedResources: Iterable<NamedNode>): Promise<void>
+}
+
+function toTriple({ subject, predicate, object }: Quad) {
+  return $rdf.quad(subject, predicate, object)
 }
 
 class SparqlStoreFacade implements TripleStoreFacade {
@@ -76,17 +77,25 @@ class SparqlStoreFacade implements TripleStoreFacade {
     return cf({ dataset: await $rdf.dataset().import(stream), term })
   }
 
-  async deleteResources(terms: Iterable<NamedNode>): Promise<void> {
-    let deleteQuery = ''
+  deleteQuery(terms: Iterable<NamedNode>) {
+    let deleteQuery = sparql``
     for (const id of terms) {
-      deleteQuery += turtle`DROP GRAPH ${id}; `.toString()
+      deleteQuery = sparql`${deleteQuery}DROP GRAPH ${id};\n`
     }
 
-    await this.__client.query.update(deleteQuery)
+    return deleteQuery
   }
 
-  writeResources(stream: Stream): Promise<void> {
-    return this.__client.store.put(stream)
+  writeChanges(resources: Map<NamedNode, GraphPointer>, deletedResources: Iterable<NamedNode>): Promise<void> {
+    const deleteGraphs = this.deleteQuery([...deletedResources, ...resources.keys()])
+    const insertData = [...resources.entries()].reduce((insert, [graph, { dataset }]) => {
+      return insert.DATA`GRAPH ${graph} {
+        ${[...dataset].map(toTriple)}
+      }`
+    }, INSERT.DATA``)._getTemplateResult()
+
+    const query = sparql`${deleteGraphs}\n${insertData}`
+    return this.__client.query.update(query.toString())
   }
 }
 
@@ -132,21 +141,8 @@ export default class implements ResourceStore {
   }
 
   async save(): Promise<void> {
-    const streams = [...this.__resources.values()].map(pointer => {
-      const defaultGraphTriples = [
-        ...pointer.dataset
-          .match(null, null, null, $rdf.defaultGraph()),
-      ]
-
-      return $rdf.dataset(defaultGraphTriples).toStream().pipe(new ToQuadsTransform(pointer.term))
-    })
-
-    await this.__storage.writeResources(mergeStreams(streams) as any)
-
-    if (this.__deletedGraphs.size > 0) {
-      await this.__storage.deleteResources(this.__deletedGraphs)
-      this.__deletedGraphs.clear()
-    }
+    await this.__storage.writeChanges(this.__resources, this.__deletedGraphs)
+    this.__deletedGraphs.clear()
   }
 
   create(id: NamedNode, { implicitlyDereferencable = true }: ResourceCreationOptions = {}): GraphPointer<NamedNode, DatasetExt> {
@@ -194,5 +190,6 @@ export default class implements ResourceStore {
 
   delete(id: NamedNode): void {
     this.__deletedGraphs.add(id)
+    this.__resources.delete(id)
   }
 }
