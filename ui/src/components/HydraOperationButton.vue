@@ -1,6 +1,14 @@
 <template>
   <b-tooltip v-if="operation" :label="operation.title">
-    <b-button :tag="tag" :to="to" @click="$emit('click')" :type="type" :size="size" :icon-left="iconName">
+    <b-button
+      :tag="tag"
+      :to="to"
+      @click="$emit('click')"
+      :type="type"
+      :size="size"
+      :icon-left="iconName"
+      :disabled="disabled"
+    >
       <slot />
     </b-button>
   </b-tooltip>
@@ -18,6 +26,7 @@ export default class HydraOperationButton extends Vue {
   @Prop({ default: 'is-text' }) type!: string
   @Prop({ default: 'is-small' }) size!: string
   @Prop({ default: null }) icon!: string | null
+  @Prop({ default: false }) disabled!: boolean
 
   get tag (): string {
     return this.to ? 'router-link' : 'button'

@@ -44,7 +44,11 @@
                 Output tables
               </div>
               <div class="level-item">
-                <hydra-operation-button :operation="tableCollection.actions.create" :to="{ name: 'TableCreate' }" />
+                <hydra-operation-button
+                  :operation="tableCollection.actions.create"
+                  :to="{ name: 'TableCreate' }"
+                  :disabled="sources.length === 0"
+                />
               </div>
             </div>
           </div>
