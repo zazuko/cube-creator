@@ -1,4 +1,4 @@
-import { NamedNode, Stream } from 'rdf-js'
+import { NamedNode, Term } from 'rdf-js'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import { GraphPointer } from 'clownface'
 import TermMap from '@rdfjs/term-map'
@@ -18,11 +18,8 @@ class InMemoryStorage {
     return this.__resources.get(term)
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  async writeResources(stream: Stream): Promise<void> {}
-
-  deleteResources(terms: Iterable<NamedNode>): Promise<void> {
-    for (const id of terms) {
+  writeChanges(resources: Map<Term, GraphPointer>, deletedResources: Iterable<NamedNode>): Promise<void> {
+    for (const id of deletedResources) {
       this.__resources.delete(id)
     }
     return Promise.resolve()
