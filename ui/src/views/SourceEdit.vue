@@ -16,7 +16,7 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
-import clownface, { GraphPointer } from 'clownface'
+import { GraphPointer } from 'clownface'
 import { RuntimeOperation } from 'alcaeus'
 import { Shape } from '@rdfine/shacl'
 import { Project, Source } from '../types'
