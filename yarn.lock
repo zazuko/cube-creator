@@ -1524,10 +1524,10 @@
     clownface "^1"
     once "^1.4.0"
 
-"@tpluscode/sparql-builder@^0.3.9":
-  version "0.3.9"
-  resolved "https://registry.yarnpkg.com/@tpluscode/sparql-builder/-/sparql-builder-0.3.9.tgz#a83a0da114f3ebdff116734030f546be51c2aa3d"
-  integrity sha512-RYQr0sOqlDhtf0rCO5yRRQ/WXVGGtD5fuV0dael31umpMEHTcU+fyaVSgK08FY/0vGd/UDzOf1tCVqVkgMryFQ==
+"@tpluscode/sparql-builder@^0.3.9", "@tpluscode/sparql-builder@^0.3.10":
+  version "0.3.10"
+  resolved "https://registry.yarnpkg.com/@tpluscode/sparql-builder/-/sparql-builder-0.3.10.tgz#8eb3f7adda8f0504258da061be722f033d36cfb1"
+  integrity sha512-rz4tXU9dfkP9KLQ8pyCNSXOwkvFIzDF/cWHqnq28idpZc1QLCZu8RlY0NDDWteJht0ryNbG7cNtCk0R6zBkiOw==
   dependencies:
     "@rdfjs/data-model" "^1.1.2"
     "@rdfjs/term-set" "^1.0.1"
