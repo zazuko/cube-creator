@@ -52,7 +52,7 @@ graph <cube-project/ubd/dimensions-metadata> {
   .
 
   <cube-project/ubd/dimensions-metadata?dimension=https://environment.ld.admin.ch/foen/ubd/28/shape/dimension%20year>
-    schema:about <https://environment.ld.admin.ch/foen/ubd/28/shape/dimension%20year>
+    schema:about <https://environment.ld.admin.ch/foen/ubd/28/shape/dimension%20year> ;
     schema:name "Yahr"@de ;
     scale:scaleOfMeasure scale:Temporal ;
   .
@@ -309,27 +309,27 @@ graph <cube-project/ubd/csv-mapping/tables> {
   .
 }
 
-<project/ubd/csv-mapping/table-observation> void:inDataset <ubd-example> .
-graph <project/ubd/csv-mapping/table-observation> {
-  <project/ubd/csv-mapping/table-observation>
+<cube-project/ubd/csv-mapping/table-observation> void:inDataset <ubd-example> .
+graph <cube-project/ubd/csv-mapping/table-observation> {
+  <cube-project/ubd/csv-mapping/table-observation>
     a cc:Table, cc:ObservationTable, hydra:Resource ;
-    cc:csvw <project/ubd/csv-mapping/table-observation/csvw> ;
+    cc:csvw <cube-project/ubd/csv-mapping/table-observation/csvw> ;
     cc:csvMapping <cube-project/ubd/csv-mapping> ;
     cc:csvSource <cube-project/ubd/csv-source/ubd> ;
     schema:name "Observations" ;
     schema:color "#AAAAAA" ;
     # cc:identifierTemplate "ammonia/observation/{STATION}-{YEAR}-annualmean" ;
     cc:identifierTemplate "{station_id}-{year}-{aggregation_id}" ;
-    cc:columnMapping <project/ubd/csv-mapping/table-observation/column-mapping-1> ;
-    cc:columnMapping <project/ubd/csv-mapping/table-observation/column-mapping-2> ;
-    cc:columnMapping <project/ubd/csv-mapping/table-observation/column-mapping-3> ;
-    cc:columnMapping <project/ubd/csv-mapping/table-observation/column-mapping-4> ;
+    cc:columnMapping <cube-project/ubd/csv-mapping/table-observation/column-mapping-1> ;
+    cc:columnMapping <cube-project/ubd/csv-mapping/table-observation/column-mapping-2> ;
+    cc:columnMapping <cube-project/ubd/csv-mapping/table-observation/column-mapping-3> ;
+    cc:columnMapping <cube-project/ubd/csv-mapping/table-observation/column-mapping-4> ;
   .
 }
 
-<project/ubd/csv-mapping/table-observation/column-mapping-1> void:inDataset <ubd-example> .
-graph <project/ubd/csv-mapping/table-observation/column-mapping-1> {
-  <project/ubd/csv-mapping/table-observation/column-mapping-1> a cc:ColumnMapping ;
+<cube-project/ubd/csv-mapping/table-observation/column-mapping-1> void:inDataset <ubd-example> .
+graph <cube-project/ubd/csv-mapping/table-observation/column-mapping-1> {
+  <cube-project/ubd/csv-mapping/table-observation/column-mapping-1> a cc:ColumnMapping ;
     cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/year> ;
     cc:targetProperty <dimension/year> ;
     cc:datatype xsd:gYear ;
@@ -340,12 +340,12 @@ graph <project/ubd/csv-mapping/table-observation/column-mapping-1> {
   .
 }
 
-<project/ubd/csv-mapping/table-observation/column-mapping-2> void:inDataset <ubd-example> .
-graph <project/ubd/csv-mapping/table-observation/column-mapping-2> {
-  <project/ubd/csv-mapping/table-observation/column-mapping-2> a cc:ColumnMapping ;
+<cube-project/ubd/csv-mapping/table-observation/column-mapping-2> void:inDataset <ubd-example> .
+graph <cube-project/ubd/csv-mapping/table-observation/column-mapping-2> {
+  <cube-project/ubd/csv-mapping/table-observation/column-mapping-2> a cc:ColumnMapping ;
     cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/station> ;
     cc:targetProperty <station> ;
-    cc:referencedTable <project/ubd/csv-mapping/table-station> ;
+    cc:referencedTable <cube-project/ubd/csv-mapping/table-station> ;
     cc:identifierMapping [
       cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/station> ;
       cc:referencedColumn <cube-project/ubd/csv-source/stations/column/station-id> ;
@@ -353,52 +353,52 @@ graph <project/ubd/csv-mapping/table-observation/column-mapping-2> {
   .
 }
 
-<project/ubd/csv-mapping/table-observation/column-mapping-3> void:inDataset <ubd-example> .
-graph <project/ubd/csv-mapping/table-observation/column-mapping-3> {
-  <project/ubd/csv-mapping/table-observation/column-mapping-3> a cc:ColumnMapping ;
+<cube-project/ubd/csv-mapping/table-observation/column-mapping-3> void:inDataset <ubd-example> .
+graph <cube-project/ubd/csv-mapping/table-observation/column-mapping-3> {
+  <cube-project/ubd/csv-mapping/table-observation/column-mapping-3> a cc:ColumnMapping ;
     cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/value> ;
     cc:targetProperty <dimension/value> ;
     cc:datatype xsd:float ;
   .
 }
 
-<project/ubd/csv-mapping/table-observation/column-mapping-4> void:inDataset <ubd-example> .
-graph <project/ubd/csv-mapping/table-observation/column-mapping-4> {
-  <project/ubd/csv-mapping/table-observation/column-mapping-4> a cc:ColumnMapping ;
+<cube-project/ubd/csv-mapping/table-observation/column-mapping-4> void:inDataset <ubd-example> .
+graph <cube-project/ubd/csv-mapping/table-observation/column-mapping-4> {
+  <cube-project/ubd/csv-mapping/table-observation/column-mapping-4> a cc:ColumnMapping ;
     cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/aggregation> ;
-    cc:targetProperty <project/ubd/csv-mapping/aggregation> ;
+    cc:targetProperty <cube-project/ubd/csv-mapping/aggregation> ;
     cc:datatype xsd:float ;
   .
 }
 
-<project/ubd/csv-mapping/table-station> void:inDataset <ubd-example> .
-graph <project/ubd/csv-mapping/table-station> {
-  <project/ubd/csv-mapping/table-station> a cc:Table, hydra:Resource ;
+<cube-project/ubd/csv-mapping/table-station> void:inDataset <ubd-example> .
+graph <cube-project/ubd/csv-mapping/table-station> {
+  <cube-project/ubd/csv-mapping/table-station> a cc:Table, hydra:Resource ;
     cc:csvMapping <cube-project/ubd/csv-mapping> ;
     cc:csvSource <cube-project/ubd/csv-source/stations> ;
-    cc:csvw <project/ubd/csv-mapping/table-station/csvw> ;
+    cc:csvw <cube-project/ubd/csv-mapping/table-station/csvw> ;
     schema:name "Station" ;
     schema:color "#BBBBBB" ;
     # cc:identifierTemplate "station/{STATION_ID}" ;
     cc:identifierTemplate "{station_id}-{year}-{aggregation_id}" ;
-    cc:columnMapping <project/ubd/csv-mapping/table-station/column-mapping-1> ;
-    cc:columnMapping <project/ubd/csv-mapping/table-station/column-mapping-2> ;
-    cc:columnMapping <project/ubd/csv-mapping/table-station/column-mapping-3> ;
+    cc:columnMapping <cube-project/ubd/csv-mapping/table-station/column-mapping-1> ;
+    cc:columnMapping <cube-project/ubd/csv-mapping/table-station/column-mapping-2> ;
+    cc:columnMapping <cube-project/ubd/csv-mapping/table-station/column-mapping-3> ;
   .
 }
 
-<project/ubd/csv-mapping/table-station/column-mapping-1> void:inDataset <ubd-example> .
-graph <project/ubd/csv-mapping/table-station/column-mapping-1> {
-  <project/ubd/csv-mapping/table-station/column-mapping-1> a cc:ColumnMapping ;
+<cube-project/ubd/csv-mapping/table-station/column-mapping-1> void:inDataset <ubd-example> .
+graph <cube-project/ubd/csv-mapping/table-station/column-mapping-1> {
+  <cube-project/ubd/csv-mapping/table-station/column-mapping-1> a cc:ColumnMapping ;
     cc:sourceColumn <cube-project/ubd/csv-source/stations/column/station-id> ;
     cc:targetProperty schema:identifier ;
     cc:datatype xsd:string ;
   .
 }
 
-<project/ubd/csv-mapping/table-station/column-mapping-2> void:inDataset <ubd-example> .
-graph <project/ubd/csv-mapping/table-station/column-mapping-2> {
-  <project/ubd/csv-mapping/table-station/column-mapping-2> a cc:ColumnMapping ;
+<cube-project/ubd/csv-mapping/table-station/column-mapping-2> void:inDataset <ubd-example> .
+graph <cube-project/ubd/csv-mapping/table-station/column-mapping-2> {
+  <cube-project/ubd/csv-mapping/table-station/column-mapping-2> a cc:ColumnMapping ;
     cc:sourceColumn <cube-project/ubd/csv-source/stations/column/station-name-fr> ;
     cc:targetProperty rdfs:label ;
     cc:datatype xsd:langString ;
@@ -406,9 +406,9 @@ graph <project/ubd/csv-mapping/table-station/column-mapping-2> {
   .
 }
 
-<project/ubd/csv-mapping/table-station/column-mapping-3> void:inDataset <ubd-example> .
-graph <project/ubd/csv-mapping/table-station/column-mapping-3> {
-  <project/ubd/csv-mapping/table-station/column-mapping-3> a cc:ColumnMapping ;
+<cube-project/ubd/csv-mapping/table-station/column-mapping-3> void:inDataset <ubd-example> .
+graph <cube-project/ubd/csv-mapping/table-station/column-mapping-3> {
+  <cube-project/ubd/csv-mapping/table-station/column-mapping-3> a cc:ColumnMapping ;
     cc:sourceColumn <cube-project/ubd/csv-source/stations/column/station-name-de> ;
     cc:targetProperty rdfs:label ;
     cc:datatype xsd:langString ;
@@ -417,8 +417,8 @@ graph <project/ubd/csv-mapping/table-station/column-mapping-3> {
 }
 
 <cube-project/ubd/jobs> void:inDataset <ubd-example> .
-graph <project/ubd/jobs> {
-  <project/ubd/jobs>
+graph <cube-project/ubd/jobs> {
+  <cube-project/ubd/jobs>
     a hydra:Collection, cc:JobCollection ;
     cc:project <cube-project/ubd> ;
     hydra:manages [
@@ -431,9 +431,9 @@ graph <project/ubd/jobs> {
   .
 }
 
-<project/ubd/csv-mapping/jobs/test-job> void:inDataset <ubd-example> .
-graph <project/ubd/csv-mapping/jobs/test-job> {
-  <project/ubd/csv-mapping/jobs/test-job>
+<cube-project/ubd/csv-mapping/jobs/test-job> void:inDataset <ubd-example> .
+graph <cube-project/ubd/csv-mapping/jobs/test-job> {
+  <cube-project/ubd/csv-mapping/jobs/test-job>
     a hydra:Resource, cc:Job ;
     cc:tables <cube-project/ubd/csv-mapping/tables> ;
     schema:name "cli-test" ;
@@ -444,9 +444,9 @@ graph <project/ubd/csv-mapping/jobs/test-job> {
   .
 }
 
-<project/ubd/csv-mapping/jobs/broken-job> void:inDataset <ubd-example> .
-graph <project/ubd/csv-mapping/jobs/broken-job> {
-  <project/ubd/csv-mapping/jobs/broken-job>
+<cube-project/ubd/csv-mapping/jobs/broken-job> void:inDataset <ubd-example> .
+graph <cube-project/ubd/csv-mapping/jobs/broken-job> {
+  <cube-project/ubd/csv-mapping/jobs/broken-job>
     a hydra:Resource, cc:Job ;
     cc:tables <cube-project/ubd/csv-mapping/no-tables> ;
     schema:name "cli-test" ;
