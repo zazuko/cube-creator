@@ -63,14 +63,14 @@ services:
     build:
       - npm i -g nodemon
     command: nodemon -w packages --verbose --ext ts,ttl,js,trig --ignore **/*.spec.ts --ignore **/*.spec-graphs.ts --exec node --inspect=0.0.0.0:45681 -r ts-node/register --inspect cli/server.ts
-    port: 45680
-    ssl: true
+    port: 80
     overrides:
       image: node:14
       ports:
         - '45681:45681'
       environment:
         TS_NODE_TRANSPILE_ONLY: "true"
+        NODE_TLS_REJECT_UNAUTHORIZED: 0
     moreHttpPorts:
           - 45681
 
@@ -84,4 +84,4 @@ proxy:
   s3:
     - s3.cube-creator.lndo.site:9000
   pipeline:
-    - pipeline.cube-creator.lndo.site:45680
+    - pipeline.cube-creator.lndo.site

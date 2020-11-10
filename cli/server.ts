@@ -1,5 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import express from 'express'
+import * as http from 'http'
+import asyncMiddleware from 'middleware-async'
 import debug from 'debug'
 import cors from 'cors'
 import bodyParser from 'body-parser'
@@ -38,7 +40,7 @@ async function main() {
 
   const tranform = transform.default(pipelines.TransformFiles, log)
 
-  app.post('/', async (req, res) => {
+  app.post('/', asyncMiddleware(async (req, res) => {
     const job = req.body.JOB_URI
     if (!job) {
       res.status(400)
@@ -48,9 +50,9 @@ async function main() {
     tranform({ to: 'graph-store', job, debug: true }).catch((e) => log(e))
 
     return res.status(202).end()
-  })
+  }))
 
-  app.listen(45680, () => log('Api ready'))
+  http.createServer(app).listen(80, () => log('Api ready'))
 }
 
 main()
