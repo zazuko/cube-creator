@@ -42,5 +42,6 @@ describe('domain/job/create', () => {
     expect(job.out(cc.tables).value).to.eq('myTables')
     expect(job.out(schema.name).value).to.be.ok
     expect(job.out(dcterms.created).value).to.be.ok
+    expect(job.out(schema.actionStatus).term).to.deep.eq(schema.PotentialActionStatus)
   })
 })
