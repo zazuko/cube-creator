@@ -11,6 +11,7 @@ prefix void: <http://rdfs.org/ns/void#>
 prefix cube: <http://ns.bergnet.org/cube/>
 prefix cc: <https://cube-creator.zazuko.com/vocab#>
 prefix sh: <http://www.w3.org/ns/shacl#>
+prefix scale: <http://ns.bergnet.org/cube/scale/>
 
 <ubd-example> a void:Dataset .
 
@@ -38,6 +39,22 @@ graph <cube-project/ubd/dataset> {
     a cube:Cube ;
     schema:dateCreated "2015-08-06"^^xsd:date;
     dcterms:creator <user> ;
+  .
+}
+
+graph <cube-project/ubd/dimensions-metadata> {
+  <cube-project/ubd/dimensions-metadata> a cc:DimensionsMetadata ;
+    schema:hasPart <cube-project/ubd/dimensions-metadata?dimension=https://environment.ld.admin.ch/foen/ubd/28/shape/dimension%20year> ;
+    schema:hasPart <cube-project/ubd/dimensions-metadata?dimension=https://environment.ld.admin.ch/foen/ubd/28/shape/station> ;
+    schema:hasPart <cube-project/ubd/dimensions-metadata?dimension=https://environment.ld.admin.ch/foen/ubd/28/shape/aggregation> ;
+    schema:hasPart <cube-project/ubd/dimensions-metadata?dimension=https://environment.ld.admin.ch/foen/ubd/28/shape/pollutant> ;
+    schema:hasPart <cube-project/ubd/dimensions-metadata?dimension=https://environment.ld.admin.ch/foen/ubd/28/shape/unit-id> ;
+  .
+
+  <cube-project/ubd/dimensions-metadata?dimension=https://environment.ld.admin.ch/foen/ubd/28/shape/dimension%20year>
+    schema:about <https://environment.ld.admin.ch/foen/ubd/28/shape/dimension%20year>
+    schema:name "Yahr"@de ;
+    scale:scaleOfMeasure scale:Temporal ;
   .
 }
 
@@ -82,7 +99,7 @@ graph <cube-project/ubd/cube-data> {
     sh:closed    true ;
     sh:property  _:observedBy ;
     sh:property  _:rdfType ;
-    sh:property  <https://environment.ld.admin.ch/foen/ubd/28/shape/dimension/year>;
+    sh:property  <https://environment.ld.admin.ch/foen/ubd/28/shape/dimension%20year>;
     sh:property  <https://environment.ld.admin.ch/foen/ubd/28/shape/station> ;
     sh:property  <https://environment.ld.admin.ch/foen/ubd/28/shape/aggregation> ;
     sh:property  <https://environment.ld.admin.ch/foen/ubd/28/shape/pollutant> ;
