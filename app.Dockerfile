@@ -1,6 +1,9 @@
 # First step: build the assets
 FROM node:lts-alpine AS builder
 
+# Do not install Cypress
+ENV CYPRESS_INSTALL_BINARY=0
+
 WORKDIR /app
 ADD package.json yarn.lock ./
 ADD ./ui/package.json ./ui/
