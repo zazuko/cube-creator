@@ -4,13 +4,17 @@ import CSVSniffer from 'csv-sniffer'
 const csvDelimiters = [',', ';', '\t']
 const sniffer = new (CSVSniffer())(csvDelimiters)
 
-function parse(csv: string, options: CSVparse.Options): Promise<Array<Array<any>>> {
+export function parse(csv: string, options: CSVparse.Options): Promise<{ header: any[]; rows: any[] }> {
   return new Promise((resolve, reject) => CSVparse(csv, options, (err, records) => {
     if (err) {
       reject(err)
       return
     }
-    resolve(records)
+    const [header, ...rows] = records
+    resolve({
+      header,
+      rows,
+    })
   }))
 }
 
@@ -27,11 +31,8 @@ export async function sniffParse(csv: string): Promise<{ dialect: {delimiter: st
 
   const records = await parse(csv, parserOptions)
 
-  const [columns, ...fileSample] = records
-
   return {
     dialect: csvDialect,
-    header: columns,
-    rows: fileSample,
+    ...records,
   }
 }

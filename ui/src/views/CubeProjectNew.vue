@@ -1,27 +1,31 @@
 <template>
   <side-pane :is-open="true" :title="title" @close="onCancel">
-    <b-message v-if="error" type="is-danger">
-      {{ error }}
-    </b-message>
-    <form @submit.prevent="onSubmit">
-      <cc-form :resource.prop="resource" :shapes.prop="shapes" no-editor-switches />
-      <form-submit-cancel submit-label="Create project" @cancel="onCancel" />
-    </form>
+    <hydra-operation-form
+      v-if="operation"
+      :operation="operation"
+      :resource="resource"
+      :shape="shape"
+      :error="error"
+      :is-submitting="isSubmitting"
+      @submit="onSubmit"
+      @cancel="onCancel"
+    />
   </side-pane>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { State } from 'vuex-class'
+import { RuntimeOperation } from 'alcaeus'
 import clownface, { GraphPointer } from 'clownface'
+import { Shape } from '@rdfine/shacl'
 import { dataset } from '@rdf-esm/dataset'
 import SidePane from '@/components/SidePane.vue'
-import FormSubmitCancel from '@/components/FormSubmitCancel.vue'
-import { sh } from '@tpluscode/rdf-ns-builders'
-import { RuntimeOperation, RdfResource } from 'alcaeus'
+import HydraOperationForm from '@/components/HydraOperationForm.vue'
+import { api } from '@/api'
 
 @Component({
-  components: { SidePane, FormSubmitCancel },
+  components: { SidePane, HydraOperationForm },
 })
 export default class CubeProjectNewView extends Vue {
   @State((state) => state.projects.collection.actions.create)
@@ -29,6 +33,8 @@ export default class CubeProjectNewView extends Vue {
 
   resource: GraphPointer | null = Object.freeze(clownface({ dataset: dataset() }).namedNode(''));
   error: string | null = null;
+  isSubmitting = false;
+  shape: Shape | null = null;
   shapes: GraphPointer | null = null;
 
   get title (): string {
@@ -36,21 +42,14 @@ export default class CubeProjectNewView extends Vue {
   }
 
   async mounted (): Promise<void> {
-    const expects: RdfResource | undefined = this.operation?.expects
-      .find(expects => 'load' in expects && expects.types.has(sh.Shape))
-
-    if (expects && expects.load) {
-      const { representation } = await expects.load()
-      if (representation && representation.root) {
-        const shape = representation.root
-        this.shapes = shape.pointer
-      }
+    if (this.operation) {
+      this.shape = await api.fetchOperationShape(this.operation)
     }
   }
 
   async onSubmit (): Promise<void> {
     this.error = null
-    const loader = this.$buefy.loading.open({})
+    this.isSubmitting = true
 
     try {
       const project = await this.$store.dispatch('api/invokeSaveOperation', {
@@ -69,7 +68,7 @@ export default class CubeProjectNewView extends Vue {
       // TODO: Improve error display
       this.error = e
     } finally {
-      loader.close()
+      this.isSubmitting = false
     }
   }
 

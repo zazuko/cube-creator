@@ -7,6 +7,9 @@ import { NamedNode } from 'rdf-js'
 import { dcterms } from '@tpluscode/rdf-ns-builders'
 import { initializer } from './lib/initializer'
 import { childResource } from './lib/resourceIdentifiers'
+import { Link } from './lib/Link'
+import { Collection } from '@rdfine/hydra'
+import { Job } from './Job'
 
 export interface Project extends RdfResourceCore {
   csvMapping?: CsvMapping
@@ -14,6 +17,7 @@ export interface Project extends RdfResourceCore {
   cubeGraph: NamedNode
   creator: NamedNode
   label: string
+  jobCollection: Link<Collection<Job>>
 }
 
 export function ProjectMixin<Base extends Constructor>(base: Base) {
@@ -30,6 +34,9 @@ export function ProjectMixin<Base extends Constructor>(base: Base) {
 
     @property({ path: dcterms.creator })
     creator!: NamedNode
+
+    @property.resource({ path: cc.jobCollection })
+    jobCollection!: Link<Collection<Job>>
   }
 
   return Impl
@@ -38,6 +45,5 @@ export function ProjectMixin<Base extends Constructor>(base: Base) {
 ProjectMixin.appliesTo = cc.CubeProject
 
 type MandatoryFields = 'creator' | 'label'
-type OptionalFields = 'csvMapping'
 
-export const create = initializer<Project, MandatoryFields, OptionalFields>(ProjectMixin)
+export const create = initializer<Project, MandatoryFields>(ProjectMixin)

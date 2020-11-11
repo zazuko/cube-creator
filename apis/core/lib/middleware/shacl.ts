@@ -3,8 +3,7 @@ import $rdf from 'rdf-ext'
 import { Term, Quad } from 'rdf-js'
 import { hydra, rdf, sh } from '@tpluscode/rdf-ns-builders'
 import SHACLValidator from 'rdf-validate-shacl'
-import error from 'http-errors'
-import clownface from 'clownface'
+import clownface, { GraphPointer } from 'clownface'
 import { resourceStore } from '../domain/resources'
 import { ProblemDocument } from 'http-problem-details'
 import { loadResourcesTypes } from '../domain/queries/resources-types'
@@ -17,6 +16,13 @@ interface ShaclMiddlewareOptions {
 export const shaclMiddleware = (options: ShaclMiddlewareOptions) => asyncMiddleware(async (req, res, next) => {
   const resources = options.createResourceStore()
 
+  let resource: GraphPointer
+  if (!req.dataset) {
+    resource = clownface({ dataset: $rdf.dataset() }).node(req.hydra.term)
+  } else {
+    resource = await req.resource()
+  }
+
   const shapes = $rdf.dataset()
   await Promise.all(req.hydra.operation.out(hydra.expects).map(async (expects) => {
     if (expects.term.termType !== 'NamedNode') return
@@ -24,20 +30,17 @@ export const shaclMiddleware = (options: ShaclMiddlewareOptions) => asyncMiddlew
     const pointer = await resources.get(expects.term)
     if (pointer?.has(rdf.type, [sh.NodeShape]).values.length) {
       await shapes.addAll([...pointer.dataset])
+
+      if (pointer.out([sh.targetClass, sh.targetNode, sh.targetObjectsOf, sh.targetSubjectsOf]).values.length === 0) {
+        shapes.add($rdf.quad(pointer.term, sh.targetNode, req.hydra.term))
+      }
+
+      resource.addOut(rdf.type, pointer.out(sh.targetClass))
     }
   }))
 
   if (shapes.size === 0) {
     return next()
-  }
-
-  if (!req.dataset) {
-    return next(new error.BadRequest())
-  }
-
-  const resource = await req.resource()
-  if (resource.dataset.size === 0) {
-    return next(new error.BadRequest('Resource cannot be empty'))
   }
 
   // Load data from linked instances to be able to validate their type

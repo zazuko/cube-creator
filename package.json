@@ -3,8 +3,8 @@
   "private": true,
   "scripts": {
     "lint": "eslint . --ext .ts,.vue,.tsx --quiet --ignore-path .gitignore",
-    "test": "mocha --recursive apis/**/*.test.ts",
-    "test:cli": "mocha --recursive cli/**/*.test.ts",
+    "test": "c8 -o coverage/apis mocha --recursive apis/**/*.test.ts",
+    "test:cli": "c8 -o coverage/cli mocha --recursive cli/**/*.test.ts",
     "seed-data": "dotenv -e .local.env -- bash -c \"ts-node packages/testing/index.ts -i fuseki/sample-ubd.trig\""
   },
   "workspaces": [
@@ -17,6 +17,7 @@
     "@tpluscode/eslint-config": "^0.1.1",
     "@typescript-eslint/eslint-plugin": "^4.4.1",
     "@typescript-eslint/parser": "^4.4.1",
+    "c8": "^7.3.5",
     "dotenv": "^8.2.0",
     "eslint": "^7.11.0",
     "eslint-config-standard": "^14.1.1",
@@ -40,6 +41,19 @@
     ],
     "require": [
       "mocha-setup.js"
+    ]
+  },
+  "c8": {
+    "all": true,
+    "reporter": "lcov",
+    "exclude": [
+      "node_modules",
+      "ui",
+      "typings",
+      "apis/*/test",
+      "apis/*/bootstrap",
+      "apis/*/types",
+      "cli/test"
     ]
   }
 }

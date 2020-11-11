@@ -4,20 +4,22 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "serve-local": "nodenv --env ../.local.env --exec 'vue-cli-service serve'",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint"
+    "test:e2e": "vue-cli-service test:e2e",
+    "lint": "vue-cli-service lint",
+    "serve-local": "nodenv --env ../.local.env --exec 'vue-cli-service serve'"
   },
   "dependencies": {
     "@cube-creator/core": "*",
+    "@cube-creator/model": "*",
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@fortawesome/vue-fontawesome": "^2.0.0",
     "@hydrofoil/shaperone-wc": "^0.1.4",
     "@rdf-esm/data-model": "^0.5.3",
     "@rdf-esm/dataset": "^0.5.1",
-    "@rdfine/shacl": "^0.5.1",
+    "@rdfine/shacl": "^0.6.0",
     "@tpluscode/rdf-ns-builders": "^0.4",
     "@tpluscode/rdfine": "^0.5.10",
     "alcaeus": "1.0.0-RC.4",
@@ -37,6 +39,7 @@
     "vuex-oidc": "^3.10.1"
   },
   "devDependencies": {
+    "@cypress/webpack-preprocessor": "^5.4.10",
     "@types/clownface": "^1.0.3",
     "@types/rdf-js": "^4",
     "@types/rdfjs__dataset": "^1.0.4",
@@ -44,6 +47,7 @@
     "@typescript-eslint/eslint-plugin": "^4.4.1",
     "@typescript-eslint/parser": "^4.4.1",
     "@vue/cli-plugin-babel": "~4.5.8",
+    "@vue/cli-plugin-e2e-cypress": "^4.5.8",
     "@vue/cli-plugin-eslint": "~4.5.8",
     "@vue/cli-plugin-router": "~4.5.8",
     "@vue/cli-plugin-typescript": "~4.5.8",
@@ -52,6 +56,8 @@
     "@vue/eslint-config-standard": "^5.1.2",
     "@vue/eslint-config-typescript": "^7.0.0",
     "@vue/test-utils": "^1.1.0",
+    "cypress-file-upload": "^4.1.1",
+    "eslint": "^7.11.0",
     "node-env-run": "^4.0.2",
     "sass": "^1.27.0",
     "sass-loader": "^10.0.3",

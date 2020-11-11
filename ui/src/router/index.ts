@@ -12,9 +12,11 @@ import CubeProjectNew from '@/views/CubeProjectNew.vue'
 import CubeProjectEdit from '@/views/CubeProjectEdit.vue'
 import CSVMapping from '@/views/CSVMapping.vue'
 import CSVUpload from '@/views/CSVUpload.vue'
+import SourceEdit from '@/views/SourceEdit.vue'
 import TableCreate from '@/views/TableCreate.vue'
 import ColumnMappingEdit from '@/views/ColumnMappingEdit.vue'
 import CubeDesigner from '@/views/CubeDesigner.vue'
+import Pipeline from '@/views/Pipeline.vue'
 import PageNotFound from '@/views/PageNotFound.vue'
 import Logout from '@/views/Logout.vue'
 import NotAuthorized from '@/views/NotAuthorized.vue'
@@ -61,6 +63,11 @@ const routes: Array<RouteConfig> = [
                 component: CSVUpload,
               },
               {
+                path: 'sources/:sourceId/edit',
+                name: 'SourceEdit',
+                component: SourceEdit,
+              },
+              {
                 path: 'tables/create',
                 name: 'TableCreate',
                 component: TableCreate,
@@ -76,6 +83,11 @@ const routes: Array<RouteConfig> = [
             path: 'metadata',
             name: 'CubeDesigner',
             component: CubeDesigner,
+          },
+          {
+            path: 'pipeline',
+            name: 'Pipeline',
+            component: Pipeline,
           },
         ],
       },
@@ -114,6 +126,8 @@ const router = new VueRouter({
   routes
 })
 
-router.beforeEach(vuexOidcCreateRouterMiddleware(store, 'auth'))
+if (!process.env.VUE_APP_E2E) {
+  router.beforeEach(vuexOidcCreateRouterMiddleware(store, 'auth'))
+}
 
 export default router

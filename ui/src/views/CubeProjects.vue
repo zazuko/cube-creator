@@ -15,7 +15,7 @@
         </div>
       </div>
     </div>
-    <div v-if="projects && projects.length > 0" class="panel">
+    <div v-if="projects && projects.length > 0" class="panel container-narrow">
       <router-link
         v-for="project in projects"
         :key="project.id.value"

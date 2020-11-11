@@ -1,6 +1,12 @@
 # First step: build the assets
 FROM node:lts-alpine AS builder
 
+# Do not install Cypress
+ENV CYPRESS_INSTALL_BINARY=0
+
+# Mitigate a heap-size issue
+ENV NODE_OPTIONS="--max-old-space-size=5120"
+
 WORKDIR /app
 ADD package.json yarn.lock ./
 ADD ./ui/package.json ./ui/

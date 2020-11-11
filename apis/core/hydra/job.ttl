@@ -1,14 +1,42 @@
-BASE          <urn:hydra-box:api>
-PREFIX cc:    <https://cube-creator.zazuko.com/vocab#>
-prefix hydra: <http://www.w3.org/ns/hydra/core#>
-prefix code:  <https://code.described.at/>
-prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-prefix schema:   <http://schema.org/>
+BASE           <urn:hydra-box:api>
+PREFIX cc:     <https://cube-creator.zazuko.com/vocab#>
+prefix hydra:  <http://www.w3.org/ns/hydra/core#>
+prefix code:   <https://code.described.at/>
+prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#subClassOf>
+prefix schema: <http://schema.org/>
+prefix query:  <http://hypermedia.app/query#>
+prefix sh:     <http://www.w3.org/ns/shacl#>
+
+cc:Job
+  a
+    hydra:Class ;
+  rdfs:subClassOf
+    schema:Action ;
+  hydra:supportedOperation
+    [
+      a
+        hydra:Operation,
+        schema:UpdateAction ;
+      hydra:title
+        "Update job" ;
+      hydra:method
+        "PATCH" ;
+      hydra:expects
+        <shape/job/update> ;
+      code:implementedBy
+        [
+          a
+            code:EcmaScript ;
+          code:link
+            <file:handlers/jobs#patch> ;
+        ] ;
+    ] .
 
 cc:JobCollection
-    a
-        hydra:Class ;
-    hydra:supportedOperation
+  a
+    hydra:Class ;
+  hydra:supportedOperation
     [
       a
         hydra:Operation,
@@ -17,6 +45,8 @@ cc:JobCollection
         "Start transformation" ;
       hydra:method
         "POST" ;
+      hydra:expects
+        <shape/job/trigger> ;
       code:implementedBy
         [
           a
@@ -26,3 +56,7 @@ cc:JobCollection
         ] ;
     ]
 .
+
+<shape/job/trigger>
+  a
+    sh:Shape .

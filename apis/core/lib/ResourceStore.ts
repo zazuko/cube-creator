@@ -1,16 +1,13 @@
 import type StreamClient from 'sparql-http-client/StreamClient'
-import { NamedNode, Stream } from 'rdf-js'
+import { NamedNode, Quad, Term } from 'rdf-js'
 import cf, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import DatasetExt from 'rdf-ext/lib/Dataset'
-import ToQuadsTransform from 'rdf-transform-triple-to-quad'
-import { CONSTRUCT } from '@tpluscode/sparql-builder'
+import { CONSTRUCT, INSERT } from '@tpluscode/sparql-builder'
 import TermMap from '@rdfjs/term-map'
-import mergeStreams from 'merge-stream'
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 import { warn } from '@hydrofoil/labyrinth/lib/logger'
-import { ResourceIdentifier } from '@tpluscode/rdfine'
-import { turtle } from '@tpluscode/rdf-string'
+import { sparql } from '@tpluscode/rdf-string'
 import TermSet from '@rdfjs/term-set'
 import RdfResource, { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 
@@ -30,8 +27,8 @@ export interface ResourceStore {
    *
    * @param id
    */
-  get(id: string | ResourceIdentifier): Promise<GraphPointer<NamedNode, DatasetExt> | undefined>
-  getResource<T extends RdfResourceCore>(id: string | ResourceIdentifier): Promise<T | undefined>
+  get(id: string | Term | undefined): Promise<GraphPointer<NamedNode, DatasetExt> | undefined>
+  getResource<T extends RdfResourceCore>(id: string | Term | undefined): Promise<T | undefined>
 
   /**
    * Creates a new resource a puts in the in-memory store
@@ -58,8 +55,11 @@ export interface ResourceStore {
 
 interface TripleStoreFacade {
   loadResource(term: NamedNode): Promise<GraphPointer<NamedNode, DatasetExt> | undefined>
-  writeResources(stream: Stream): Promise<void>
-  deleteResources(terms: Iterable<NamedNode>): Promise<void>
+  writeChanges(resources: Map<Term, GraphPointer>, deletedResources: Iterable<NamedNode>): Promise<void>
+}
+
+function toTriple({ subject, predicate, object }: Quad) {
+  return $rdf.quad(subject, predicate, object)
 }
 
 class SparqlStoreFacade implements TripleStoreFacade {
@@ -77,17 +77,25 @@ class SparqlStoreFacade implements TripleStoreFacade {
     return cf({ dataset: await $rdf.dataset().import(stream), term })
   }
 
-  async deleteResources(terms: Iterable<NamedNode>): Promise<void> {
-    let deleteQuery = ''
+  deleteQuery(terms: Iterable<NamedNode>) {
+    let deleteQuery = sparql``
     for (const id of terms) {
-      deleteQuery += turtle`DROP GRAPH ${id}; `.toString()
+      deleteQuery = sparql`${deleteQuery}DROP GRAPH ${id};\n`
     }
 
-    await this.__client.query.update(deleteQuery)
+    return deleteQuery
   }
 
-  writeResources(stream: Stream): Promise<void> {
-    return this.__client.store.put(stream)
+  writeChanges(resources: Map<NamedNode, GraphPointer>, deletedResources: Iterable<NamedNode>): Promise<void> {
+    const deleteGraphs = this.deleteQuery([...deletedResources, ...resources.keys()])
+    const insertData = [...resources.entries()].reduce((insert, [graph, { dataset }]) => {
+      return insert.DATA`GRAPH ${graph} {
+        ${[...dataset].map(toTriple)}
+      }`
+    }, INSERT.DATA``)._getTemplateResult()
+
+    const query = sparql`${deleteGraphs}\n${insertData}`
+    return this.__client.query.update(query.toString())
   }
 }
 
@@ -102,8 +110,19 @@ export default class implements ResourceStore {
     this.__deletedGraphs = new TermSet()
   }
 
-  async get(id: string | NamedNode): Promise<GraphPointer<NamedNode, DatasetExt> | undefined> {
-    const term = typeof id === 'string' ? $rdf.namedNode(id) : id
+  async get(id: string | Term | undefined): Promise<GraphPointer<NamedNode, DatasetExt> | undefined> {
+    if (!id) {
+      return undefined
+    }
+
+    let term: NamedNode
+    if (typeof id === 'string') {
+      term = $rdf.namedNode(id)
+    } else if (id.termType === 'NamedNode') {
+      term = id
+    } else {
+      return undefined
+    }
     if (!this.__resources.has(term)) {
       const resource = await this.__storage.loadResource(term)
       if (resource) {
@@ -114,7 +133,7 @@ export default class implements ResourceStore {
     return this.__resources.get(term)
   }
 
-  async getResource<T extends RdfResourceCore>(id: string | NamedNode):Promise<T | undefined> {
+  async getResource<T extends RdfResourceCore>(id: string | Term | undefined):Promise<T | undefined> {
     const pointer = await this.get(id)
     if (!pointer) return undefined
 
@@ -122,26 +141,13 @@ export default class implements ResourceStore {
   }
 
   async save(): Promise<void> {
-    const streams = [...this.__resources.values()].map(pointer => {
-      const defaultGraphTriples = [
-        ...pointer.dataset
-          .match(null, null, null, $rdf.defaultGraph()),
-      ]
-
-      return $rdf.dataset(defaultGraphTriples).toStream().pipe(new ToQuadsTransform(pointer.term))
-    })
-
-    await this.__storage.writeResources(mergeStreams(streams) as any)
-
-    if (this.__deletedGraphs.size > 0) {
-      await this.__storage.deleteResources(this.__deletedGraphs)
-      this.__deletedGraphs.clear()
-    }
+    await this.__storage.writeChanges(this.__resources, this.__deletedGraphs)
+    this.__deletedGraphs.clear()
   }
 
   create(id: NamedNode, { implicitlyDereferencable = true }: ResourceCreationOptions = {}): GraphPointer<NamedNode, DatasetExt> {
     if (this.__resources.has(id)) {
-      throw new Error('Resource')
+      throw new Error(`Resource <${id.value}> already exists`)
     }
 
     const pointer = cf({ dataset: $rdf.dataset(), term: id })
@@ -184,5 +190,6 @@ export default class implements ResourceStore {
 
   delete(id: NamedNode): void {
     this.__deletedGraphs.add(id)
+    this.__resources.delete(id)
   }
 }

@@ -33,6 +33,7 @@ async function main() {
     .description('Transforms source files to RDF')
     .requiredOption('--to <targetName>', "(required) Target to write triples (built-in: 'stdout', 'filesystem', 's3', 'graph-store')")
     .requiredOption('--job <job>', '(required) URL of a Cube Creator project job')
+    .option('--execution-url <executionUrl>', 'Link to job execution')
     .option('-v, --variable <name=value>', 'Pipeline variables', parseVariables, new Map())
     .option('--debug', 'Print diagnostic information to standard output')
     .option('--enable-buffer-monitor', 'enable histogram of buffer usage')
@@ -44,6 +45,5 @@ async function main() {
 
 main()
   .catch(e => {
-    log(e)
     process.exit(1)
   })

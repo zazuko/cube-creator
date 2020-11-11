@@ -12,6 +12,10 @@ jobs:
           node-version: 14
       - run: yarn install --ci
       - run: yarn test
+      - name: Codecov
+        uses: codecov/codecov-action@v1.0.5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   cli-test:
     runs-on: ubuntu-latest
@@ -31,6 +35,10 @@ jobs:
       - name: logs on fail
         if: ${{ failure() }}
         run: lando logs -s core
+      - name: Codecov
+        uses: codecov/codecov-action@v1.0.5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   lint:
     runs-on: ubuntu-latest
@@ -52,10 +60,29 @@ jobs:
       - run: yarn install --ci
       - name: Install lando
         run: sh e2e-tests/install-lando.sh
+      - name: Set e2e environment variables
+        run: echo -e "\nVUE_APP_E2E=true\nVUE_APP_X_USER=john-doe\nVUE_APP_X_PERMISSION=pipelines:read,pipelines:write" >> .local.env
       - name: Start site
         run: sh e2e-tests/start-lando.sh
       - run: yarn seed-data
-      - run: docker-compose -f docker-compose.yml -f docker-compose.posix.yml run e2e-tests
+
+      - name: Hydra e2e tests
+        run: docker-compose -f docker-compose.yml -f docker-compose.posix.yml run e2e-tests
       - name: logs on fail
         if: ${{ failure() }}
         run: lando logs -s core
+
+      - name: UI e2e tests
+        run: yarn --cwd ui test:e2e --url https://app.cube-creator.lndo.site --headless
+      - name: Save Cypress videos
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: cypress-videos
+          path: ui/tests/e2e/videos/*
+      - name: Save Cypress screenshots
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: ui/tests/e2e/screenshots/*
