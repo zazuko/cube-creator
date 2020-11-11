@@ -4,6 +4,7 @@ PREFIX cc: <https://cube-creator.zazuko.com/vocab#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX dcterms: <http://purl.org/dc/terms/>
 PREFIX schema: <http://schema.org/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
 ENTRYPOINT "project/ubd/csv-mapping/table-observation"
 
