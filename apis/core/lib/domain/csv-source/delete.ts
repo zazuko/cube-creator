@@ -38,7 +38,7 @@ export async function deleteSourceWithoutSave({
   if (!csvSource) return
 
   // Remove links from tables
-  const tables = await getLinkedTablesForSource(csvSource.term)
+  const tables = getLinkedTablesForSource(csvSource.term)
   for await (const table of tables) {
     const tableGraph = await store.get(table)
     tableGraph?.dataset.delete($rdf.quad(tableGraph.term, cc.csvSource, csvSource.term))
