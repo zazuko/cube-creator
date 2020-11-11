@@ -6,6 +6,7 @@ import { schema } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import $rdf from 'rdf-ext'
 import * as TableQueries from '../queries/table'
+import { Table } from '@cube-creator/model'
 
 interface DeleteSourceCommand {
   resource: NamedNode | Term
@@ -39,9 +40,11 @@ export async function deleteSourceWithoutSave({
 
   // Remove links from tables
   const tables = getLinkedTablesForSource(csvSource.term)
-  for await (const table of tables) {
-    const tableGraph = await store.get(table)
-    tableGraph?.dataset.delete($rdf.quad(tableGraph.term, cc.csvSource, csvSource.term))
+  for await (const tableId of tables) {
+    const table = await store.getResource<Table>(tableId)
+    if (table) {
+      table.csvSource = undefined
+    }
   }
 
   // Delete S3 resource
