@@ -1,44 +1,48 @@
 <template>
   <side-pane :is-open="true" :title="title" @close="onCancel">
-    <form @submit.prevent="onSubmit">
-      <cc-form :resource.prop="cubeMetadata.pointer" :shapes.prop="shapes" />
-      <form-submit-cancel submit-label="Save metadata" @cancel="onCancel" />
-    </form>
+    <hydra-operation-form
+      v-if="operation"
+      :operation="operation"
+      :resource="resource"
+      :shape="shape"
+      :error="error"
+      :is-submitting="isSubmitting"
+      @submit="onSubmit"
+      @cancel="onCancel"
+    />
   </side-pane>
 </template>
 
 <script lang="ts">
-import { RdfResource, RuntimeOperation } from 'alcaeus'
-import { sh } from '@tpluscode/rdf-ns-builders'
-import { GraphPointer } from 'clownface'
 import { Component, Vue } from 'vue-property-decorator'
+import { RuntimeOperation } from 'alcaeus'
+import { Shape } from '@rdfine/shacl'
+import { GraphPointer } from 'clownface'
 import { namespace } from 'vuex-class'
 import { CubeMetadata } from '@/types'
 import SidePane from '@/components/SidePane.vue'
-import FormSubmitCancel from '@/components/FormSubmitCancel.vue'
+import HydraOperationForm from '@/components/HydraOperationForm.vue'
+import { api } from '@/api'
 
 const projectNS = namespace('project')
 
 @Component({
-  components: { SidePane, FormSubmitCancel },
+  components: { SidePane, HydraOperationForm },
 })
 export default class CubeMetadataEdit extends Vue {
   @projectNS.State('cubeMetadata') cubeMetadata!: CubeMetadata;
 
+  resource: GraphPointer | null = null;
+  shape: Shape | null = null;
   error: string | null = null;
-  shapes: GraphPointer | null = null;
+  isSubmitting = false
 
   async mounted (): Promise<void> {
-    const expects: RdfResource | undefined = this.operation?.expects
-      .find(expects => 'load' in expects && expects.types.has(sh.Shape))
-
-    if (expects && expects.load) {
-      const { representation } = await expects.load()
-      if (representation && representation.root) {
-        const shape = representation.root
-        this.shapes = shape.pointer
-      }
+    if (this.operation) {
+      this.shape = await api.fetchOperationShape(this.operation)
     }
+
+    this.resource = this.cubeMetadata.pointer
   }
 
   get operation (): RuntimeOperation | null {
@@ -49,8 +53,16 @@ export default class CubeMetadataEdit extends Vue {
     return this.operation?.title ?? 'Error: Missing operation'
   }
 
-  onSubmit (): void {
-    // TODO
+  async onSubmit (): Promise<void> {
+    this.isSubmitting = true
+
+    try {
+      // TODO
+      console.log(this.cubeMetadata.toJSON())
+      await new Promise((resolve) => setTimeout(resolve, 500))
+    } finally {
+      this.isSubmitting = false
+    }
   }
 
   onCancel (): void {
