@@ -4,7 +4,7 @@ import request from 'supertest'
 import $rdf from 'rdf-ext'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import { NamedNode } from 'rdf-js'
-import { hydra, rdf, rdfs, sh } from '@tpluscode/rdf-ns-builders'
+import { hydra, rdf, rdfs, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import clownface, { GraphPointer } from 'clownface'
 import { turtle } from '@tpluscode/rdf-string'
@@ -126,7 +126,7 @@ describe('middleware/shacl', () => {
     await response.expect(400)
   })
 
-  it('return 400 when request has no body', async () => {
+  it('does not fail if body is empty but shape has no properties', async () => {
     // given
     const app = express()
     app.use(appMock(api => {
@@ -135,7 +135,58 @@ describe('middleware/shacl', () => {
     const shape = clownface({ dataset: $rdf.dataset() })
       .namedNode(ex.Shape)
       .addOut(rdf.type, sh.NodeShape)
-      .addOut(sh.targetClass, cc.CubeProject)
+
+    app.use(mockResourceMiddleware())
+    app.use(shaclMiddleware({
+      createResourceStore: testResourceStore([shape]),
+      loadResourcesTypes,
+    }))
+    app.use((req, res) => res.status(204).end())
+
+    // when
+    const response = request(app).post('/')
+
+    // then
+    await response.expect(204)
+  })
+
+  it('fails if body is empty but shape has targetClass', async () => {
+    // given
+    const app = express()
+    app.use(appMock(api => {
+      api.operation.addOut(hydra.expects, ex.Shape)
+      api.term = ex.Resource
+    }))
+    const shape = clownface({ dataset: $rdf.dataset() })
+      .namedNode(ex.Shape)
+      .addOut(rdf.type, sh.NodeShape)
+      .addOut(sh.targetClass, schema.Person)
+      .addOut(sh.property, prop => prop.addOut(sh.path, rdfs.label).addOut(sh.minCount, 1))
+
+    app.use(mockResourceMiddleware())
+    app.use(shaclMiddleware({
+      createResourceStore: testResourceStore([shape]),
+      loadResourcesTypes,
+    }))
+    app.use((req, res) => res.status(204).end())
+
+    // when
+    const response = request(app).post('/')
+
+    // then
+    await response.expect(400)
+  })
+
+  it('fails if body is empty but shape has properties', async () => {
+    // given
+    const app = express()
+    app.use(appMock(api => {
+      api.operation.addOut(hydra.expects, ex.Shape)
+      api.term = ex.Resource
+    }))
+    const shape = clownface({ dataset: $rdf.dataset() })
+      .namedNode(ex.Shape)
+      .addOut(rdf.type, sh.NodeShape)
       .addOut(sh.property, prop => prop.addOut(sh.path, rdfs.label).addOut(sh.minCount, 1))
 
     app.use(mockResourceMiddleware())

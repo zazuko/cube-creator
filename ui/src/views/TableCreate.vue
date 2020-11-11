@@ -1,26 +1,27 @@
 <template>
   <side-pane :is-open="true" :title="operation.title" @close="onCancel">
-    <form @submit.prevent="onSubmit">
-      <b-message v-if="error" type="is-danger">
-        {{ error }}
-      </b-message>
+    <hydra-operation-form
+      v-if="operation"
+      :operation="operation"
+      :resource="resource"
+      :shape="shape"
+      :error="error"
+      :is-submitting="isSubmitting"
+      @submit="onSubmit"
+      @cancel="onCancel"
+    />
 
-      <cc-form :resource.prop="resource" :shapes.prop="shapes" no-editor-switches />
-
-      <b-field label="Mapped columns" v-if="preselectedColumns.length > 0" class="content" :addons="false">
-        <p class="help">
-          The following columns will be mapped with default values.
-          They can be edited once the table is created.
-        </p>
-        <ul>
-          <li v-for="column in preselectedColumns" :key="column.id.value">
-            {{ column.name }}
-          </li>
-        </ul>
-      </b-field>
-
-      <form-submit-cancel :submit-label="operation.title" @cancel="onCancel" />
-    </form>
+    <b-field label="Mapped columns" v-if="preselectedColumns.length > 0" class="content" :addons="false">
+      <p class="help">
+        The following columns will be mapped with default values.
+        They can be edited once the table is created.
+      </p>
+      <ul>
+        <li v-for="column in preselectedColumns" :key="column.id.value">
+          {{ column.name }}
+        </li>
+      </ul>
+    </b-field>
   </side-pane>
 </template>
 
@@ -28,20 +29,21 @@
 import { Vue, Component } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
 import clownface, { GraphPointer } from 'clownface'
-import { RuntimeOperation, RdfResource } from 'alcaeus'
+import { RuntimeOperation } from 'alcaeus'
 import { dataset } from '@rdf-esm/dataset'
-import { csvw, sh } from '@tpluscode/rdf-ns-builders'
+import { csvw } from '@tpluscode/rdf-ns-builders'
 import { Shape } from '@rdfine/shacl'
 import * as ns from '@cube-creator/core/namespace'
 import SidePane from '@/components/SidePane.vue'
-import FormSubmitCancel from '@/components/FormSubmitCancel.vue'
+import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import { APIErrorValidation } from '@/api/errors'
+import { api } from '@/api'
 import { SourcesCollection, Source, CSVColumn } from '../types'
 
 const projectNS = namespace('project')
 
 @Component({
-  components: { SidePane, FormSubmitCancel },
+  components: { SidePane, HydraOperationForm },
 })
 export default class TableCreateView extends Vue {
   @projectNS.State('sourcesCollection') sourcesCollection!: SourcesCollection
@@ -49,12 +51,13 @@ export default class TableCreateView extends Vue {
   @projectNS.Getter('findSource') findSource!: (id: string) => Source | null
 
   resource: GraphPointer | null = clownface({ dataset: dataset() }).namedNode('')
-  shapes: GraphPointer | null = null
+  shape: Shape | null = null
+  isSubmitting = false;
   error: string | null = null
 
   async mounted (): Promise<void> {
     this.resource = this.prepareResourceFromQueryParams()
-    this.shapes = await this.prepareShapes()
+    this.shape = await this.prepareShape()
   }
 
   prepareResourceFromQueryParams (): GraphPointer {
@@ -73,24 +76,19 @@ export default class TableCreateView extends Vue {
     return resource
   }
 
-  async prepareShapes (): Promise<GraphPointer | null> {
-    let shapes = null
-
-    const expects: RdfResource | undefined = this.operation?.expects
-      .find(expects => 'load' in expects && expects.types.has(sh.Shape))
-
-    if (expects && expects.load) {
-      const { representation } = await expects.load<Shape>()
-      if (representation && representation.root) {
-        const shape = representation.root
-        const sourceProperty: any = shape.property.find(p => p.class?.equals(ns.cc.CSVSource))
-        sourceProperty[ns.hashi.collection.value] = this.sourcesCollection
-
-        shapes = shape.pointer
-      }
+  async prepareShape (): Promise<Shape | null> {
+    if (!this.operation) {
+      return null
     }
 
-    return shapes
+    const shape = await api.fetchOperationShape(this.operation)
+
+    if (shape) {
+      const sourceProperty: any = shape.property.find(p => p.class?.equals(ns.cc.CSVSource))
+      sourceProperty[ns.hashi.collection.value] = this.sourcesCollection
+    }
+
+    return shape
   }
 
   get preselectedSource (): Source | null {
@@ -128,7 +126,7 @@ export default class TableCreateView extends Vue {
 
   async onSubmit (): Promise<void> {
     this.error = null
-    const loader = this.$buefy.loading.open({})
+    this.isSubmitting = true
 
     try {
       const table = await this.$store.dispatch('api/invokeSaveOperation', {
@@ -152,7 +150,7 @@ export default class TableCreateView extends Vue {
         this.error = e.toString()
       }
     } finally {
-      loader.close()
+      this.isSubmitting = false
     }
   }
 

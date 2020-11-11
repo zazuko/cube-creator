@@ -119,6 +119,7 @@
                    code:name "excludeValuesOf";
                    code:value (
                                 "http://www.w3.org/2004/02/skos/core#notation"
+                                "https://cube-creator.zazuko.com/vocab#cube"
                               )
                  ] .
 

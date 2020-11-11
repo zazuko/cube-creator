@@ -7,12 +7,13 @@ import { Table } from './Table'
 import { Link } from './lib/Link'
 import { NamedNode } from 'rdf-js'
 import { schema, dcterms } from '@tpluscode/rdf-ns-builders'
+import { initializer } from './lib/initializer'
 
 export interface Job extends Action, Rdfs.Resource, RdfResource {
   tableCollection: Link<Collection<Table>>
-  cubeGraph?: NamedNode
+  cubeGraph: NamedNode
   label: string
-  create?: Date
+  created: Date
 }
 
 export function JobMixin<Base extends Constructor<RdfResource>>(base: Base) {
@@ -21,16 +22,22 @@ export function JobMixin<Base extends Constructor<RdfResource>>(base: Base) {
     tableCollection!: Link<Collection<Table>>
 
     @property({ path: cc.cubeGraph })
-    cubeGraph?: NamedNode
+    cubeGraph!: NamedNode
 
-    @property.literal({ path: schema.label })
+    @property.literal({ path: schema.name })
     label!: string
 
-    @property.literal({ path: dcterms.created, type: Date })
-    create!: Date
+    @property.literal({ path: dcterms.created, type: Date, initial: () => new Date() })
+    created!: Date
   }
 
   return Impl
 }
 
 JobMixin.appliesTo = cc.Job
+
+type RequiredProperties = 'label' | 'cubeGraph' | 'tableCollection'
+
+export const create = initializer<Job, RequiredProperties>(JobMixin, {
+  types: [cc.Job],
+})

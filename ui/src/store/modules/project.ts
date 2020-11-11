@@ -1,7 +1,15 @@
 import { ActionTree, MutationTree, GetterTree } from 'vuex'
 import { api } from '@/api'
 import { RootState } from '../types'
-import { Project, CSVMapping, SourcesCollection, TableCollection, Table, CubeMetadata } from '@/types'
+import {
+  Project,
+  CSVMapping,
+  JobCollection,
+  SourcesCollection,
+  TableCollection,
+  Table,
+  CubeMetadata,
+} from '@/types'
 
 export interface ProjectState {
   project: null | Project,
@@ -9,6 +17,7 @@ export interface ProjectState {
   sourcesCollection: null | SourcesCollection,
   tableCollection: null | TableCollection,
   cubeMetadata: null | CubeMetadata,
+  jobCollection: null | JobCollection,
 }
 
 const initialState = {
@@ -17,6 +26,7 @@ const initialState = {
   sourcesCollection: null,
   tableCollection: null,
   cubeMetadata: null,
+  jobCollection: null,
 }
 
 const getters: GetterTree<ProjectState, RootState> = {
@@ -26,6 +36,12 @@ const getters: GetterTree<ProjectState, RootState> = {
 
   tables (state) {
     return state.tableCollection?.member || []
+  },
+
+  jobs (state) {
+    const jobs = state.jobCollection?.member || []
+
+    return jobs.sort(({ created: created1 }, { created: created2 }) => created2.getTime() - created1.getTime())
   },
 
   findSource (_state, getters) {
@@ -54,12 +70,24 @@ const actions: ActionTree<ProjectState, RootState> = {
     return project
   },
 
-  async fetchCSVMapping (context, id) {
+  async fetchCSVMapping (context) {
+    const project = context.state.project
+
+    if (!project) {
+      throw new Error('Project not loaded')
+    }
+
+    const mappingId = project.csvMapping?.id.value
+
+    if (!mappingId) {
+      throw new Error('Project does not have a csvMapping')
+    }
+
     context.commit('storeCSVMapping', null)
     context.commit('storeSourcesCollection', null)
     context.commit('storeTableCollection', null)
 
-    const mapping = await api.fetchResource<CSVMapping>(id)
+    const mapping = await api.fetchResource<CSVMapping>(mappingId)
     context.commit('storeCSVMapping', mapping)
 
     const sourcesCollection = await api.fetchResource(mapping.sourcesCollection.id.value)
@@ -69,6 +97,23 @@ const actions: ActionTree<ProjectState, RootState> = {
     context.commit('storeTableCollection', tableCollection)
 
     return mapping
+  },
+
+  async fetchJobCollection (context) {
+    if (!context.state.project) {
+      throw new Error('Project not loaded')
+    }
+
+    const id = context.state.project.jobCollectionId
+
+    if (!id) {
+      throw new Error('Project does not have a jobCollection')
+    }
+
+    const collection = await api.fetchResource<JobCollection>(id)
+    context.commit('storeJobCollection', collection)
+
+    return collection
   },
 
   async refreshSourcesCollection (context) {
@@ -100,7 +145,10 @@ const actions: ActionTree<ProjectState, RootState> = {
   async uploadCSVs (context, files) {
     const operation = context.state.csvMapping?.sourcesCollection.actions.upload ?? null
     const uploads = files.map((file: File) => {
-      const headers = { 'content-disposition': `file; filename=${file.name}` }
+      const headers = {
+        'content-type': 'text/csv',
+        'content-disposition': `file; filename=${file.name}`,
+      }
       return api.invokeSaveOperation(operation, file, headers)
     })
 
@@ -144,6 +192,10 @@ const mutations: MutationTree<ProjectState> = {
 
   storeCubeMetadata (state, cubeMetadata) {
     state.cubeMetadata = cubeMetadata
+  },
+
+  storeJobCollection (state, collection) {
+    state.jobCollection = collection
   },
 }
 

@@ -1,4 +1,4 @@
-import { RdfResource, Resource, RuntimeOperation } from 'alcaeus'
+import { RdfResource, RuntimeOperation } from 'alcaeus'
 import { ActionTree, MutationTree, GetterTree } from 'vuex'
 import { api } from '@/api'
 import { RootState } from '../types'
@@ -6,7 +6,7 @@ import { GraphPointer } from 'clownface'
 import RdfResourceImpl, { ResourceIdentifier } from '@tpluscode/rdfine'
 
 export interface APIState {
-  entrypoint: null | Resource,
+  entrypoint: null | RdfResource,
 }
 
 const initialState = {

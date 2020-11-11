@@ -1,17 +1,19 @@
 import { URLSearchParams } from 'url'
 import { NamedNode } from 'rdf-js'
-import fetch, { RequestInit } from 'node-fetch'
+import nodeFetch, { RequestInit } from 'node-fetch'
 import env from '@cube-creator/core/env'
+import { GraphPointer } from 'clownface'
+import { dcterms } from '@tpluscode/rdf-ns-builders'
 
 const pipelineURI = env.PIPELINE_URI
 
-function trigger(triggerRequestInit: (job: NamedNode) => RequestInit) {
-  return async (job: NamedNode) => {
+function trigger(triggerRequestInit: (job: NamedNode, params: GraphPointer) => RequestInit) {
+  return async (job: NamedNode, params: GraphPointer, fetch = nodeFetch) => {
     if (!job) {
       throw new Error('Job URI missing')
     }
 
-    const res = await fetch(pipelineURI, triggerRequestInit(job))
+    const res = await fetch(pipelineURI, triggerRequestInit(job, params))
 
     if (res.status !== 201) {
       const message = await res.text()
@@ -35,7 +37,7 @@ export async function gitlab(job: NamedNode): Promise<void> {
   throw new Error('Not implemented')
 }
 
-export const github = trigger(job => {
+export const github = trigger((job, params) => {
   const body = {
     ref: 'master',
     inputs: {
@@ -48,6 +50,7 @@ export const github = trigger(job => {
     body: JSON.stringify(body),
     headers: {
       accept: 'application/vnd.github.v3+json',
+      authorization: `Bearer ${params.out(dcterms.identifier).value}`,
     },
   }
 })

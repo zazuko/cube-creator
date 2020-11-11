@@ -10,7 +10,11 @@
               </h3>
             </div>
             <div class="level-item">
-              <hydra-operation-button :operation="sourcesCollection.actions.upload" :to="{ name: 'CSVUpload' }" />
+              <hydra-operation-button
+                :operation="sourcesCollection.actions.upload"
+                :to="{ name: 'CSVUpload' }"
+                data-testid="upload-source"
+              />
             </div>
           </div>
           <div class="level-right">
@@ -44,7 +48,11 @@
                 Output tables
               </div>
               <div class="level-item">
-                <hydra-operation-button :operation="tableCollection.actions.create" :to="{ name: 'TableCreate' }" />
+                <hydra-operation-button
+                  :operation="tableCollection.actions.create"
+                  :to="{ name: 'TableCreate' }"
+                  :disabled="sources.length === 0"
+                />
               </div>
             </div>
           </div>
@@ -98,8 +106,7 @@ export default class CSVMappingView extends Vue {
   @projectNS.Getter('tables') tables!: Table[];
 
   mounted (): void {
-    const project = this.$store.state.project.project
-    this.$store.dispatch('project/fetchCSVMapping', project.csvMapping.id.value)
+    this.$store.dispatch('project/fetchCSVMapping')
   }
 }
 </script>

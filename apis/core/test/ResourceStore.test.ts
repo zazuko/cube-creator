@@ -160,38 +160,23 @@ describe('ResourceStore', () => {
       await resources.save()
 
       // then
-      expect(client.store.put).to.have.been.calledOnce
-      const savedDataset = await $rdf.dataset().import(store.put.firstCall.args[0])
-      expect(savedDataset.toCanonical()).to.matchSnapshot(this)
+      expect(client.query.update).to.have.been.calledOnce
+      expect(query.update.firstCall.args[0]).to.matchSnapshot(this)
     })
   })
 
   describe('delete', () => {
-    it('delete is not executed without save', async function () {
+    it('delete is adding DROP GRAPH statement and removes from inserts', async function () {
       // given
       const resourceStore = new ResourceStore(client)
       resourceStore.create(ex.Foo)
-      await resourceStore.save()
-
-      // when
-      resourceStore.delete(ex.Foo)
-
-      // then
-      expect(client.query.update).to.not.have.been.called
-    })
-
-    it('delete is executed on save', async function () {
-      // given
-      const resourceStore = new ResourceStore(client)
-      resourceStore.create(ex.Foo)
-      await resourceStore.save()
       resourceStore.delete(ex.Foo)
 
       // when
       await resourceStore.save()
 
       // then
-      expect(client.query.update).to.have.been.calledOnce
+      expect(query.update.firstCall.args[0]).to.matchSnapshot(this)
     })
   })
 })

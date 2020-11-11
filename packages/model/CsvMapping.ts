@@ -7,14 +7,12 @@ import { Table } from './Table'
 import { Link } from './lib/Link'
 import { initializer } from './lib/initializer'
 import { NamedNode } from 'rdf-js'
-import { Job } from './Job'
 import { Project } from './Project'
 
 export interface CsvMapping extends RdfResourceCore {
   namespace: NamedNode
   sources: CsvSource[]
   sourcesCollection: Link<Collection<CsvSource>>
-  jobCollection: Link<Collection<Job>>
   tableCollection: Link<Collection<Table>>
   project: Link<Project>
 }
@@ -29,9 +27,6 @@ export function CsvMappingMixin<Base extends Constructor>(base: Base) {
 
     @property.resource({ path: cc.csvSourceCollection })
     sourcesCollection!: Link<Collection<CsvSource>>
-
-    @property.resource({ path: cc.jobCollection })
-    jobCollection!: Link<Collection<Job>>
 
     @property.resource({ path: cc.tables })
     tableCollection!: Link<Collection<Table>>

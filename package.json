@@ -51,6 +51,8 @@
       "ui",
       "typings",
       "apis/*/test",
+      "apis/*/bootstrap",
+      "apis/*/types",
       "cli/test"
     ]
   }

@@ -1,7 +1,9 @@
 import { Hydra } from 'alcaeus/web'
 import { RdfResource, Resource, RuntimeOperation } from 'alcaeus'
 import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
+import { sh } from '@tpluscode/rdf-ns-builders'
 import { ShapeBundle } from '@rdfine/shacl/bundles'
+import { Shape } from '@rdfine/shacl'
 import store from '@/store'
 import { APIError } from './errors'
 import { apiResourceMixin } from './mixins/ApiResource'
@@ -16,6 +18,8 @@ import TableMixin from './mixins/Table'
 import ColumnMappingMixin from './mixins/ColumnMapping'
 import CubeMixin from './mixins/Cube'
 import CubeMetadataMixin from './mixins/CubeMetadata'
+import JobCollectionMixin from './mixins/JobCollection'
+import { JobMixin } from '@cube-creator/model/Job'
 
 const rootURL = window.APP_CONFIG.apiCoreBase
 const segmentSeparator = '!!' // used to replace slash in URI to prevent escaping
@@ -39,6 +43,8 @@ Hydra.resources.factory.addMixin(TableMixin)
 Hydra.resources.factory.addMixin(ColumnMappingMixin)
 Hydra.resources.factory.addMixin(CubeMixin)
 Hydra.resources.factory.addMixin(CubeMetadataMixin)
+Hydra.resources.factory.addMixin(JobCollectionMixin)
+Hydra.resources.factory.addMixin(JobMixin)
 Hydra.resources.factory.addMixin(...ShapeBundle)
 
 // Inject the access token in all requests if present
@@ -64,7 +70,7 @@ Hydra.defaultHeaders = () => {
 }
 
 export const api = {
-  async fetchResource <T extends RdfResourceCore = Resource> (url: string): Promise<Resource & T> {
+  async fetchResource <T extends RdfResourceCore = RdfResource> (url: string): Promise<T> {
     const response = await Hydra.loadResource<T>(url.replace(segmentSeparator, '/'))
 
     if (response.response?.xhr.status !== 200) {
@@ -79,7 +85,21 @@ export const api = {
     return resource
   },
 
-  async invokeSaveOperation<T extends Resource = Resource> (operation: RuntimeOperation | null, data: RdfResource | File, headers: Record<string, string> = {}): Promise<T> {
+  async fetchOperationShape (operation: RuntimeOperation): Promise<Shape | null> {
+    const expects: RdfResource | undefined = operation.expects
+      .find(expects => 'load' in expects && expects.types.has(sh.Shape))
+
+    if (expects && expects.load) {
+      const { representation } = await expects.load<Shape>()
+      if (representation && representation.root) {
+        return representation.root
+      }
+    }
+
+    return null
+  },
+
+  async invokeSaveOperation<T extends RdfResource = RdfResource> (operation: RuntimeOperation | null, data: RdfResource | File, headers: Record<string, string> = {}): Promise<T> {
     if (!operation) throw new Error('Operation does not exist')
 
     const serializedData = data instanceof File ? data : JSON.stringify(data.toJSON())
@@ -89,12 +109,12 @@ export const api = {
       throw await APIError.fromResponse(response)
     }
 
-    const resource = response.representation?.root
+    // TODO: Is there anything I can do to avoid casting as `unknown`?
+    const resource: unknown = response.representation?.root
     if (!resource) {
       throw new Error('Response does not contain created resource')
     }
 
-    // TODO: We're lying to the compiler
     return resource as T
   },
 
