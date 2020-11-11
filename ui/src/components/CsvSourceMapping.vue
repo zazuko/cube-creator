@@ -61,7 +61,11 @@
             <span class="has-text-grey" v-if="column.sampleValues.length > 0">
               &nbsp;({{ column.sampleValues.slice(0, 3).join(", ") }})
             </span>
-          </b-checkbox>/app/ui/src/components/
+          </b-checkbox>
+          <div>
+            <b-tooltip
+              v-for="{table, columnMapping} in getColumnMappings(column)"
+              :key="columnMapping.id.value"
               class="source-column-mapping"
               :style="{ 'background-color': table.color }"
               :label="table.name + ' / ' + columnMapping.targetProperty.value"
