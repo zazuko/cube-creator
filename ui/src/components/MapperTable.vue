@@ -59,7 +59,7 @@
 
 <script lang="ts">
 import { Prop, Component, Vue } from 'vue-property-decorator'
-import { ColumnMapping, Table } from '../types'
+import { ColumnMapping, Table } from '@cube-creator/model'
 import HydraOperationButton from './HydraOperationButton.vue'
 
 @Component({

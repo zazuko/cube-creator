@@ -1,7 +1,6 @@
 import { Constructor } from '@tpluscode/rdfine'
 import { CsvColumn, Table } from '@cube-creator/model'
 import { cc } from '@cube-creator/core/namespace'
-import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import * as ColumnMapping from '@cube-creator/model/ColumnMapping'
 import $rdf from 'rdf-ext'
 import { NamedNode, Term } from 'rdf-js'
@@ -12,9 +11,9 @@ interface CreateColumnMapping {
   store: ResourceStore
   sourceColumn: CsvColumn
   targetProperty: Term
-  datatype?: NamedNode | null
-  language?: string | null
-  defaultValue?: Term | null
+  datatype?: NamedNode
+  language?: string
+  defaultValue?: Term
 }
 
 interface CreateColumnMappingFromColumn {
@@ -22,7 +21,7 @@ interface CreateColumnMappingFromColumn {
   column: CsvColumn
 }
 
-interface ApiTable extends RdfResourceCore {
+interface ApiTable {
   addColumnMapping(params: CreateColumnMapping): ColumnMapping.ColumnMapping
   addColumnMappingFromColumn(params: CreateColumnMappingFromColumn): ColumnMapping.ColumnMapping
 }

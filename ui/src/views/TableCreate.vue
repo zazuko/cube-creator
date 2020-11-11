@@ -38,7 +38,7 @@ import SidePane from '@/components/SidePane.vue'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import { APIErrorValidation } from '@/api/errors'
 import { api } from '@/api'
-import { SourcesCollection, Source, CSVColumn } from '../types'
+import { SourcesCollection, CsvSource, CsvColumn } from '@cube-creator/model'
 
 const projectNS = namespace('project')
 
@@ -48,7 +48,7 @@ const projectNS = namespace('project')
 export default class TableCreateView extends Vue {
   @projectNS.State('sourcesCollection') sourcesCollection!: SourcesCollection
   @projectNS.State((state) => state.tableCollection.actions.create) operation!: RuntimeOperation | null
-  @projectNS.Getter('findSource') findSource!: (id: string) => Source | null
+  @projectNS.Getter('findSource') findSource!: (id: string) => CsvSource | null
 
   resource: GraphPointer | null = clownface({ dataset: dataset() }).namedNode('')
   shape: Shape | null = null
@@ -91,7 +91,7 @@ export default class TableCreateView extends Vue {
     return shape
   }
 
-  get preselectedSource (): Source | null {
+  get preselectedSource (): CsvSource | null {
     const sourceId = this.$router.currentRoute.query.source
 
     if (sourceId && !Array.isArray(sourceId)) {
@@ -101,7 +101,7 @@ export default class TableCreateView extends Vue {
     }
   }
 
-  get preselectedColumns (): CSVColumn[] {
+  get preselectedColumns (): CsvColumn[] {
     const source = this.preselectedSource
 
     if (!source) return []
@@ -121,7 +121,7 @@ export default class TableCreateView extends Vue {
           return null
         }
       })
-      .filter((column): column is CSVColumn => column !== null)
+      .filter((column): column is CsvColumn => column !== null)
   }
 
   async onSubmit (): Promise<void> {

@@ -18,7 +18,7 @@ import { namespace } from 'vuex-class'
 import { RuntimeOperation } from 'alcaeus'
 import clownface, { GraphPointer } from 'clownface'
 import { Shape } from '@rdfine/shacl'
-import { Source, Table } from '../types'
+import { CsvSource, Table } from '@cube-creator/model'
 import SidePane from '@/components/SidePane.vue'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import { api } from '@/api'
@@ -33,7 +33,7 @@ const projectNS = namespace('project')
 })
 export default class CubeProjectEditView extends Vue {
   @projectNS.Getter('findTable') findTable!: (id: string) => Table
-  @projectNS.Getter('findSource') findSource!: (id: string) => Source
+  @projectNS.Getter('findSource') findSource!: (id: string) => CsvSource
 
   resource: GraphPointer | null = clownface({ dataset: dataset() }).namedNode('')
   isSubmitting = false;
@@ -54,8 +54,8 @@ export default class CubeProjectEditView extends Vue {
       const shape = await api.fetchOperationShape(this.operation)
 
       // Populate Column selector
-      if (shape) {
-        const source = this.findSource(this.table.source.clientPath)
+      if (shape && this.table.csvSource?.clientPath) {
+        const source = this.findSource(this.table.csvSource.clientPath)
         const columnProperty: any = shape.property.find(p => p.class?.equals(csvw.Column))
         columnProperty.in = source.columns
         source.columns.forEach((column) => {

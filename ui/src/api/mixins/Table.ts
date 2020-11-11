@@ -1,37 +1,26 @@
 import { Constructor } from '@tpluscode/rdfine'
 import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import * as ns from '@cube-creator/core/namespace'
-import { schema } from '@tpluscode/rdf-ns-builders'
-import { Table, Source, ColumnMapping } from '@/types'
-import { commonActions, findOperation } from '../common'
+import { Table, ColumnMapping } from '@cube-creator/model'
+import { AdditionalActions } from '@/api/mixins/ApiResource'
 
-export default function mixin<Base extends Constructor<Table>> (base: Base): Mixin {
-  return class extends base implements Table {
-    get actions () {
+declare module '@cube-creator/model' {
+  interface Table {
+    isObservationTable: boolean;
+    columnMappings: ColumnMapping[];
+  }
+}
+
+export default function mixin<Base extends Constructor> (base: Base): Mixin {
+  return class extends base implements Partial<Table>, AdditionalActions {
+    get _additionalActions () {
       return {
-        ...commonActions(this),
-        createColumnMapping: findOperation(this, ns.cc.CreateColumnMappingAction),
+        createColumnMapping: ns.cc.CreateColumnMappingAction,
       }
     }
 
     get isObservationTable (): boolean {
       return this.types.has(ns.cc.ObservationTable)
-    }
-
-    get name (): string {
-      return this.getString(schema.name)
-    }
-
-    get color (): string {
-      return this.getString(schema.color)
-    }
-
-    get source (): Source {
-      return this.get<Source>(ns.cc.csvSource)
-    }
-
-    get identifierTemplate (): string {
-      return this.getString(ns.cc.identifierTemplate)
     }
 
     get columnMappings (): ColumnMapping[] {

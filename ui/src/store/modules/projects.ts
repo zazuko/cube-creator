@@ -2,7 +2,7 @@ import { ActionTree, MutationTree, GetterTree } from 'vuex'
 import { api } from '@/api'
 import { RootState } from '../types'
 import * as ns from '@cube-creator/core/namespace'
-import { ProjectsCollection } from '@/types'
+import { ProjectsCollection } from '@cube-creator/model'
 
 export interface ProjectsState {
   collection: null | ProjectsCollection,

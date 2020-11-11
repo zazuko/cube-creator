@@ -39,7 +39,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { State } from 'vuex-class'
 import PageContent from '@/components/PageContent.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
-import { ProjectsCollection, Project } from '../types'
+import { ProjectsCollection, Project } from '@cube-creator/model'
 
 @Component({
   components: { PageContent, LoadingBlock },
