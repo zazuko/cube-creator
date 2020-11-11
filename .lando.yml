@@ -71,6 +71,8 @@ services:
       environment:
         TS_NODE_TRANSPILE_ONLY: "true"
         NODE_TLS_REJECT_UNAUTHORIZED: 0
+        # Requires override because port must be used in internal communication
+        GRAPH_STORE_ENDPOINT: http://db.cube-creator.lndo.site:3030/cube-creator/data
     moreHttpPorts:
           - 45681
 
