@@ -24,6 +24,8 @@ Vue.use(Buefy, {
 
 Vue.config.productionTip = false
 
+Vue.filter('format-date', (date: Date) => date.toLocaleString())
+
 new Vue({
   router,
   store,

@@ -1,13 +1,14 @@
 import { ActionTree, MutationTree, GetterTree } from 'vuex'
 import { api } from '@/api'
 import { RootState } from '../types'
-import { Project, CSVMapping, SourcesCollection, TableCollection, Table } from '@/types'
+import { Project, CSVMapping, JobCollection, SourcesCollection, TableCollection, Table } from '@/types'
 
 export interface ProjectState {
   project: null | Project,
   csvMapping: null | CSVMapping,
   sourcesCollection: null | SourcesCollection,
   tableCollection: null | TableCollection,
+  jobCollection: null | JobCollection,
 }
 
 const initialState = {
@@ -15,6 +16,7 @@ const initialState = {
   csvMapping: null,
   sourcesCollection: null,
   tableCollection: null,
+  jobCollection: null,
 }
 
 const getters: GetterTree<ProjectState, RootState> = {
@@ -24,6 +26,12 @@ const getters: GetterTree<ProjectState, RootState> = {
 
   tables (state) {
     return state.tableCollection?.member || []
+  },
+
+  jobs (state) {
+    const jobs = state.jobCollection?.member || []
+
+    return jobs.sort(({ created: created1 }, { created: created2 }) => created2.getTime() - created1.getTime())
   },
 
   findSource (_state, getters) {
@@ -79,6 +87,23 @@ const actions: ActionTree<ProjectState, RootState> = {
     context.commit('storeTableCollection', tableCollection)
 
     return mapping
+  },
+
+  async fetchJobCollection (context) {
+    if (!context.state.project) {
+      throw new Error('Project not loaded')
+    }
+
+    const id = context.state.project.jobCollectionId
+
+    if (!id) {
+      throw new Error('Project does not have a jobCollection')
+    }
+
+    const collection = await api.fetchResource<JobCollection>(id)
+    context.commit('storeJobCollection', collection)
+
+    return collection
   },
 
   async refreshSourcesCollection (context) {
@@ -137,6 +162,10 @@ const mutations: MutationTree<ProjectState> = {
 
   storeTableCollection (state, collection) {
     state.tableCollection = collection
+  },
+
+  storeJobCollection (state, collection) {
+    state.jobCollection = collection
   },
 }
 
