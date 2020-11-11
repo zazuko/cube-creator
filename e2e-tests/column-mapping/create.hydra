@@ -25,10 +25,16 @@ With Class api:Table {
 
             <>  cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/year> ;
                 cc:targetProperty <dimension/year> ;
-                cc:datatype xsd:gYear .
+                cc:datatype xsd:gYear ;
+                cc:language "en" ;
+                cc:default "2000" .
             ```
         } => {
             Expect Status 201
+
+            Expect Type <https://cube-creator.zazuko.com/vocab#ColumnMapping>
+            Expect Property cc:targetProperty
+            Expect Property cc:sourceColumn
         }
     }
 }

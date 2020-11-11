@@ -59,7 +59,7 @@ export async function createTable({
         throw new Error(`Column ${columnId} not found`)
       }
 
-      return table.addColumnMapping({
+      return table.addColumnMappingFromColumn({
         store,
         column,
       })

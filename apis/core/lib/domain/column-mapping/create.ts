@@ -1,8 +1,6 @@
 import { GraphPointer } from 'clownface'
 import { cc } from '@cube-creator/core/namespace'
-import * as ColumnMapping from '@cube-creator/model/ColumnMapping'
 import { ResourceStore } from '../../ResourceStore'
-import * as id from '../identifiers'
 import { resourceStore } from '../resources'
 import { NamedNode } from 'rdf-js'
 import { CsvColumn, Table } from '@cube-creator/model'
@@ -25,7 +23,8 @@ export async function createColumnMapping({
     throw new Error(`Column ${columnId} not found`)
   }
 
-  const columnMapping = ColumnMapping.create(store.create(id.columnMapping(table, column.name)), {
+  const columnMapping = table.addColumnMapping({
+    store,
     sourceColumn: column,
     targetProperty: resource.out(cc.targetProperty).term!,
   })
