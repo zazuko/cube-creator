@@ -27,7 +27,7 @@ With Class api:Table {
                 cc:targetProperty <dimension/year> ;
                 cc:datatype xsd:gYear ;
                 cc:language "en" ;
-                cc:default "2000" .
+                cc:defaultValue "2000" .
             ```
         } => {
             Expect Status 201
@@ -35,6 +35,9 @@ With Class api:Table {
             Expect Type <https://cube-creator.zazuko.com/vocab#ColumnMapping>
             Expect Property cc:targetProperty
             Expect Property cc:sourceColumn
+            Expect Property cc:datatype
+            Expect Property cc:language
+            Expect Property cc:defaultValue
         }
     }
 }

@@ -4,19 +4,22 @@ import { cc } from '@cube-creator/core/namespace'
 import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import * as ColumnMapping from '@cube-creator/model/ColumnMapping'
 import $rdf from 'rdf-ext'
-import { Term } from 'rdf-js'
+import { NamedNode, Term } from 'rdf-js'
 import { ResourceStore } from '../../ResourceStore'
 import * as id from '../identifiers'
 
 interface CreateColumnMapping {
+  store: ResourceStore
   sourceColumn: CsvColumn
   targetProperty: Term
-  store: ResourceStore
+  datatype?: NamedNode | null
+  language?: string | null
+  defaultValue?: Term | null
 }
 
 interface CreateColumnMappingFromColumn {
-  column: CsvColumn
   store: ResourceStore
+  column: CsvColumn
 }
 
 interface ApiTable extends RdfResourceCore {
@@ -37,10 +40,13 @@ function defaultProperty(columnName: string) {
 
 export default function Mixin<Base extends Constructor<Table>>(Resource: Base) {
   return class Impl extends Resource implements ApiTable {
-    addColumnMapping({ store, sourceColumn, targetProperty }: CreateColumnMapping): ColumnMapping.ColumnMapping {
+    addColumnMapping({ store, sourceColumn, targetProperty, datatype, language, defaultValue }: CreateColumnMapping): ColumnMapping.ColumnMapping {
       const columnMapping = ColumnMapping.create(store.create(id.columnMapping(this, sourceColumn.name)), {
         sourceColumn,
         targetProperty,
+        datatype,
+        language,
+        defaultValue,
       })
 
       this.pointer.addOut(cc.columnMapping, columnMapping.id)

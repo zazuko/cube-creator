@@ -224,7 +224,7 @@ graph <project/ubd/csv-mapping/table-observation/column-mapping-1> {
     cc:datatype xsd:gYear ;
     # -- Other possible ColumnMapping properties
     # cc:language
-    # cc:default
+    # cc:defaultValue
     # cc:datatype/params TBD
   .
 }

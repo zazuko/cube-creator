@@ -39,6 +39,7 @@ type CubeCreatorProperty =
   'targetProperty' |
   'datatype' |
   'language' |
+  'defaultValue' |
   'isObservationTable' |
   'cube' |
   'jobCollection'

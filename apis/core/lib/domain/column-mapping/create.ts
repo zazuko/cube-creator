@@ -27,6 +27,9 @@ export async function createColumnMapping({
     store,
     sourceColumn: column,
     targetProperty: resource.out(cc.targetProperty).term!,
+    datatype: resource.out(cc.datatype).term as NamedNode,
+    language: resource.out(cc.language).value,
+    defaultValue: resource.out(cc.defaultValue).term,
   })
 
   store.save()
