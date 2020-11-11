@@ -1524,7 +1524,7 @@
     clownface "^1"
     once "^1.4.0"
 
-"@tpluscode/sparql-builder@^0.3.9", "@tpluscode/sparql-builder@^0.3.10":
+"@tpluscode/sparql-builder@^0.3.10", "@tpluscode/sparql-builder@^0.3.9":
   version "0.3.10"
   resolved "https://registry.yarnpkg.com/@tpluscode/sparql-builder/-/sparql-builder-0.3.10.tgz#8eb3f7adda8f0504258da061be722f033d36cfb1"
   integrity sha512-rz4tXU9dfkP9KLQ8pyCNSXOwkvFIzDF/cWHqnq28idpZc1QLCZu8RlY0NDDWteJht0ryNbG7cNtCk0R6zBkiOw==
@@ -4628,6 +4628,13 @@ cyclist@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/cyclist/-/cyclist-1.0.1.tgz#596e9698fd0c80e12038c2b82d6eb1b35b6224d9"
   integrity sha1-WW6WmP0MgOEgOMK4LW6xs1tiJNk=
+
+cypress-file-upload@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/cypress-file-upload/-/cypress-file-upload-4.1.1.tgz#952713c8104ab7008de99c65bd63f74b244fe4df"
+  integrity sha512-tX6UhuJ63rNgjdzxglpX+ZYf/bM6PDhFMtt1qCBljLtAgdearqyfD1AHqyh59rOHCjfM+bf6FA3o9b/mdaX6pw==
+  dependencies:
+    mime "^2.4.4"
 
 cypress@^3.8.3:
   version "3.8.3"

@@ -10,7 +10,11 @@
               </h3>
             </div>
             <div class="level-item">
-              <hydra-operation-button :operation="sourcesCollection.actions.upload" :to="{ name: 'CSVUpload' }" />
+              <hydra-operation-button
+                :operation="sourcesCollection.actions.upload"
+                :to="{ name: 'CSVUpload' }"
+                data-testid="upload-source"
+              />
             </div>
           </div>
           <div class="level-right">
