@@ -1,0 +1,30 @@
+PREFIX cc: <https://cube-creator.zazuko.com/vocab#>
+
+ENTRYPOINT "cube-project/ubd/jobs"
+
+HEADERS {
+  x-user "john-doe"
+  x-permission "pipelines:read"
+}
+
+With Class cc:JobCollection {
+    Expect Operation cc:TransformAction {
+        Invoke {
+            Expect Status 201
+            Expect Header Location [job]
+        }
+    }
+
+    Expect Operation cc:TransformAction {
+        Invoke {
+            Content-Type "application/ld+json"
+
+            ```
+            {}
+            ```
+        } => {
+            Expect Status 201
+            Expect Header Location [job]
+        }
+    }
+}

@@ -40,4 +40,5 @@ type RequiredProperties = 'label' | 'cubeGraph' | 'tableCollection'
 
 export const create = initializer<Job, RequiredProperties>(JobMixin, {
   types: [cc.Job],
+  actionStatus: schema.PotentialActionStatus,
 })
