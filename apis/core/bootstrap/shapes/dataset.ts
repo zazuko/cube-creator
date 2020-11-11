@@ -100,6 +100,7 @@ ${shape('dataset/edit-metadata')} {
       ${sh.minCount} 1 ;
       ${dash.editor} ${dash.DetailsEditor} ;
       ${sh.node} ${$rdf.blankNode('temporal-from-to')} ;
+      ${sh.class} ${dcterms.PeriodOfTime} ;
       ${sh.order} 70 ;
     ] ;
     ${sh.property} [
@@ -115,6 +116,7 @@ ${shape('dataset/edit-metadata')} {
       ${sh.minCount} 1 ;
       ${dash.editor} ${dash.DetailsEditor} ;
       ${sh.node} ${$rdf.blankNode('vcard-organization')} ;
+      ${sh.class} ${vcard.Organization} ;
       ${sh.order} 90 ;
     ] ;
     ${sh.property} [
