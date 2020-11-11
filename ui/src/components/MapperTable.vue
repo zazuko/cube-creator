@@ -48,6 +48,12 @@
         </div>
       </div>
     </div>
+    <div class="panel-block">
+      <hydra-operation-button
+        :operation="table.actions.createColumnMapping"
+        :to="{ name: 'ColumnMappingCreate', params: { tableId: table.clientPath } }"
+      />
+    </div>
   </div>
 </template>
 

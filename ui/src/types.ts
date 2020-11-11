@@ -39,7 +39,9 @@ export interface ColumnMapping extends APIResource {
 }
 
 export interface Table extends APIResource {
-  actions: CommonActions;
+  actions: CommonActions & {
+    createColumnMapping: RuntimeOperation | null,
+  };
   name: string;
   source: Source;
   color: string;

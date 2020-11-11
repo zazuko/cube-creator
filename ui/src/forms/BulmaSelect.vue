@@ -1,9 +1,9 @@
 <template>
-  <b-select placeholder="Select" @input="emit" :value="value">
+  <b-select placeholder="Select" @input="update" :value="value">
     <option
       v-for="option in options"
-      :value="option.id"
-      :key="option.id.value"
+      :value="option.term"
+      :key="option.value"
     >
       {{ label(option) }}
     </option>
@@ -12,34 +12,39 @@
 
 <script lang="ts">
 import { Prop, Component, Vue } from 'vue-property-decorator'
-import { RdfResource } from '@tpluscode/rdfine'
+import { PropertyShape } from '@rdfine/shacl'
 import { Hydra } from 'alcaeus/web'
 import { NamedNode } from 'rdf-js'
-import { schema } from '@tpluscode/rdf-ns-builders'
-
-const labelProperty = schema.name
+import { rdfs, schema, sh } from '@tpluscode/rdf-ns-builders'
+import { hashi } from '@cube-creator/core/namespace'
+import { GraphPointer } from 'clownface'
 
 @Component
 export default class extends Vue {
-  @Prop() collection?: RdfResource
+  @Prop() property!: PropertyShape
   @Prop() update!: (newValue: string | NamedNode) => void
   @Prop() value?: NamedNode;
 
-  options: RdfResource[] = []
+  options: GraphPointer[] = []
 
-  label (option: RdfResource): string {
-    return option.getString(labelProperty, { strict: false }) || option.id.value
+  label (option: GraphPointer): string {
+    return (
+      option.out(rdfs.label).values[0] ||
+      option.out(schema.name).values[0] ||
+      option.value
+    )
   }
 
   async mounted (): Promise<void> {
-    if (this.collection && this.collection.id.termType === 'NamedNode') {
-      const { representation } = await Hydra.loadResource(this.collection.id)
-      this.options = representation?.root?.member || []
-    }
-  }
+    const collection = this.property.get(hashi.collection)
+    const shIn = this.property.pointer.out(sh.in).list()
 
-  emit (value: NamedNode): void {
-    this.update(value)
+    if (collection && collection.id.termType === 'NamedNode') {
+      const { representation } = await Hydra.loadResource(collection.id)
+      this.options = (representation?.root?.member || []).map((resource) => resource.pointer)
+    } else if (shIn) {
+      this.options = [...shIn]
+    }
   }
 }
 </script>

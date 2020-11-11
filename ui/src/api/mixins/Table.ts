@@ -3,12 +3,15 @@ import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import * as ns from '@cube-creator/core/namespace'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { Table, Source, ColumnMapping } from '@/types'
-import { commonActions } from '../common'
+import { commonActions, findOperation } from '../common'
 
 export default function mixin<Base extends Constructor<Table>> (base: Base): Mixin {
   return class extends base implements Table {
     get actions () {
-      return commonActions(this)
+      return {
+        ...commonActions(this),
+        createColumnMapping: findOperation(this, ns.cc.CreateColumnMappingAction),
+      }
     }
 
     get isObservationTable (): boolean {
