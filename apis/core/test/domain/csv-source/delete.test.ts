@@ -23,8 +23,13 @@ describe('domain/csv-sources/delete', () => {
       saveFile: sinon.spy(),
       deleteFile: sinon.spy(),
     }
-    getLinkedTablesForSource = sinon.stub().resolves(['table'])
-    getTablesForMapping = sinon.stub().resolves([$rdf.namedNode('table')])
+
+    function * tableGenerator() {
+      yield 'table'
+    }
+
+    getLinkedTablesForSource = sinon.stub().returns(tableGenerator())
+    getTablesForMapping = sinon.stub().returns(tableGenerator())
     tableQueries = {
       getLinkedTablesForSource,
       getTablesForMapping,
