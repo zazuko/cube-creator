@@ -23,7 +23,7 @@ export async function createColumnMapping({
   }
 
   const columnId = resource.out(cc.sourceColumn).term as NamedNode
-  const source = await store.getResource<CsvSource>(table.csvSource.id)
+  const source = await store.getResource<CsvSource>(table.csvSource?.id)
   const column = source?.columns.find(({ id }) => id.equals(columnId))
 
   if (!column) {

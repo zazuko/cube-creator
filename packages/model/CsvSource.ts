@@ -1,6 +1,6 @@
 import * as Schema from '@rdfine/schema'
 import * as Csvw from '@rdfine/csvw'
-import RdfResourceImpl, { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
+import RdfResourceImpl, { RdfResource } from '@tpluscode/rdfine/RdfResource'
 import { Constructor, property } from '@tpluscode/rdfine'
 import { csvw, schema } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
@@ -10,13 +10,19 @@ import { initializer } from './lib/initializer'
 import { Link } from './lib/Link'
 import { CsvMapping } from './CsvMapping'
 import { CsvColumn, CsvColumnMixin } from './CsvColumn'
+import { Collection } from '@rdfine/hydra'
 
-export interface CsvSource extends RdfResourceCore {
+export interface CsvSource extends RdfResource {
   associatedMedia: Schema.MediaObject
   name: string
   dialect: Csvw.Dialect
   csvMapping: Link<CsvMapping>
   columns: CsvColumn[]
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface SourcesCollection extends Collection<CsvSource> {
+
 }
 
 export function CsvSourceMixin<Base extends Constructor>(base: Base) {

@@ -1,21 +1,28 @@
-import RdfResource, { Constructor, namespace, property } from '@tpluscode/rdfine'
+import RdfResourceImpl, { RdfResource, Constructor, namespace, property } from '@tpluscode/rdfine'
 import type * as Csvw from '@rdfine/csvw'
 import { cc } from '@cube-creator/core/namespace'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { CsvSource } from './CsvSource'
-import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
+import { Collection } from '@rdfine/hydra'
 import { Link } from './lib/Link'
 import { initializer } from './lib/initializer'
 import { CsvMapping } from './CsvMapping'
 import { childResource } from './lib/resourceIdentifiers'
+import { ColumnMapping } from './ColumnMapping'
 
-export interface Table extends RdfResourceCore {
+export interface Table extends RdfResource {
   csvw: Link<Csvw.Table>
   csvSource?: Link<CsvSource>
   name: string
   csvMapping: Link<CsvMapping>
   identifierTemplate: string
   color: string
+  columnMappings: ColumnMapping[]
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface TableCollection extends Collection<Table> {
+
 }
 
 export function TableMixin<Base extends Constructor>(base: Base) {
@@ -44,7 +51,7 @@ export function TableMixin<Base extends Constructor>(base: Base) {
 }
 
 TableMixin.appliesTo = cc.Table
-TableMixin.Class = TableMixin(RdfResource)
+TableMixin.Class = TableMixin(RdfResourceImpl)
 
 type RequiredProperties = 'name' | 'csvSource' | 'csvMapping' | 'identifierTemplate'
 

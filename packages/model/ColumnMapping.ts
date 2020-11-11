@@ -1,4 +1,4 @@
-import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
+import { RdfResource } from '@tpluscode/rdfine/RdfResource'
 import { CsvColumn } from './CsvColumn'
 import { NamedNode, Term } from 'rdf-js'
 import { Link } from './lib/Link'
@@ -6,12 +6,12 @@ import { Constructor, namespace, property } from '@tpluscode/rdfine'
 import { cc } from '@cube-creator/core/namespace'
 import { initializer } from './lib/initializer'
 
-export interface ColumnMapping extends RdfResourceCore {
+export interface ColumnMapping extends RdfResource {
   sourceColumn: Link<CsvColumn>
   targetProperty: Term
-  datatype: NamedNode | null
-  language: string | null
-  defaultValue: Term | null
+  datatype: NamedNode
+  language: string
+  defaultValue: Term
 }
 
 export function ColumnMappingMixin<Base extends Constructor>(Resource: Base) {
@@ -24,13 +24,13 @@ export function ColumnMappingMixin<Base extends Constructor>(Resource: Base) {
     targetProperty!: Term
 
     @property()
-    datatype!: NamedNode
+    datatype?: NamedNode
 
     @property()
-    language!: string
+    language?: string
 
     @property()
-    defaultValue!: Term
+    defaultValue?: Term
   }
 
   return Impl

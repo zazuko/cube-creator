@@ -6,7 +6,7 @@ PREFIX dcterms: <http://purl.org/dc/terms/>
 PREFIX schema: <http://schema.org/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
-ENTRYPOINT "project/ubd/csv-mapping/table-observation"
+ENTRYPOINT "cube-project/ubd/csv-mapping/table-observation"
 
 HEADERS {
   x-user "john-doe"

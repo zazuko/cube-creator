@@ -91,7 +91,7 @@ import { namespace } from 'vuex-class'
 import CsvSourceMapping from '@/components/CsvSourceMapping.vue'
 import HydraOperationButton from '@/components/HydraOperationButton.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
-import { CSVMapping, SourcesCollection, TableCollection, Table, Source } from '../types'
+import { CsvMapping, SourcesCollection, TableCollection, Table, CsvSource } from '@cube-creator/model'
 
 const projectNS = namespace('project')
 
@@ -99,10 +99,10 @@ const projectNS = namespace('project')
   components: { CsvSourceMapping, HydraOperationButton, LoadingBlock },
 })
 export default class CSVMappingView extends Vue {
-  @projectNS.State('csvMapping') mapping!: CSVMapping | null;
+  @projectNS.State('csvMapping') mapping!: CsvMapping | null;
   @projectNS.State('sourcesCollection') sourcesCollection!: SourcesCollection | null;
   @projectNS.State('tableCollection') tableCollection!: TableCollection | null;
-  @projectNS.Getter('sources') sources!: Source[];
+  @projectNS.Getter('sources') sources!: CsvSource[];
   @projectNS.Getter('tables') tables!: Table[];
 
   mounted (): void {

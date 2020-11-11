@@ -44,7 +44,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { State } from 'vuex-class'
-import { Project } from '@/types'
+import { Project } from '@cube-creator/model'
 import PageContent from '@/components/PageContent.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 
