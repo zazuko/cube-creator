@@ -8,7 +8,7 @@ import clownface from 'clownface'
 
 export const post = protectedResource(shaclValidate, asyncMiddleware(async (req, res) => {
   const columnMapping = await createColumnMapping({
-    table: RdfResource.createEntity<Table>(clownface(req.hydra.resource)),
+    table: RdfResource.factory.createEntity<Table>(clownface(req.hydra.resource)),
     resource: await req.resource(),
   })
 
