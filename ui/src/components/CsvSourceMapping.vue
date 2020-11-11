@@ -61,11 +61,7 @@
             <span class="has-text-grey" v-if="column.sampleValues.length > 0">
               &nbsp;({{ column.sampleValues.slice(0, 3).join(", ") }})
             </span>
-          </b-checkbox>
-          <div>
-            <b-tooltip
-              v-for="{table, columnMapping} in getColumnMappings(column)"
-              :key="columnMapping.id.value"
+          </b-checkbox>/app/ui/src/components/
               class="source-column-mapping"
               :style="{ 'background-color': table.color }"
               :label="table.name + ' / ' + columnMapping.targetProperty.value"
@@ -112,7 +108,7 @@ export default class CsvSourceMapping extends Vue {
   selectedColumns: CSVColumn[] = []
 
   get sourceTables (): Table[] {
-    return this.tables.filter(({ source }) => source.id.equals(this.source.id))
+    return this.tables.filter(({ source }) => source && source.id.equals(this.source.id))
   }
 
   get createTableQueryParams (): Record<string, string | string[]> {
