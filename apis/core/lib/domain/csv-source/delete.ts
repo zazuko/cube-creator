@@ -1,40 +1,54 @@
 import { NamedNode, Term } from 'rdf-js'
 import { ResourceStore } from '../../ResourceStore'
 import { resourceStore } from '../resources'
-import { deleteFile } from '../../storage/s3'
+import * as s3 from '../../storage/s3'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import $rdf from 'rdf-ext'
+import * as TableQueries from '../queries/table'
 
 interface DeleteSourceCommand {
-  resource: NamedNode
+  resource: NamedNode | Term
   store?: ResourceStore
+  fileStorage?: s3.FileStorage
+  tableQueries?: Pick<typeof TableQueries, 'getLinkedTablesForSource'>
 }
 
 export async function deleteSource({
   resource,
   store = resourceStore(),
+  fileStorage = s3,
+  tableQueries: { getLinkedTablesForSource } = TableQueries,
 }: DeleteSourceCommand): Promise<void> {
-  await deleteSourceWithoutSave(resource, store)
+  await deleteSourceWithoutSave({ resource, store, fileStorage, tableQueries: { getLinkedTablesForSource } })
 
   // Save changes
   await store.save()
 }
 
-export async function deleteSourceWithoutSave(csvSourceTerm: Term, store: ResourceStore): Promise<void> {
-  if (csvSourceTerm.termType !== 'NamedNode') return
+export async function deleteSourceWithoutSave({
+  resource,
+  store = resourceStore(),
+  fileStorage = s3,
+  tableQueries: { getLinkedTablesForSource } = TableQueries,
+}: DeleteSourceCommand): Promise<void> {
+  if (resource.termType !== 'NamedNode') return
 
-  const csvSource = await store.get(csvSourceTerm)
+  const csvSource = await store.get(resource)
   if (!csvSource) return
 
-  // TODO: Delete Tables or prevent it
-  // Find related tables
-  // Delete them
+  // Remove links from tables
+  const tables = await getLinkedTablesForSource(csvSource.term)
+  for await (const table of tables) {
+    const tableGraph = await store.get(table)
+    tableGraph?.dataset.delete($rdf.quad(tableGraph.term, cc.csvSource, csvSource.term))
+  }
+
   // Delete S3 resource
   const path = csvSource.out(schema.associatedMedia).out(schema.identifier).term
     ?.value
   if (path) {
-    await deleteFile(path)
+    await fileStorage.deleteFile(path)
   }
 
   // Delete links from in csv-mapping
@@ -47,5 +61,5 @@ export async function deleteSourceWithoutSave(csvSourceTerm: Term, store: Resour
   }
 
   // Delete Graph
-  store.delete(csvSourceTerm)
+  store.delete(resource)
 }
