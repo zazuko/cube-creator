@@ -3,7 +3,7 @@ import { cc } from '@cube-creator/core/namespace'
 import { ResourceStore } from '../../ResourceStore'
 import { resourceStore } from '../resources'
 import { NamedNode } from 'rdf-js'
-import { CsvColumn, Table } from '@cube-creator/model'
+import { CsvSource, Table } from '@cube-creator/model'
 
 interface CreateColumnMappingCommand {
   table: Table
@@ -17,7 +17,8 @@ export async function createColumnMapping({
   store = resourceStore(),
 }: CreateColumnMappingCommand): Promise<GraphPointer> {
   const columnId = resource.out(cc.sourceColumn).term as NamedNode
-  const column = await store.getResource<CsvColumn>(columnId)
+  const source = await store.getResource<CsvSource>(table.csvSource.id)
+  const column = source?.columns.find(({ id }) => id.equals(columnId))
 
   if (!column) {
     throw new Error(`Column ${columnId} not found`)
