@@ -7,7 +7,6 @@ import { NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import { NotFoundError } from '../../errors'
 import { CsvMapping, CsvSource } from '@cube-creator/model'
-import { createColumnMappingFromColumn } from '../column-mapping/create'
 
 const trueTerm = $rdf.literal('true', xsd.boolean)
 
