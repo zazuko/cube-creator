@@ -32,6 +32,10 @@ export function apiResourceMixin (rootUrl: string, separator: string): Mixin {
       get actions (): Actions {
         return commonActions(this, this._additionalActions)
       }
+
+      get inlineRepresentation () {
+        return this
+      }
     }
 
     return BaseClass
