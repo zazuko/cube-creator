@@ -38,6 +38,14 @@ ${shape('column-mapping/create')} {
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
       ${sh.nodeKind} ${sh.IRI} ;
+      ${sh.in} (
+        ${xsd.date}
+        ${xsd.dateTime}
+        ${xsd.decimal}
+        ${xsd.float}
+        ${xsd.int}
+        ${xsd.string}
+      ) ;
       ${sh.order} 40 ;
     ] ;
     ${sh.property} [
@@ -55,5 +63,12 @@ ${shape('column-mapping/create')} {
       ${sh.order} 60 ;
     ] ;
   .
+
+  ${xsd.string} ${rdfs.label} "string" .
+  ${xsd.int} ${rdfs.label} "int" .
+  ${xsd.float} ${rdfs.label} "float" .
+  ${xsd.decimal} ${rdfs.label} "decimal" .
+  ${xsd.date} ${rdfs.label} "date" .
+  ${xsd.dateTime} ${rdfs.label} "datetime" .
 }
 `

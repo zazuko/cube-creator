@@ -25,9 +25,9 @@ With Class api:Table {
 
             <>  cc:sourceColumn <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/year> ;
                 cc:targetProperty "dimension/year" ;
-                cc:datatype xsd:gYear ;
+                cc:datatype xsd:date ;
                 cc:language "en" ;
-                cc:defaultValue "2000" .
+                cc:defaultValue "2000-01-01" .
             ```
         } => {
             Expect Status 201
@@ -38,10 +38,10 @@ With Class api:Table {
                 Expect Id <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/year>
             }
             Expect Property cc:datatype {
-                Expect Id xsd:gYear
+                Expect Id xsd:date
             }
             Expect Property cc:language "en"
-            Expect Property cc:defaultValue "2000"
+            Expect Property cc:defaultValue "2000-01-01"
         }
     }
 }

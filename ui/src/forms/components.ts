@@ -30,6 +30,20 @@ export const instanceSelect: SingleEditorComponent = {
   }
 }
 
+export const enumSelect: SingleEditorComponent = {
+  editor: dash.EnumSelectEditor,
+  render ({ property, value }, { update }) {
+    return html`<b-select .property="${property.shape}"
+                          .update="${update}"
+                          .value="${value.object.term}"></b-select>`
+  },
+  loadDependencies () {
+    return [
+      import('./BulmaSelect.vue').then(createCustomElement('b-select'))
+    ]
+  }
+}
+
 export const radioButtons: SingleEditorComponent = {
   editor: ns.editor.RadioButtons,
   render ({ property, value }, { update }) {
