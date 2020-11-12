@@ -16,7 +16,7 @@
 import { Vue, Component } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
 import { RuntimeOperation } from 'alcaeus'
-import { GraphPointer } from 'clownface'
+import clownface, { GraphPointer } from 'clownface'
 import { Shape } from '@rdfine/shacl'
 import { Source, Table } from '../types'
 import SidePane from '@/components/SidePane.vue'
@@ -24,6 +24,7 @@ import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import { api } from '@/api'
 import { APIErrorValidation } from '@/api/errors'
 import { csvw, schema } from '@tpluscode/rdf-ns-builders'
+import { dataset } from '@rdf-esm/dataset'
 
 const projectNS = namespace('project')
 
@@ -34,7 +35,7 @@ export default class CubeProjectEditView extends Vue {
   @projectNS.Getter('findTable') findTable!: (id: string) => Table
   @projectNS.Getter('findSource') findSource!: (id: string) => Source
 
-  resource: GraphPointer | null = null;
+  resource: GraphPointer | null = clownface({ dataset: dataset() }).namedNode('')
   isSubmitting = false;
   error: string | null = null;
   shape: Shape | null = null;
@@ -49,8 +50,6 @@ export default class CubeProjectEditView extends Vue {
   }
 
   async mounted (): Promise<void> {
-    this.resource = Object.freeze(this.table.pointer)
-
     if (this.operation) {
       const shape = await api.fetchOperationShape(this.operation)
 
