@@ -97,6 +97,18 @@ export const uriEditor: SingleEditorComponent = {
   }
 }
 
+export const propertyEditor: SingleEditorComponent = {
+  editor: ns.editor.PropertyEditor,
+  render ({ value }, { update }) {
+    return html`<cc-property-input .value="${value.object.term}" .update="${update}"></cc-property-input>`
+  },
+  loadDependencies () {
+    return [
+      import('./PropertyInput.vue').then(createCustomElement('cc-property-input'))
+    ]
+  }
+}
+
 export const nestedForm: SingleEditorComponent = {
   editor: dash.DetailsEditor,
   render ({ property, value }) {

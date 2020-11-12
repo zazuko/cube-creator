@@ -56,6 +56,7 @@ export interface CSVMapping extends APIResource {
   actions: CommonActions;
   sourcesCollection: SourcesCollection;
   tableCollection: TableCollection;
+  namespace: string | null;
 }
 
 export interface Project extends APIResource {

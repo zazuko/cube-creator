@@ -1,4 +1,5 @@
 import { ActionTree, MutationTree, GetterTree } from 'vuex'
+import { loadCommonProperties } from '@/rdf-properties'
 import { RootState } from '../types'
 
 export interface Message {
@@ -10,11 +11,13 @@ export interface Message {
 export interface AppState {
   messages: Message[];
   loading: boolean;
+  commonRDFProperties: string[];
 }
 
 const initialState = {
   messages: [],
   loading: false,
+  commonRDFProperties: [],
 }
 
 const getters: GetterTree<AppState, RootState> = {
@@ -27,6 +30,11 @@ const actions: ActionTree<AppState, RootState> = {
 
   showMessage (context, message) {
     context.commit('pushMessage', message)
+  },
+
+  async loadCommonRDFProperties (context) {
+    const properties = await loadCommonProperties()
+    context.commit('storeCommonRDFProperties', properties)
   },
 }
 
@@ -41,7 +49,11 @@ const mutations: MutationTree<AppState> = {
 
   setLoading (state, isLoading) {
     state.loading = isLoading
-  }
+  },
+
+  storeCommonRDFProperties (state, properties) {
+    state.commonRDFProperties = properties
+  },
 }
 
 export default {

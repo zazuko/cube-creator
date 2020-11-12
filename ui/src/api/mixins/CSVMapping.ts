@@ -17,6 +17,10 @@ export default function mixin<Base extends Constructor<CSVMapping>> (base: Base)
     get tableCollection (): TableCollection {
       return this.get<TableCollection>(ns.cc.tables)
     }
+
+    get namespace (): string | null {
+      return this.get(ns.cc.namespace)?.id.value ?? null
+    }
   }
 }
 

@@ -1,4 +1,4 @@
-import { cc, shape } from '@cube-creator/core/namespace'
+import { cc, editor, shape } from '@cube-creator/core/namespace'
 import { dash, hydra, rdfs, sh, csvw, xsd } from '@tpluscode/rdf-ns-builders'
 import { turtle } from '@tpluscode/rdf-string'
 
@@ -21,6 +21,7 @@ ${shape('column-mapping/create')} {
       ${sh.path} ${cc.targetProperty} ;
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
+      ${dash.editor} ${editor.PropertyEditor} ;
       ${sh.or} (
         [
           ${sh.nodeKind} ${sh.IRI} ;
