@@ -126,6 +126,7 @@ export default class CsvSourceMapping extends Vue {
     return this.tables
       .map((table) => {
         return table.columnMappings
+          .map(cm => cm.inlineRepresentation!)
           .filter((columnMapping) => columnMapping.sourceColumn.id.equals(column.id))
           .map((columnMapping) => ({ table, columnMapping }))
       })

@@ -40,7 +40,7 @@ export function ColumnMappingMixin<Base extends Constructor>(Resource: Base) {
 ColumnMappingMixin.appliesTo = cc.ColumnMapping
 
 export const fromPointer = <T extends ResourceIdentifier, D extends DatasetCore>(pointer: GraphPointer<T, D>, initializer?: Initializer<ColumnMapping>): ColumnMapping<D> => {
-  return RdfResourceImpl.factory.createEntity<ColumnMapping>(pointer, [ColumnMappingMixin], {
+  return RdfResourceImpl.factory.createEntity<ColumnMapping<D>>(pointer, [ColumnMappingMixin], {
     initializer: {
       ...initializer,
       types: [cc.ColumnMapping],
