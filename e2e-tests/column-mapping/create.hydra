@@ -23,8 +23,8 @@ With Class api:Table {
             prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
             prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 
-            <>  cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/year> ;
-                cc:targetProperty <dimension/year> ;
+            <>  cc:sourceColumn <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/year> ;
+                cc:targetProperty "dimension/year" ;
                 cc:datatype xsd:gYear ;
                 cc:language "en" ;
                 cc:defaultValue "2000" .
@@ -33,11 +33,15 @@ With Class api:Table {
             Expect Status 201
 
             Expect Type <https://cube-creator.zazuko.com/vocab#ColumnMapping>
-            Expect Property cc:targetProperty
-            Expect Property cc:sourceColumn
-            Expect Property cc:datatype
-            Expect Property cc:language
-            Expect Property cc:defaultValue
+            Expect Property cc:targetProperty "dimension/year"
+            Expect Property cc:sourceColumn {
+                Expect Id <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/year>
+            }
+            Expect Property cc:datatype {
+                Expect Id xsd:gYear
+            }
+            Expect Property cc:language "en"
+            Expect Property cc:defaultValue "2000"
         }
     }
 }
