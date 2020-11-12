@@ -1,5 +1,10 @@
 import { Column, Table } from '@rdfine/csvw'
+import { NamedNode } from 'rdf-js'
 
-export function findColumn(table: Table, name: string): Column | undefined {
-  return table.tableSchema?.column.find(column => column.title?.value === name)
+export function findColumn(table: Table, nameOrProp: string | NamedNode): Column | undefined {
+  if (typeof nameOrProp === 'string') {
+    return table.tableSchema?.column.find(column => column.title?.value === nameOrProp)
+  }
+
+  return table.tableSchema?.column.find(column => column.propertyUrl === nameOrProp.value)
 }

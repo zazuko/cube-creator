@@ -47,7 +47,7 @@ export function TableMixin<Base extends Constructor>(base: Base) {
     @property.literal({ path: schema.color })
     color!: string
 
-    @property.resource({ values: 'array' })
+    @property.resource({ values: 'array', path: cc.columnMapping })
     columnMappings!: Array<Link<ColumnMapping>>
   }
 
