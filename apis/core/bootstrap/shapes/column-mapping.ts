@@ -21,7 +21,15 @@ ${shape('column-mapping/create')} {
       ${sh.path} ${cc.targetProperty} ;
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
-      ${sh.nodeKind} ${sh.IRI} ;
+      ${sh.or} (
+        [
+          ${sh.nodeKind} ${sh.IRI} ;
+        ]
+        [
+          ${sh.nodeKind} ${sh.Literal} ;
+          ${sh.datatype} ${xsd.string} ;
+        ]
+      );
       ${sh.order} 30 ;
     ] ;
     ${sh.property} [
