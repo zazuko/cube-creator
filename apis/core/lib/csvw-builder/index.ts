@@ -3,8 +3,9 @@ import TermMap from '@rdfjs/term-map'
 import { ColumnMapping, CsvColumn, CsvMapping, CsvSource, Table } from '@cube-creator/model'
 import cf from 'clownface'
 import $rdf from 'rdf-ext'
-import RdfResource, { namespace } from '@tpluscode/rdfine'
+import RdfResource from '@tpluscode/rdfine'
 import { Initializer } from '@tpluscode/rdfine/RdfResource'
+import { cc } from '@cube-creator/core/namespace'
 import { ResourceStore } from '../ResourceStore'
 import { warning } from '../log'
 import { NamedNode, Term } from 'rdf-js'
@@ -26,7 +27,7 @@ function unmappedColumn({ column }: { column: CsvColumn }): Initializer<Csvw.Col
 function mappedColumn({ columnMapping, column, source, namespace }: { column: CsvColumn; columnMapping: ColumnMapping; source: CsvSource; namespace: NamedNode }): Initializer<Csvw.Column> {
   return {
     title: $rdf.literal(column.name),
-    propertyUrl: `${namespace}${columnMapping.targetProperty.value}`,
+    propertyUrl: `${namespace.value}${columnMapping.targetProperty.value}`,
   }
 }
 
@@ -67,7 +68,11 @@ export async function buildCsvw({ table, resources }: { table: Table; resources:
 
   const { namespace } = csvMapping
 
-  const column: Initializer<Csvw.Column>[] = []
+  const column: Initializer<Csvw.Column>[] = [{
+    virtual: true,
+    propertyUrl: cc.cube.value,
+    valueUrl: namespace.value,
+  }]
   for await (const csvwColumn of buildColumns({ table, source, resources, namespace })) {
     column.push(csvwColumn)
   }
