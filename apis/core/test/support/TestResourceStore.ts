@@ -10,7 +10,7 @@ class InMemoryStorage {
   constructor(pointers: GraphPointer<NamedNode, DatasetExt>[]) {
     this.__resources = new TermMap()
     for (const pointer of pointers) {
-      this.__resources.set(pointer.term, pointer)
+      this.push(pointer)
     }
   }
 
@@ -24,10 +24,18 @@ class InMemoryStorage {
     }
     return Promise.resolve()
   }
+
+  push(pointer: GraphPointer<NamedNode, DatasetExt>) {
+    this.__resources.set(pointer.term, pointer)
+  }
 }
 
 export class TestResourceStore extends ResourceStore {
   constructor(pointers: GraphPointer<NamedNode, DatasetExt>[]) {
-    super(new InMemoryStorage(pointers))
+    const resources = new InMemoryStorage(pointers)
+    super(resources)
+    this.push = (pointer: GraphPointer<any, DatasetExt>) => resources.push(pointer)
   }
+
+  readonly push: (pointer: GraphPointer<Term, DatasetExt>) => void
 }
