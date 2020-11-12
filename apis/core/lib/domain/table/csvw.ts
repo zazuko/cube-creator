@@ -1,16 +1,10 @@
-import * as Csvw from '@rdfine/csvw'
 import * as Table from '@cube-creator/model/Table'
-import RdfResource from '@tpluscode/rdfine'
 import { NamedNode } from 'rdf-js'
 import { ResourceStore } from '../../ResourceStore'
 import { resourceStore } from '../resources'
 import { NotFoundError } from '../../errors'
 import { buildCsvw } from '../../csvw-builder'
 import '../../domain'
-
-RdfResource.factory.addMixin(
-  ...Object.values(Csvw),
-)
 
 interface Command {
   tableResource: NamedNode
@@ -32,12 +26,7 @@ export async function createCsvw({
 }
 /*
   return new Csvw.TableMixin.Class(cf({ dataset: $rdf.dataset(), term: table.csvw.id }), {
-    dialect: {
-      ...source.dialect.toJSON(),
-      types: [csvw.Dialect],
-    },
     tableSchema: {
-      aboutUrl: `${namespace}observation/${table.identifierTemplate}`,
       column: [{
         title: 'unit_id',
         datatype: xsd.string,

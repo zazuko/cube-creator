@@ -18,7 +18,7 @@ export interface Table extends RdfResource {
   csvMapping: Link<CsvMapping>
   identifierTemplate: string
   color: string
-  columnMappings: ColumnMapping[]
+  columnMappings: Array<Link<ColumnMapping>>
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -46,6 +46,9 @@ export function TableMixin<Base extends Constructor>(base: Base) {
 
     @property.literal({ path: schema.color })
     color!: string
+
+    @property.resource({ values: 'array' })
+    columnMappings!: ColumnMapping[]
   }
 
   return Impl

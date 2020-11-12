@@ -4,10 +4,13 @@ import clownface from 'clownface'
 import $rdf from 'rdf-ext'
 import * as CsvMapping from '@cube-creator/model/CsvMapping'
 import * as CsvSource from '@cube-creator/model/CsvSource'
+import * as CsvColumn from '@cube-creator/model/CsvColumn'
+import * as ColumnMapping from '@cube-creator/model/ColumnMapping'
 import * as Table from '@cube-creator/model/Table'
 import { buildCsvw } from '../../lib/csvw-builder'
 import '../../lib/domain'
 import { TestResourceStore } from '../support/TestResourceStore'
+import { findColumn } from './support'
 
 describe('lib/csvw-builder', () => {
   let table: Table.Table
@@ -28,6 +31,10 @@ describe('lib/csvw-builder', () => {
     csvSource = CsvSource.create(csvMappingPointer, {
       name: 'test-observation.csv',
       csvMapping,
+      dialect: {
+        delimiter: '-',
+        quoteChar: '""',
+      },
     })
 
     table = Table.create(graph.namedNode('table'), {
@@ -57,5 +64,57 @@ describe('lib/csvw-builder', () => {
 
     // then
     expect(csvw.url).to.eq(csvSource.id.value)
+  })
+
+  it('combines namespace and identifier template to construct csvw:aboutUrl', async () => {
+    // when
+    const csvw = await buildCsvw({ table, resources })
+
+    // then
+    expect(csvw.tableSchema?.aboutUrl).to.eq('http://example.com/test-cube/observation/{id}-{sub_id}')
+  })
+
+  it('copies csvw:dialect from CsvSource', async () => {
+    // given
+    const csvw = await buildCsvw({ table, resources })
+
+    // then
+    expect(csvw.dialect?.quoteChar).to.eq('""')
+    expect(csvw.dialect?.delimiter).to.eq('-')
+  })
+
+  it('returns unmapped source column as suppressed', async () => {
+    // given
+    csvSource.columns = [
+      CsvColumn.fromPointer(csvSource.pointer.blankNode(), { name: 'id' }),
+    ]
+
+    // when
+    const csvw = await buildCsvw({ table, resources })
+
+    // then
+    const csvwColumn = findColumn(csvw, 'id')
+    expect(csvwColumn?.suppressOutput)
+    expect(csvwColumn?.title).to.deep.eq($rdf.literal('id'))
+  })
+
+  it("combines namespace and source column's target property csvw:propertyUrl", async () => {
+    // given
+    csvSource.columns = [
+      CsvColumn.fromPointer(csvSource.pointer.namedNode('yahr-column'), { name: 'YAHR' }),
+    ]
+    const columnMapping = ColumnMapping.fromPointer(clownface({ dataset: $rdf.dataset() }).namedNode('year-mapping'), {
+      sourceColumn: $rdf.namedNode('yahr-column') as any,
+      targetProperty: $rdf.literal('year'),
+    })
+    resources.push(columnMapping.pointer)
+    table.columnMappings = [columnMapping] as any
+
+    // when
+    const csvw = await buildCsvw({ table, resources })
+
+    // then
+    const csvwColumn = findColumn(csvw, 'YAHR')
+    expect(csvwColumn?.propertyUrl).to.eq('http://example.com/test-cube/year')
   })
 })
