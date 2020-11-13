@@ -5,7 +5,7 @@ import { CsvSource, SourcesCollection } from './CsvSource'
 import { TableCollection } from './Table'
 import { Link } from './lib/Link'
 import { initializer } from './lib/initializer'
-import { NamedNode } from 'rdf-js'
+import { NamedNode, Term } from 'rdf-js'
 import { Project } from './Project'
 
 export interface CsvMapping extends RdfResource {
@@ -14,6 +14,7 @@ export interface CsvMapping extends RdfResource {
   sourcesCollection: Link<SourcesCollection>
   tableCollection: Link<TableCollection>
   project: Link<Project>
+  createIdentifier(template: string | Term): NamedNode
 }
 
 export function CsvMappingMixin<Base extends Constructor>(base: Base) {
@@ -32,6 +33,21 @@ export function CsvMappingMixin<Base extends Constructor>(base: Base) {
 
     @property.resource({ path: cc.project })
     project!: Link<Project>
+
+    createIdentifier(template: string | Term): NamedNode {
+      if (typeof template === 'string') {
+        return this.pointer.namedNode(this.namespace.value + template).term
+      }
+
+      if (template.termType === 'Literal') {
+        return this.pointer.namedNode(this.namespace.value + template.value).term
+      }
+      if (template.termType === 'NamedNode') {
+        return template
+      }
+
+      throw new Error(`Unexpected identifier template type ${template.termType}`)
+    }
   }
 
   return Impl
