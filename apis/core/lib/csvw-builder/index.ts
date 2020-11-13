@@ -8,7 +8,7 @@ import { Initializer } from '@tpluscode/rdfine/RdfResource'
 import { cc } from '@cube-creator/core/namespace'
 import { ResourceStore } from '../ResourceStore'
 import { warning } from '../log'
-import { NamedNode, Term } from 'rdf-js'
+import { Term } from 'rdf-js'
 
 RdfResource.factory.addMixin(
   ...Object.values(Csvw),
@@ -24,14 +24,20 @@ function unmappedColumn({ column }: { column: CsvColumn }): Initializer<Csvw.Col
   return initializer
 }
 
-function mappedColumn({ columnMapping, column, source, namespace }: { column: CsvColumn; columnMapping: ColumnMapping; source: CsvSource; namespace: NamedNode }): Initializer<Csvw.Column> {
+interface CsvwBuildingContext {
+  csvMapping: CsvMapping
+  source: CsvSource
+  resources: ResourceStore
+}
+
+function mappedColumn({ csvMapping, columnMapping, column }: CsvwBuildingContext & { column: CsvColumn; columnMapping: ColumnMapping }): Initializer<Csvw.Column> {
   return {
     title: $rdf.literal(column.name),
-    propertyUrl: `${namespace.value}${columnMapping.targetProperty.value}`,
+    propertyUrl: csvMapping.createIdentifier(columnMapping.targetProperty).value,
   }
 }
 
-async function * buildColumns({ table, source, resources, namespace }: { table: Table; source: CsvSource; resources: ResourceStore; namespace: NamedNode }) {
+async function * buildColumns({ table, source, resources, csvMapping }: CsvwBuildingContext & { table: Table }) {
   const unmappedColumns = new TermMap([...source.columns.map<[Term, CsvColumn]>(c => [c.id, c])])
 
   for (const columnMappingLink of table.columnMappings) {
@@ -48,7 +54,7 @@ async function * buildColumns({ table, source, resources, namespace }: { table: 
       continue
     }
 
-    yield mappedColumn({ columnMapping, column, source, namespace })
+    yield mappedColumn({ csvMapping, columnMapping, column, source, resources })
   }
 
   for (const [, column] of unmappedColumns) {
@@ -66,14 +72,12 @@ export async function buildCsvw({ table, resources }: { table: Table; resources:
     throw new Error(`CSV Mapping resource not found for table ${table.id.value}`)
   }
 
-  const { namespace } = csvMapping
-
   const column: Initializer<Csvw.Column>[] = [{
     virtual: true,
     propertyUrl: cc.cube.value,
-    valueUrl: namespace.value,
+    valueUrl: csvMapping.namespace.value,
   }]
-  for await (const csvwColumn of buildColumns({ table, source, resources, namespace })) {
+  for await (const csvwColumn of buildColumns({ csvMapping, table, source, resources })) {
     column.push(csvwColumn)
   }
 
@@ -83,7 +87,7 @@ export async function buildCsvw({ table, resources }: { table: Table; resources:
       ...source.dialect.toJSON(),
     },
     tableSchema: {
-      aboutUrl: `${namespace.value}observation/${table.identifierTemplate}`,
+      aboutUrl: csvMapping.createIdentifier(`observation/${table.identifierTemplate}`).value,
       column,
     },
   })
