@@ -57,7 +57,7 @@ async function * buildColumns({ table, source, resources, namespace }: { table: 
 }
 
 export async function buildCsvw({ table, resources }: { table: Table; resources: ResourceStore }): Promise<Csvw.Table> {
-  const source = await resources.getResource<CsvSource>(table.csvSource.id)
+  const source = await resources.getResource<CsvSource>(table.csvSource?.id)
   if (!source) {
     throw new Error(`Source not found for table ${table.id.value}`)
   }
