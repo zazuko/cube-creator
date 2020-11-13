@@ -40,7 +40,7 @@ ${shape('table/create')} {
       ${sh.path} ${cc.identifierTemplate} ;
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
-      ${sh.minLength} 1 ;
+      ${sh.pattern} "[\w\d]" ;
       ${sh.defaultValue} "" ;
       ${sh.order} 30 ;
     ] ;
