@@ -5,86 +5,59 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX dcterms: <http://purl.org/dc/terms/>
 PREFIX schema: <http://schema.org/>
 
+ENTRYPOINT "cube-project/ubd/csv-mapping/tables"
+
 HEADERS {
   x-user "john-doe"
   x-permission "pipelines:write"
 }
 
-With Class api:EntryPoint {
-    Expect Property cc:projects {
-        With Operation cc:CreateProjectAction {
-            Invoke {
-                Content-Type "text/turtle"
+With Class cc:TableCollection {
 
-                ```
-                prefix cc: <https://cube-creator.zazuko.com/vocab#>
-                prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    Expect Operation schema:CreateAction {
+        Invoke {
+            Content-Type "text/turtle"
 
-                <> cc:projectSourceKind <https://cube-creator.lndo.site/shape/cube-project/create#CSV> ;
-                   rdfs:label "Test Project" ;
-                   cc:namespace <http://example.com/test-cube/> .
-                ```
-            } => {
-                Expect Status 201
-                Expect Link cc:csvMapping {
-                    Expect Property cc:csvSourceCollection {
-                        Expect Operation cc:UploadCSVAction {
-                            Invoke {
-                                Content-Type "text/csv"
-                                Content-Disposition "file; filename=test.jpg"
+            ```
+            prefix csvw: <http://www.w3.org/ns/csvw#> 
+            prefix cc: <https://cube-creator.zazuko.com/vocab#> 
+            prefix schema: <http://schema.org/> 
+            prefix xsd: <http://www.w3.org/2001/XMLSchema#> 
 
-                                ```
-                                A,B,C
-                                1,2,test
-                                1,2,test
-                                1,2,test1
-                                1,2,test2
-                                .
-                                ```
-                            } => {
-                                Expect Status 201
-                                With Operation cc:CreateTableAction {
-                                    Invoke {
-                                        Content-Type "application/ld+json"
+            <>  
+                schema:color "#EF9A9A" ;
+                schema:name "Test Table" ;
+                csvw:column <https://cube-creator.lndo.site/cube-project/ubd/csv-source/stations/column/station-name-de>,
+                    <https://cube-creator.lndo.site/cube-project/ubd/csv-source/stations/column/station-name-fr>,
+                    <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/year> ;
+                cc:csvSource <https://cube-creator.lndo.site/cube-project/ubd/csv-source/stations> ;
+                cc:identifierTemplate "id-template" ;
+                cc:isObservationTable false .
+            ```
+        } => {
+            Expect Status 201
+        }
+        Invoke {
+            Content-Type "text/turtle"
 
-                                        ```
-                                        {
-                                            "id": "",
-                                            "https://cube-creator.zazuko.com/vocab#csvSource": {
-                                                "id": "https://cube-creator.lndo.site/cube-project/asd-d5yndl4wykm/csv-mapping/csv-source/chyearlyairimmissionbasetable-csv-awrngqnk8ly",
-                                                "type": [
-                                                    "https://cube-creator.zazuko.com/vocab#CSVSource"
-                                                ]
-                                            },
-                                            "https://cube-creator.zazuko.com/vocab#columnMapping": {
-                                                "id": "_:b1",
-                                                "https://cube-creator.zazuko.com/vocab#column": {
-                                                    "id": "https://cube-creator.lndo.site/cube-project/asd-d5yndl4wykm/csv-mapping/csv-source/chyearlyairimmissionbasetable-csv-awrngqnk8ly/column/value-zkwzlnnpox9"
-                                                }
-                                            },
-                                            "http://schema.org/name": "abc",
-                                            "https://cube-creator.zazuko.com/vocab#identifierTemplate": "def",
-                                            "http://schema.org/color": "#CE93D8",
-                                            "@context": {
-                                                "id": "@id",
-                                                "type": "@type"
-                                            }
-                                        }
-                                        ```
-                                    } => {
-                                        Expect Status 201
+            ```
+            prefix csvw: <http://www.w3.org/ns/csvw#> 
+            prefix cc: <https://cube-creator.zazuko.com/vocab#> 
+            prefix schema: <http://schema.org/> 
+            prefix xsd: <http://www.w3.org/2001/XMLSchema#> 
 
-                                        Expect Property schema:color "#CE93D8"
-                                        Expect Link cc:csvMapping {
-                                            Expect Type <https://cube-creator.zazuko.com/vocab#CsvMapping>
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            <>  
+                schema:color "#EF9A9A" ;
+                schema:name "Test Table" ;
+                csvw:column <https://cube-creator.lndo.site/cube-project/ubd/csv-source/stations/column/station-name-de>,
+                    <https://cube-creator.lndo.site/cube-project/ubd/csv-source/stations/column/station-name-fr>,
+                    <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/year> ;
+                cc:csvSource <https://cube-creator.lndo.site/cube-project/ubd/csv-source/stations> ;
+                cc:identifierTemplate "" ;
+                cc:isObservationTable false .
+            ```
+        } => {
+            Expect Status 400
         }
     }
 }
