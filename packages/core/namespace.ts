@@ -15,6 +15,7 @@ type CubeCreatorClass =
   'TableCollection' |
   'ObservationTable' |
   'ColumnMapping' |
+  'CreateColumnMappingAction' |
   'Job' |
   'JobCollection' |
   'TransformAction'
@@ -38,6 +39,7 @@ type CubeCreatorProperty =
   'targetProperty' |
   'datatype' |
   'language' |
+  'defaultValue' |
   'isObservationTable' |
   'cube' |
   'jobCollection'

@@ -64,4 +64,25 @@ describe('middleware/resource', () => {
     // then
     expect(res.text).to.matchSnapshot(this)
   })
+
+  it('returns pointer to hydra.request.term if there is no request body', async function () {
+    // given
+    const app = express()
+    app.use(appMock(hydra => {
+      hydra.term = $rdf.namedNode('http://example.com/foo/bar')
+    }))
+    app.use(resource)
+    app.use(async (req, res) => {
+      const pointer = await req.resource()
+      res.send(pointer.value)
+    })
+
+    // when
+    const res = await request(app)
+      .post('/foo/bar')
+      .set('host', 'example.com')
+
+    // then
+    expect(res.text).to.eq('http://example.com/foo/bar')
+  })
 })

@@ -1,5 +1,5 @@
 import { Hydra } from 'alcaeus/web'
-import { RdfResource, Resource, RuntimeOperation } from 'alcaeus'
+import { RdfResource, RuntimeOperation } from 'alcaeus'
 import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import { sh } from '@tpluscode/rdf-ns-builders'
 import { ShapeBundle } from '@rdfine/shacl/bundles'
@@ -7,19 +7,11 @@ import { Shape } from '@rdfine/shacl'
 import store from '@/store'
 import { APIError } from './errors'
 import { apiResourceMixin } from './mixins/ApiResource'
-import ProjectsCollectionMixin from './mixins/ProjectsCollection'
-import ProjectMixin from './mixins/Project'
-import CSVMappingMixin from './mixins/CSVMapping'
 import CSVSourceCollectionMixin from './mixins/CSVSourceCollection'
 import CSVSourceMixin from './mixins/CSVSource'
-import CSVColumnMixin from './mixins/CSVColumn'
-import TableCollectionMixin from './mixins/TableCollection'
 import TableMixin from './mixins/Table'
-import ColumnMappingMixin from './mixins/ColumnMapping'
-import CubeMixin from './mixins/Cube'
-import CubeMetadataMixin from './mixins/CubeMetadata'
 import JobCollectionMixin from './mixins/JobCollection'
-import { JobMixin } from '@cube-creator/model/Job'
+import * as Models from '@cube-creator/model'
 
 const rootURL = window.APP_CONFIG.apiCoreBase
 const segmentSeparator = '!!' // used to replace slash in URI to prevent escaping
@@ -31,20 +23,12 @@ if (!rootURL) {
 // Tells Hydra to use the API root URI as base URI for relative URIs
 Hydra.baseUri = rootURL
 
+Hydra.resources.factory.addMixin(...Object.values(Models))
 Hydra.resources.factory.addMixin(apiResourceMixin(rootURL, segmentSeparator))
-Hydra.resources.factory.addMixin(ProjectsCollectionMixin)
-Hydra.resources.factory.addMixin(ProjectMixin)
-Hydra.resources.factory.addMixin(CSVMappingMixin)
 Hydra.resources.factory.addMixin(CSVSourceCollectionMixin)
 Hydra.resources.factory.addMixin(CSVSourceMixin)
-Hydra.resources.factory.addMixin(CSVColumnMixin)
-Hydra.resources.factory.addMixin(TableCollectionMixin)
 Hydra.resources.factory.addMixin(TableMixin)
-Hydra.resources.factory.addMixin(ColumnMappingMixin)
-Hydra.resources.factory.addMixin(CubeMixin)
-Hydra.resources.factory.addMixin(CubeMetadataMixin)
 Hydra.resources.factory.addMixin(JobCollectionMixin)
-Hydra.resources.factory.addMixin(JobMixin)
 Hydra.resources.factory.addMixin(...ShapeBundle)
 
 // Inject the access token in all requests if present

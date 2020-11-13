@@ -60,7 +60,7 @@ describe('domain/cube-projects/create', () => {
     const project = await createProject({ resource, store, projectsCollection, user })
 
     // then
-    const dataset = await store.get(project.dataset)
+    const dataset = await store.get(project.dataset.id)
     expect(dataset).to.matchShape({
       property: {
         path: rdf.type,
@@ -231,7 +231,7 @@ describe('domain/cube-projects/create', () => {
       const project = await createProject({ resource, store, projectsCollection, user })
 
       // then
-      const dataset = await store.get(project.dataset)
+      const dataset = await store.get(project.dataset.id)
       expect(dataset).to.matchShape({
         property: [{
           path: rdf.type,

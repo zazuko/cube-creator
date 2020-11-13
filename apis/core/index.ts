@@ -1,4 +1,7 @@
 import express from 'express'
+import * as http from 'http'
+import * as https from 'https'
+import * as fs from 'fs'
 import * as path from 'path'
 import { hydraBox } from '@hydrofoil/labyrinth'
 import cors from 'cors'
@@ -51,7 +54,14 @@ async function main() {
 
   await bootstrap(env.STORE_GRAPH_ENDPOINT, baseUri)
 
-  app.listen(45670, () => log('Api ready'))
+  if (!env.production) {
+    const key = fs.readFileSync('/certs/cert.key')
+    const cert = fs.readFileSync('/certs/cert.crt')
+    https.createServer({ key, cert }, app)
+      .listen(443, () => log('Dev server listening on 443'))
+  }
+  http.createServer(app)
+    .listen(45670, () => log('Api ready'))
 }
 
 main().catch(error)

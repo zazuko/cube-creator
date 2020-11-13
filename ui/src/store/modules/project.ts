@@ -3,20 +3,20 @@ import { api } from '@/api'
 import { RootState } from '../types'
 import {
   Project,
-  CSVMapping,
+  CsvMapping,
   JobCollection,
   SourcesCollection,
   TableCollection,
   Table,
-  CubeMetadata,
-} from '@/types'
+  Dataset,
+} from '@cube-creator/model'
 
 export interface ProjectState {
   project: null | Project,
-  csvMapping: null | CSVMapping,
+  csvMapping: null | CsvMapping,
   sourcesCollection: null | SourcesCollection,
   tableCollection: null | TableCollection,
-  cubeMetadata: null | CubeMetadata,
+  cubeMetadata: null | Dataset,
   jobCollection: null | JobCollection,
 }
 
@@ -47,6 +47,11 @@ const getters: GetterTree<ProjectState, RootState> = {
   findSource (_state, getters) {
     return (id: string) =>
       getters.sources.find(({ clientPath }: { clientPath: string}) => clientPath === id)
+  },
+
+  findTable (_state, getters) {
+    return (id: string) =>
+      getters.tables.find(({ clientPath }: { clientPath: string}) => clientPath === id)
   },
 
   columnMappings (state, getters) {
@@ -87,7 +92,7 @@ const actions: ActionTree<ProjectState, RootState> = {
     context.commit('storeSourcesCollection', null)
     context.commit('storeTableCollection', null)
 
-    const mapping = await api.fetchResource<CSVMapping>(mappingId)
+    const mapping = await api.fetchResource<CsvMapping>(mappingId)
     context.commit('storeCSVMapping', mapping)
 
     const sourcesCollection = await api.fetchResource(mapping.sourcesCollection.id.value)
@@ -104,7 +109,7 @@ const actions: ActionTree<ProjectState, RootState> = {
       throw new Error('Project not loaded')
     }
 
-    const id = context.state.project.jobCollectionId
+    const id = context.state.project.jobCollection?.id.value
 
     if (!id) {
       throw new Error('Project does not have a jobCollection')
@@ -143,7 +148,7 @@ const actions: ActionTree<ProjectState, RootState> = {
   },
 
   async uploadCSVs (context, files) {
-    const operation = context.state.csvMapping?.sourcesCollection.actions.upload ?? null
+    const operation = context.state.csvMapping?.sourcesCollection.actions?.upload ?? null
     const uploads = files.map((file: File) => {
       const headers = {
         'content-type': 'text/csv',
@@ -162,11 +167,11 @@ const actions: ActionTree<ProjectState, RootState> = {
       throw new Error('Project not loaded')
     }
 
-    if (!project.cubeMetadataId) {
+    if (!project.dataset) {
       throw new Error('Project does not have a cc:dataset')
     }
 
-    const cubeMetadata = await api.fetchResource<CubeMetadata>(project.cubeMetadataId)
+    const cubeMetadata = await api.fetchResource<Dataset>(project.dataset.id.value)
     context.commit('storeCubeMetadata', cubeMetadata)
 
     return cubeMetadata
