@@ -39,6 +39,11 @@ const getters: GetterTree<ProjectState, RootState> = {
       getters.sources.find(({ clientPath }: { clientPath: string}) => clientPath === id)
   },
 
+  findTable (_state, getters) {
+    return (id: string) =>
+      getters.tables.find(({ clientPath }: { clientPath: string}) => clientPath === id)
+  },
+
   columnMappings (state, getters) {
     return getters.tables.map((table: Table) => table.columnMappings).flat()
   },
