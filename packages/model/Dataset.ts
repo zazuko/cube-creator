@@ -1,11 +1,11 @@
-import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
+import { RdfResource } from '@tpluscode/rdfine/RdfResource'
 import { Constructor, property } from '@tpluscode/rdfine'
 import { _void, dcat, schema } from '@tpluscode/rdf-ns-builders'
 import { cube } from '@cube-creator/core/namespace'
 import { initializer } from './lib/initializer'
 import { Cube } from './Cube'
 
-export interface Dataset extends RdfResourceCore {
+export interface Dataset extends RdfResource {
   hasPart: Cube[]
 }
 

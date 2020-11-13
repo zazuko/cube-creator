@@ -1,19 +1,18 @@
-import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
+import { RdfResource } from '@tpluscode/rdfine/RdfResource'
 import { Constructor, property } from '@tpluscode/rdfine'
-import { Collection } from '@rdfine/hydra'
 import { cc } from '@cube-creator/core/namespace'
-import { CsvSource } from './CsvSource'
-import { Table } from './Table'
+import { CsvSource, SourcesCollection } from './CsvSource'
+import { TableCollection } from './Table'
 import { Link } from './lib/Link'
 import { initializer } from './lib/initializer'
 import { NamedNode } from 'rdf-js'
 import { Project } from './Project'
 
-export interface CsvMapping extends RdfResourceCore {
+export interface CsvMapping extends RdfResource {
   namespace: NamedNode
   sources: CsvSource[]
-  sourcesCollection: Link<Collection<CsvSource>>
-  tableCollection: Link<Collection<Table>>
+  sourcesCollection: Link<SourcesCollection>
+  tableCollection: Link<TableCollection>
   project: Link<Project>
 }
 
@@ -26,10 +25,10 @@ export function CsvMappingMixin<Base extends Constructor>(base: Base) {
     sources!: CsvSource[]
 
     @property.resource({ path: cc.csvSourceCollection })
-    sourcesCollection!: Link<Collection<CsvSource>>
+    sourcesCollection!: Link<SourcesCollection>
 
     @property.resource({ path: cc.tables })
-    tableCollection!: Link<Collection<Table>>
+    tableCollection!: Link<TableCollection>
 
     @property.resource({ path: cc.project })
     project!: Link<Project>

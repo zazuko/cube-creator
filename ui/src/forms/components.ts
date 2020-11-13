@@ -3,7 +3,6 @@ import * as ns from '@cube-creator/core/namespace'
 import { dash, xsd } from '@tpluscode/rdf-ns-builders'
 import $rdf from '@rdfjs/data-model'
 import { createCustomElement } from '@/forms/bulma'
-import { hashi } from '@cube-creator/core/namespace'
 
 export const textField: SingleEditorComponent = {
   editor: dash.TextFieldEditor,
@@ -36,7 +35,21 @@ export const textFieldWithLang: SingleEditorComponent = {
 export const instanceSelect: SingleEditorComponent = {
   editor: dash.InstancesSelectEditor,
   render ({ property, value }, { update }) {
-    return html`<b-select .collection="${property.shape.get(hashi.collection)}"
+    return html`<b-select .property="${property.shape}"
+                          .update="${update}"
+                          .value="${value.object.term}"></b-select>`
+  },
+  loadDependencies () {
+    return [
+      import('./BulmaSelect.vue').then(createCustomElement('b-select'))
+    ]
+  }
+}
+
+export const enumSelect: SingleEditorComponent = {
+  editor: dash.EnumSelectEditor,
+  render ({ property, value }, { update }) {
+    return html`<b-select .property="${property.shape}"
                           .update="${update}"
                           .value="${value.object.term}"></b-select>`
   },

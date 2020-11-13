@@ -1,8 +1,6 @@
 import type { SingleEditor } from '@hydrofoil/shaperone-core'
 import * as ns from '@cube-creator/core/namespace'
 import { dash, rdf, xsd } from '@tpluscode/rdf-ns-builders'
-import { PropertyShape } from '@rdfine/shacl'
-import { GraphPointer } from 'clownface'
 
 export const radioButtons: SingleEditor = {
   term: ns.editor.RadioButtons,
@@ -35,7 +33,7 @@ export const checkBox: SingleEditor = {
 // TODO: Remove once shaperone supports it
 export const textFieldWithLang: SingleEditor = {
   term: dash.TextFieldWithLangEditor,
-  match (shape: PropertyShape, value: GraphPointer) {
+  match (shape, value) {
     const valueDatatype = (value.term.termType === 'Literal' && value.term?.datatype) || null
     const propertyDatatype = shape.datatype?.id
 

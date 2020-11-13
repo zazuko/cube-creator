@@ -61,9 +61,31 @@ cc:Table
           code:link
             <file:handlers/table/delete#remove> ;
         ] ;
-    ]
-  
-.
+    ] ,
+    [
+      a
+        hydra:Operation,
+      cc:CreateColumnMappingAction ;
+      hydra:title
+        "Create Column Mapping" ;
+      hydra:method
+        "POST" ;
+      hydra:expects
+        cc:ColumnMapping,
+        <shape/column-mapping/create> ;
+      code:implementedBy
+        [
+          a
+            code:EcmaScript ;
+          code:link
+            <file:handlers/column-mapping#post> ;
+        ]
+    ] .
+
+
+<shape/column-mapping/create>
+  a
+    sh:Shape .
 
 cc:csvw
   a

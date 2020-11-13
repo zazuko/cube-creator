@@ -25,7 +25,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import JobForm from '@/components/JobForm.vue'
-import { CSVMapping, JobCollection, Job } from '@/types'
+import { CsvMapping, JobCollection, Job } from '@cube-creator/model'
 
 const projectNS = namespace('project')
 
@@ -33,7 +33,7 @@ const projectNS = namespace('project')
   components: { LoadingBlock, JobForm },
 })
 export default class CubeDesignerView extends Vue {
-  @projectNS.State('csvMapping') mapping!: CSVMapping | null;
+  @projectNS.State('csvMapping') mapping!: CsvMapping | null;
   @projectNS.State('jobCollection') jobCollection!: JobCollection | null;
   @projectNS.Getter('jobs') jobs!: Job[];
 

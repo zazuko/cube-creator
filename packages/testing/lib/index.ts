@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import $rdf from 'rdf-ext'
 import { parsers } from '@rdfjs/formats-common'
 import { SELECT } from '@tpluscode/sparql-builder'
 import StreamClient from 'sparql-http-client/StreamClient'
@@ -41,6 +42,7 @@ export const insertTestData = async (pathName: string) => {
   const stream = parsers.import('application/trig', file)
 
   if (stream) {
-    await client.store.post(stream)
+    const ds = await $rdf.dataset().import(stream)
+    await client.store.post(ds.toStream())
   }
 }

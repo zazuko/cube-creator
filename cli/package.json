@@ -33,6 +33,7 @@
     "express": "^4.17.1",
     "get-stream": "^5.1.0",
     "is-stream": "^2.0.0",
+    "middleware-async": "^1.2.7",
     "node-fetch": "^2.6.1",
     "null-writable": "^1.0.5",
     "once": "^1.4.0",

@@ -11,7 +11,7 @@ export async function deleteMapping(csvMapping: NamedNode, store: ResourceStore)
 
   const sources = csvMappingResource.out(cc.csvSource).terms
   for await (const source of sources) {
-    await deleteSourceWithoutSave(source, store)
+    await deleteSourceWithoutSave({ resource: source, store })
   }
 
   const sourceCollection = csvMappingResource.out(cc.csvSourceCollection).term

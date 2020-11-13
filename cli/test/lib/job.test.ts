@@ -31,7 +31,7 @@ describe('lib/job', function () {
   describe('JobIterator', () => {
     it('streams csv table objects from job', async () => {
       // given
-      const iteratorStream = new JobIterator({ jobUri: `${env.API_CORE_BASE}project/ubd/csv-mapping/jobs/test-job`, log, variables })
+      const iteratorStream = new JobIterator({ jobUri: `${env.API_CORE_BASE}cube-project/ubd/csv-mapping/jobs/test-job`, log, variables })
 
       // when
       const results: Table[] = []
@@ -41,7 +41,7 @@ describe('lib/job', function () {
 
       // then
       expect(results).to.have.length(2)
-      expect(results[0].id.value).to.match(new RegExp('/project/ubd/csv-mapping/table-\\w+/csvw$'))
+      expect(results[0].id.value).to.match(new RegExp('/cube-project/ubd/csv-mapping/table-\\w+/csvw$'))
       expect(results[0].dialect?.quoteChar).to.equal('"')
       expect(results[0].dialect?.delimiter).to.equal(',')
       expect(results[0].dialect?.header).to.equal(true)
@@ -49,7 +49,7 @@ describe('lib/job', function () {
 
     it('sets cube URI as pipeline variable "graph"', async () => {
       // given
-      const iteratorStream = new JobIterator({ jobUri: `${env.API_CORE_BASE}project/ubd/csv-mapping/jobs/test-job`, log, variables })
+      const iteratorStream = new JobIterator({ jobUri: `${env.API_CORE_BASE}cube-project/ubd/csv-mapping/jobs/test-job`, log, variables })
 
       // when
       await new Promise((resolve, reject) => {
@@ -65,7 +65,7 @@ describe('lib/job', function () {
 
     it('updates execution URL and sets job status to active', async () => {
       // given
-      const jobUri = `${env.API_CORE_BASE}project/ubd/csv-mapping/jobs/test-job`
+      const jobUri = `${env.API_CORE_BASE}cube-project/ubd/csv-mapping/jobs/test-job`
       const iteratorStream = new JobIterator({ jobUri, log, variables })
 
       // when

@@ -12,7 +12,8 @@ type ShapeTerms =
   'csv-source/update' |
   'dataset/edit-metadata' |
   'job/update' |
-  'job/trigger'
+  'job/trigger' |
+  'column-mapping/create'
 
 type ShapesNamespace = (term: ShapeTerms) => NamedNode
 

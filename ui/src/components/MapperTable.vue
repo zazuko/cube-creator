@@ -48,12 +48,18 @@
         </div>
       </div>
     </div>
+    <div class="panel-block">
+      <hydra-operation-button
+        :operation="table.actions.createColumnMapping"
+        :to="{ name: 'ColumnMappingCreate', params: { tableId: table.clientPath } }"
+      />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Prop, Component, Vue } from 'vue-property-decorator'
-import { ColumnMapping, Table } from '../types'
+import { ColumnMapping, Table } from '@cube-creator/model'
 import HydraOperationButton from './HydraOperationButton.vue'
 
 @Component({
