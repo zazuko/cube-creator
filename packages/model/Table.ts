@@ -11,7 +11,7 @@ import { childResource } from './lib/resourceIdentifiers'
 
 export interface Table extends RdfResourceCore {
   csvw: Link<Csvw.Table>
-  csvSource: Link<CsvSource>
+  csvSource?: Link<CsvSource>
   name: string
   csvMapping: Link<CsvMapping>
   identifierTemplate: string
