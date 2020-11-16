@@ -4,5 +4,4 @@ import { HydraResponse } from 'alcaeus'
 
 export type Link<T extends RdfResourceCore> = RdfResourceCore & Partial<RdfResource> & {
   load?(): Promise<HydraResponse<DatasetCore, T>>
-  inlineRepresentation?: T
 }
