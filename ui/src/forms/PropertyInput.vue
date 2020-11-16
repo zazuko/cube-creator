@@ -24,7 +24,7 @@ const appNS = namespace('app')
 
 @Component
 export default class extends Vue {
-  @Prop() value?: Term | null;
+  @Prop() value?: Term;
   @Prop() update!: (newValue: Term | null) => void
 
   get $store (): Store<RootState> {
