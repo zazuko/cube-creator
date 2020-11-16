@@ -11,7 +11,7 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
-import { Project } from '../types'
+import { Project } from '@cube-creator/model'
 import SidePane from '@/components/SidePane.vue'
 
 const projectNS = namespace('project')
@@ -32,7 +32,7 @@ export default class CubeProjectEditView extends Vue {
       onConfirm: async () => {
         await this.$store.dispatch('api/invokeDeleteOperation', {
           operation: this.project.actions.delete,
-          successMessage: `Project ${this.project.title} successfully deleted`,
+          successMessage: `Project ${this.project.label} successfully deleted`,
           callbackAction: 'projects/fetchCollection',
         })
         this.$router.push({ name: 'CubeProjects' })

@@ -15,7 +15,7 @@ function trigger(triggerRequestInit: (job: NamedNode, params: GraphPointer) => R
 
     const res = await fetch(pipelineURI, triggerRequestInit(job, params))
 
-    if (res.status !== 201) {
+    if (!res.ok) {
       const message = await res.text()
       throw new Error(`Pipeline failed: ${message}`)
     }

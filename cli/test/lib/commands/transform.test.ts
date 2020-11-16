@@ -29,7 +29,7 @@ describe('lib/commands/transform', function () {
     await runner({
       to: 'graph-store',
       debug: true,
-      job: `${env.API_CORE_BASE}project/ubd/csv-mapping/jobs/test-job`,
+      job: `${env.API_CORE_BASE}cube-project/ubd/csv-mapping/jobs/test-job`,
       executionUrl,
     })
     await new Promise((resolve) =>
@@ -54,7 +54,7 @@ describe('lib/commands/transform', function () {
     await runner({
       to: 'graph-store',
       debug: true,
-      job: `${env.API_CORE_BASE}project/ubd/csv-mapping/jobs/test-job`,
+      job: `${env.API_CORE_BASE}cube-project/ubd/csv-mapping/jobs/test-job`,
       executionUrl,
     })
 
@@ -67,7 +67,7 @@ describe('lib/commands/transform', function () {
 
   it('updates job when pipeline ends successfully', async function () {
     // given
-    const jobUri = `${env.API_CORE_BASE}project/ubd/csv-mapping/jobs/test-job`
+    const jobUri = `${env.API_CORE_BASE}cube-project/ubd/csv-mapping/jobs/test-job`
     const runner = transform($rdf.namedNode('urn:pipeline:cube-creator#Main'), debug('test'))
 
     // when
@@ -96,7 +96,7 @@ describe('lib/commands/transform', function () {
 
   it('updates job when pipeline has errors', async function () {
     // given
-    const jobUri = `${env.API_CORE_BASE}project/ubd/csv-mapping/jobs/broken-job`
+    const jobUri = `${env.API_CORE_BASE}cube-project/ubd/csv-mapping/jobs/broken-job`
     const runner = transform($rdf.namedNode('urn:pipeline:cube-creator#Main'), debug('test'))
 
     // when

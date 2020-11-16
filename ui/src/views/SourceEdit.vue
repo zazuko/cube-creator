@@ -19,7 +19,7 @@ import { namespace } from 'vuex-class'
 import { GraphPointer } from 'clownface'
 import { RuntimeOperation } from 'alcaeus'
 import { Shape } from '@rdfine/shacl'
-import { Project, Source } from '../types'
+import { Project, CsvSource } from '@cube-creator/model'
 import SidePane from '@/components/SidePane.vue'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import { api } from '@/api'
@@ -32,14 +32,14 @@ const projectNS = namespace('project')
 })
 export default class CubeProjectEditView extends Vue {
   @projectNS.State('project') project!: Project
-  @projectNS.Getter('findSource') findSource!: (id: string) => Source
+  @projectNS.Getter('findSource') findSource!: (id: string) => CsvSource
 
   resource: GraphPointer | null = null;
   isSubmitting = false;
   error: string | null = null;
   shape: Shape | null = null;
 
-  get source (): Source {
+  get source (): CsvSource {
     const sourceId = this.$router.currentRoute.params.sourceId
     return this.findSource(sourceId)
   }

@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import $rdf from 'rdf-ext'
 import { parsers } from '@rdfjs/formats-common'
 import { SELECT } from '@tpluscode/sparql-builder'
 import StreamClient from 'sparql-http-client/StreamClient'
@@ -30,7 +31,7 @@ async function removeTestGraphs() {
       ?graph ${_void.inDataset} ?d.
     `.execute(parsingClient.query, clientOptions())
 
-  const dropGraphs = sparql`${graphs.map(result => sparql`DROP GRAPH ${result.graph};`)}`.toString()
+  const dropGraphs = sparql`${graphs.map(result => sparql`DROP SILENT GRAPH ${result.graph};`)}`.toString()
   return client.query.update(dropGraphs)
 }
 
@@ -41,6 +42,7 @@ export const insertTestData = async (pathName: string) => {
   const stream = parsers.import('application/trig', file)
 
   if (stream) {
-    await client.store.post(stream)
+    const ds = await $rdf.dataset().import(stream)
+    await client.store.post(ds.toStream())
   }
 }

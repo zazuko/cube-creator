@@ -25,7 +25,7 @@ An example of this is the `CsvMapping` which has a link to the table collection 
 ```typescript
 export interface CsvMapping extends RdfResourceCore {
   // only a link
-  tableCollection: Link<Collection<Table>>
+  tableCollection: Link<TableCollection>
 }
 ```
 

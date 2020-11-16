@@ -58,8 +58,8 @@
         >
           <b-checkbox v-model="selectedColumns" :native-value="column">
             {{ column.name }}
-            <span class="has-text-grey" v-if="column.sampleValues.length > 0">
-              &nbsp;({{ column.sampleValues.slice(0, 3).join(", ") }})
+            <span class="has-text-grey" v-if="column.samples.length > 0">
+              &nbsp;({{ column.samples.slice(0, 3).join(", ") }})
             </span>
           </b-checkbox>
           <div>
@@ -93,7 +93,7 @@
 
 <script lang="ts">
 import { Prop, Component, Vue } from 'vue-property-decorator'
-import { Source, Table, TableCollection, CSVColumn, ColumnMapping } from '../types'
+import { CsvSource, Table, TableCollection, CsvColumn, ColumnMapping } from '@cube-creator/model'
 import MapperTable from './MapperTable.vue'
 import HydraOperationButton from './HydraOperationButton.vue'
 
@@ -105,14 +105,14 @@ import HydraOperationButton from './HydraOperationButton.vue'
 })
 export default class CsvSourceMapping extends Vue {
   @Prop({ default: false }) readonly isFirstSource!: boolean;
-  @Prop() readonly source!: Source;
+  @Prop() readonly source!: CsvSource;
   @Prop() readonly tables!: Table[];
   @Prop() readonly tableCollection!: TableCollection;
 
-  selectedColumns: CSVColumn[] = []
+  selectedColumns: CsvColumn[] = []
 
   get sourceTables (): Table[] {
-    return this.tables.filter(({ source }) => source.id.equals(this.source.id))
+    return this.tables.filter(({ csvSource }) => csvSource?.id.equals(this.source.id))
   }
 
   get createTableQueryParams (): Record<string, string | string[]> {
@@ -122,7 +122,7 @@ export default class CsvSourceMapping extends Vue {
     }
   }
 
-  getColumnMappings (column: CSVColumn): {table: Table, columnMapping: ColumnMapping}[] {
+  getColumnMappings (column: CsvColumn): {table: Table, columnMapping: ColumnMapping}[] {
     return this.tables
       .map((table) => {
         return table.columnMappings
@@ -132,7 +132,7 @@ export default class CsvSourceMapping extends Vue {
       .flat()
   }
 
-  async deleteSource (source: Source): Promise<void> {
+  async deleteSource (source: CsvSource): Promise<void> {
     this.$buefy.dialog.confirm({
       title: source.actions.delete?.title,
       message: 'Are you sure you want to delete this CSV source?',
