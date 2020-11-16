@@ -31,7 +31,7 @@ export default class extends Vue {
     return store
   }
 
-  @projectNS.State((state) => state.csvMapping.namespace ?? '') projectPrefix!: string
+  @projectNS.State((state) => state.csvMapping.namespace.value) projectPrefix!: string
   @appNS.State('commonRDFProperties') rdfProperties!: string[]
 
   get textValue (): string {
