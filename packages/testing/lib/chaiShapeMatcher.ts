@@ -1,5 +1,6 @@
 import chai from 'chai'
-import { NodeShape, NodeShapeMixin, ValidationResult } from '@rdfine/shacl'
+import type { NodeShape, ValidationResult } from '@rdfine/shacl'
+import { NodeShapeMixin } from '@rdfine/shacl/NodeShape'
 import { ShapeBundle, ValidationResultBundle } from '@rdfine/shacl/bundles'
 import RdfResourceImpl, { Initializer, RdfResource, ResourceIdentifier } from '@tpluscode/rdfine/RdfResource'
 import { BlankNode, DatasetCore, NamedNode, Term } from 'rdf-js'
