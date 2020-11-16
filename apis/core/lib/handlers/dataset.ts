@@ -14,7 +14,6 @@ export const put = protectedResource(
     })
 
     res.status(200)
-    res.header('Location', dataset.term.value)
     await res.dataset(dataset.dataset)
   }),
 )
