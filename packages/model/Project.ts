@@ -31,7 +31,7 @@ export function ProjectMixin<Base extends Constructor>(base: Base) {
     @property.resource({ as: [CsvMappingMixin] })
     csvMapping?: CsvMapping
 
-    @property({ initial: childResource('dataset') })
+    @property.resource({ initial: childResource('dataset') })
     dataset!: Link<Dataset>
 
     @property({ initial: childResource('cube-data') })
