@@ -104,10 +104,10 @@ describe('lib/csvw-builder', () => {
   it("combines namespace and source column's target property csvw:propertyUrl", async () => {
     // given
     csvSource.columns = [
-      CsvColumn.fromPointer(csvSource.pointer.namedNode('yahr-column'), { name: 'YAHR' }),
+      CsvColumn.fromPointer(csvSource.pointer.namedNode('jahr-column'), { name: 'JAHR' }),
     ]
     const columnMapping = ColumnMapping.fromPointer(clownface({ dataset: $rdf.dataset() }).namedNode('year-mapping'), {
-      sourceColumn: $rdf.namedNode('yahr-column') as any,
+      sourceColumn: $rdf.namedNode('jahr-column') as any,
       targetProperty: $rdf.literal('year'),
     })
     resources.push(columnMapping.pointer)
@@ -117,17 +117,17 @@ describe('lib/csvw-builder', () => {
     const csvw = await buildCsvw({ table, resources })
 
     // then
-    const csvwColumn = findColumn(csvw, 'YAHR')
+    const csvwColumn = findColumn(csvw, 'JAHR')
     expect(csvwColumn?.propertyUrl).to.eq('http://example.com/test-cube/year')
   })
 
   it("takes source column's target property as-is when it is a NamedNode", async () => {
     // given
     csvSource.columns = [
-      CsvColumn.fromPointer(csvSource.pointer.namedNode('yahr-column'), { name: 'YAHR' }),
+      CsvColumn.fromPointer(csvSource.pointer.namedNode('jahr-column'), { name: 'JAHR' }),
     ]
     const columnMapping = ColumnMapping.fromPointer(clownface({ dataset: $rdf.dataset() }).namedNode('year-mapping'), {
-      sourceColumn: $rdf.namedNode('yahr-column') as any,
+      sourceColumn: $rdf.namedNode('jahr-column') as any,
       targetProperty: schema.yearBuilt,
     })
     resources.push(columnMapping.pointer)
@@ -137,17 +137,17 @@ describe('lib/csvw-builder', () => {
     const csvw = await buildCsvw({ table, resources })
 
     // then
-    const csvwColumn = findColumn(csvw, 'YAHR')
+    const csvwColumn = findColumn(csvw, 'JAHR')
     expect(csvwColumn?.propertyUrl).to.eq(schema.yearBuilt.value)
   })
 
   it('maps column with datatype', async () => {
     // given
     csvSource.columns = [
-      CsvColumn.fromPointer(csvSource.pointer.namedNode('yahr-column'), { name: 'YAHR' }),
+      CsvColumn.fromPointer(csvSource.pointer.namedNode('jahr-column'), { name: 'JAHR' }),
     ]
     const columnMapping = ColumnMapping.fromPointer(clownface({ dataset: $rdf.dataset() }).namedNode('year-mapping'), {
-      sourceColumn: $rdf.namedNode('yahr-column') as any,
+      sourceColumn: $rdf.namedNode('jahr-column') as any,
       targetProperty: schema.yearBuilt,
       datatype: xsd.gYear,
     })
@@ -158,7 +158,7 @@ describe('lib/csvw-builder', () => {
     const csvw = await buildCsvw({ table, resources })
 
     // then
-    const csvwColumn = findColumn(csvw, 'YAHR')
+    const csvwColumn = findColumn(csvw, 'JAHR')
     expect(csvwColumn?.datatype?.id).to.deep.eq(xsd.gYear)
   })
 
