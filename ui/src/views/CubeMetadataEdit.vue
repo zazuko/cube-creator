@@ -23,6 +23,7 @@ import { Dataset } from '@cube-creator/model'
 import SidePane from '@/components/SidePane.vue'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import { api } from '@/api'
+import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 
 const projectNS = namespace('project')
 
@@ -34,7 +35,7 @@ export default class CubeMetadataEdit extends Vue {
 
   resource: GraphPointer | null = null;
   shape: Shape | null = null;
-  error: string | null = null;
+  error: ErrorDetails | null = null;
   isSubmitting = false
 
   async mounted (): Promise<void> {
@@ -54,12 +55,27 @@ export default class CubeMetadataEdit extends Vue {
   }
 
   async onSubmit (): Promise<void> {
+    this.error = null
     this.isSubmitting = true
 
     try {
-      // TODO
-      console.log(this.cubeMetadata.toJSON())
-      await new Promise((resolve) => setTimeout(resolve, 500))
+      await this.$store.dispatch('api/invokeSaveOperation', {
+        operation: this.operation,
+        resource: this.resource,
+      })
+
+      this.$store.dispatch('app/showMessage', {
+        message: 'Cube metadata was saved',
+        type: 'is-success',
+      })
+
+      this.$router.push({ name: 'CubeDesigner' })
+    } catch (e) {
+      this.error = e.details ?? { detail: e.toString() }
+
+      if (!(e instanceof APIErrorValidation)) {
+        console.error(e)
+      }
     } finally {
       this.isSubmitting = false
     }
