@@ -31,10 +31,16 @@ interface CsvwBuildingContext {
 }
 
 function mappedColumn({ csvMapping, columnMapping, column }: CsvwBuildingContext & { column: CsvColumn; columnMapping: ColumnMapping }): Initializer<Csvw.Column> {
-  return {
+  const csvwColumn: Initializer<Csvw.Column> = {
     title: $rdf.literal(column.name),
     propertyUrl: csvMapping.createIdentifier(columnMapping.targetProperty).value,
   }
+
+  if (columnMapping.datatype) {
+    csvwColumn.datatype = columnMapping.datatype
+  }
+
+  return csvwColumn
 }
 
 async function * buildColumns({ table, source, resources, csvMapping }: CsvwBuildingContext & { table: Table }) {
