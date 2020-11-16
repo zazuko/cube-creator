@@ -23,6 +23,8 @@ export async function update({
     throw new NotFoundError(dataset)
   }
 
+  const hasPart = datasetResource.out(schema.hasPart)
+
   datasetResource.out().forEach(child => {
     if (child.term.termType === 'BlankNode') {
       child.deleteOut()
@@ -37,6 +39,8 @@ export async function update({
     .addOut(rdf.type, schema.Dataset)
     .addOut(rdf.type, _void.Dataset)
     .addOut(rdf.type, dcat.Dataset)
+
+  hasPart.forEach(child => datasetResource.addOut(schema.hasPart, child))
 
   await store.save()
 

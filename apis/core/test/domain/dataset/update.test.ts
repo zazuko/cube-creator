@@ -12,7 +12,9 @@ describe('domain/dataset/update', () => {
   const dataset = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('dataset') })
     .addOut(dcterms.title, 'My Title')
     .addOut(dcat.keyword, 'Test')
-  const cubeNode = dataset.namedNode('cube').addOut(rdf.type, cube.Cube)
+  const cubeNode = dataset.namedNode('cube')
+    .addOut(rdf.type, cube.Cube)
+    .addIn(schema.hasPart, dataset)
 
   beforeEach(() => {
     store = new TestResourceStore([
@@ -36,10 +38,13 @@ describe('domain/dataset/update', () => {
     expect(result.out(dcterms.description).value).to.eq(description)
     expect(result.out(dcat.keyword).value).is.undefined
     expect(dataset).to.matchShape({
-      property: {
+      property: [{
         path: rdf.type,
         [sh.hasValue.value]: [schema.Dataset, _void.Dataset, dcat.Dataset],
-      },
+      }, {
+        path: schema.hasPart,
+        minCount: 1,
+      }],
     })
     expect(cubeNode.value).to.eq('cube')
   })
