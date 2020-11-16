@@ -5,12 +5,14 @@ import $rdf from 'rdf-ext'
 import { dcat, dcterms, rdf, schema, sh, _void } from '@tpluscode/rdf-ns-builders'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import { update } from '../../../lib/domain/dataset/update'
+import { cube } from '@cube-creator/core/namespace'
 
 describe('domain/dataset/update', () => {
   let store: TestResourceStore
   const dataset = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('dataset') })
     .addOut(dcterms.title, 'My Title')
     .addOut(dcat.keyword, 'Test')
+  const cubeNode = dataset.namedNode('cube').addOut(rdf.type, cube.Cube)
 
   beforeEach(() => {
     store = new TestResourceStore([
@@ -19,9 +21,9 @@ describe('domain/dataset/update', () => {
   })
 
   it('update, adds, deletes and  elements', async () => {
+    // given
     const title = 'My New Title'
     const description = 'Bla bla bla'
-    // given
     const updatedResource = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('dataset') })
       .addOut(dcterms.title, title)
       .addOut(dcterms.description, description)
@@ -39,5 +41,6 @@ describe('domain/dataset/update', () => {
         [sh.hasValue.value]: [schema.Dataset, _void.Dataset, dcat.Dataset],
       },
     })
+    expect(cubeNode.value).to.eq('cube')
   })
 })
