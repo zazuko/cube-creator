@@ -16,7 +16,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { RuntimeOperation } from 'alcaeus'
-import { Shape } from '@rdfine/shacl'
+import type { Shape } from '@rdfine/shacl'
 import { GraphPointer } from 'clownface'
 import { namespace } from 'vuex-class'
 import { Dataset } from '@cube-creator/model'

@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import { Prop, Component, Vue } from 'vue-property-decorator'
-import { PropertyShape } from '@rdfine/shacl'
+import type { PropertyShape } from '@rdfine/shacl'
 import { Hydra } from 'alcaeus/web'
 import { NamedNode } from 'rdf-js'
 import { rdf, rdfs, schema } from '@tpluscode/rdf-ns-builders'

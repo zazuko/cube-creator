@@ -1,4 +1,4 @@
-import * as Rdfs from '@rdfine/rdfs'
+import { ResourceMixin } from '@rdfine/rdfs/Resource'
 import { CsvMapping, CsvMappingMixin } from './CsvMapping'
 import { Constructor, namespace, property, RdfResource } from '@tpluscode/rdfine'
 import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
@@ -8,7 +8,7 @@ import { dcterms } from '@tpluscode/rdf-ns-builders'
 import { initializer } from './lib/initializer'
 import { childResource } from './lib/resourceIdentifiers'
 import { Link } from './lib/Link'
-import { Collection } from '@rdfine/hydra'
+import type { Collection } from '@rdfine/hydra'
 import { JobCollection } from './Job'
 import { Dataset } from './Dataset'
 
@@ -28,7 +28,7 @@ export interface ProjectsCollection extends Collection<Project> {
 
 export function ProjectMixin<Base extends Constructor>(base: Base): Mixin {
   @namespace(cc)
-  class Impl extends Rdfs.ResourceMixin(base) implements Partial<Project> {
+  class Impl extends ResourceMixin(base) implements Partial<Project> {
     @property.resource({ as: [CsvMappingMixin] })
     csvMapping?: CsvMapping
 

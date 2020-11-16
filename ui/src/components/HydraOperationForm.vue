@@ -31,7 +31,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { RuntimeOperation } from 'alcaeus'
 import { GraphPointer } from 'clownface'
-import { Shape } from '@rdfine/shacl'
+import type { Shape } from '@rdfine/shacl'
 import FormSubmitCancel from './FormSubmitCancel.vue'
 import { ErrorDetails } from '@/api/errors'
 
