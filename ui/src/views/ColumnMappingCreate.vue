@@ -22,7 +22,7 @@ import { CsvSource, Table } from '@cube-creator/model'
 import SidePane from '@/components/SidePane.vue'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import { api } from '@/api'
-import { APIErrorValidation } from '@/api/errors'
+import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 import { csvw, schema } from '@tpluscode/rdf-ns-builders'
 import { dataset } from '@rdf-esm/dataset'
 
@@ -37,7 +37,7 @@ export default class CubeProjectEditView extends Vue {
 
   resource: GraphPointer | null = clownface({ dataset: dataset() }).namedNode('')
   isSubmitting = false;
-  error: string | null = null;
+  error: ErrorDetails | null = null;
   shape: Shape | null = null;
 
   get table (): Table {
@@ -86,11 +86,10 @@ export default class CubeProjectEditView extends Vue {
 
       this.$router.push({ name: 'CSVMapping' })
     } catch (e) {
-      if (e instanceof APIErrorValidation) {
-        this.error = e.details?.title ?? e.toString()
-      } else {
+      this.error = e.details ?? { detail: e.toString() }
+
+      if (!(e instanceof APIErrorValidation)) {
         console.error(e)
-        this.error = e.toString()
       }
     } finally {
       this.isSubmitting = false
