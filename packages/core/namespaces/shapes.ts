@@ -10,6 +10,7 @@ type ShapeTerms =
   'cube-project/create#ExistingCube' |
   'table/create' |
   'csv-source/update' |
+  'dataset/edit-metadata' |
   'job/update' |
   'job/trigger' |
   'column-mapping/create'

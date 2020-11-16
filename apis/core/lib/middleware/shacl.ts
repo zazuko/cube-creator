@@ -48,7 +48,7 @@ export const shaclMiddleware = (options: ShaclMiddlewareOptions) => asyncMiddlew
     .out(sh.property)
     .has(sh.class)
     .out(sh.path)
-  const linkedInstancesIds = resource.out(classProperties).terms
+  const linkedInstancesIds = resource.out(classProperties).terms.filter(r => r.termType !== 'BlankNode')
   const linkedInstancesQuads = await options.loadResourcesTypes(linkedInstancesIds)
 
   const dataset = $rdf.dataset([...resource.dataset, ...linkedInstancesQuads])

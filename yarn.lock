@@ -1046,32 +1046,32 @@
     rdf-loaders-registry "^0.2.0"
     sparql-http-client "^2.2.2"
 
-"@hydrofoil/shaperone-core@0.2.3":
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-core/-/shaperone-core-0.2.3.tgz#805ff0f4f8ce49c96ebb7f20ae34160e8ace3e79"
-  integrity sha512-yVmb5qddNckQ3zt14fWL5u98xBCf0NuQGl+9KHmgpKdoVAev87u1OYl9JUWeeZ8PyjNUYzmAcUZ2CgbbofoRwQ==
+"@hydrofoil/shaperone-core@0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-core/-/shaperone-core-0.3.1.tgz#ec6fd60a4047de779c35d51213207ac49b5d07ed"
+  integrity sha512-8um0lFcSgLLlKshKr6xrHPPf3r8fivAdX0pA3D55lgvtqJ0fxHfS0nYiyuZXV+C2ZIe1kmiuUhEvqAD8gYnmIw==
   dependencies:
     "@captaincodeman/rdx" "^1.0.0-rc.8"
     "@rdf-esm/data-model" "^0.5.3"
+    "@rdf-esm/dataset" "^0.5.1"
     "@rdf-esm/namespace" "^0.5.1"
     "@rdf-esm/term-map" "^0.5.0"
     "@rdfine/rdfs" "^0.5"
     "@rdfine/shacl" "^0.5.2"
     "@tpluscode/rdf-ns-builders" "^0.4.0"
-    "@tpluscode/rdfine" "^0.5.6"
+    "@tpluscode/rdfine" "^0.5.15"
     "@zazuko/rdf-vocabularies" "^2020.11.2"
     clownface "^1.1.0"
     immer "^7.0.9"
-    rdf-ext "^1.3.0"
 
-"@hydrofoil/shaperone-wc@^0.1.4":
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-wc/-/shaperone-wc-0.1.4.tgz#579f2711aac4ab79881efebc25e5af0cf5e586f7"
-  integrity sha512-wA2Kp4VXLiHKyzzAODmGgcbIA1pCnZq7NAHp3EKD/LEtk3g7xSaQl6mxdUFYQzS1kV+w3BBPZbdXjm7+KAj5mg==
+"@hydrofoil/shaperone-wc@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-wc/-/shaperone-wc-0.2.1.tgz#cae3a420d83d77ef444b7c37c08e58d326f3000e"
+  integrity sha512-iDev/pA0gzYWgrDyepfVibNG9cWDh6J2O1FyfD8Fjs4v+JTDyP9OU6waDENCDvKW7P0Dyk6CpDx9WEub6mazGw==
   dependencies:
     "@captaincodeman/rdx" "^1.0.0-rc.8"
-    "@hydrofoil/shaperone-core" "0.2.3"
-    "@rdf-esm/data-model" "^0.5.3"
+    "@hydrofoil/shaperone-core" "0.3.1"
+    "@rdf-esm/data-model" "^0.5.4"
     "@rdf-esm/term-map" "^0.5.0"
     "@rdfine/shacl" "^0.5.1"
     "@tpluscode/rdf-ns-builders" "^0.4.0"
@@ -1126,7 +1126,7 @@
     "@nodelib/fs.scandir" "2.1.3"
     fastq "^1.6.0"
 
-"@rdf-esm/data-model@^0.5.1", "@rdf-esm/data-model@^0.5.3":
+"@rdf-esm/data-model@^0.5.1", "@rdf-esm/data-model@^0.5.3", "@rdf-esm/data-model@^0.5.4":
   version "0.5.4"
   resolved "https://registry.yarnpkg.com/@rdf-esm/data-model/-/data-model-0.5.4.tgz#bd0f7aba4415240387f26ef0cd05ebb6b444f47f"
   integrity sha512-EINrtebCO6aT9e8vLmkaFFs317sCRj9cdFlKexvZA+7bLwcKrmcQLwC+nnnyBurtypHzWlokbLvp1SZHQWiH3w==
@@ -1504,7 +1504,7 @@
     "@tpluscode/rdf-ns-builders" "^0.4"
     "@zazuko/rdf-vocabularies" "^2020.11.2"
 
-"@tpluscode/rdfine@^0.5.10", "@tpluscode/rdfine@^0.5.12", "@tpluscode/rdfine@^0.5.14", "@tpluscode/rdfine@^0.5.15", "@tpluscode/rdfine@^0.5.6", "@tpluscode/rdfine@^0.5.7", "@tpluscode/rdfine@^0.5.9":
+"@tpluscode/rdfine@^0.5.10", "@tpluscode/rdfine@^0.5.12", "@tpluscode/rdfine@^0.5.14", "@tpluscode/rdfine@^0.5.15", "@tpluscode/rdfine@^0.5.7", "@tpluscode/rdfine@^0.5.9":
   version "0.5.15"
   resolved "https://registry.yarnpkg.com/@tpluscode/rdfine/-/rdfine-0.5.15.tgz#f7a89931c2ee8429b999a6d0a46c83473fe51545"
   integrity sha512-QzMRdZZcHHjnKDa0GWC/E1DQ+Z2wugNJF3PVpf5XA2P3oCd15/reBUUMj9YcutXzU48x+Jhu2A4xZyIQkYZiXQ==
