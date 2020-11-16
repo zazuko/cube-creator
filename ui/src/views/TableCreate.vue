@@ -36,8 +36,8 @@ import { Shape } from '@rdfine/shacl'
 import * as ns from '@cube-creator/core/namespace'
 import SidePane from '@/components/SidePane.vue'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
-import { APIErrorValidation } from '@/api/errors'
 import { api } from '@/api'
+import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 import { SourcesCollection, CsvSource, CsvColumn } from '@cube-creator/model'
 
 const projectNS = namespace('project')
@@ -53,7 +53,7 @@ export default class TableCreateView extends Vue {
   resource: GraphPointer | null = clownface({ dataset: dataset() }).namedNode('')
   shape: Shape | null = null
   isSubmitting = false;
-  error: string | null = null
+  error: ErrorDetails | null = null
 
   async mounted (): Promise<void> {
     this.resource = this.prepareResourceFromQueryParams()
@@ -143,11 +143,10 @@ export default class TableCreateView extends Vue {
 
       this.$router.push({ name: 'CSVMapping' })
     } catch (e) {
-      if (e instanceof APIErrorValidation) {
-        this.error = e.details?.title ?? e.toString()
-      } else {
+      this.error = e.details ?? { detail: e.toString() }
+
+      if (!(e instanceof APIErrorValidation)) {
         console.error(e)
-        this.error = e.toString()
       }
     } finally {
       this.isSubmitting = false
