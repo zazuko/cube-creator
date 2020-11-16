@@ -13,6 +13,7 @@ import { buildCsvw } from '../../lib/csvw-builder'
 import '../../lib/domain'
 import { TestResourceStore } from '../support/TestResourceStore'
 import { findColumn } from './support'
+import { schema } from '@tpluscode/rdf-ns-builders'
 
 describe('lib/csvw-builder', () => {
   let table: Table.Table
@@ -118,6 +119,26 @@ describe('lib/csvw-builder', () => {
     // then
     const csvwColumn = findColumn(csvw, 'YAHR')
     expect(csvwColumn?.propertyUrl).to.eq('http://example.com/test-cube/year')
+  })
+
+  it("takes source column's target property as-is when it is a NamedNode", async () => {
+    // given
+    csvSource.columns = [
+      CsvColumn.fromPointer(csvSource.pointer.namedNode('yahr-column'), { name: 'YAHR' }),
+    ]
+    const columnMapping = ColumnMapping.fromPointer(clownface({ dataset: $rdf.dataset() }).namedNode('year-mapping'), {
+      sourceColumn: $rdf.namedNode('yahr-column') as any,
+      targetProperty: schema.yearBuilt,
+    })
+    resources.push(columnMapping.pointer)
+    table.columnMappings = [columnMapping] as any
+
+    // when
+    const csvw = await buildCsvw({ table, resources })
+
+    // then
+    const csvwColumn = findColumn(csvw, 'YAHR')
+    expect(csvwColumn?.propertyUrl).to.eq(schema.yearBuilt.value)
   })
 
   it('adds a cc:cube virtual column to output', async () => {
