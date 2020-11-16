@@ -31,7 +31,7 @@ async function removeTestGraphs() {
       ?graph ${_void.inDataset} ?d.
     `.execute(parsingClient.query, clientOptions())
 
-  const dropGraphs = sparql`${graphs.map(result => sparql`DROP GRAPH ${result.graph};`)}`.toString()
+  const dropGraphs = sparql`${graphs.map(result => sparql`DROP SILENT GRAPH ${result.graph};`)}`.toString()
   return client.query.update(dropGraphs)
 }
 
