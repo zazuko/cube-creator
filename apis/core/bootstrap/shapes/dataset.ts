@@ -49,6 +49,7 @@ ${shape('dataset/edit-metadata')} {
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
       ${sh.in} ("Draft" "Published") ;
+      ${sh.defaultValue} "Draft" ;
       ${sh.order} 30 ;
     ] ;
     ${sh.property} [
@@ -57,6 +58,7 @@ ${shape('dataset/edit-metadata')} {
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
       ${sh.datatype} ${xsd.boolean} ;
+      ${sh.defaultValue} ${false} ;
       ${sh.order} 40 ;
     ] ;
     ${sh.property} [
@@ -65,6 +67,7 @@ ${shape('dataset/edit-metadata')} {
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
       ${sh.datatype} ${xsd.boolean} ;
+      ${sh.defaultValue} ${false} ;
       ${sh.order} 50 ;
     ] ;
     ${sh.property} [
