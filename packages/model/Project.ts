@@ -9,10 +9,11 @@ import { childResource } from './lib/resourceIdentifiers'
 import { Link } from './lib/Link'
 import { Collection } from '@rdfine/hydra'
 import { JobCollection } from './Job'
+import { Dataset } from './Dataset'
 
 export interface Project extends RdfResource {
   csvMapping?: CsvMapping
-  dataset: NamedNode
+  dataset: Link<Dataset>
   cubeGraph: NamedNode
   creator: NamedNode
   label: string
@@ -30,8 +31,8 @@ export function ProjectMixin<Base extends Constructor>(base: Base) {
     @property.resource({ as: [CsvMappingMixin] })
     csvMapping?: CsvMapping
 
-    @property({ initial: childResource('dataset') })
-    dataset!: NamedNode
+    @property.resource({ initial: childResource('dataset') })
+    dataset!: Link<Dataset>
 
     @property({ initial: childResource('cube-data') })
     cubeGraph!: NamedNode
