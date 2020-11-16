@@ -23,7 +23,7 @@ import SidePane from '@/components/SidePane.vue'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
-import { csvw, schema } from '@tpluscode/rdf-ns-builders'
+import { rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { dataset } from '@rdf-esm/dataset'
 
 const projectNS = namespace('project')
@@ -56,10 +56,10 @@ export default class CubeProjectEditView extends Vue {
       // Populate Column selector
       if (shape && this.table.csvSource?.clientPath) {
         const source = this.findSource(this.table.csvSource.clientPath)
-        const columnProperty: any = shape.property.find(p => p.class?.equals(csvw.Column))
-        columnProperty.in = source.columns
         source.columns.forEach((column) => {
-          shape.pointer.node(column.id).addOut(schema.name, column.name)
+          shape.pointer.node(column.id)
+            .addOut(schema.name, column.name)
+            .addOut(rdf.type, column.pointer.out(rdf.type))
         })
       }
 
