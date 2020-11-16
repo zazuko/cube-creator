@@ -52,7 +52,7 @@ graph <cube-project/ubd/dimensions-metadata> {
     schema:hasPart <cube-project/ubd/dimensions-metadata?dimension=https://environment.ld.admin.ch/foen/ubd/28/unit-id> ;
   .
 
-  <cube-project/ubd/dimensions-metadata?dimension=https://environment.ld.admin.ch/foen/ubd/28/shape/dimension%20year_built>
+  <cube-project/ubd/dimensions-metadata?dimension=https://environment.ld.admin.ch/foen/ubd/28/shape/dimension%20year>
     schema:about <https://environment.ld.admin.ch/foen/ubd/28/dimension%20year> ;
     schema:name "Jahr"@de ;
     scale:scaleOfMeasure scale:Temporal ;
