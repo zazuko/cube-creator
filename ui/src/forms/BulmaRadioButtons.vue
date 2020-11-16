@@ -3,7 +3,7 @@
     <b-radio-button
       v-for="option in choices"
       :key="option.value"
-      :value="value.value"
+      :value="_value"
       :native-value="option.value"
       @input="emit"
     >
@@ -23,6 +23,10 @@ export default class extends Vue {
   @Prop() options?: MultiPointer;
   @Prop() value?: GraphPointer;
   @Prop() update!: (newValue: Term | string) => void;
+
+  get _value () {
+    return this.value?.value || ''
+  }
 
   get choices (): Term[] {
     return this.options?.terms ?? []
