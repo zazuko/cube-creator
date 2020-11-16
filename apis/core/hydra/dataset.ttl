@@ -16,7 +16,7 @@ void:Dataset
         hydra:Operation,
         schema:UpdateAction ;
       hydra:title
-        "Edit cube metadata" ;
+        "Edit metadata" ;
       hydra:method
         "PUT" ;
       hydra:expects
