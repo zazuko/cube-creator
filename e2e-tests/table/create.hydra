@@ -57,7 +57,7 @@ With Class cc:TableCollection {
                 cc:isObservationTable false .
             ```
         } => {
-            Expect Status 400
+            Expect Status 201
         }
     }
 }

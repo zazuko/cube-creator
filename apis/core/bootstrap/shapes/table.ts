@@ -36,11 +36,10 @@ ${shape('table/create')} {
     ] ;
     ${sh.property} [
       ${sh.name} "Identifier template" ;
-      ${sh.description} "Used to build a unique identifier for each row of this table. Not supported yet: Leave empty to get an auto-generated identifier." ;
+      ${sh.description} "Used to build a unique identifier for each row of this table. Leave empty to get an auto-generated identifier." ;
       ${sh.path} ${cc.identifierTemplate} ;
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
-      ${sh.pattern} "[\w\d]" ;
       ${sh.defaultValue} "" ;
       ${sh.order} 30 ;
     ] ;
