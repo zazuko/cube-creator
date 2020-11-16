@@ -71,6 +71,6 @@ export async function createTable({
 }
 
 function getTemplate(template: string | undefined, columns: CsvColumn[]): string {
-  if (template) return template
-  return columns.map((column) => `{${column.name}}`).join('/')
+  if (template?.trim()) return template
+  return columns.sort((a, b) => (a.order - b.order)).map((column) => `{${column.name}}`).join('/')
 }
