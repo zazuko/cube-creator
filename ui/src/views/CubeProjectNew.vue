@@ -23,6 +23,7 @@ import { dataset } from '@rdf-esm/dataset'
 import SidePane from '@/components/SidePane.vue'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import { api } from '@/api'
+import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 
 @Component({
   components: { SidePane, HydraOperationForm },
@@ -32,7 +33,7 @@ export default class CubeProjectNewView extends Vue {
   operation!: RuntimeOperation | null;
 
   resource: GraphPointer | null = Object.freeze(clownface({ dataset: dataset() }).namedNode(''));
-  error: string | null = null;
+  error: ErrorDetails | null = null;
   isSubmitting = false;
   shape: Shape | null = null;
   shapes: GraphPointer | null = null;
@@ -64,9 +65,11 @@ export default class CubeProjectNewView extends Vue {
 
       this.$router.push({ name: 'CubeProject', params: { id: project.clientPath } })
     } catch (e) {
-      console.error(e)
-      // TODO: Improve error display
-      this.error = e
+      this.error = e.details ?? { detail: e.toString() }
+
+      if (!(e instanceof APIErrorValidation)) {
+        console.error(e)
+      }
     } finally {
       this.isSubmitting = false
     }

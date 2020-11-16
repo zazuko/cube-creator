@@ -23,6 +23,7 @@ import { dataset } from '@rdf-esm/dataset'
 import { Shape } from '@rdfine/shacl'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import { api } from '@/api'
+import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 import { schema } from '@tpluscode/rdf-ns-builders'
 
 @Component({
@@ -33,7 +34,7 @@ export default class JobForm extends Vue {
 
   resource: GraphPointer = Object.freeze(clownface({ dataset: dataset() }).namedNode('').addOut(schema.name, 'test'));
   shape: Shape | null = null;
-  error: string | null = null;
+  error: ErrorDetails | null = null;
   isSubmitting = false;
 
   async mounted (): Promise<void> {
@@ -61,9 +62,11 @@ export default class JobForm extends Vue {
 
       this.$store.dispatch('project/fetchJobCollection')
     } catch (e) {
-      console.error(e)
-      // TODO: Improve error display
-      this.error = e
+      this.error = e.details ?? { detail: e.toString() }
+
+      if (!(e instanceof APIErrorValidation)) {
+        console.error(e)
+      }
     } finally {
       this.isSubmitting = false
     }
