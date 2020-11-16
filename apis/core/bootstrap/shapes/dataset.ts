@@ -122,8 +122,37 @@ ${shape('dataset/edit-metadata')} {
     ${sh.property} [
       ${sh.name} "Theme" ;
       ${sh.path} ${dcat.theme} ;
+      ${sh.minCount} 1 ;
       ${sh.minLength} 1 ;
       ${sh.order} 100 ;
+      ${sh.nodeKind} ${sh.IRI} ;
+      ${sh.in}
+      (
+        <http://opendata.swiss/themes/administration>
+        <http://opendata.swiss/themes/agriculture> 
+        <http://opendata.swiss/themes/construction> 
+        <http://opendata.swiss/themes/crime> 
+        <http://opendata.swiss/themes/culture>
+        <http://opendata.swiss/themes/education> 
+        <http://opendata.swiss/themes/energy> 
+        <http://opendata.swiss/themes/finances> 
+        <http://opendata.swiss/themes/geography> 
+        <http://opendata.swiss/themes/health> 
+        <http://opendata.swiss/themes/industry> 
+        <http://opendata.swiss/themes/legislation> 
+        <http://opendata.swiss/themes/mobility> 
+        <http://opendata.swiss/themes/national-economy>
+        <http://opendata.swiss/themes/politics> 
+        <http://opendata.swiss/themes/population> 
+        <http://opendata.swiss/themes/prices> 
+        <http://opendata.swiss/themes/public-order>
+        <http://opendata.swiss/themes/social-security>
+        <http://opendata.swiss/themes/statistical-basis>
+        <http://opendata.swiss/themes/territory>
+        <http://opendata.swiss/themes/tourism>
+        <http://opendata.swiss/themes/trade>
+        <http://opendata.swiss/themes/work>
+      ) ;
     ] ;
     ${sh.property} [
       ${sh.name} "Tags" ;
@@ -366,6 +395,177 @@ freq:weekly a skos:Concept ;
 freq: dcterms:creator [ rdfs:label "Dublin Core Collection Description Task Group" ] ;
     dcterms:modified "2013-05-10"^^dcterms:W3CDTF ;
     dcterms:title "The Collection Description Frequency Namespace"@en .
+
+<http://opendata.swiss/themes/administration> a skos:Concept ;
+    skos:definition ""@de,
+        ""@en,
+        ""@fr,
+        ""@it ;
+    rdfs:label "Administration"@en .
+
+
+
+<http://opendata.swiss/themes/agriculture> a skos:Concept ;
+    skos:definition ""@de,
+        ""@en,
+        ""@fr,
+        ""@it ;    
+    rdfs:label "Agriculture, forestry"@en .
+
+<http://opendata.swiss/themes/construction> a skos:Concept ;
+    skos:definition ""@de,
+        ""@en,
+        ""@fr,
+        ""@it ;
+    rdfs:label "Construction and housing"@en .
+
+
+<http://opendata.swiss/themes/crime> a skos:Concept ;
+    skos:definition ""@de,
+        ""@en,
+        ""@fr,
+        ""@it ;
+    rdfs:label "Crime, criminal justice"@en .
+
+<http://opendata.swiss/themes/culture> a skos:Concept ;
+    skos:definition ""@de,
+        ""@en,
+        ""@fr,
+        ""@it ;
+    rdfs:label "Culture, media, information society, sport"@en.
+
+<http://opendata.swiss/themes/education> a skos:Concept ;
+    skos:definition ""@de,
+        ""@en,
+        ""@fr,
+        ""@it ;
+    rdfs:label "Education and science"@en .
+
+<http://opendata.swiss/themes/energy> a skos:Concept ;
+    skos:definition ""@de,
+        ""@en,
+        ""@fr,
+        ""@it ;
+    rdfs:label "Energy"@en .
+
+<http://opendata.swiss/themes/finances> a skos:Concept ;
+    skos:definition ""@de,
+        ""@en,
+        ""@fr,
+        ""@it ;
+    rdfs:label "Finances"@en .
+
+<http://opendata.swiss/themes/geography> a skos:Concept ;
+    skos:definition ""@de,
+        ""@en,
+        ""@fr,
+        ""@it ;
+    rdfs:label "Geography"@en.
+
+<http://opendata.swiss/themes/health> a skos:Concept ;
+    skos:definition ""@de,
+        ""@en,
+        ""@fr,
+        ""@it ;
+    rdfs:label "Health"@en .
+
+<http://opendata.swiss/themes/industry> a skos:Concept ;
+    skos:definition ""@de,
+        ""@en,
+        ""@fr,
+        ""@it ;
+    rdfs:label "Industry and services"@en .
+
+<http://opendata.swiss/themes/legislation> a skos:Concept ;
+    skos:definition ""@de,
+        ""@en,
+        ""@fr,
+        ""@it ;
+    rdfs:label "Legislation"@en .
+
+<http://opendata.swiss/themes/mobility> a skos:Concept ;
+    skos:definition ""@de,
+        ""@en,
+        ""@fr,
+        ""@it ;
+    rdfs:label "Mobility and Transport"@en .
+
+<http://opendata.swiss/themes/national-economy> a skos:Concept ;
+    skos:definition ""@de,
+        ""@en,
+        ""@fr,
+        ""@it ;
+    rdfs:label "National economy"@en .
+
+<http://opendata.swiss/themes/politics> a skos:Concept ;
+    skos:definition ""@de,
+        ""@en,
+        ""@fr,
+        ""@it ;
+    rdfs:label "Politics"@en .
+
+<http://opendata.swiss/themes/population> a skos:Concept ;
+    skos:definition ""@de,
+        ""@en,
+        ""@fr,
+        ""@it ;
+    rdfs:label "Population"@en .
+
+<http://opendata.swiss/themes/prices> a skos:Concept ;
+    skos:definition ""@de,
+        ""@en,
+        ""@fr,
+        ""@it ;
+    rdfs:label "Prices"@en .
+
+<http://opendata.swiss/themes/public-order> a skos:Concept ;
+    skos:definition ""@de,
+        ""@en,
+        ""@fr,
+        ""@it ;
+    rdfs:label "Public order and security"@en .
+
+<http://opendata.swiss/themes/social-security> a skos:Concept ;
+    skos:definition ""@de,
+        ""@en,
+        ""@fr,
+        ""@it ;
+    rdfs:label "Social security"@en .
+
+<http://opendata.swiss/themes/statistical-basis> a skos:Concept ;
+    skos:definition ""@de,
+        ""@en,
+        ""@fr,
+        ""@it ;
+    rdfs:label "Statistical basis"@en .
+
+<http://opendata.swiss/themes/territory> a skos:Concept ;
+    skos:definition ""@de,
+        ""@en,
+        ""@fr,
+        ""@it ;
+    rdfs:label "Territory and environment"@en .
+
+<http://opendata.swiss/themes/tourism> a skos:Concept ;
+    skos:definition ""@de,
+        ""@en,
+        ""@fr,
+        ""@it ;
+    rdfs:label "Tourism"@en .
+
+<http://opendata.swiss/themes/trade> a skos:Concept ;
+    skos:definition ""@de,
+        ""@en,
+        ""@fr,
+        ""@it ;
+    rdfs:label "Trade"@en .
+
+<http://opendata.swiss/themes/work> a skos:Concept ;
+    skos:definition ""@de,
+        ""@en,
+        ""@fr,
+        ""@it ;
+    rdfs:label "Work and income"@en .
 }
 
 `
