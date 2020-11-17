@@ -8,7 +8,7 @@
           </h2>
         </div>
         <div v-if="projectsCollection" class="level-item">
-          <router-link v-if="projectsCollection.actions.create" :to="{ name: 'CubeProjectNew' }" class="button">
+          <router-link v-if="projectsCollection.actions.create" :to="{ name: 'CubeProjectCreate' }" class="button">
             <b-icon icon="plus" />
             <span>{{ projectsCollection.actions.create.title }}</span>
           </router-link>

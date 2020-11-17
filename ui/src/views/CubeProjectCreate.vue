@@ -28,7 +28,7 @@ import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 @Component({
   components: { SidePane, HydraOperationForm },
 })
-export default class CubeProjectNewView extends Vue {
+export default class extends Vue {
   @State((state) => state.projects.collection.actions.create)
   operation!: RuntimeOperation | null;
 
