@@ -18,7 +18,8 @@ type CubeCreatorClass =
   'CreateColumnMappingAction' |
   'Job' |
   'JobCollection' |
-  'TransformAction'
+  'TransformAction' |
+  'DimensionsMetadataCollection'
 
 type CubeCreatorProperty =
   'projectSourceKind' |
