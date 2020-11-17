@@ -94,7 +94,7 @@ export const uriEditor: Lazy<SingleEditorComponent> = {
   }
 }
 
-export const propertyEditor: SingleEditorComponent = {
+export const propertyEditor: Lazy<SingleEditorComponent> = {
   editor: ns.editor.PropertyEditor,
   async lazyRender () {
     await import('./PropertyInput.vue').then(createCustomElement('cc-property-input'))
