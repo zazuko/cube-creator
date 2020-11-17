@@ -5,7 +5,7 @@ import { Enrichment } from '@hydrofoil/labyrinth/lib/middleware/preprocessResour
 import { shaclValidate } from '../middleware/shacl'
 import { update } from '../domain/dataset/update'
 import { loadCubeShapes } from '../domain/queries/cube'
-import { parsingClient } from '../query-client'
+import { streamClient } from '../query-client'
 
 export const put = protectedResource(
   shaclValidate,
@@ -21,9 +21,9 @@ export const put = protectedResource(
 )
 
 export const loadCubes: Enrichment = async (req, dataset) => {
-  const shapeQuads = await loadCubeShapes(dataset, parsingClient)
+  const shapeQuads = await loadCubeShapes(dataset, streamClient)
 
-  for (const quad of shapeQuads) {
+  for await (const quad of shapeQuads) {
     dataset.dataset.add(quad)
   }
 }
