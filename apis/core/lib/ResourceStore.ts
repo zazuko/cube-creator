@@ -33,12 +33,12 @@ export interface ResourceStore {
   /**
    * Creates a new resource a puts in the in-memory store
    */
-  create(id: NamedNode, options?: ResourceCreationOptions): GraphPointer<NamedNode, DatasetExt>
+  create(id: Term, options?: ResourceCreationOptions): GraphPointer<NamedNode, DatasetExt>
 
   /**
    * Create a new collection member, initialized according to `hydra:manages` entries
    */
-  createMember(collection: NamedNode, id: NamedNode, options?: ResourceCreationOptions): Promise<GraphPointer<NamedNode, DatasetExt>>
+  createMember(collection: Term, id: NamedNode, options?: ResourceCreationOptions): Promise<GraphPointer<NamedNode, DatasetExt>>
 
   /**
    * Replaces the resources in the triple store by inserting default graph
@@ -146,6 +146,10 @@ export default class implements ResourceStore {
   }
 
   create(id: NamedNode, { implicitlyDereferencable = true }: ResourceCreationOptions = {}): GraphPointer<NamedNode, DatasetExt> {
+    if (id.termType !== 'NamedNode') {
+      throw new Error('Resource must be identified by a NamedNode')
+    }
+
     if (this.__resources.has(id)) {
       throw new Error(`Resource <${id.value}> already exists`)
     }
