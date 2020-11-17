@@ -33,9 +33,7 @@ export async function createProject({
   })
 
   project.initializeJobCollection(store)
-  const dataset = Dataset.create(store.create(project.dataset.id, {
-    implicitlyDereferencable: false,
-  }))
+  const dataset = Dataset.create(store.create(project.dataset.id))
 
   DimensionMetadata.createCollection(store.create(dataset.dimensionMetadata.id))
 
