@@ -62,6 +62,18 @@ cc:Table
             <file:handlers/table/delete#remove> ;
         ] ;
     ] ,
+    # [
+    #   a
+    #     hydra:Operation,
+    #     schema:UpdateAction ;
+    #   hydra:title
+    #     "Edit table" ;
+    #   hydra:method
+    #     "PUT" ;
+    #   hydra:expects
+    #     cc:Table,
+    #     <shape/table/update> ;
+    # ],
     [
       a
         hydra:Operation,
@@ -82,6 +94,10 @@ cc:Table
         ]
     ] .
 
+
+<shape/table/update>
+  a
+    sh:Shape .
 
 <shape/column-mapping/create>
   a

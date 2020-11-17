@@ -14,6 +14,7 @@ import CSVMapping from '@/views/CSVMapping.vue'
 import CSVUpload from '@/views/CSVUpload.vue'
 import SourceEdit from '@/views/SourceEdit.vue'
 import TableCreate from '@/views/TableCreate.vue'
+import TableEdit from '@/views/TableEdit.vue'
 import ColumnMappingEdit from '@/views/ColumnMappingEdit.vue'
 import ColumnMappingCreate from '@/views/ColumnMappingCreate.vue'
 import CubeDesigner from '@/views/CubeDesigner.vue'
@@ -73,6 +74,11 @@ const routes: Array<RouteConfig> = [
                 path: 'tables/create',
                 name: 'TableCreate',
                 component: TableCreate,
+              },
+              {
+                path: 'tables/:tableId/edit',
+                name: 'TableEdit',
+                component: TableEdit,
               },
               {
                 path: 'column-mappings/:columnMappingId/edit',
