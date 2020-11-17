@@ -86,7 +86,20 @@ export default class MapperTable extends Vue {
   }
 
   deleteColumnMapping (columnMapping: ColumnMapping): void {
-    this.$buefy.toast.open({ message: 'Not implemented yet', type: 'is-info' })
+    this.$buefy.dialog.confirm({
+      title: columnMapping.actions.delete?.title,
+      message: 'Are you sure you want to delete this column mapping?',
+      confirmText: 'Delete',
+      type: 'is-danger',
+      hasIcon: true,
+      onConfirm: () => {
+        this.$store.dispatch('api/invokeDeleteOperation', {
+          operation: columnMapping.actions.delete,
+          successMessage: 'Column mapping deleted successfully',
+          callbackAction: 'project/refreshTablesCollection',
+        })
+      },
+    })
   }
 }
 </script>
