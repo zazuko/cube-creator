@@ -1,4 +1,4 @@
-import { ResourceMixin } from '@rdfine/rdfs/Resource'
+import { ResourceMixin } from '@rdfine/rdfs'
 import { CsvMapping, CsvMappingMixin } from './CsvMapping'
 import { Constructor, namespace, property, RdfResource } from '@tpluscode/rdfine'
 import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'

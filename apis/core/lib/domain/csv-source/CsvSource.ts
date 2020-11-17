@@ -5,7 +5,7 @@ import { Constructor, property } from '@tpluscode/rdfine'
 import { MediaObjectMixin } from '@rdfine/schema'
 import { NamedNode } from 'rdf-js'
 import { csvw, schema } from '@tpluscode/rdf-ns-builders'
-import * as Csvw from '@rdfine/csvw'
+import type * as Csvw from '@rdfine/csvw'
 import * as id from '../identifiers'
 import { DialectMixin } from '@rdfine/csvw'
 

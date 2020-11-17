@@ -1,12 +1,10 @@
 import { RdfResource, RuntimeOperation } from 'alcaeus'
 import { NamedNode } from 'rdf-js'
-import { schema } from '@tpluscode/rdf-ns-builders'
+import { rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { Actions } from '@/api/mixins/ApiResource'
 
 export function findOperation (resource: RdfResource, idOrType: NamedNode): RuntimeOperation | null {
-  const matches = resource.findOperations({
-    bySupportedOperation: idOrType,
-  })
+  const matches = resource.operations.filter(op => op.pointer.has(rdf.type, idOrType).values.length)
 
   if (matches.length > 1) {
     console.error(`More than one match for operation ${idOrType} on ${resource.id}`)

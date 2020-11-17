@@ -5,13 +5,13 @@
   "dependencies": {
     "@cube-creator/core": "*",
     "@rdf-esm/data-model": "^0.5.3",
-    "@rdfine/csvw": "^0.5.1",
-    "@rdfine/hydra": "^0.5.4",
-    "@rdfine/rdfs": "^0.5.0",
-    "@rdfine/schema": "^0.5.2",
+    "@rdfine/csvw": "^0.6.0",
+    "@rdfine/hydra": "^0.6.0",
+    "@rdfine/rdfs": "^0.6.0",
+    "@rdfine/schema": "^0.6.0",
     "@tpluscode/rdf-ns-builders": "^0.4.0",
-    "@tpluscode/rdfine": "^0.5.10",
-    "alcaeus": "^1.0.0-RC.2"
+    "@tpluscode/rdfine": "^0.5.16",
+    "alcaeus": "^1.0.1"
   },
   "devDependencies": {
     "@types/clownface": "^1",
