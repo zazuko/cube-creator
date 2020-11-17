@@ -1,3 +1,4 @@
+import prefixes from '@zazuko/rdf-vocabularies/prefixes'
 import namespace from '@rdf-esm/namespace'
 import { NamedNode } from 'rdf-js'
 
@@ -55,8 +56,13 @@ type MetaDataProperty =
 
 type CubeCreatorNamespace = Record<CubeCreatorClass | CubeCreatorProperty | OtherTerms | MetaDataProperty, NamedNode>
 
+prefixes.scale = 'http://ns.bergnet.org/cube/scale/'
+prefixes.freq = 'http://purl.org/cld/freq/'
+prefixes.cube = 'http://ns.bergnet.org/cube/'
+
 export const hashi = namespace('http://hypermedia.app/shapes#')
-export const cube = namespace('http://ns.bergnet.org/cube/')
+export const cube = namespace(prefixes.cube)
 export const cc: CubeCreatorNamespace = namespace('https://cube-creator.zazuko.com/vocab#') as any
 export const editor = namespace(cc.dash.value)
-export const freq = namespace('http://purl.org/cld/freq/')
+export const freq = namespace(prefixes.freq)
+export const scale = namespace(prefixes.scale)

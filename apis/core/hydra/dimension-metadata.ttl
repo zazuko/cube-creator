@@ -1,0 +1,43 @@
+BASE           <urn:hydra-box:api>
+PREFIX cc:     <https://cube-creator.zazuko.com/vocab#>
+prefix hydra:  <http://www.w3.org/ns/hydra/core#>
+prefix sh:     <http://www.w3.org/ns/shacl#>
+prefix schema: <http://schema.org/>
+prefix code:   <https://code.described.at/>
+
+cc:DimensionMetadataCollection
+  a
+    hydra:Class ;
+  hydra:supportedProperty
+    [ hydra:property
+        schema:hasPart ] ;
+  hydra:supportedOperation
+    _:DimensionUpdateOperation ;
+.
+
+schema:hasPart
+  hydra:supportedOperation
+    _:DimensionUpdateOperation .
+
+_:DimensionUpdateOperation
+  a
+    hydra:Operation,
+    schema:UpdateAction ;
+  hydra:title
+    "Update dimension" ;
+  hydra:method
+    "PUT" ;
+  hydra:expects
+    <shape/dimension/metadata> ;
+  code:implementedBy
+    [
+      a
+        code:EcmaScript ;
+      code:link
+        <file:handlers/dimension#put> ;
+    ] ;
+.
+
+<shape/dimension/metadata>
+  a
+    sh:Shape .

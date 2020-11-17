@@ -1,3 +1,4 @@
+import { Request, Response } from 'express'
 import asyncMiddleware from 'middleware-async'
 import $rdf from 'rdf-ext'
 import { Term, Quad, NamedNode } from 'rdf-js'
@@ -11,6 +12,7 @@ import { loadResourcesTypes } from '../domain/queries/resources-types'
 interface ShaclMiddlewareOptions {
   createResourceStore: typeof resourceStore
   loadResourcesTypes(ids: Term[]): Promise<Quad[]>
+  getTargetNode?(req: Request, res: Response): NamedNode
 }
 
 export const shaclMiddleware = (options: ShaclMiddlewareOptions) => asyncMiddleware(async (req, res, next) => {
@@ -23,6 +25,11 @@ export const shaclMiddleware = (options: ShaclMiddlewareOptions) => asyncMiddlew
     resource = await req.resource()
   }
 
+  let targetNode = resource.term
+  if (options.getTargetNode) {
+    targetNode = options.getTargetNode(req, res)
+  }
+
   const shapes = $rdf.dataset()
   await Promise.all(req.hydra.operation.out(hydra.expects).map(async (expects) => {
     if (expects.term.termType !== 'NamedNode') return
@@ -32,7 +39,7 @@ export const shaclMiddleware = (options: ShaclMiddlewareOptions) => asyncMiddlew
       await shapes.addAll([...pointer.dataset])
 
       if (pointer.out([sh.targetClass, sh.targetNode, sh.targetObjectsOf, sh.targetSubjectsOf]).values.length === 0) {
-        shapes.add($rdf.quad(pointer.term, sh.targetNode, resource.term))
+        shapes.add($rdf.quad(pointer.term, sh.targetNode, targetNode))
       }
 
       resource.addOut(rdf.type, pointer.out(sh.targetClass))
@@ -77,4 +84,10 @@ export const shaclMiddleware = (options: ShaclMiddlewareOptions) => asyncMiddlew
 export const shaclValidate = shaclMiddleware({
   createResourceStore: resourceStore,
   loadResourcesTypes,
+})
+
+export const shaclValidateTargetNode = ({ getTargetNode }: Pick<Required<ShaclMiddlewareOptions>, 'getTargetNode'>) => shaclMiddleware({
+  createResourceStore: resourceStore,
+  loadResourcesTypes,
+  getTargetNode,
 })
