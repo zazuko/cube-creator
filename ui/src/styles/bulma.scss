@@ -1,10 +1,10 @@
-// Import Bulma's core
-@import "~bulma/sass/utilities/_all";
 
 $body-size: 14px;
-
 $size-7: 0.8rem;
-$size-small: $size-7;
+$primary: #ffb15e;
+
+// Import Bulma's core
+@import "~bulma/sass/utilities/_all";
 
 $panel-shadow: none;
 $panel-heading-size: 1rem;
