@@ -16,7 +16,7 @@
           <div class="level-item">
             <hydra-operation-button
               :operation="table.actions.edit"
-              @click="editTable(table)"
+              :to="{ name: 'TableEdit', params: { tableId: table.clientPath } }"
             />
             <hydra-operation-button
               :operation="table.actions.delete"
@@ -83,10 +83,6 @@ export default class MapperTable extends Vue {
         })
       },
     })
-  }
-
-  editTable (table: Table): void {
-    this.$buefy.toast.open({ message: 'Not implemented yet', type: 'is-info' })
   }
 
   deleteColumnMapping (columnMapping: ColumnMapping): void {
