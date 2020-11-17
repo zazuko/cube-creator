@@ -22,5 +22,5 @@ export function DimensionMetadataCollectionMixin<Base extends Constructor>(Resou
 }
 
 export const createCollection = initializer<DimensionMetadataCollection>(DimensionMetadataCollectionMixin, {
-  types: [cc.DimensionsMetadataCollection],
+  types: [cc.DimensionMetadataCollection],
 })

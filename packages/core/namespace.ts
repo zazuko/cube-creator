@@ -19,7 +19,7 @@ type CubeCreatorClass =
   'Job' |
   'JobCollection' |
   'TransformAction' |
-  'DimensionsMetadataCollection'
+  'DimensionMetadataCollection'
 
 type CubeCreatorProperty =
   'projectSourceKind' |
