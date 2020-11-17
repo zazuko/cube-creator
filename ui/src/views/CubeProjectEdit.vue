@@ -1,23 +1,22 @@
 <template>
-  <side-pane :is-open="true" title="Project settings" @close="onCancel">
+  <div>
     <b-field v-if="project.actions.delete">
       <b-button icon-left="trash" type="is-danger" @click="deleteProject">
         {{ project.actions.delete.title }}
       </b-button>
     </b-field>
-  </side-pane>
+  </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
 import { Project } from '@cube-creator/model'
-import SidePane from '@/components/SidePane.vue'
 
 const projectNS = namespace('project')
 
 @Component({
-  components: { SidePane },
+  components: {},
 })
 export default class CubeProjectEditView extends Vue {
   @projectNS.State('project') project!: Project
@@ -38,10 +37,6 @@ export default class CubeProjectEditView extends Vue {
         this.$router.push({ name: 'CubeProjects' })
       },
     })
-  }
-
-  onCancel (): void {
-    this.$router.push({ name: 'CubeProject' })
   }
 }
 </script>
