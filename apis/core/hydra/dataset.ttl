@@ -10,6 +10,15 @@ PREFIX void:   <http://rdfs.org/ns/void#>
 void:Dataset
   a
     hydra:Class ;
+  query:include
+    cc:dimensionMetadata ;
+  query:preprocess
+    [
+      a
+        code:EcmaScript ;
+      code:link
+        <file:handlers/dataset#loadCubes> ;
+    ] ;
   hydra:supportedOperation
     [
       a
