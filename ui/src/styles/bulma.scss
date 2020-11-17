@@ -1,9 +1,9 @@
+@import "~bulma/sass/utilities/initial-variables";
 
 $body-size: 14px;
 $size-7: 0.8rem;
-$primary: #ffb15e;
+$primary: $turquoise;
 
-// Import Bulma's core
 @import "~bulma/sass/utilities/_all";
 
 $panel-shadow: none;
