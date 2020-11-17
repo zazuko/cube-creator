@@ -4,7 +4,7 @@ import { commonActions } from '@/api/common'
 import { NamedNode } from 'rdf-js'
 import { RuntimeOperation } from 'alcaeus'
 
-interface Actions {
+export interface Actions {
   [key: string]: RuntimeOperation | null,
   create: RuntimeOperation | null,
   edit: RuntimeOperation | null,

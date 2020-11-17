@@ -1,4 +1,5 @@
 import { Constructor, property, RdfResource } from '@tpluscode/rdfine'
+import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import { Collection } from '@rdfine/hydra'
 import * as Rdfs from '@rdfine/rdfs'
 import { Action, ActionMixin } from '@rdfine/schema'
@@ -21,7 +22,7 @@ export interface JobCollection extends Collection<Job> {
 
 }
 
-export function JobMixin<Base extends Constructor<RdfResource>>(base: Base) {
+export function JobMixin<Base extends Constructor<RdfResource>>(base: Base): Mixin {
   class Impl extends Rdfs.ResourceMixin(ActionMixin(base)) implements Partial<Job> {
     @property.resource({ path: cc.tables })
     tableCollection!: Link<TableCollection>
