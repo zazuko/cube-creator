@@ -62,10 +62,13 @@ describe('domain/cube-projects/create', () => {
     // then
     const dataset = await store.get(project.dataset.id)
     expect(dataset).to.matchShape({
-      property: {
+      property: [{
         path: rdf.type,
         [sh.hasValue.value]: [schema.Dataset, _void.Dataset, dcat.Dataset],
-      },
+      }, {
+        path: cc.dimensionMetadata,
+        minCount: 1,
+      }],
     })
   })
 

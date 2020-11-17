@@ -42,7 +42,8 @@ type CubeCreatorProperty =
   'defaultValue' |
   'isObservationTable' |
   'cube' |
-  'jobCollection'
+  'jobCollection' |
+  'dimensionMetadata'
 
 type OtherTerms =
   'dash'
