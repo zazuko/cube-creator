@@ -32,7 +32,9 @@ export async function createProject({
   })
 
   project.initializeJobCollection(store)
-  const dataset = Dataset.create(store.create(project.dataset.id as NamedNode))
+  const dataset = Dataset.create(store.create(project.dataset.id as NamedNode, {
+    implicitlyDereferencable: false,
+  }))
 
   if (shape('cube-project/create#CSV').equals(resource.out(cc.projectSourceKind).term)) {
     let namespace = resource.out(cc.namespace).term
