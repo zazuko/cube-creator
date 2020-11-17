@@ -30,6 +30,7 @@ ${shape('cube-project/create')} {
     ] ;
     ${sh.property} [
       ${sh.name} "Cube namespace" ;
+      ${sh.description} "A URI that will be used as default prefix for all the custom properties created during the mapping." ;
       ${sh.path} ${cc.namespace} ;
       ${sh.maxCount} 1 ;
       ${sh.nodeKind} ${sh.IRI} ;
