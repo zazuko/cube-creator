@@ -1,4 +1,5 @@
 import { RdfResource } from '@tpluscode/rdfine/RdfResource'
+import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import { Constructor, property } from '@tpluscode/rdfine'
 import { _void, dcat, schema } from '@tpluscode/rdf-ns-builders'
 import { cube } from '@cube-creator/core/namespace'
@@ -9,7 +10,7 @@ export interface Dataset extends RdfResource {
   hasPart: Cube[]
 }
 
-export function DatasetMixin<Base extends Constructor>(Resource: Base) {
+export function DatasetMixin<Base extends Constructor>(Resource: Base): Mixin {
   class Impl extends Resource implements Partial<Dataset> {
     @property.resource({ path: schema.hasPart, values: 'array', implicitTypes: [cube.Cube] })
     hasPart!: Cube[]

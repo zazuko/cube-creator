@@ -1,6 +1,7 @@
 import * as Rdfs from '@rdfine/rdfs'
 import { CsvMapping, CsvMappingMixin } from './CsvMapping'
 import { Constructor, namespace, property, RdfResource } from '@tpluscode/rdfine'
+import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import { cc } from '@cube-creator/core/namespace'
 import { NamedNode } from 'rdf-js'
 import { dcterms } from '@tpluscode/rdf-ns-builders'
@@ -25,7 +26,7 @@ export interface ProjectsCollection extends Collection<Project> {
 
 }
 
-export function ProjectMixin<Base extends Constructor>(base: Base) {
+export function ProjectMixin<Base extends Constructor>(base: Base): Mixin {
   @namespace(cc as any)
   class Impl extends Rdfs.ResourceMixin(base) implements Partial<Project> {
     @property.resource({ as: [CsvMappingMixin] })
