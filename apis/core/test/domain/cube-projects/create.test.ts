@@ -88,7 +88,7 @@ describe('domain/cube-projects/create', () => {
     expect(dimensionMetadata).to.matchShape({
       property: [{
         path: rdf.type,
-        hasValue: cc.DimensionsMetadataCollection,
+        hasValue: cc.DimensionMetadataCollection,
       }],
     })
   })
