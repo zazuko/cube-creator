@@ -1,5 +1,8 @@
 <template>
-  <b-field v-if="property && !isHidden" :label="property.name" :addons="false">
+  <label v-if="property && !isHidden" class="form-property">
+    <span class="label">
+      {{ property.name }}
+    </span>
     <b-field v-if="property.shape.description">
       <p class="help">
         {{ property.shape.description }}
@@ -13,10 +16,10 @@
     </div>
     <div v-if="!property.selectedEditor && property.canAdd">
       <b-tooltip label="Add value">
-        <b-button icon-left="plus" @click="actions.addObject" type="is-white" />
+        <b-button icon-left="plus" @click.prevent="actions.addObject" type="is-white" />
       </b-tooltip>
     </div>
-  </b-field>
+  </label>
 </template>
 
 <script lang="ts">
@@ -42,3 +45,9 @@ export default class extends Vue {
   }
 }
 </script>
+
+<style scoped>
+.form-property {
+  display: block;
+}
+</style>
