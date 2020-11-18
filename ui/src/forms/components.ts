@@ -94,6 +94,15 @@ export const uriEditor: Lazy<SingleEditorComponent> = {
   }
 }
 
+export const propertyEditor: Lazy<SingleEditorComponent> = {
+  editor: ns.editor.PropertyEditor,
+  async lazyRender () {
+    await import('./PropertyInput.vue').then(createCustomElement('cc-property-input'))
+
+    return ({ value }, { update }) => html`<cc-property-input .value="${value.object?.term}" .update="${update}"></cc-property-input>`
+  },
+}
+
 export const nestedForm: SingleEditorComponent = {
   editor: dash.DetailsEditor,
   render ({ property, value }) {
