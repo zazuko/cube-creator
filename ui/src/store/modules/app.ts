@@ -32,8 +32,8 @@ const actions: ActionTree<AppState, RootState> = {
     context.commit('pushMessage', message)
   },
 
-  loadCommonRDFProperties (context) {
-    const properties = loadCommonProperties()
+  async loadCommonRDFProperties (context) {
+    const properties = await loadCommonProperties()
     context.commit('storeCommonRDFProperties', properties)
   },
 }
