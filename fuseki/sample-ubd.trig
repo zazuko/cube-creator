@@ -12,6 +12,7 @@ prefix cube: <http://ns.bergnet.org/cube/>
 prefix cc: <https://cube-creator.zazuko.com/vocab#>
 prefix sh: <http://www.w3.org/ns/shacl#>
 prefix scale: <http://ns.bergnet.org/cube/scale/>
+prefix dcat: <http://www.w3.org/ns/dcat#>
 
 <ubd-example> a void:Dataset .
 
@@ -25,15 +26,15 @@ graph <cube-project/ubd> {
     dcterms:creator <user> ;
     rdfs:label "UBD28 Project" ;
     cc:jobCollection <cube-project/jobs> ;
-    cc:dimensionMetadata <cube-project/ubd/dimensions-metadata> ;
   .
 }
 
 <cube-project/ubd/dataset> void:inDataset <ubd-example> .
 graph <cube-project/ubd/dataset> {
   <cube-project/ubd/dataset>
-    a void:Dataset, hydra:Resource , schema:Dataset ;
+    a void:Dataset, hydra:Resource, schema:Dataset, dcat:Dataset ;
     schema:hasPart <https://environment.ld.admin.ch/foen/ubd/28/> ;
+    cc:dimensionMetadata <cube-project/ubd/dimensions-metadata> ;
   .
 
   <https://environment.ld.admin.ch/foen/ubd/28/>
@@ -43,8 +44,9 @@ graph <cube-project/ubd/dataset> {
   .
 }
 
+<cube-project/ubd/dimensions-metadata> void:inDataset <ubd-example> .
 graph <cube-project/ubd/dimensions-metadata> {
-  <cube-project/ubd/dimensions-metadata> a cc:DimensionsMetadata ;
+  <cube-project/ubd/dimensions-metadata> a cc:DimensionsMetadataCollection ;
     schema:hasPart <cube-project/ubd/dimensions-metadata?dimension=https://environment.ld.admin.ch/foen/ubd/28/dimension%20year> ;
     schema:hasPart <cube-project/ubd/dimensions-metadata?dimension=https://environment.ld.admin.ch/foen/ubd/28/station> ;
     schema:hasPart <cube-project/ubd/dimensions-metadata?dimension=https://environment.ld.admin.ch/foen/ubd/28/aggregation> ;

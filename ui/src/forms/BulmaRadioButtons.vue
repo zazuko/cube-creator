@@ -24,7 +24,7 @@ export default class extends Vue {
   @Prop() value?: GraphPointer;
   @Prop() update!: (newValue: Term | string) => void;
 
-  get _value () {
+  get _value (): string {
     return this.value?.value || ''
   }
 

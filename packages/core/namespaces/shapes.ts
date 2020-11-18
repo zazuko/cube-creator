@@ -9,6 +9,7 @@ type ShapeTerms =
   'cube-project/create#CSV' |
   'cube-project/create#ExistingCube' |
   'table/create' |
+  'table/update' |
   'csv-source/update' |
   'dataset/edit-metadata' |
   'job/update' |

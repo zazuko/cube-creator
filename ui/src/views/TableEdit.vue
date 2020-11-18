@@ -14,38 +14,49 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
-import { State } from 'vuex-class'
+import { Vue, Component } from 'vue-property-decorator'
+import { namespace } from 'vuex-class'
+import { GraphPointer } from 'clownface'
 import { RuntimeOperation } from 'alcaeus'
-import clownface, { GraphPointer } from 'clownface'
 import { Shape } from '@rdfine/shacl'
-import { dataset } from '@rdf-esm/dataset'
 import SidePane from '@/components/SidePane.vue'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
+import { Table } from '@cube-creator/model'
+
+const projectNS = namespace('project')
 
 @Component({
   components: { SidePane, HydraOperationForm },
 })
-export default class CubeProjectNewView extends Vue {
-  @State((state) => state.projects.collection.actions.create)
-  operation!: RuntimeOperation | null;
+export default class TableCreateView extends Vue {
+  @projectNS.Getter('findTable') findTable!: (id: string) => Table | null
 
-  resource: GraphPointer | null = Object.freeze(clownface({ dataset: dataset() }).namedNode(''));
-  error: ErrorDetails | null = null;
+  resource: GraphPointer | null = null
+  shape: Shape | null = null
   isSubmitting = false;
-  shape: Shape | null = null;
-  shapes: GraphPointer | null = null;
-
-  get title (): string {
-    return this.operation?.title ?? ''
-  }
+  error: ErrorDetails | null = null
 
   async mounted (): Promise<void> {
     if (this.operation) {
       this.shape = await api.fetchOperationShape(this.operation)
     }
+
+    this.resource = this.table?.pointer ?? null
+  }
+
+  get table (): Table | null {
+    const tableId = this.$router.currentRoute.params.tableId
+    return this.findTable(tableId)
+  }
+
+  get operation (): RuntimeOperation | null {
+    return this.table?.actions.edit ?? null
+  }
+
+  get title (): string {
+    return this.operation?.title ?? 'Error: Missing operation'
   }
 
   async onSubmit (): Promise<void> {
@@ -53,17 +64,19 @@ export default class CubeProjectNewView extends Vue {
     this.isSubmitting = true
 
     try {
-      const project = await this.$store.dispatch('api/invokeSaveOperation', {
+      const table = await this.$store.dispatch('api/invokeSaveOperation', {
         operation: this.operation,
         resource: this.resource,
       })
 
+      this.$store.dispatch('project/refreshTableCollection')
+
       this.$store.dispatch('app/showMessage', {
-        message: `Project ${project.title} successfully created`,
+        message: `Table ${table.name} was successfully created`,
         type: 'is-success',
       })
 
-      this.$router.push({ name: 'CubeProject', params: { id: project.clientPath } })
+      this.$router.push({ name: 'CSVMapping' })
     } catch (e) {
       this.error = e.details ?? { detail: e.toString() }
 
@@ -76,7 +89,7 @@ export default class CubeProjectNewView extends Vue {
   }
 
   onCancel (): void {
-    this.$router.push({ name: 'CubeProjects' })
+    this.$router.push({ name: 'CSVMapping' })
   }
 }
 </script>

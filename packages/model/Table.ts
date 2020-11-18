@@ -1,4 +1,5 @@
 import RdfResourceImpl, { RdfResource, Constructor, namespace, property } from '@tpluscode/rdfine'
+import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import type * as Csvw from '@rdfine/csvw'
 import { cc } from '@cube-creator/core/namespace'
 import { schema } from '@tpluscode/rdf-ns-builders'
@@ -25,7 +26,7 @@ export interface TableCollection extends Collection<Table> {
 
 }
 
-export function TableMixin<Base extends Constructor>(base: Base) {
+export function TableMixin<Base extends Constructor>(base: Base): Mixin {
   @namespace(cc as any)
   class Impl extends base implements Partial<Table> {
     @property.resource({ initial: childResource('csvw') })
