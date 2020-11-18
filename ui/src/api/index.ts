@@ -1,7 +1,7 @@
 import { Hydra } from 'alcaeus/web'
 import { RdfResource, RuntimeOperation } from 'alcaeus'
 import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
-import { sh } from '@tpluscode/rdf-ns-builders'
+import { hydra, sh } from '@tpluscode/rdf-ns-builders'
 import { ShapeBundle } from '@rdfine/shacl/bundles'
 import { Shape } from '@rdfine/shacl'
 import store from '@/store'
@@ -51,6 +51,11 @@ Hydra.defaultHeaders = () => {
   }
 
   return headers
+}
+
+// Cache API documentation because we know that it doesn't ever change.
+Hydra.cacheStrategy.shouldLoad = (previous) => {
+  return !previous.representation.root?.types.has(hydra.ApiDocumentation)
 }
 
 export const api = {
