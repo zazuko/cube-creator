@@ -1,22 +1,21 @@
 import $rdf from '@rdf-esm/dataset'
 import { Quad } from 'rdf-js'
-import { expand as _expand } from '@zazuko/rdf-vocabularies/expand'
+import { expand as _expand } from './lib/expand'
 import { shrink as _shrink } from '@zazuko/rdf-vocabularies/shrink'
-import { vocabularies } from '@zazuko/rdf-vocabularies/vocabularies'
+import { rdfs, schema, qb, sdmx, dcterms, dc11, skos, skosxl, xkos, xsd, wgs } from '@zazuko/rdf-vocabularies/datasets'
 import prefixes from '@zazuko/rdf-vocabularies/prefixes'
 import { rdf } from '@tpluscode/rdf-ns-builders'
 
-const relevantPrefixes = ['rdfs', 'schema', 'qb', 'sdmx', 'dcterms', 'dc11', 'skos', 'skosxl', 'xkos', 'xsd', 'wgs']
+const vocabs = { rdfs, schema, qb, sdmx, dcterms, dc11, skos, skosxl, xkos, xsd, wgs }
 
-export async function loadCommonProperties (): Promise<string[]> {
-  const vocabs = await vocabularies({ only: relevantPrefixes })
-
-  return Object.entries(vocabs).flatMap(([prefix, dataset]) => {
+export function loadCommonProperties (): string[] {
+  return Object.entries(vocabs).flatMap(([prefix, factory]) => {
+    const dataset = $rdf.dataset(factory($rdf))
     const baseIRI = prefixes[prefix]
     const graph = $rdf.namedNode(baseIRI)
-    const properties = dataset.match(null, rdf.type, rdf.property, graph)
+    const properties = [...dataset.match(null, rdf.type, rdf.property, graph)]
 
-    return properties.toArray().map((property: Quad) => shrink(property.subject.value))
+    return properties.map((property: Quad) => shrink(property.subject.value))
   })
 }
 
