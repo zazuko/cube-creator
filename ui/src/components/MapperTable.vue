@@ -1,5 +1,5 @@
 <template>
-  <div class="table panel">
+  <div class="mapper-table panel">
     <div class="panel-heading" :style="{ 'background-color': table.color }">
       <div class="level">
         <div class="level-left">
@@ -21,6 +21,7 @@
             <hydra-operation-button
               :operation="table.actions.delete"
               @click="deleteTable(table)"
+              data-testid="delete-table"
             />
           </div>
         </div>
@@ -52,6 +53,7 @@
       <hydra-operation-button
         :operation="table.actions.createColumnMapping"
         :to="{ name: 'ColumnMappingCreate', params: { tableId: table.clientPath } }"
+        data-testid="create-column-mapping"
       />
     </div>
   </div>
