@@ -1,5 +1,5 @@
-import { Initializer, RdfResource } from '@tpluscode/rdfine/RdfResource'
-import RdfResourceImpl, { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
+import RdfResourceImpl, { Initializer, RdfResource } from '@tpluscode/rdfine/RdfResource'
+import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import { Constructor, property, ResourceIdentifier } from '@tpluscode/rdfine'
 import type { GraphPointer } from 'clownface'
 import { initializer } from './lib/initializer'
