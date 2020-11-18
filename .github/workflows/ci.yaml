@@ -11,27 +11,14 @@ jobs:
         with:
           node-version: 14
       - run: yarn install --ci
-      - run: yarn test
-      - name: Codecov
-        uses: codecov/codecov-action@v1.0.5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-
-  cli-test:
-    runs-on: ubuntu-latest
-    env:
-      AUTH_RUNNER_CLIENT_SECRET: ${{ secrets.AUTH_RUNNER_CLIENT_SECRET }}
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1.4.4
-        with:
-          node-version: 14
-      - run: yarn install --ci
+      - run: yarn test      
       - name: Install lando
         run: sh e2e-tests/install-lando.sh
       - name: Start site
         run: sh e2e-tests/start-lando.sh
       - run: yarn test:cli
+        env:
+          AUTH_RUNNER_CLIENT_SECRET: ${{ secrets.AUTH_RUNNER_CLIENT_SECRET }}
       - name: logs on fail
         if: ${{ failure() }}
         run: lando logs -s core
