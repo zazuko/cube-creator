@@ -126,6 +126,38 @@ describe('middleware/shacl', () => {
     await response.expect(400)
   })
 
+  it('applies overridden targetNode to validate', async () => {
+    // given
+    const app = express()
+    app.use(appMock(api => {
+      api.operation.addOut(hydra.expects, ex.Shape)
+    }))
+    const shape = clownface({ dataset: $rdf.dataset() })
+      .namedNode(ex.Shape)
+      .addOut(rdf.type, sh.NodeShape)
+      .addOut(sh.property, prop => prop.addOut(sh.path, rdfs.label).addOut(sh.minCount, 1))
+
+    app.use(mockResourceMiddleware())
+    app.use(shaclMiddleware({
+      createResourceStore: testResourceStore([shape]),
+      loadResourcesTypes,
+      getTargetNode() {
+        return ex.resource
+      },
+    }))
+    app.use((req, res) => res.status(204).end())
+
+    // when
+    const response = request(app)
+      .put('/')
+      .set('content-type', 'text/turtle')
+      .send(turtle`${ex.resource} a ${cc.Job} .`.toString())
+
+    // then
+    // it should mark invalid based on targetNode
+    await response.expect(400)
+  })
+
   it('does not fail if body is empty but shape has no properties', async () => {
     // given
     const app = express()
