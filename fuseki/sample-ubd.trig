@@ -275,7 +275,7 @@ graph <cube-project/ubd/csv-source/stations> {
 
   <cube-project/ubd/csv-source/stations/column/station-id>
     a csvw:Column ;
-    schema:name "STATION_ID" ;
+    schema:name "station_id" ;
     dtype:order 0 ;
     cc:csvColumnSample "1" ;
     cc:csvColumnSample "2" ;
