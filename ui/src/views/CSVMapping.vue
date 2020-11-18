@@ -52,6 +52,7 @@
                   :operation="tableCollection.actions.create"
                   :to="{ name: 'TableCreate' }"
                   :disabled="sources.length === 0"
+                  data-testid="create-table"
                 />
               </div>
             </div>
