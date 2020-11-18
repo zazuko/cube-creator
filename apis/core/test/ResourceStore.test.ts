@@ -166,7 +166,7 @@ describe('ResourceStore', () => {
   })
 
   describe('delete', () => {
-    it('delete is adding DROP GRAPH statement and removes from inserts', async function () {
+    it('delete is adding DROP SILENT GRAPH statement and removes from inserts', async function () {
       // given
       const resourceStore = new ResourceStore(client)
       resourceStore.create(ex.Foo)
