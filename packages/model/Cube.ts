@@ -1,4 +1,5 @@
 import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
+import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import { Constructor, property } from '@tpluscode/rdfine'
 import { dcterms, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import { cube } from '@cube-creator/core/namespace'
@@ -10,7 +11,7 @@ export interface Cube extends RdfResourceCore {
   creator: NamedNode
 }
 
-export function CubeMixin<Base extends Constructor>(Resource: Base) {
+export function CubeMixin<Base extends Constructor>(Resource: Base): Mixin {
   class Impl extends Resource implements Cube {
     @property.literal({
       path: schema.dateCreated,

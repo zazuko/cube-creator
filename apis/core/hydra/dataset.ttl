@@ -1,0 +1,45 @@
+BASE           <urn:hydra-box:api>
+PREFIX cc:     <https://cube-creator.zazuko.com/vocab#>
+prefix hydra:  <http://www.w3.org/ns/hydra/core#>
+prefix code:   <https://code.described.at/>
+prefix query:  <http://hypermedia.app/query#>
+prefix sh:     <http://www.w3.org/ns/shacl#>
+PREFIX schema: <http://schema.org/>
+PREFIX void:   <http://rdfs.org/ns/void#>
+
+void:Dataset
+  a
+    hydra:Class ;
+  query:include
+    cc:dimensionMetadata ;
+  query:preprocess
+    [
+      a
+        code:EcmaScript ;
+      code:link
+        <file:handlers/dataset#loadCubes> ;
+    ] ;
+  hydra:supportedOperation
+    [
+      a
+        hydra:Operation,
+        schema:UpdateAction ;
+      hydra:title
+        "Edit metadata" ;
+      hydra:method
+        "PUT" ;
+      hydra:expects
+        void:Dataset,
+        <shape/dataset/edit-metadata> ;
+      code:implementedBy
+        [
+          a
+            code:EcmaScript ;
+          code:link
+            <file:handlers/dataset#put> ;
+        ] ;
+    ] .
+
+<shape/dataset/edit-metadata>
+  a
+    sh:Shape .

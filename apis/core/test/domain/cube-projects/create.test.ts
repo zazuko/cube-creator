@@ -9,6 +9,7 @@ import { createProject } from '../../../lib/domain/cube-projects/create'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import '../../../lib/domain'
 import env from '@cube-creator/core/env'
+import { Dataset } from '@cube-creator/model'
 
 describe('domain/cube-projects/create', () => {
   let store: TestResourceStore
@@ -60,12 +61,35 @@ describe('domain/cube-projects/create', () => {
     const project = await createProject({ resource, store, projectsCollection, user })
 
     // then
-    const dataset = await store.get(project.dataset)
+    const dataset = await store.get(project.dataset.id)
     expect(dataset).to.matchShape({
-      property: {
+      property: [{
         path: rdf.type,
         [sh.hasValue.value]: [schema.Dataset, _void.Dataset, dcat.Dataset],
-      },
+      }, {
+        path: cc.dimensionMetadata,
+        minCount: 1,
+      }],
+    })
+  })
+
+  it('initializes a dimension metadata collection resource', async function () {
+    // given
+    const resource = clownface({ dataset: $rdf.dataset() })
+      .namedNode('')
+      .addOut(rdfs.label, 'Foo bar project')
+
+    // when
+    const project = await createProject({ resource, store, projectsCollection, user })
+
+    // then
+    const dataset = await store.getResource<Dataset>(project.dataset.id)
+    const dimensionMetadata = await store.get(dataset?.dimensionMetadata.id)
+    expect(dimensionMetadata).to.matchShape({
+      property: [{
+        path: rdf.type,
+        hasValue: cc.DimensionMetadataCollection,
+      }],
     })
   })
 
@@ -231,7 +255,7 @@ describe('domain/cube-projects/create', () => {
       const project = await createProject({ resource, store, projectsCollection, user })
 
       // then
-      const dataset = await store.get(project.dataset)
+      const dataset = await store.get(project.dataset.id)
       expect(dataset).to.matchShape({
         property: [{
           path: rdf.type,

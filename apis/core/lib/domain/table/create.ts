@@ -6,7 +6,7 @@ import { resourceStore } from '../resources'
 import { NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import { NotFoundError } from '../../errors'
-import { CsvMapping, CsvSource } from '@cube-creator/model'
+import { CsvColumn, CsvMapping, CsvSource } from '@cube-creator/model'
 
 const trueTerm = $rdf.literal('true', xsd.boolean)
 
@@ -41,16 +41,17 @@ export async function createTable({
     throw new NotFoundError(csvSourceId)
   }
 
+  const columns = [...csvSource.columns]
+
   const table = await csvMapping.addTable(store, {
     name: label.value,
     csvSource,
-    identifierTemplate: resource.out(cc.identifierTemplate).value,
+    identifierTemplate: getTemplate(resource.out(cc.identifierTemplate).value, columns),
     color: resource.out(schema.color).value,
     isObservationTable: trueTerm.equals(resource.out(cc.isObservationTable).term),
   })
 
   // Create default column mappings for provided columns
-  const columns = [...csvSource.columns]
   resource.out(csvw.column)
     .forEach(({ term: columnId }) => {
       const column = columns
@@ -67,4 +68,9 @@ export async function createTable({
 
   await store.save()
   return table.pointer
+}
+
+function getTemplate(template: string | undefined, columns: CsvColumn[]): string {
+  if (template?.trim()) return template
+  return columns.sort((a, b) => (a.order - b.order)).map((column) => `{${column.name}}`).join('/')
 }

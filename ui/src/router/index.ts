@@ -8,15 +8,17 @@ import store from '@/store'
 import Authenticated from '@/views/Authenticated.vue'
 import CubeProjects from '@/views/CubeProjects.vue'
 import CubeProject from '@/views/CubeProject.vue'
-import CubeProjectNew from '@/views/CubeProjectNew.vue'
+import CubeProjectCreate from '@/views/CubeProjectCreate.vue'
 import CubeProjectEdit from '@/views/CubeProjectEdit.vue'
 import CSVMapping from '@/views/CSVMapping.vue'
 import CSVUpload from '@/views/CSVUpload.vue'
 import SourceEdit from '@/views/SourceEdit.vue'
 import TableCreate from '@/views/TableCreate.vue'
+import TableEdit from '@/views/TableEdit.vue'
 import ColumnMappingEdit from '@/views/ColumnMappingEdit.vue'
 import ColumnMappingCreate from '@/views/ColumnMappingCreate.vue'
 import CubeDesigner from '@/views/CubeDesigner.vue'
+import CubeMetadataEdit from '@/views/CubeMetadataEdit.vue'
 import Pipeline from '@/views/Pipeline.vue'
 import PageNotFound from '@/views/PageNotFound.vue'
 import Logout from '@/views/Logout.vue'
@@ -38,8 +40,8 @@ const routes: Array<RouteConfig> = [
         children: [
           {
             path: 'new',
-            name: 'CubeProjectNew',
-            component: CubeProjectNew,
+            name: 'CubeProjectCreate',
+            component: CubeProjectCreate,
           },
         ],
       },
@@ -74,6 +76,11 @@ const routes: Array<RouteConfig> = [
                 component: TableCreate,
               },
               {
+                path: 'tables/:tableId/edit',
+                name: 'TableEdit',
+                component: TableEdit,
+              },
+              {
                 path: 'column-mappings/:columnMappingId/edit',
                 name: 'ColumnMappingEdit',
                 component: ColumnMappingEdit,
@@ -89,6 +96,13 @@ const routes: Array<RouteConfig> = [
             path: 'metadata',
             name: 'CubeDesigner',
             component: CubeDesigner,
+            children: [
+              {
+                path: 'edit',
+                name: 'CubeMetadataEdit',
+                component: CubeMetadataEdit,
+              }
+            ],
           },
           {
             path: 'pipeline',

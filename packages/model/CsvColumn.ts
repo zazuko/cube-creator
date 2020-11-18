@@ -1,5 +1,6 @@
 import { Initializer, RdfResource } from '@tpluscode/rdfine/RdfResource'
-import RdfResourceImpl, { Constructor, property, ResourceIdentifier } from '@tpluscode/rdfine'
+import RdfResourceImpl, { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
+import { Constructor, property, ResourceIdentifier } from '@tpluscode/rdfine'
 import type { GraphPointer } from 'clownface'
 import { initializer } from './lib/initializer'
 import { csvw, dtype, schema } from '@tpluscode/rdf-ns-builders'
@@ -11,7 +12,7 @@ export interface CsvColumn extends RdfResource {
   samples: string[]
 }
 
-export function CsvColumnMixin<Base extends Constructor>(Resource: Base) {
+export function CsvColumnMixin<Base extends Constructor>(Resource: Base): Mixin {
   class Impl extends Resource implements Partial<CsvColumn> {
     @property.literal({ path: schema.name })
     name!: string

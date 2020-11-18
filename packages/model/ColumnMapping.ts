@@ -1,4 +1,5 @@
 import { Initializer, RdfResource } from '@tpluscode/rdfine/RdfResource'
+import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import { CsvColumn } from './CsvColumn'
 import { DatasetCore, NamedNode, Term } from 'rdf-js'
 import { Link } from './lib/Link'
@@ -15,7 +16,7 @@ export interface ColumnMapping<D extends DatasetCore = DatasetCore> extends RdfR
   defaultValue: Term
 }
 
-export function ColumnMappingMixin<Base extends Constructor>(Resource: Base) {
+export function ColumnMappingMixin<Base extends Constructor>(Resource: Base): Mixin {
   @namespace(cc as any)
   class Impl extends Resource implements Partial<ColumnMapping> {
     @property.resource()

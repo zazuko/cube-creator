@@ -2,7 +2,7 @@ import { describe, it, beforeEach } from 'mocha'
 import { expect } from 'chai'
 import clownface from 'clownface'
 import $rdf from 'rdf-ext'
-import { csvw, hydra, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
+import { csvw, dtype, hydra, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import { createTable } from '../../../lib/domain/table/create'
 import { TestResourceStore } from '../../support/TestResourceStore'
@@ -139,5 +139,23 @@ describe('domain/table/create', () => {
         maxCount: 1,
       }],
     })
+  })
+
+  it('generates template if missing', async () => {
+    const resource = clownface({ dataset: $rdf.dataset() })
+      .node($rdf.namedNode(''))
+      .addOut(schema.name, 'the name')
+      .addOut(schema.color, '#aaa')
+      .addOut(cc.identifierTemplate, '')
+      .addOut(cc.csvSource, $rdf.namedNode('foo'))
+      .addOut(csvw.column, [$rdf.namedNode('source-column-1'), $rdf.namedNode('source-column-2')])
+    csvSource.addOut(csvw.column, $rdf.namedNode('source-column-1'), column => column.addOut(schema.name, 'column 1').addOut(dtype.order, 0))
+    csvSource.addOut(csvw.column, $rdf.namedNode('source-column-2'), column => column.addOut(schema.name, 'column 2').addOut(dtype.order, 1))
+
+    // when
+    const table = await createTable({ resource, store, tableCollection })
+
+    // then
+    expect(table.out(cc.identifierTemplate).value).to.eq('{column 1}/{column 2}')
   })
 })

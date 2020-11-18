@@ -1,6 +1,7 @@
 import * as Schema from '@rdfine/schema'
 import * as Csvw from '@rdfine/csvw'
 import RdfResourceImpl, { RdfResource } from '@tpluscode/rdfine/RdfResource'
+import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import { Constructor, property } from '@tpluscode/rdfine'
 import { csvw, schema } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
@@ -26,7 +27,7 @@ export interface SourcesCollection extends Collection<CsvSource> {
 
 }
 
-export function CsvSourceMixin<Base extends Constructor>(base: Base) {
+export function CsvSourceMixin<Base extends Constructor>(base: Base): Mixin {
   class Impl extends base implements Partial<CsvSource> {
     @property.resource({ path: schema.associatedMedia, as: [MediaObjectMixin] })
     associatedMedia!: Schema.MediaObject

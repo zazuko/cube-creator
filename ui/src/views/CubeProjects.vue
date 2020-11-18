@@ -8,10 +8,14 @@
           </h2>
         </div>
         <div v-if="projectsCollection" class="level-item">
-          <router-link v-if="projectsCollection.actions.create" :to="{ name: 'CubeProjectNew' }" class="button">
-            <b-icon icon="plus" />
-            <span>{{ projectsCollection.actions.create.title }}</span>
-          </router-link>
+          <hydra-operation-button
+            :operation="projectsCollection.actions.create"
+            :to="{ name: 'CubeProjectCreate' }"
+            type="is-default"
+            size=""
+          >
+            {{ projectsCollection.actions.create.title }}
+          </hydra-operation-button>
         </div>
       </div>
     </div>
@@ -39,10 +43,11 @@ import { Component, Vue } from 'vue-property-decorator'
 import { State } from 'vuex-class'
 import PageContent from '@/components/PageContent.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
+import HydraOperationButton from '@/components/HydraOperationButton.vue'
 import { ProjectsCollection, Project } from '@cube-creator/model'
 
 @Component({
-  components: { PageContent, LoadingBlock },
+  components: { PageContent, LoadingBlock, HydraOperationButton },
 })
 export default class CubeProjectsView extends Vue {
   @State('collection', { namespace: 'projects' }) projectsCollection!: ProjectsCollection | null;

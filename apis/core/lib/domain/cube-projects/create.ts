@@ -4,6 +4,7 @@ import { rdfs } from '@tpluscode/rdf-ns-builders'
 import { cc, shape } from '@cube-creator/core/namespace'
 import * as Project from '@cube-creator/model/Project'
 import * as Dataset from '@cube-creator/model/Dataset'
+import * as DimensionMetadata from '@cube-creator/model/DimensionMetadata'
 import { ResourceStore } from '../../ResourceStore'
 import * as id from '../identifiers'
 import { resourceStore } from '../resources'
@@ -32,7 +33,9 @@ export async function createProject({
   })
 
   project.initializeJobCollection(store)
-  const dataset = Dataset.create(store.create(project.dataset))
+  const dataset = Dataset.create(store.create(project.dataset.id))
+
+  DimensionMetadata.createCollection(store.create(dataset.dimensionMetadata.id))
 
   if (shape('cube-project/create#CSV').equals(resource.out(cc.projectSourceKind).term)) {
     let namespace = resource.out(cc.namespace).term

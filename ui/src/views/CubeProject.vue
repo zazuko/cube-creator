@@ -1,7 +1,12 @@
 <template>
   <div v-if="project">
-    <div class="tabs project-tabs">
+    <div class="tabs project-tabs is-boxed">
       <ul>
+        <li class="tab">
+          <h2 class="project-title">
+            {{ project.title }}
+          </h2>
+        </li>
         <router-link v-if="hasCSVMapping" :to="{ name: 'CSVMapping' }" v-slot="{ href, isActive, navigate }">
           <li :class="{ 'is-active': isActive }">
             <a :href="href" @click="navigate">CSV Mapping</a>
@@ -31,10 +36,6 @@
     </div>
 
     <page-content>
-      <h2 class="title is-4">
-        {{ project.title }}
-      </h2>
-
       <router-view />
     </page-content>
   </div>
@@ -76,6 +77,13 @@ export default class CubeProjectView extends Vue {
 <style scoped>
 .tabs.project-tabs {
   margin-bottom: 0;
+  margin-top: 0.5rem;
+}
+
+.project-title {
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  margin-right: 1rem;
 }
 
 .tab-right {
