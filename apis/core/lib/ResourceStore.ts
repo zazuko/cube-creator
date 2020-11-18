@@ -80,7 +80,7 @@ class SparqlStoreFacade implements TripleStoreFacade {
   deleteQuery(terms: Iterable<NamedNode>) {
     let deleteQuery = sparql``
     for (const id of terms) {
-      deleteQuery = sparql`${deleteQuery}DROP GRAPH ${id};\n`
+      deleteQuery = sparql`${deleteQuery}DROP SILENT GRAPH ${id};\n`
     }
 
     return deleteQuery
