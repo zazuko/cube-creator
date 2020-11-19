@@ -3,6 +3,7 @@ import { CsvColumn, Table } from '@cube-creator/model'
 import { cc } from '@cube-creator/core/namespace'
 import * as ColumnMapping from '@cube-creator/model/ColumnMapping'
 import $rdf from 'rdf-ext'
+import slug from 'slug'
 import { NamedNode, Term } from 'rdf-js'
 import { ResourceStore } from '../../ResourceStore'
 import * as id from '../identifiers'
@@ -32,11 +33,6 @@ declare module '@cube-creator/model' {
   }
 }
 
-function defaultProperty(columnName: string) {
-  // TODO: How do we define the default target property for a column?
-  return $rdf.literal(columnName)
-}
-
 export default function Mixin<Base extends Constructor<Table>>(Resource: Base) {
   return class Impl extends Resource implements ApiTable {
     addColumnMapping({ store, sourceColumn, targetProperty, datatype, language, defaultValue }: CreateColumnMapping): ColumnMapping.ColumnMapping {
@@ -54,12 +50,10 @@ export default function Mixin<Base extends Constructor<Table>>(Resource: Base) {
     }
 
     addColumnMappingFromColumn({ store, column }: CreateColumnMappingFromColumn): ColumnMapping.ColumnMapping {
-      const targetProperty = defaultProperty(column.name)
-
       return this.addColumnMapping({
         store,
         sourceColumn: column,
-        targetProperty,
+        targetProperty: $rdf.literal(slug(column.name)),
       })
     }
   }
