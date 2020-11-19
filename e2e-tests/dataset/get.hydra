@@ -20,7 +20,7 @@ With Class void:Dataset {
     }
 
     Expect Property cc:dimensionMetadata {
-        Expect Type <https://cube-creator.zazuko.com/vocab#DimensionsMetadataCollection>
+        Expect Type <https://cube-creator.zazuko.com/vocab#DimensionMetadataCollection>
         Expect Property schema:hasPart {
             Expect Property schema:about
         }
