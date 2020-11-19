@@ -76,7 +76,7 @@ export async function createTable({
 
       if (table.types.has(cc.ObservationTable)) {
         dimensionMetaDataCollection.addDimensionMetadata({
-          store, columnMapping,
+          store, columnMapping, csvMapping,
         })
       }
 

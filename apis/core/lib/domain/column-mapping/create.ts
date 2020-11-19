@@ -3,7 +3,7 @@ import { cc } from '@cube-creator/core/namespace'
 import { ResourceStore } from '../../ResourceStore'
 import { resourceStore } from '../resources'
 import { NamedNode } from 'rdf-js'
-import { CsvSource, DimensionMetadataCollection, Table } from '@cube-creator/model'
+import { CsvMapping, CsvSource, DimensionMetadataCollection, Table } from '@cube-creator/model'
 import * as DimensionMetadataQueries from '../queries/dimension-metadata'
 import { NotFoundError } from '../../errors'
 
@@ -44,6 +44,10 @@ export async function createColumnMapping({
   })
 
   if (table.types.has(cc.ObservationTable)) {
+    const csvMapping = await store.getResource<CsvMapping>(table.csvMapping.id)
+    if (!csvMapping) {
+      throw new NotFoundError(csvMapping)
+    }
     const dimensionMetaDataCollectionPointer = await getDimensionMetaDataCollection(table.csvMapping.id)
     const dimensionMetaDataCollection = await store.getResource<DimensionMetadataCollection>(dimensionMetaDataCollectionPointer)
     if (!dimensionMetaDataCollection) {
@@ -51,7 +55,7 @@ export async function createColumnMapping({
     }
 
     dimensionMetaDataCollection.addDimensionMetadata({
-      store, columnMapping,
+      store, columnMapping, csvMapping,
     })
   }
 

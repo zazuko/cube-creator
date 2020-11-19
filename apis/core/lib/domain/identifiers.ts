@@ -57,5 +57,5 @@ export function job(jobCollection: GraphPointer<NamedNode>): NamedNode {
 }
 
 export function dimensionMetadata(dimensionMetadataCollection: DimensionMetadataCollection, mapping: ColumnMapping): NamedNode {
-  return $rdf.namedNode(`${dimensionMetadataCollection.pointer}?dimension=${mapping.pointer}`)
+  return $rdf.namedNode(`${dimensionMetadataCollection.pointer}/${mapping.targetProperty}`)
 }

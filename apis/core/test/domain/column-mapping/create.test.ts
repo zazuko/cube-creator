@@ -23,6 +23,10 @@ describe('domain/column-mapping/create', () => {
     .addOut(rdf.type, cc.Table)
     .addOut(rdf.type, cc.ObservationTable)
     .addOut(cc.csvMapping, $rdf.namedNode('myMapping'))
+  const csvMapping = clownface({ dataset: $rdf.dataset() })
+    .namedNode('myMapping')
+    .addOut(rdf.type, cc.CsvMapping)
+    .addOut(cc.namespace, $rdf.namedNode('http://example.com'))
   const csvSource = clownface({ dataset: $rdf.dataset() })
     .namedNode('foo')
     .addOut(rdf.type, cc.CSVSource)
@@ -39,8 +43,10 @@ describe('domain/column-mapping/create', () => {
     store = new TestResourceStore([
       table,
       observationTable,
+      csvMapping,
       csvSource,
       dimensionMetadata,
+
     ])
 
     getDimensionMetaDataCollection = sinon.stub().resolves(dimensionMetadata.term.value)
@@ -168,4 +174,18 @@ describe('domain/column-mapping/create', () => {
       },
     })
   })
+/* Does not work yet
+  it('throw if same column added twice', async () => {
+    // given
+    const resource = clownface({ dataset: $rdf.dataset() })
+      .node($rdf.namedNode(''))
+      .addOut(cc.sourceColumn, $rdf.namedNode('my-column'))
+      .addOut(cc.targetProperty, $rdf.namedNode('test'))
+    await createColumnMapping({ resource, store, tableId: observationTable.term, dimensionMetadataQueries })
+
+    // when
+    // this should throw
+    await createColumnMapping({ resource, store, tableId: observationTable.term, dimensionMetadataQueries })
+  })
+*/
 })
