@@ -19,6 +19,7 @@ describe('domain/table/create', () => {
     .namedNode('myCsvMapping')
     .addOut(rdf.type, cc.CsvMapping)
     .addOut(cc.tables, $rdf.namedNode('tables'))
+    .addOut(cc.namespace, $rdf.namedNode('http://example.com'))
   const tableCollection = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('tables') })
     .addOut(rdf.type, cc.Table)
     .addOut(cc.csvMapping, csvMapping)

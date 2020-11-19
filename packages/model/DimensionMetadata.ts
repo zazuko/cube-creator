@@ -21,6 +21,8 @@ export function DimensionMetadataMixin<Base extends Constructor>(Resource: Base)
   return Impl
 }
 
+DimensionMetadataMixin.shouldApply = false
+
 export function DimensionMetadataCollectionMixin<Base extends Constructor>(Resource: Base) {
   class Impl extends Resource implements Partial<DimensionMetadataCollection> {
     @property.resource({ path: schema.hasPart, values: 'array' })
@@ -33,6 +35,8 @@ export function DimensionMetadataCollectionMixin<Base extends Constructor>(Resou
 export const createCollection = initializer<DimensionMetadataCollection>(DimensionMetadataCollectionMixin, {
   types: [cc.DimensionMetadataCollection],
 })
+
+DimensionMetadataCollectionMixin.appliesTo = cc.DimensionMetadataCollection
 
 type RequiredProperties = 'about'
 
