@@ -170,7 +170,7 @@ describe('domain/table/create', () => {
     expect(table.out(cc.identifierTemplate).value).to.eq('{column 1}/{column 2}')
   })
 
-  it('creates Dimension Metadata for columns', async () => {
+  it('no dimension metadata when not observation table', async () => {
     // given
     const resource = clownface({ dataset: $rdf.dataset() })
       .node($rdf.namedNode(''))
@@ -189,7 +189,40 @@ describe('domain/table/create', () => {
     expect(dimensionMetadata).to.matchShape({
       property: [{
         path: schema.hasPart,
+        maxCount: 0,
+      }],
+    })
+  })
+
+  it('creates Dimension Metadata for observation table columns ', async () => {
+    // given
+    const resource = clownface({ dataset: $rdf.dataset() })
+      .node($rdf.namedNode(''))
+      .addOut(schema.name, 'the name')
+      .addOut(cc.isObservationTable, true)
+      .addOut(schema.color, '#aaa')
+      .addOut(cc.identifierTemplate, '')
+      .addOut(cc.csvSource, $rdf.namedNode('foo'))
+      .addOut(csvw.column, [$rdf.namedNode('source-column-1'), $rdf.namedNode('source-column-2')])
+    csvSource.addOut(csvw.column, $rdf.namedNode('source-column-1'), column => column.addOut(schema.name, 'column 1').addOut(dtype.order, 0))
+    csvSource.addOut(csvw.column, $rdf.namedNode('source-column-2'), column => column.addOut(schema.name, 'column 2').addOut(dtype.order, 1))
+
+    // when
+    await createTable({ resource, store, tableCollection, dimensionMetadataQueries })
+
+    // then
+    expect(dimensionMetadata).to.matchShape({
+      property: [{
+        path: schema.hasPart,
         minCount: 2,
+        maxCount: 2,
+        node: {
+          property: {
+            path: schema.about,
+            minCount: 1,
+            maxCount: 1,
+          },
+        },
       }],
     })
   })
