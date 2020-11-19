@@ -24,7 +24,7 @@ With Class api:Table {
             prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 
             <>  cc:sourceColumn <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/year> ;
-                cc:targetProperty "dimension/year" ;
+                cc:targetProperty "dimension/year-built" ;
                 cc:datatype xsd:date ;
                 cc:language "en" ;
                 cc:defaultValue "2000-01-01" .
@@ -33,7 +33,7 @@ With Class api:Table {
             Expect Status 201
 
             Expect Type <https://cube-creator.zazuko.com/vocab#ColumnMapping>
-            Expect Property cc:targetProperty "dimension/year"
+            Expect Property cc:targetProperty "dimension/year-built"
             Expect Property cc:sourceColumn {
                 Expect Id <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/year>
             }
@@ -42,6 +42,24 @@ With Class api:Table {
             }
             Expect Property cc:language "en"
             Expect Property cc:defaultValue "2000-01-01"
+        }
+
+        Invoke {
+            Content-Type "text/turtle"
+
+            ```
+            prefix cc: <https://cube-creator.zazuko.com/vocab#>
+            prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+            prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+
+            <>  cc:sourceColumn <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/year> ;
+                cc:targetProperty "dimension/year" ;
+                cc:datatype xsd:date ;
+                cc:language "en" ;
+                cc:defaultValue "2000-01-01" .
+            ```
+        } => {
+            Expect Status 400
         }
     }
 }
