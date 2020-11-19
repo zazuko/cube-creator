@@ -58,7 +58,7 @@ export async function createTable({
   const dimensionMetaDataCollectionPointer = await getDimensionMetaDataCollection(csvMapping.id)
   const dimensionMetaDataCollection = await store.getResource<DimensionMetadataCollection>(dimensionMetaDataCollectionPointer)
   if (!dimensionMetaDataCollection) {
-    throw new Error(`DimensionMetadataCollection ${dimensionMetaDataCollectionPointer} not found`)
+    throw new NotFoundError(dimensionMetaDataCollectionPointer)
   }
 
   resource.out(csvw.column)
@@ -73,9 +73,12 @@ export async function createTable({
         store,
         column,
       })
-      dimensionMetaDataCollection.addDimensionMetadata({
-        store, columnMapping,
-      })
+
+      if (table.types.has(cc.ObservationTable)) {
+        dimensionMetaDataCollection.addDimensionMetadata({
+          store, columnMapping,
+        })
+      }
 
       return columnMapping
     })

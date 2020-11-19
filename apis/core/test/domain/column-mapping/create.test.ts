@@ -18,6 +18,11 @@ describe('domain/column-mapping/create', () => {
     .namedNode('myTable')
     .addOut(rdf.type, cc.Table)
     .addOut(cc.csvMapping, $rdf.namedNode('myMapping'))
+  const observationTable = clownface({ dataset: $rdf.dataset() })
+    .namedNode('myObservationTable')
+    .addOut(rdf.type, cc.Table)
+    .addOut(rdf.type, cc.ObservationTable)
+    .addOut(cc.csvMapping, $rdf.namedNode('myMapping'))
   const csvSource = clownface({ dataset: $rdf.dataset() })
     .namedNode('foo')
     .addOut(rdf.type, cc.CSVSource)
@@ -25,6 +30,7 @@ describe('domain/column-mapping/create', () => {
       column.addOut(schema.name, $rdf.literal('My Column'))
     })
   table.addOut(cc.csvSource, csvSource.term)
+  observationTable.addOut(cc.csvSource, csvSource.term)
   const dimensionMetadata = clownface({ dataset: $rdf.dataset() })
     .namedNode('myDimensionMetadata')
     .addOut(rdf.type, cc.DimensionMetadataCollection)
@@ -32,6 +38,7 @@ describe('domain/column-mapping/create', () => {
   beforeEach(() => {
     store = new TestResourceStore([
       table,
+      observationTable,
       csvSource,
       dimensionMetadata,
     ])
@@ -117,7 +124,7 @@ describe('domain/column-mapping/create', () => {
     })
   })
 
-  it('creates Dimension Metadata for column', async () => {
+  it('No metadata when not observation table', async () => {
     // given
     const resource = clownface({ dataset: $rdf.dataset() })
       .node($rdf.namedNode(''))
@@ -129,10 +136,36 @@ describe('domain/column-mapping/create', () => {
 
     // then
     expect(dimensionMetadata).to.matchShape({
-      property: [{
+      property: {
+        path: schema.hasPart,
+        maxCount: 0,
+      },
+    })
+  })
+
+  it('creates Dimension Metadata for column', async () => {
+    // given
+    const resource = clownface({ dataset: $rdf.dataset() })
+      .node($rdf.namedNode(''))
+      .addOut(cc.sourceColumn, $rdf.namedNode('my-column'))
+      .addOut(cc.targetProperty, $rdf.namedNode('test'))
+
+    // when
+    await createColumnMapping({ resource, store, tableId: observationTable.term, dimensionMetadataQueries })
+
+    // then
+    expect(dimensionMetadata).to.matchShape({
+      property: {
         path: schema.hasPart,
         minCount: 1,
-      }],
+        node: {
+          property: {
+            path: schema.about,
+            minCount: 1,
+            maxCount: 1,
+          },
+        },
+      },
     })
   })
 })

@@ -5,6 +5,7 @@ import { resourceStore } from '../resources'
 import { NamedNode } from 'rdf-js'
 import { CsvSource, DimensionMetadataCollection, Table } from '@cube-creator/model'
 import * as DimensionMetadataQueries from '../queries/dimension-metadata'
+import { NotFoundError } from '../../errors'
 
 interface CreateColumnMappingCommand {
   tableId: NamedNode
@@ -22,7 +23,7 @@ export async function createColumnMapping({
   const table = await store.getResource<Table>(tableId)
 
   if (!table) {
-    throw new Error(`Table ${tableId.value} not found`)
+    throw new NotFoundError(tableId)
   }
 
   const columnId = resource.out(cc.sourceColumn).term as NamedNode
@@ -30,7 +31,7 @@ export async function createColumnMapping({
   const column = source?.columns.find(({ id }) => id.equals(columnId))
 
   if (!column) {
-    throw new Error(`Column ${columnId.value} not found`)
+    throw new NotFoundError(columnId)
   }
 
   const columnMapping = table.addColumnMapping({
@@ -42,15 +43,17 @@ export async function createColumnMapping({
     defaultValue: resource.out(cc.defaultValue).term,
   })
 
-  const dimensionMetaDataCollectionPointer = await getDimensionMetaDataCollection(table.csvMapping.id)
-  const dimensionMetaDataCollection = await store.getResource<DimensionMetadataCollection>(dimensionMetaDataCollectionPointer)
-  if (!dimensionMetaDataCollection) {
-    throw new Error(`DimensionMetadataCollection ${dimensionMetaDataCollectionPointer} not found`)
-  }
+  if (table.types.has(cc.ObservationTable)) {
+    const dimensionMetaDataCollectionPointer = await getDimensionMetaDataCollection(table.csvMapping.id)
+    const dimensionMetaDataCollection = await store.getResource<DimensionMetadataCollection>(dimensionMetaDataCollectionPointer)
+    if (!dimensionMetaDataCollection) {
+      throw new NotFoundError(dimensionMetaDataCollectionPointer)
+    }
 
-  dimensionMetaDataCollection.addDimensionMetadata({
-    store, columnMapping,
-  })
+    dimensionMetaDataCollection.addDimensionMetadata({
+      store, columnMapping,
+    })
+  }
 
   store.save()
 
