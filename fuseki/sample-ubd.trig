@@ -262,7 +262,7 @@ graph <cube-project/ubd/csv-source/stations> {
                             ] ;
     schema:name "stations.csv" ;
     csvw:dialect <cube-project/ubd/csv-source/stations/dialect> ;
-    csvw:column <cube-project/ubd/csv-source/ubd/column/year> ;
+    csvw:column <cube-project/ubd/csv-source/stations/column/station-id> ;
     csvw:column <cube-project/ubd/csv-source/stations/column/station-name-fr> ;
     csvw:column <cube-project/ubd/csv-source/stations/column/station-name-de> ;
   .
