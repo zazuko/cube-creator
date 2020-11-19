@@ -386,7 +386,7 @@ graph <cube-project/ubd/csv-mapping/table-station> {
     cc:csvw <cube-project/ubd/csv-mapping/table-station/csvw> ;
     schema:name "Station" ;
     schema:color "#BBBBBB" ;
-    cc:identifierTemplate "station/{STATION_ID}" ;
+    cc:identifierTemplate "station/{station_id}" ;
     cc:columnMapping <cube-project/ubd/csv-mapping/table-station/column-mapping-1> ;
     cc:columnMapping <cube-project/ubd/csv-mapping/table-station/column-mapping-2> ;
     cc:columnMapping <cube-project/ubd/csv-mapping/table-station/column-mapping-3> ;
