@@ -216,7 +216,7 @@ graph <cube-project/ubd/csv-source/ubd> {
 
   <cube-project/ubd/csv-source/ubd/column/year>
     a csvw:Column ;
-    schema:name "YEAR" ;
+    schema:name "year" ;
     dtype:order 0 ;
     cc:csvColumnSample "2010" ;
     cc:csvColumnSample "2020" ;
@@ -225,7 +225,7 @@ graph <cube-project/ubd/csv-source/ubd> {
 
   <cube-project/ubd/csv-source/ubd/column/station>
     a csvw:Column ;
-    schema:name "STATION" ;
+    schema:name "station_id" ;
     dtype:order 1 ;
     cc:csvColumnSample "1" ;
     cc:csvColumnSample "2" ;
@@ -234,7 +234,7 @@ graph <cube-project/ubd/csv-source/ubd> {
 
   <cube-project/ubd/csv-source/ubd/column/value>
     a csvw:Column ;
-    schema:name "VALUE" ;
+    schema:name "value" ;
     dtype:order 2 ;
     cc:csvColumnSample "3.4" ;
     cc:csvColumnSample "2.1" ;
@@ -243,7 +243,7 @@ graph <cube-project/ubd/csv-source/ubd> {
 
   <cube-project/ubd/csv-source/ubd/column/aggregation>
     a csvw:Column ;
-    schema:name "AGGREGATION" ;
+    schema:name "aggregation_id" ;
     dtype:order 3 ;
     cc:csvColumnSample "13.4" ;
     cc:csvColumnSample "14.4" ;
@@ -275,7 +275,7 @@ graph <cube-project/ubd/csv-source/stations> {
 
   <cube-project/ubd/csv-source/stations/column/station-id>
     a csvw:Column ;
-    schema:name "STATION_ID" ;
+    schema:name "station_id" ;
     dtype:order 0 ;
     cc:csvColumnSample "1" ;
     cc:csvColumnSample "2" ;
@@ -338,7 +338,7 @@ graph <cube-project/ubd/csv-mapping/table-observation> {
 graph <cube-project/ubd/csv-mapping/table-observation/column-mapping-1> {
   <cube-project/ubd/csv-mapping/table-observation/column-mapping-1> a cc:ColumnMapping ;
     cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/year> ;
-    cc:targetProperty <dimension/year> ;
+    cc:targetProperty "dimension/year" ;
     cc:datatype xsd:gYear ;
     # -- Other possible ColumnMapping properties
     # cc:language
@@ -351,7 +351,7 @@ graph <cube-project/ubd/csv-mapping/table-observation/column-mapping-1> {
 graph <cube-project/ubd/csv-mapping/table-observation/column-mapping-2> {
   <cube-project/ubd/csv-mapping/table-observation/column-mapping-2> a cc:ColumnMapping ;
     cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/station> ;
-    cc:targetProperty <station> ;
+    cc:targetProperty "station" ;
     cc:referencedTable <cube-project/ubd/csv-mapping/table-station> ;
     cc:identifierMapping [
       cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/station> ;
@@ -364,7 +364,7 @@ graph <cube-project/ubd/csv-mapping/table-observation/column-mapping-2> {
 graph <cube-project/ubd/csv-mapping/table-observation/column-mapping-3> {
   <cube-project/ubd/csv-mapping/table-observation/column-mapping-3> a cc:ColumnMapping ;
     cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/value> ;
-    cc:targetProperty <dimension/value> ;
+    cc:targetProperty "dimension/value" ;
     cc:datatype xsd:float ;
   .
 }
@@ -373,7 +373,7 @@ graph <cube-project/ubd/csv-mapping/table-observation/column-mapping-3> {
 graph <cube-project/ubd/csv-mapping/table-observation/column-mapping-4> {
   <cube-project/ubd/csv-mapping/table-observation/column-mapping-4> a cc:ColumnMapping ;
     cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/aggregation> ;
-    cc:targetProperty <cube-project/ubd/csv-mapping/aggregation> ;
+    cc:targetProperty "project/ubd/csv-mapping/aggregation" ;
     cc:datatype xsd:float ;
   .
 }
@@ -386,8 +386,7 @@ graph <cube-project/ubd/csv-mapping/table-station> {
     cc:csvw <cube-project/ubd/csv-mapping/table-station/csvw> ;
     schema:name "Station" ;
     schema:color "#BBBBBB" ;
-    # cc:identifierTemplate "station/{STATION_ID}" ;
-    cc:identifierTemplate "{station_id}-{year}-{aggregation_id}" ;
+    cc:identifierTemplate "station/{station_id}" ;
     cc:columnMapping <cube-project/ubd/csv-mapping/table-station/column-mapping-1> ;
     cc:columnMapping <cube-project/ubd/csv-mapping/table-station/column-mapping-2> ;
     cc:columnMapping <cube-project/ubd/csv-mapping/table-station/column-mapping-3> ;

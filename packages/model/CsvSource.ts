@@ -12,6 +12,7 @@ import { Link } from './lib/Link'
 import { CsvMapping } from './CsvMapping'
 import { CsvColumn, CsvColumnMixin } from './CsvColumn'
 import { Collection } from '@rdfine/hydra'
+import { blankNode } from '@rdf-esm/data-model'
 
 export interface CsvSource extends RdfResource {
   associatedMedia: Schema.MediaObject
@@ -34,7 +35,7 @@ export function CsvSourceMixin<Base extends Constructor>(base: Base): Mixin {
     @property.literal({ path: schema.name })
     name!: string
 
-    @property.resource({ path: csvw.dialect, as: [DialectMixin] })
+    @property.resource({ path: csvw.dialect, as: [DialectMixin], initial: () => blankNode() })
     dialect!: Csvw.Dialect
 
     @property.resource({ path: cc.csvMapping })

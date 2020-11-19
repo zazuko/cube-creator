@@ -125,7 +125,7 @@ export default class CsvSourceMapping extends Vue {
   getColumnMappings (column: CsvColumn): {table: Table, columnMapping: ColumnMapping}[] {
     return this.tables
       .map((table) => {
-        return table.columnMappings
+        return (table.columnMappings as any as ColumnMapping[])
           .filter((columnMapping) => columnMapping.sourceColumn.id.equals(column.id))
           .map((columnMapping) => ({ table, columnMapping }))
       })

@@ -1,6 +1,7 @@
-import { RdfResource } from '@tpluscode/rdfine/RdfResource'
+import RdfResourceImpl, { Initializer, RdfResource } from '@tpluscode/rdfine/RdfResource'
 import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
-import { Constructor, property } from '@tpluscode/rdfine'
+import { Constructor, property, ResourceIdentifier } from '@tpluscode/rdfine'
+import type { GraphPointer } from 'clownface'
 import { initializer } from './lib/initializer'
 import { csvw, dtype, schema } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
@@ -27,6 +28,12 @@ export function CsvColumnMixin<Base extends Constructor>(Resource: Base): Mixin 
 }
 
 CsvColumnMixin.appliesTo = csvw.Column
+
+export const fromPointer = (pointer: GraphPointer<ResourceIdentifier>, initializer?: Initializer<CsvColumn>): CsvColumn => {
+  return RdfResourceImpl.factory.createEntity<CsvColumn>(pointer, [CsvColumnMixin], {
+    initializer,
+  })
+}
 
 type RequiredProperties = 'name' | 'order'
 

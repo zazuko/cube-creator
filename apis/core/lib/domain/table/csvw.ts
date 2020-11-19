@@ -1,19 +1,10 @@
-import * as Csvw from '@rdfine/csvw'
-import { CsvMapping, CsvMappingMixin, CsvSourceMixin, TableMixin } from '@cube-creator/model'
-import RdfResource from '@tpluscode/rdfine'
-import cf from 'clownface'
-import $rdf from 'rdf-ext'
-import { csvw, xsd } from '@tpluscode/rdf-ns-builders'
+import * as Table from '@cube-creator/model/Table'
 import { NamedNode } from 'rdf-js'
-import { cc } from '@cube-creator/core/namespace'
 import { ResourceStore } from '../../ResourceStore'
 import { resourceStore } from '../resources'
 import { NotFoundError } from '../../errors'
-
-RdfResource.factory.addMixin(
-  ...Object.values(Csvw),
-  CsvMappingMixin,
-)
+import { buildCsvw } from '../../csvw-builder'
+import '../../domain'
 
 interface Command {
   tableResource: NamedNode
@@ -26,30 +17,16 @@ export async function createCsvw({
 }: Command) {
   const tablePointer = await resources.get(tableResource)
   if (!tablePointer) {
-    throw new Error(`Resource <${tableResource}> not found`)
+    throw new NotFoundError(tableResource)
   }
 
-  const table = new TableMixin.Class(tablePointer)
-  const sourcePointer = await resources.get(table.csvSource.id)
-  if (!sourcePointer) {
-    throw new NotFoundError(table.csvSource.pointer)
-  }
-  const csvMappingPointer = await resources.get(table.csvMapping?.id)
-  if (!csvMappingPointer) {
-    throw new NotFoundError(table.csvMapping?.id)
-  }
-  const { namespace: { value: namespace } } = RdfResource.factory.createEntity<CsvMapping>(csvMappingPointer)
+  const table = Table.fromPointer(tablePointer)
 
-  const source = new CsvSourceMixin.Class(sourcePointer)
-
+  return buildCsvw({ table, resources })
+}
+/*
   return new Csvw.TableMixin.Class(cf({ dataset: $rdf.dataset(), term: table.csvw.id }), {
-    url: source.id.value,
-    dialect: {
-      ...source.dialect.toJSON(),
-      types: [csvw.Dialect],
-    },
     tableSchema: {
-      aboutUrl: `${namespace}observation/${table.identifierTemplate}`,
       column: [{
         title: 'unit_id',
         datatype: xsd.string,
@@ -91,3 +68,4 @@ export async function createCsvw({
     },
   })
 }
+*/

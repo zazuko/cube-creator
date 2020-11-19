@@ -5,11 +5,12 @@ import $rdf from 'rdf-ext'
 import { ASK, CONSTRUCT } from '@tpluscode/sparql-builder'
 import debug from 'debug'
 import { Hydra } from 'alcaeus/node'
-import { rdfs, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
+import { rdf, rdfs, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import transform from '../../../lib/commands/transform'
 import { setupEnv } from '../../support/env'
 import { client, insertTestData } from '@cube-creator/testing/lib'
-import { cc } from '@cube-creator/core/namespace'
+import { cc, cube } from '@cube-creator/core/namespace'
+import clownface from 'clownface'
 
 describe('lib/commands/transform', function () {
   this.timeout(200000)
@@ -43,7 +44,31 @@ describe('lib/commands/transform', function () {
       .WHERE`?s ?p ?o`
       .execute(client.query))
 
-    expect(dataset.toCanonical()).to.matchSnapshot(this)
+    const cubePointer = clownface({ dataset })
+    expect(cubePointer.has(rdf.type, cube.Observation).terms).to.have.length.greaterThan(10)
+    expect(cubePointer.has(rdf.type, sh.NodeShape).terms.length).to.eq(1)
+    expect(cubePointer.has(rdf.type, cube.Observation).toArray()[0]).to.matchShape({
+      property: [{
+        path: rdf.type,
+        hasValue: cube.Observation,
+        minCount: 1,
+      }, {
+        path: cube.observedBy,
+        minCount: 1,
+      }, {
+        path: $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/dimension/year'),
+        minCount: 1,
+        maxCount: 1,
+      }, {
+        path: $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/dimension/value'),
+        minCount: 1,
+        maxCount: 1,
+      }, {
+        path: $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/station'),
+        minCount: 1,
+        maxCount: 1,
+      }],
+    })
   })
 
   it('does not output cc:cube as dimension property', async () => {

@@ -1,4 +1,5 @@
-import RdfResourceImpl, { RdfResource, Constructor, namespace, property } from '@tpluscode/rdfine'
+import RdfResourceImpl, { RdfResource, Constructor, namespace, property, ResourceIdentifier } from '@tpluscode/rdfine'
+import type { GraphPointer } from 'clownface'
 import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import type * as Csvw from '@rdfine/csvw'
 import { cc } from '@cube-creator/core/namespace'
@@ -18,7 +19,7 @@ export interface Table extends RdfResource {
   csvMapping: Link<CsvMapping>
   identifierTemplate: string
   color: string
-  columnMappings: ColumnMapping[]
+  columnMappings: Array<Link<ColumnMapping>>
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -46,13 +47,19 @@ export function TableMixin<Base extends Constructor>(base: Base): Mixin {
 
     @property.literal({ path: schema.color })
     color!: string
+
+    @property.resource({ values: 'array', path: cc.columnMapping })
+    columnMappings!: Array<Link<ColumnMapping>>
   }
 
   return Impl
 }
 
 TableMixin.appliesTo = cc.Table
-TableMixin.Class = TableMixin(RdfResourceImpl)
+
+export const fromPointer = (pointer: GraphPointer<ResourceIdentifier>): Table => {
+  return RdfResourceImpl.factory.createEntity<Table>(pointer, [TableMixin])
+}
 
 type RequiredProperties = 'name' | 'csvSource' | 'csvMapping' | 'identifierTemplate'
 
