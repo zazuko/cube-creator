@@ -36,7 +36,7 @@ _:DimensionUpdateOperation
     hydra:Operation,
     schema:UpdateAction ;
   hydra:title
-    "Update dimension" ;
+    "Edit dimension metadata" ;
   hydra:method
     "PUT" ;
   hydra:expects
