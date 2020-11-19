@@ -10,7 +10,7 @@ if (env.PIPELINE_TYPE === 'github') {
     ${sh.name} "GitHub Personal Access Token" ;
     ${sh.minLength} 1 ;
     ${sh.minCount} 1 ;
-    ${sh.manCount} 1 ;
+    ${sh.maxCount} 1 ;
   ] ;`
 }
 
