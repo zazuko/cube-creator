@@ -5,6 +5,7 @@ import { GraphPointer } from 'clownface'
 import env from '@cube-creator/core/env'
 import { nanoid } from 'nanoid'
 import { ColumnMapping, CsvMapping, CsvSource, DimensionMetadataCollection, Project, Table } from '@cube-creator/model'
+import { shrink } from '@zazuko/rdf-vocabularies'
 
 const url = new UrlSlugify()
 
@@ -57,5 +58,10 @@ export function job(jobCollection: GraphPointer<NamedNode>): NamedNode {
 }
 
 export function dimensionMetadata(dimensionMetadataCollection: DimensionMetadataCollection, mapping: ColumnMapping): NamedNode {
-  return $rdf.namedNode(`${dimensionMetadataCollection.pointer}/${mapping.targetProperty}`)
+  if (mapping.targetProperty.termType === 'Literal') {
+    return $rdf.namedNode(`${dimensionMetadataCollection.id.value}/${mapping.targetProperty.value}`)
+  } else {
+    const prefixedProperty = shrink(mapping.targetProperty.value) || mapping.targetProperty.value
+    return $rdf.namedNode(`${dimensionMetadataCollection.id.value}/${prefixedProperty}`)
+  }
 }
