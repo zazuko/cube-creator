@@ -28,7 +28,8 @@
       </div>
     </div>
     <div class="panel-block">
-      Identifier template: <code>{{ table.identifierTemplate }}</code>
+      <span>Identifier template:</span>
+      <code class="identifier-template">{{ table.identifierTemplate }}</code>
     </div>
     <div v-for="columnMapping in table.columnMappings" :key="columnMapping.id.value" class="panel-block">
       <div class="level-left">
@@ -105,3 +106,10 @@ export default class MapperTable extends Vue {
   }
 }
 </script>
+
+<style scoped>
+.identifier-template {
+  max-width: 60rem;
+  overflow-x: auto;
+}
+</style>
