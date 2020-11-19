@@ -46,7 +46,7 @@ graph <cube-project/ubd/dataset> {
 
 <cube-project/ubd/dimensions-metadata> void:inDataset <ubd-example> .
 graph <cube-project/ubd/dimensions-metadata> {
-  <cube-project/ubd/dimensions-metadata> a cc:DimensionsMetadataCollection ;
+  <cube-project/ubd/dimensions-metadata> a cc:DimensionMetadataCollection ;
     schema:hasPart <cube-project/ubd/dimensions-metadata?dimension=https://environment.ld.admin.ch/foen/ubd/28/dimension%20year> ;
     schema:hasPart <cube-project/ubd/dimensions-metadata?dimension=https://environment.ld.admin.ch/foen/ubd/28/station> ;
     schema:hasPart <cube-project/ubd/dimensions-metadata?dimension=https://environment.ld.admin.ch/foen/ubd/28/aggregation> ;
