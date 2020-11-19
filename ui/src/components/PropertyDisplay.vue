@@ -15,7 +15,7 @@ const projectNS = namespace('project')
 @Component
 export default class PropertyDisplay extends Vue {
   @Prop() term!: Term
-  @projectNS.State((state) => state.csvMapping.namespace.value) projectPrefix!: string
+  @projectNS.State((state) => state.csvMapping?.namespace.value) projectPrefix?: string
 
   get value (): string {
     return this.term.value || ''

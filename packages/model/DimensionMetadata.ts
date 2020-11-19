@@ -1,13 +1,14 @@
 import { Constructor, namespace, property, RdfResource } from '@tpluscode/rdfine'
 import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
-import { NamedNode } from 'rdf-js'
+import { Literal, NamedNode } from 'rdf-js'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import { initializer } from './lib/initializer'
 
-interface DimensionMetadata extends RdfResourceCore {
+export interface DimensionMetadata extends RdfResourceCore {
   about?: NamedNode
+  name?: Literal[]
 }
 
 export interface DimensionMetadataCollection extends RdfResource {
@@ -19,6 +20,9 @@ function DimensionMetadataMixin<Base extends Constructor>(Resource: Base) {
   class Impl extends Resource implements DimensionMetadata {
     @property()
     about!: NamedNode
+
+    @property({ values: 'array' })
+    name?: Literal[]
   }
 
   return Impl
