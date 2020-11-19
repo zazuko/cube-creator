@@ -11,13 +11,25 @@ cc:DimensionMetadataCollection
   hydra:supportedProperty
     [ hydra:property
         schema:hasPart ] ;
-  hydra:supportedOperation
-    _:DimensionUpdateOperation ;
 .
 
 schema:hasPart
   hydra:supportedOperation
-    _:DimensionUpdateOperation .
+    _:DimensionUpdateOperation ,
+    _:DimensionGetOperation .
+
+_:DimensionGetOperation
+  a
+    hydra:Operation;
+  hydra:method "GET" ;
+  code:implementedBy
+    [
+      a
+        code:EcmaScript ;
+      code:link
+        <file:handlers/dimension#get> ;
+    ] ;
+.
 
 _:DimensionUpdateOperation
   a

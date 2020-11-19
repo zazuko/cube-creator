@@ -37,15 +37,11 @@ describe('middleware/resource', () => {
     expect(res.text).to.matchSnapshot(this)
   })
 
-  it('returns pointer to hydra.request.resource.term if it appears in the body', async function () {
+  it('returns pointer to req.hydra.term if it appears in the body', async function () {
     // given
     const app = express()
     app.use(appMock(hydra => {
-      hydra.resource = {
-        term: $rdf.namedNode('http://example.com/foo/bar'),
-        types: new Set(),
-        dataset: $rdf.dataset(),
-      }
+      hydra.term = $rdf.namedNode('http://example.com/foo/bar')
     }))
     app.use(resource)
     app.use(async (req, res) => {

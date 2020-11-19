@@ -1,0 +1,40 @@
+PREFIX cc:     <https://cube-creator.zazuko.com/vocab#>
+PREFIX schema: <http://schema.org/>
+PREFIX void:   <http://rdfs.org/ns/void#>
+PREFIX cube:   <http://ns.bergnet.org/cube/>
+PREFIX hydra:  <http://www.w3.org/ns/hydra/core#>
+PREFIX scale:  <http://ns.bergnet.org/cube/scale/>
+
+ENTRYPOINT "cube-project/ubd/dimensions-metadata/aggregation"
+
+HEADERS {
+  x-user "john-doe"
+  x-permission "pipelines:write"
+}
+
+With Operation schema:UpdateAction {
+    Invoke {
+        Content-Type "text/turtle"
+
+        ```
+        base <https://cube-creator.lndo.site/>
+        prefix scale: <http://ns.bergnet.org/cube/scale/>
+        PREFIX schema: <http://schema.org/>
+
+        <cube-project/ubd/dimensions-metadata/aggregation>
+            schema:about <https://environment.ld.admin.ch/foen/ubd/28/aggregation> ;
+            scale:scaleOfMeasure scale:Temporal ;
+            schema:name "Aggregation"@en .
+        ```
+    } => {
+        Expect Status 200
+
+        Expect Property schema:about {
+            Expect Id <https://environment.ld.admin.ch/foen/ubd/28/aggregation>
+        }
+        Expect Property scale:scaleOfMeasure {
+            Expect Id scale:Temporal
+        }
+        Expect Property schema:name "Aggregation"
+    }
+}

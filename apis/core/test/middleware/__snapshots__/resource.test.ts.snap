@@ -2,3 +2,5 @@ exports["middleware/resource returns pointer to empty named node if the request 
 
 exports["middleware/resource returns pointer to hydra.request.resource.term if it appears in the body"] = "<http://example.com/foo/bar> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://cube-creator.zazuko.com/vocab#CubeProject> .\n<http://example.com/foo/bar> <http://www.w3.org/2000/01/rdf-schema#label> \"Test project\" .\n";
 
+exports["middleware/resource returns pointer to req.hydra.term if it appears in the body"] = "<http://example.com/foo/bar> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://cube-creator.zazuko.com/vocab#CubeProject> .\n<http://example.com/foo/bar> <http://www.w3.org/2000/01/rdf-schema#label> \"Test project\" .\n";
+

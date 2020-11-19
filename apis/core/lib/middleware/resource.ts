@@ -18,7 +18,7 @@ export function resource(req: express.Request, res: unknown, next: express.NextF
 
     const dataset = await req.dataset()
 
-    const resource = clownface({ dataset }).node(req.hydra.resource.term)
+    const resource = clownface({ dataset }).node(req.hydra.term)
     if (resource.out().values.length) {
       return resource
     }
