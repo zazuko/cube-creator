@@ -7,12 +7,18 @@ import { cc } from '@cube-creator/core/namespace'
 import { createColumnMapping } from '../../../lib/domain/column-mapping/create'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import '../../../lib/domain'
+import { DomainError } from '../../../lib/errors'
 
 describe('domain/column-mapping/create', () => {
   let store: TestResourceStore
+  const csvMapping = clownface({ dataset: $rdf.dataset() })
+    .namedNode('csv-mapping')
+    .addOut(rdf.type, cc.CsvMapping)
+    .addOut(cc.namespace, 'http://example.com/')
   const table = clownface({ dataset: $rdf.dataset() })
     .namedNode('myTable')
     .addOut(rdf.type, cc.Table)
+    .addOut(cc.csvMapping, csvMapping)
   const csvSource = clownface({ dataset: $rdf.dataset() })
     .namedNode('foo')
     .addOut(rdf.type, cc.CSVSource)
@@ -25,6 +31,7 @@ describe('domain/column-mapping/create', () => {
     store = new TestResourceStore([
       table,
       csvSource,
+      csvMapping,
     ])
   })
 
@@ -102,6 +109,68 @@ describe('domain/column-mapping/create', () => {
         [sh.hasValue.value]: columnMapping.term,
         minCount: 1,
       }],
+    })
+  })
+
+  describe('when some column mappings exist', () => {
+    it('throws when exact targetProperty is used for new property', async () => {
+      // given
+      const existingMapping = clownface({ dataset: $rdf.dataset() })
+        .namedNode('mapping')
+        .addOut(rdf.type, cc.ColumnMapping)
+        .addOut(cc.targetProperty, $rdf.literal('year'))
+      store.push(existingMapping)
+      table.addOut(cc.columnMapping, existingMapping)
+      const resource = clownface({ dataset: $rdf.dataset() })
+        .node($rdf.namedNode(''))
+        .addOut(cc.sourceColumn, $rdf.namedNode('my-column'))
+        .addOut(cc.targetProperty, $rdf.literal('year'))
+
+      // when
+      const promise = createColumnMapping({ resource, store, tableId: table.term })
+
+      // then
+      await expect(promise).to.have.rejectedWith(DomainError)
+    })
+
+    it('throws when exact targetProperty URI is used for new property', async () => {
+      // given
+      const existingMapping = clownface({ dataset: $rdf.dataset() })
+        .namedNode('mapping')
+        .addOut(rdf.type, cc.ColumnMapping)
+        .addOut(cc.targetProperty, $rdf.namedNode('year'))
+      store.push(existingMapping)
+      table.addOut(cc.columnMapping, existingMapping)
+      const resource = clownface({ dataset: $rdf.dataset() })
+        .node($rdf.namedNode(''))
+        .addOut(cc.sourceColumn, $rdf.namedNode('my-column'))
+        .addOut(cc.targetProperty, $rdf.namedNode('year'))
+
+      // when
+      const promise = createColumnMapping({ resource, store, tableId: table.term })
+
+      // then
+      await expect(promise).to.have.rejectedWith(DomainError)
+    })
+
+    it('throws when target property would result in an URI used explicitly', async () => {
+      // given
+      const existingMapping = clownface({ dataset: $rdf.dataset() })
+        .namedNode('mapping')
+        .addOut(rdf.type, cc.ColumnMapping)
+        .addOut(cc.targetProperty, $rdf.namedNode('http://example.com/year'))
+      store.push(existingMapping)
+      table.addOut(cc.columnMapping, existingMapping)
+      const resource = clownface({ dataset: $rdf.dataset() })
+        .node($rdf.namedNode(''))
+        .addOut(cc.sourceColumn, $rdf.namedNode('my-column'))
+        .addOut(cc.targetProperty, $rdf.literal('year'))
+
+      // when
+      const promise = createColumnMapping({ resource, store, tableId: table.term })
+
+      // then
+      await expect(promise).to.have.rejectedWith(DomainError)
     })
   })
 })
