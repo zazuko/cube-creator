@@ -18,10 +18,12 @@ export async function getDimensionMetaDataCollection(csvMapping: Term, client = 
             ?dataset ${cc.dimensionMetadata} ?dimensionMetadata .
         }
         `
-    .LIMIT(1)
     .execute(client.query)
-  if (results.length === 0) {
+  if (results.length < 1) {
     throw new Error(`No DimensionMetadata for table ${csvMapping} found`)
+  }
+  if (results.length > 1) {
+    throw new Error(`More than one DimensionMetadata for table ${csvMapping} found`)
   }
   return results[0].dimensionMetadata
 }
