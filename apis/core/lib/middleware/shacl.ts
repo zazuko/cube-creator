@@ -1,6 +1,6 @@
 import asyncMiddleware from 'middleware-async'
 import $rdf from 'rdf-ext'
-import { Term, Quad } from 'rdf-js'
+import { Term, Quad, NamedNode } from 'rdf-js'
 import { hydra, rdf, sh } from '@tpluscode/rdf-ns-builders'
 import SHACLValidator from 'rdf-validate-shacl'
 import clownface, { GraphPointer } from 'clownface'
@@ -16,7 +16,7 @@ interface ShaclMiddlewareOptions {
 export const shaclMiddleware = (options: ShaclMiddlewareOptions) => asyncMiddleware(async (req, res, next) => {
   const resources = options.createResourceStore()
 
-  let resource: GraphPointer
+  let resource: GraphPointer<NamedNode>
   if (!req.dataset) {
     resource = clownface({ dataset: $rdf.dataset() }).node(req.hydra.term)
   } else {
@@ -32,7 +32,7 @@ export const shaclMiddleware = (options: ShaclMiddlewareOptions) => asyncMiddlew
       await shapes.addAll([...pointer.dataset])
 
       if (pointer.out([sh.targetClass, sh.targetNode, sh.targetObjectsOf, sh.targetSubjectsOf]).values.length === 0) {
-        shapes.add($rdf.quad(pointer.term, sh.targetNode, req.hydra.term))
+        shapes.add($rdf.quad(pointer.term, sh.targetNode, resource.term))
       }
 
       resource.addOut(rdf.type, pointer.out(sh.targetClass))
