@@ -8,7 +8,7 @@ import { initializer } from './lib/initializer'
 
 export interface DimensionMetadata extends RdfResourceCore {
   about?: NamedNode
-  name?: Literal[]
+  name: Literal[]
 }
 
 export interface DimensionMetadataCollection extends RdfResource {
@@ -22,7 +22,7 @@ function DimensionMetadataMixin<Base extends Constructor>(Resource: Base) {
     about!: NamedNode
 
     @property({ values: 'array' })
-    name?: Literal[]
+    name!: Literal[]
   }
 
   return Impl

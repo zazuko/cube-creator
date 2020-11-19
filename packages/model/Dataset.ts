@@ -29,7 +29,7 @@ export function DatasetMixin<Base extends Constructor>(Resource: Base): Mixin {
     dimensionMetadata!: Link<DimensionMetadataCollection>
 
     @property({ path: dcterms.title, values: 'array' })
-    title?: Literal[]
+    title!: Literal[]
   }
 
   return Impl
