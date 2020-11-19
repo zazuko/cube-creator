@@ -7,6 +7,7 @@ import Project from './cube-projects/Project'
 import Table from './table/Table'
 import Dataset from './dataset/Dataset'
 import Resource from './Resource'
+import DimensionMetadataCollection from './dimension/DimensionMetadataCollection'
 
 RdfResourceImpl.factory.addMixin(...Object.values(CoreModel))
 RdfResourceImpl.factory.addMixin(CsvMapping)
@@ -15,5 +16,6 @@ RdfResourceImpl.factory.addMixin(Project)
 RdfResourceImpl.factory.addMixin(Dataset)
 RdfResourceImpl.factory.addMixin(Table)
 RdfResourceImpl.factory.addMixin(Resource)
+RdfResourceImpl.factory.addMixin(DimensionMetadataCollection)
 
 RdfResourceImpl.factory.addMixin(ThingMixin)

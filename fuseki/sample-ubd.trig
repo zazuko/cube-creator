@@ -46,21 +46,21 @@ graph <cube-project/ubd/dataset> {
 
 <cube-project/ubd/dimensions-metadata> void:inDataset <ubd-example> .
 graph <cube-project/ubd/dimensions-metadata> {
-  <cube-project/ubd/dimensions-metadata> a cc:DimensionsMetadataCollection ;
-    schema:hasPart <cube-project/ubd/dimensions-metadata?dimension=https://environment.ld.admin.ch/foen/ubd/28/dimension%20year> ;
-    schema:hasPart <cube-project/ubd/dimensions-metadata?dimension=https://environment.ld.admin.ch/foen/ubd/28/station> ;
-    schema:hasPart <cube-project/ubd/dimensions-metadata?dimension=https://environment.ld.admin.ch/foen/ubd/28/aggregation> ;
-    schema:hasPart <cube-project/ubd/dimensions-metadata?dimension=https://environment.ld.admin.ch/foen/ubd/28/pollutant> ;
-    schema:hasPart <cube-project/ubd/dimensions-metadata?dimension=https://environment.ld.admin.ch/foen/ubd/28/unit-id> ;
+  <cube-project/ubd/dimensions-metadata> a cc:DimensionMetadataCollection , hydra:Resource ;
+    schema:hasPart <cube-project/ubd/dimensions-metadata/dimension-year> ;
+    schema:hasPart <cube-project/ubd/dimensions-metadata/station> ;
+    schema:hasPart <cube-project/ubd/dimensions-metadata/aggregation> ;
+    schema:hasPart <cube-project/ubd/dimensions-metadata/pollutant> ;
+    schema:hasPart <cube-project/ubd/dimensions-metadata/unit-id> ;
   .
 
-  <cube-project/ubd/dimensions-metadata?dimension=https://environment.ld.admin.ch/foen/ubd/28/shape/dimension%20year>
-    schema:about <https://environment.ld.admin.ch/foen/ubd/28/dimension%20year> ;
+  <cube-project/ubd/dimensions-metadata/dimension-year>
+    schema:about <https://environment.ld.admin.ch/foen/ubd/28/dimension-year> ;
     schema:name "Jahr"@de ;
     scale:scaleOfMeasure scale:Temporal ;
   .
 
-  <cube-project/ubd/dimensions-metadata?dimension=https://environment.ld.admin.ch/foen/ubd/28/aggregation>
+  <cube-project/ubd/dimensions-metadata/aggregation>
     schema:about <https://environment.ld.admin.ch/foen/ubd/28/aggregation> ;
   .
 }
