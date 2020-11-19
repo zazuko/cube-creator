@@ -4,12 +4,21 @@ import { schema } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import { initializer } from './lib/initializer'
 
-interface DimensionMetadata {
+export interface DimensionMetadata extends RdfResource {
   about: NamedNode
 }
 
 export interface DimensionMetadataCollection extends RdfResource {
   hasPart: Array<DimensionMetadata>
+}
+
+export function DimensionMetadataMixin<Base extends Constructor>(Resource: Base) {
+  class Impl extends Resource implements Partial<DimensionMetadata> {
+    @property.resource({ path: schema.about })
+    about!: NamedNode
+  }
+
+  return Impl
 }
 
 export function DimensionMetadataCollectionMixin<Base extends Constructor>(Resource: Base) {
@@ -24,3 +33,7 @@ export function DimensionMetadataCollectionMixin<Base extends Constructor>(Resou
 export const createCollection = initializer<DimensionMetadataCollection>(DimensionMetadataCollectionMixin, {
   types: [cc.DimensionMetadataCollection],
 })
+
+type RequiredProperties = 'about'
+
+export const create = initializer<DimensionMetadata, RequiredProperties>(DimensionMetadataMixin)
