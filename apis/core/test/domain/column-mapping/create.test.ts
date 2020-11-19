@@ -174,8 +174,8 @@ describe('domain/column-mapping/create', () => {
       },
     })
   })
-/* Does not work yet
-  it('throw if same column added twice', async () => {
+
+  it('throw if same dimension metadata with same targetProperty is added twice', async () => {
     // given
     const resource = clownface({ dataset: $rdf.dataset() })
       .node($rdf.namedNode(''))
@@ -183,9 +183,7 @@ describe('domain/column-mapping/create', () => {
       .addOut(cc.targetProperty, $rdf.namedNode('test'))
     await createColumnMapping({ resource, store, tableId: observationTable.term, dimensionMetadataQueries })
 
-    // when
-    // this should throw
-    await createColumnMapping({ resource, store, tableId: observationTable.term, dimensionMetadataQueries })
+    // then
+    expect(createColumnMapping({ resource, store, tableId: observationTable.term, dimensionMetadataQueries })).to.rejectedWith(Error)
   })
-*/
 })
