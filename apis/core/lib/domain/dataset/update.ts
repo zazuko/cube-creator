@@ -1,3 +1,4 @@
+import { cc } from '@cube-creator/core/namespace'
 import { dcat, hydra, rdf, schema, _void } from '@tpluscode/rdf-ns-builders'
 import { GraphPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'
@@ -24,6 +25,7 @@ export async function update({
   }
 
   const hasPart = datasetResource.out(schema.hasPart)
+  const dimensionMetadata = datasetResource.out(cc.dimensionMetadata)
 
   datasetResource.out().forEach(child => {
     if (child.term.termType === 'BlankNode') {
@@ -41,6 +43,7 @@ export async function update({
     .addOut(rdf.type, dcat.Dataset)
 
   hasPart.forEach(child => datasetResource.addOut(schema.hasPart, child))
+  dimensionMetadata.forEach(child => datasetResource.addOut(cc.dimensionMetadata, child))
 
   await store.save()
 

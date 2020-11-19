@@ -1,5 +1,6 @@
 import { describe, it, beforeEach } from 'mocha'
 import { expect } from 'chai'
+import * as sinon from 'sinon'
 import clownface from 'clownface'
 import $rdf from 'rdf-ext'
 import { csvw, dtype, hydra, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
@@ -7,10 +8,13 @@ import { cc } from '@cube-creator/core/namespace'
 import { createTable } from '../../../lib/domain/table/create'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import { NamedNode } from 'rdf-js'
+import type * as DimensionMetadataQueries from '../../../lib/domain/queries/dimension-metadata'
 import '../../../lib/domain'
 
 describe('domain/table/create', () => {
   let store: TestResourceStore
+  let dimensionMetadataQueries: typeof DimensionMetadataQueries
+  let getDimensionMetaDataCollection: sinon.SinonStub
   const csvMapping = clownface({ dataset: $rdf.dataset() })
     .namedNode('myCsvMapping')
     .addOut(rdf.type, cc.CsvMapping)
@@ -21,13 +25,20 @@ describe('domain/table/create', () => {
   const csvSource = clownface({ dataset: $rdf.dataset() })
     .namedNode('foo')
     .addOut(rdf.type, cc.CSVSource)
+  const dimensionMetadata = clownface({ dataset: $rdf.dataset() })
+    .namedNode('myDimensionMetadata')
+    .addOut(rdf.type, cc.DimensionMetadataCollection)
 
   beforeEach(() => {
     store = new TestResourceStore([
       tableCollection,
       csvSource,
       csvMapping,
+      dimensionMetadata,
     ])
+
+    getDimensionMetaDataCollection = sinon.stub().resolves(dimensionMetadata.term.value)
+    dimensionMetadataQueries = { getDimensionMetaDataCollection }
   })
 
   it('creates identifier by slugifying schema:name', async () => {
@@ -40,7 +51,7 @@ describe('domain/table/create', () => {
       .addOut(cc.identifierTemplate, '{id}')
 
     // when
-    const table = await createTable({ resource, store, tableCollection })
+    const table = await createTable({ resource, store, tableCollection, dimensionMetadataQueries })
 
     // then
     expect(table.out(schema.name).value).to.eq('the name')
@@ -58,7 +69,7 @@ describe('domain/table/create', () => {
       .addOut(cc.csvSource, $rdf.namedNode('foo'))
 
     // when
-    const table = await createTable({ resource, store, tableCollection })
+    const table = await createTable({ resource, store, tableCollection, dimensionMetadataQueries })
 
     // then
     expect(table).to.matchShape({
@@ -94,7 +105,7 @@ describe('domain/table/create', () => {
       .addOut(cc.csvSource, $rdf.namedNode('foo'))
 
     // when
-    const table = await createTable({ resource, store, tableCollection })
+    const table = await createTable({ resource, store, tableCollection, dimensionMetadataQueries })
 
     // then
     expect(table).to.matchShape({
@@ -119,7 +130,7 @@ describe('domain/table/create', () => {
     csvSource.addOut(csvw.column, $rdf.namedNode('source-column-2'), column => column.addOut(schema.name, 'column 2'))
 
     // when
-    const table = await createTable({ resource, store, tableCollection })
+    const table = await createTable({ resource, store, tableCollection, dimensionMetadataQueries })
     const column = await store.get(table.out(cc.columnMapping).terms[0] as NamedNode)
 
     // then
@@ -153,9 +164,33 @@ describe('domain/table/create', () => {
     csvSource.addOut(csvw.column, $rdf.namedNode('source-column-2'), column => column.addOut(schema.name, 'column 2').addOut(dtype.order, 1))
 
     // when
-    const table = await createTable({ resource, store, tableCollection })
+    const table = await createTable({ resource, store, tableCollection, dimensionMetadataQueries })
 
     // then
     expect(table.out(cc.identifierTemplate).value).to.eq('{column 1}/{column 2}')
+  })
+
+  it('creates Dimension Metadata for columns', async () => {
+    // given
+    const resource = clownface({ dataset: $rdf.dataset() })
+      .node($rdf.namedNode(''))
+      .addOut(schema.name, 'the name')
+      .addOut(schema.color, '#aaa')
+      .addOut(cc.identifierTemplate, '')
+      .addOut(cc.csvSource, $rdf.namedNode('foo'))
+      .addOut(csvw.column, [$rdf.namedNode('source-column-1'), $rdf.namedNode('source-column-2')])
+    csvSource.addOut(csvw.column, $rdf.namedNode('source-column-1'), column => column.addOut(schema.name, 'column 1').addOut(dtype.order, 0))
+    csvSource.addOut(csvw.column, $rdf.namedNode('source-column-2'), column => column.addOut(schema.name, 'column 2').addOut(dtype.order, 1))
+
+    // when
+    await createTable({ resource, store, tableCollection, dimensionMetadataQueries })
+
+    // then
+    expect(dimensionMetadata).to.matchShape({
+      property: [{
+        path: schema.hasPart,
+        minCount: 2,
+      }],
+    })
   })
 })
