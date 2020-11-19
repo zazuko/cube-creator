@@ -1,7 +1,8 @@
 import { describe, it, beforeEach } from 'mocha'
 import { expect } from 'chai'
-import clownface from 'clownface'
+import clownface, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
+import DatasetExt from 'rdf-ext/lib/Dataset'
 import { csvw, dtype, hydra, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import { createTable } from '../../../lib/domain/table/create'
@@ -11,18 +12,20 @@ import '../../../lib/domain'
 
 describe('domain/table/create', () => {
   let store: TestResourceStore
-  const csvMapping = clownface({ dataset: $rdf.dataset() })
-    .namedNode('myCsvMapping')
-    .addOut(rdf.type, cc.CsvMapping)
-    .addOut(cc.tables, $rdf.namedNode('tables'))
-  const tableCollection = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('tables') })
-    .addOut(rdf.type, cc.Table)
-    .addOut(cc.csvMapping, csvMapping)
-  const csvSource = clownface({ dataset: $rdf.dataset() })
-    .namedNode('foo')
-    .addOut(rdf.type, cc.CSVSource)
+  let tableCollection: GraphPointer<NamedNode, DatasetExt>
+  let csvSource: GraphPointer<NamedNode, DatasetExt>
 
   beforeEach(() => {
+    const csvMapping = clownface({ dataset: $rdf.dataset() })
+      .namedNode('myCsvMapping')
+      .addOut(rdf.type, cc.CsvMapping)
+      .addOut(cc.tables, $rdf.namedNode('tables'))
+    tableCollection = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('tables') })
+      .addOut(rdf.type, cc.Table)
+      .addOut(cc.csvMapping, csvMapping)
+    csvSource = clownface({ dataset: $rdf.dataset() })
+      .namedNode('foo')
+      .addOut(rdf.type, cc.CSVSource)
     store = new TestResourceStore([
       tableCollection,
       csvSource,
@@ -138,6 +141,32 @@ describe('domain/table/create', () => {
         minCount: 1,
         maxCount: 1,
       }],
+    })
+  })
+
+  it('turns column names into URL-safe slugs', async () => {
+    // given
+    const resource = clownface({ dataset: $rdf.dataset() })
+      .node($rdf.namedNode(''))
+      .addOut(schema.name, 'the name')
+      .addOut(schema.color, '#ababab')
+      .addOut(cc.identifierTemplate, '{id}')
+      .addOut(cc.csvSource, $rdf.namedNode('foo'))
+      .addOut(csvw.column, $rdf.namedNode('source-column-1'))
+    csvSource.addOut(csvw.column, $rdf.namedNode('source-column-1'), column => column.addOut(schema.name, 'Column 1'))
+
+    // when
+    const table = await createTable({ resource, store, tableCollection })
+    const column = await store.get(table.out(cc.columnMapping).terms[0] as NamedNode)
+
+    // then
+    expect(column).to.matchShape({
+      property: {
+        path: cc.targetProperty,
+        hasValue: 'column-1',
+        minCount: 1,
+        maxCount: 1,
+      },
     })
   })
 
