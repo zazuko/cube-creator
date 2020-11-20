@@ -1,7 +1,7 @@
 import { describe, it, beforeEach } from 'mocha'
 import { expect } from 'chai'
 import * as sinon from 'sinon'
-import clownface from 'clownface'
+import clownface, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import { csvw, hydra, rdf, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
@@ -10,37 +10,44 @@ import { TestResourceStore } from '../../support/TestResourceStore'
 import type * as DimensionMetadataQueries from '../../../lib/domain/queries/dimension-metadata'
 import '../../../lib/domain'
 import { DomainError } from '../../../lib/errors'
+import { NamedNode } from 'rdf-js'
+import DatasetExt from 'rdf-ext/lib/Dataset'
 
 describe('domain/column-mapping/create', () => {
   let store: TestResourceStore
   let dimensionMetadataQueries: typeof DimensionMetadataQueries
   let getDimensionMetaDataCollection: sinon.SinonStub
-  const csvMapping = clownface({ dataset: $rdf.dataset() })
-    .namedNode('csv-mapping')
-    .addOut(rdf.type, cc.CsvMapping)
-    .addOut(cc.namespace, 'http://example.com/')
-  const table = clownface({ dataset: $rdf.dataset() })
-    .namedNode('myTable')
-    .addOut(rdf.type, cc.Table)
-    .addOut(cc.csvMapping, csvMapping)
-  const observationTable = clownface({ dataset: $rdf.dataset() })
-    .namedNode('myObservationTable')
-    .addOut(rdf.type, cc.Table)
-    .addOut(rdf.type, cc.ObservationTable)
-    .addOut(cc.csvMapping, csvMapping)
-  const csvSource = clownface({ dataset: $rdf.dataset() })
-    .namedNode('foo')
-    .addOut(rdf.type, cc.CSVSource)
-    .addOut(csvw.column, $rdf.namedNode('my-column'), (column) => {
-      column.addOut(schema.name, $rdf.literal('My Column'))
-    })
-  table.addOut(cc.csvSource, csvSource.term)
-  observationTable.addOut(cc.csvSource, csvSource.term)
-  const dimensionMetadata = clownface({ dataset: $rdf.dataset() })
-    .namedNode('myDimensionMetadata')
-    .addOut(rdf.type, cc.DimensionMetadataCollection)
+  let table: GraphPointer<NamedNode, DatasetExt>
+  let observationTable: GraphPointer<NamedNode, DatasetExt>
+  let dimensionMetadata: GraphPointer<NamedNode, DatasetExt>
 
   beforeEach(() => {
+    const csvMapping = clownface({ dataset: $rdf.dataset() })
+      .namedNode('csv-mapping')
+      .addOut(rdf.type, cc.CsvMapping)
+      .addOut(cc.namespace, 'http://example.com/')
+    const csvSource = clownface({ dataset: $rdf.dataset() })
+      .namedNode('foo')
+      .addOut(rdf.type, cc.CSVSource)
+      .addOut(csvw.column, $rdf.namedNode('my-column'), (column) => {
+        column.addOut(schema.name, $rdf.literal('My Column'))
+      })
+    table = clownface({ dataset: $rdf.dataset() })
+      .namedNode('myTable')
+      .addOut(rdf.type, cc.Table)
+      .addOut(cc.csvMapping, csvMapping)
+      .addOut(cc.csvSource, csvSource)
+    observationTable = clownface({ dataset: $rdf.dataset() })
+      .namedNode('myObservationTable')
+      .addOut(rdf.type, cc.Table)
+      .addOut(rdf.type, cc.ObservationTable)
+      .addOut(cc.csvMapping, csvMapping)
+      .addOut(cc.csvSource, csvSource)
+
+    dimensionMetadata = clownface({ dataset: $rdf.dataset() })
+      .namedNode('myDimensionMetadata')
+      .addOut(rdf.type, cc.DimensionMetadataCollection)
+
     store = new TestResourceStore([
       table,
       observationTable,
