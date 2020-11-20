@@ -5,7 +5,7 @@ import prefixes from '@zazuko/rdf-vocabularies/prefixes'
 import { rdf } from '@tpluscode/rdf-ns-builders'
 
 export async function loadCommonProperties (): Promise<string[]> {
-  const { rdfs, schema, qb, sdmx, dcterms, dc11, skos, skosxl, xkos, xsd, wgs } = await import('@zazuko/rdf-vocabularies/datasets')
+  const { rdfs, schema, qb, sdmx, dcterms, dc11, skos, skosxl, xkos, xsd, wgs } = await import('./vocabularies')
   const vocabFactories = { rdfs, schema, qb, sdmx, dcterms, dc11, skos, skosxl, xkos, xsd, wgs }
 
   return Object.entries(vocabFactories).flatMap(([prefix, factory]) => {
