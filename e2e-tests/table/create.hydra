@@ -19,17 +19,17 @@ With Class cc:TableCollection {
             Content-Type "text/turtle"
 
             ```
-            prefix csvw: <http://www.w3.org/ns/csvw#> 
-            prefix cc: <https://cube-creator.zazuko.com/vocab#> 
-            prefix schema: <http://schema.org/> 
-            prefix xsd: <http://www.w3.org/2001/XMLSchema#> 
+            prefix csvw: <http://www.w3.org/ns/csvw#>
+            prefix cc: <https://cube-creator.zazuko.com/vocab#>
+            prefix schema: <http://schema.org/>
+            prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 
-            <>  
+            <>
                 schema:color "#EF9A9A" ;
                 schema:name "Test Table" ;
                 csvw:column <https://cube-creator.lndo.site/cube-project/ubd/csv-source/stations/column/station-name-de>,
                     <https://cube-creator.lndo.site/cube-project/ubd/csv-source/stations/column/station-name-fr>,
-                    <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/year> ;
+                    <https://cube-creator.lndo.site/cube-project/ubd/csv-source/stations/column/station-id> ;
                 cc:csvSource <https://cube-creator.lndo.site/cube-project/ubd/csv-source/stations> ;
                 cc:identifierTemplate "id-template" ;
                 cc:isObservationTable false .
@@ -41,17 +41,17 @@ With Class cc:TableCollection {
             Content-Type "text/turtle"
 
             ```
-            prefix csvw: <http://www.w3.org/ns/csvw#> 
-            prefix cc: <https://cube-creator.zazuko.com/vocab#> 
-            prefix schema: <http://schema.org/> 
-            prefix xsd: <http://www.w3.org/2001/XMLSchema#> 
+            prefix csvw: <http://www.w3.org/ns/csvw#>
+            prefix cc: <https://cube-creator.zazuko.com/vocab#>
+            prefix schema: <http://schema.org/>
+            prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 
-            <>  
+            <>
                 schema:color "#EF9A9A" ;
                 schema:name "Test Table" ;
                 csvw:column <https://cube-creator.lndo.site/cube-project/ubd/csv-source/stations/column/station-name-de>,
                     <https://cube-creator.lndo.site/cube-project/ubd/csv-source/stations/column/station-name-fr>,
-                    <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/year> ;
+                    <https://cube-creator.lndo.site/cube-project/ubd/csv-source/stations/column/station-id> ;
                 cc:csvSource <https://cube-creator.lndo.site/cube-project/ubd/csv-source/stations> ;
                 cc:identifierTemplate "" ;
                 cc:isObservationTable false .

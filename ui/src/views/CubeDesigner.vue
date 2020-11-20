@@ -1,36 +1,35 @@
 <template>
-  <div v-if="cubeMetadata">
-    <h3>{{ cube.title }}</h3>
-    <p class="has-text-small">
-      {{ cube.id.value }}
-    </p>
-    <hydra-operation-button :operation="cubeMetadata.actions.edit" :to="{ name: 'CubeMetadataEdit' }" />
+  <div v-if="cubeMetadata && dimensionMetadataCollection">
+    <CubePreview
+      :cube-metadata="cubeMetadata"
+      :dimensions="dimensions"
+    />
 
-    <router-view />
+    <router-view :key="$route.fullPath" />
   </div>
+  <loading-block v-else />
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
-import { Cube, Dataset } from '@cube-creator/model'
-import HydraOperationButton from '@/components/HydraOperationButton.vue'
+import type { Dataset, DimensionMetadata, DimensionMetadataCollection } from '@cube-creator/model'
+import CubePreview from '@/components/CubePreview.vue'
+import LoadingBlock from '@/components/LoadingBlock.vue'
 
 const projectNS = namespace('project')
 
 @Component({
-  components: { HydraOperationButton },
+  components: { CubePreview, LoadingBlock },
 })
 export default class CubeDesignerView extends Vue {
-  @projectNS.State('cubeMetadata') cubeMetadata!: Dataset | null;
+  @projectNS.State('cubeMetadata') cubeMetadata!: Dataset | null
+  @projectNS.State('dimensionMetadataCollection') dimensionMetadataCollection!: DimensionMetadataCollection | null
+  @projectNS.Getter('dimensions') dimensions!: DimensionMetadata[]
 
-  get cube (): Cube | null {
-    const [cube] = this.cubeMetadata?.hasPart || []
-    return cube ?? null
-  }
-
-  mounted (): void {
-    this.$store.dispatch('project/fetchCubeMetadata')
+  async mounted (): Promise<void> {
+    await this.$store.dispatch('project/fetchCubeMetadata')
+    this.$store.dispatch('project/fetchDimensionMetadataCollection')
   }
 }
 </script>

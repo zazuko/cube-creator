@@ -9,6 +9,7 @@ import {
   TableCollection,
   Table,
   Dataset,
+  DimensionMetadataCollection,
 } from '@cube-creator/model'
 
 export interface ProjectState {
@@ -17,6 +18,7 @@ export interface ProjectState {
   sourcesCollection: null | SourcesCollection,
   tableCollection: null | TableCollection,
   cubeMetadata: null | Dataset,
+  dimensionMetadataCollection: null | DimensionMetadataCollection,
   jobCollection: null | JobCollection,
 }
 
@@ -26,6 +28,7 @@ const initialState = {
   sourcesCollection: null,
   tableCollection: null,
   cubeMetadata: null,
+  dimensionMetadataCollection: null,
   jobCollection: null,
 }
 
@@ -36,6 +39,10 @@ const getters: GetterTree<ProjectState, RootState> = {
 
   tables (state) {
     return state.tableCollection?.member || []
+  },
+
+  dimensions (state) {
+    return state.dimensionMetadataCollection?.hasPart || []
   },
 
   jobs (state) {
@@ -61,6 +68,11 @@ const getters: GetterTree<ProjectState, RootState> = {
   findColumnMapping (_state, getters) {
     return (id: string) =>
       getters.columnMappings.find(({ clientPath }: { clientPath: string}) => clientPath === id)
+  },
+
+  findDimension (_state, getters) {
+    return (id: string) =>
+      getters.dimensions.find(({ clientPath }: { clientPath: string }) => clientPath === id)
   },
 }
 
@@ -176,6 +188,19 @@ const actions: ActionTree<ProjectState, RootState> = {
 
     return cubeMetadata
   },
+
+  async fetchDimensionMetadataCollection (context) {
+    const cubeMetadata = context.state.cubeMetadata
+
+    if (!cubeMetadata) {
+      throw new Error('CubeMetadata not loaded')
+    }
+
+    const collection = await api.fetchResource<DimensionMetadataCollection>(cubeMetadata.dimensionMetadata.id.value)
+    context.commit('storeDimensionMetadataCollection', collection)
+
+    return collection
+  },
 }
 
 const mutations: MutationTree<ProjectState> = {
@@ -197,6 +222,10 @@ const mutations: MutationTree<ProjectState> = {
 
   storeCubeMetadata (state, cubeMetadata) {
     state.cubeMetadata = cubeMetadata
+  },
+
+  storeDimensionMetadataCollection (state, collection) {
+    state.dimensionMetadataCollection = collection
   },
 
   storeJobCollection (state, collection) {

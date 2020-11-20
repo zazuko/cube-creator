@@ -12,7 +12,7 @@ ${shape('dimension/metadata')} {
       ${sh.datatype} ${rdf.langString} ;
       ${sh.languageIn} ( "en" "de" "fr" "it" ) ;
       ${sh.uniqueLang} true ;
-      ${sh.defaultValue} "" ;
+      ${sh.defaultValue} ""@en ;
       ${sh.minLength} 1 ;
       ${sh.order} 10 ;
     ] , [

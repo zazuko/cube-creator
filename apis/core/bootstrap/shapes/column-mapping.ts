@@ -22,6 +22,7 @@ ${shape('column-mapping/create')} {
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
       ${dash.editor} ${editor.PropertyEditor} ;
+      ${sh.message} "A target property must be an URI or string including only letters, numbers and hyphens" ;
       ${sh.or} (
         [
           ${sh.nodeKind} ${sh.IRI} ;
@@ -29,6 +30,7 @@ ${shape('column-mapping/create')} {
         [
           ${sh.nodeKind} ${sh.Literal} ;
           ${sh.datatype} ${xsd.string} ;
+          ${sh.pattern} "^[a-zA-Z0-9]+[a-zA-Z0-9-/]*$" ;
         ]
       );
       ${sh.order} 30 ;

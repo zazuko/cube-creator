@@ -3,9 +3,10 @@ import { cc } from '@cube-creator/core/namespace'
 import { ResourceStore } from '../../ResourceStore'
 import { resourceStore } from '../resources'
 import { NamedNode } from 'rdf-js'
-import { CsvMapping, CsvSource, DimensionMetadataCollection, Table } from '@cube-creator/model'
+import { CsvColumn, CsvMapping, CsvSource, DimensionMetadataCollection, Table } from '@cube-creator/model'
 import * as DimensionMetadataQueries from '../queries/dimension-metadata'
-import { NotFoundError } from '../../errors'
+import { findMapping } from './lib'
+import { NotFoundError, DomainError } from '../../errors'
 
 interface CreateColumnMappingCommand {
   tableId: NamedNode
@@ -34,10 +35,17 @@ export async function createColumnMapping({
     throw new NotFoundError(columnId)
   }
 
+  const targetProperty = resource.out(cc.targetProperty).term!
+  const mappingExists = await findMapping(table, targetProperty, store)
+  if (mappingExists) {
+    const column = await store.getResource<CsvColumn>(mappingExists.sourceColumn?.id)
+    throw new DomainError(`Target property already mapped from column ${column?.name}`)
+  }
+
   const columnMapping = table.addColumnMapping({
     store,
     sourceColumn: column,
-    targetProperty: resource.out(cc.targetProperty).term!,
+    targetProperty,
     datatype: resource.out(cc.datatype).term as NamedNode,
     language: resource.out(cc.language).value,
     defaultValue: resource.out(cc.defaultValue).term,
