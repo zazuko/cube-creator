@@ -180,6 +180,7 @@ describe('domain/table/create', () => {
       .addOut(csvw.column, [$rdf.namedNode('source-column-1'), $rdf.namedNode('source-column-2')])
     csvSource.addOut(csvw.column, $rdf.namedNode('source-column-1'), column => column.addOut(schema.name, 'column 1').addOut(dtype.order, 0))
     csvSource.addOut(csvw.column, $rdf.namedNode('source-column-2'), column => column.addOut(schema.name, 'column 2').addOut(dtype.order, 1))
+    csvSource.addOut(csvw.column, $rdf.namedNode('source-column-3'), column => column.addOut(schema.name, 'column 3').addOut(dtype.order, 1))
 
     // when
     const table = await createTable({ resource, store, tableCollection })
