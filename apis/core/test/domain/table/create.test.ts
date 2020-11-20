@@ -25,13 +25,14 @@ describe('domain/table/create', () => {
       .namedNode('myCsvMapping')
       .addOut(rdf.type, cc.CsvMapping)
       .addOut(cc.tables, $rdf.namedNode('tables'))
+      .addOut(cc.namespace, 'http://example.com/')
     tableCollection = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('tables') })
       .addOut(rdf.type, cc.Table)
       .addOut(cc.csvMapping, csvMapping)
     csvSource = clownface({ dataset: $rdf.dataset() })
       .namedNode('foo')
       .addOut(rdf.type, cc.CSVSource)
-    const dimensionMetadata = clownface({ dataset: $rdf.dataset() })
+    dimensionMetadata = clownface({ dataset: $rdf.dataset() })
       .namedNode('myDimensionMetadata')
       .addOut(rdf.type, cc.DimensionMetadataCollection)
     store = new TestResourceStore([
@@ -168,7 +169,7 @@ describe('domain/table/create', () => {
     csvSource.addOut(csvw.column, $rdf.namedNode('source-column-1'), column => column.addOut(schema.name, 'Column 1'))
 
     // when
-    const table = await createTable({ resource, store, tableCollection })
+    const table = await createTable({ resource, store, tableCollection, dimensionMetadataQueries })
     const column = await store.get(table.out(cc.columnMapping).terms[0] as NamedNode)
 
     // then
