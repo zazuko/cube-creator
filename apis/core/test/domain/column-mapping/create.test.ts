@@ -26,7 +26,7 @@ describe('domain/column-mapping/create', () => {
   const csvMapping = clownface({ dataset: $rdf.dataset() })
     .namedNode('myMapping')
     .addOut(rdf.type, cc.CsvMapping)
-    .addOut(cc.namespace, $rdf.namedNode('http://example.com'))
+    .addOut(cc.namespace, $rdf.namedNode('http://example.com/'))
   const csvSource = clownface({ dataset: $rdf.dataset() })
     .namedNode('foo')
     .addOut(rdf.type, cc.CSVSource)
@@ -46,7 +46,6 @@ describe('domain/column-mapping/create', () => {
       csvMapping,
       csvSource,
       dimensionMetadata,
-
     ])
 
     getDimensionMetaDataCollection = sinon.stub().resolves(dimensionMetadata.term.value)
@@ -164,13 +163,47 @@ describe('domain/column-mapping/create', () => {
       property: {
         path: schema.hasPart,
         minCount: 1,
-        node: {
-          property: {
-            path: schema.about,
-            minCount: 1,
-            maxCount: 1,
-          },
-        },
+        hasValue: $rdf.namedNode('myDimensionMetadata/test'),
+      },
+    })
+
+    const testLiteral = dimensionMetadata.node($rdf.namedNode('myDimensionMetadata/test'))
+    expect(testLiteral).to.matchShape({
+      property: {
+        path: schema.about,
+        minCount: 1,
+        maxCount: 1,
+        hasValue: $rdf.namedNode('test'),
+      },
+    })
+  })
+
+  it('creates Dimension Metadata for column, literal property', async () => {
+    // given
+    const resource = clownface({ dataset: $rdf.dataset() })
+      .node($rdf.namedNode(''))
+      .addOut(cc.sourceColumn, $rdf.namedNode('my-column'))
+      .addOut(cc.targetProperty, $rdf.literal('testLiteral'))
+
+    // when
+    await createColumnMapping({ resource, store, tableId: observationTable.term, dimensionMetadataQueries })
+
+    // then
+    expect(dimensionMetadata).to.matchShape({
+      property: {
+        path: schema.hasPart,
+        minCount: 1,
+        hasValue: $rdf.namedNode('myDimensionMetadata/testLiteral'),
+      },
+    })
+
+    const testLiteral = dimensionMetadata.node($rdf.namedNode('myDimensionMetadata/testLiteral'))
+    expect(testLiteral).to.matchShape({
+      property: {
+        path: schema.about,
+        minCount: 1,
+        maxCount: 1,
+        hasValue: $rdf.namedNode('http://example.com/testLiteral'),
       },
     })
   })
