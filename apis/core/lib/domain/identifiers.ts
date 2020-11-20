@@ -4,8 +4,7 @@ import { NamedNode } from 'rdf-js'
 import { GraphPointer } from 'clownface'
 import env from '@cube-creator/core/env'
 import { nanoid } from 'nanoid'
-import { ColumnMapping, CsvMapping, CsvSource, DimensionMetadataCollection, Project, Table } from '@cube-creator/model'
-import { shrink } from '@zazuko/rdf-vocabularies'
+import { CsvMapping, CsvSource, Project, Table } from '@cube-creator/model'
 
 const url = new UrlSlugify()
 
@@ -55,13 +54,4 @@ export function user(user: string): NamedNode {
 
 export function job(jobCollection: GraphPointer<NamedNode>): NamedNode {
   return $rdf.namedNode(`${jobCollection.value}/${nanoid()}`)
-}
-
-export function dimensionMetadata(dimensionMetadataCollection: DimensionMetadataCollection, mapping: ColumnMapping): NamedNode {
-  if (mapping.targetProperty.termType === 'Literal') {
-    return $rdf.namedNode(`${dimensionMetadataCollection.id.value}/${mapping.targetProperty.value}`)
-  } else {
-    const prefixedProperty = shrink(mapping.targetProperty.value) || mapping.targetProperty.value
-    return $rdf.namedNode(`${dimensionMetadataCollection.id.value}/${prefixedProperty}`)
-  }
 }

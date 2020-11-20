@@ -43,8 +43,6 @@ export const createCollection = initializer<DimensionMetadataCollection>(Dimensi
   types: [cc.DimensionMetadataCollection],
 })
 
-DimensionMetadataCollectionMixin.appliesTo = cc.DimensionMetadataCollection
-
 type RequiredProperties = 'about'
 
 export const create = initializer<DimensionMetadata, RequiredProperties>(DimensionMetadataMixin)
