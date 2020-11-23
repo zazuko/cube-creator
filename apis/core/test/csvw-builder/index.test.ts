@@ -193,6 +193,27 @@ describe('lib/csvw-builder', () => {
     expect(csvwColumn?.datatype?.id).to.deep.eq(xsd.gYear)
   })
 
+  it('maps column with language', async () => {
+    // given
+    csvSource.columns = [
+      CsvColumn.fromPointer(csvSource.pointer.namedNode('jahr-column'), { name: 'JAHR' }),
+    ]
+    const columnMapping = ColumnMapping.fromPointer(clownface({ dataset: $rdf.dataset() }).namedNode('year-mapping'), {
+      sourceColumn: $rdf.namedNode('jahr-column') as any,
+      targetProperty: schema.yearBuilt,
+      language: 'de-DE',
+    })
+    resources.push(columnMapping.pointer)
+    table.columnMappings = [columnMapping] as any
+
+    // when
+    const csvw = await buildCsvw({ table, resources })
+
+    // then
+    const csvwColumn = findColumn(csvw, 'JAHR')
+    expect(csvwColumn?.lang).to.eq('de-DE')
+  })
+
   it('adds a cc:cube virtual column to output of observation table', async () => {
     // given
     table.types.add(cc.ObservationTable)
