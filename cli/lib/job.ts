@@ -145,7 +145,10 @@ export class JobIterator extends stream.Readable {
 
               log.debug(`Will transform table '${table.name}' from ${csvwResource.url}. Dialect: delimiter=${csvwResource.dialect.delimiter} quote=${csvwResource.dialect.quoteChar}`)
 
-              this.push(csvwResource)
+              this.push({
+                isObservationTable: table.isObservationTable,
+                csvwResource,
+              })
             })
             .catch(e => {
               log.error(`Failed to load ${table.csvw.id.value}`)

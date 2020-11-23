@@ -5,7 +5,7 @@ import $rdf from 'rdf-ext'
 import { ASK, CONSTRUCT } from '@tpluscode/sparql-builder'
 import debug from 'debug'
 import { Hydra } from 'alcaeus/node'
-import { rdf, rdfs, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
+import { dcterms, rdf, rdfs, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import transform from '../../../lib/commands/transform'
 import { setupEnv } from '../../support/env'
 import { client, insertTestData } from '@cube-creator/testing/lib'
@@ -45,9 +45,8 @@ describe('lib/commands/transform', function () {
       .execute(client.query))
 
     const cubePointer = clownface({ dataset })
-    expect(cubePointer.has(rdf.type, cube.Observation).terms).to.have.length.greaterThan(10)
     expect(cubePointer.has(rdf.type, sh.NodeShape).terms.length).to.eq(1)
-    expect(cubePointer.has(rdf.type, cube.Observation).toArray()[0]).to.matchShape({
+    expect(cubePointer.namedNode('https://environment.ld.admin.ch/foen/ubd/28/observation/blBAS-2000-annualmean')).to.matchShape({
       property: [{
         path: rdf.type,
         hasValue: cube.Observation,
@@ -57,16 +56,29 @@ describe('lib/commands/transform', function () {
         minCount: 1,
       }, {
         path: $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/dimension/year'),
+        hasValue: $rdf.literal('2000', xsd.gYear),
         minCount: 1,
         maxCount: 1,
       }, {
         path: $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/dimension/value'),
+        hasValue: $rdf.literal('4.7', xsd.float),
         minCount: 1,
         maxCount: 1,
       }, {
         path: $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/station'),
         minCount: 1,
         maxCount: 1,
+      }],
+    })
+    expect(cubePointer.namedNode('https://environment.ld.admin.ch/foen/ubd/28/station/blBAS')).to.matchShape({
+      property: [{
+        path: dcterms.identifier,
+        hasValue: 'blBAS',
+        minCount: 1,
+        maxCount: 1,
+      }, {
+        path: rdfs.label,
+        minCount: 1,
       }],
     })
   })

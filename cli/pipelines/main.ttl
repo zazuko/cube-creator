@@ -29,12 +29,32 @@
                        a         code:EcmaScript ] ;
   code:arguments     ( "jobUri"^^:VariableName ) .
 
+<#SelectAndRunTransformation>
+ a :Pipeline, :ReadableObjectMode ;
+  :steps [ :stepList (<#selectTransformation>) ]
+.
+
+<#selectTransformation>
+  a :Step ;
+  code:implementedBy [code:link <file:../lib/pipeline#selectTransformation> ;
+  a         code:EcmaScript ] ;
+  code:arguments [
+                    code:name "observationTable" ;
+                    code:value <#TransformObservationCsv>
+                 ], [
+                    code:name "otherTable" ;
+                    code:value <#TransformCsv>
+                 ] .
+
 <#doTransform>
   a                  :Step ;
   code:implementedBy [ code:link <node:barnard59-core#forEach> ;
                        a         code:EcmaScript ] ;
-  code:arguments     ( <#TransformCsv>
-                       "(p, csvwResource) => { p.variables.set('csvw', csvwResource) }"^^code:EcmaScript ) .
+  code:arguments     ( <#SelectAndRunTransformation>
+                       """(p, { csvwResource, isObservationTable }) => {
+                            p.variables.set('csvw', csvwResource)
+                            p.variables.set('isObservationTable', isObservationTable)
+                           }"""^^code:EcmaScript ) .
 
 # ------------------------------
 #
@@ -42,7 +62,7 @@
 #
 # ------------------------------
 
-<#TransformCsv>
+<#TransformObservationCsv>
   a      :Pipeline, :ReadableObjectMode ;
   :steps [ :stepList (
                        <#loadCsvStep>
@@ -53,6 +73,14 @@
                        <#toCubeShape>
                        <#flatten>
                        <#filterCubeLinks>
+                     ) ] .
+
+<#TransformCsv>
+  a      :Pipeline, :ReadableObjectMode ;
+  :steps [ :stepList (
+                       <#loadCsvStep>
+                       <#parse>
+                       <#filterNotCsvw>
                      ) ] .
 
 <#LoadCsv>
