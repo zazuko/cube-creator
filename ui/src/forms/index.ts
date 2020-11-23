@@ -17,7 +17,7 @@ export const focusNodeStrategy: FocusNodeRenderStrategy = ({ focusNode, renderGr
 
 const propertyStrategy: PropertyRenderStrategy = ({ property, actions, renderObject, renderMultiEditor }) => {
   return html`<form-property
-    .property="${property}"
+    .property="${Object.freeze(property)}"
     .renderObject="${renderObject}"
     .actions="${actions}"
     .renderMultiEditor="${renderMultiEditor}"
@@ -31,7 +31,7 @@ propertyStrategy.loadDependencies = () => [
 export const objectStrategy: ObjectRenderStrategy = ({ object, actions, renderEditor, property }) => {
   return html`<form-object
     .object="${object}"
-    .property="${property}"
+    .property="${Object.freeze(property)}"
     .actions="${actions}"
     .renderEditor="${renderEditor}"
   />`
