@@ -1,38 +1,63 @@
 import { describe, it, beforeEach } from 'mocha'
 import { expect } from 'chai'
-import clownface from 'clownface'
+import * as sinon from 'sinon'
+import clownface, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import { csvw, hydra, rdf, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import { createColumnMapping } from '../../../lib/domain/column-mapping/create'
 import { TestResourceStore } from '../../support/TestResourceStore'
+import type * as DimensionMetadataQueries from '../../../lib/domain/queries/dimension-metadata'
 import '../../../lib/domain'
 import { DomainError } from '../../../lib/errors'
+import { NamedNode } from 'rdf-js'
+import DatasetExt from 'rdf-ext/lib/Dataset'
 
 describe('domain/column-mapping/create', () => {
   let store: TestResourceStore
-  const csvMapping = clownface({ dataset: $rdf.dataset() })
-    .namedNode('csv-mapping')
-    .addOut(rdf.type, cc.CsvMapping)
-    .addOut(cc.namespace, 'http://example.com/')
-  const table = clownface({ dataset: $rdf.dataset() })
-    .namedNode('myTable')
-    .addOut(rdf.type, cc.Table)
-    .addOut(cc.csvMapping, csvMapping)
-  const csvSource = clownface({ dataset: $rdf.dataset() })
-    .namedNode('foo')
-    .addOut(rdf.type, cc.CSVSource)
-    .addOut(csvw.column, $rdf.namedNode('my-column'), (column) => {
-      column.addOut(schema.name, $rdf.literal('My Column'))
-    })
-  table.addOut(cc.csvSource, csvSource.term)
+  let dimensionMetadataQueries: typeof DimensionMetadataQueries
+  let getDimensionMetaDataCollection: sinon.SinonStub
+  let table: GraphPointer<NamedNode, DatasetExt>
+  let observationTable: GraphPointer<NamedNode, DatasetExt>
+  let dimensionMetadata: GraphPointer<NamedNode, DatasetExt>
 
   beforeEach(() => {
+    const csvMapping = clownface({ dataset: $rdf.dataset() })
+      .namedNode('csv-mapping')
+      .addOut(rdf.type, cc.CsvMapping)
+      .addOut(cc.namespace, 'http://example.com/')
+    const csvSource = clownface({ dataset: $rdf.dataset() })
+      .namedNode('foo')
+      .addOut(rdf.type, cc.CSVSource)
+      .addOut(csvw.column, $rdf.namedNode('my-column'), (column) => {
+        column.addOut(schema.name, $rdf.literal('My Column'))
+      })
+    table = clownface({ dataset: $rdf.dataset() })
+      .namedNode('myTable')
+      .addOut(rdf.type, cc.Table)
+      .addOut(cc.csvMapping, csvMapping)
+      .addOut(cc.csvSource, csvSource)
+    observationTable = clownface({ dataset: $rdf.dataset() })
+      .namedNode('myObservationTable')
+      .addOut(rdf.type, cc.Table)
+      .addOut(rdf.type, cc.ObservationTable)
+      .addOut(cc.csvMapping, csvMapping)
+      .addOut(cc.csvSource, csvSource)
+
+    dimensionMetadata = clownface({ dataset: $rdf.dataset() })
+      .namedNode('myDimensionMetadata')
+      .addOut(rdf.type, cc.DimensionMetadataCollection)
+
     store = new TestResourceStore([
       table,
-      csvSource,
+      observationTable,
       csvMapping,
+      csvSource,
+      dimensionMetadata,
     ])
+
+    getDimensionMetaDataCollection = sinon.stub().resolves(dimensionMetadata.term.value)
+    dimensionMetadataQueries = { getDimensionMetaDataCollection }
   })
 
   it('creates identifier by slugifying the column schema:name', async () => {
@@ -43,7 +68,7 @@ describe('domain/column-mapping/create', () => {
       .addOut(cc.targetProperty, 'test')
 
     // when
-    const columnMapping = await createColumnMapping({ resource, store, tableId: table.term })
+    const columnMapping = await createColumnMapping({ resource, store, tableId: table.term, dimensionMetadataQueries })
 
     // then
     expect(columnMapping.term.value).to.match(/\/my-column-(.+)$/)
@@ -60,7 +85,7 @@ describe('domain/column-mapping/create', () => {
       .addOut(cc.defaultValue, $rdf.literal('test'))
 
     // when
-    const columnMapping = await createColumnMapping({ resource, store, tableId: table.term })
+    const columnMapping = await createColumnMapping({ resource, store, tableId: table.term, dimensionMetadataQueries })
 
     // then
     expect(columnMapping).to.matchShape({
@@ -100,7 +125,7 @@ describe('domain/column-mapping/create', () => {
       .addOut(cc.targetProperty, $rdf.namedNode('test'))
 
     // when
-    const columnMapping = await createColumnMapping({ resource, store, tableId: table.term })
+    const columnMapping = await createColumnMapping({ resource, store, tableId: table.term, dimensionMetadataQueries })
 
     // then
     expect(table).to.matchShape({
@@ -112,6 +137,96 @@ describe('domain/column-mapping/create', () => {
     })
   })
 
+  it('No metadata when not observation table', async () => {
+    // given
+    const resource = clownface({ dataset: $rdf.dataset() })
+      .node($rdf.namedNode(''))
+      .addOut(cc.sourceColumn, $rdf.namedNode('my-column'))
+      .addOut(cc.targetProperty, $rdf.namedNode('test'))
+
+    // when
+    await createColumnMapping({ resource, store, tableId: table.term, dimensionMetadataQueries })
+
+    // then
+    expect(dimensionMetadata).to.matchShape({
+      property: {
+        path: schema.hasPart,
+        maxCount: 0,
+      },
+    })
+  })
+
+  it('creates Dimension Metadata for column', async () => {
+    // given
+    const resource = clownface({ dataset: $rdf.dataset() })
+      .node($rdf.namedNode(''))
+      .addOut(cc.sourceColumn, $rdf.namedNode('my-column'))
+      .addOut(cc.targetProperty, $rdf.namedNode('test'))
+
+    // when
+    await createColumnMapping({ resource, store, tableId: observationTable.term, dimensionMetadataQueries })
+
+    // then
+    expect(dimensionMetadata).to.matchShape({
+      property: {
+        path: schema.hasPart,
+        minCount: 1,
+        hasValue: $rdf.namedNode('myDimensionMetadata/test'),
+      },
+    })
+
+    const testLiteral = dimensionMetadata.node($rdf.namedNode('myDimensionMetadata/test'))
+    expect(testLiteral).to.matchShape({
+      property: {
+        path: schema.about,
+        minCount: 1,
+        maxCount: 1,
+        hasValue: $rdf.namedNode('test'),
+      },
+    })
+  })
+
+  it('creates Dimension Metadata for column, literal property', async () => {
+    // given
+    const resource = clownface({ dataset: $rdf.dataset() })
+      .node($rdf.namedNode(''))
+      .addOut(cc.sourceColumn, $rdf.namedNode('my-column'))
+      .addOut(cc.targetProperty, $rdf.literal('testLiteral'))
+
+    // when
+    await createColumnMapping({ resource, store, tableId: observationTable.term, dimensionMetadataQueries })
+
+    // then
+    expect(dimensionMetadata).to.matchShape({
+      property: {
+        path: schema.hasPart,
+        minCount: 1,
+        hasValue: $rdf.namedNode('myDimensionMetadata/testLiteral'),
+      },
+    })
+
+    const testLiteral = dimensionMetadata.node($rdf.namedNode('myDimensionMetadata/testLiteral'))
+    expect(testLiteral).to.matchShape({
+      property: {
+        path: schema.about,
+        minCount: 1,
+        maxCount: 1,
+        hasValue: $rdf.namedNode('http://example.com/testLiteral'),
+      },
+    })
+  })
+
+  it('throw if same dimension metadata with same targetProperty is added twice', async () => {
+    // given
+    const resource = clownface({ dataset: $rdf.dataset() })
+      .node($rdf.namedNode(''))
+      .addOut(cc.sourceColumn, $rdf.namedNode('my-column'))
+      .addOut(cc.targetProperty, $rdf.namedNode('test'))
+    await createColumnMapping({ resource, store, tableId: observationTable.term, dimensionMetadataQueries })
+
+    // then
+    expect(createColumnMapping({ resource, store, tableId: observationTable.term, dimensionMetadataQueries })).to.rejectedWith(Error)
+  })
   describe('when some column mappings exist', () => {
     it('throws when exact targetProperty is used for new property', async () => {
       // given

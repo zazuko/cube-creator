@@ -7,7 +7,7 @@ import { cc } from '@cube-creator/core/namespace'
 import { initializer } from './lib/initializer'
 
 export interface DimensionMetadata extends RdfResource {
-  about?: NamedNode
+  about: NamedNode
   name: Literal[]
 }
 
@@ -42,3 +42,7 @@ DimensionMetadataCollectionMixin.appliesTo = cc.DimensionMetadataCollection
 export const createCollection = initializer<DimensionMetadataCollection>(DimensionMetadataCollectionMixin, {
   types: [cc.DimensionMetadataCollection],
 })
+
+type RequiredProperties = 'about'
+
+export const create = initializer<DimensionMetadata, RequiredProperties>(DimensionMetadataMixin)

@@ -6,7 +6,8 @@ import { resourceStore } from '../resources'
 import { NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import { NotFoundError } from '../../errors'
-import { CsvColumn, CsvMapping, CsvSource } from '@cube-creator/model'
+import { CsvColumn, CsvMapping, CsvSource, DimensionMetadataCollection } from '@cube-creator/model'
+import * as DimensionMetadataQueries from '../queries/dimension-metadata'
 
 const trueTerm = $rdf.literal('true', xsd.boolean)
 
@@ -14,12 +15,14 @@ interface CreateTableCommand {
   tableCollection: GraphPointer<NamedNode>
   resource: GraphPointer
   store?: ResourceStore
+  dimensionMetadataQueries?: Pick<typeof DimensionMetadataQueries, 'getDimensionMetaDataCollection'>
 }
 
 export async function createTable({
   tableCollection,
   resource,
   store = resourceStore(),
+  dimensionMetadataQueries: { getDimensionMetaDataCollection } = DimensionMetadataQueries,
 }: CreateTableCommand): Promise<GraphPointer> {
   const label = resource.out(schema.name)
   if (!label?.value) {
@@ -52,6 +55,12 @@ export async function createTable({
   })
 
   // Create default column mappings for provided columns
+  const dimensionMetaDataCollectionPointer = await getDimensionMetaDataCollection(csvMapping.id)
+  const dimensionMetaDataCollection = await store.getResource<DimensionMetadataCollection>(dimensionMetaDataCollectionPointer)
+  if (!dimensionMetaDataCollection) {
+    throw new NotFoundError(dimensionMetaDataCollectionPointer)
+  }
+
   resource.out(csvw.column)
     .forEach(({ term: columnId }) => {
       const column = columns
@@ -60,10 +69,18 @@ export async function createTable({
         throw new Error(`Column ${columnId} not found`)
       }
 
-      return table.addColumnMappingFromColumn({
+      const columnMapping = table.addColumnMappingFromColumn({
         store,
         column,
       })
+
+      if (table.types.has(cc.ObservationTable)) {
+        dimensionMetaDataCollection.addDimensionMetadata({
+          store, columnMapping, csvMapping,
+        })
+      }
+
+      return columnMapping
     })
 
   await store.save()
