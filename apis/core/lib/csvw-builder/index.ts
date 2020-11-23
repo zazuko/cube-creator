@@ -78,11 +78,20 @@ export async function buildCsvw({ table, resources }: { table: Table; resources:
     throw new Error(`CSV Mapping resource not found for table ${table.id.value}`)
   }
 
-  const column: Initializer<Csvw.Column>[] = [{
-    virtual: true,
-    propertyUrl: cc.cube.value,
-    valueUrl: csvMapping.namespace.value,
-  }]
+  let template: string
+  const column: Initializer<Csvw.Column>[] = []
+
+  if (table.isObservationTable) {
+    template = `observation/${table.identifierTemplate}`
+    column.push({
+      virtual: true,
+      propertyUrl: cc.cube.value,
+      valueUrl: csvMapping.namespace.value,
+    })
+  } else {
+    template = table.identifierTemplate
+  }
+
   for await (const csvwColumn of buildColumns({ csvMapping, table, source, resources })) {
     column.push(csvwColumn)
   }
@@ -93,7 +102,7 @@ export async function buildCsvw({ table, resources }: { table: Table; resources:
       ...source.dialect.toJSON(),
     },
     tableSchema: {
-      aboutUrl: csvMapping.createIdentifier(`observation/${table.identifierTemplate}`).value,
+      aboutUrl: csvMapping.createIdentifier(template).value,
       column,
     },
   })

@@ -69,12 +69,23 @@ describe('lib/csvw-builder', () => {
     expect(csvw.url).to.eq(csvSource.id.value)
   })
 
-  it('combines namespace and identifier template to construct csvw:aboutUrl', async () => {
+  it('combines namespace and identifier template to construct csvw:aboutUrl of observation table', async () => {
+    // given
+    table.types.add(cc.ObservationTable)
+
     // when
     const csvw = await buildCsvw({ table, resources })
 
     // then
     expect(csvw.tableSchema?.aboutUrl).to.eq('http://example.com/test-cube/observation/{id}-{sub_id}')
+  })
+
+  it('does not add "/observation" segment to csvw:aboutUrl when it is not observation table', async () => {
+    // when
+    const csvw = await buildCsvw({ table, resources })
+
+    // then
+    expect(csvw.tableSchema?.aboutUrl).to.eq('http://example.com/test-cube/{id}-{sub_id}')
   })
 
   it('copies csvw:dialect from CsvSource', async () => {
@@ -162,7 +173,10 @@ describe('lib/csvw-builder', () => {
     expect(csvwColumn?.datatype?.id).to.deep.eq(xsd.gYear)
   })
 
-  it('adds a cc:cube virtual column to output', async () => {
+  it('adds a cc:cube virtual column to output of observation table', async () => {
+    // given
+    table.types.add(cc.ObservationTable)
+
     // when
     const csvw = await buildCsvw({ table, resources })
 
@@ -185,5 +199,14 @@ describe('lib/csvw-builder', () => {
         minCount: 1,
       }],
     })
+  })
+
+  it('does not add a cc:cube virtual column to output of ordinary table', async () => {
+    // when
+    const csvw = await buildCsvw({ table, resources })
+
+    // then
+    const csvwColumn = findColumn(csvw, cc.cube)
+    expect(csvwColumn).to.be.undefined
   })
 })

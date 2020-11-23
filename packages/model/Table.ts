@@ -20,6 +20,7 @@ export interface Table extends RdfResource {
   identifierTemplate: string
   color: string
   columnMappings: Array<Link<ColumnMapping>>
+  isObservationTable: boolean
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -50,6 +51,10 @@ export function TableMixin<Base extends Constructor>(base: Base): Mixin {
 
     @property.resource({ values: 'array', path: cc.columnMapping })
     columnMappings!: Array<Link<ColumnMapping>>
+
+    get isObservationTable(): boolean {
+      return this.types.has(cc.ObservationTable)
+    }
   }
 
   return Impl
