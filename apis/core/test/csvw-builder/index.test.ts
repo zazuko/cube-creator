@@ -132,6 +132,26 @@ describe('lib/csvw-builder', () => {
     expect(csvwColumn?.propertyUrl).to.eq('http://example.com/test-cube/year')
   })
 
+  it('does not add a duplicate csvw:column as suppressed', async () => {
+    // given
+    csvSource.columns = [
+      CsvColumn.fromPointer(csvSource.pointer.namedNode('jahr-column'), { name: 'JAHR' }),
+    ]
+    const columnMapping = ColumnMapping.fromPointer(clownface({ dataset: $rdf.dataset() }).namedNode('year-mapping'), {
+      sourceColumn: $rdf.namedNode('jahr-column') as any,
+      targetProperty: $rdf.literal('year'),
+    })
+    resources.push(columnMapping.pointer)
+    table.columnMappings = [columnMapping] as any
+
+    // when
+    const csvw = await buildCsvw({ table, resources })
+
+    // then
+    expect(csvw.tableSchema?.column).to.have.length(1)
+    expect(csvw.tableSchema?.column[0].suppressOutput).to.be.undefined
+  })
+
   it("takes source column's target property as-is when it is a NamedNode", async () => {
     // given
     csvSource.columns = [
