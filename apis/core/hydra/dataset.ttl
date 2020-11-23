@@ -1,11 +1,13 @@
-BASE           <urn:hydra-box:api>
-PREFIX cc:     <https://cube-creator.zazuko.com/vocab#>
-prefix hydra:  <http://www.w3.org/ns/hydra/core#>
-prefix code:   <https://code.described.at/>
-prefix query:  <http://hypermedia.app/query#>
-prefix sh:     <http://www.w3.org/ns/shacl#>
-PREFIX schema: <http://schema.org/>
-PREFIX void:   <http://rdfs.org/ns/void#>
+BASE              <urn:hydra-box:api>
+PREFIX cc:        <https://cube-creator.zazuko.com/vocab#>
+prefix hydra:     <http://www.w3.org/ns/hydra/core#>
+prefix hydra-box: <http://hydra-box.org/schema/>
+prefix code:      <https://code.described.at/>
+prefix query:     <http://hypermedia.app/query#>
+prefix sh:        <http://www.w3.org/ns/shacl#>
+PREFIX schema:    <http://schema.org/>
+PREFIX void:      <http://rdfs.org/ns/void#>
+prefix view:      <http://ns.bergnet.org/cube-view/>
 
 void:Dataset
   a
@@ -38,7 +40,53 @@ void:Dataset
           code:link
             <file:handlers/dataset#put> ;
         ] ;
-    ] .
+    ] ;
+.
+
+cc:Observations a hydra:Class ;
+  hydra:supportedOperation
+    [
+      a
+        hydra:SupportedOperation ;
+      hydra:method
+        "GET" ;
+      code:implementedBy
+        [
+          a
+            code:EcmaScript ;
+          code:link
+            <file:handlers/observations#query> ;
+        ] ;
+      hydra-box:variables
+        [
+          a
+            hydra:IriTemplate ;
+          hydra:template
+            "/observations?cube={cube}{&view}" ;
+          hydra:mapping
+            [
+              a
+                hydra:IriTemplateMapping ;
+              hydra:property
+                cc:cube ;
+              hydra:required
+                true ;
+              hydra:variable
+                "cube" ;
+            ],
+            [
+              a
+                hydra:IriTemplateMapping ;
+              hydra:property
+                view:view ;
+              hydra:required
+                true ;
+              hydra:variable
+                "view" ;
+            ] ;
+        ] ;
+    ]
+.
 
 <shape/dataset/edit-metadata>
   a

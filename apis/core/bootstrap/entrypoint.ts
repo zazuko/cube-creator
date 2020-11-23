@@ -8,4 +8,8 @@ export const entrypoint = turtle`
     ${hydra.title} "Cube Creator" ;
     ${cc.projects} <cube-projects>
 }
+
+<observations> {
+  <observations> a ${cc.Observations} ;
+}
 `
