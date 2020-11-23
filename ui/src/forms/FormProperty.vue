@@ -9,10 +9,10 @@
       </p>
     </b-field>
     <b-field v-if="property.selectedEditor">
-      <render-wc-func :f="renderMultiEditor" :args="[null]" />
+      <render-wc-template :template-result="renderMultiEditor()" />
     </b-field>
     <div v-else v-for="object in property.objects" :key="object.key">
-      <render-wc-func :f="renderObject" :args="[object]" />
+      <render-wc-template :template-result="renderObject(object)" />
     </div>
     <div v-if="!property.selectedEditor && property.canAdd">
       <b-tooltip label="Add value">
@@ -27,12 +27,10 @@ import { Prop, Component, Vue } from 'vue-property-decorator'
 import { PropertyObjectState, PropertyState } from '@hydrofoil/shaperone-core/models/forms'
 import { TemplateResult } from 'lit-element'
 import { dash } from '@tpluscode/rdf-ns-builders'
-import RenderWcFunc from './RenderWcFunc.vue'
+import RenderWcTemplate from './RenderWcTemplate.vue'
 
 @Component({
-  components: {
-    RenderWcFunc,
-  }
+  components: { RenderWcTemplate },
 })
 export default class extends Vue {
   @Prop() property!: PropertyState;
