@@ -4,7 +4,7 @@ import { cc } from '@cube-creator/core/namespace'
 
 const csvwNs = csvw().value
 
-export function removeCsvwTriples(quad: Quad): boolean {
+function removeCsvwTriples(quad: Quad): boolean {
   if (quad.predicate.value.startsWith(csvwNs)) {
     return false
   }
@@ -16,4 +16,12 @@ export function removeCsvwTriples(quad: Quad): boolean {
 
 export function removeCubeLinks(quad: Quad): boolean {
   return !quad.predicate.equals(cc.cube)
+}
+
+function removeDefaultProperties(quad: Quad): boolean {
+  return !quad.predicate.value.startsWith('#')
+}
+
+export default function (quad: Quad): boolean {
+  return removeCsvwTriples(quad) && removeDefaultProperties(quad)
 }

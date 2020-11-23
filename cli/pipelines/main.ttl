@@ -67,7 +67,7 @@
   :steps [ :stepList (
                        <#loadCsvStep>
                        <#parse>
-                       <#filterNotCsvw>
+                       <#filter>
                        <#toDataset>
                        <#toObservation>
                        <#toCubeShape>
@@ -80,7 +80,7 @@
   :steps [ :stepList (
                        <#loadCsvStep>
                        <#parse>
-                       <#filterNotCsvw>
+                       <#filter>
                      ) ] .
 
 <#LoadCsv>
@@ -108,11 +108,11 @@
                        a         code:EcmaScript ] ;
   code:arguments     ( "csvw"^^:VariableName ) .
 
-<#filterNotCsvw>
+<#filter>
   a                  :Step ;
   code:implementedBy [ a         code:EcmaScript ;
                        code:link <node:barnard59-base#filter> ] ;
-  code:arguments     ( [ code:link <file:../lib/output-filter#removeCsvwTriples> ;
+  code:arguments     ( [ code:link <file:../lib/output-filter#default> ;
                          a         code:EcmaScript ] ) .
 
 <#toDataset> a :Step;
