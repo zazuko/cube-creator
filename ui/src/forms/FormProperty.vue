@@ -11,7 +11,7 @@
     <b-field v-if="property.selectedEditor">
       <render-wc-func :f="renderMultiEditor" :args="[null]" />
     </b-field>
-    <div v-else v-for="object in property.objects" :key="object.id">
+    <div v-else v-for="object in property.objects" :key="object.key">
       <render-wc-func :f="renderObject" :args="[object]" />
     </div>
     <div v-if="!property.selectedEditor && property.canAdd">
