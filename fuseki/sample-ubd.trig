@@ -407,7 +407,6 @@ graph <cube-project/ubd/csv-mapping/table-station/column-mapping-2> {
   <cube-project/ubd/csv-mapping/table-station/column-mapping-2> a cc:ColumnMapping ;
     cc:sourceColumn <cube-project/ubd/csv-source/stations/column/station-name-fr> ;
     cc:targetProperty rdfs:label ;
-    cc:datatype xsd:langString ;
     cc:language "fr" ;
   .
 }
@@ -417,7 +416,6 @@ graph <cube-project/ubd/csv-mapping/table-station/column-mapping-3> {
   <cube-project/ubd/csv-mapping/table-station/column-mapping-3> a cc:ColumnMapping ;
     cc:sourceColumn <cube-project/ubd/csv-source/stations/column/station-name-de> ;
     cc:targetProperty rdfs:label ;
-    cc:datatype xsd:langString ;
     cc:language "de" ;
   .
 }
