@@ -5,7 +5,7 @@ import $rdf from 'rdf-ext'
 import { ASK, CONSTRUCT } from '@tpluscode/sparql-builder'
 import debug from 'debug'
 import { Hydra } from 'alcaeus/node'
-import { dcterms, rdf, rdfs, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
+import { rdf, rdfs, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import transform from '../../../lib/commands/transform'
 import { setupEnv } from '../../support/env'
 import { client, insertTestData } from '@cube-creator/testing/lib'
@@ -72,7 +72,7 @@ describe('lib/commands/transform', function () {
     })
     expect(cubePointer.namedNode('https://environment.ld.admin.ch/foen/ubd/28/station/blBAS')).to.matchShape({
       property: [{
-        path: dcterms.identifier,
+        path: schema.identifier,
         hasValue: 'blBAS',
         minCount: 1,
         maxCount: 1,

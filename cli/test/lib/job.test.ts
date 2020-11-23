@@ -36,7 +36,7 @@ describe('lib/job', function () {
       // when
       const results: Table[] = []
       for await (const table of iteratorStream) {
-        results.push(table)
+        results.push(table.csvwResource)
       }
 
       // then
