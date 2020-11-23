@@ -16,6 +16,7 @@ describe('domain/csv-sources/delete', () => {
   let tableQueries: typeof TableQueries
   let getLinkedTablesForSource: sinon.SinonStub
   let getTablesForMapping: sinon.SinonStub
+  const getTableForColumnMapping = sinon.stub()
 
   beforeEach(() => {
     fileStorage = {
@@ -33,6 +34,7 @@ describe('domain/csv-sources/delete', () => {
     tableQueries = {
       getLinkedTablesForSource,
       getTablesForMapping,
+      getTableForColumnMapping,
     }
   })
   const csvSource = clownface({ dataset: $rdf.dataset() })
