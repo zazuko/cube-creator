@@ -7,6 +7,7 @@ import * as DimensionMetadata from '@cube-creator/model/DimensionMetadata'
 import $rdf from 'rdf-ext'
 import { shrink } from '@zazuko/rdf-vocabularies'
 import { ResourceStore } from '../../ResourceStore'
+import { Term } from 'rdf-js'
 
 interface CreateColumnMetadata {
   store: ResourceStore
@@ -14,9 +15,15 @@ interface CreateColumnMetadata {
   columnMapping: ColumnMapping
 }
 
+interface FindDimensionMetadata {
+  csvMapping: CsvMapping
+  targetProperty: Term
+}
+
 interface ApiDimensionMetadataCollection {
   updateDimension(dimension: GraphPointer): void
   addDimensionMetadata(params: CreateColumnMetadata): DimensionMetadata.DimensionMetadata
+  findDimension(params: FindDimensionMetadata): DimensionMetadata.DimensionMetadata | undefined
 }
 
 declare module '@cube-creator/model' {
@@ -28,7 +35,7 @@ declare module '@cube-creator/model' {
 export default function Mixin<Base extends Constructor<Omit<DimensionMetadataCollection, keyof ApiDimensionMetadataCollection>>>(Resource: Base) {
   return class extends Resource implements ApiDimensionMetadataCollection {
     updateDimension(dimension: GraphPointer): void {
-      const found = this.hasPart.find(part => part.about?.equals(dimension.out(schema.about).term))
+      const found = this.find(dimension.out(schema.about).term)
       if (!found) {
         throw new Error('Dimension not found')
       }
@@ -55,12 +62,22 @@ export default function Mixin<Base extends Constructor<Omit<DimensionMetadataCol
       return dimensionMetadata
     }
 
+    findDimension(params: FindDimensionMetadata): DimensionMetadata.DimensionMetadata | undefined {
+      const identifier = params.csvMapping.createIdentifier(params.targetProperty)
+
+      return this.find(identifier)
+    }
+
     private getId(mapping: ColumnMapping) {
       const property = (mapping.targetProperty.termType === 'Literal')
         ? mapping.targetProperty.value
         : shrink(mapping.targetProperty.value) || encodeURI(mapping.targetProperty.value)
 
       return $rdf.namedNode(`${this.id.value}/${property}`)
+    }
+
+    private find(identifier: Term | undefined): DimensionMetadata.DimensionMetadata | undefined {
+      return this.hasPart.find(part => part.about?.equals(identifier))
     }
   }
 }
