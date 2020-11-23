@@ -36,12 +36,14 @@ export function CsvMappingMixin<Base extends Constructor>(base: Base): Mixin {
     project!: Link<Project>
 
     createIdentifier(template: string | Term): NamedNode {
+      const namespace = this.namespace.value.match(/[/#]$/) ? this.namespace.value : `${this.namespace.value}/`
+
       if (typeof template === 'string') {
-        return this.pointer.namedNode(this.namespace.value + template).term
+        return this.pointer.namedNode(namespace + template).term
       }
 
       if (template.termType === 'Literal') {
-        return this.pointer.namedNode(this.namespace.value + template.value).term
+        return this.pointer.namedNode(namespace + template.value).term
       }
       if (template.termType === 'NamedNode') {
         return template
