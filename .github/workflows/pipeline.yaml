@@ -6,6 +6,8 @@ on:
       job:
         description: 'Job URL'
         required: true
+      to:
+        default: 'graph-store'
 
 jobs:
   pipeline:
@@ -24,4 +26,10 @@ jobs:
         with:
           node-version: 14
       - run: yarn install --ci
-      - run: yarn ts-node cli/index.ts transform --job "${{ github.event.inputs.job }}" --execution-url "https://${{ github.repository }}/actions/runs/${{ github.run_id }}" --to graph-store --debug
+      - run: yarn ts-node cli/index.ts transform --job "${{ github.event.inputs.job }}" --execution-url "https://${{ github.repository }}/actions/runs/${{ github.run_id }}" --to ${{ github.event.inputs.to }} --debug
+      - name: Output artifact
+        if: github.event.inputs.to == 'filesystem'
+        uses: actions/upload-artifact@v2
+        with:
+          name: transformed.nt
+          path: cli/output/transformed.nt
