@@ -1,0 +1,51 @@
+BASE          <urn:hydra-box:api>
+PREFIX cc:    <https://cube-creator.zazuko.com/vocab#>
+prefix hydra: <http://www.w3.org/ns/hydra/core#>
+prefix code:  <https://code.described.at/>
+prefix schema:   <http://schema.org/>
+prefix sh:     <http://www.w3.org/ns/shacl#>
+
+cc:ColumnMapping
+  a
+    hydra:Class
+  hydra:supportedOperation
+  [
+    a hydra:Operation,
+      schema:UpdateAction ;
+    hydra:title 
+      "Update Column Mapping" ;
+    hydra:method  
+      "PUT" ;
+    code:implementedBy[
+      a
+        code:EcmaScript ;
+      hydra:expects
+        cc:ColumnMapping,
+        <shape/column-mapping/create> ;
+      code:link
+        <file:handlers/column-mapping#put> ;
+
+    ]
+    
+  ] ,
+  [
+    a hydra:Operation,
+      schema:DeleteAction ;
+    hydra:title
+      "Delete Column Mapping"
+    hydra:method
+      "DELETE"
+    code:implementedBy[
+      a
+        code:EcmaScript ;
+      hydra:expects
+        cc:ColumnMapping ;
+      code:link
+        <file:handlers/column-mapping#remove> ;
+
+    ]
+  ] .
+
+  <shape/column-mapping/create>
+  a
+    sh:Shape .
