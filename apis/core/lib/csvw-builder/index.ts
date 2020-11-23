@@ -40,6 +40,10 @@ function mappedColumn({ csvMapping, columnMapping, column }: CsvwBuildingContext
     csvwColumn.datatype = columnMapping.datatype
   }
 
+  if (columnMapping.language) {
+    csvwColumn.lang = columnMapping.language
+  }
+
   return csvwColumn
 }
 
