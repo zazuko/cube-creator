@@ -52,7 +52,7 @@ async function * buildColumns({ table, source, resources, csvMapping }: CsvwBuil
       warning(`Column mapping ${columnMappingLink.id} not found`)
       continue
     }
-    unmappedColumns.delete(columnMapping?.id)
+    unmappedColumns.delete(columnMapping?.sourceColumn.id)
 
     const column = source.columns.find(column => columnMapping.sourceColumn.equals(column))
     if (!column) {
