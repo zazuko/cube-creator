@@ -8,6 +8,7 @@ ${shape('dimension/metadata')} {
     a ${sh.NodeShape}, ${hydra.Resource} ;
     ${rdfs.label} "Dimension" ;
     ${sh.property} [
+      ${sh.name} "Name" ;
       ${sh.path} ${schema.name} ;
       ${sh.datatype} ${rdf.langString} ;
       ${sh.languageIn} ( "en" "de" "fr" "it" ) ;
@@ -16,6 +17,7 @@ ${shape('dimension/metadata')} {
       ${sh.minLength} 1 ;
       ${sh.order} 10 ;
     ] , [
+      ${sh.name} "Scale of measure" ;
       ${sh.path} ${scale.scaleOfMeasure} ;
       ${sh.in} (
         ${scale.Categorical}
