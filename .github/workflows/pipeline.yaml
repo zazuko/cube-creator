@@ -26,7 +26,8 @@ jobs:
         with:
           node-version: 14
       - run: yarn install --ci
-      - run: yarn ts-node cli/index.ts transform --job "${{ github.event.inputs.job }}" --execution-url "https://${{ github.repository }}/actions/runs/${{ github.run_id }}" --to ${{ github.event.inputs.to }} --debug
+      - run: yarn ts-node index.ts transform --job "${{ github.event.inputs.job }}" --execution-url "https://${{ github.repository }}/actions/runs/${{ github.run_id }}" --to ${{ github.event.inputs.to }} --debug
+        working-directory: cli
       - name: Output artifact
         if: github.event.inputs.to == 'filesystem'
         uses: actions/upload-artifact@v2
