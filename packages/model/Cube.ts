@@ -26,7 +26,7 @@ export function CubeMixin<Base extends Constructor>(Resource: Base): Mixin {
     @property({ path: dcterms.creator })
     creator!: NamedNode
 
-    @property({ path: cc.observations })
+    @property.resource({ path: cc.observations })
     readonly observations!: IriTemplate
   }
 
