@@ -24,7 +24,8 @@ With Operation schema:UpdateAction {
         <cube-project/ubd/dimensions-metadata/aggregation>
             schema:about <https://environment.ld.admin.ch/foen/ubd/28/aggregation> ;
             scale:scaleOfMeasure scale:Temporal ;
-            schema:name "Aggregation"@en .
+            schema:name "Aggregation"@en ;
+            schema:description "The aggregation"@en.
         ```
     } => {
         Expect Status 200
@@ -36,5 +37,6 @@ With Operation schema:UpdateAction {
             Expect Id scale:Temporal
         }
         Expect Property schema:name "Aggregation"
+        Expect Property schema:description "The aggregation"
     }
 }

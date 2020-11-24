@@ -26,6 +26,20 @@ export const textFieldWithLang: Lazy<SingleEditorComponent> = {
   }
 }
 
+export const textAreaWithLang: Lazy<SingleEditorComponent> = {
+  editor: dash.TextAreaWithLangEditor,
+  async lazyRender () {
+    await import('./TextFieldWithLangEditor.vue').then(createCustomElement('cc-text-field-with-lang'))
+
+    return ({ value, property }, { update }) => html`<cc-text-field-with-lang
+      .value="${value.object?.term}"
+      .property="${property}"
+      .update="${update}"
+      input-type="textarea"
+    ></cc-text-field-with-lang>`
+  }
+}
+
 export const instanceSelect: Lazy<SingleEditorComponent> = {
   editor: dash.InstancesSelectEditor,
   async lazyRender () {

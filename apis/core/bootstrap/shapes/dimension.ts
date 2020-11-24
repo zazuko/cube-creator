@@ -32,6 +32,16 @@ ${shape('dimension/metadata')} {
       ${sh.maxCount} 1 ;
       ${sh.order} 20 ;
     ] , [
+      ${sh.name} "Description" ;
+      ${sh.path} ${schema.description} ;
+      ${sh.datatype} ${rdf.langString} ;
+      ${sh.languageIn} ( "en" "de" "fr" "it" ) ;
+      ${sh.uniqueLang} true ;
+      ${sh.defaultValue} ""@en ;
+      ${sh.minLength} 1 ;
+      ${dash.singleLine} false ;
+      ${sh.order} 30 ;
+    ], [
       ${sh.path} ${schema.about} ;
       ${sh.nodeKind} ${sh.IRI} ;
       ${sh.minCount} 1 ;
