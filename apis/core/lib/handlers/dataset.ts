@@ -26,15 +26,20 @@ export const put = protectedResource(
 
 export const loadCubes: Enrichment = async (req, dataset) => {
   const shapeQuads = await loadCubeShapes(dataset, streamClient)
+  let graph = ''
 
   for await (const quad of shapeQuads) {
-    dataset.dataset.add(quad)
+    if (quad.predicate.equals(cc.cubeGraph)) {
+      graph = quad.object.value
+    } else {
+      dataset.dataset.add(quad)
+    }
   }
 
   dataset.any().has(rdf.type, cube.Cube).forEach(cube => {
     cube.addOut(cc.observations, template => {
       return new IriTemplateMixin.Class(template, {
-        template: `${env.API_CORE_BASE}observations?cube=${cube.value}{&view,pageSize}`,
+        template: `${env.API_CORE_BASE}observations?cube=${cube.value}&graph=${graph}{&view,pageSize}`,
         mapping: [{
           property: view.view,
           variable: 'view',

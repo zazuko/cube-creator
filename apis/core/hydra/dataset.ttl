@@ -62,7 +62,7 @@ cc:Observations a hydra:Class ;
           a
             hydra:IriTemplate ;
           hydra:template
-            "/observations?cube={cube}{&view}" ;
+            "/observations?cube={cube}&graph={graph}{&view}" ;
           hydra:mapping
             [
               a
@@ -73,6 +73,16 @@ cc:Observations a hydra:Class ;
                 true ;
               hydra:variable
                 "cube" ;
+            ] ,
+            [
+              a
+                hydra:IriTemplateMapping ;
+              hydra:property
+                cc:cubeGraph ;
+              hydra:required
+                true ;
+              hydra:variable
+                "graph" ;
             ] ,
             [
               a

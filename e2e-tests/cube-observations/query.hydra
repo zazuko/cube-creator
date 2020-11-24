@@ -20,20 +20,19 @@ With Class void:Dataset {
 
 With Class cube:Cube {
     Expect Link cc:observations (
-        cc:cube="https://environment.ld.admin.ch/foen/ubd/28/"
         view:view='prefix view: <http://ns.bergnet.org/cube-view/>
-prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+                   prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 
-[
- view:operation view:Gte ;
- view:dimension <https://environment.ld.admin.ch/foen/ubd/28/dimension/year> ;
- view:argument "2000"^^xsd:gYear ;
-] .'
+                   [
+                     view:operation view:Gte ;
+                     view:dimension <https://environment.ld.admin.ch/foen/ubd/28/dimension/year> ;
+                     view:argument "2000"^^xsd:gYear ;
+                   ] .'
     ) {
         Expect Type hydra:Collection
         Expect Property hydra:member
         Expect Property hydra:view {
-            Expect Id <https://cube-creator.lndo.site/observations?cube=https://environment.ld.admin.ch/foen/ubd/28/&view=prefix%20view%3A%20%3Chttp%3A%2F%2Fns.bergnet.org%2Fcube-view%2F%3E%0Aprefix%20xsd%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2001%2FXMLSchema%23%3E%0A%0A%5B%0A%20view%3Aoperation%20view%3AGte%20%3B%0A%20view%3Adimension%20%3Chttps%3A%2F%2Fenvironment.ld.admin.ch%2Ffoen%2Fubd%2F28%2Fdimension%2Fyear%3E%20%3B%0A%20view%3Aargument%20%222000%22%5E%5Exsd%3AgYear%20%3B%0A%5D%20.>
+            Expect Id <https://cube-creator.lndo.site/observations?cube=https://environment.ld.admin.ch/foen/ubd/28/&graph=https://cube-creator.lndo.site/cube-project/ubd/cube-data&view=prefix%20view%3A%20%3Chttp%3A%2F%2Fns.bergnet.org%2Fcube-view%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20prefix%20xsd%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2001%2FXMLSchema%23%3E%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20view%3Aoperation%20view%3AGte%20%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20view%3Adimension%20%3Chttps%3A%2F%2Fenvironment.ld.admin.ch%2Ffoen%2Fubd%2F28%2Fdimension%2Fyear%3E%20%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20view%3Aargument%20%222000%22%5E%5Exsd%3AgYear%20%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%5D%20.>
         }
     }
 }

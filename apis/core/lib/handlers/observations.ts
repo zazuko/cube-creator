@@ -18,20 +18,22 @@ const parser = new Parser()
 
 export const query = protectedResource(
   asyncMiddleware(async (req, res, next) => {
-    const source = new Cube.Source({
-      endpointUrl: env.STORE_QUERY_ENDPOINT,
-      user: env.maybe.STORE_ENDPOINTS_USERNAME,
-      password: env.maybe.STORE_ENDPOINTS_PASSWORD,
-      sourceGraph: 'https://cube-creator.lndo.site/cube-project/ubd/cube-data',
-    })
-
     if (!req.dataset) {
       return next(new error.BadRequest())
     }
 
     const query = clownface({ dataset: await req.dataset() }).has(cc.cube)
+
     const cubeId = query.out(cc.cube).value
     const pageSize = Number.parseInt(query.out(hydra.limit).value || '0')
+    const sourceGraph = query.out(cc.cubeGraph).value
+
+    const source = new Cube.Source({
+      endpointUrl: env.STORE_QUERY_ENDPOINT,
+      user: env.maybe.STORE_ENDPOINTS_USERNAME,
+      password: env.maybe.STORE_ENDPOINTS_PASSWORD,
+      sourceGraph,
+    })
 
     let view: AnyPointer | undefined
     const viewArgument = query.out(ns.view.view).value
