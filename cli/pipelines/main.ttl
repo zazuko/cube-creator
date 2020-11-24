@@ -141,7 +141,7 @@
 
 <#toCubeShape> a :Step;
   code:implementedBy [ a code:EcmaScript;
-  code:link <file:../lib/toCubeShape#default>
+  code:link <file:../lib/toCubeShape>
                      ];
   code:arguments [
                    code:name "excludeValuesOf";

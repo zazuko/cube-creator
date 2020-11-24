@@ -1,8 +1,8 @@
-import clownface from 'clownface'
-import rdf from 'rdf-ext'
-import TermMap from '@rdfjs/term-map'
-import TermSet from '@rdfjs/term-set'
-import * as ns from '@tpluscode/rdf-ns-builders'
+const clownface = require('clownface')
+const rdf = require('rdf-ext')
+const TermMap = require('@rdfjs/term-map')
+const TermSet = require('@rdfjs/term-set')
+const ns = require('@tpluscode/rdf-ns-builders')
 
 const datatypeParsers = new TermMap([
   [ns.xsd.date, term => new Date(term.value)],
@@ -11,7 +11,7 @@ const datatypeParsers = new TermMap([
   [ns.xsd.integer, term => parseInt(term.value)],
 ])
 
-export class Dimension {
+class Dimension {
   constructor({ predicate, object }) {
     this.predicate = predicate
     this.termType = object.termType

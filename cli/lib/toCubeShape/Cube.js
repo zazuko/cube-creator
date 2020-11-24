@@ -1,11 +1,11 @@
-import clownface from 'clownface'
-import * as ns from '@tpluscode/rdf-ns-builders'
-import rdf from 'rdf-ext'
-import TermMap from '@rdfjs/term-map'
-import Dimension from './Dimension'
-import { cube } from '@cube-creator/core/namespace'
+const clownface = require('clownface')
+const rdf = require('rdf-ext')
+const TermMap = require('@rdfjs/term-map')
+const Dimension = require('./Dimension')
+const ns = require('@tpluscode/rdf-ns-builders')
+const { cube } = require('@cube-creator/core/namespace')
 
-export class Cube {
+class Cube {
   constructor({ term, observationSet, shape }) {
     this.term = term
     this.observationSet = observationSet
@@ -51,3 +51,5 @@ export class Cube {
     return dataset
   }
 }
+
+module.exports = Cube

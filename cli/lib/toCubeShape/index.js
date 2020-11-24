@@ -1,12 +1,12 @@
-import clownface from 'clownface'
-import TermMap from '@rdfjs/term-map'
-import TermSet from '@rdfjs/term-set'
-import rdf from 'rdf-ext'
-import { Transform } from 'readable-stream'
-import { urlJoin } from './urlJoin'
-import { Cube } from './Cube'
-import * as ns from '@tpluscode/rdf-ns-builders'
-import { cube } from '@cube-creator/core/namespace'
+const clownface = require('clownface')
+const TermMap = require('@rdfjs/term-map')
+const TermSet = require('@rdfjs/term-set')
+const rdf = require('rdf-ext')
+const { Transform } = require('readable-stream')
+const urlJoin = require('./urlJoin')
+const Cube = require('./Cube')
+const ns = require('@tpluscode/rdf-ns-builders')
+const { cube } = require('@cube-creator/core/namespace')
 
 function defaultCube({ observationSet }) {
   const observationSetIri = observationSet && observationSet.value
@@ -85,6 +85,8 @@ class ToCubeShape extends Transform {
   }
 }
 
-export default function toCubeShape({ cube, excludeValuesOf } = {}) {
+function toCubeShape({ cube, excludeValuesOf } = {}) {
   return new ToCubeShape({ cube, excludeValuesOf })
 }
+
+module.exports = toCubeShape
