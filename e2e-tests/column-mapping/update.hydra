@@ -1,0 +1,47 @@
+PREFIX api: <https://cube-creator.zazuko.com/vocab#>
+PREFIX hydra: <http://www.w3.org/ns/hydra/core#>
+PREFIX cc: <https://cube-creator.zazuko.com/vocab#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX schema: <http://schema.org/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+ENTRYPOINT "cube-project/ubd/csv-mapping/table-station/column-mapping-1"
+
+HEADERS {
+  x-user "john-doe"
+  x-permission "pipelines:write"
+}
+
+With Class cc:ColumnMapping {
+  Expect Operation schema:UpdateAction {
+    Invoke {
+      Content-Type "text/turtle"
+
+      ```
+      base <https://cube-creator.lndo.site/>
+      prefix cc: <https://cube-creator.zazuko.com/vocab#>
+      prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+      prefix schema: <http://schema.org/>
+
+      <cube-project/ubd/csv-mapping/table-station/column-mapping-1> 
+        a cc:ColumnMapping ;
+        cc:sourceColumn <cube-project/ubd/csv-source/stations/column/station-id> ;
+        cc:targetProperty schema:identifier ;
+        cc:datatype xsd:integer ;
+        cc:language "en" ;    
+      .
+      ```
+    } => { 
+      Expect Status 200
+      Expect Property cc:sourceColumn {
+          Expect Id <https://cube-creator.lndo.site/cube-project/ubd/csv-source/stations/column/station-id>
+      }
+      Expect Property cc:datatype {
+          Expect Id xsd:integer
+      }
+      Expect Property cc:language "en"
+    }
+  }
+}  
+
