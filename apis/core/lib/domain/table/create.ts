@@ -46,10 +46,22 @@ export async function createTable({
 
   const columns = [...csvSource.columns]
 
+  const columnsToAdd : CsvColumn[] = []
+
+  resource.out(csvw.column)
+    .forEach(({ term: columnId }) => {
+      const column = columns
+        .find(({ id }) => id.equals(columnId))
+      if (!column) {
+        throw new Error(`Column ${columnId} not found`)
+      }
+      columnsToAdd.push(column)
+    })
+
   const table = await csvMapping.addTable(store, {
     name: label.value,
     csvSource,
-    identifierTemplate: getTemplate(resource.out(cc.identifierTemplate).value, columns),
+    identifierTemplate: getTemplate(resource.out(cc.identifierTemplate).value, columnsToAdd),
     color: resource.out(schema.color).value,
     isObservationTable: trueTerm.equals(resource.out(cc.isObservationTable).term),
   })
@@ -61,14 +73,9 @@ export async function createTable({
     throw new NotFoundError(dimensionMetaDataCollectionPointer)
   }
 
-  resource.out(csvw.column)
-    .forEach(({ term: columnId }) => {
-      const column = columns
-        .find(({ id }) => id.equals(columnId))
-      if (!column) {
-        throw new Error(`Column ${columnId} not found`)
-      }
-
+  // Create default column mappings for provided columns
+  columnsToAdd
+    .forEach((column: CsvColumn) => {
       const columnMapping = table.addColumnMappingFromColumn({
         store,
         column,
