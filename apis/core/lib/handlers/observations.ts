@@ -11,7 +11,9 @@ import env from '@cube-creator/core/env'
 import * as ns from '@cube-creator/core/namespace'
 import { cc, hydraBox } from '@cube-creator/core/namespace'
 import { warning } from '../log'
+import { hydra } from '@tpluscode/rdf-ns-builders'
 
+const DEFAULT_PAGE_SIZE = 20
 const parser = new Parser()
 
 export const query = protectedResource(
@@ -29,6 +31,8 @@ export const query = protectedResource(
 
     const query = clownface({ dataset: await req.dataset() }).has(cc.cube)
     const cubeId = query.out(cc.cube).value
+    const pageSize = Number.parseInt(query.out(hydra.limit).value || '0')
+
     let view: AnyPointer | undefined
     const viewArgument = query.out(ns.view.view).value
     if (viewArgument) {
@@ -72,7 +76,7 @@ export const query = protectedResource(
     const collectionPointer = clownface({ dataset: $rdf.dataset() })
       .namedNode(new URL(collectionId, env.API_CORE_BASE).toString())
     const collection = new CollectionMixin.Class(collectionPointer, {
-      member: observations.slice(0, 20),
+      member: observations.slice(0, pageSize || DEFAULT_PAGE_SIZE),
       totalItems: observations.length,
       view: {
         id: req.absoluteUrl(),

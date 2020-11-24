@@ -73,16 +73,26 @@ cc:Observations a hydra:Class ;
                 true ;
               hydra:variable
                 "cube" ;
-            ],
+            ] ,
             [
               a
                 hydra:IriTemplateMapping ;
               hydra:property
                 view:view ;
               hydra:required
-                true ;
+                false ;
               hydra:variable
                 "view" ;
+            ] ,
+            [
+              a
+                hydra:IriTemplateMapping ;
+              hydra:property
+                hydra:limit ;
+              hydra:required
+                false ;
+              hydra:variable
+                "pageSize" ;
             ] ;
         ] ;
     ]
