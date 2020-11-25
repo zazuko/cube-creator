@@ -1,0 +1,24 @@
+PREFIX api: <https://cube-creator.zazuko.com/vocab#>
+PREFIX hydra: <http://www.w3.org/ns/hydra/core#>
+PREFIX cc: <https://cube-creator.zazuko.com/vocab#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX schema: <http://schema.org/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+ENTRYPOINT "cube-project/ubd/csv-mapping/table-observation/column-mapping-1"
+
+HEADERS {
+  x-user "john-doe"
+  x-permission "pipelines:write"
+}
+
+With Class cc:ColumnMapping {
+    Expect Operation schema:DeleteAction {
+        Invoke {
+        } => {
+            Expect Status 204
+        }
+    }
+}
+
