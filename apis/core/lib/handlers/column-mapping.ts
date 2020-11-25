@@ -34,7 +34,6 @@ export const remove = labyrinth.protectedResource(
     })
 
     res.sendStatus(204) */
-    
     res.sendStatus(500)
   }),
 )
