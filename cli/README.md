@@ -22,7 +22,7 @@ The possible options and their arguments are described below. Each argument is
 provided by the `-v, --variable` option. For example
 
 ```
-docker run --rm zazuko/cube-creator-cli transform -v sourceDir=/downloads/csv -v targetFile=./converted.nt
+docker run --rm zazuko/cube-creator-cli transform --job URI -v targetFile=./converted.nt
 ```
 
 ### `--to stdout`
@@ -52,7 +52,18 @@ Does not require additional configuration, in which case will save to a graph pr
 
 Can also be configured with env variables. Check `.test.env` for example.
 
-## Run from locally-built image
+## Running locally
+
+To run an OIDC secret must be added to `.env` as
+
+```
+AUTH_CLIENT_SECRET=foo-bar
+```
+
+It is obtained from [keycloak](https://keycloak.zazukoians.org/admin/master/console/#/realms/zazuko-dev/clients/64f92868-71e3-48e1-9d8b-7bfaf5fac2bd/credentials)
+
+
+### from locally-built image
 
 Here's an example of converting local files using a locally-built image:
 
@@ -71,7 +82,7 @@ Here's an example of converting local files using a locally-built image:
         --debug
     ```
 
-## Run from sources
+### from sources
 
 If it is necessary to debug, the CLI can be started directly from sources. The `package.json` has a `transform` script which loads environment variables from a [`.env`](https://npm.im/dotenv) file (you have to create it locally as it is not committed).
 
@@ -89,14 +100,3 @@ npm run transform -- --to stdout
 
 Note the additional double dash which `npm` needs.
 Also note that `yarn` has to be installed on the system in both cases.
-
-
-## Tests
-
-To run tests a OIDC secret must be added to `.env` as
-
-```
-AUTH_CLIENT_SECRET=foo-bar
-```
-
-It is obtained from [keycloak](https://keycloak.zazukoians.org/admin/master/console/#/realms/zazuko-dev/clients/64f92868-71e3-48e1-9d8b-7bfaf5fac2bd/credentials)

@@ -45,5 +45,6 @@ async function main() {
 
 main()
   .catch(e => {
+    log(e)
     process.exit(1)
   })
