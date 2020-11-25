@@ -9,3 +9,11 @@ services:
     volumes:
       - ~/.lando/certs/lndo.site.crt:/lndo.site.crt
       - ./e2e-tests:/tests
+  cli:
+    build:
+      context: .
+      dockerfile: cli.Dockerfile
+    network_mode: "host"
+    env_file:
+      - cli/.env
+      - cli/.test.env
