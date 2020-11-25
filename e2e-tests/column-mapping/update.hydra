@@ -28,7 +28,7 @@ With Class cc:ColumnMapping {
         a cc:ColumnMapping ;
         cc:sourceColumn <cube-project/ubd/csv-source/stations/column/station-id> ;
         cc:targetProperty schema:identifier ;
-        cc:datatype xsd:integer ;
+        cc:datatype xsd:int ;
         cc:language "en" ;    
       .
       ```
@@ -38,7 +38,7 @@ With Class cc:ColumnMapping {
           Expect Id <https://cube-creator.lndo.site/cube-project/ubd/csv-source/stations/column/station-id>
       }
       Expect Property cc:datatype {
-          Expect Id xsd:integer
+          Expect Id xsd:int
       }
       Expect Property cc:language "en"
     }
