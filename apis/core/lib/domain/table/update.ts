@@ -58,7 +58,7 @@ export async function updateTable({
   const isObservationTable = trueTerm.equals(resource.out(cc.isObservationTable).term)
   if (table.isObservationTable && !isObservationTable) {
     // TODO Remove dimensionMetadata
-    table.types.add(cc.ObservationTable)
+    table.types.delete(cc.ObservationTable)
   }
 
   if (!table.isObservationTable && isObservationTable) {
@@ -73,7 +73,7 @@ export async function updateTable({
       })
     }
 
-    table.types.delete(cc.ObservationTable)
+    table.types.add(cc.ObservationTable)
   }
 
   await store.save()
