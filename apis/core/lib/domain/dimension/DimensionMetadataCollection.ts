@@ -23,7 +23,7 @@ interface FindDimensionMetadata {
 interface ApiDimensionMetadataCollection {
   updateDimension(dimension: GraphPointer): void
   addDimensionMetadata(params: CreateColumnMetadata): DimensionMetadata.DimensionMetadata
-  findDimension(params: FindDimensionMetadata): DimensionMetadata.DimensionMetadata | undefined
+  find(params: FindDimensionMetadata | Term): DimensionMetadata.DimensionMetadata | undefined
 }
 
 declare module '@cube-creator/model' {
@@ -35,7 +35,7 @@ declare module '@cube-creator/model' {
 export default function Mixin<Base extends Constructor<Omit<DimensionMetadataCollection, keyof ApiDimensionMetadataCollection>>>(Resource: Base) {
   return class extends Resource implements ApiDimensionMetadataCollection {
     updateDimension(dimension: GraphPointer): void {
-      const found = this.find(dimension.out(schema.about).term)
+      const found = this.find(dimension.out(schema.about).term!)
       if (!found) {
         throw new Error('Dimension not found')
       }
@@ -62,10 +62,9 @@ export default function Mixin<Base extends Constructor<Omit<DimensionMetadataCol
       return dimensionMetadata
     }
 
-    findDimension(params: FindDimensionMetadata): DimensionMetadata.DimensionMetadata | undefined {
-      const identifier = params.csvMapping.createIdentifier(params.targetProperty)
-
-      return this.find(identifier)
+    find(params: FindDimensionMetadata | Term): DimensionMetadata.DimensionMetadata | undefined {
+      const identifier = 'termType' in params ? params : params.csvMapping.createIdentifier(params.targetProperty)
+      return this.hasPart.find(part => identifier.equals(part.about))
     }
 
     private getId(mapping: ColumnMapping) {
@@ -74,10 +73,6 @@ export default function Mixin<Base extends Constructor<Omit<DimensionMetadataCol
         : shrink(mapping.targetProperty.value) || encodeURI(mapping.targetProperty.value)
 
       return $rdf.namedNode(`${this.id.value}/${property}`)
-    }
-
-    private find(identifier: Term | undefined): DimensionMetadata.DimensionMetadata | undefined {
-      return this.hasPart.find(part => part.about?.equals(identifier))
     }
   }
 }

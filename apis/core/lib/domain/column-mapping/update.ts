@@ -67,7 +67,7 @@ export async function updateColumnMapping({
         throw new NotFoundError(dimensionMetaDataCollectionPointer)
       }
 
-      const dimension = dimensionMetaDataCollection.findDimension({ csvMapping, targetProperty: columnMapping.targetProperty })
+      const dimension = dimensionMetaDataCollection.find({ csvMapping, targetProperty: columnMapping.targetProperty })
       if (!dimension) {
         throw new NotFoundError(dimension)
       }
