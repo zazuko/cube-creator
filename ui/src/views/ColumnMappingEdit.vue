@@ -35,6 +35,7 @@ export default class CubeProjectEditView extends Vue {
   @projectNS.Getter('findColumnMapping') findColumnMapping!: (id: string) => ColumnMapping | null
   @projectNS.Getter('findTable') findTable!: (id: string) => Table
   @projectNS.Getter('findSource') findSource!: (id: string) => CsvSource
+  @projectNS.Getter('sources') sources!: CsvSource[]
 
   resource: GraphPointer | null = null
   isSubmitting = false;
@@ -51,6 +52,16 @@ export default class CubeProjectEditView extends Vue {
     return this.findTable(tableId)
   }
 
+  get source (): CsvSource | null {
+    for (const source of this.sources) {
+      if (source.columns.find((column) => column.id.value === this.columnMapping?.sourceColumn.id.value)) {
+        return source
+      }
+    }
+
+    return null
+  }
+
   get operation (): RuntimeOperation | null {
     return this.columnMapping?.actions.edit ?? null
   }
@@ -60,14 +71,17 @@ export default class CubeProjectEditView extends Vue {
       const shape = await api.fetchOperationShape(this.operation)
 
       // Populate Column selector
-      if (shape && this.table.csvSource?.clientPath) {
-        const source = this.findSource(this.table.csvSource.clientPath)
-        source.columns.forEach((column) => {
-          shape.pointer.node(column.id)
-            .addOut(schema.name, column.name)
-            .addOut(rdf.type, column.pointer.out(rdf.type))
-        })
+      if (shape && this.source) {
+        const source = this.source
+        if (source) {
+          source.columns.forEach((column) => {
+            shape.pointer.node(column.id)
+              .addOut(schema.name, column.name)
+              .addOut(rdf.type, column.pointer.out(rdf.type))
+          })
+        }
       }
+
       this.resource = this.columnMapping?.pointer ?? null
       this.shape = shape
     }
