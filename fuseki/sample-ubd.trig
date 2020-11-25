@@ -336,7 +336,7 @@ graph <cube-project/ubd/csv-mapping/table-observation> {
 
 <cube-project/ubd/csv-mapping/table-observation/column-mapping-1> void:inDataset <ubd-example> .
 graph <cube-project/ubd/csv-mapping/table-observation/column-mapping-1> {
-  <cube-project/ubd/csv-mapping/table-observation/column-mapping-1> a cc:ColumnMapping ;
+  <cube-project/ubd/csv-mapping/table-observation/column-mapping-1> a cc:ColumnMapping, hydra:Resource ;
     cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/year> ;
     cc:targetProperty "dimension/year" ;
     cc:datatype xsd:gYear ;
@@ -349,7 +349,7 @@ graph <cube-project/ubd/csv-mapping/table-observation/column-mapping-1> {
 
 <cube-project/ubd/csv-mapping/table-observation/column-mapping-2> void:inDataset <ubd-example> .
 graph <cube-project/ubd/csv-mapping/table-observation/column-mapping-2> {
-  <cube-project/ubd/csv-mapping/table-observation/column-mapping-2> a cc:ColumnMapping ;
+  <cube-project/ubd/csv-mapping/table-observation/column-mapping-2> a cc:ColumnMapping, hydra:Resource ;
     cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/station> ;
     cc:targetProperty "station" ;
     cc:referencedTable <cube-project/ubd/csv-mapping/table-station> ;
@@ -362,7 +362,7 @@ graph <cube-project/ubd/csv-mapping/table-observation/column-mapping-2> {
 
 <cube-project/ubd/csv-mapping/table-observation/column-mapping-3> void:inDataset <ubd-example> .
 graph <cube-project/ubd/csv-mapping/table-observation/column-mapping-3> {
-  <cube-project/ubd/csv-mapping/table-observation/column-mapping-3> a cc:ColumnMapping ;
+  <cube-project/ubd/csv-mapping/table-observation/column-mapping-3> a cc:ColumnMapping, hydra:Resource ;
     cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/value> ;
     cc:targetProperty "dimension/value" ;
     cc:datatype xsd:float ;
@@ -371,7 +371,7 @@ graph <cube-project/ubd/csv-mapping/table-observation/column-mapping-3> {
 
 <cube-project/ubd/csv-mapping/table-observation/column-mapping-4> void:inDataset <ubd-example> .
 graph <cube-project/ubd/csv-mapping/table-observation/column-mapping-4> {
-  <cube-project/ubd/csv-mapping/table-observation/column-mapping-4> a cc:ColumnMapping ;
+  <cube-project/ubd/csv-mapping/table-observation/column-mapping-4> a cc:ColumnMapping, hydra:Resource ;
     cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/aggregation> ;
     cc:targetProperty "project/ubd/csv-mapping/aggregation" ;
     cc:datatype xsd:float ;
