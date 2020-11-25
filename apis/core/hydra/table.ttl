@@ -84,29 +84,58 @@ cc:Table
     [
       a
         hydra:Operation,
-      cc:CreateColumnMappingAction ;
+      cc:CreateLiteralColumnMappingAction ;
       hydra:title
-        "Create Column Mapping" ;
+        "Map column to literal value" ;
       hydra:method
         "POST" ;
       hydra:expects
-        cc:ColumnMapping,
-        <shape/column-mapping/create> ;
+        cc:LiteralColumnMapping,
+        <shape/column-mapping/literal> ;
       code:implementedBy
         [
           a
             code:EcmaScript ;
           code:link
-            <file:handlers/column-mapping#post> ;
+            <file:handlers/column-mapping#postLiteral> ;
         ]
-    ] .
+    ] , [
+      a
+        hydra:Operation,
+      cc:CreateReferenceColumnMappingAction ;
+      hydra:title
+        "Link to another table" ;
+      hydra:method
+        "POST" ;
+      hydra:expects
+        cc:ReferenceColumnMapping,
+        <shape/column-mapping/reference> ;
+      code:implementedBy
+        [
+          a
+            code:EcmaScript ;
+          code:link
+            <file:handlers/column-mapping#postReference> ;
+        ]
+    ] ;
+.
 
+cc:LiteralColumnMapping a hydra:Class .
+cc:ReferenceColumnMapping a hydra:Class .
 
 <shape/table/update>
   a
     sh:Shape .
 
 <shape/column-mapping/create>
+  a
+    sh:Shape .
+
+<shape/column-mapping/literal>
+  a
+    sh:Shape .
+
+<shape/column-mapping/reference>
   a
     sh:Shape .
 

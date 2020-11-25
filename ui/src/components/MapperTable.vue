@@ -34,7 +34,10 @@
     <div v-for="columnMapping in table.columnMappings" :key="columnMapping.id.value" class="panel-block">
       <div class="level-left">
         <div class="level-item">
-          <property-display :term="columnMapping.targetProperty" />
+          <b-tag v-if="columnMapping.referencedTable" rounded :style="{ 'background-color': getTable(columnMapping.referencedTable.id).color }">
+            <property-display :term="columnMapping.targetProperty" />
+          </b-tag>
+          <property-display v-else :term="columnMapping.targetProperty" />
         </div>
       </div>
       <div class="level-right">
@@ -51,26 +54,36 @@
       </div>
     </div>
     <div class="panel-block">
-      <hydra-operation-button
-        :operation="table.actions.createColumnMapping"
-        :to="{ name: 'ColumnMappingCreate', params: { tableId: table.clientPath } }"
-        data-testid="create-column-mapping"
-      />
+      <b-tooltip v-if="table.actions.createLiteralColumnMapping || table.actions.createReferenceColumnMapping" label="Map column">
+        <b-button
+          tag="router-link"
+          :to="{ name: 'ColumnMappingCreate', params: { tableId: table.clientPath } }"
+          type="is-text"
+          size="is-small"
+          icon-left="plus"
+        />
+      </b-tooltip>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Prop, Component, Vue } from 'vue-property-decorator'
+import { Term } from 'rdf-js'
+import { namespace } from 'vuex-class'
 import { ColumnMapping, Table } from '@cube-creator/model'
 import HydraOperationButton from './HydraOperationButton.vue'
 import PropertyDisplay from './PropertyDisplay.vue'
+
+const projectNS = namespace('project')
 
 @Component({
   components: { HydraOperationButton, PropertyDisplay },
 })
 export default class MapperTable extends Vue {
   @Prop() readonly table!: Table;
+
+  @projectNS.Getter('getTable') getTable!: (uri: Term) => Table
 
   deleteTable (table: Table): void {
     this.$buefy.dialog.confirm({

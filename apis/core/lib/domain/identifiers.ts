@@ -4,7 +4,7 @@ import { NamedNode } from 'rdf-js'
 import { GraphPointer } from 'clownface'
 import env from '@cube-creator/core/env'
 import { nanoid } from 'nanoid'
-import { CsvMapping, CsvSource, Project, Table } from '@cube-creator/model'
+import { ColumnMapping, CsvMapping, CsvSource, Project, Table } from '@cube-creator/model'
 
 const url = new UrlSlugify()
 
@@ -34,6 +34,10 @@ export function table(csvMapping: CsvMapping, label: string): NamedNode {
 
 export function columnMapping(table: Table, columnName: string): NamedNode {
   return $rdf.namedNode(`${table.id.value}/column-mapping/${url.slugify(columnName)}`)
+}
+
+export function identifierMapping(columnMapping: ColumnMapping): NamedNode {
+  return $rdf.namedNode(`${columnMapping.id.value}/identifier-mapping/${nanoid()}`)
 }
 
 export function csvSource(mapping: CsvMapping, fileName: string): NamedNode {

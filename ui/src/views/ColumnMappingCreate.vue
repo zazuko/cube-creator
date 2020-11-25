@@ -1,11 +1,32 @@
 <template>
   <side-pane :is-open="true" :title="operation.title" @close="onCancel">
-    <hydra-operation-form
+    <b-field label="Column mapping type">
+      <b-radio-button v-model="columnMappingType" native-value="literal">
+        Literal value
+      </b-radio-button>
+      <b-radio-button v-model="columnMappingType" native-value="reference">
+        Link to another table
+      </b-radio-button>
+    </b-field>
+
+    <literal-column-mapping-form
+      v-if="columnMappingType === 'literal'"
       :operation="operation"
-      :resource="resource"
-      :shape="shape"
       :error="error"
       :is-submitting="isSubmitting"
+      :table="table"
+      :source="source"
+      @submit="onSubmit"
+      @cancel="onCancel"
+    />
+
+    <reference-column-mapping-form
+      v-else-if="columnMappingType === 'reference'"
+      :operation="operation"
+      :error="error"
+      :is-submitting="isSubmitting"
+      :table="table"
+      :source="source"
       @submit="onSubmit"
       @cancel="onCancel"
     />
@@ -13,68 +34,64 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { Vue, Component, Watch } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
 import { RuntimeOperation } from 'alcaeus'
-import clownface, { GraphPointer } from 'clownface'
-import type { Shape } from '@rdfine/shacl'
+import { GraphPointer } from 'clownface'
+import { Term } from 'rdf-js'
 import { CsvSource, Table } from '@cube-creator/model'
 import SidePane from '@/components/SidePane.vue'
-import HydraOperationForm from '@/components/HydraOperationForm.vue'
-import { api } from '@/api'
+import ReferenceColumnMappingForm from '@/components/ReferenceColumnMappingForm.vue'
+import LiteralColumnMappingForm from '@/components/LiteralColumnMappingForm.vue'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
-import { rdf, schema } from '@tpluscode/rdf-ns-builders'
-import { dataset } from '@rdf-esm/dataset'
 
 const projectNS = namespace('project')
 
+type ColumnMappingType = 'literal' | 'reference'
+
 @Component({
-  components: { SidePane, HydraOperationForm },
+  components: { SidePane, LiteralColumnMappingForm, ReferenceColumnMappingForm },
 })
 export default class CubeProjectEditView extends Vue {
   @projectNS.Getter('findTable') findTable!: (id: string) => Table
-  @projectNS.Getter('findSource') findSource!: (id: string) => CsvSource
+  @projectNS.Getter('getSource') getSource!: (uri: Term) => CsvSource
 
-  resource: GraphPointer | null = clownface({ dataset: dataset() }).namedNode('')
+  columnMappingType: ColumnMappingType = 'literal'
   isSubmitting = false;
   error: ErrorDetails | null = null;
-  shape: Shape | null = null;
 
   get table (): Table {
     const tableId = this.$router.currentRoute.params.tableId
     return this.findTable(tableId)
   }
 
+  get source (): CsvSource {
+    const source = this.table.csvSource && this.getSource(this.table.csvSource.id)
+
+    if (!source) throw new Error('Source not found')
+
+    return source
+  }
+
   get operation (): RuntimeOperation | null {
-    return this.table?.actions.createColumnMapping ?? null
+    return this.columnMappingType === 'literal'
+      ? this.table?.actions.createLiteralColumnMapping ?? null
+      : this.table?.actions.createReferenceColumnMapping ?? null
   }
 
-  async mounted (): Promise<void> {
-    if (this.operation) {
-      const shape = await api.fetchOperationShape(this.operation)
-
-      // Populate Column selector
-      if (shape && this.table.csvSource?.clientPath) {
-        const source = this.findSource(this.table.csvSource.clientPath)
-        source.columns.forEach((column) => {
-          shape.pointer.node(column.id)
-            .addOut(schema.name, column.name)
-            .addOut(rdf.type, column.pointer.out(rdf.type))
-        })
-      }
-
-      this.shape = shape
-    }
+  @Watch('columnMappingType')
+  resetError (): void {
+    this.error = null
   }
 
-  async onSubmit (): Promise<void> {
+  async onSubmit (resource: GraphPointer): Promise<void> {
     this.error = null
     this.isSubmitting = true
 
     try {
       await this.$store.dispatch('api/invokeSaveOperation', {
         operation: this.operation,
-        resource: this.resource,
+        resource,
       })
 
       this.$store.dispatch('project/refreshTableCollection')

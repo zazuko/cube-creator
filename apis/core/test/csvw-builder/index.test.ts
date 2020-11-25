@@ -117,7 +117,7 @@ describe('lib/csvw-builder', () => {
     csvSource.columns = [
       CsvColumn.fromPointer(csvSource.pointer.namedNode('jahr-column'), { name: 'JAHR' }),
     ]
-    const columnMapping = ColumnMapping.fromPointer(clownface({ dataset: $rdf.dataset() }).namedNode('year-mapping'), {
+    const columnMapping = ColumnMapping.literalFromPointer(clownface({ dataset: $rdf.dataset() }).namedNode('year-mapping'), {
       sourceColumn: $rdf.namedNode('jahr-column') as any,
       targetProperty: $rdf.literal('year'),
     })
@@ -137,7 +137,7 @@ describe('lib/csvw-builder', () => {
     csvSource.columns = [
       CsvColumn.fromPointer(csvSource.pointer.namedNode('jahr-column'), { name: 'JAHR' }),
     ]
-    const columnMapping = ColumnMapping.fromPointer(clownface({ dataset: $rdf.dataset() }).namedNode('year-mapping'), {
+    const columnMapping = ColumnMapping.literalFromPointer(clownface({ dataset: $rdf.dataset() }).namedNode('year-mapping'), {
       sourceColumn: $rdf.namedNode('jahr-column') as any,
       targetProperty: $rdf.literal('year'),
     })
@@ -157,7 +157,7 @@ describe('lib/csvw-builder', () => {
     csvSource.columns = [
       CsvColumn.fromPointer(csvSource.pointer.namedNode('jahr-column'), { name: 'JAHR' }),
     ]
-    const columnMapping = ColumnMapping.fromPointer(clownface({ dataset: $rdf.dataset() }).namedNode('year-mapping'), {
+    const columnMapping = ColumnMapping.literalFromPointer(clownface({ dataset: $rdf.dataset() }).namedNode('year-mapping'), {
       sourceColumn: $rdf.namedNode('jahr-column') as any,
       targetProperty: schema.yearBuilt,
     })
@@ -177,7 +177,7 @@ describe('lib/csvw-builder', () => {
     csvSource.columns = [
       CsvColumn.fromPointer(csvSource.pointer.namedNode('jahr-column'), { name: 'JAHR' }),
     ]
-    const columnMapping = ColumnMapping.fromPointer(clownface({ dataset: $rdf.dataset() }).namedNode('year-mapping'), {
+    const columnMapping = ColumnMapping.literalFromPointer(clownface({ dataset: $rdf.dataset() }).namedNode('year-mapping'), {
       sourceColumn: $rdf.namedNode('jahr-column') as any,
       targetProperty: schema.yearBuilt,
       datatype: xsd.gYear,
@@ -198,7 +198,7 @@ describe('lib/csvw-builder', () => {
     csvSource.columns = [
       CsvColumn.fromPointer(csvSource.pointer.namedNode('jahr-column'), { name: 'JAHR' }),
     ]
-    const columnMapping = ColumnMapping.fromPointer(clownface({ dataset: $rdf.dataset() }).namedNode('year-mapping'), {
+    const columnMapping = ColumnMapping.literalFromPointer(clownface({ dataset: $rdf.dataset() }).namedNode('year-mapping'), {
       sourceColumn: $rdf.namedNode('jahr-column') as any,
       targetProperty: schema.yearBuilt,
       language: 'de-DE',

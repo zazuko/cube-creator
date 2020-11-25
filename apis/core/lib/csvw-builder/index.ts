@@ -1,6 +1,6 @@
 import * as Csvw from '@rdfine/csvw'
 import TermMap from '@rdfjs/term-map'
-import { ColumnMapping, CsvColumn, CsvMapping, CsvSource, Table } from '@cube-creator/model'
+import { ColumnMapping, CsvColumn, CsvMapping, CsvSource, LiteralColumnMapping, Table } from '@cube-creator/model'
 import cf from 'clownface'
 import $rdf from 'rdf-ext'
 import RdfResource from '@tpluscode/rdfine'
@@ -30,7 +30,7 @@ interface CsvwBuildingContext {
   resources: ResourceStore
 }
 
-function mappedColumn({ csvMapping, columnMapping, column }: CsvwBuildingContext & { column: CsvColumn; columnMapping: ColumnMapping }): Initializer<Csvw.Column> {
+function mappedColumn({ csvMapping, columnMapping, column }: CsvwBuildingContext & { column: CsvColumn; columnMapping: LiteralColumnMapping }): Initializer<Csvw.Column> {
   const csvwColumn: Initializer<Csvw.Column> = {
     title: $rdf.literal(column.name),
     propertyUrl: csvMapping.createIdentifier(columnMapping.targetProperty).value,
@@ -56,6 +56,9 @@ async function * buildColumns({ table, source, resources, csvMapping }: CsvwBuil
       warning(`Column mapping ${columnMappingLink.id} not found`)
       continue
     }
+
+    if (!isLiteralColumnMapping(columnMapping)) continue
+
     unmappedColumns.delete(columnMapping?.sourceColumn.id)
 
     const column = source.columns.find(column => columnMapping.sourceColumn.equals(column))
@@ -112,4 +115,8 @@ export async function buildCsvw({ table, resources }: { table: Table; resources:
   })
 
   return csvw as any
+}
+
+function isLiteralColumnMapping(columnMapping: ColumnMapping): columnMapping is LiteralColumnMapping {
+  return columnMapping.types.has(cc.LiteralColumnMapping)
 }

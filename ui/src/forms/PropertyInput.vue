@@ -30,6 +30,11 @@ export default class extends Vue {
     return store
   }
 
+  set $store (store: Store<RootState>) {
+    // Setter is required when using the component directly in the app
+    // Do nothing
+  }
+
   @projectNS.State((state) => state.csvMapping.namespace.value) projectPrefix!: string
   @appNS.State('commonRDFProperties') rdfProperties!: string[]
 

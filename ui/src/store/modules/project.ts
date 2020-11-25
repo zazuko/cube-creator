@@ -10,6 +10,7 @@ import {
   Table,
   Dataset,
   DimensionMetadataCollection,
+  CsvSource,
 } from '@cube-creator/model'
 import {
   serializeDimensionMetadataCollection,
@@ -17,12 +18,16 @@ import {
   serializeSourcesCollection,
   serializeTableCollection,
 } from '../serializers'
+import { Term } from 'rdf-js'
+import { RdfResource } from 'alcaeus'
 
 export interface ProjectState {
   project: null | Project,
   csvMapping: null | CsvMapping,
   sourcesCollection: null | SourcesCollection,
+  sources: null | Map<string, CsvSource>,
   tableCollection: null | TableCollection,
+  tables: null | Map<string, Table>,
   cubeMetadata: null | Dataset,
   dimensionMetadataCollection: null | DimensionMetadataCollection,
   jobCollection: null | JobCollection,
@@ -32,7 +37,9 @@ const initialState = {
   project: null,
   csvMapping: null,
   sourcesCollection: null,
+  sources: null,
   tableCollection: null,
+  tables: null,
   cubeMetadata: null,
   dimensionMetadataCollection: null,
   jobCollection: null,
@@ -40,11 +47,11 @@ const initialState = {
 
 const getters: GetterTree<ProjectState, RootState> = {
   sources (state) {
-    return state.sourcesCollection?.member || []
+    return [...(state.sources?.values() ?? [])]
   },
 
   tables (state) {
-    return state.tableCollection?.member || []
+    return [...(state.tables?.values() ?? [])]
   },
 
   dimensions (state) {
@@ -62,9 +69,25 @@ const getters: GetterTree<ProjectState, RootState> = {
       getters.sources.find(({ clientPath }: { clientPath: string}) => clientPath === id)
   },
 
+  getSource (state) {
+    return (uri: Term): CsvSource => {
+      const source = state.sources?.get(uri.value)
+      if (!source) throw new Error(`Source not found: ${uri.value}`)
+      return source
+    }
+  },
+
   findTable (_state, getters) {
     return (id: string) =>
       getters.tables.find(({ clientPath }: { clientPath: string}) => clientPath === id)
+  },
+
+  getTable (state) {
+    return (uri: Term): Table => {
+      const table = state.tables?.get(uri.value)
+      if (!table) throw new Error(`Source not found: ${uri.value}`)
+      return table
+    }
   },
 
   columnMappings (state, getters) {
@@ -230,10 +253,12 @@ const mutations: MutationTree<ProjectState> = {
 
   storeSourcesCollection (state, collection) {
     state.sourcesCollection = collection ? serializeSourcesCollection(collection) : null
+    state.sources = indexResources(state.sourcesCollection?.member || [], ({ id }: CsvSource) => id.value)
   },
 
   storeTableCollection (state, collection) {
     state.tableCollection = collection ? serializeTableCollection(collection) : null
+    state.tables = indexResources(state.tableCollection?.member || [], ({ id }: Table) => id.value)
   },
 
   storeCubeMetadata (state, cubeMetadata) {
@@ -255,4 +280,11 @@ export default {
   getters,
   actions,
   mutations,
+}
+
+function indexResources<T extends RdfResource> (array: T[], indexFunction: (item: T) => string): Map<string, T> {
+  return array.reduce((acc, item) => {
+    acc.set(indexFunction(item), item)
+    return acc
+  }, new Map<string, T>())
 }

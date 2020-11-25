@@ -14,7 +14,8 @@ export default function mixin<Base extends Constructor> (base: Base): Mixin {
   class Impl extends base implements Partial<Table>, AdditionalActions {
     get _additionalActions () {
       return {
-        createColumnMapping: cc.CreateColumnMappingAction,
+        createLiteralColumnMapping: cc.CreateLiteralColumnMappingAction,
+        createReferenceColumnMapping: cc.CreateReferenceColumnMappingAction,
       }
     }
 
