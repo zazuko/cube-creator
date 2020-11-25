@@ -39,7 +39,7 @@ export const loadCubes: Enrichment = async (req, dataset) => {
   dataset.any().has(rdf.type, cube.Cube).forEach(cube => {
     cube.addOut(cc.observations, template => {
       return new IriTemplateMixin.Class(template, {
-        template: `${env.API_CORE_BASE}observations?cube=${cube.value}&graph=${graph}{&view,pageSize}`,
+        template: `${env.API_CORE_BASE}observations?cube=${encodeURIComponent(cube.value)}&graph=${encodeURIComponent(graph)}{&view,pageSize}`,
         mapping: [{
           property: view.view,
           variable: 'view',

@@ -24,10 +24,16 @@ declare module 'rdf-cube-view-query/lib/View' {
 
   type Observation = Record<string, Term>
 
-  class View extends Node {
-    constructor (arg?: { parent: View; term: Term; dataset: DatasetCore; graph: NamedNode; dimensions: any[]; filters: any[] })
-    static fromCube(cube: Cube): View
+  namespace View {
+    interface View extends Node.Node {
+      dimension(arg: { cubeDimension: string | Term | GraphPointer | undefined }): Dimension | null
+      observations(): Promise<Observation[]>
+    }
+  }
 
+  class View extends Node implements View.View {
+    constructor (arg?: { parent: Node.Node; term: Term; dataset: DatasetCore; graph: NamedNode; dimensions: any[]; filters: any[] })
+    static fromCube(cube: Cube.Cube): View.View
     dimension(arg: { cubeDimension: string | Term | GraphPointer | undefined }): Dimension | null
     observations(): Promise<Observation[]>
   }
@@ -39,7 +45,13 @@ declare module 'rdf-cube-view-query/lib/Source' {
   import Cube = require('rdf-cube-view-query/lib/Cube')
   import Node = require('rdf-cube-view-query/lib/Node')
 
-  class Source extends Node {
+  namespace Source {
+    interface Source extends Node.Node {
+      cubes(): Promise<Cube[]>
+    }
+  }
+
+  class Source extends Node implements Source.Source {
     constructor(arg: {
       endpointUrl: string
       user?: string
@@ -54,10 +66,18 @@ declare module 'rdf-cube-view-query/lib/Source' {
 }
 
 declare module 'rdf-cube-view-query/lib/Cube' {
+  import { DatasetCore, NamedNode, Term } from 'rdf-js'
   import Node = require('rdf-cube-view-query/lib/Node')
+  import Source = require('rdf-cube-view-query/lib/Source')
 
-  class Cube extends Node {
+  namespace Cube {
+    interface Cube extends Node.Node {
+      clear(): void
+    }
+  }
 
+  class Cube extends Node implements Cube.Cube {
+    constructor(arg: { parent?: Node.Node; term?: Term; dataset?: DatasetCore; graph?: NamedNode; source: Source.Source })
   }
 
   export = Cube
@@ -67,11 +87,23 @@ declare module 'rdf-cube-view-query/lib/Node' {
   import { DatasetCore, NamedNode, Term } from 'rdf-js'
   import type { GraphPointer } from 'clownface'
 
-  class Node {
-    constructor (arg: { parent: Node; term?: Term; dataset: DatasetCore; graph: NamedNode })
+  namespace Node {
+    interface Node {
+      parent: Node
+      children: Set<Node>
+      ptr: GraphPointer
+      term: Term
+      dataset: DatasetCore
 
-    parent: Node
-    children: Set<Node>
+      clear(): void
+    }
+  }
+
+  class Node implements Node.Node {
+    constructor (arg: { parent?: Node.Node; term?: Term; dataset?: DatasetCore; graph?: NamedNode })
+
+    parent: Node.Node
+    children: Set<Node.Node>
     ptr: GraphPointer
     term: Term
     dataset: DatasetCore
