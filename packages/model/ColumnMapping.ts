@@ -17,7 +17,7 @@ export interface ColumnMapping<D extends DatasetCore = DatasetCore> extends RdfR
 }
 
 export function ColumnMappingMixin<Base extends Constructor>(Resource: Base): Mixin {
-  @namespace(cc as any)
+  @namespace(cc)
   class Impl extends Resource implements Partial<ColumnMapping> {
     @property.resource()
     sourceColumn!: Link<CsvColumn>

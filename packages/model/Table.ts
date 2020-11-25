@@ -29,7 +29,7 @@ export interface TableCollection extends Collection<Table> {
 }
 
 export function TableMixin<Base extends Constructor>(base: Base): Mixin {
-  @namespace(cc as any)
+  @namespace(cc)
   class Impl extends base implements Partial<Table> {
     @property.resource({ initial: childResource('csvw') })
     csvw!: Link<Csvw.Table>
