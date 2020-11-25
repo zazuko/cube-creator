@@ -49,5 +49,14 @@ ${shape('dimension/metadata')} {
       ${dash.hidden} true ;
     ]
   .
+
+  ${scale.Categorical} ${rdfs.label} "Categorical"@en .
+  ${scale.Continuous} ${rdfs.label} "Continuous"@en .
+  ${scale.Discrete} ${rdfs.label} "Discrete"@en .
+  ${scale.Nominal} ${rdfs.label} "Nominal"@en .
+  ${scale.Ordinal} ${rdfs.label} "Ordinal"@en .
+  ${scale.Numerical} ${rdfs.label} "Numerical"@en .
+  ${scale.Spatial} ${rdfs.label} "Spatial"@en .
+  ${scale.Temporal} ${rdfs.label} "Temporal"@en .
 }
 `
