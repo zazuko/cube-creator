@@ -25,7 +25,7 @@ graph <cube-project/ubd> {
     cc:csvMapping <cube-project/ubd/csv-mapping> ;
     dcterms:creator <user> ;
     rdfs:label "UBD28 Project" ;
-    cc:jobCollection <cube-project/jobs> ;
+    cc:jobCollection <cube-project/ubd/jobs> ;
   .
 }
 
