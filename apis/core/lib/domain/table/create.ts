@@ -46,16 +46,14 @@ export async function createTable({
 
   const columns = [...csvSource.columns]
 
-  const columnsToAdd : CsvColumn[] = []
-
-  resource.out(csvw.column)
-    .forEach(({ term: columnId }) => {
+  const columnsToAdd = resource.out(csvw.column)
+    .map(({ term: columnId }) => {
       const column = columns
         .find(({ id }) => id.equals(columnId))
       if (!column) {
         throw new Error(`Column ${columnId} not found`)
       }
-      columnsToAdd.push(column)
+      return column
     })
 
   const table = await csvMapping.addTable(store, {
