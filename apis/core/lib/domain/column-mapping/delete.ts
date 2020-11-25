@@ -52,4 +52,5 @@ export async function deleteColumnMapping({
 
   // Delete Graph
   store.delete(resource)
+  await store.save()
 }
