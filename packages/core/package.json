@@ -3,10 +3,11 @@
   "version": "0.0.2",
   "private": true,
   "dependencies": {
-    "@rdf-esm/namespace": "^0.5.1",
+    "@rdf-esm/namespace": "^0.5.2",
     "@zazuko/rdf-vocabularies": "^2020.11.3"
   },
   "devDependencies": {
-    "@types/rdf-js": "^4.0.0"
+    "@types/rdf-js": "^4.0.0",
+    "@types/rdfjs__namespace": "^1.1.3"
   }
 }
