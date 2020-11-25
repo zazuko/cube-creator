@@ -17,7 +17,6 @@ interface DeleteColumnMappingCommand {
 export async function deleteColumnMapping({
   resource,
   store = resourceStore(),
-
   dimensionMetadataQueries: { getDimensionMetaDataCollection } = DimensionMetadataQueries,
   tableQueries: { getTableForColumnMapping } = TableQueries,
 }: DeleteColumnMappingCommand): Promise<void> {
