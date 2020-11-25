@@ -16,12 +16,13 @@ cc:ColumnMapping
       "Update Column Mapping" ;
     hydra:method
       "PUT" ;
+    hydra:expects
+      cc:ColumnMapping,
+      <shape/column-mapping/create> ;
     code:implementedBy [
       a
         code:EcmaScript ;
-      hydra:expects
-        cc:ColumnMapping,
-        <shape/column-mapping/create> ;
+
       code:link
         <file:handlers/column-mapping#put> ;
     ]
