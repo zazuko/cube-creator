@@ -49,6 +49,13 @@ describe('domain/table/update', () => {
       .addOut(cc.identifierTemplate, '{id}')
       .addOut(cc.columnMapping, columnMapping)
 
+    const columnMappingObservation = clownface({ dataset: $rdf.dataset() })
+      .node($rdf.namedNode('columnMappingObservation'))
+      .addOut(rdf.type, cc.ColumnMapping)
+      .addOut(rdf.type, hydra.Resource)
+      .addOut(cc.sourceColumn, $rdf.namedNode('my-column'))
+      .addOut(cc.targetProperty, $rdf.namedNode('testObservation'))
+
     const observationTable = clownface({ dataset: $rdf.dataset() })
       .namedNode('myObservationTable')
       .addOut(rdf.type, cc.Table)
@@ -58,17 +65,21 @@ describe('domain/table/update', () => {
       .addOut(schema.name, 'the name')
       .addOut(schema.color, '#ababab')
       .addOut(cc.identifierTemplate, '{id}')
-      .addOut(cc.columnMapping, columnMapping)
+      .addOut(cc.columnMapping, columnMappingObservation)
 
     dimensionMetadata = clownface({ dataset: $rdf.dataset() })
       .namedNode('myDimensionMetadata')
       .addOut(rdf.type, cc.DimensionMetadataCollection)
+      .addOut(schema.hasPart, $rdf.namedNode('myDimension'), dim => {
+        dim.addOut(schema.about, $rdf.namedNode('testObservation'))
+      })
 
     store = new TestResourceStore([
       csvSource,
       csvMapping,
       columnMapping,
       table,
+      columnMappingObservation,
       observationTable,
       dimensionMetadata,
     ])
@@ -134,17 +145,19 @@ describe('domain/table/update', () => {
     expect(dimensionMetadata).to.matchShape({
       property: [{
         path: schema.hasPart,
+        minCount: 2,
+        maxCount: 2,
+      }],
+    })
+
+    const dimension = dimensionMetadata.node($rdf.namedNode('myDimensionMetadata/test'))
+    expect(dimension).to.matchShape({
+      property: {
+        path: schema.about,
         minCount: 1,
         maxCount: 1,
-        node: {
-          property: {
-            path: schema.about,
-            minCount: 1,
-            maxCount: 1,
-            hasValue: $rdf.namedNode('test'),
-          },
-        },
-      }],
+        hasValue: $rdf.namedNode('test'),
+      },
     })
   })
 
@@ -167,6 +180,14 @@ describe('domain/table/update', () => {
         hasValue: cc.Table,
         maxCount: 1,
         minCount: 1,
+      }],
+    })
+
+    expect(dimensionMetadata).to.matchShape({
+      property: [{
+        path: schema.hasPart,
+        minCount: 0,
+        maxCount: 0,
       }],
     })
   })
