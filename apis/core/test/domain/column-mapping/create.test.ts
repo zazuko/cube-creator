@@ -216,7 +216,22 @@ describe('domain/column-mapping/create', () => {
     })
   })
 
-  it('throw if same dimension metadata with same targetProperty is added twice', async () => {
+  it('do not throw if same dimension metadata with same targetProperty is added twice', async () => {
+    // given
+    const resource = clownface({ dataset: $rdf.dataset() })
+      .node($rdf.namedNode(''))
+      .addOut(cc.sourceColumn, $rdf.namedNode('my-column'))
+      .addOut(cc.targetProperty, $rdf.namedNode('test'))
+    await createColumnMapping({ resource, store, tableId: table.term, dimensionMetadataQueries })
+
+    // when
+    const createdAgain = await createColumnMapping({ resource, store, tableId: table.term, dimensionMetadataQueries })
+
+    // then
+    expect(createdAgain).to.be.ok
+  })
+
+  it('throw if same dimension metadata with same targetProperty is added twice to an observation table', async () => {
     // given
     const resource = clownface({ dataset: $rdf.dataset() })
       .node($rdf.namedNode(''))
@@ -227,7 +242,8 @@ describe('domain/column-mapping/create', () => {
     // then
     expect(createColumnMapping({ resource, store, tableId: observationTable.term, dimensionMetadataQueries })).to.rejectedWith(Error)
   })
-  describe('when some column mappings exist', () => {
+
+  describe('when some column mappings exist on observation table', () => {
     it('throws when exact targetProperty is used for new property', async () => {
       // given
       const existingMapping = clownface({ dataset: $rdf.dataset() })
@@ -235,14 +251,14 @@ describe('domain/column-mapping/create', () => {
         .addOut(rdf.type, cc.ColumnMapping)
         .addOut(cc.targetProperty, $rdf.literal('year'))
       store.push(existingMapping)
-      table.addOut(cc.columnMapping, existingMapping)
+      observationTable.addOut(cc.columnMapping, existingMapping)
       const resource = clownface({ dataset: $rdf.dataset() })
         .node($rdf.namedNode(''))
         .addOut(cc.sourceColumn, $rdf.namedNode('my-column'))
         .addOut(cc.targetProperty, $rdf.literal('year'))
 
       // when
-      const promise = createColumnMapping({ resource, store, tableId: table.term })
+      const promise = createColumnMapping({ resource, store, tableId: observationTable.term })
 
       // then
       await expect(promise).to.have.rejectedWith(DomainError)
@@ -255,14 +271,14 @@ describe('domain/column-mapping/create', () => {
         .addOut(rdf.type, cc.ColumnMapping)
         .addOut(cc.targetProperty, $rdf.namedNode('year'))
       store.push(existingMapping)
-      table.addOut(cc.columnMapping, existingMapping)
+      observationTable.addOut(cc.columnMapping, existingMapping)
       const resource = clownface({ dataset: $rdf.dataset() })
         .node($rdf.namedNode(''))
         .addOut(cc.sourceColumn, $rdf.namedNode('my-column'))
         .addOut(cc.targetProperty, $rdf.namedNode('year'))
 
       // when
-      const promise = createColumnMapping({ resource, store, tableId: table.term })
+      const promise = createColumnMapping({ resource, store, tableId: observationTable.term })
 
       // then
       await expect(promise).to.have.rejectedWith(DomainError)
@@ -275,14 +291,14 @@ describe('domain/column-mapping/create', () => {
         .addOut(rdf.type, cc.ColumnMapping)
         .addOut(cc.targetProperty, $rdf.namedNode('http://example.com/year'))
       store.push(existingMapping)
-      table.addOut(cc.columnMapping, existingMapping)
+      observationTable.addOut(cc.columnMapping, existingMapping)
       const resource = clownface({ dataset: $rdf.dataset() })
         .node($rdf.namedNode(''))
         .addOut(cc.sourceColumn, $rdf.namedNode('my-column'))
         .addOut(cc.targetProperty, $rdf.literal('year'))
 
       // when
-      const promise = createColumnMapping({ resource, store, tableId: table.term })
+      const promise = createColumnMapping({ resource, store, tableId: observationTable.term })
 
       // then
       await expect(promise).to.have.rejectedWith(DomainError)
