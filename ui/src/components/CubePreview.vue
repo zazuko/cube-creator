@@ -58,7 +58,10 @@
       <tr v-else-if="observations.data.length === 0">
         <td :colspan="tableWidth">
           <p class="has-text-grey has-text-centered">
-            No observations available
+            No observations available. Did you already
+            <router-link :to="{ name: 'Pipeline' }">
+              run a transformation
+            </router-link>?
           </p>
         </td>
       </tr>
@@ -129,6 +132,11 @@ export default class extends Vue {
 
     if (!this.cube) {
       this.observations = Remote.error('No available cube')
+      return
+    }
+
+    if (!this.cube.observations) {
+      this.observations = Remote.loaded([])
       return
     }
 
