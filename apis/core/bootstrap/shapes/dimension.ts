@@ -32,6 +32,16 @@ ${shape('dimension/metadata')} {
       ${sh.maxCount} 1 ;
       ${sh.order} 20 ;
     ] , [
+      ${sh.name} "Description" ;
+      ${sh.path} ${schema.description} ;
+      ${sh.datatype} ${rdf.langString} ;
+      ${sh.languageIn} ( "en" "de" "fr" "it" ) ;
+      ${sh.uniqueLang} true ;
+      ${sh.defaultValue} ""@en ;
+      ${sh.minLength} 1 ;
+      ${dash.singleLine} false ;
+      ${sh.order} 30 ;
+    ], [
       ${sh.path} ${schema.about} ;
       ${sh.nodeKind} ${sh.IRI} ;
       ${sh.minCount} 1 ;
@@ -39,5 +49,14 @@ ${shape('dimension/metadata')} {
       ${dash.hidden} true ;
     ]
   .
+
+  ${scale.Categorical} ${rdfs.label} "Categorical"@en .
+  ${scale.Continuous} ${rdfs.label} "Continuous"@en .
+  ${scale.Discrete} ${rdfs.label} "Discrete"@en .
+  ${scale.Nominal} ${rdfs.label} "Nominal"@en .
+  ${scale.Ordinal} ${rdfs.label} "Ordinal"@en .
+  ${scale.Numerical} ${rdfs.label} "Numerical"@en .
+  ${scale.Spatial} ${rdfs.label} "Spatial"@en .
+  ${scale.Temporal} ${rdfs.label} "Temporal"@en .
 }
 `

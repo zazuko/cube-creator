@@ -39,6 +39,10 @@ describe('domain/dimension/update', function () {
         $rdf.literal('Year', 'en'),
       ])
       .addOut(scale.scaleOfMeasure, scale.Temporal)
+      .addOut(schema.description, [
+        $rdf.literal('Das Jahr', 'de'),
+        $rdf.literal('The year', 'en'),
+      ])
 
     // when
     const updated = await update({
@@ -48,7 +52,7 @@ describe('domain/dimension/update', function () {
     })
 
     // then
-    expect(updated.dataset).to.have.property('size').eq(4)
+    expect(updated.dataset).to.have.property('size').eq(6)
     expect(updated).to.matchShape({
       property: [{
         path: schema.about,
@@ -65,6 +69,14 @@ describe('domain/dimension/update', function () {
         [sh.hasValue.value]: [
           $rdf.literal('Year', 'en'),
           $rdf.literal('Jahr', 'de'),
+        ],
+        maxCount: 2,
+        minCount: 2,
+      }, {
+        path: schema.description,
+        [sh.hasValue.value]: [
+          $rdf.literal('The year', 'en'),
+          $rdf.literal('Das Jahr', 'de'),
         ],
         maxCount: 2,
         minCount: 2,

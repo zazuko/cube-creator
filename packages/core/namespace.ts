@@ -1,6 +1,5 @@
 import prefixes from '@zazuko/rdf-vocabularies/prefixes'
 import namespace from '@rdf-esm/namespace'
-import { NamedNode } from 'rdf-js'
 
 export { shape } from './namespaces/shapes'
 
@@ -56,7 +55,7 @@ type MetaDataProperty =
   'publishOnOpendata' |
   'publishOnVisualize'
 
-type CubeCreatorNamespace = Record<CubeCreatorClass | CubeCreatorProperty | OtherTerms | MetaDataProperty, NamedNode>
+type CubeCreatorTerms = CubeCreatorClass | CubeCreatorProperty | OtherTerms | MetaDataProperty
 
 prefixes.scale = 'http://ns.bergnet.org/cube/scale/'
 prefixes.freq = 'http://purl.org/cld/freq/'
@@ -67,7 +66,7 @@ export const hashi = namespace('http://hypermedia.app/shapes#')
 export const cube = namespace(prefixes.cube)
 export const view = namespace(prefixes.view)
 export const hydraBox = namespace('http://hydra-box.org/schema/')
-export const cc: CubeCreatorNamespace = namespace('https://cube-creator.zazuko.com/vocab#') as any
+export const cc = namespace<CubeCreatorTerms>('https://cube-creator.zazuko.com/vocab#')
 export const editor = namespace(cc.dash.value)
 export const freq = namespace(prefixes.freq)
 export const scale = namespace(prefixes.scale)

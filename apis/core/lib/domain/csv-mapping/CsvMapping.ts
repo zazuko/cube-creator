@@ -91,10 +91,6 @@ export default function Mixin<Base extends Constructor<Omit<CsvMapping, keyof Ap
     }
 
     async addTable(store: ResourceStore, { name, csvSource, identifierTemplate, isObservationTable, color }: AddTable): Promise<Table.Table> {
-      if (!identifierTemplate) {
-        throw new Error('Cannot create table without cc:identifierTemplate')
-      }
-
       const table = await store.createMember(this.tableCollection.id as NamedNode, id.table(this, name))
       const types = isObservationTable ? [cc.ObservationTable] : []
 

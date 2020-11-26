@@ -27,7 +27,7 @@ export interface ProjectsCollection extends Collection<Project> {
 }
 
 export function ProjectMixin<Base extends Constructor>(base: Base): Mixin {
-  @namespace(cc as any)
+  @namespace(cc)
   class Impl extends Rdfs.ResourceMixin(base) implements Partial<Project> {
     @property.resource({ as: [CsvMappingMixin] })
     csvMapping?: CsvMapping

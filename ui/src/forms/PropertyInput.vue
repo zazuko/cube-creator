@@ -4,7 +4,6 @@
       :value="textValue"
       @input="onUpdate"
       :data="suggestions"
-      keep-first
     />
   </b-field>
 </template>

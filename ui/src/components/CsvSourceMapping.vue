@@ -112,7 +112,9 @@ export default class CsvSourceMapping extends Vue {
   selectedColumns: CsvColumn[] = []
 
   get sourceTables (): Table[] {
-    return this.tables.filter(({ csvSource }) => csvSource?.id.equals(this.source.id))
+    return this.tables
+      .filter(({ csvSource }) => csvSource?.id.equals(this.source.id))
+      .sort(({ isObservationTable: o1 }, { isObservationTable: o2 }) => (o1 === o2) ? 0 : (o1 ? -1 : 1))
   }
 
   get createTableQueryParams (): Record<string, string | string[]> {

@@ -1,6 +1,6 @@
 <template>
   <b-field>
-    <b-input :value="valueText" @input="updateValue" class="text-input" />
+    <b-input :value="valueText" @input="updateValue" class="text-input" :type="inputType" />
     <b-select :value="valueLanguage" @input="updateLanguage">
       <option v-for="language in languages" :key="language">
         {{ language }}
@@ -20,6 +20,7 @@ export default class extends Vue {
   @Prop() value?: Literal
   @Prop() property?: PropertyState
   @Prop() update!: (newValue: Literal) => void
+  @Prop({ default: 'text' }) inputType?: string
 
   get languages (): string[] {
     return this.property?.shape.languageIn || []

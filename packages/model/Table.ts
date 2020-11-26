@@ -29,7 +29,7 @@ export interface TableCollection extends Collection<Table> {
 }
 
 export function TableMixin<Base extends Constructor>(base: Base): Mixin {
-  @namespace(cc as any)
+  @namespace(cc)
   class Impl extends base implements Partial<Table> {
     @property.resource({ initial: childResource('csvw') })
     csvw!: Link<Csvw.Table>
@@ -44,7 +44,7 @@ export function TableMixin<Base extends Constructor>(base: Base): Mixin {
     name!: string
 
     @property.literal()
-    identifierTemplate!: string
+    identifierTemplate?: string
 
     @property.literal({ path: schema.color })
     color!: string
@@ -66,7 +66,7 @@ export const fromPointer = (pointer: GraphPointer<ResourceIdentifier>): Table =>
   return RdfResourceImpl.factory.createEntity<Table>(pointer, [TableMixin])
 }
 
-type RequiredProperties = 'name' | 'csvSource' | 'csvMapping' | 'identifierTemplate'
+type RequiredProperties = 'name' | 'csvSource' | 'csvMapping'
 
 export const create = initializer<Table, RequiredProperties>(TableMixin, {
   types: [cc.Table],

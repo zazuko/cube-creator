@@ -11,13 +11,13 @@ import type { GraphPointer } from 'clownface'
 export interface ColumnMapping<D extends DatasetCore = DatasetCore> extends RdfResource<D> {
   sourceColumn: Link<CsvColumn>
   targetProperty: Term
-  datatype: NamedNode
-  language: string
-  defaultValue: Term
+  datatype?: NamedNode
+  language?: string
+  defaultValue?: Term
 }
 
 export function ColumnMappingMixin<Base extends Constructor>(Resource: Base): Mixin {
-  @namespace(cc as any)
+  @namespace(cc)
   class Impl extends Resource implements Partial<ColumnMapping> {
     @property.resource()
     sourceColumn!: Link<CsvColumn>

@@ -127,6 +127,8 @@ const actions: ActionTree<ProjectState, RootState> = {
       throw new Error('Project does not have a jobCollection')
     }
 
+    context.commit('storeJobCollection', null)
+
     const collection = await api.fetchResource<JobCollection>(id)
     context.commit('storeJobCollection', collection)
 
@@ -140,6 +142,8 @@ const actions: ActionTree<ProjectState, RootState> = {
       throw new Error('Sources collection not loaded')
     }
 
+    context.commit('storeSourcesCollection', null)
+
     const freshCollection = await api.fetchResource<SourcesCollection>(collection.id.value)
     context.commit('storeSourcesCollection', freshCollection)
 
@@ -152,6 +156,8 @@ const actions: ActionTree<ProjectState, RootState> = {
     if (!collection) {
       throw new Error('Table collection not loaded')
     }
+
+    context.commit('storeTableCollection', null)
 
     const freshCollection = await api.fetchResource<TableCollection>(collection.id.value)
     context.commit('storeTableCollection', freshCollection)
@@ -183,6 +189,8 @@ const actions: ActionTree<ProjectState, RootState> = {
       throw new Error('Project does not have a cc:dataset')
     }
 
+    context.commit('storeCubeMetadata', null)
+
     const cubeMetadata = await api.fetchResource<Dataset>(project.dataset.id.value)
     context.commit('storeCubeMetadata', cubeMetadata)
 
@@ -195,6 +203,8 @@ const actions: ActionTree<ProjectState, RootState> = {
     if (!cubeMetadata) {
       throw new Error('CubeMetadata not loaded')
     }
+
+    context.commit('storeDimensionMetadataCollection', null)
 
     const collection = await api.fetchResource<DimensionMetadataCollection>(cubeMetadata.dimensionMetadata.id.value)
     context.commit('storeDimensionMetadataCollection', collection)
