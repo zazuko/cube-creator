@@ -13,6 +13,7 @@ import { NotFoundError } from '../../../lib/errors'
 import { NamedNode } from 'rdf-js'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import { deleteColumnMapping } from '../../../lib/domain/column-mapping/delete'
+import { ColumnMapping } from '@cube-creator/model'
 
 describe('domain/column-mapping/delete', () => {
   let store: TestResourceStore
@@ -22,7 +23,7 @@ describe('domain/column-mapping/delete', () => {
   const getTablesForMapping = sinon.stub()
   let tableQueries: typeof TableQueries
   let getTableForColumnMapping: sinon.SinonStub
-  let dimensionMetadata: GraphPointer<NamedNode, DatasetExt>
+  let dimensionMetadataCollection: GraphPointer<NamedNode, DatasetExt>
   let columnMapping: GraphPointer<NamedNode, DatasetExt>
   let columnMappingObservation: GraphPointer<NamedNode, DatasetExt>
   let observationTable: GraphPointer<NamedNode, DatasetExt>
@@ -84,11 +85,14 @@ describe('domain/column-mapping/delete', () => {
       .addOut(cc.csvSource, csvSource)
       .addOut(cc.columnMapping, columnMappingObservation)
 
-    dimensionMetadata = clownface({ dataset: $rdf.dataset() })
-      .namedNode('myDimensionMetadata')
+    dimensionMetadataCollection = clownface({ dataset: $rdf.dataset() })
+      .namedNode('dimensionMetadataCollection')
       .addOut(rdf.type, cc.DimensionMetadataCollection)
       .addOut(schema.hasPart, $rdf.namedNode('myDimension'), dim => {
         dim.addOut(schema.about, $rdf.namedNode('test'))
+      })
+      .addOut(schema.hasPart, $rdf.namedNode('myDimension2'), dim => {
+        dim.addOut(schema.about, $rdf.namedNode('test2'))
       })
 
     store = new TestResourceStore([
@@ -96,13 +100,13 @@ describe('domain/column-mapping/delete', () => {
       observationTable,
       csvMapping,
       csvSource,
-      dimensionMetadata,
+      dimensionMetadataCollection,
       columnMapping,
       otherColumnMapping,
       columnMappingObservation,
     ])
 
-    getDimensionMetaDataCollection = sinon.stub().resolves(dimensionMetadata.term.value)
+    getDimensionMetaDataCollection = sinon.stub().resolves(dimensionMetadataCollection.term.value)
     dimensionMetadataQueries = { getDimensionMetaDataCollection }
     getTableForColumnMapping = sinon.stub().resolves(table.term.value)
     tableQueries = {
@@ -113,20 +117,22 @@ describe('domain/column-mapping/delete', () => {
   })
 
   it('deletes a column mapping and its dimensions', async () => {
-    const resource = $rdf.namedNode('columnMapping')
+    const resourceId = $rdf.namedNode('columnMappingObservation')
 
-    const before = await store.getResource($rdf.namedNode('myDimensionMetadata'))
-    expect(before?.toJSON().hasPart[0].id).to.eq('myDimension')
+    const dimensionsCount = dimensionMetadataCollection.out(schema.hasPart).terms.length
 
-    const columnMapping = deleteColumnMapping({ resource, store, dimensionMetadataQueries, tableQueries })
+    expect(dimensionMetadataCollection.node($rdf.namedNode('myDimension')).out().values).to.have.length(1)
+    await deleteColumnMapping({ resource: resourceId, store, dimensionMetadataQueries, tableQueries })
 
-    const after = await store.getResource($rdf.namedNode('myDimensionMetadata'))
-    expect(after?.toJSON().hasPart[0].id).not.to.eq('myDimension')
+    const columnMapping = await store.getResource<ColumnMapping>(resourceId)
+    expect(columnMapping).to.eq(undefined)
 
-    expect(columnMapping).to.be.fulfilled
+    expect(dimensionMetadataCollection.out(schema.hasPart).terms).to.have.length(dimensionsCount - 1)
+
+    expect(dimensionMetadataCollection.node($rdf.namedNode('myDimension')).out().values).to.have.length(0)
   })
 
-  it('throw if column mapping does not exit', async () => {
+  it('throw if column mapping does not exist', async () => {
     const resource = $rdf.namedNode('columnMapping-foo')
     const promise = deleteColumnMapping({ resource, store, dimensionMetadataQueries, tableQueries })
 

@@ -44,9 +44,9 @@ export async function deleteColumnMapping({
       throw new NotFoundError(dimensionMetaDataCollectionPointer)
     }
 
-    const dimension = dimensionMetaDataCollection.findDimension({ csvMapping, targetProperty: columnMapping.targetProperty })
+    const dimension = dimensionMetaDataCollection.find({ csvMapping, targetProperty: columnMapping.targetProperty })
     if (dimension && dimension.id.termType === 'NamedNode') {
-      store.delete(dimension.id)
+      dimensionMetaDataCollection.deleteDimension(dimension)
     }
   }
 

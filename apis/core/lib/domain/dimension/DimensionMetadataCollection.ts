@@ -22,6 +22,7 @@ interface FindDimensionMetadata {
 
 interface ApiDimensionMetadataCollection {
   updateDimension(dimension: GraphPointer): void
+  deleteDimension(dimension: DimensionMetadata.DimensionMetadata): void
   addDimensionMetadata(params: CreateColumnMetadata): DimensionMetadata.DimensionMetadata
   find(params: FindDimensionMetadata | Term): DimensionMetadata.DimensionMetadata | undefined
 }
@@ -44,6 +45,16 @@ export default function Mixin<Base extends Constructor<Omit<DimensionMetadataCol
       for (const quad of dimension.dataset.match(dimension.term)) {
         found.pointer.addOut(quad.predicate, quad.object)
       }
+    }
+
+    deleteDimension(dimension: DimensionMetadata.DimensionMetadata): void {
+      const found = this.find(dimension.pointer.out(schema.about).term!)
+      if (!found) {
+        throw new Error('Dimension not found')
+      }
+      found.pointer.deleteOut()
+
+      this.hasPart = this.hasPart.filter(part => !found.id.equals(part.id))
     }
 
     addDimensionMetadata(params: CreateColumnMetadata): DimensionMetadata.DimensionMetadata {
