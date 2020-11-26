@@ -1,0 +1,39 @@
+PREFIX api: <https://cube-creator.zazuko.com/vocab#>
+PREFIX hydra: <http://www.w3.org/ns/hydra/core#>
+PREFIX cc: <https://cube-creator.zazuko.com/vocab#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX schema: <http://schema.org/>
+
+ENTRYPOINT "cube-project/ubd/csv-mapping/table-station"
+
+HEADERS {
+  x-user "john-doe"
+  x-permission "pipelines:write"
+}
+
+With Class cc:Table {
+  Expect Operation schema:UpdateAction {
+    Invoke {
+        Content-Type "text/turtle"
+
+        ```
+        base <https://cube-creator.lndo.site/> 
+        prefix cc: <https://cube-creator.zazuko.com/vocab#>
+        prefix schema: <http://schema.org/>
+        prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+
+        <cube-project/ubd/csv-mapping/table-station>
+            a cc:Table ;
+            schema:color "#EF9A9A" ;
+            schema:name "Station" ;
+            cc:csvSource <https://cube-creator.lndo.site/cube-project/ubd/csv-source/stations> ;
+            cc:identifierTemplate "station/{station_id}" ;
+            cc:isObservationTable false .
+        ```
+    } => {
+        Expect Status 200
+        Expect Property schema:color "#EF9A9A"
+    }
+  }
+}
