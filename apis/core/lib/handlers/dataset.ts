@@ -36,6 +36,10 @@ export const loadCubes: Enrichment = async (req, dataset) => {
     }
   }
 
+  if (!graph) {
+    return
+  }
+
   dataset.any().has(rdf.type, cube.Cube).forEach(cube => {
     cube.addOut(cc.observations, template => {
       return new IriTemplateMixin.Class(template, {
