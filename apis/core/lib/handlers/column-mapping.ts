@@ -1,7 +1,9 @@
 import asyncMiddleware from 'middleware-async'
+import * as labyrinth from '@hydrofoil/labyrinth/resource'
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
 import { shaclValidate } from '../middleware/shacl'
 import { createColumnMapping } from '../domain/column-mapping/create'
+import { updateColumnMapping } from '../domain/column-mapping/update'
 
 export const post = protectedResource(shaclValidate, asyncMiddleware(async (req, res) => {
   const columnMapping = await createColumnMapping({
@@ -13,3 +15,25 @@ export const post = protectedResource(shaclValidate, asyncMiddleware(async (req,
   res.header('Location', columnMapping.value)
   await res.dataset(columnMapping.dataset)
 }))
+
+export const put = protectedResource(shaclValidate, asyncMiddleware(async (req, res) => {
+  const columnMapping = await updateColumnMapping({
+    resource: await req.resource(),
+  })
+
+  await res.dataset(columnMapping.dataset)
+}))
+
+export const remove = labyrinth.protectedResource(
+  asyncMiddleware(async (req, res) => {
+    /* TODO
+    const columnMapping = req.hydra.resource.term
+
+    await deleteColumnMapping({
+      resource: columnMapping,
+    })
+
+    res.sendStatus(204) */
+    res.sendStatus(500)
+  }),
+)

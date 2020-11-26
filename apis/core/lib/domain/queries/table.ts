@@ -1,4 +1,4 @@
-import { NamedNode } from 'rdf-js'
+import { NamedNode, Term } from 'rdf-js'
 import { SELECT } from '@tpluscode/sparql-builder'
 
 import { parsingClient } from '../../query-client'
@@ -42,4 +42,25 @@ export async function * getLinkedTablesForSource(csvSource: NamedNode, client = 
       yield table
     }
   }
+}
+
+export async function getTableForColumnMapping(columnMapping: NamedNode, client = parsingClient): Promise<Term> {
+  const results = await SELECT
+    .DISTINCT`?table`
+    .WHERE`
+    GRAPH ?table
+    {
+      ?table a ${cc.Table} ;
+           ${cc.columnMapping} ${columnMapping} .
+    }
+    `
+    .execute(client.query)
+
+  if (results.length < 1) {
+    throw new Error(`No table for column mapping ${columnMapping.value} found`)
+  }
+  if (results.length > 1) {
+    throw new Error(`More than one table for column mapping ${columnMapping.value} found`)
+  }
+  return results[0].table
 }
