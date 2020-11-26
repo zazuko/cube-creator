@@ -36,10 +36,12 @@ export async function createColumnMapping({
   }
 
   const targetProperty = resource.out(cc.targetProperty).term!
-  const mappingExists = await findMapping(table, targetProperty, store)
-  if (mappingExists) {
-    const column = await store.getResource<CsvColumn>(mappingExists.sourceColumn?.id)
-    throw new DomainError(`Target property already mapped from column ${column?.name}`)
+  if (table.isObservationTable) {
+    const mappingExists = await findMapping(table, targetProperty, store)
+    if (mappingExists) {
+      const column = await store.getResource<CsvColumn>(mappingExists.sourceColumn?.id)
+      throw new DomainError(`Target property already mapped from column ${column?.name}`)
+    }
   }
 
   const columnMapping = table.addColumnMapping({
