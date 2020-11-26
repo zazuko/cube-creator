@@ -49,31 +49,34 @@ export async function updateTable({
     throw new NotFoundError(csvMapping)
   }
 
-  const dimensionMetaDataCollectionPointer = await getDimensionMetaDataCollection(table.csvMapping.id)
-  const dimensionMetaDataCollection = await store.getResource<DimensionMetadataCollection>(dimensionMetaDataCollectionPointer)
-  if (!dimensionMetaDataCollection) {
-    throw new NotFoundError(dimensionMetaDataCollectionPointer)
-  }
-
   const isObservationTable = trueTerm.equals(resource.out(cc.isObservationTable).term)
-  if (table.isObservationTable && !isObservationTable) {
-    // TODO Remove dimensionMetadata
-    table.types.delete(cc.ObservationTable)
-  }
+  if (table.isObservationTable !== isObservationTable) {
+    const dimensionMetaDataCollectionPointer = await getDimensionMetaDataCollection(table.csvMapping.id)
+    const dimensionMetaDataCollection = await store.getResource<DimensionMetadataCollection>(dimensionMetaDataCollectionPointer)
+    if (!dimensionMetaDataCollection) {
+      throw new NotFoundError(dimensionMetaDataCollectionPointer)
+    }
 
-  if (!table.isObservationTable && isObservationTable) {
     for (const columnMappingPointer of table.columnMappings) {
       const columnMapping = await store.getResource<ColumnMapping>(columnMappingPointer.id)
       if (!columnMapping) {
         throw new NotFoundError(columnMappingPointer.id)
       }
 
-      dimensionMetaDataCollection.addDimensionMetadata({
-        store, columnMapping, csvMapping,
-      })
+      if (isObservationTable) {
+        dimensionMetaDataCollection.addDimensionMetadata({ store, columnMapping, csvMapping })
+      } else {
+        const dimensionMetadata = dimensionMetaDataCollection.find({ csvMapping, targetProperty: columnMapping.targetProperty })
+
+        // TODO Use function on dimensionMetaDataCollection
+        if (dimensionMetadata) {
+          dimensionMetadata.pointer.deleteOut()
+          dimensionMetaDataCollection.hasPart = dimensionMetaDataCollection.hasPart.filter(part => !dimensionMetadata.id.equals(part.id))
+        }
+      }
     }
 
-    table.types.add(cc.ObservationTable)
+    isObservationTable ? table.types.add(cc.ObservationTable) : table.types.delete(cc.ObservationTable)
   }
 
   await store.save()
