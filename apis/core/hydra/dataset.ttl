@@ -62,7 +62,7 @@ cc:Observations a hydra:Class ;
           a
             hydra:IriTemplate ;
           hydra:template
-            "/observations?cube={cube}&graph={graph}{&view}" ;
+            "/observations?cube={cube}&graph={graph}{&view,pageSize}" ;
           hydra:mapping
             [
               a

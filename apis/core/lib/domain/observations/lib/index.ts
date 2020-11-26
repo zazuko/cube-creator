@@ -9,6 +9,7 @@ import { Collection, CollectionMixin, IriTemplate } from '@rdfine/hydra'
 import { cc } from '@cube-creator/core/namespace'
 import $rdf from 'rdf-ext'
 import { Term } from 'rdf-js'
+import { hydra } from '@tpluscode/rdf-ns-builders'
 
 export function createSource(sourceGraph: string): Source {
   return new CubeQuery.Source({
@@ -63,6 +64,7 @@ export function createHydraCollection({ templateParams, template, observations, 
     member: observations,
     totalItems,
     view: {
+      types: [hydra.PartialCollectionView],
       id: new URL(viewId, env.API_CORE_BASE).toString(),
     },
   }) as any

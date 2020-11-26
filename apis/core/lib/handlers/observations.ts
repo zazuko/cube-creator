@@ -58,6 +58,7 @@ export const query = protectedResource(
       templateParams: query.toArray()[0],
     })
 
+    res.setLink(collection.view[0].id.value, 'canonical')
     return res.dataset(collection.pointer.dataset)
   }),
 )

@@ -1972,6 +1972,13 @@
     "@types/mime" "*"
     "@types/node" "*"
 
+"@types/set-link@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@types/set-link/-/set-link-1.0.1.tgz#6db4ba77e1b95daa14d547908244fb3135154e98"
+  integrity sha512-VbykkYxJ1gHd0j8lxptS4Sb6jP6cJ9Rn5coX0G2bjzMuDEL8QS0Y0BlggLIVkhb2qXojLesBfMRAfk0dwGQbmA==
+  dependencies:
+    "@types/express" "*"
+
 "@types/sinon-chai@^3.2.4":
   version "3.2.4"
   resolved "https://registry.yarnpkg.com/@types/sinon-chai/-/sinon-chai-3.2.4.tgz#c425625681f4f8d3a43a7551a77f590ce1c49b21"
