@@ -24,6 +24,7 @@ import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 import { Table } from '@cube-creator/model'
+import { cc } from '@cube-creator/core/namespace'
 
 const projectNS = namespace('project')
 
@@ -44,6 +45,7 @@ export default class TableCreateView extends Vue {
     }
 
     this.resource = this.table?.pointer ?? null
+    this.resource?.addOut(cc.isObservationTable, this.table?.isObservationTable ?? false)
   }
 
   get table (): Table | null {
