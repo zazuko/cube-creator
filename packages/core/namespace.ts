@@ -19,7 +19,8 @@ type CubeCreatorClass =
   'Job' |
   'JobCollection' |
   'TransformAction' |
-  'DimensionMetadataCollection'
+  'DimensionMetadataCollection' |
+  'Observations'
 
 type CubeCreatorProperty =
   'projectSourceKind' |
@@ -44,7 +45,8 @@ type CubeCreatorProperty =
   'isObservationTable' |
   'cube' |
   'jobCollection' |
-  'dimensionMetadata'
+  'dimensionMetadata' |
+  'observations'
 
 type OtherTerms =
   'dash'
@@ -58,9 +60,12 @@ type CubeCreatorTerms = CubeCreatorClass | CubeCreatorProperty | OtherTerms | Me
 prefixes.scale = 'http://ns.bergnet.org/cube/scale/'
 prefixes.freq = 'http://purl.org/cld/freq/'
 prefixes.cube = 'http://ns.bergnet.org/cube/'
+prefixes.view = 'http://ns.bergnet.org/cube-view/'
 
 export const hashi = namespace('http://hypermedia.app/shapes#')
 export const cube = namespace(prefixes.cube)
+export const view = namespace(prefixes.view)
+export const hydraBox = namespace('http://hydra-box.org/schema/')
 export const cc = namespace<CubeCreatorTerms>('https://cube-creator.zazuko.com/vocab#')
 export const editor = namespace(cc.dash.value)
 export const freq = namespace(prefixes.freq)

@@ -9,5 +9,10 @@
     "rules": {
       "no-unused-expressions": "off"
     }
+  }, {
+    "files": ["cli/lib/toCubeShape/*.js"],
+    "rules": {
+      "@typescript-eslint/no-var-requires": "off"
+    }
   }]
 }

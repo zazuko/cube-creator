@@ -106,14 +106,14 @@ graph <cube-project/ubd/cube-data> {
     sh:closed    true ;
     sh:property  _:observedBy ;
     sh:property  _:rdfType ;
-    sh:property  <https://environment.ld.admin.ch/foen/ubd/28/shape/dimension%20year>;
-    sh:property  <https://environment.ld.admin.ch/foen/ubd/28/shape/station> ;
-    sh:property  <https://environment.ld.admin.ch/foen/ubd/28/shape/aggregation> ;
-    sh:property  <https://environment.ld.admin.ch/foen/ubd/28/shape/pollutant> ;
-    sh:property  <https://environment.ld.admin.ch/foen/ubd/28/shape/unit-id> ;
+    sh:property  _:dimension-year ;
+    sh:property  _:station ;
+    sh:property  _:aggregation ;
+    sh:property  _:pollutant ;
+    sh:property  _:unit-id ;
   .
 
-  <https://environment.ld.admin.ch/foen/ubd/28/shape/aggregation>
+  _:aggregation
     sh:in        ( <https://environment.ld.admin.ch/foen/ubd/28/aggregation/annualmean> ) ;
     sh:maxCount  1 ;
     sh:minCount  1 ;
@@ -127,14 +127,14 @@ graph <cube-project/ubd/cube-data> {
     sh:nodeKind  sh:IRI ;
     sh:path      cube:observedBy .
 
-  <https://environment.ld.admin.ch/foen/ubd/28/shape/pollutant>
+  _:pollutant
     sh:in        ( <https://environment.ld.admin.ch/foen/ubd/28/pollutant/so2> ) ;
     sh:maxCount  1 ;
     sh:minCount  1 ;
     sh:nodeKind  sh:IRI ;
     sh:path      <https://environment.ld.admin.ch/foen/ubd/28/pollutant> .
 
-  <https://environment.ld.admin.ch/foen/ubd/28/shape/dimension%2Fyear>
+  _:dimension-year
     sh:datatype  xsd:gYear ;
     sh:in        ( "1984"^^xsd:gYear "1985"^^xsd:gYear "1986"^^xsd:gYear "1987"^^xsd:gYear "1988"^^xsd:gYear "1989"^^xsd:gYear "1990"^^xsd:gYear "1991"^^xsd:gYear "1992"^^xsd:gYear "1993"^^xsd:gYear "1994"^^xsd:gYear "1995"^^xsd:gYear "1996"^^xsd:gYear "1997"^^xsd:gYear "1998"^^xsd:gYear "1999"^^xsd:gYear "2000"^^xsd:gYear "2001"^^xsd:gYear "2002"^^xsd:gYear "2003"^^xsd:gYear ) ;
     sh:maxCount  1 ;
@@ -149,7 +149,7 @@ graph <cube-project/ubd/cube-data> {
     sh:nodeKind  sh:IRI ;
     sh:path      rdf:type .
 
-  <https://environment.ld.admin.ch/foen/ubd/28/shape/unit-id>
+  _:unit-id
     sh:datatype  xsd:string ;
     sh:in        ( "µg/m3" ) ;
     sh:maxCount  1 ;
@@ -157,7 +157,7 @@ graph <cube-project/ubd/cube-data> {
     sh:nodeKind  sh:Literal ;
     sh:path      <https://environment.ld.admin.ch/foen/ubd/28/unit-id> .
 
-  <https://environment.ld.admin.ch/foen/ubd/28/shape/station>
+  _:station
     sh:in        ( <https://environment.ld.admin.ch/foen/ubd/28/station/blBAS> ) ;
     sh:maxCount  1 ;
     sh:minCount  1 ;

@@ -141,7 +141,7 @@
 
 <#toCubeShape> a :Step;
   code:implementedBy [ a code:EcmaScript;
-  code:link <node:ssz-data/lib/toCubeShape>
+  code:link <file:../lib/toCubeShape>
                      ];
   code:arguments [
                    code:name "excludeValuesOf";
@@ -149,6 +149,9 @@
                                 "http://www.w3.org/2004/02/skos/core#notation"
                                 "https://cube-creator.zazuko.com/vocab#cube"
                               )
+                 ] , [
+                   code:name "cube" ;
+                   code:value [ a code:EcmaScript ; code:link <file:../lib/cube#getCubeId> ]
                  ] .
 
 <#flatten> a :Step;

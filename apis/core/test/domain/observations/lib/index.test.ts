@@ -1,0 +1,206 @@
+import { describe, it, beforeEach, before } from 'mocha'
+import { expect } from 'chai'
+import * as sinon from 'sinon'
+import clownface, { AnyPointer, GraphPointer } from 'clownface'
+import $rdf from 'rdf-ext'
+import { View } from 'rdf-cube-view-query/lib/View'
+import * as ns from '@cube-creator/core/namespace'
+import { hydra, rdf, schema, xsd } from '@tpluscode/rdf-ns-builders'
+import { IriTemplate } from '@rdfine/hydra'
+import { IriTemplateBundle } from '@rdfine/hydra/bundles'
+import RdfResource from '@tpluscode/rdfine/RdfResource'
+import { populateFilters, createHydraCollection } from '../../../../lib/domain/observations/lib'
+import { Term } from 'rdf-js'
+import { cc } from '@cube-creator/core/namespace'
+
+RdfResource.factory.addMixin(...IriTemplateBundle)
+
+describe('lib/domain/observations/lib', () => {
+  describe('populateFilters', () => {
+    let filter: AnyPointer
+    let view: View
+    let dimension: sinon.SinonStub
+
+    beforeEach(() => {
+      filter = clownface({ dataset: $rdf.dataset() })
+      dimension = sinon.stub()
+      view = {
+        ptr: clownface({ dataset: $rdf.dataset() }).blankNode(),
+        dimension,
+      } as any as View
+    })
+
+    it('skip filter without dimension', () => {
+      // given
+      filter.blankNode()
+        .addOut(ns.view.operation, ns.view.Gte)
+        .addOut(ns.view.argument, '18')
+
+      // when
+      populateFilters(view, filter)
+
+      // then
+      expect(view.ptr.dataset).to.have.length(0)
+    })
+
+    it('skip filter without argument', () => {
+      // given
+      filter.blankNode()
+        .addOut(ns.view.dimension, schema.age)
+        .addOut(ns.view.operation, ns.view.Gte)
+
+      // when
+      populateFilters(view, filter)
+
+      // then
+      expect(view.ptr.dataset).to.have.length(0)
+    })
+
+    it('skip filter without operation', () => {
+      // given
+      filter.blankNode()
+        .addOut(ns.view.dimension, schema.age)
+        .addOut(ns.view.argument, '18')
+
+      // when
+      populateFilters(view, filter)
+
+      // then
+      expect(view.ptr.dataset).to.have.length(0)
+    })
+
+    it('adds all filters, swapping dimension property for view dimension', () => {
+      // given
+      filter
+        .blankNode()
+        .addOut(ns.view.dimension, schema.age)
+        .addOut(ns.view.operation, ns.view.Gte)
+        .addOut(ns.view.argument, '18')
+        .blankNode()
+        .addOut(ns.view.dimension, schema.name)
+        .addOut(ns.view.operation, ns.view.Eq)
+        .addOut(ns.view.argument, 'John')
+      dimension.callsFake(({ cubeDimension }) => {
+        if (cubeDimension.equals(schema.age)) {
+          return { ptr: $rdf.namedNode('dim/age') }
+        }
+
+        return { ptr: $rdf.namedNode('dim/name') }
+      })
+
+      // when
+      populateFilters(view, filter)
+
+      // then
+      expect(view.ptr).to.matchShape({
+        property: {
+          path: ns.view.filter,
+          minCount: 2,
+          maxCount: 2,
+          xone: [{
+            node: {
+              property: [{
+                path: ns.view.dimension,
+                hasValue: $rdf.namedNode('dim/age'),
+                minCount: 1,
+                maxCount: 1,
+              }, {
+                path: ns.view.operation,
+                hasValue: ns.view.Gte,
+                minCount: 1,
+                maxCount: 1,
+              }, {
+                path: ns.view.argument,
+                hasValue: $rdf.literal('18'),
+                minCount: 1,
+                maxCount: 1,
+              }],
+            },
+          }, {
+            node: {
+              property: [{
+                path: ns.view.dimension,
+                hasValue: $rdf.namedNode('dim/name'),
+                minCount: 1,
+                maxCount: 1,
+              }, {
+                path: ns.view.operation,
+                hasValue: ns.view.Eq,
+                minCount: 1,
+                maxCount: 1,
+              }, {
+                path: ns.view.argument,
+                hasValue: $rdf.literal('John'),
+                minCount: 1,
+                maxCount: 1,
+              }],
+            },
+          }],
+        },
+      })
+    })
+  })
+
+  describe('createHydraCollection', () => {
+    let templateParams: GraphPointer
+    let template: IriTemplate
+    let observations: Record<string, Term>[]
+
+    before(() => {
+      templateParams = clownface({ dataset: $rdf.dataset() })
+        .blankNode()
+        .addOut(cc.cube, 'CUBE')
+        .addOut(cc.cubeGraph, 'GRAPH')
+        .addOut(ns.view.view, 'FILTERS')
+        .addOut(hydra.limit, $rdf.literal('20', xsd.integer))
+      const templatePointer = clownface({ dataset: $rdf.dataset() })
+        .blankNode()
+        .addOut(rdf.type, hydra.IriTemplate)
+      template = RdfResource.factory.createEntity(templatePointer, [], {
+        initializer: {
+          template: '/observations?cube={cube}&graph={graph}{&view,pageSize}',
+          mapping: [{
+            property: cc.cube,
+            variable: 'cube',
+          }, {
+            property: cc.cubeGraph,
+            variable: 'graph',
+          }, {
+            property: ns.view.view,
+            variable: 'view',
+          }, {
+            property: hydra.limit,
+            variable: 'pageSize',
+          }],
+        },
+      })
+      observations = []
+    })
+
+    it('creates collection with id template filled with cube and graph', () => {
+      // when
+      const collection = createHydraCollection({
+        templateParams,
+        template,
+        observations,
+        totalItems: 10,
+      })
+
+      // then
+      expect(collection.id.value).to.match(/\/observations\?cube=CUBE&graph=GRAPH$/)
+    })
+
+    it('creates collection view with id constructed with all template params', () => {
+      // when
+      const collection = createHydraCollection({
+        templateParams,
+        template,
+        observations,
+        totalItems: 10,
+      })
+
+      // then
+      expect(collection.view[0].id.value).to.match(/\/observations\?cube=CUBE&graph=GRAPH&view=FILTERS&pageSize=20$/)
+    })
+  })
+})

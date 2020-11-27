@@ -10,6 +10,7 @@ export function loadCubeShapes(dataset: GraphPointer, client: StreamClient): Pro
   return CONSTRUCT`
     ?s ?p ?o .
     ?cube ${cube.observationConstraint} ?shape .
+    ?project ${cc.cubeGraph} ?cubeData .
   `
     .WHERE`
     GRAPH ?project {

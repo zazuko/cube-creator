@@ -35,8 +35,6 @@ Hydra.resources.factory.addMixin(...ShapeBundle)
 Hydra.defaultHeaders = () => {
   const headers = new Headers()
 
-  headers.set('Content-Type', 'application/ld+json')
-
   const token = store.state.auth.access_token
   if (token) {
     headers.set('Authorization', `Bearer ${token}`)
@@ -92,7 +90,10 @@ export const api = {
     if (!operation) throw new Error('Operation does not exist')
 
     const serializedData = data instanceof File ? data : JSON.stringify(data.toJSON())
-    const response = await operation.invoke(serializedData, headers)
+    const response = await operation.invoke(serializedData, {
+      'content-type': 'application/ld+json',
+      ...headers,
+    })
 
     if (!response.response?.xhr.ok) {
       throw await APIError.fromResponse(response)
