@@ -11,6 +11,12 @@ import {
   Dataset,
   DimensionMetadataCollection,
 } from '@cube-creator/model'
+import {
+  serializeDimensionMetadataCollection,
+  serializeJobCollection,
+  serializeSourcesCollection,
+  serializeTableCollection,
+} from '../serializers'
 
 export interface ProjectState {
   project: null | Project,
@@ -223,11 +229,11 @@ const mutations: MutationTree<ProjectState> = {
   },
 
   storeSourcesCollection (state, collection) {
-    state.sourcesCollection = Object.freeze(collection)
+    state.sourcesCollection = collection ? serializeSourcesCollection(collection) : null
   },
 
   storeTableCollection (state, collection) {
-    state.tableCollection = Object.freeze(collection)
+    state.tableCollection = collection ? serializeTableCollection(collection) : null
   },
 
   storeCubeMetadata (state, cubeMetadata) {
@@ -235,11 +241,11 @@ const mutations: MutationTree<ProjectState> = {
   },
 
   storeDimensionMetadataCollection (state, collection) {
-    state.dimensionMetadataCollection = Object.freeze(collection)
+    state.dimensionMetadataCollection = collection ? serializeDimensionMetadataCollection(collection) : null
   },
 
   storeJobCollection (state, collection) {
-    state.jobCollection = Object.freeze(collection)
+    state.jobCollection = collection ? serializeJobCollection(collection) : null
   },
 }
 

@@ -10,7 +10,6 @@ import { Link } from './lib/Link'
 import { initializer } from './lib/initializer'
 import { CsvMapping } from './CsvMapping'
 import { childResource } from './lib/resourceIdentifiers'
-import { ColumnMapping } from './ColumnMapping'
 
 export interface Table extends RdfResource {
   csvw: Link<Csvw.Table>
@@ -19,7 +18,6 @@ export interface Table extends RdfResource {
   csvMapping: Link<CsvMapping>
   identifierTemplate: string
   color: string
-  columnMappings: Array<Link<ColumnMapping>>
   isObservationTable: boolean
 }
 
@@ -48,9 +46,6 @@ export function TableMixin<Base extends Constructor>(base: Base): Mixin {
 
     @property.literal({ path: schema.color })
     color!: string
-
-    @property.resource({ values: 'array', path: cc.columnMapping })
-    columnMappings!: Array<Link<ColumnMapping>>
 
     get isObservationTable(): boolean {
       return this.types.has(cc.ObservationTable)
