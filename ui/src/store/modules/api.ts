@@ -56,7 +56,7 @@ const actions: ActionTree<APIState, RootState> = {
 
 const mutations: MutationTree<APIState> = {
   storeEntrypoint (state, entrypoint) {
-    state.entrypoint = entrypoint
+    state.entrypoint = Object.freeze(entrypoint)
   }
 }
 

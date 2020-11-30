@@ -56,7 +56,7 @@
           :key="column.id.value"
           class="source-column panel-block"
         >
-          <b-checkbox v-model="selectedColumns" :native-value="column">
+          <b-checkbox :value="selectedColumnsMap[column.clientPath]" @input="selectedColumnsMap[column.clientPath] = $event">
             {{ column.name }}
             <span class="has-text-grey" v-if="column.samples.length > 0">
               &nbsp;({{ column.samples.slice(0, 3).join(", ") }})
@@ -109,7 +109,14 @@ export default class CsvSourceMapping extends Vue {
   @Prop() readonly tables!: Table[];
   @Prop() readonly tableCollection!: TableCollection;
 
-  selectedColumns: CsvColumn[] = []
+  selectedColumnsMap: Record<string, boolean> = this.source.columns
+    .reduce((acc, { clientPath }) => ({ ...acc, [clientPath]: false }), {})
+
+  get selectedColumns (): string[] {
+    return Object.entries(this.selectedColumnsMap)
+      .filter(([, isSelected]) => isSelected)
+      .map(([columnId]) => columnId)
+  }
 
   get sourceTables (): Table[] {
     return this.tables
@@ -120,7 +127,7 @@ export default class CsvSourceMapping extends Vue {
   get createTableQueryParams (): Record<string, string | string[]> {
     return {
       source: this.source.clientPath,
-      columns: this.selectedColumns.map(({ clientPath }) => clientPath),
+      columns: this.selectedColumns,
     }
   }
 

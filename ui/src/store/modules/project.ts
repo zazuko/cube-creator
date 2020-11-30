@@ -215,31 +215,31 @@ const actions: ActionTree<ProjectState, RootState> = {
 
 const mutations: MutationTree<ProjectState> = {
   storeProject (state, project) {
-    state.project = project
+    state.project = Object.freeze(project)
   },
 
   storeCSVMapping (state, mapping) {
-    state.csvMapping = mapping
+    state.csvMapping = Object.freeze(mapping)
   },
 
   storeSourcesCollection (state, collection) {
-    state.sourcesCollection = collection
+    state.sourcesCollection = Object.freeze(collection)
   },
 
   storeTableCollection (state, collection) {
-    state.tableCollection = collection
+    state.tableCollection = Object.freeze(collection)
   },
 
   storeCubeMetadata (state, cubeMetadata) {
-    state.cubeMetadata = cubeMetadata
+    state.cubeMetadata = Object.freeze(cubeMetadata)
   },
 
   storeDimensionMetadataCollection (state, collection) {
-    state.dimensionMetadataCollection = collection
+    state.dimensionMetadataCollection = Object.freeze(collection)
   },
 
   storeJobCollection (state, collection) {
-    state.jobCollection = collection
+    state.jobCollection = Object.freeze(collection)
   },
 }
 
