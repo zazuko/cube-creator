@@ -48,13 +48,9 @@ export default function Mixin<Base extends Constructor<Omit<DimensionMetadataCol
     }
 
     deleteDimension(dimension: DimensionMetadata.DimensionMetadata): void {
-      const found = this.find(dimension.pointer.out(schema.about).term!)
-      if (!found) {
-        throw new Error('Dimension not found')
-      }
-      found.pointer.deleteOut()
+      dimension.pointer.deleteOut()
 
-      this.hasPart = this.hasPart.filter(part => !found.id.equals(part.id))
+      this.hasPart = this.hasPart.filter(part => !dimension.id.equals(part.id))
     }
 
     addDimensionMetadata(params: CreateColumnMetadata): DimensionMetadata.DimensionMetadata {
