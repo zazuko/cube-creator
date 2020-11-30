@@ -29,7 +29,7 @@ const actions: ActionTree<ProjectsState, RootState> = {
 
 const mutations: MutationTree<ProjectsState> = {
   storeCollection (state, collection) {
-    state.collection = collection
+    state.collection = Object.freeze(collection)
   },
 }
 
