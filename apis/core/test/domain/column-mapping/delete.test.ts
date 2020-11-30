@@ -84,6 +84,7 @@ describe('domain/column-mapping/delete', () => {
       .addOut(cc.csvMapping, csvMapping)
       .addOut(cc.csvSource, csvSource)
       .addOut(cc.columnMapping, columnMappingObservation)
+      .addOut(cc.columnMapping, columnMapping)
 
     dimensionMetadataCollection = clownface({ dataset: $rdf.dataset() })
       .namedNode('dimensionMetadataCollection')
@@ -108,7 +109,7 @@ describe('domain/column-mapping/delete', () => {
 
     getDimensionMetaDataCollection = sinon.stub().resolves(dimensionMetadataCollection.term.value)
     dimensionMetadataQueries = { getDimensionMetaDataCollection }
-    getTableForColumnMapping = sinon.stub().resolves(table.term.value)
+    getTableForColumnMapping = sinon.stub().resolves(observationTable.term.value)
     tableQueries = {
       getLinkedTablesForSource,
       getTablesForMapping,
@@ -120,16 +121,17 @@ describe('domain/column-mapping/delete', () => {
     const resourceId = $rdf.namedNode('columnMappingObservation')
 
     const dimensionsCount = dimensionMetadataCollection.out(schema.hasPart).terms.length
+    const columnMappingsCount = observationTable.out(cc.columnMapping).terms.length
+    const dimensionMetadataCount = dimensionMetadataCollection.node($rdf.namedNode('myDimension')).out().values.length
 
-    expect(dimensionMetadataCollection.node($rdf.namedNode('myDimension')).out().values).to.have.length(1)
     await deleteColumnMapping({ resource: resourceId, store, dimensionMetadataQueries, tableQueries })
 
     const columnMapping = await store.getResource<ColumnMapping>(resourceId)
     expect(columnMapping).to.eq(undefined)
 
     expect(dimensionMetadataCollection.out(schema.hasPart).terms).to.have.length(dimensionsCount - 1)
-
-    expect(dimensionMetadataCollection.node($rdf.namedNode('myDimension')).out().values).to.have.length(0)
+    expect(observationTable.out(cc.columnMapping).terms).to.have.length(columnMappingsCount - 1)
+    expect(dimensionMetadataCollection.node($rdf.namedNode('myDimension')).out().values).to.have.length(dimensionMetadataCount - 1)
   })
 
   it('throw if column mapping does not exist', async () => {

@@ -1,7 +1,9 @@
+import { NamedNode } from 'rdf-js'
+import $rdf from 'rdf-ext'
+import { cc } from '@cube-creator/core/namespace'
+import { ColumnMapping, CsvMapping, DimensionMetadataCollection, Table } from '@cube-creator/model'
 import { ResourceStore } from '../../ResourceStore'
 import { resourceStore } from '../resources'
-import { NamedNode } from 'rdf-js'
-import { ColumnMapping, CsvMapping, DimensionMetadataCollection, Table } from '@cube-creator/model'
 import * as DimensionMetadataQueries from '../queries/dimension-metadata'
 import * as TableQueries from '../queries/table'
 import { NotFoundError } from '../../errors'
@@ -31,6 +33,8 @@ export async function deleteColumnMapping({
   if (!table) {
     throw new NotFoundError(tableId)
   }
+
+  table.pointer.dataset.delete($rdf.quad(table.pointer.term, cc.columnMapping, columnMapping.id))
 
   if (table.isObservationTable) {
     const csvMapping = await store.getResource<CsvMapping>(table.csvMapping.id)
