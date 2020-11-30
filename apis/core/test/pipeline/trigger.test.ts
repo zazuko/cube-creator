@@ -32,4 +32,33 @@ describe('pipeline/trigger', () => {
       )
     })
   })
+
+  describe('gitlab', () => {
+    it('sends authenticated POST to gitlab', () => {
+      // given
+      const job = $rdf.namedNode('job')
+      const params = clownface({ dataset: $rdf.dataset() }).blankNode()
+      const fetch: any = sinon.spy()
+      env.PIPELINE_TOKEN = 'token'
+      env.PIPELINE_BRANCH = 'master'
+      env.PIPELINE_ENV = 'UNITTEST'
+
+      // when
+      trigger.gitlab(job, params, fetch)
+
+      // then
+      expect(fetch).to.have.been.calledOnceWithExactly(
+        env.PIPELINE_URI,
+        sinon.match({
+          body: new URLSearchParams({
+            token: 'token',
+            ref: 'master',
+            'variables[JOB]': 'job',
+            'variables[ENV]': 'UNITTEST',
+          }),
+          method: 'POST',
+        }),
+      )
+    })
+  })
 })

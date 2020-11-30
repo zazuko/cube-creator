@@ -33,9 +33,19 @@ export const local = trigger(job => {
   }
 })
 
-export async function gitlab(job: NamedNode): Promise<void> {
-  throw new Error('Not implemented')
-}
+export const gitlab = trigger(job => {
+  const form = new URLSearchParams({
+    token: env.PIPELINE_TOKEN,
+    ref: env.maybe.PIPELINE_BRANCH || 'master',
+    'variables[JOB]': job.value,
+    'variables[ENV]': env.PIPELINE_ENV,
+  })
+
+  return {
+    method: 'POST',
+    body: form,
+  }
+})
 
 export const github = trigger((job, params) => {
   const body = {

@@ -40,6 +40,9 @@ type ENV_VARS =
   | 'AWS_SECRET_ACCESS_KEY'
   | 'PIPELINE_TYPE'
   | 'PIPELINE_URI'
+  | 'PIPELINE_TOKEN'
+  | 'PIPELINE_BRANCH'
+  | 'PIPELINE_ENV'
 
 type KnownVariables = {
   [P in ENV_VARS]: string
