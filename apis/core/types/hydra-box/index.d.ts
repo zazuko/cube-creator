@@ -5,19 +5,19 @@ declare module 'hydra-box' {
   import type { GraphPointer } from 'clownface'
 
   namespace hydraBox {
-    interface Resource {
+    interface ObjectResource {
       term: Term
       dataset: DatasetCore
       types: Set<Term>
     }
 
-    interface PropertyResource extends Resource {
+    interface PropertyResource extends ObjectResource {
       property: Term
       object: Term
     }
 
     interface ResourceLoader {
-      forClassOperation (term: Term, req: Request): Promise<Array<Resource>>
+      forClassOperation (term: Term, req: Request): Promise<Array<ObjectResource>>
       forPropertyOperation (term: Term, req: Request): Promise<Array<PropertyResource>>
     }
 
@@ -30,19 +30,21 @@ declare module 'hydra-box' {
         types: Set<NamedNode>
       }
       operation: GraphPointer
+      operations: { resource: ObjectResource; operation: GraphPointer }[]
+    }
+
+    interface Options {
+      baseIriFromRequest?: boolean
+      loader?: hydraBox.ResourceLoader
+      store?: any
+      middleware?: {
+        resource?: RequestHandler | RequestHandler[]
+        operations?: RequestHandler | RequestHandler[]
+      }
     }
   }
 
-  interface Options {
-    baseIriFromRequest?: boolean
-    loader?: hydraBox.ResourceLoader
-    store?: any
-    middleware?: {
-      resource: RequestHandler | RequestHandler[]
-    }
-  }
-
-  function middleware(api: Api, options: Options): Router
+  function middleware(api: Api, options: hydraBox.Options): Router
 
   const hydraBox: {
     Api: Api
