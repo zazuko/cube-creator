@@ -78,12 +78,21 @@ const getToken = async function (config: AuthConfig, log: Debugger) {
   }
 }
 
-function defaultAuthConfig(): AuthConfig {
-  return {
-    clientId: process.env.AUTH_RUNNER_CLIENT_ID!,
-    clientSecret: process.env.AUTH_RUNNER_CLIENT_SECRET!,
-    issuer: process.env.AUTH_RUNNER_ISSUER!,
+function defaultAuthConfig(log: Debugger): AuthConfig {
+  const clientId = process.env.AUTH_RUNNER_CLIENT_ID
+  const clientSecret = process.env.AUTH_RUNNER_CLIENT_SECRET
+  const issuer = process.env.AUTH_RUNNER_ISSUER
+
+  if (clientId && clientSecret && issuer) {
+    return {
+      clientId,
+      clientSecret,
+      issuer,
+    }
   }
+
+  log('OIDC config %O', { clientId, clientSecret, issuer })
+  throw new Error('Incomplete OIDC config')
 }
 
 export function setupAuthentication(config: Partial<AuthConfig>, log: Debugger) {
@@ -91,7 +100,7 @@ export function setupAuthentication(config: Partial<AuthConfig>, log: Debugger) 
 
   Hydra.defaultHeaders = async () => {
     if (!token || !isValid(token)) {
-      token = await getToken({ ...defaultAuthConfig(), ...config }, log)
+      token = await getToken({ ...defaultAuthConfig(log), ...config }, log)
     }
 
     return {
