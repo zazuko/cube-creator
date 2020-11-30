@@ -68,10 +68,8 @@ export async function updateTable({
       } else {
         const dimensionMetadata = dimensionMetaDataCollection.find({ csvMapping, targetProperty: columnMapping.targetProperty })
 
-        // TODO Use function on dimensionMetaDataCollection
         if (dimensionMetadata) {
-          dimensionMetadata.pointer.deleteOut()
-          dimensionMetaDataCollection.hasPart = dimensionMetaDataCollection.hasPart.filter(part => !dimensionMetadata.id.equals(part.id))
+          dimensionMetaDataCollection.deleteDimension(dimensionMetadata)
         }
       }
     }
