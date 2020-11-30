@@ -7,7 +7,7 @@ elif [[ $GITHUB_REF == refs/heads/* ]]; then
     VERSION=edge
   fi
 elif [[ $GITHUB_REF == refs/pull/* ]]; then
-  VERSION=pr-$GITHUB_EVENT_NAME
+  VERSION=pr-$GITHUB_EVENT_NUMBER
 fi
 TAGS="${DOCKER_IMAGE}:${VERSION}"
 if [[ $VERSION =~ ^v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then

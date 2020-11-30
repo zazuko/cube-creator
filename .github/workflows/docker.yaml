@@ -9,7 +9,8 @@ on:
   pull_request:
 
 env:
-  GITHUB_EVENT_NAME: ${{ github.event.number }}
+  GITHUB_EVENT_NAME: ${{ github.event_name }}
+  GITHUB_EVENT_NUMBER: ${{ github.event.number }}
   DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
 
 jobs:
