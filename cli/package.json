@@ -4,7 +4,7 @@
   "description": "Runs a pipeline to create an RDF data cube",
   "main": "index.js",
   "scripts": {
-    "postinstall": "mkdir -p output",
+    "postinstall": "mkdir -p output; touch .env",
     "transform": "dotenv -e ./.env -e ./.test.env -- yarn start",
     "start": "ts-node index.ts transform --job \"$TRANSFORM_JOB\" --to filesystem --debug",
     "build": "tsc"
