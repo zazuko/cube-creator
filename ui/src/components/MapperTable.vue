@@ -100,7 +100,7 @@ export default class MapperTable extends Vue {
         this.$store.dispatch('api/invokeDeleteOperation', {
           operation: columnMapping.actions.delete,
           successMessage: 'Column mapping deleted successfully',
-          callbackAction: 'project/refreshTablesCollection',
+          callbackAction: 'project/refreshTableCollection',
         })
       },
     })
