@@ -6,7 +6,7 @@
       class="box container-narrow"
     />
 
-    <div class="jobs content" v-if="jobs.length > 0">
+    <div class="jobs content" v-show="jobs.length > 0">
       <h3 class="title is-5">
         Previous jobs
       </h3>
