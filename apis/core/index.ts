@@ -10,6 +10,7 @@ import authentication from './lib/auth'
 import env from '@cube-creator/core/env'
 import { bootstrap } from './bootstrap'
 import { resource } from './lib/middleware/resource'
+import { expectsDisambiguate } from './lib/middleware/operations'
 import { errorMappers } from './lib/errors'
 import './lib/domain'
 
@@ -50,6 +51,11 @@ async function main() {
       password: env.maybe.STORE_ENDPOINTS_PASSWORD,
     },
     errorMappers,
+    middleware: {
+      operations: [
+        expectsDisambiguate,
+      ],
+    },
   })
 
   await bootstrap(env.STORE_GRAPH_ENDPOINT, baseUri)

@@ -1078,19 +1078,19 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
-"@hydrofoil/labyrinth@^0.1.12":
-  version "0.1.12"
-  resolved "https://registry.yarnpkg.com/@hydrofoil/labyrinth/-/labyrinth-0.1.12.tgz#c612c3f6c79e75d50856a8fc5804226bc428bdd1"
-  integrity sha512-PHULQx7UD5DYu8wRtHs52E5d9WXuoQKAwR28Y2lJuIE62hdzfOlVtcPS4lH9jTENjSACAmY/FQKNmmJQBtyaYQ==
+"@hydrofoil/labyrinth@^0.1.13":
+  version "0.1.13"
+  resolved "https://registry.yarnpkg.com/@hydrofoil/labyrinth/-/labyrinth-0.1.13.tgz#db37c92c1a236f85f8082a36f80cd1fa96565fb4"
+  integrity sha512-SL2rimWc5nXcAJMCkiylgH//t2pMVf93aO2Bvvu5poW6B/M1DwQyzGO5M/kmKgC6UL8jHyu/Lza9b4fjQp9qOA==
   dependencies:
     "@fcostarodrigo/walk" "^5.0.0"
-    "@rdfine/hydra" "^0.5.1"
+    "@rdfine/hydra" "^0.5.5"
     "@rdfjs/data-model" "^1.2"
     "@rdfjs/namespace" "^1.1.0"
     "@rdfjs/term-set" "^1.0.1"
     "@tpluscode/rdf-ns-builders" "^0.4.0"
     "@tpluscode/rdf-string" "^0.2.18"
-    "@tpluscode/rdfine" "^0.5.9"
+    "@tpluscode/rdfine" "^0.5.15"
     "@tpluscode/sparql-builder" "^0.3.9"
     clownface "^1.1.0"
     cors "^2.8.5"
@@ -1565,7 +1565,7 @@
     "@tpluscode/rdf-ns-builders" "^0.4"
     "@zazuko/rdf-vocabularies" "^2020.11.2"
 
-"@tpluscode/rdfine@^0.5.10", "@tpluscode/rdfine@^0.5.12", "@tpluscode/rdfine@^0.5.14", "@tpluscode/rdfine@^0.5.15", "@tpluscode/rdfine@^0.5.7", "@tpluscode/rdfine@^0.5.9":
+"@tpluscode/rdfine@^0.5.10", "@tpluscode/rdfine@^0.5.12", "@tpluscode/rdfine@^0.5.14", "@tpluscode/rdfine@^0.5.15", "@tpluscode/rdfine@^0.5.7":
   version "0.5.15"
   resolved "https://registry.yarnpkg.com/@tpluscode/rdfine/-/rdfine-0.5.15.tgz#f7a89931c2ee8429b999a6d0a46c83473fe51545"
   integrity sha512-QzMRdZZcHHjnKDa0GWC/E1DQ+Z2wugNJF3PVpf5XA2P3oCd15/reBUUMj9YcutXzU48x+Jhu2A4xZyIQkYZiXQ==
@@ -6511,7 +6511,7 @@ glob-to-regexp@^0.3.0:
   resolved "https://registry.yarnpkg.com/glob-to-regexp/-/glob-to-regexp-0.3.0.tgz#8c5a1494d2066c570cc3bfe4496175acc4d502ab"
   integrity sha1-jFoUlNIGbFcMw7/kSWF1rMTVAqs=
 
-glob@7.1.6, glob@^7.0.3, glob@^7.0.5, glob@^7.1.1, glob@^7.1.2, glob@^7.1.3, glob@^7.1.4:
+glob@7.1.6, glob@^7.0.3, glob@^7.0.5, glob@^7.1.1, glob@^7.1.2, glob@^7.1.3, glob@^7.1.4, glob@^7.1.6:
   version "7.1.6"
   resolved "https://registry.yarnpkg.com/glob/-/glob-7.1.6.tgz#141f33b81a7c2492e125594307480c46679278a6"
   integrity sha512-LwaxwyZ72Lk7vZINtNNrywX0ZuLyStrdDtabefZKAY5ZGJhVtgdznluResxNmPitE0SAO+O26sWTHeKSI2wMBA==
@@ -6942,9 +6942,9 @@ human-signals@^1.1.1:
   resolved "https://registry.yarnpkg.com/human-signals/-/human-signals-1.1.1.tgz#c5b1cd14f50aeae09ab6c59fe63ba3395fe4dfa3"
   integrity sha512-SEQu7vl8KjNL2eoGBLF3+wAjpsNfA9XMlXAYj/3EdaNfAlxKthD1xjEQfGOUhllCGGJVNY34bRr6lPINhNjyZw==
 
-hydra-box@zazuko/hydra-box#api-handler-errors:
+hydra-box@zazuko/hydra-box#property-operations-responses:
   version "0.5.1"
-  resolved "https://codeload.github.com/zazuko/hydra-box/tar.gz/abb2bd9724df6816f28bb8ce5852ef16b3de0d35"
+  resolved "https://codeload.github.com/zazuko/hydra-box/tar.gz/ff22a4450f1cda25f7352e769a2b67369e07eb93"
   dependencies:
     "@rdfjs/data-model" "^1.1.2"
     "@rdfjs/dataset" "^1.0.1"

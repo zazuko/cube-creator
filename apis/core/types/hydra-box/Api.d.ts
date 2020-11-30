@@ -1,5 +1,5 @@
 declare module 'hydra-box/Api' {
-  import { DatasetCore, NamedNode, Term } from 'rdf-js'
+  import { DatasetCore, DefaultGraph, NamedNode, Term } from 'rdf-js'
 
   namespace Api {
     interface Options {
@@ -15,7 +15,7 @@ declare module 'hydra-box/Api' {
     initialized: boolean
     path: string
     codePath: string
-    graph: NamedNode
+    graph: NamedNode | DefaultGraph
     dataset: DatasetCore
     term: Term
     init(): void
