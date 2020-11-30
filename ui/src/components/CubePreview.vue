@@ -42,7 +42,7 @@
         </th>
       </tr>
     </thead>
-    <tbody>
+    <tbody class="is-family-monospace">
       <tr v-if="observations.isLoading">
         <td :colspan="tableWidth">
           <loading-block />
@@ -66,7 +66,7 @@
         </td>
       </tr>
       <tr v-else v-for="observation in observations.data" :key="observation.id.value">
-        <td v-for="dimension in dimensions" :key="dimension.clientPath">
+        <td v-for="dimension in dimensions" :key="dimension.clientPath" :class="dimensionClasses(dimension)">
           <term-display :term="observation[dimension.about.value]" />
         </td>
       </tr>
@@ -92,6 +92,7 @@ import { Collection } from 'alcaeus'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 import * as $rdf from '@rdf-esm/dataset'
 import type { Cube, Dataset, DimensionMetadata } from '@cube-creator/model'
+import { scale } from '@cube-creator/core/namespace'
 import { api } from '@/api'
 import Remote, { RemoteData } from '@/remote'
 import HydraOperationButton from './HydraOperationButton.vue'
@@ -124,6 +125,21 @@ export default class extends Vue {
 
   mounted (): void {
     this.fetchCubeData()
+  }
+
+  dimensionClasses (dimension: DimensionMetadata): string {
+    const scaleOfMeasure = dimension.scaleOfMeasure
+
+    if (
+      scale.Numerical.equals(scaleOfMeasure) ||
+      scale.Continuous.equals(scaleOfMeasure) ||
+      scale.Discrete.equals(scaleOfMeasure) ||
+      scale.Temporal.equals(scaleOfMeasure)
+    ) {
+      return 'has-text-right'
+    }
+
+    return ''
   }
 
   @Watch('pageSize')
