@@ -40,7 +40,6 @@ describe('pipeline/trigger', () => {
       const params = clownface({ dataset: $rdf.dataset() }).blankNode()
       const fetch: any = sinon.spy()
       env.PIPELINE_TOKEN = 'token'
-      env.PIPELINE_BRANCH = 'master'
       env.PIPELINE_ENV = 'UNITTEST'
 
       // when

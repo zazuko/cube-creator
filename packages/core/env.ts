@@ -41,7 +41,6 @@ type ENV_VARS =
   | 'PIPELINE_TYPE'
   | 'PIPELINE_URI'
   | 'PIPELINE_TOKEN'
-  | 'PIPELINE_BRANCH'
   | 'PIPELINE_ENV'
 
 type KnownVariables = {
