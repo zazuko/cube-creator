@@ -75,7 +75,6 @@ ${shape('dataset/edit-metadata')} {
       ${sh.path} ${dcterms.accrualPeriodicity} ;
       ${sh.minCount} 0 ;
       ${sh.minLength} 1 ;
-      ${sh.datatype} ${dcterms.PeriodOfTime} ;
       ${sh.nodeKind} ${sh.IRI} ;
       ${sh.in} 
         ( ${freq.triennial} 
