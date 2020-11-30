@@ -4,6 +4,7 @@ import { protectedResource } from '@hydrofoil/labyrinth/resource'
 import { shaclValidate } from '../middleware/shacl'
 import { createColumnMapping } from '../domain/column-mapping/create'
 import { updateColumnMapping } from '../domain/column-mapping/update'
+import { deleteColumnMapping } from '../domain/column-mapping/delete'
 
 export const post = protectedResource(shaclValidate, asyncMiddleware(async (req, res) => {
   const columnMapping = await createColumnMapping({
@@ -26,14 +27,8 @@ export const put = protectedResource(shaclValidate, asyncMiddleware(async (req, 
 
 export const remove = labyrinth.protectedResource(
   asyncMiddleware(async (req, res) => {
-    /* TODO
-    const columnMapping = req.hydra.resource.term
-
-    await deleteColumnMapping({
-      resource: columnMapping,
-    })
-
-    res.sendStatus(204) */
-    res.sendStatus(500)
+    const columnMapping = req.hydra.resource
+    await deleteColumnMapping({ resource: columnMapping.term })
+    res.sendStatus(204)
   }),
 )
