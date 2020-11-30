@@ -1,10 +1,33 @@
 <template>
   <div>
-    <b-field v-if="project.actions.delete">
-      <b-button icon-left="trash" type="is-danger" @click="deleteProject">
-        {{ project.actions.delete.title }}
-      </b-button>
-    </b-field>
+    <div class="box container-narrow" v-if="project.actions.edit">
+      <h3 class="title is-5">
+        {{ project.actions.edit.title }}
+      </h3>
+      <hydra-operation-form
+        :operation="project.actions.edit"
+        :resource="resource"
+        :shape="shape"
+        :error="error"
+        :is-submitting="isSubmitting"
+        @submit="updateProject"
+        :show-cancel="false"
+        submit-label="Save project settings"
+      />
+    </div>
+    <div class="box container-narrow" v-if="project.actions.delete">
+      <h3 class="title is-5">
+        Delete project
+      </h3>
+      <p class="block">
+        Delete all data related to this project. This operation is not revertible!
+      </p>
+      <b-field v-if="project.actions.delete">
+        <b-button icon-left="trash" type="is-danger" @click="deleteProject">
+          {{ project.actions.delete.title }}
+        </b-button>
+      </b-field>
+    </div>
   </div>
 </template>
 
@@ -12,19 +35,68 @@
 import { Vue, Component } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
 import { Project } from '@cube-creator/model'
+import HydraOperationForm from '@/components/HydraOperationForm.vue'
+import { GraphPointer } from 'clownface'
+import { Shape } from '@rdfine/shacl'
+import { api } from '@/api'
+import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 
 const projectNS = namespace('project')
 
 @Component({
-  components: {},
+  components: { HydraOperationForm },
 })
 export default class CubeProjectEditView extends Vue {
   @projectNS.State('project') project!: Project
 
+  resource: GraphPointer | null = null
+  shape: Shape | null = null
+  isSubmitting = false;
+  error: ErrorDetails | null = null
+
+  async mounted (): Promise<void> {
+    const operation = this.project.actions.edit
+
+    if (operation) {
+      this.shape = await api.fetchOperationShape(operation)
+    }
+
+    this.resource = Object.freeze(this.project?.pointer) ?? null
+  }
+
+  async updateProject (): Promise<void> {
+    const operation = this.project.actions.edit
+
+    this.error = null
+    this.isSubmitting = true
+
+    try {
+      const project = await this.$store.dispatch('api/invokeSaveOperation', {
+        operation: operation,
+        resource: this.resource,
+      })
+
+      this.$store.commit('project/storeProject', project)
+
+      this.$store.dispatch('app/showMessage', {
+        message: 'Project settings were saved',
+        type: 'is-success',
+      })
+    } catch (e) {
+      this.error = e.details ?? { detail: e.toString() }
+
+      if (!(e instanceof APIErrorValidation)) {
+        console.error(e)
+      }
+    } finally {
+      this.isSubmitting = false
+    }
+  }
+
   async deleteProject (): Promise<void> {
     this.$buefy.dialog.confirm({
       title: this.project.actions.delete?.title,
-      message: 'Are you sure you want to delete this project? This action is not reversible.',
+      message: 'Are you sure you want to delete this project? This action is not revertible.',
       confirmText: 'Delete',
       type: 'is-danger',
       hasIcon: true,

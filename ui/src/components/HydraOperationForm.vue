@@ -19,7 +19,7 @@
     <cc-form :resource.prop="resource" :shapes.prop="shapePointer" no-editor-switches />
 
     <form-submit-cancel
-      :submit-label="operation.title"
+      :submit-label="_submitLabel"
       :is-submitting="isSubmitting"
       :show-cancel="showCancel"
       @cancel="$emit('cancel')"
@@ -45,9 +45,14 @@ export default class HydraOperationButton extends Vue {
   @Prop({ default: null }) error!: ErrorDetails | null
   @Prop({ default: false }) isSubmitting!: boolean
   @Prop() showCancel?: boolean
+  @Prop() submitLabel?: string
 
   get shapePointer (): GraphPointer | null {
     return this.shape?.pointer ?? null
+  }
+
+  get _submitLabel (): string {
+    return this.submitLabel ?? this.operation.title ?? 'Save'
   }
 
   shrink (uri: string): string {
