@@ -5,7 +5,7 @@ import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 import TermSet from '@rdfjs/term-set'
 
 export const expectsDisambiguate: RequestHandler = asyncMiddleware(async (req, res, next) => {
-  if (req.hydra.operations.length <= 1) {
+  if (req.hydra.operations.length < 2) {
     return next()
   }
 
