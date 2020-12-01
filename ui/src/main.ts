@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import './styles/app.scss'
 import store from './store'
 
-import './forms'
+import('./forms')
 
 iconsLibrary.add(fas)
 Vue.component('FontAwesomeIcon', FontAwesomeIcon)
