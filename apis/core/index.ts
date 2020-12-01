@@ -10,7 +10,7 @@ import authentication from './lib/auth'
 import env from '@cube-creator/core/env'
 import { bootstrap } from './bootstrap'
 import { resource } from './lib/middleware/resource'
-import { expectsDisambiguate } from './lib/middleware/operations'
+import { expectsDisambiguate, preferHydraCollection } from './lib/middleware/operations'
 import { errorMappers } from './lib/errors'
 import './lib/domain'
 
@@ -53,6 +53,7 @@ async function main() {
     errorMappers,
     middleware: {
       operations: [
+        preferHydraCollection,
         expectsDisambiguate,
       ],
     },

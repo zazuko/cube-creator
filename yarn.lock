@@ -1078,15 +1078,16 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
-"@hydrofoil/labyrinth@^0.1.13":
-  version "0.1.13"
-  resolved "https://registry.yarnpkg.com/@hydrofoil/labyrinth/-/labyrinth-0.1.13.tgz#db37c92c1a236f85f8082a36f80cd1fa96565fb4"
-  integrity sha512-SL2rimWc5nXcAJMCkiylgH//t2pMVf93aO2Bvvu5poW6B/M1DwQyzGO5M/kmKgC6UL8jHyu/Lza9b4fjQp9qOA==
+"@hydrofoil/labyrinth@^0.1.14":
+  version "0.1.14"
+  resolved "https://registry.yarnpkg.com/@hydrofoil/labyrinth/-/labyrinth-0.1.14.tgz#3255e037898ea5ffa3a0add6788bac7e64b185b3"
+  integrity sha512-YbHkmF363Jjjedp5FtDb94a/2/tgX+IIpYRWHD25dGAP9mzBiwke7BKIUxhyANRKi96d6xeEe3I+7L7KNe6HQg==
   dependencies:
     "@fcostarodrigo/walk" "^5.0.0"
     "@rdfine/hydra" "^0.5.5"
     "@rdfjs/data-model" "^1.2"
     "@rdfjs/namespace" "^1.1.0"
+    "@rdfjs/term-map" "^1.0.0"
     "@rdfjs/term-set" "^1.0.1"
     "@tpluscode/rdf-ns-builders" "^0.4.0"
     "@tpluscode/rdf-string" "^0.2.18"
@@ -1359,9 +1360,10 @@
   dependencies:
     "@rdfjs/data-model" "^1.1.1"
 
-"@rdfjs/express-handler@^1.2.0", "@rdfjs/express-handler@tpluscode/express-handler#dataset-multiple-times":
-  version "1.2.0"
-  resolved "https://codeload.github.com/tpluscode/express-handler/tar.gz/e3960e68a13d648de1afd8d7853371868de68bc4"
+"@rdfjs/express-handler@^1.2.0", "@rdfjs/express-handler@^1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@rdfjs/express-handler/-/express-handler-1.2.1.tgz#e0182697d87cf211fc75d10534c4c3812296d266"
+  integrity sha512-prJN6H7l7qjVa5j4iBBD1M54yfykvO1DEwXcNSuiuUfJHkDBWlTEyPkx7HUKv6jB53JA/Lfa89fcDqTgI2K1Ng==
   dependencies:
     "@rdfjs/dataset" "^1.0.1"
     "@rdfjs/formats-common" "^2.0.0"
@@ -6942,9 +6944,9 @@ human-signals@^1.1.1:
   resolved "https://registry.yarnpkg.com/human-signals/-/human-signals-1.1.1.tgz#c5b1cd14f50aeae09ab6c59fe63ba3395fe4dfa3"
   integrity sha512-SEQu7vl8KjNL2eoGBLF3+wAjpsNfA9XMlXAYj/3EdaNfAlxKthD1xjEQfGOUhllCGGJVNY34bRr6lPINhNjyZw==
 
-hydra-box@zazuko/hydra-box#property-operations-responses:
+hydra-box@zazuko/hydra-box:
   version "0.5.1"
-  resolved "https://codeload.github.com/zazuko/hydra-box/tar.gz/ff22a4450f1cda25f7352e769a2b67369e07eb93"
+  resolved "https://codeload.github.com/zazuko/hydra-box/tar.gz/14cdcee86662c0c59eea1ab0f0bddaffca7e264b"
   dependencies:
     "@rdfjs/data-model" "^1.1.2"
     "@rdfjs/dataset" "^1.0.1"
