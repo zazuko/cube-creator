@@ -60,8 +60,20 @@ graph <cube-project/ubd/dimensions-metadata> {
     scale:scaleOfMeasure scale:Temporal ;
   .
 
+  <cube-project/ubd/dimensions-metadata/station>
+    schema:about <https://environment.ld.admin.ch/foen/ubd/28/station> ;
+  .
+
   <cube-project/ubd/dimensions-metadata/aggregation>
     schema:about <https://environment.ld.admin.ch/foen/ubd/28/aggregation> ;
+  .
+
+  <cube-project/ubd/dimensions-metadata/pollutant>
+    schema:about <https://environment.ld.admin.ch/foen/ubd/28/pollutant> ;
+  .
+
+  <cube-project/ubd/dimensions-metadata/unit-id>
+    schema:about <https://environment.ld.admin.ch/foen/ubd/28/unit-id> ;
   .
 }
 
