@@ -1,3 +1,5 @@
+set -x
+
 VERSION=noop
 if [[ $GITHUB_REF == refs/tags/* ]]; then
   VERSION=${GITHUB_REF#refs/tags/}
