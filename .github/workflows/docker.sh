@@ -1,9 +1,11 @@
+set -x
+
 VERSION=noop
 if [[ $GITHUB_REF == refs/tags/* ]]; then
   VERSION=${GITHUB_REF#refs/tags/}
 elif [[ $GITHUB_REF == refs/heads/* ]]; then
   VERSION=$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
-  if [ "$DEFUALT_BRANCH" = "$VERSION" ]; then
+  if [ "$DEFAULT_BRANCH" = "$VERSION" ]; then
     VERSION=edge
   fi
 elif [[ $GITHUB_REF == refs/pull/* ]]; then
