@@ -6,7 +6,7 @@ import $rdf from 'rdf-ext'
 import TermSet from '@rdfjs/term-set'
 import { ObjectResource } from 'hydra-box'
 import { turtle } from '@tpluscode/rdf-string'
-import { expectsDisambiguate } from '../../lib/middleware/operations'
+import { expectsDisambiguate, preferHydraCollection } from '../../lib/middleware/operations'
 import { appMock, mockResourceMiddleware } from '../support/middleware'
 import { ex } from '../support/namespace'
 import { hydra, rdf, sh } from '@tpluscode/rdf-ns-builders'
@@ -85,6 +85,36 @@ describe('lib/middleware/operations', () => {
       // then
       await response.expect([
         ex.Operation2.value,
+      ])
+    })
+  })
+
+  describe('preferHydraCollection', () => {
+    it('remove hydra:Resource operation if there is also one for hydra:Collection', async () => {
+      const app = express()
+      app.use(appMock(hydraBox => {
+        hydraBox.operations = [{
+          resource,
+          operation: clownface(hydraBox.api)
+            .node(ex.ResourceOperation)
+            .addIn(hydra.supportedOperation, hydra.Resource),
+        }, {
+          resource,
+          operation: clownface(hydraBox.api)
+            .node(ex.CollectionOperation)
+            .addIn(hydra.supportedOperation, hydra.Collection),
+        }]
+      }))
+      app.use(mockResourceMiddleware())
+      app.use(preferHydraCollection)
+      app.use(returnOperations)
+
+      // when
+      const response = request(app).get('/')
+
+      // then
+      await response.expect([
+        ex.CollectionOperation.value,
       ])
     })
   })

@@ -22,3 +22,20 @@ export const expectsDisambiguate: RequestHandler = asyncMiddleware(async (req, r
   })
   next()
 })
+
+export const preferHydraCollection: RequestHandler = (req, res, next) => {
+  if (req.hydra.operations.length < 2) {
+    return next()
+  }
+
+  const collectionOperations = req.hydra.operations
+    .filter(({ operation }) => new TermSet(operation.in(hydra.supportedOperation).terms).has(hydra.Collection))
+  const resourceOperations = req.hydra.operations
+    .filter(({ operation }) => new TermSet(operation.in(hydra.supportedOperation).terms).has(hydra.Resource))
+
+  if (collectionOperations) {
+    req.hydra.operations = req.hydra.operations.filter(value => !resourceOperations.includes(value))
+  }
+
+  next()
+}
