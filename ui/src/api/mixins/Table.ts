@@ -1,17 +1,28 @@
-import { Constructor } from '@tpluscode/rdfine'
+import { Constructor, property } from '@tpluscode/rdfine'
 import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
-import * as ns from '@cube-creator/core/namespace'
-import { Table } from '@cube-creator/model'
+import { cc } from '@cube-creator/core/namespace'
+import { ColumnMapping, Table } from '@cube-creator/model'
 import { AdditionalActions } from '@/api/mixins/ApiResource'
 
-export default function mixin<Base extends Constructor> (base: Base): Mixin {
-  return class extends base implements Partial<Table>, AdditionalActions {
-    get _additionalActions () {
-      return {
-        createColumnMapping: ns.cc.CreateColumnMappingAction,
-      }
-    }
+declare module '@cube-creator/model' {
+  export interface Table {
+    columnMappings: ColumnMapping[]
   }
 }
 
-mixin.appliesTo = ns.cc.Table
+export default function mixin<Base extends Constructor> (base: Base): Mixin {
+  class Impl extends base implements Partial<Table>, AdditionalActions {
+    get _additionalActions () {
+      return {
+        createColumnMapping: cc.CreateColumnMappingAction,
+      }
+    }
+
+    @property.resource({ values: 'array', path: cc.columnMapping })
+    columnMappings!: Array<ColumnMapping>
+  }
+
+  return Impl
+}
+
+mixin.appliesTo = cc.Table

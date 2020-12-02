@@ -1,4 +1,5 @@
-import { Constructor } from '@tpluscode/rdfine'
+import { Constructor, property } from '@tpluscode/rdfine'
+import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import { CsvColumn, Table } from '@cube-creator/model'
 import { cc } from '@cube-creator/core/namespace'
 import * as ColumnMapping from '@cube-creator/model/ColumnMapping'
@@ -7,6 +8,7 @@ import slug from 'slug'
 import { NamedNode, Term } from 'rdf-js'
 import { ResourceStore } from '../../ResourceStore'
 import * as id from '../identifiers'
+import { Link } from '@cube-creator/model/lib/Link'
 
 interface CreateColumnMapping {
   store: ResourceStore
@@ -25,6 +27,7 @@ interface CreateColumnMappingFromColumn {
 interface ApiTable {
   addColumnMapping(params: CreateColumnMapping): ColumnMapping.ColumnMapping
   addColumnMappingFromColumn(params: CreateColumnMappingFromColumn): ColumnMapping.ColumnMapping
+  columnMappings: Array<Link<ColumnMapping.ColumnMapping>>
 }
 
 declare module '@cube-creator/model' {
@@ -33,8 +36,11 @@ declare module '@cube-creator/model' {
   }
 }
 
-export default function Mixin<Base extends Constructor<Table>>(Resource: Base) {
-  return class Impl extends Resource implements ApiTable {
+export default function mixin<Base extends Constructor<Table>>(Resource: Base): Mixin {
+  class Impl extends Resource implements ApiTable {
+    @property.resource({ values: 'array', path: cc.columnMapping })
+    columnMappings!: Array<Link<ColumnMapping.ColumnMapping>>
+
     addColumnMapping({ store, sourceColumn, targetProperty, datatype, language, defaultValue }: CreateColumnMapping): ColumnMapping.ColumnMapping {
       const columnMapping = ColumnMapping.create(store.create(id.columnMapping(this, sourceColumn.name)), {
         sourceColumn,
@@ -57,6 +63,8 @@ export default function Mixin<Base extends Constructor<Table>>(Resource: Base) {
       })
     }
   }
+
+  return Impl
 }
 
-Mixin.appliesTo = cc.Table
+mixin.appliesTo = cc.Table
