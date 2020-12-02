@@ -8,7 +8,7 @@ import { cc } from '@cube-creator/core/namespace'
 import { TableCollection } from './Table'
 import { Link } from './lib/Link'
 import { NamedNode } from 'rdf-js'
-import { schema, dcterms } from '@tpluscode/rdf-ns-builders'
+import { schema, dcterms, rdfs } from '@tpluscode/rdf-ns-builders'
 import { initializer } from './lib/initializer'
 
 export interface Job extends Action, Rdfs.Resource, RdfResource {
@@ -16,6 +16,7 @@ export interface Job extends Action, Rdfs.Resource, RdfResource {
   cubeGraph: NamedNode
   label: string
   created: Date
+  link?: string
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -33,6 +34,9 @@ export function JobMixin<Base extends Constructor<RdfResource>>(base: Base): Mix
 
     @property.literal({ path: schema.name })
     label!: string
+
+    @property.literal({ path: rdfs.seeAlso })
+    link?: string
 
     @property.literal({ path: dcterms.created, type: Date, initial: () => new Date() })
     created!: Date

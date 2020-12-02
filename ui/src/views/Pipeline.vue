@@ -11,8 +11,13 @@
         Previous jobs
       </h3>
       <ul>
-        <li v-for="job in jobs" :key="job.id.value">
-          {{ job.created | format-date }} ({{ job.name }})
+        <li v-for="job in jobs" :key="job.clientPath">
+          <a v-if="job.link" :href="job.link" target="_blank">
+            {{ job.created | format-date }} ({{ job.name }})
+          </a>
+          <span v-else>
+            {{ job.created | format-date }} ({{ job.name }})
+          </span>
         </li>
       </ul>
     </div>
