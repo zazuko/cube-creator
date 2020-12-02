@@ -15,11 +15,12 @@ export function openFromCsvw(csvw: Csvw.Table) {
       accept: 'text/csv',
     })
 
-    if (response && response.xhr.body) {
-      (response.xhr.body as any).pipe(csvStream)
-    } else {
-      csvStream.end()
+    if (!response?.xhr.ok || !response.xhr.body) {
+      csvStream.emit('error', new Error('Failed to load CSV. Response was: ' + response?.xhr.statusText))
+      return
     }
+
+    (response.xhr.body as any).pipe(csvStream)
   })
 
   return readable(csvStream)
