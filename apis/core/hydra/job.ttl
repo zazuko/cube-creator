@@ -46,6 +46,7 @@ cc:JobCollection
       hydra:method
         "POST" ;
       hydra:expects
+        #cc:TransformJob, 
         <shape/job/trigger> ;
       code:implementedBy
         [

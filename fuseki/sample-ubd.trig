@@ -450,7 +450,7 @@ graph <cube-project/ubd/jobs> {
 <cube-project/ubd/csv-mapping/jobs/test-job> void:inDataset <ubd-example> .
 graph <cube-project/ubd/csv-mapping/jobs/test-job> {
   <cube-project/ubd/csv-mapping/jobs/test-job>
-    a hydra:Resource, cc:Job ;
+    a hydra:Resource, cc:Job, cc:TransformJob ;
     cc:tables <cube-project/ubd/csv-mapping/tables> ;
     schema:name "cli-test" ;
     cc:cubeGraph <cube-project/ubd/cube-data> ;
@@ -463,7 +463,7 @@ graph <cube-project/ubd/csv-mapping/jobs/test-job> {
 <cube-project/ubd/csv-mapping/jobs/broken-job> void:inDataset <ubd-example> .
 graph <cube-project/ubd/csv-mapping/jobs/broken-job> {
   <cube-project/ubd/csv-mapping/jobs/broken-job>
-    a hydra:Resource, cc:Job ;
+    a hydra:Resource, cc:Job, cc:TransformJob ;
     cc:tables <cube-project/ubd/csv-mapping/no-tables> ;
     schema:name "cli-test" ;
   .

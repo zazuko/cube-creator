@@ -6,7 +6,7 @@ import { dcterms, rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import '../../../lib/domain'
 import { TestResourceStore } from '../../support/TestResourceStore'
-import { createJob } from '../../../lib/domain/job/create'
+import { createTransformJob } from '../../../lib/domain/job/create'
 
 describe('domain/job/create', () => {
   let store: TestResourceStore
@@ -31,11 +31,11 @@ describe('domain/job/create', () => {
     ])
   })
 
-  it('creates a job', async () => {
+  it('creates a transformation job', async () => {
     // given
 
     // when
-    const job = await createJob({ resource: jobCollection.term, store })
+    const job = await createTransformJob({ resource: jobCollection.term, store })
 
     // then
     expect(job.out(cc.cubeGraph).value).to.eq('myCubeGraph')

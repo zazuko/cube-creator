@@ -1,6 +1,6 @@
 import stream from 'readable-stream'
 import { Hydra } from 'alcaeus/node'
-import { Job, Table } from '@cube-creator/model'
+import { Job, Table, TransformJob } from '@cube-creator/model'
 import * as Csvw from '@rdfine/csvw'
 import type * as Schema from '@rdfine/schema'
 import * as Models from '@cube-creator/model'
@@ -21,9 +21,9 @@ interface Params {
   variables: Map<string, any>
 }
 
-async function loadJob(jobUri: string, log: Logger, variables: Params['variables']): Promise<Job> {
+async function loadTransformJob(jobUri: string, log: Logger, variables: Params['variables']): Promise<TransformJob> {
   log.debug(`Loading job ${jobUri}`)
-  const { representation, response } = await Hydra.loadResource<Job>(jobUri)
+  const { representation, response } = await Hydra.loadResource<TransformJob>(jobUri)
   if (!representation || !representation.root) {
     throw new Error(`Did not find representation of job ${jobUri}. Server responded ${response?.xhr.status}`)
   }
@@ -85,7 +85,7 @@ export async function updateJobStatus({ jobUri, executionUrl, log, status, error
   }
 }
 
-async function loadTables(job: Job, log: Logger): Promise<Table[]> {
+async function loadTables(job: TransformJob, log: Logger): Promise<Table[]> {
   if (job.tableCollection.load) {
     log.info(`Will transform project ${job.label}`)
     const { representation } = await job.tableCollection.load()
@@ -109,7 +109,7 @@ export class JobIterator extends stream.Readable {
 
     Promise.resolve()
       .then(async () => {
-        const job = await loadJob(jobUri, log, variables)
+        const job = await loadTransformJob(jobUri, log, variables)
         await updateJobStatus({
           jobUri,
           executionUrl: variables.get(names.executionUrl),

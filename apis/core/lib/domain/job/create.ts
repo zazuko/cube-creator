@@ -12,7 +12,7 @@ interface StartTransformationCommand {
   store?: ResourceStore
 }
 
-export async function createJob({
+export async function createTransformJob({
   resource,
   store = resourceStore(),
 }: StartTransformationCommand): Promise<GraphPointer<NamedNode>> {
@@ -29,7 +29,7 @@ export async function createJob({
   }
 
   const jobPointer = await store.createMember(jobCollection.term, id.job(jobCollection))
-  Job.create(jobPointer, {
+  Job.createTransform(jobPointer, {
     cubeGraph: project.cubeGraph,
     label: 'Transformation job',
     tableCollection: csvMapping.tableCollection,
