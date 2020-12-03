@@ -38,4 +38,5 @@ ${shape('job/update')} {
       ${schema.CompletedActionStatus}
     )
   ] ;
+  .
 }`
