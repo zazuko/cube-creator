@@ -5,7 +5,6 @@ import { resourceStore } from '../resources'
 import { NamedNode } from 'rdf-js'
 import {
   ColumnMapping,
-  CsvColumn,
   CsvMapping,
   CsvSource,
   DimensionMetadataCollection,
@@ -153,15 +152,4 @@ async function updateColumnMapping<T extends ColumnMapping>({
   }
 
   return { columnMapping, table }
-}
-
-async function getColumn (table: Table, columnId: NamedNode, store: ResourceStore): Promise<CsvColumn> {
-  const source = await store.getResource<CsvSource>(table.csvSource?.id)
-  const column = source?.columns.find(({ id }) => id.equals(columnId))
-
-  if (!column) {
-    throw new NotFoundError(columnId)
-  }
-
-  return column
 }

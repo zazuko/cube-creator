@@ -2,33 +2,33 @@ import * as Template from 'uri-template'
 import isUri from 'is-uri'
 
 export interface ParsedTemplate {
-  prefix: string;
-  columnNames: string[];
-  toString(): string;
-  renameColumnVariable(from: string, to: string): boolean;
-  toAbsoluteUrl (baseUri: string): string;
+  prefix: string
+  columnNames: string[]
+  toString(): string
+  renameColumnVariable(from: string, to: string): boolean
+  toAbsoluteUrl (baseUri: string): string
 }
 
 class ParsedTemplateWrapper implements ParsedTemplate {
   private __template: any
 
-  constructor (template: any) {
+  constructor(template: any) {
     this.__template = template
   }
 
-  get prefix () {
+  get prefix() {
     return this.__template.prefix
   }
 
-  get columnNames () {
+  get columnNames() {
     return this.__template.expressions.map(expr => expr.params[0].name)
   }
 
-  toString () {
+  toString() {
     return this.__template.toString()
   }
 
-  renameColumnVariable (from: string, to: string) {
+  renameColumnVariable(from: string, to: string) {
     const expression = this.__template.expressions.find(expr => expr.params[0].name === from)
     if (!expression) {
       return false
@@ -38,7 +38,7 @@ class ParsedTemplateWrapper implements ParsedTemplate {
     return true
   }
 
-  toAbsoluteUrl (baseUri: string) {
+  toAbsoluteUrl(baseUri: string) {
     if (isUri(this.prefix)) {
       return this.toString()
     }
@@ -47,7 +47,7 @@ class ParsedTemplateWrapper implements ParsedTemplate {
   }
 }
 
-export function parse (template: string): ParsedTemplate {
+export function parse(template: string): ParsedTemplate {
   const escaped = template.replace(/{([\w ]+)}/g, (_, name) => `{${encodeURIComponent(name)}}`)
 
   const parsed = Template.parse(escaped)

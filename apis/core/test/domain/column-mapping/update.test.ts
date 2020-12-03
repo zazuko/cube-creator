@@ -12,7 +12,7 @@ import '../../../lib/domain'
 import { DomainError, NotFoundError } from '../../../lib/errors'
 import { NamedNode } from 'rdf-js'
 import DatasetExt from 'rdf-ext/lib/Dataset'
-import { updateLiteralColumnMapping, updateReferenceColumnMapping } from '../../../lib/domain/column-mapping/update'
+import { updateLiteralColumnMapping } from '../../../lib/domain/column-mapping/update'
 
 describe('domain/column-mapping/update', () => {
   let store: TestResourceStore

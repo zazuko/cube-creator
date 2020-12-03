@@ -55,7 +55,7 @@ async function mappedReferenceColumn({ csvMapping, columnMapping, resources }: C
 
   const identifierMappings = columnMapping.identifierMapping
   const columnNameMap: Map<string, string> = await identifierMappings
-    .reduce(async (map, mapping)  => {
+    .reduce(async (map, mapping) => {
       const sourceColumn = await resources.getResource<CsvColumn>(mapping.sourceColumn.id)
       const referencedColumn = await resources.getResource<CsvColumn>(mapping.referencedColumn.id)
 

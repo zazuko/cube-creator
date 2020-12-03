@@ -14,7 +14,7 @@ describe('uriTemplateParser', () => {
       // then
       expect(parsed.toString()).toEqual('/{column1}/{column2}')
       expect(parsed.columnNames).toEqual(
-        expect.arrayContaining(['column1', 'column2'])
+        expect.arrayContaining(['column1', 'column2']),
       )
     })
 
@@ -28,7 +28,7 @@ describe('uriTemplateParser', () => {
       // then
       expect(parsed.toString()).toEqual('/{column one}/{column two}')
       expect(parsed.columnNames).toEqual(
-        expect.arrayContaining(['column one', 'column two'])
+        expect.arrayContaining(['column one', 'column two']),
       )
     })
   })
@@ -46,7 +46,7 @@ describe('uriTemplateParser', () => {
       expect(success).toBe(true)
       expect(parsed.toString()).toEqual('/{with spaces}')
       expect(parsed.columnNames).toEqual(
-        expect.arrayContaining(['with spaces'])
+        expect.arrayContaining(['with spaces']),
       )
     })
   })
