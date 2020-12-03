@@ -48,34 +48,34 @@ function mappedLiteralColumn({ csvMapping, columnMapping, column }: CsvwBuilding
   return csvwColumn
 }
 
-async function mappedReferenceColumn({ csvMapping, columnMapping, resources }: CsvwBuildingContext & { columnMapping: ReferenceColumnMapping }): Initializer<Csvw.Column> {
+async function mappedReferenceColumn({ csvMapping, columnMapping, resources }: CsvwBuildingContext & { columnMapping: ReferenceColumnMapping }): Promise<Initializer<Csvw.Column>> {
   const csvwColumn: Initializer<Csvw.Column> = {
     propertyUrl: csvMapping.createIdentifier(columnMapping.targetProperty).value,
   }
 
   const identifierMappings = columnMapping.identifierMapping
-  const columnNameMap: Map<string, string> = await identifierMappings
-    .reduce(async (map, mapping) => {
-      const sourceColumn = await resources.getResource<CsvColumn>(mapping.sourceColumn.id)
-      const referencedColumn = await resources.getResource<CsvColumn>(mapping.referencedColumn.id)
+  const columnNameMap = await identifierMappings.reduce<Promise<Map<string, string>>>(async (mapP, mapping) => {
+    const map = await mapP
+    const sourceColumn = await resources.getResource<CsvColumn>(mapping.sourceColumn.id)
+    const referencedColumn = await resources.getResource<CsvColumn>(mapping.referencedColumn.id)
 
-      if (!sourceColumn) {
-        warning(`Column ${mapping.sourceColumn.id} not found`)
-        return map
-      }
-
-      if (!referencedColumn) {
-        warning(`Column ${mapping.referencedColumn.id} not found`)
-        return map
-      }
-
-      const from = sourceColumn.name
-      const to = referencedColumn.name
-
-      map.set(to, from)
-
+    if (!sourceColumn) {
+      warning(`Column ${mapping.sourceColumn.id} not found`)
       return map
-    }, new Map<string, string>())
+    }
+
+    if (!referencedColumn) {
+      warning(`Column ${mapping.referencedColumn.id} not found`)
+      return map
+    }
+
+    const from = sourceColumn.name
+    const to = referencedColumn.name
+
+    map.set(to, from)
+
+    return Promise.resolve(map)
+  }, Promise.resolve(new Map<string, string>()))
 
   const referencedTable = await resources.getResource<Table>(columnMapping.referencedTable.id)
   if (!referencedTable) {

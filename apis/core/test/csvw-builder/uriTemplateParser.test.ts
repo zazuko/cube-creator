@@ -12,10 +12,8 @@ describe('uriTemplateParser', () => {
       const parsed = parse(template)
 
       // then
-      expect(parsed.toString()).toEqual('/{column1}/{column2}')
-      expect(parsed.columnNames).toEqual(
-        expect.arrayContaining(['column1', 'column2']),
-      )
+      expect(parsed.toString()).to.equal('/{column1}/{column2}')
+      expect(parsed.columnNames).to.have.members(['column1', 'column2'])
     })
 
     it('accepts spaces in column names', () => {
@@ -26,10 +24,8 @@ describe('uriTemplateParser', () => {
       const parsed = parse(template)
 
       // then
-      expect(parsed.toString()).toEqual('/{column one}/{column two}')
-      expect(parsed.columnNames).toEqual(
-        expect.arrayContaining(['column one', 'column two']),
-      )
+      expect(parsed.toString()).to.equal('/{column one}/{column two}')
+      expect(parsed.columnNames).to.have.members(['column one', 'column two'])
     })
   })
 
@@ -43,11 +39,9 @@ describe('uriTemplateParser', () => {
       const success = parsed.renameColumnVariable('from', 'with spaces')
 
       // then
-      expect(success).toBe(true)
-      expect(parsed.toString()).toEqual('/{with spaces}')
-      expect(parsed.columnNames).toEqual(
-        expect.arrayContaining(['with spaces']),
-      )
+      expect(success).to.equal(true)
+      expect(parsed.toString()).to.equal('/{with spaces}')
+      expect(parsed.columnNames).to.have.members(['with spaces'])
     })
   })
 })

@@ -241,7 +241,7 @@ describe('domain/column-mapping/update', () => {
       .addOut(cc.sourceColumn, $rdf.namedNode('my-column'))
       .addOut(cc.targetProperty, $rdf.namedNode('other'))
 
-    const columnMapping = await updateColumnMapping({ resource, store, dimensionMetadataQueries, tableQueries })
+    const columnMapping = await updateLiteralColumnMapping({ resource, store, dimensionMetadataQueries, tableQueries })
 
     expect(columnMapping.out(cc.targetProperty).value).to.eq('other')
   })

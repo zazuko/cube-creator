@@ -1,4 +1,4 @@
-import * as Template from 'uri-template'
+import { parse as _parse, Template } from 'uri-template'
 import isUri from 'is-uri'
 
 export interface ParsedTemplate {
@@ -10,9 +10,9 @@ export interface ParsedTemplate {
 }
 
 class ParsedTemplateWrapper implements ParsedTemplate {
-  private __template: any
+  private __template: Template
 
-  constructor(template: any) {
+  constructor(template: Template) {
     this.__template = template
   }
 
@@ -50,7 +50,7 @@ class ParsedTemplateWrapper implements ParsedTemplate {
 export function parse(template: string): ParsedTemplate {
   const escaped = template.replace(/{([\w ]+)}/g, (_, name) => `{${encodeURIComponent(name)}}`)
 
-  const parsed = Template.parse(escaped)
+  const parsed = _parse(escaped)
   parsed.expressions.forEach(expression => {
     expression.params.forEach(p => {
       // TODO: required until grncdr/uri-template#19 is fixed

@@ -121,7 +121,7 @@ describe('lib/csvw-builder', () => {
       sourceColumn: $rdf.namedNode('jahr-column') as any,
       targetProperty: $rdf.literal('year'),
     })
-    resources.push(columnMapping.pointer)
+    resources.push(columnMapping.pointer as any)
     table.columnMappings = [columnMapping] as any
 
     // when
@@ -141,7 +141,7 @@ describe('lib/csvw-builder', () => {
       sourceColumn: $rdf.namedNode('jahr-column') as any,
       targetProperty: $rdf.literal('year'),
     })
-    resources.push(columnMapping.pointer)
+    resources.push(columnMapping.pointer as any)
     table.columnMappings = [columnMapping] as any
 
     // when
@@ -161,7 +161,7 @@ describe('lib/csvw-builder', () => {
       sourceColumn: $rdf.namedNode('jahr-column') as any,
       targetProperty: schema.yearBuilt,
     })
-    resources.push(columnMapping.pointer)
+    resources.push(columnMapping.pointer as any)
     table.columnMappings = [columnMapping] as any
 
     // when
@@ -182,7 +182,7 @@ describe('lib/csvw-builder', () => {
       targetProperty: schema.yearBuilt,
       datatype: xsd.gYear,
     })
-    resources.push(columnMapping.pointer)
+    resources.push(columnMapping.pointer as any)
     table.columnMappings = [columnMapping] as any
 
     // when
@@ -203,7 +203,7 @@ describe('lib/csvw-builder', () => {
       targetProperty: schema.yearBuilt,
       language: 'de-DE',
     })
-    resources.push(columnMapping.pointer)
+    resources.push(columnMapping.pointer as any)
     table.columnMappings = [columnMapping] as any
 
     // when

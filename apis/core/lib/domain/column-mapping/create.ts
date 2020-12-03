@@ -3,7 +3,7 @@ import { cc } from '@cube-creator/core/namespace'
 import { ResourceStore } from '../../ResourceStore'
 import { resourceStore } from '../resources'
 import { NamedNode, Term } from 'rdf-js'
-import { ColumnMapping, CsvColumn, CsvMapping, CsvSource, DimensionMetadataCollection, Table } from '@cube-creator/model'
+import { CsvColumn, CsvMapping, CsvSource, DimensionMetadataCollection, LiteralColumnMapping, ReferenceColumnMapping, Table } from '@cube-creator/model'
 import * as DimensionMetadataQueries from '../queries/dimension-metadata'
 import { findMapping } from './lib'
 import { NotFoundError, DomainError } from '../../errors'
@@ -33,8 +33,7 @@ export async function createColumnMapping({
   if (table.isObservationTable) {
     const mappingExists = await findMapping(table, targetProperty, store)
     if (mappingExists) {
-      const column = await store.getResource<CsvColumn>(mappingExists.sourceColumn?.id)
-      throw new DomainError(`Target property already mapped from column ${column?.name}`)
+      throw new DomainError('Target property already mapped')
     }
   }
 
@@ -71,7 +70,7 @@ interface CreateLiteralColumnMappingCommand {
   store: ResourceStore
 }
 
-async function createLiteralColumnMapping({ targetProperty, table, resource, store }: CreateLiteralColumnMappingCommand): Promise<ColumnMapping> {
+async function createLiteralColumnMapping({ targetProperty, table, resource, store }: CreateLiteralColumnMappingCommand): Promise<LiteralColumnMapping> {
   const columnId = resource.out(cc.sourceColumn).term as NamedNode
   const source = await store.getResource<CsvSource>(table.csvSource?.id)
   const column = source?.columns.find(({ id }) => id.equals(columnId))
@@ -97,7 +96,7 @@ interface CreateReferenceColumnMappingCommand {
   store: ResourceStore
 }
 
-async function createReferenceColumnMapping({ targetProperty, table, resource, store }: CreateReferenceColumnMappingCommand): Promise<ColumnMapping> {
+async function createReferenceColumnMapping({ targetProperty, table, resource, store }: CreateReferenceColumnMappingCommand): Promise<ReferenceColumnMapping> {
   const referencedTableId = resource.out(cc.referencedTable).term
   const referencedTable = await store.getResource<Table>(referencedTableId)
 

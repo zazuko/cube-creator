@@ -35,9 +35,9 @@ interface CreateColumnMappingFromColumn {
 }
 
 interface ApiTable {
-  addLiteralColumnMapping(params: CreateLiteralColumnMapping): ColumnMapping.ColumnMapping
-  addReferenceColumnMapping(params: CreateReferenceColumnMapping): ColumnMapping.ColumnMapping
-  addColumnMappingFromColumn(params: CreateColumnMappingFromColumn): ColumnMapping.ColumnMapping
+  addLiteralColumnMapping(params: CreateLiteralColumnMapping): ColumnMapping.LiteralColumnMapping
+  addReferenceColumnMapping(params: CreateReferenceColumnMapping): ColumnMapping.ReferenceColumnMapping
+  addColumnMappingFromColumn(params: CreateColumnMappingFromColumn): ColumnMapping.LiteralColumnMapping
   columnMappings: Array<Link<ColumnMapping.ColumnMapping>>
 }
 
@@ -52,7 +52,7 @@ export default function mixin<Base extends Constructor<Table>>(Resource: Base): 
     @property.resource({ values: 'array', path: cc.columnMapping })
     columnMappings!: Array<Link<ColumnMapping.ColumnMapping>>
 
-    addLiteralColumnMapping({ store, sourceColumn, targetProperty, datatype, language, defaultValue }: CreateLiteralColumnMapping): ColumnMapping.ColumnMapping {
+    addLiteralColumnMapping({ store, sourceColumn, targetProperty, datatype, language, defaultValue }: CreateLiteralColumnMapping): ColumnMapping.LiteralColumnMapping {
       const columnMapping = ColumnMapping.createLiteral(store.create(id.columnMapping(this, sourceColumn.name)), {
         sourceColumn,
         targetProperty,
@@ -66,7 +66,7 @@ export default function mixin<Base extends Constructor<Table>>(Resource: Base): 
       return columnMapping
     }
 
-    addReferenceColumnMapping({ store, targetProperty, referencedTable, identifierMappings }: CreateReferenceColumnMapping): ColumnMapping.ColumnMapping {
+    addReferenceColumnMapping({ store, targetProperty, referencedTable, identifierMappings }: CreateReferenceColumnMapping): ColumnMapping.ReferenceColumnMapping {
       const columnMapping = ColumnMapping.createReference(store.create(id.columnMapping(this, targetProperty.value)), {
         targetProperty,
         referencedTable,
@@ -84,7 +84,7 @@ export default function mixin<Base extends Constructor<Table>>(Resource: Base): 
       return columnMapping
     }
 
-    addColumnMappingFromColumn({ store, column }: CreateColumnMappingFromColumn): ColumnMapping.ColumnMapping {
+    addColumnMappingFromColumn({ store, column }: CreateColumnMappingFromColumn): ColumnMapping.LiteralColumnMapping {
       return this.addLiteralColumnMapping({
         store,
         sourceColumn: column,
