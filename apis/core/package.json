@@ -41,6 +41,7 @@
     "http-problem-details-mapper": "^0.1.6",
     "hydra-box": "zazuko/hydra-box",
     "is-stream": "^2",
+    "is-uri": "^1.2.0",
     "jwks-rsa": "^1.9.0",
     "middleware-async": "^1.2.7",
     "nanoid": "^3.1.16",
@@ -52,6 +53,7 @@
     "slug": "^4.0.2",
     "sparql-http-client": "^2.2.2",
     "string-to-stream": "^3.0.1",
+    "uri-template": "^1.0.1",
     "url-slugify": "^1.0.6"
   },
   "devDependencies": {
