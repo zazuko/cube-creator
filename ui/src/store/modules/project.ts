@@ -113,11 +113,11 @@ const actions: ActionTree<ProjectState, RootState> = {
     const mapping = await api.fetchResource<CsvMapping>(mappingId)
     context.commit('storeCSVMapping', mapping)
 
-    const sourcesCollection = await api.fetchResource(mapping.sourcesCollection.id.value)
-    context.commit('storeSourcesCollection', sourcesCollection)
+    api.fetchResource(mapping.sourcesCollection.id.value).then((sourcesCollection) =>
+      context.commit('storeSourcesCollection', sourcesCollection))
 
-    const tableCollection = await api.fetchResource(mapping.tableCollection.id.value)
-    context.commit('storeTableCollection', tableCollection)
+    api.fetchResource(mapping.tableCollection.id.value).then((tableCollection) =>
+      context.commit('storeTableCollection', tableCollection))
 
     return mapping
   },
