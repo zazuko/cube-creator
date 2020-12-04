@@ -1,3 +1,4 @@
+
 {
   "name": "@cube-creator/cli",
   "version": "0.0.4",
@@ -45,6 +46,7 @@
     "rdf-stream-to-dataset-stream": "^1.0.0",
     "readable-stream": "^3.6.0",
     "string-to-stream": "^3.0.1",
+    "through2": "^4.0.2",
     "through2-reduce": "1.1.1"
   },
   "devDependencies": {
@@ -70,6 +72,7 @@
     "@types/rdfjs__sink-map": "^1.0.0",
     "@types/readable-stream": "^2.3.9",
     "@types/sparql-http-client": "^2",
+    "@types/through2": "^2.0.36",
     "chai": "^4.2.0",
     "dotenv": "^8.2.0",
     "dotenv-cli": "^3.1.0",

@@ -9,6 +9,7 @@ import namespace from '@rdfjs/namespace'
 import dotenv from 'dotenv'
 import * as path from 'path'
 import * as transform from './lib/commands/transform'
+import * as publish from './lib/commands/publish'
 
 dotenv.config({
   path: path.resolve(__dirname, '.env'),
@@ -38,7 +39,7 @@ async function main() {
 
   app.get('/', (req, res) => res.status(204).end())
 
-  const tranform = transform.default(pipelines.TransformFiles, log)
+  const doTransform = transform.default(pipelines.TransformFiles, log)
 
   app.post('/', asyncMiddleware(async (req, res) => {
     const job = req.body.JOB_URI
@@ -47,7 +48,21 @@ async function main() {
       return res.send('No job defined')
     }
 
-    tranform({ to: 'graph-store', job, debug: true }).catch((e) => log(e))
+    doTransform({ to: 'graph-store', job, debug: true }).catch((e) => log(e))
+
+    return res.status(202).end()
+  }))
+
+  const doPublish = publish.default(pipelines.TransformFiles, log)
+
+  app.post('/publish', asyncMiddleware(async (req, res) => {
+    const job = req.body.JOB_URI
+    if (!job) {
+      res.status(400)
+      return res.send('No job defined')
+    }
+
+    doPublish({ job, debug: true }).catch((e) => log(e))
 
     return res.status(202).end()
   }))

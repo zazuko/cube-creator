@@ -1,0 +1,69 @@
+@base <urn:pipeline:cube-creator> .
+@prefix : <https://pipeline.described.at/> .
+@prefix code: <https://code.described.at/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+<#Main> a :Pipeline ;
+  :steps [ :stepList ( <#loadGraphStep> <#injectMetadata> <#streamOutputStep> ) ] .
+
+
+
+<#loadGraphStep>
+  a                  :Step ;
+  code:implementedBy [ code:link <file:../lib/pipeline#asStep> ;
+                       a         code:EcmaScript ] ;
+  code:arguments     ( <#loadCube> ) .
+
+<#loadCube>
+  a      :Pipeline, :ReadableObjectMode;
+  :steps [ :stepList (  _:get ) ] ;.
+
+_:get
+  a                  :Step ;
+  code:implementedBy [ a         code:EcmaScript ;
+                       code:link <file:../lib/loadCube#loadCube> ] ;
+
+  code:arguments     [ code:name  "jobUri" ;
+                       code:value "jobUri"^^:VariableName ] ;
+  code:arguments     [ code:name  "endpoint" ;
+                       code:value "graph-store-endpoint"^^:VariableName ] ;
+  code:arguments     [ code:name  "user" ;
+                       code:value "graph-store-user"^^:VariableName ] ;
+  code:arguments     [ code:name  "password" ;
+                       code:value "graph-store-password"^^:VariableName ] .
+
+<#injectMetadata>
+  a                  :Step ;
+  code:implementedBy [ code:link <file:../lib/metadata#injectMetadata> ;
+                       a         code:EcmaScript ] ;
+  code:arguments     ( "jobUri"^^:VariableName ) .
+
+<#StreamOutput>
+  a :Pipeline, :WritableObjectMode .
+
+<#streamOutputStep>
+  a                  :Step ;
+  code:implementedBy [ code:link <file:../lib/pipeline#asStep> ;
+                       a         code:EcmaScript ] ;
+  code:arguments     ( <#StreamOutput> ) .
+
+<#StreamOutput>
+  a      :Pipeline ;
+  :steps [ :stepList ( _:setGraph _:upload ) ] ;.
+
+_:setGraph
+  a                  :Step ;
+  code:implementedBy [ a         code:EcmaScript ;
+                       code:link <node:barnard59-base#setGraph> ] ;
+  code:arguments     ( "target-graph"^^:VariableName ) .
+
+_:upload
+  a                  :Step ;
+  code:implementedBy [ a         code:EcmaScript ;
+                       code:link <node:barnard59-graph-store#put> ] ;
+  code:arguments     [ code:name  "endpoint" ;
+                       code:value "publish-graph-store-endpoint"^^:VariableName ] ;
+  code:arguments     [ code:name  "user" ;
+                       code:value "publish-graph-store-user"^^:VariableName ] ;
+  code:arguments     [ code:name  "password" ;
+                       code:value "publish-graph-store-password"^^:VariableName ] .
