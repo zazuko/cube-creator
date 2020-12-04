@@ -21,6 +21,9 @@ jobs:
       GRAPH_STORE_ENDPOINT: ${{ secrets.GRAPH_STORE_ENDPOINT }}
       GRAPH_STORE_USER: ${{ secrets.GRAPH_STORE_USER }}
       GRAPH_STORE_PASSWORD: ${{ secrets.GRAPH_STORE_PASSWORD }}
+      PUBLISH_GRAPH_STORE_ENDPOINT: ${{ secrets.GRAPH_STORE_ENDPOINT }}
+      PUBLISH_GRAPH_STORE_USER: ${{ secrets.GRAPH_STORE_USER }}
+      PUBLISH_GRAPH_STORE_PASSWORD: ${{ secrets.GRAPH_STORE_PASSWORD }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1.4.4
