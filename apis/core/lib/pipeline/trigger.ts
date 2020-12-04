@@ -1,14 +1,15 @@
 import { URLSearchParams } from 'url'
-import { NamedNode } from 'rdf-js'
 import nodeFetch, { RequestInit } from 'node-fetch'
 import env from '@cube-creator/core/env'
 import { GraphPointer } from 'clownface'
-import { dcterms } from '@tpluscode/rdf-ns-builders'
+import { dcterms, rdf } from '@tpluscode/rdf-ns-builders'
+import { cc } from '@cube-creator/core/namespace'
+import { NamedNode } from 'rdf-js'
 
 const pipelineURI = env.PIPELINE_URI
 
-function trigger(triggerRequestInit: (job: NamedNode, params: GraphPointer) => RequestInit) {
-  return async (job: NamedNode, params: GraphPointer, fetch = nodeFetch) => {
+function trigger(triggerRequestInit: (job: GraphPointer<NamedNode>, params: GraphPointer) => RequestInit) {
+  return async (job: GraphPointer<NamedNode>, params: GraphPointer, fetch = nodeFetch) => {
     if (!job) {
       throw new Error('Job URI missing')
     }
@@ -23,9 +24,14 @@ function trigger(triggerRequestInit: (job: NamedNode, params: GraphPointer) => R
 }
 
 export const local = trigger(job => {
-  const form = new URLSearchParams({
-    JOB_URI: job.value,
-  })
+  const form = new URLSearchParams()
+
+  if (job.has(rdf.type, cc.TransformJob).values.length > 0) {
+    form.append('TRANSFORM_JOB_URI', job.value)
+  }
+  if (job.has(rdf.type, cc.PublishJob).values.length > 0) {
+    form.append('PUBLISH_JOB_URI', job.value)
+  }
 
   return {
     method: 'POST',
@@ -37,9 +43,15 @@ export const gitlab = trigger(job => {
   const form = new URLSearchParams({
     token: env.PIPELINE_TOKEN,
     ref: 'master',
-    'variables[JOB]': job.value,
     'variables[ENV]': env.PIPELINE_ENV,
   })
+
+  if (job.has(rdf.type, cc.TransformJob).values.length > 0) {
+    form.append('variables[TRANSFORM_JOB]', job.value)
+  }
+  if (job.has(rdf.type, cc.PublishJob).values.length > 0) {
+    form.append('variables[PUBLISH_JOB]', job.value)
+  }
 
   return {
     method: 'POST',
@@ -48,13 +60,22 @@ export const gitlab = trigger(job => {
 })
 
 export const github = trigger((job, params) => {
-  const body = {
-    ref: 'master',
-    inputs: {
-      job: job.value,
-    },
+  let body
+  if (job.has(rdf.type, cc.TransformJob).values.length > 0) {
+    body = {
+      ref: 'master',
+      inputs: {
+        transform_job: job.value,
+      },
+    }
+  } else {
+    body = {
+      ref: 'master',
+      inputs: {
+        publish_job: job.value,
+      },
+    }
   }
-
   return {
     method: 'POST',
     body: JSON.stringify(body),

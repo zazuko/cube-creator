@@ -40,30 +40,23 @@ async function main() {
   app.get('/', (req, res) => res.status(204).end())
 
   const doTransform = transform.default(pipelines.TransformFiles, log)
-
-  app.post('/', asyncMiddleware(async (req, res) => {
-    const job = req.body.JOB_URI
-    if (!job) {
-      res.status(400)
-      return res.send('No job defined')
-    }
-
-    doTransform({ to: 'graph-store', job, debug: true }).catch((e) => log(e))
-
-    return res.status(202).end()
-  }))
-
   const doPublish = publish.default(pipelines.TransformFiles, log)
 
-  app.post('/publish', asyncMiddleware(async (req, res) => {
-    const job = req.body.JOB_URI
-    if (!job) {
+  app.post('/', asyncMiddleware(async (req, res) => {
+    const transformJob = req.body.TRANSFORM_JOB_URI
+    const publishJob = req.body.PUBLISH_JOB_URI
+    if (!transformJob && !publishJob) {
       res.status(400)
       return res.send('No job defined')
     }
 
-    doPublish({ job, debug: true }).catch((e) => log(e))
+    if (transformJob) {
+      doTransform({ to: 'graph-store', job: transformJob, debug: true }).catch((e) => log(e))
+    }
 
+    if (publishJob) {
+      doPublish({ job: publishJob, debug: true }).catch((e) => log(e))
+    }
     return res.status(202).end()
   }))
 

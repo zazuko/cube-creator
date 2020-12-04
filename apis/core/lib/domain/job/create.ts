@@ -12,6 +12,11 @@ interface StartTransformationCommand {
   store?: ResourceStore
 }
 
+interface StartPublicationCommand {
+  resource: NamedNode
+  store?: ResourceStore
+}
+
 export async function createTransformJob({
   resource,
   store = resourceStore(),
@@ -31,8 +36,30 @@ export async function createTransformJob({
   const jobPointer = await store.createMember(jobCollection.term, id.job(jobCollection))
   Job.createTransform(jobPointer, {
     cubeGraph: project.cubeGraph,
-    label: 'Transformation job',
+    name: 'Transformation job',
     tableCollection: csvMapping.tableCollection,
+  })
+
+  await store.save()
+
+  return jobPointer
+}
+
+export async function createPublishJob({
+  resource,
+  store = resourceStore(),
+}: StartPublicationCommand): Promise<GraphPointer<NamedNode>> {
+  const jobCollection = (await store.get(resource))!
+  const projectPointer = jobCollection.out(cc.project).term
+
+  if (!projectPointer || projectPointer.termType !== 'NamedNode') {
+    throw new Error('Project not found from jobs collection')
+  }
+
+  const jobPointer = await store.createMember(jobCollection.term, id.job(jobCollection))
+  Job.createPublish(jobPointer, {
+    project: projectPointer,
+    name: 'Publish job',
   })
 
   await store.save()

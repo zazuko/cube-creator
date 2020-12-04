@@ -3,22 +3,51 @@ import { expect } from 'chai'
 import * as sinon from 'sinon'
 import $rdf from 'rdf-ext'
 import clownface from 'clownface'
-import { dcterms } from '@tpluscode/rdf-ns-builders'
+import { dcterms, rdf } from '@tpluscode/rdf-ns-builders'
 import * as trigger from '../../lib/pipeline/trigger'
 import env from '@cube-creator/core/env'
+import { cc } from '@cube-creator/core/namespace'
 
 describe('pipeline/trigger', () => {
+  const transformJob = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('transformjob') })
+    .addOut(rdf.type, cc.TransformJob)
+  const publishJob = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('publishjob') })
+    .addOut(rdf.type, cc.PublishJob)
+
   describe('github', () => {
-    it('sends authenticated POST to github', () => {
+    it('sends authenticated transform POST to github', () => {
       // given
-      const job = $rdf.namedNode('job')
+
       const params = clownface({ dataset: $rdf.dataset() })
         .blankNode()
         .addOut(dcterms.identifier, 'token')
       const fetch: any = sinon.spy()
 
       // when
-      trigger.github(job, params, fetch)
+      trigger.github(transformJob, params, fetch)
+
+      // then
+      expect(fetch).to.have.been.calledOnceWithExactly(
+        env.PIPELINE_URI,
+        sinon.match({
+          method: 'POST',
+          headers: {
+            authorization: 'Bearer token',
+          },
+        }),
+      )
+    })
+
+    it('sends authenticated publish POST to github', () => {
+      // given
+
+      const params = clownface({ dataset: $rdf.dataset() })
+        .blankNode()
+        .addOut(dcterms.identifier, 'token')
+      const fetch: any = sinon.spy()
+
+      // when
+      trigger.github(publishJob, params, fetch)
 
       // then
       expect(fetch).to.have.been.calledOnceWithExactly(
@@ -34,16 +63,15 @@ describe('pipeline/trigger', () => {
   })
 
   describe('gitlab', () => {
-    it('sends authenticated POST to gitlab', () => {
+    it('sends authenticated transform POST to gitlab', () => {
       // given
-      const job = $rdf.namedNode('job')
       const params = clownface({ dataset: $rdf.dataset() }).blankNode()
       const fetch: any = sinon.spy()
       env.PIPELINE_TOKEN = 'token'
       env.PIPELINE_ENV = 'UNITTEST'
 
       // when
-      trigger.gitlab(job, params, fetch)
+      trigger.gitlab(transformJob, params, fetch)
 
       // then
       expect(fetch).to.have.been.calledOnceWithExactly(
@@ -52,8 +80,33 @@ describe('pipeline/trigger', () => {
           body: new URLSearchParams({
             token: 'token',
             ref: 'master',
-            'variables[JOB]': 'job',
             'variables[ENV]': 'UNITTEST',
+            'variables[TRANSFORM_JOB]': 'transformjob',
+          }),
+          method: 'POST',
+        }),
+      )
+    })
+
+    it('sends authenticated publish POST to gitlab', () => {
+      // given
+      const params = clownface({ dataset: $rdf.dataset() }).blankNode()
+      const fetch: any = sinon.spy()
+      env.PIPELINE_TOKEN = 'token'
+      env.PIPELINE_ENV = 'UNITTEST'
+
+      // when
+      trigger.gitlab(publishJob, params, fetch)
+
+      // then
+      expect(fetch).to.have.been.calledOnceWithExactly(
+        env.PIPELINE_URI,
+        sinon.match({
+          body: new URLSearchParams({
+            token: 'token',
+            ref: 'master',
+            'variables[ENV]': 'UNITTEST',
+            'variables[PUBLISH_JOB]': 'publishjob',
           }),
           method: 'POST',
         }),
