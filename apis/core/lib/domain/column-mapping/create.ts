@@ -25,10 +25,6 @@ export async function createColumnMapping({
 }: CreateColumnMappingCommand): Promise<GraphPointer> {
   const table = await store.getResource<Table>(tableId)
 
-  if (!table) {
-    throw new NotFoundError(tableId)
-  }
-
   const targetProperty = resource.out(cc.targetProperty).term!
   if (table.isObservationTable) {
     const mappingExists = await findMapping(table, targetProperty, store)
@@ -38,7 +34,6 @@ export async function createColumnMapping({
   }
 
   const source = await store.getResource<CsvSource>(table.csvSource?.id)
-  if (!source) throw new NotFoundError(table.csvSource?.id)
 
   const resourceTypes = new TermSet(resource.out(rdf.type).terms)
   const columnMapping = resourceTypes.has(cc.ReferenceColumnMapping)
@@ -47,14 +42,8 @@ export async function createColumnMapping({
 
   if (table.types.has(cc.ObservationTable)) {
     const csvMapping = await store.getResource<CsvMapping>(table.csvMapping.id)
-    if (!csvMapping) {
-      throw new NotFoundError(csvMapping)
-    }
     const dimensionMetaDataCollectionPointer = await getDimensionMetaDataCollection(table.csvMapping.id)
     const dimensionMetaDataCollection = await store.getResource<DimensionMetadataCollection>(dimensionMetaDataCollectionPointer)
-    if (!dimensionMetaDataCollection) {
-      throw new NotFoundError(dimensionMetaDataCollectionPointer)
-    }
 
     dimensionMetaDataCollection.addDimensionMetadata({
       store, columnMapping, csvMapping,
@@ -103,10 +92,7 @@ interface CreateReferenceColumnMappingCommand {
 async function createReferenceColumnMapping({ targetProperty, table, source, resource, store }: CreateReferenceColumnMappingCommand): Promise<ReferenceColumnMapping> {
   const referencedTableId = resource.out(cc.referencedTable).term
   const referencedTable = await store.getResource<Table>(referencedTableId)
-  if (!referencedTable) throw new NotFoundError(referencedTableId)
-
   const referencedSource = await store.getResource<CsvSource>(referencedTable.csvSource?.id)
-  if (!referencedSource) throw new NotFoundError(referencedTable.csvSource?.id)
 
   const identifierMappings = await Promise.all(resource.out(cc.identifierMapping).map(async (identifierMapping) => {
     const sourceColumnId = identifierMapping.out(cc.sourceColumn).term!

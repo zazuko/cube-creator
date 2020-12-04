@@ -13,7 +13,7 @@ export async function deleteProject({
   resource,
   store = resourceStore(),
 }: DeleteProjectCommand): Promise<void> {
-  const project = await store.get(resource)
+  const project = await store.get(resource, { allowMissing: true })
   if (!project) return
 
   const csvMapping = project.out(cc.csvMapping).term

@@ -22,17 +22,9 @@ export async function createTransformJob({
   resource,
   store = resourceStore(),
 }: StartTransformationCommand): Promise<GraphPointer<NamedNode>> {
-  const jobCollection = (await store.get(resource))!
+  const jobCollection = await store.get(resource)
   const project = await store.getResource<Project>(jobCollection.out(cc.project).term)
-  const csvMapping = await store?.getResource<CsvMapping>(project?.csvMapping?.id)
-
-  if (!project) {
-    throw new Error('Project not found from jobs collection')
-  }
-
-  if (!csvMapping) {
-    throw new Error('CSV Mapping not found from project')
-  }
+  const csvMapping = await store.getResource<CsvMapping>(project?.csvMapping?.id)
 
   const jobPointer = await store.createMember(jobCollection.term, id.job(jobCollection))
   Job.createTransform(jobPointer, {
@@ -57,7 +49,7 @@ export async function createPublishJob({
     throw new Error('Project not found from jobs collection')
   }
 
-  const project = (await store.getResource<Project>(projectPointer))!
+  const project = await store.getResource<Project>(projectPointer)
 
   if (!project.publishGraph) {
     throw new DomainError('Cannot publish cube. Project does not have publish graph')

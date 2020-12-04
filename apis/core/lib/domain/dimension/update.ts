@@ -3,7 +3,6 @@ import { NamedNode } from 'rdf-js'
 import { DimensionMetadataCollection } from '@cube-creator/model'
 import { ResourceStore } from '../../ResourceStore'
 import { resourceStore } from '../resources'
-import { NotFoundError } from '../../errors'
 
 interface UpdateDimensionCommand {
   metadataCollection: NamedNode
@@ -17,9 +16,6 @@ export async function update({
   dimensionMetadata,
 }: UpdateDimensionCommand): Promise<GraphPointer> {
   const metadata = await store.getResource<DimensionMetadataCollection>(metadataCollection)
-  if (!metadata) {
-    throw new NotFoundError(metadataCollection)
-  }
 
   metadata.updateDimension(dimensionMetadata)
   await store.save()

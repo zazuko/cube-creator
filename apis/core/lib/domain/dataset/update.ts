@@ -2,7 +2,6 @@ import { cc } from '@cube-creator/core/namespace'
 import { dcat, hydra, rdf, schema, _void } from '@tpluscode/rdf-ns-builders'
 import { GraphPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'
-import { NotFoundError } from '../../errors'
 import { ResourceStore } from '../../ResourceStore'
 import { resourceStore } from '../resources'
 
@@ -19,10 +18,6 @@ export async function update({
   store = resourceStore(),
 }: AddMetaDataCommand): Promise<GraphPointer> {
   const datasetResource = await store.get(dataset.term)
-
-  if (!datasetResource) {
-    throw new NotFoundError(dataset)
-  }
 
   const hasPart = datasetResource.out(schema.hasPart)
   const dimensionMetadata = datasetResource.out(cc.dimensionMetadata)

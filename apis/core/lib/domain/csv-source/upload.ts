@@ -13,7 +13,6 @@ import * as CsvSourceQueries from '../queries/csv-source'
 import { Conflict } from 'http-errors'
 import { resourceStore } from '../resources'
 import { sampleValues } from '../csv/sample-values'
-import { NotFoundError } from '../../errors'
 import { CsvMapping } from '@cube-creator/model'
 
 interface UploadCSVCommand {
@@ -34,9 +33,6 @@ export async function uploadFile({
   csvSourceQueries: { sourceWithFilenameExists } = CsvSourceQueries,
 }: UploadCSVCommand): Promise<GraphPointer> {
   const csvMapping = await store.getResource<CsvMapping>(resource)
-  if (!csvMapping) {
-    throw new NotFoundError(resource)
-  }
 
   if (await sourceWithFilenameExists(csvMapping.id, fileName)) {
     throw new Conflict(`A file with ${fileName} has already been added to the project`)

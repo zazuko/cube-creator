@@ -35,13 +35,13 @@ export async function deleteSourceWithoutSave({
 }: DeleteSourceCommand): Promise<void> {
   if (resource.termType !== 'NamedNode') return
 
-  const csvSource = await store.get(resource)
+  const csvSource = await store.get(resource, { allowMissing: true })
   if (!csvSource) return
 
   // Remove links from tables
   const tables = getLinkedTablesForSource(csvSource.term)
   for await (const tableId of tables) {
-    const table = await store.getResource<Table>(tableId)
+    const table = await store.getResource<Table>(tableId, { allowMissing: true })
     if (table) {
       table.csvSource = undefined
     }
@@ -57,7 +57,7 @@ export async function deleteSourceWithoutSave({
   // Delete links from in csv-mapping
   const csvMapping = csvSource.out(cc.csvMapping).term
   if (csvMapping) {
-    const csvMappingGraph = await store.get(csvMapping.value)
+    const csvMappingGraph = await store.get(csvMapping.value, { allowMissing: true })
     if (csvMappingGraph) {
       csvMappingGraph.dataset.delete($rdf.quad(csvMappingGraph.term, cc.csvSource, csvSource.term))
     }

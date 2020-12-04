@@ -126,7 +126,7 @@ describe('domain/column-mapping/delete', () => {
 
     await deleteColumnMapping({ resource: resourceId, store, dimensionMetadataQueries, tableQueries })
 
-    const columnMapping = await store.getResource<ColumnMapping>(resourceId)
+    const columnMapping = await store.getResource<ColumnMapping>(resourceId, { allowMissing: true })
     expect(columnMapping).to.eq(undefined)
 
     expect(dimensionMetadataCollection.out(schema.hasPart).terms).to.have.length(dimensionsCount - 1)

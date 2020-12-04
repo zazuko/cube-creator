@@ -10,9 +10,14 @@ import { warn } from '@hydrofoil/labyrinth/lib/logger'
 import { sparql } from '@tpluscode/rdf-string'
 import TermSet from '@rdfjs/term-set'
 import RdfResource, { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
+import { NotFoundError } from './errors'
 
 interface ResourceCreationOptions {
   implicitlyDereferencable?: boolean
+}
+
+interface GetOptions {
+  allowMissing?: boolean
 }
 
 /**
@@ -24,11 +29,12 @@ export interface ResourceStore {
   /**
    * Gets all triples from a named graph and returns a graph pointer to a resource
    * identified by the same URI
-   *
-   * @param id
    */
-  get(id: string | Term | undefined): Promise<GraphPointer<NamedNode, DatasetExt> | undefined>
-  getResource<T extends RdfResourceCore>(id: string | Term | undefined): Promise<T | undefined>
+  get(id: string | Term | undefined, opts?: GetOptions): Promise<GraphPointer<NamedNode, DatasetExt>>
+  get(id: string | Term | undefined, opts: { allowMissing: true }): Promise<GraphPointer<NamedNode, DatasetExt> | undefined>
+
+  getResource<T extends RdfResourceCore>(id: string | Term | undefined, opts?: GetOptions): Promise<T>
+  getResource<T extends RdfResourceCore>(id: string | Term | undefined, opts: { allowMissing: true }): Promise<T> | undefined
 
   /**
    * Creates a new resource a puts in the in-memory store
@@ -110,31 +116,40 @@ export default class implements ResourceStore {
     this.__deletedGraphs = new TermSet()
   }
 
-  async get(id: string | Term | undefined): Promise<GraphPointer<NamedNode, DatasetExt> | undefined> {
-    if (!id) {
-      return undefined
-    }
-
-    let term: NamedNode
+  async get(id: string | Term | undefined, opts?: GetOptions): Promise<GraphPointer<NamedNode, DatasetExt>> {
+    let resource: GraphPointer<NamedNode, DatasetExt> | undefined
+    let term: NamedNode | undefined
     if (typeof id === 'string') {
       term = $rdf.namedNode(id)
-    } else if (id.termType === 'NamedNode') {
-      term = id
+    } else if (id && id.termType !== 'NamedNode') {
+      throw new Error('Loaded resource id must be NamedNode')
     } else {
-      return undefined
-    }
-    if (!this.__resources.has(term)) {
-      const resource = await this.__storage.loadResource(term)
-      if (resource) {
-        this.__resources.set(term, resource)
-      }
+      term = id
     }
 
-    return this.__resources.get(term)
+    if (term) {
+      if (!this.__resources.has(term)) {
+        resource = await this.__storage.loadResource(term)
+        if (resource) {
+          this.__resources.set(term, resource)
+        }
+      }
+
+      resource = this.__resources.get(term)
+    }
+
+    if (!resource) {
+      if (opts?.allowMissing) {
+        return undefined as any
+      }
+      throw new NotFoundError(term)
+    }
+
+    return resource
   }
 
-  async getResource<T extends RdfResourceCore>(id: string | Term | undefined):Promise<T | undefined> {
-    const pointer = await this.get(id)
+  async getResource<T extends RdfResourceCore>(id: string | Term | undefined, opts?: GetOptions):Promise<T | undefined> {
+    const pointer = await this.get(id, opts)
     if (!pointer) return undefined
 
     return RdfResource.factory.createEntity<T>(pointer)

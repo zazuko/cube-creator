@@ -5,7 +5,6 @@ import { isPublishJob } from '@cube-creator/model/Job'
 import RdfResource from '@tpluscode/rdfine'
 import { ResourceStore } from '../../ResourceStore'
 import { resourceStore } from '../resources'
-import { NotFoundError } from '../../errors'
 import { schema } from '@tpluscode/rdf-ns-builders'
 
 interface JobUpdateParams {
@@ -16,9 +15,6 @@ interface JobUpdateParams {
 export async function update({ resource, store = resourceStore() }: JobUpdateParams): Promise<GraphPointer> {
   const changes = RdfResource.factory.createEntity<Job>(resource, [JobMixin])
   const job = await store.getResource<Job>(resource.term)
-  if (!job) {
-    throw new NotFoundError(resource.term)
-  }
 
   if (changes.actionStatus) {
     job.actionStatus = changes.actionStatus
