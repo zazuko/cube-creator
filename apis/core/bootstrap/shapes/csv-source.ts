@@ -3,6 +3,8 @@ import { csvw, dash, hydra, rdfs, schema, sh, xsd } from '@tpluscode/rdf-ns-buil
 import { turtle } from '@tpluscode/rdf-string'
 import $rdf from 'rdf-ext'
 
+const csvSourceDialect = $rdf.blankNode('csvSourceDialect')
+
 export const CSVSourceShape = turtle`
 ${shape('csv-source/update')} {
   ${shape('csv-source/update')} a ${sh.NodeShape}, ${hydra.Resource} ;
@@ -11,7 +13,7 @@ ${shape('csv-source/update')} {
     ${sh.property} [
       ${sh.name} "CSV dialect options" ;
       ${sh.path} ${csvw.dialect} ;
-      ${sh.node} ${$rdf.blankNode('csv-source-dialect')} ;
+      ${sh.node} ${csvSourceDialect} ;
       ${dash.editor} ${dash.DetailsEditor} ;
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
@@ -28,7 +30,7 @@ ${shape('csv-source/update')} {
     ] ;
   .
 
-  ${$rdf.blankNode('csv-source-dialect')} a ${sh.NodeShape} ;
+  ${csvSourceDialect} a ${sh.NodeShape} ;
     ${rdfs.label} "CSV dialect options" ;
     ${sh.property} [
       ${sh.name} "Delimiter" ;
