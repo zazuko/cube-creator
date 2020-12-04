@@ -3,6 +3,9 @@ import { hydra, rdfs, sh, dcat, dcterms, xsd, rdf, vcard, schema, _void, dash } 
 import { turtle } from '@tpluscode/rdf-string'
 import $rdf from 'rdf-ext'
 
+const temporalFromTo = $rdf.blankNode('temporalFromTo')
+const vcardOrganization = $rdf.blankNode('vcardOrganization')
+
 export const DatasetShape = turtle`
 @prefix cld: <http://purl.org/cld/terms/> .
 @prefix dcam: <http://purl.org/dc/dcam/> .
@@ -101,7 +104,7 @@ ${shape('dataset/edit-metadata')} {
       ${sh.path} ${dcterms.temporal} ;
       ${sh.minCount} 1 ;
       ${dash.editor} ${dash.DetailsEditor} ;
-      ${sh.node} ${$rdf.blankNode('temporal-from-to')} ;
+      ${sh.node} ${temporalFromTo} ;
       ${sh.class} ${dcterms.PeriodOfTime} ;
       ${sh.order} 70 ;
     ] ;
@@ -117,7 +120,7 @@ ${shape('dataset/edit-metadata')} {
       ${sh.path} ${dcat.contactPoint} ;
       ${sh.minCount} 1 ;
       ${dash.editor} ${dash.DetailsEditor} ;
-      ${sh.node} ${$rdf.blankNode('vcard-organization')} ;
+      ${sh.node} ${vcardOrganization} ;
       ${sh.class} ${vcard.Organization} ;
       ${sh.order} 90 ;
     ] ;
@@ -200,7 +203,7 @@ ${shape('dataset/edit-metadata')} {
     ] ;
   .
 
-  ${$rdf.blankNode('temporal-from-to')} a ${sh.NodeShape} ;
+  ${temporalFromTo} a ${sh.NodeShape} ;
     ${sh.targetClass} ${dcterms.PeriodOfTime} ;
     ${rdfs.label} "Data converage" ;
     ${sh.property} [
@@ -221,7 +224,7 @@ ${shape('dataset/edit-metadata')} {
     ] ;
   .
 
-  ${$rdf.blankNode('vcard-organization')} a ${sh.NodeShape} ;
+  ${vcardOrganization} a ${sh.NodeShape} ;
   ${sh.targetClass} ${vcard.Organization} ;
   ${rdfs.label} "Organization" ;
   ${sh.property} [
