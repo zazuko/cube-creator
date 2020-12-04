@@ -5,15 +5,20 @@ import { expect } from 'chai'
 import $rdf from 'rdf-ext'
 import { CONSTRUCT } from '@tpluscode/sparql-builder'
 import debug from 'debug'
-import { dcterms, rdf, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
+import { dcat, dcterms, rdf, schema, sh, vcard, xsd } from '@tpluscode/rdf-ns-builders'
 import { setupEnv } from '../../support/env'
 import { client, insertTestData } from '@cube-creator/testing/lib'
-import { cube } from '@cube-creator/core/namespace'
+import { cube, scale } from '@cube-creator/core/namespace'
 import clownface from 'clownface'
 import publish from '../../../lib/commands/publish'
+import namespace from '@rdfjs/namespace'
 
 describe('lib/commands/publish', function () {
   this.timeout(200000)
+
+  const ns = {
+    targetCube: namespace('https://environment.ld.admin.ch/foen/ubd/28/'),
+  }
 
   const executionUrl = 'http://example.com/transformation-test'
 
@@ -37,7 +42,7 @@ describe('lib/commands/publish', function () {
     )
 
     // then
-    const expectedGraph = $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/')
+    const expectedGraph = ns.targetCube()
     const dataset = await $rdf.dataset().import(await CONSTRUCT`?s ?p ?o`
       .FROM(expectedGraph)
       .WHERE`?s ?p ?o`
@@ -57,10 +62,26 @@ describe('lib/commands/publish', function () {
         hasValue: $rdf.literal('UBD28'),
         minCount: 1,
         maxCount: 1,
+      }, {
+        path: dcat.contactPoint,
+        minCount: 1,
+        maxCount: 1,
+        node: {
+          property: [{
+            path: vcard.fn,
+            hasValue: $rdf.literal('Test Name'),
+            minCount: 1,
+          },
+          {
+            path: vcard.fn,
+            hasValue: $rdf.literal('test@mail.ch'),
+            minCount: 1,
+          }],
+        },
       }],
     })
 
-    expect(cubePointer.namedNode('https://environment.ld.admin.ch/foen/ubd/28/observation/blBAS-2002-annualmean')).to.matchShape({
+    expect(cubePointer.namedNode(ns.targetCube('observation/blBAS-2002-annualmean'))).to.matchShape({
       property: [{
         path: rdf.type,
         hasValue: cube.Observation,
@@ -69,55 +90,61 @@ describe('lib/commands/publish', function () {
         path: cube.observedBy,
         minCount: 1,
       }, {
-        path: $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/dimension/year'),
+        path: ns.targetCube('dimension/year'),
         hasValue: $rdf.literal('2002', xsd.gYear),
         minCount: 1,
         maxCount: 1,
       }, {
-        path: $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/dimension/value'),
+        path: ns.targetCube('dimension/value'),
         hasValue: $rdf.literal('6.1', xsd.float),
         minCount: 1,
         maxCount: 1,
       }, {
-        path: $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/station'),
+        path: ns.targetCube('station'),
         minCount: 1,
         maxCount: 1,
       }, {
-        path: $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/pollutant'),
+        path: ns.targetCube('pollutant'),
         minCount: 1,
         maxCount: 1,
       }, {
-        path: $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/unit-id'),
+        path: ns.targetCube('unit-id'),
         hasValue: $rdf.literal('µg/m3'),
         minCount: 1,
         maxCount: 1,
       }],
     })
 
-    expect(cubePointer.namedNode('https://environment.ld.admin.ch/foen/ubd/28/shape/')).to.matchShape({
-      property: [{
+    expect(cubePointer.namedNode(ns.targetCube('shape/'))).to.matchShape({
+      property: {
         path: rdf.type,
         hasValue: cube.Constraint,
         minCount: 1,
-      }, {
-        path: sh.property,
+      },
+    })
+
+    expect(cubePointer.namedNode(ns.targetCube('shape/')).out(sh.property).has(sh.path, ns.targetCube('dimension/year'))).to.matchShape({
+      property: {
+        path: sh.path,
+        hasValue: ns.targetCube('dimension/year'),
         minCount: 1,
+      },
+    })
 
-        node: {
-          xone: [{
-            property: [{
-              path: sh.path,
-              hasValue: $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/dimension/year'),
-              minCount: 1,
-            }, {
-              path: schema.name,
-              hasValue: $rdf.literal('Jahr', 'de'),
-              minCount: 1,
-            }],
-          }],
-        },
+    expect(cubePointer.namedNode(ns.targetCube('shape/')).out(sh.property).has(sh.path, schema.name)).to.matchShape({
+      property: {
+        path: schema.name,
+        hasValue: $rdf.literal('Jahr', 'de'),
+        minCount: 1,
+      },
+    })
 
-      }],
+    expect(cubePointer.namedNode(ns.targetCube('shape/')).out(sh.property).has(sh.path, scale.scaleOfMeasure)).to.matchShape({
+      property: {
+        path: scale.scaleOfMeasure,
+        hasValue: scale.Temporal,
+        minCount: 1,
+      },
     })
   })
 })
