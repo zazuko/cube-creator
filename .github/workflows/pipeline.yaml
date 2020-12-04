@@ -3,9 +3,10 @@ name: Pipeline
 on:
   workflow_dispatch:
     inputs:
-      job:
+      transform_job:
         description: 'Job URL'
-        required: true
+      publish_job:
+        description: 'Job URL'
       to:
         default: 'graph-store'
 
@@ -26,7 +27,13 @@ jobs:
         with:
           node-version: 14
       - run: yarn install --ci
-      - run: yarn ts-node index.ts transform --job "${{ github.event.inputs.job }}" --execution-url "https://${{ github.repository }}/actions/runs/${{ github.run_id }}" --to ${{ github.event.inputs.to }} --debug
+      - name: transform pipeline
+        if: github.event.inputs.transform_job != ''
+        run: yarn ts-node index.ts transform --job "${{ github.event.inputs.transform_job }}" --execution-url "https://${{ github.repository }}/actions/runs/${{ github.run_id }}" --to ${{ github.event.inputs.to }} --debug
+        working-directory: cli
+      - name: publish pipeline
+        if: github.event.inputs.publish_job != ''
+        run: yarn ts-node index.ts publish --job "${{ github.event.inputs.publish_job }}" --execution-url "https://${{ github.repository }}/actions/runs/${{ github.run_id }}" --debug
         working-directory: cli
       - name: Output artifact
         if: github.event.inputs.to == 'filesystem'
