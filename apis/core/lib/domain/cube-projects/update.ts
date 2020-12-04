@@ -6,7 +6,6 @@ import { ResourceStore } from '../../ResourceStore'
 import { resourceStore } from '../resources'
 import { rdfs } from '@tpluscode/rdf-ns-builders'
 import { CsvMapping, Project } from '@cube-creator/model'
-import { NotFoundError } from '../../errors'
 
 interface UpdateProjectCommand {
   resource: GraphPointer
@@ -20,10 +19,6 @@ export async function updateProject({
   store = resourceStore(),
 }: UpdateProjectCommand): Promise<Project> {
   const storedProject = await store.getResource<Project>(resource.term)
-
-  if (!storedProject) {
-    throw new NotFoundError(resource.term)
-  }
 
   const oldLabel = storedProject.pointer.out(rdfs.label).term as Literal
 
@@ -39,10 +34,7 @@ export async function updateProject({
   const newNamespace = resource.out(cc.csvMapping).out(cc.namespace).term as NamedNode
   if (newNamespace) {
     const csvMapping = await store.getResource<CsvMapping>(project.out(cc.csvMapping).term)
-
-    if (csvMapping) {
-      csvMapping.namespace = newNamespace
-    }
+    csvMapping.namespace = newNamespace
   }
 
   storedProject.updatePublishGraph(resource.out(cc.publishGraph).term)

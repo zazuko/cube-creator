@@ -21,7 +21,7 @@ export async function deleteTable({
 export async function deleteTableWithoutSave(tableTerm: Term, store: ResourceStore): Promise<void> {
   if (tableTerm.termType !== 'NamedNode') return
 
-  const table = await store.get(tableTerm)
+  const table = await store.get(tableTerm, { allowMissing: true })
   if (!table) return
 
   // Delete in columnMappings

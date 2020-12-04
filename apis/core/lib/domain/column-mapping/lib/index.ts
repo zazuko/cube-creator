@@ -6,7 +6,7 @@ export async function findMapping(table: Table, targetProperty: Term, store: Res
   const csvMapping = await store.getResource<CsvMapping>(table.csvMapping.id)
 
   for (const columnMappingLink of table.columnMappings) {
-    const columnMapping = await store.getResource<ColumnMapping>(columnMappingLink.id)
+    const columnMapping = await store.getResource<ColumnMapping>(columnMappingLink.id, { allowMissing: true })
     if (!columnMapping) {
       continue
     }
@@ -15,7 +15,7 @@ export async function findMapping(table: Table, targetProperty: Term, store: Res
       return columnMapping
     }
 
-    const effectiveProperty = csvMapping?.createIdentifier(targetProperty)
+    const effectiveProperty = csvMapping.createIdentifier(targetProperty)
     if (columnMapping.targetProperty.equals(effectiveProperty)) {
       return columnMapping
     }

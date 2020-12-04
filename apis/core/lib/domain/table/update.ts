@@ -2,7 +2,6 @@ import { ColumnMapping, CsvMapping, DimensionMetadataCollection, Table } from '@
 import { schema, xsd } from '@tpluscode/rdf-ns-builders'
 import $rdf from 'rdf-ext'
 import { GraphPointer } from 'clownface'
-import { NotFoundError } from '../../errors'
 import { ResourceStore } from '../../ResourceStore'
 import * as DimensionMetadataQueries from '../queries/dimension-metadata'
 import { cc } from '@cube-creator/core/namespace'
@@ -23,9 +22,6 @@ export async function updateTable({
 } : UpdateTableCommand): Promise<GraphPointer> {
   const table = await store.getResource<Table>(resource.term)
 
-  if (!table) {
-    throw new NotFoundError(resource.term)
-  }
   const label = resource.out(schema.name)
   if (!label?.value) {
     throw new Error('schema:name missing from the payload')
@@ -45,23 +41,14 @@ export async function updateTable({
   table.identifierTemplate = identifierTemplate.value
 
   const csvMapping = await store.getResource<CsvMapping>(table.csvMapping.id)
-  if (!csvMapping) {
-    throw new NotFoundError(csvMapping)
-  }
 
   const isObservationTable = trueTerm.equals(resource.out(cc.isObservationTable).term)
   if (table.isObservationTable !== isObservationTable) {
     const dimensionMetaDataCollectionPointer = await getDimensionMetaDataCollection(table.csvMapping.id)
     const dimensionMetaDataCollection = await store.getResource<DimensionMetadataCollection>(dimensionMetaDataCollectionPointer)
-    if (!dimensionMetaDataCollection) {
-      throw new NotFoundError(dimensionMetaDataCollectionPointer)
-    }
 
     for (const columnMappingPointer of table.columnMappings) {
       const columnMapping = await store.getResource<ColumnMapping>(columnMappingPointer.id)
-      if (!columnMapping) {
-        throw new NotFoundError(columnMappingPointer.id)
-      }
 
       if (isObservationTable) {
         dimensionMetaDataCollection.addDimensionMetadata({ store, columnMapping, csvMapping })

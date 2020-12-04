@@ -56,8 +56,8 @@ async function mappedReferenceColumn({ csvMapping, columnMapping, resources }: C
   const identifierMappings = columnMapping.identifierMapping
   const columnNameMap = await identifierMappings.reduce<Promise<Map<string, string>>>(async (mapP, mapping) => {
     const map = await mapP
-    const sourceColumn = await resources.getResource<CsvColumn>(mapping.sourceColumn.id)
-    const referencedColumn = await resources.getResource<CsvColumn>(mapping.referencedColumn.id)
+    const sourceColumn = await resources.getResource<CsvColumn>(mapping.sourceColumn.id, { allowMissing: true })
+    const referencedColumn = await resources.getResource<CsvColumn>(mapping.referencedColumn.id, { allowMissing: true })
 
     if (!sourceColumn) {
       warning(`Column ${mapping.sourceColumn.id} not found`)
@@ -78,9 +78,6 @@ async function mappedReferenceColumn({ csvMapping, columnMapping, resources }: C
   }, Promise.resolve(new Map<string, string>()))
 
   const referencedTable = await resources.getResource<Table>(columnMapping.referencedTable.id)
-  if (!referencedTable) {
-    throw new Error(`Table ${columnMapping.referencedTable.id} not found`)
-  }
 
   if (typeof referencedTable.identifierTemplate === 'string') {
     const uriTemplate = parse(referencedTable.identifierTemplate)
@@ -100,7 +97,7 @@ async function * buildColumns({ table, source, resources, csvMapping }: CsvwBuil
   const unmappedColumns = new TermMap([...source.columns.map<[Term, CsvColumn]>(c => [c.id, c])])
 
   for (const columnMappingLink of table.columnMappings) {
-    const columnMapping = await resources.getResource<ColumnMapping>(columnMappingLink.id)
+    const columnMapping = await resources.getResource<ColumnMapping>(columnMappingLink.id, { allowMissing: true })
     if (!columnMapping) {
       warning(`Column mapping ${columnMappingLink.id} not found`)
       continue
@@ -128,13 +125,7 @@ async function * buildColumns({ table, source, resources, csvMapping }: CsvwBuil
 
 export async function buildCsvw({ table, resources }: { table: Table; resources: ResourceStore }): Promise<Csvw.Table> {
   const source = await resources.getResource<CsvSource>(table.csvSource?.id)
-  if (!source) {
-    throw new Error(`Source not found for table ${table.id.value}`)
-  }
   const csvMapping = await resources.getResource<CsvMapping>(table.csvMapping.id)
-  if (!csvMapping) {
-    throw new Error(`CSV Mapping resource not found for table ${table.id.value}`)
-  }
 
   let template: string
   const column: Initializer<Csvw.Column>[] = []

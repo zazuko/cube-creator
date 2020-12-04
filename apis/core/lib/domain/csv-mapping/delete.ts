@@ -6,7 +6,7 @@ import { deleteTableWithoutSave } from '../table/delete'
 import { getTablesForMapping } from '../queries/table'
 
 export async function deleteMapping(csvMapping: NamedNode, store: ResourceStore): Promise<void> {
-  const csvMappingResource = await store.get(csvMapping)
+  const csvMappingResource = await store.get(csvMapping, { allowMissing: true })
   if (!csvMappingResource) return
 
   const sources = csvMappingResource.out(cc.csvSource).terms

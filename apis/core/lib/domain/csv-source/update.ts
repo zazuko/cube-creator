@@ -5,7 +5,6 @@ import RdfResource from '@tpluscode/rdfine'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { ResourceStore } from '../../ResourceStore'
 import { resourceStore } from '../resources'
-import { NotFoundError } from '../../errors'
 import { error } from '../../log'
 import { Readable } from 'stream'
 import * as s3 from '../../storage/s3'
@@ -26,9 +25,6 @@ export async function update({
 }: UpdateCsvSourceCommand): Promise<GraphPointer> {
   const changed = RdfResource.factory.createEntity<CsvSource>(resource)
   const csvSource = await store.getResource<CsvSource>(resource.term)
-  if (!csvSource) {
-    throw new NotFoundError(resource)
-  }
 
   csvSource.name = changed.name
   if (csvSource.setDialect(changed.dialect) && csvSource.associatedMedia.identifierLiteral) {

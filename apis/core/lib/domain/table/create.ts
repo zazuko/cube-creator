@@ -5,7 +5,6 @@ import { ResourceStore } from '../../ResourceStore'
 import { resourceStore } from '../resources'
 import { NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
-import { NotFoundError } from '../../errors'
 import { CsvColumn, CsvMapping, CsvSource, DimensionMetadataCollection } from '@cube-creator/model'
 import * as DimensionMetadataQueries from '../queries/dimension-metadata'
 
@@ -35,14 +34,8 @@ export async function createTable({
   }
 
   const csvMapping = await store.getResource<CsvMapping>(csvMappingPointer.term)
-  if (!csvMapping) {
-    throw new NotFoundError(csvMappingPointer.term)
-  }
   const csvSourceId = resource.out(cc.csvSource).term
   const csvSource = await store.getResource<CsvSource>(csvSourceId)
-  if (!csvSource) {
-    throw new NotFoundError(csvSourceId)
-  }
 
   const columns = [...csvSource.columns]
 
@@ -67,9 +60,6 @@ export async function createTable({
   // Create default column mappings for provided columns
   const dimensionMetaDataCollectionPointer = await getDimensionMetaDataCollection(csvMapping.id)
   const dimensionMetaDataCollection = await store.getResource<DimensionMetadataCollection>(dimensionMetaDataCollectionPointer)
-  if (!dimensionMetaDataCollection) {
-    throw new NotFoundError(dimensionMetaDataCollectionPointer)
-  }
 
   // Create default column mappings for provided columns
   columnsToAdd

@@ -75,7 +75,7 @@ export async function updateReferenceColumnMapping({
   // Update referencedTable
   const referencedTableId = resource.out(cc.referencedTable).term!
   const referencedTable = await store.getResource<Table>(referencedTableId)
-  if (!referencedTable) throw new NotFoundError(referencedTableId)
+
   columnMapping.referencedTable = referencedTable
 
   // Update identifierMapping
@@ -110,16 +110,8 @@ async function updateColumnMapping<T extends ColumnMapping>({
 }: UpdateColumnMappingCommand): Promise<{ columnMapping: T; table: Table }> {
   const columnMapping = await store.getResource<T>(resource.term)
 
-  if (!columnMapping || columnMapping.id.termType !== 'NamedNode') {
-    throw new NotFoundError(resource.term)
-  }
-
-  const tableId = await getTableForColumnMapping(columnMapping.id)
+  const tableId = await getTableForColumnMapping(columnMapping.id as NamedNode)
   const table = await store.getResource<Table>(tableId)
-
-  if (!table) {
-    throw new NotFoundError(tableId)
-  }
 
   const targetProperty = resource.out(cc.targetProperty).term!
 
@@ -131,14 +123,8 @@ async function updateColumnMapping<T extends ColumnMapping>({
       }
 
       const csvMapping = await store.getResource<CsvMapping>(table.csvMapping.id)
-      if (!csvMapping) {
-        throw new NotFoundError(csvMapping)
-      }
       const dimensionMetaDataCollectionPointer = await getDimensionMetaDataCollection(table.csvMapping.id)
       const dimensionMetaDataCollection = await store.getResource<DimensionMetadataCollection>(dimensionMetaDataCollectionPointer)
-      if (!dimensionMetaDataCollection) {
-        throw new NotFoundError(dimensionMetaDataCollectionPointer)
-      }
 
       const dimension = dimensionMetaDataCollection.find({ csvMapping, targetProperty: columnMapping.targetProperty })
       if (!dimension) {

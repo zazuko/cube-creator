@@ -6,7 +6,6 @@ import { ResourceStore } from '../../ResourceStore'
 import { resourceStore } from '../resources'
 import * as DimensionMetadataQueries from '../queries/dimension-metadata'
 import * as TableQueries from '../queries/table'
-import { NotFoundError } from '../../errors'
 
 interface DeleteColumnMappingCommand {
   resource: NamedNode
@@ -23,29 +22,15 @@ export async function deleteColumnMapping({
 }: DeleteColumnMappingCommand): Promise<void> {
   const columnMapping = await store.getResource<ColumnMapping>(resource)
 
-  if (!columnMapping || columnMapping.id.termType !== 'NamedNode') {
-    throw new NotFoundError(resource)
-  }
-
-  const tableId = await getTableForColumnMapping(columnMapping.id)
+  const tableId = await getTableForColumnMapping(columnMapping.id as NamedNode)
   const table = await store.getResource<Table>(tableId)
-
-  if (!table) {
-    throw new NotFoundError(tableId)
-  }
 
   table.pointer.dataset.delete($rdf.quad(table.pointer.term, cc.columnMapping, columnMapping.id))
 
   if (table.isObservationTable) {
     const csvMapping = await store.getResource<CsvMapping>(table.csvMapping.id)
-    if (!csvMapping) {
-      throw new NotFoundError(csvMapping)
-    }
     const dimensionMetaDataCollectionPointer = await getDimensionMetaDataCollection(table.csvMapping.id)
     const dimensionMetaDataCollection = await store.getResource<DimensionMetadataCollection>(dimensionMetaDataCollectionPointer)
-    if (!dimensionMetaDataCollection) {
-      throw new NotFoundError(dimensionMetaDataCollectionPointer)
-    }
 
     const dimension = dimensionMetaDataCollection.find({ csvMapping, targetProperty: columnMapping.targetProperty })
     if (dimension && dimension.id.termType === 'NamedNode') {
