@@ -1545,7 +1545,7 @@
     "@tpluscode/rdf-ns-builders" "^0.4"
     "@zazuko/rdf-vocabularies" "^2020.11.2"
 
-"@tpluscode/rdfine@^0.5.10", "@tpluscode/rdfine@^0.5.14", "@tpluscode/rdfine@^0.5.15", "@tpluscode/rdfine@^0.5.16", "@tpluscode/rdfine@^0.5.7":
+"@tpluscode/rdfine@^0.5.10", "@tpluscode/rdfine@^0.5.15", "@tpluscode/rdfine@^0.5.16":
   version "0.5.16"
   resolved "https://registry.yarnpkg.com/@tpluscode/rdfine/-/rdfine-0.5.16.tgz#9b592502aa1197205127cf8e4513fbeaaace3b38"
   integrity sha512-0ZsiU8h5lmCP5SjW3vBMllV5juvDypjqSvbrvfNnEKZv6c5CJT3F51wAoeqfcL81b1CEgFUtEfDkIfsizsgNJg==
