@@ -46,7 +46,7 @@ export function JobMixin<Base extends Constructor<RdfResource>>(base: Base): Mix
 JobMixin.appliesTo = cc.Job
 
 export function TransformJobMixin<Base extends Constructor<RdfResource>>(base: Base): Mixin {
-  class Impl extends base implements Partial<TransformJob> {
+  class Impl extends ResourceMixin(ActionMixin(base)) implements Partial<TransformJob> {
     @property.resource({ path: cc.tables })
     tableCollection!: Link<TableCollection>
 
