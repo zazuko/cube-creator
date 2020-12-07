@@ -51,7 +51,6 @@ export default function (pipelineId: NamedNode, log: Debugger) {
     const pipelinePath = (filename: string) => path.join(basePath, `./pipelines/${filename}.ttl`)
     const dataset = $rdf.dataset()
       .merge(await fileToDataset('text/turtle', pipelinePath('publish')))
-      // .merge(await fileToDataset('text/turtle', pipelinePath(`to-${to}`)))
 
     setupAuthentication(authConfig, log)
 
