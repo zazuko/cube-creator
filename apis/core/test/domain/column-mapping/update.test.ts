@@ -12,7 +12,7 @@ import '../../../lib/domain'
 import { DomainError, NotFoundError } from '../../../lib/errors'
 import { NamedNode } from 'rdf-js'
 import DatasetExt from 'rdf-ext/lib/Dataset'
-import { updateColumnMapping } from '../../../lib/domain/column-mapping/update'
+import { updateLiteralColumnMapping } from '../../../lib/domain/column-mapping/update'
 
 describe('domain/column-mapping/update', () => {
   let store: TestResourceStore
@@ -44,7 +44,7 @@ describe('domain/column-mapping/update', () => {
 
     columnMapping = clownface({ dataset: $rdf.dataset() })
       .node($rdf.namedNode('columnMapping'))
-      .addOut(rdf.type, cc.ColumnMapping)
+      .addOut(rdf.type, [cc.ColumnMapping, cc.LiteralColumnMapping])
       .addOut(rdf.type, hydra.Resource)
       .addOut(cc.sourceColumn, $rdf.namedNode('my-column'))
       .addOut(cc.targetProperty, $rdf.namedNode('test'))
@@ -54,7 +54,7 @@ describe('domain/column-mapping/update', () => {
 
     const otherColumnMapping = clownface({ dataset: $rdf.dataset() })
       .node($rdf.namedNode('otherColumnMapping'))
-      .addOut(rdf.type, cc.ColumnMapping)
+      .addOut(rdf.type, [cc.ColumnMapping, cc.LiteralColumnMapping])
       .addOut(rdf.type, hydra.Resource)
       .addOut(cc.sourceColumn, $rdf.namedNode('my-column2'))
       .addOut(cc.targetProperty, $rdf.namedNode('other'))
@@ -69,7 +69,7 @@ describe('domain/column-mapping/update', () => {
 
     columnMappingObservation = clownface({ dataset: $rdf.dataset() })
       .node($rdf.namedNode('columnMappingObservation'))
-      .addOut(rdf.type, cc.ColumnMapping)
+      .addOut(rdf.type, [cc.ColumnMapping, cc.LiteralColumnMapping])
       .addOut(rdf.type, hydra.Resource)
       .addOut(cc.sourceColumn, $rdf.namedNode('my-column'))
       .addOut(cc.targetProperty, $rdf.namedNode('test'))
@@ -129,7 +129,7 @@ describe('domain/column-mapping/update', () => {
       .addOut(cc.language, $rdf.literal('de'))
       .addOut(cc.defaultValue, $rdf.literal('test2'))
 
-    const columnMapping = await updateColumnMapping({ resource, store, dimensionMetadataQueries, tableQueries })
+    const columnMapping = await updateLiteralColumnMapping({ resource, store, dimensionMetadataQueries, tableQueries })
 
     expect(columnMapping).to.matchShape({
       property: [{
@@ -166,7 +166,7 @@ describe('domain/column-mapping/update', () => {
       .addOut(cc.sourceColumn, $rdf.namedNode('my-column'))
       .addOut(cc.targetProperty, $rdf.namedNode('test'))
 
-    const columnMapping = await updateColumnMapping({ resource, store, dimensionMetadataQueries, tableQueries })
+    const columnMapping = await updateLiteralColumnMapping({ resource, store, dimensionMetadataQueries, tableQueries })
 
     expect(columnMapping).to.matchShape({
       property: [{
@@ -203,7 +203,7 @@ describe('domain/column-mapping/update', () => {
       .addOut(cc.language, $rdf.literal('fr'))
       .addOut(cc.defaultValue, $rdf.literal('test'))
 
-    const columnMapping = await updateColumnMapping({ resource, store, dimensionMetadataQueries, tableQueries })
+    const columnMapping = await updateLiteralColumnMapping({ resource, store, dimensionMetadataQueries, tableQueries })
 
     expect(columnMapping.out(cc.sourceColumn).value).to.eq('my-column2')
   })
@@ -217,12 +217,12 @@ describe('domain/column-mapping/update', () => {
       .addOut(cc.language, $rdf.literal('fr'))
       .addOut(cc.defaultValue, $rdf.literal('test'))
 
-    const promise = updateColumnMapping({ resource, store, dimensionMetadataQueries, tableQueries })
+    const promise = updateLiteralColumnMapping({ resource, store, dimensionMetadataQueries, tableQueries })
 
     await expect(promise).to.have.rejectedWith(NotFoundError)
   })
 
-  it.only('throw if targetProperty already in use on observation table', async () => {
+  it('throw if targetProperty already in use on observation table', async () => {
     getTableForColumnMapping.resolves(observationTable.term.value)
 
     const resource = clownface({ dataset: $rdf.dataset() })
@@ -230,7 +230,7 @@ describe('domain/column-mapping/update', () => {
       .addOut(cc.sourceColumn, $rdf.namedNode('my-column'))
       .addOut(cc.targetProperty, $rdf.namedNode('other'))
 
-    const promise = updateColumnMapping({ resource, store, dimensionMetadataQueries, tableQueries })
+    const promise = updateLiteralColumnMapping({ resource, store, dimensionMetadataQueries, tableQueries })
 
     await expect(promise).to.have.rejectedWith(DomainError)
   })
@@ -241,7 +241,7 @@ describe('domain/column-mapping/update', () => {
       .addOut(cc.sourceColumn, $rdf.namedNode('my-column'))
       .addOut(cc.targetProperty, $rdf.namedNode('other'))
 
-    const columnMapping = await updateColumnMapping({ resource, store, dimensionMetadataQueries, tableQueries })
+    const columnMapping = await updateLiteralColumnMapping({ resource, store, dimensionMetadataQueries, tableQueries })
 
     expect(columnMapping.out(cc.targetProperty).value).to.eq('other')
   })
@@ -257,7 +257,7 @@ describe('domain/column-mapping/update', () => {
       .addOut(cc.language, $rdf.literal('fr'))
       .addOut(cc.defaultValue, $rdf.literal('test'))
 
-    const columnMapping = await updateColumnMapping({ resource, store, dimensionMetadataQueries, tableQueries })
+    const columnMapping = await updateLiteralColumnMapping({ resource, store, dimensionMetadataQueries, tableQueries })
 
     expect(columnMapping.out(cc.targetProperty).value).to.eq('test2')
     const myDimension = dimensionMetadata.node($rdf.namedNode('myDimension'))

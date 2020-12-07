@@ -10,7 +10,7 @@ import { ResourceStore } from '../../ResourceStore'
 import * as id from '../identifiers'
 import { Link } from '@cube-creator/model/lib/Link'
 
-interface CreateColumnMapping {
+interface CreateLiteralColumnMapping {
   store: ResourceStore
   sourceColumn: CsvColumn
   targetProperty: Term
@@ -19,14 +19,25 @@ interface CreateColumnMapping {
   defaultValue?: Term
 }
 
+interface CreateReferenceColumnMapping {
+  store: ResourceStore
+  targetProperty: Term
+  referencedTable: Table
+  identifierMappings: {
+    sourceColumn: CsvColumn
+    referencedColumn: CsvColumn
+  }[]
+}
+
 interface CreateColumnMappingFromColumn {
   store: ResourceStore
   column: CsvColumn
 }
 
 interface ApiTable {
-  addColumnMapping(params: CreateColumnMapping): ColumnMapping.ColumnMapping
-  addColumnMappingFromColumn(params: CreateColumnMappingFromColumn): ColumnMapping.ColumnMapping
+  addLiteralColumnMapping(params: CreateLiteralColumnMapping): ColumnMapping.LiteralColumnMapping
+  addReferenceColumnMapping(params: CreateReferenceColumnMapping): ColumnMapping.ReferenceColumnMapping
+  addColumnMappingFromColumn(params: CreateColumnMappingFromColumn): ColumnMapping.LiteralColumnMapping
   columnMappings: Array<Link<ColumnMapping.ColumnMapping>>
 }
 
@@ -41,8 +52,8 @@ export default function mixin<Base extends Constructor<Table>>(Resource: Base): 
     @property.resource({ values: 'array', path: cc.columnMapping })
     columnMappings!: Array<Link<ColumnMapping.ColumnMapping>>
 
-    addColumnMapping({ store, sourceColumn, targetProperty, datatype, language, defaultValue }: CreateColumnMapping): ColumnMapping.ColumnMapping {
-      const columnMapping = ColumnMapping.create(store.create(id.columnMapping(this, sourceColumn.name)), {
+    addLiteralColumnMapping({ store, sourceColumn, targetProperty, datatype, language, defaultValue }: CreateLiteralColumnMapping): ColumnMapping.LiteralColumnMapping {
+      const columnMapping = ColumnMapping.createLiteral(store.create(id.columnMapping(this, sourceColumn.name)), {
         sourceColumn,
         targetProperty,
         datatype,
@@ -55,8 +66,26 @@ export default function mixin<Base extends Constructor<Table>>(Resource: Base): 
       return columnMapping
     }
 
-    addColumnMappingFromColumn({ store, column }: CreateColumnMappingFromColumn): ColumnMapping.ColumnMapping {
-      return this.addColumnMapping({
+    addReferenceColumnMapping({ store, targetProperty, referencedTable, identifierMappings }: CreateReferenceColumnMapping): ColumnMapping.ReferenceColumnMapping {
+      const columnMapping = ColumnMapping.createReference(store.create(id.columnMapping(this, targetProperty.value)), {
+        targetProperty,
+        referencedTable,
+      })
+
+      columnMapping.identifierMapping = identifierMappings.map((properties) =>
+        ColumnMapping.createIdentifierMapping(
+          columnMapping.pointer.node(id.identifierMapping(columnMapping)),
+          properties,
+        ),
+      )
+
+      this.pointer.addOut(cc.columnMapping, columnMapping.id)
+
+      return columnMapping
+    }
+
+    addColumnMappingFromColumn({ store, column }: CreateColumnMappingFromColumn): ColumnMapping.LiteralColumnMapping {
+      return this.addLiteralColumnMapping({
         store,
         sourceColumn: column,
         targetProperty: $rdf.literal(slug(column.name)),

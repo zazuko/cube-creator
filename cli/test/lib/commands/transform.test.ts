@@ -66,6 +66,7 @@ describe('lib/commands/transform', function () {
         maxCount: 1,
       }, {
         path: $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/station'),
+        hasValue: $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/station/blBAS'),
         minCount: 1,
         maxCount: 1,
       }],

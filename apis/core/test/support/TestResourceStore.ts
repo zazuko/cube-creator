@@ -25,7 +25,7 @@ class InMemoryStorage {
     return Promise.resolve()
   }
 
-  push(pointer: GraphPointer<NamedNode, DatasetExt>) {
+  push(pointer: GraphPointer<NamedNode, any>) {
     this.__resources.set(pointer.term, pointer)
   }
 }

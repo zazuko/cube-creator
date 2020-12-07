@@ -1,5 +1,8 @@
 import { Actions } from '@/api/mixins/ApiResource'
+import { cc } from '@cube-creator/core/namespace'
 import { ColumnMapping, CsvColumn, CsvSource, DimensionMetadata, DimensionMetadataCollection, JobCollection, SourcesCollection, Table, TableCollection } from '@cube-creator/model'
+import { IdentifierMapping, LiteralColumnMapping, ReferenceColumnMapping } from '@cube-creator/model/ColumnMapping'
+import { Link } from '@cube-creator/model/lib/Link'
 import { RdfResource } from '@tpluscode/rdfine/RdfResource'
 
 export function serializeSourcesCollection (collection: SourcesCollection): SourcesCollection {
@@ -44,7 +47,8 @@ export function serializeTable (table: Table): Table {
     ...serializeResource(table),
     actions: {
       ...serializeActions(table.actions),
-      createColumnMapping: table.actions.createColumnMapping,
+      createLiteralColumnMapping: table.actions.createLiteralColumnMapping,
+      createReferenceColumnMapping: table.actions.createReferenceColumnMapping,
     },
     name: table.name,
     csvSource: table.csvSource,
@@ -57,11 +61,34 @@ export function serializeTable (table: Table): Table {
   })
 }
 
-export function serializeColumnMapping (columnMapping: ColumnMapping): ColumnMapping {
+export function serializeColumnMapping (columnMapping: ColumnMapping): ReferenceColumnMapping | LiteralColumnMapping {
+  return columnMapping.types.has(cc.LiteralColumnMapping)
+    ? serializeLiteralColumnMapping(columnMapping as LiteralColumnMapping)
+    : serializeReferenceColumnMapping(columnMapping as ReferenceColumnMapping)
+}
+
+export function serializeLiteralColumnMapping (columnMapping: LiteralColumnMapping): LiteralColumnMapping {
   return Object.freeze({
     ...serializeResource(columnMapping),
-    sourceColumn: columnMapping.sourceColumn,
     targetProperty: columnMapping.targetProperty,
+    sourceColumn: Object.freeze(columnMapping.sourceColumn),
+  })
+}
+
+export function serializeReferenceColumnMapping (columnMapping: ReferenceColumnMapping): ReferenceColumnMapping {
+  return Object.freeze({
+    ...serializeResource(columnMapping),
+    targetProperty: columnMapping.targetProperty,
+    referencedTable: serializeLink<Table>(columnMapping.referencedTable),
+    identifierMapping: columnMapping.identifierMapping.map(serializeIdentifierMapping),
+  })
+}
+
+export function serializeIdentifierMapping (identifierMapping: IdentifierMapping): IdentifierMapping {
+  return Object.freeze({
+    ...serializeResource(identifierMapping),
+    sourceColumn: serializeLink<CsvColumn>(identifierMapping.sourceColumn),
+    referencedColumn: serializeLink<CsvColumn>(identifierMapping.referencedColumn),
   })
 }
 
@@ -90,10 +117,17 @@ export function serializeJobCollection (collection: JobCollection): JobCollectio
 export function serializeResource (resource: RdfResource): RdfResource {
   return {
     id: resource.id,
+    types: Object.freeze(resource.types),
     clientPath: resource.clientPath,
     actions: serializeActions(resource.actions),
     pointer: Object.freeze(resource.pointer),
   } as RdfResource
+}
+
+export function serializeLink<T extends RdfResource> (resource: Link<T>): Link<T> {
+  return {
+    id: resource.id,
+  } as Link<T>
 }
 
 export function serializeActions (actions: Actions): Actions {

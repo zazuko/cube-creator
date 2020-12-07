@@ -14,7 +14,7 @@ HEADERS {
 }
 
 With Class api:Table {
-    Expect Operation cc:CreateColumnMappingAction {
+    Expect Operation cc:CreateLiteralColumnMappingAction {
         Invoke {
             Content-Type "text/turtle"
 
@@ -23,7 +23,8 @@ With Class api:Table {
             prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
             prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 
-            <>  cc:sourceColumn <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/year> ;
+            <>  a cc:LiteralColumnMapping ;
+                cc:sourceColumn <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/year> ;
                 cc:targetProperty "dimension year" ;
                 cc:datatype xsd:date ;
                 cc:language "en" ;

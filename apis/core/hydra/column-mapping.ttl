@@ -11,27 +11,9 @@ cc:ColumnMapping
   hydra:supportedOperation
   [
     a hydra:Operation,
-      schema:UpdateAction ;
-    hydra:title
-      "Update Column Mapping" ;
-    hydra:method
-      "PUT" ;
-    hydra:expects
-      cc:ColumnMapping,
-      <shape/column-mapping/create> ;
-    code:implementedBy [
-      a
-        code:EcmaScript ;
-
-      code:link
-        <file:handlers/column-mapping#put> ;
-    ]
-  ] ,
-  [
-    a hydra:Operation,
       schema:DeleteAction ;
     hydra:title
-      "Delete Column Mapping" ;
+      "Delete column mapping" ;
     hydra:method
       "DELETE" ;
     code:implementedBy [
@@ -44,6 +26,54 @@ cc:ColumnMapping
     ]
   ] .
 
-  <shape/column-mapping/create>
+cc:LiteralColumnMapping
+  a
+    hydra:Class ;
+  hydra:supportedOperation
+  [
+    a hydra:Operation,
+      schema:UpdateAction ;
+    hydra:title
+      "Edit column mapping" ;
+    hydra:method
+      "PUT" ;
+    hydra:expects
+      cc:ColumnMapping,
+      <shape/column-mapping/literal> ;
+    code:implementedBy [
+      a
+        code:EcmaScript ;
+      code:link
+        <file:handlers/column-mapping#putLiteral> ;
+    ]
+  ] .
+
+cc:ReferenceColumnMapping
+  a
+    hydra:Class ;
+  hydra:supportedOperation
+  [
+    a hydra:Operation,
+      schema:UpdateAction ;
+    hydra:title
+      "Edit column mapping" ;
+    hydra:method
+      "PUT" ;
+    hydra:expects
+      cc:ColumnMapping,
+      <shape/column-mapping/reference> ;
+    code:implementedBy [
+      a
+        code:EcmaScript ;
+      code:link
+        <file:handlers/column-mapping#putReference> ;
+    ]
+  ] .
+
+<shape/column-mapping/literal>
+  a
+    sh:Shape .
+
+<shape/column-mapping/reference>
   a
     sh:Shape .
