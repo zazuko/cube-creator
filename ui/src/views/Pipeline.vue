@@ -6,11 +6,11 @@
       class="box container-narrow"
     />
 
-    <div class="jobs content" v-show="jobs.length > 0">
+    <div class="jobs content">
       <h3 class="title is-5">
         Previous jobs
       </h3>
-      <ul>
+      <ul v-if="jobs.length > 0">
         <li v-for="job in jobs" :key="job.clientPath">
           <a v-if="job.link" :href="job.link" target="_blank">
             {{ job.created | format-date }} ({{ job.name }})
@@ -20,6 +20,9 @@
           </span>
         </li>
       </ul>
+      <p v-else class="has-text-grey">
+        No jobs yet
+      </p>
     </div>
   </div>
   <loading-block v-else />
@@ -48,3 +51,9 @@ export default class CubeDesignerView extends Vue {
   }
 }
 </script>
+
+<style>
+.jobs {
+  margin-top: 2.5rem;
+}
+</style>
