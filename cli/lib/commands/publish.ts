@@ -57,7 +57,7 @@ export default function (pipelineId: NamedNode, log: Debugger) {
     log('Running job %s', job)
     const pipeline = clownface({ dataset }).namedNode(pipelineId)
     variable.set('jobUri', job)
-    variable.set(names.executionUrl, executionUrl)
+    variable.set(names.executionUrl, executionUrl || process.env.EXECUTION_URL)
     variable.set('graph-store-endpoint', graphStore?.endpoint || process.env.GRAPH_STORE_ENDPOINT)
     variable.set('graph-store-user', graphStore?.user || process.env.GRAPH_STORE_USER)
     variable.set('graph-store-password', graphStore?.password || process.env.GRAPH_STORE_PASSWORD)
