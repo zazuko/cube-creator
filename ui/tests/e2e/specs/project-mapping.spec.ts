@@ -54,8 +54,7 @@ describe('CSV mapping flow', () => {
 
     cy.contains('.button', 'Create table from selected columns').click()
 
-    cy.contains('.label', 'Table name')
-      .next()
+    cy.contains('.form-property', 'Table name')
       .find('input')
       .type('My observations')
 
@@ -69,8 +68,12 @@ describe('CSV mapping flow', () => {
     cy.get('[data-icon=eye]').should('be.visible')
   })
 
-  it('Adds a column mapping to a table', () => {
-    cy.get('[data-testid=create-column-mapping]').click()
+  it('Adds a literal column mapping to a table', () => {
+    cy.contains('.mapper-table', 'My observations')
+      .find('[data-testid=create-column-mapping]')
+      .click()
+
+    cy.contains('Literal value').click()
 
     cy.contains('Source Column')
       .find('select')
@@ -102,16 +105,40 @@ describe('CSV mapping flow', () => {
       .find('select')
       .select('test.csv')
 
-    cy.contains('.label', 'Table name')
-      .next()
+    cy.contains('.form-property', 'Table name')
       .find('input')
       .type('My secondary table')
+
+    cy.contains('.form-property', 'Identifier template')
+      .find('input')
+      .type('{column2}', { parseSpecialCharSequences: false })
 
     cy.get('form').submit()
 
     cy.contains('.message', 'Table My secondary table was successfully created').should('be.visible')
     cy.contains('.mapper-table', 'My secondary table').should('be.visible')
       .find('[data-icon=eye]').should('not.be.visible')
+  })
+
+  it('Adds a reference column mapping to a table', () => {
+    cy.contains('.mapper-table', 'My observations')
+      .find('[data-testid=create-column-mapping]')
+      .click()
+
+    cy.contains('Link to another table').click()
+
+    cy.contains('.field', 'Link to table')
+      .find('select')
+      .select('My secondary table')
+
+    cy.contains('.field', 'Using the property')
+      .type('{selectall}the-other')
+
+    cy.get('form')
+      .submit()
+
+    cy.contains('.message', 'Column mapping was successfully created').should('be.visible')
+    cy.contains('.mapper-table', 'the-other').should('be.visible')
   })
 
   it('Deletes a table', () => {

@@ -61,6 +61,7 @@
           type="is-text"
           size="is-small"
           icon-left="plus"
+          data-testid="create-column-mapping"
         />
       </b-tooltip>
     </div>
