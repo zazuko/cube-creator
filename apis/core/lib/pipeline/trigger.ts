@@ -60,22 +60,14 @@ export const gitlab = trigger(job => {
 })
 
 export const github = trigger((job, params) => {
-  let body
-  if (job.has(rdf.type, cc.TransformJob).values.length > 0) {
-    body = {
-      ref: 'master',
-      inputs: {
-        transform_job: job.value,
-      },
-    }
-  } else {
-    body = {
-      ref: 'master',
-      inputs: {
-        publish_job: job.value,
-      },
-    }
+  const jobParam = job.has(rdf.type, cc.TransformJob).values.length > 0 ? 'transform_job' : 'publish_job'
+  const body = {
+    ref: 'master',
+    inputs: {
+      [jobParam]: job.value,
+    },
   }
+
   return {
     method: 'POST',
     body: JSON.stringify(body),
