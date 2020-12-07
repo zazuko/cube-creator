@@ -21,6 +21,8 @@
     "@rdf-esm/data-model": "^0.5.3",
     "@rdf-esm/dataset": "^0.5.1",
     "@rdfine/shacl": "^0.7.0",
+    "@sentry/tracing": "^5.29.0",
+    "@sentry/vue": "^5.29.0",
     "@tpluscode/rdf-ns-builders": "^0.4",
     "@tpluscode/rdfine": "^0.5.16",
     "alcaeus": "1.0.1",

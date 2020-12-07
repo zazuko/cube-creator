@@ -52,12 +52,24 @@ jobs:
           cache-to: type=local,dest=/tmp/.buildx-cache
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.prep.outputs.tags }}
+          build-args: |
+            COMMIT=${{ github.sha }}
           labels: |
             org.opencontainers.image.created=${{ steps.prep.outputs.created }}
             org.opencontainers.image.source=${{ github.repositoryUrl }}
             org.opencontainers.image.version=${{ steps.prep.outputs.version }}
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.licenses=${{ github.event.repository.license.name }}
+
+      - name: Create Sentry release
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: zazuko
+          SENTRY_PROJECT: cube-creator-api
+          SENTRY_URL: https://sentry.zazuko.com/
+        with:
+          version_prefix: cube-creator-api@
 
   build-app:
     runs-on: ubuntu-latest
@@ -98,12 +110,23 @@ jobs:
           tags: ${{ steps.prep.outputs.tags }}
           build-args: |
             PUBLIC_PATH=/app/
+            COMMIT=${{ github.sha }}
           labels: |
             org.opencontainers.image.created=${{ steps.prep.outputs.created }}
             org.opencontainers.image.source=${{ github.repositoryUrl }}
             org.opencontainers.image.version=${{ steps.prep.outputs.version }}
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.licenses=${{ github.event.repository.license.name }}
+
+      - name: Create Sentry release
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: zazuko
+          SENTRY_PROJECT: cube-creator-app
+          SENTRY_URL: https://sentry.zazuko.com/
+        with:
+          version_prefix: cube-creator-app@
 
   build-cli:
     runs-on: ubuntu-latest
@@ -142,8 +165,6 @@ jobs:
           cache-to: type=local,dest=/tmp/.buildx-cache
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.prep.outputs.tags }}
-          build-args: |
-            PUBLIC_PATH=/app/
           labels: |
             org.opencontainers.image.created=${{ steps.prep.outputs.created }}
             org.opencontainers.image.source=${{ github.repositoryUrl }}
