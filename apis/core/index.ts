@@ -3,6 +3,8 @@ import * as http from 'http'
 import * as https from 'https'
 import * as fs from 'fs'
 import * as path from 'path'
+import * as Sentry from '@sentry/node'
+import * as Tracing from '@sentry/tracing'
 import { hydraBox } from '@hydrofoil/labyrinth'
 import cors from 'cors'
 import { error, log } from './lib/log'
@@ -23,7 +25,21 @@ async function main() {
 
   const app = express()
 
+  Sentry.init({
+    dsn: env.maybe.SENTRY_DSN,
+    environment: env.maybe.SENTRY_ENVIRONMENT,
+    release: env.maybe.SENTRY_RELEASE,
+    integrations: [
+      new Sentry.Integrations.Http({ tracing: true }),
+      new Tracing.Integrations.Express({ app }),
+    ],
+    tracesSampleRate: 1.0,
+  })
+
   app.enable('trust proxy')
+
+  app.use(Sentry.Handlers.requestHandler())
+  app.use(Sentry.Handlers.tracingHandler())
 
   app.use(cors())
 
@@ -58,6 +74,8 @@ async function main() {
       ],
     },
   })
+
+  app.use(Sentry.Handlers.errorHandler())
 
   await bootstrap(env.STORE_GRAPH_ENDPOINT, baseUri)
 

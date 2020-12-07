@@ -7,6 +7,10 @@ type AppConfig = {
     scope: string
   }
   apiCoreBase: string
+  sentry?: {
+    dsn: string
+    environment: string
+  }
 }
 
 interface Window {

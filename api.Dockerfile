@@ -41,6 +41,10 @@ ADD apis/core/hydra/*.ttl ./apis/core/hydra/
 RUN apk add --no-cache tini
 ENTRYPOINT ["tini", "--", "node"]
 
+# build with `docker build --build-arg COMMIT=$(git rev-parse HEAD)`
+ARG COMMIT
+ENV SENTRY_RELEASE=cube-creator-api@$COMMIT
+
 # Have some logs by default
 # This should be kept in sync with .lando.yml
 ENV DEBUG creator*,hydra*,hydra-box*,labyrinth*

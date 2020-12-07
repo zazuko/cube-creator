@@ -28,8 +28,12 @@ WORKDIR /app/ui
 # e.g. `docker build --build-arg PUBLIC_PATH=/app/`
 ARG PUBLIC_PATH=/
 
+# build with `docker build --build-arg COMMIT=$(git rev-parse HEAD)`
+ARG COMMIT
+
 ENV PUBLIC_PATH=$PUBLIC_PATH
 ENV NODE_ENV=production
+ENV VUE_APP_SENTRY_RELEASE=cube-creator-app@$COMMIT
 RUN yarn build
 
 FROM nginx:1.19.0-alpine

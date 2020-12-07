@@ -5,4 +5,8 @@ window.APP_CONFIG = {
     scope: "openid email profile pipelines:read pipelines:write",
   },
   apiCoreBase: "$API_CORE_BASE",
+  sentry: {
+    dsn: "$SENTRY_DSN",
+    environment: "$SENTRY_ENVIRONMENT",
+  }
 };
