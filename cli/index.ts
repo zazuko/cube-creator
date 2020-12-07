@@ -11,7 +11,7 @@ const ns = {
 }
 
 const pipelines = {
-  TransformFiles: ns.pipeline('#Main'),
+  Entrypoint: ns.pipeline('#Main'),
 }
 
 function parseVariables(str: string, all: Map<string, string>) {
@@ -38,7 +38,7 @@ async function main() {
     .option('--debug', 'Print diagnostic information to standard output')
     .option('--enable-buffer-monitor', 'enable histogram of buffer usage')
     .option('--auth-param <name=value>', 'Additional variables to pass to the token endpoint', parseVariables, new Map())
-    .action(transform(pipelines.TransformFiles, log))
+    .action(transform(pipelines.Entrypoint, log))
 
   program
     .command('publish')
@@ -49,7 +49,7 @@ async function main() {
     .option('--debug', 'Print diagnostic information to standard output')
     .option('--enable-buffer-monitor', 'enable histogram of buffer usage')
     .option('--auth-param <name=value>', 'Additional variables to pass to the token endpoint', parseVariables, new Map())
-    .action(transform(pipelines.TransformFiles, log))
+    .action(transform(pipelines.Entrypoint, log))
 
   return program.parseAsync(process.argv)
 }

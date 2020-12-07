@@ -23,7 +23,7 @@ const ns = {
 }
 
 const pipelines = {
-  TransformFiles: ns.pipeline('#Main'),
+  Entrypoint: ns.pipeline('#Main'),
 }
 
 async function main() {
@@ -39,8 +39,8 @@ async function main() {
 
   app.get('/', (req, res) => res.status(204).end())
 
-  const doTransform = transform.default(pipelines.TransformFiles, log)
-  const doPublish = publish.default(pipelines.TransformFiles, log)
+  const doTransform = transform.default(pipelines.Entrypoint, log)
+  const doPublish = publish.default(pipelines.Entrypoint, log)
 
   app.post('/', asyncMiddleware(async (req, res) => {
     const transformJob = req.body.TRANSFORM_JOB_URI
