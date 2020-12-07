@@ -22,7 +22,7 @@
         </p>
         <table class="table columns-table">
           <tbody>
-            <tr v-for="mapping in data.identifierMapping" :key="mapping.referencedColumn.clientPath">
+            <tr v-for="mapping in data.identifierMapping" :key="mapping.referencedColumn.id.value">
               <td>
                 <b-select v-model="mapping.sourceColumnId">
                   <option v-for="column in source.columns" :key="column.clientPath" :value="column.id.value">
@@ -30,7 +30,7 @@
                   </option>
                 </b-select>
               </td>
-              <td>for <code>{{ '{' + mapping.referencedColumn.name + '}' }}</code></td>
+              <td>for <code>{{ '{' + getColumn(data.referencedTable.id, mapping.referencedColumn.id).name + '}' }}</code></td>
             </tr>
           </tbody>
         </table>
@@ -114,6 +114,18 @@ export default class extends Vue {
     // Setup watchers only after form data is populated
     this.$watch('data.referencedTable', this.populatePredicate)
     this.$watch('data.referencedTable', this.populateColumnMapping)
+  }
+
+  getColumn (tableId: Term, columnId: Term): CsvColumn {
+    const table = this.getTable(tableId)
+    if (!table.csvSource) throw new Error('Table does not have source')
+
+    const source = this.getSource(table.csvSource.id)
+    const column = source.columns.find(({ id }) => id.equals(columnId))
+
+    if (!column) throw new Error(`Column not found: ${columnId}`)
+
+    return column
   }
 
   populatePredicate (table: Table | null): void {
