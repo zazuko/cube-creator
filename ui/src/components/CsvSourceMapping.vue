@@ -77,8 +77,8 @@
     <div class="column is-1" />
     <div class="column">
       <mapper-table v-for="table in sourceTables" :key="table.id.value" :table="table" />
-      <div v-if="isFirstSource && sourceTables.length === 0" class="content">
-        <p>You haven't mapped any table yet.</p>
+      <div v-if="isFirstSource && tables.length === 0" class="content">
+        <p>You haven't mapped any tables yet.</p>
         <p>The first step is to define which columns of your CSV will be dimensions of your cube:</p>
         <ol>
           <li>Select columns that will be dimensions of your cube on the CSV file (left column)</li>
@@ -86,6 +86,11 @@
           <li>Select the type "Observation table" in the form. The Observation table represents the structure of your cube.</li>
           <li>After submitting the form, you should already be able to see a first version of your cube in the "Cube Preview" (bottom of the screen).</li>
         </ol>
+      </div>
+      <div v-else-if="sourceTables.length === 0">
+        <p>
+          No tables mapped from this CSV file yet
+        </p>
       </div>
     </div>
   </div>
