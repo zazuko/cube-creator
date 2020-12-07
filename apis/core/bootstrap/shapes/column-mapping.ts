@@ -3,9 +3,13 @@ import { dash, hydra, rdfs, sh, csvw, xsd } from '@tpluscode/rdf-ns-builders'
 import { turtle } from '@tpluscode/rdf-string'
 import $rdf from 'rdf-ext'
 
+const literalShapeId = shape('column-mapping/literal')
+const referenceShapeId = shape('column-mapping/reference')
+const identifierMappingId = $rdf.namedNode(referenceShapeId.value + '#identifierMapping')
+
 export const ColumnMappingShape = turtle`
-${shape('column-mapping/literal')} {
-  ${shape('column-mapping/literal')} a ${sh.NodeShape}, ${hydra.Resource} ;
+${literalShapeId} {
+  ${literalShapeId} a ${sh.NodeShape}, ${hydra.Resource} ;
     ${sh.targetClass} ${cc.LiteralColumnMapping} ;
     ${rdfs.label} "Column Mapping" ;
     ${sh.property} [
@@ -75,8 +79,8 @@ ${shape('column-mapping/literal')} {
   ${xsd.dateTime} ${rdfs.label} "datetime" .
 }
 
-${shape('column-mapping/reference')} {
-  ${shape('column-mapping/reference')} a ${sh.NodeShape}, ${hydra.Resource} ;
+${referenceShapeId} {
+  ${referenceShapeId} a ${sh.NodeShape}, ${hydra.Resource} ;
     ${sh.targetClass} ${cc.ReferenceColumnMapping} ;
     ${sh.property} [
       ${sh.name} "Target Property" ;
@@ -109,13 +113,13 @@ ${shape('column-mapping/reference')} {
     ${sh.property} [
       ${sh.name} "Identifier mapping" ;
       ${sh.path} ${cc.identifierMapping} ;
-      ${sh.node} ${$rdf.blankNode('identifierMapping')} ;
+      ${sh.node} ${identifierMappingId} ;
       ${dash.editor} ${dash.DetailsEditor} ;
       ${sh.order} 30 ;
     ] ;
   .
 
-  ${$rdf.blankNode('identifierMapping')} a ${sh.NodeShape} ;
+  ${identifierMappingId} a ${sh.NodeShape} ;
     ${sh.property} [
       ${sh.name} "Source CSV column" ;
       ${sh.path} ${cc.sourceColumn} ;
