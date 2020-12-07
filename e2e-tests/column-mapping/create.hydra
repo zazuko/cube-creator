@@ -65,9 +65,7 @@ With Class api:Table {
             Expect Status 400
         }
     }
-}
 
-With Class api:Table {
     Expect Operation cc:CreateReferenceColumnMappingAction {
         Invoke {
             Content-Type "text/turtle"
@@ -79,10 +77,10 @@ With Class api:Table {
 
             <>  a cc:ReferenceColumnMapping ;
                 cc:targetProperty "dimension/station" ;
-                cc:referencedTable <cube-project/ubd/csv-mapping/table-station> ;
+                cc:referencedTable <https://cube-creator.lndo.site/cube-project/ubd/csv-mapping/table-station> ;
                 cc:identifierMapping [
-                    cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/station> ;
-                    cc:referencedColumn <cube-project/ubd/csv-source/stations/column/station-id> ;
+                    cc:sourceColumn <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/station> ;
+                    cc:referencedColumn <https://cube-creator.lndo.site/cube-project/ubd/csv-source/stations/column/station-id> ;
                 ] .
             ```
         } => {
@@ -93,6 +91,14 @@ With Class api:Table {
             Expect Property cc:targetProperty "dimension/station"
             Expect Property cc:referencedTable {
                 Expect Id <https://cube-creator.lndo.site/cube-project/ubd/csv-mapping/table-station>
+            }
+            Expect Property cc:identifierMapping {
+                Expect Property cc:sourceColumn {
+                    Expect Id <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/station>
+                }
+                Expect Property cc:referencedColumn {
+                    Expect Id <https://cube-creator.lndo.site/cube-project/ubd/csv-source/stations/column/station-id>
+                }
             }
         }
 
@@ -106,10 +112,10 @@ With Class api:Table {
 
             <>  a cc:ReferenceColumnMapping ;
                 cc:targetProperty "dimension/station" ;
-                cc:referencedTable <cube-project/ubd/csv-mapping/table-station> ;
+                cc:referencedTable <https://cube-creator.lndo.site/cube-project/ubd/csv-mapping/table-station> ;
                 cc:identifierMapping [
-                    cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/station> ;
-                    cc:referencedColumn <cube-project/ubd/csv-source/stations/column/station-id> ;
+                    cc:sourceColumn <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/station> ;
+                    cc:referencedColumn <https://cube-creator.lndo.site/cube-project/ubd/csv-source/stations/column/station-id> ;
                 ] .
             ```
         } => {
