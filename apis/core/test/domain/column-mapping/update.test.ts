@@ -222,7 +222,7 @@ describe('domain/column-mapping/update', () => {
     await expect(promise).to.have.rejectedWith(NotFoundError)
   })
 
-  it.only('throw if targetProperty already in use on observation table', async () => {
+  it('throw if targetProperty already in use on observation table', async () => {
     getTableForColumnMapping.resolves(observationTable.term.value)
 
     const resource = clownface({ dataset: $rdf.dataset() })
