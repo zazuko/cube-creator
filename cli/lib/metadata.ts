@@ -6,6 +6,7 @@ import { cc, cube } from '@cube-creator/core/namespace'
 import { Project, PublishJob } from '@cube-creator/model'
 import { Hydra } from 'alcaeus/node'
 import * as Models from '@cube-creator/model'
+import TermSet from '@rdfjs/term-set'
 
 Hydra.resources.factory.addMixin(...Object.values(Models))
 
@@ -31,11 +32,13 @@ export async function injectMetadata(jobUri: string) {
     throw new Error(`Dataset ${project.dataset} not loaded`)
   }
 
+  const datasetTriples = dataset.pointer.dataset//.match(null, null, null, dataset.id)
+
   return obj(function (quad: Quad, _, callback) {
-    const visited = new Set()
+    const visited = new TermSet()
     const copyChildren = (subject: QuadObject) => {
       if (subject && subject.termType !== 'Literal' && !visited.has(subject)) {
-        [...dataset.pointer.dataset.match(subject)].forEach(item => {
+        [...datasetTriples.match(subject, null, null, dataset.id)].forEach(item => {
           this.push($rdf.triple(subject, item.predicate, item.object))
           visited.add(subject)
           copyChildren(item.object)
@@ -45,7 +48,7 @@ export async function injectMetadata(jobUri: string) {
 
     // Cube Metadata
     if (rdf.type.equals(quad.predicate) && quad.object.equals(cube.Cube)) {
-      [...dataset.pointer.dataset.match(dataset.id)]
+      [...datasetTriples.match(dataset.id)]
         .filter(q => !q.predicate.equals(schema.hasPart) && !q.predicate.equals(cc.dimensionMetadata))
         .forEach(metadata => {
           this.push($rdf.triple(quad.subject, metadata.predicate, metadata.object))
@@ -56,8 +59,8 @@ export async function injectMetadata(jobUri: string) {
 
     // Dimension Metadata
     if (quad.predicate.equals(sh.path)) {
-      [...dataset.pointer.dataset.match(null, schema.about, quad.object)].forEach(dim => {
-        [...dataset.pointer.dataset.match(dim.subject)]
+      [...datasetTriples.match(null, schema.about, quad.object)].forEach(dim => {
+        [...datasetTriples.match(dim.subject)]
           .filter(c => !c.predicate.equals(schema.about))
           .forEach(item2 => {
             this.push($rdf.triple(quad.subject, item2.predicate, item2.object))
