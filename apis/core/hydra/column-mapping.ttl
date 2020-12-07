@@ -5,6 +5,27 @@ prefix code:  <https://code.described.at/>
 prefix schema:   <http://schema.org/>
 prefix sh:     <http://www.w3.org/ns/shacl#>
 
+cc:ColumnMapping
+  a
+    hydra:Class ;
+  hydra:supportedOperation
+  [
+    a hydra:Operation,
+      schema:DeleteAction ;
+    hydra:title
+      "Delete column mapping" ;
+    hydra:method
+      "DELETE" ;
+    code:implementedBy [
+      a
+        code:EcmaScript ;
+      hydra:expects
+        cc:ColumnMapping ;
+      code:link
+        <file:handlers/column-mapping#remove> ;
+    ]
+  ] .
+
 cc:LiteralColumnMapping
   a
     hydra:Class ;
@@ -24,22 +45,6 @@ cc:LiteralColumnMapping
         code:EcmaScript ;
       code:link
         <file:handlers/column-mapping#putLiteral> ;
-    ]
-  ] ,
-  [
-    a hydra:Operation,
-      schema:DeleteAction ;
-    hydra:title
-      "Delete column mapping" ;
-    hydra:method
-      "DELETE" ;
-    code:implementedBy [
-      a
-        code:EcmaScript ;
-      hydra:expects
-        cc:ColumnMapping ;
-      code:link
-        <file:handlers/column-mapping#remove> ;
     ]
   ] .
 
@@ -62,22 +67,6 @@ cc:ReferenceColumnMapping
         code:EcmaScript ;
       code:link
         <file:handlers/column-mapping#putReference> ;
-    ]
-  ] ,
-  [
-    a hydra:Operation,
-      schema:DeleteAction ;
-    hydra:title
-      "Delete column mapping" ;
-    hydra:method
-      "DELETE" ;
-    code:implementedBy [
-      a
-        code:EcmaScript ;
-      hydra:expects
-        cc:ColumnMapping ;
-      code:link
-        <file:handlers/column-mapping#remove> ;
     ]
   ] .
 
