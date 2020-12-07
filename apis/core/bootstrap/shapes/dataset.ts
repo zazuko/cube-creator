@@ -3,8 +3,9 @@ import { hydra, rdfs, sh, dcat, dcterms, xsd, rdf, vcard, schema, _void, dash } 
 import { turtle } from '@tpluscode/rdf-string'
 import $rdf from 'rdf-ext'
 
-const temporalFromTo = $rdf.blankNode('temporalFromTo')
-const vcardOrganization = $rdf.blankNode('vcardOrganization')
+const shapeId = shape('dataset/edit-metadata')
+const temporalFromTo = $rdf.namedNode(shapeId.value + '#temporalFromTo')
+const vcardOrganization = $rdf.namedNode(shapeId.value + '#vcardOrganization')
 
 export const DatasetShape = turtle`
 @prefix cld: <http://purl.org/cld/terms/> .
@@ -14,8 +15,8 @@ export const DatasetShape = turtle`
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 
-${shape('dataset/edit-metadata')} {
-  ${shape('dataset/edit-metadata')} a ${sh.NodeShape}, ${hydra.Resource} ;
+${shapeId} {
+  ${shapeId} a ${sh.NodeShape}, ${hydra.Resource} ;
     ${sh.targetClass} ${_void.Dataset} ;
     ${rdfs.label} "Cube Metadata" ;
     ${sh.property} [
@@ -79,13 +80,13 @@ ${shape('dataset/edit-metadata')} {
       ${sh.minCount} 0 ;
       ${sh.minLength} 1 ;
       ${sh.nodeKind} ${sh.IRI} ;
-      ${sh.in} 
-        ( ${freq.triennial} 
-          ${freq.biennial} 
-          ${freq.annual} 
-          ${freq.semiannual} 
+      ${sh.in}
+        ( ${freq.triennial}
+          ${freq.biennial}
+          ${freq.annual}
+          ${freq.semiannual}
           ${freq.threeTimesAYear}
-          ${freq.quarterly} 
+          ${freq.quarterly}
           ${freq.bimonthly}
           ${freq.monthly}
           ${freq.semimonthly}
@@ -94,7 +95,7 @@ ${shape('dataset/edit-metadata')} {
           ${freq.weekly}
           ${freq.semiweekly}
           ${freq.threeTimesAWeek}
-          ${freq.daily} 
+          ${freq.daily}
           ${freq.continuous}
           ${freq.irregular} ) ;
       ${sh.order} 60 ;
@@ -134,22 +135,22 @@ ${shape('dataset/edit-metadata')} {
       ${sh.in}
       (
         <http://opendata.swiss/themes/administration>
-        <http://opendata.swiss/themes/agriculture> 
-        <http://opendata.swiss/themes/construction> 
-        <http://opendata.swiss/themes/crime> 
+        <http://opendata.swiss/themes/agriculture>
+        <http://opendata.swiss/themes/construction>
+        <http://opendata.swiss/themes/crime>
         <http://opendata.swiss/themes/culture>
-        <http://opendata.swiss/themes/education> 
-        <http://opendata.swiss/themes/energy> 
-        <http://opendata.swiss/themes/finances> 
-        <http://opendata.swiss/themes/geography> 
-        <http://opendata.swiss/themes/health> 
-        <http://opendata.swiss/themes/industry> 
-        <http://opendata.swiss/themes/legislation> 
-        <http://opendata.swiss/themes/mobility> 
+        <http://opendata.swiss/themes/education>
+        <http://opendata.swiss/themes/energy>
+        <http://opendata.swiss/themes/finances>
+        <http://opendata.swiss/themes/geography>
+        <http://opendata.swiss/themes/health>
+        <http://opendata.swiss/themes/industry>
+        <http://opendata.swiss/themes/legislation>
+        <http://opendata.swiss/themes/mobility>
         <http://opendata.swiss/themes/national-economy>
-        <http://opendata.swiss/themes/politics> 
-        <http://opendata.swiss/themes/population> 
-        <http://opendata.swiss/themes/prices> 
+        <http://opendata.swiss/themes/politics>
+        <http://opendata.swiss/themes/population>
+        <http://opendata.swiss/themes/prices>
         <http://opendata.swiss/themes/public-order>
         <http://opendata.swiss/themes/social-security>
         <http://opendata.swiss/themes/statistical-basis>
@@ -414,7 +415,7 @@ freq: dcterms:creator [ rdfs:label "Dublin Core Collection Description Task Grou
     skos:definition ""@de,
         ""@en,
         ""@fr,
-        ""@it ;    
+        ""@it ;
     rdfs:label "Agriculture, forestry"@en .
 
 <http://opendata.swiss/themes/construction> a skos:Concept ;
