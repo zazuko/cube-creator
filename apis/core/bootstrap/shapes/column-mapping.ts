@@ -109,13 +109,13 @@ ${shape('column-mapping/reference')} {
     ${sh.property} [
       ${sh.name} "Identifier mapping" ;
       ${sh.path} ${cc.identifierMapping} ;
-      ${sh.node} ${$rdf.blankNode('identifier-mapping')} ;
+      ${sh.node} ${$rdf.blankNode('identifierMapping')} ;
       ${dash.editor} ${dash.DetailsEditor} ;
       ${sh.order} 30 ;
     ] ;
   .
 
-  ${$rdf.blankNode('identifier-mapping')} a ${sh.NodeShape} ;
+  ${$rdf.blankNode('identifierMapping')} a ${sh.NodeShape} ;
     ${sh.property} [
       ${sh.name} "Source CSV column" ;
       ${sh.path} ${cc.sourceColumn} ;
