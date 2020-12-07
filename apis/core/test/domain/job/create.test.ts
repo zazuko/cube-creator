@@ -6,7 +6,7 @@ import { dcterms, rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import '../../../lib/domain'
 import { TestResourceStore } from '../../support/TestResourceStore'
-import { createTransformJob } from '../../../lib/domain/job/create'
+import { createPublishJob, createTransformJob } from '../../../lib/domain/job/create'
 
 describe('domain/job/create', () => {
   let store: TestResourceStore
@@ -40,6 +40,20 @@ describe('domain/job/create', () => {
     // then
     expect(job.out(cc.cubeGraph).value).to.eq('myCubeGraph')
     expect(job.out(cc.tables).value).to.eq('myTables')
+    expect(job.out(schema.name).value).to.be.ok
+    expect(job.out(dcterms.created).value).to.be.ok
+    expect(job.out(schema.actionStatus).term).to.deep.eq(schema.PotentialActionStatus)
+  })
+
+  it('creates a publish job', async () => {
+    // given
+
+    // when
+    const job = await createPublishJob({ resource: jobCollection.term, store })
+
+    // then
+    expect(job.has(rdf.type, cc.PublishJob).values.length).to.eq(1)
+    expect(job.out(cc.project).value).to.eq('myProject')
     expect(job.out(schema.name).value).to.be.ok
     expect(job.out(dcterms.created).value).to.be.ok
     expect(job.out(schema.actionStatus).term).to.deep.eq(schema.PotentialActionStatus)

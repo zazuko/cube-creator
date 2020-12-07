@@ -14,12 +14,12 @@ import { initializer } from './lib/initializer'
 export interface Job extends Action, Rdfs.Resource, RdfResource {
   created: Date
   link?: string
+  name: string
 }
 
 export interface TransformJob extends Job {
   cubeGraph: NamedNode
   tableCollection: Link<TableCollection>
-  label: string
 }
 
 export interface PublishJob extends Job {
@@ -35,6 +35,9 @@ export function JobMixin<Base extends Constructor<RdfResource>>(base: Base): Mix
   class Impl extends ResourceMixin(ActionMixin(base)) implements Partial<Job> {
     @property.literal({ path: dcterms.created, type: Date, initial: () => new Date() })
     created!: Date
+
+    @property.literal({ path: schema.name })
+    name!: string
 
     @property.literal({ path: rdfs.seeAlso })
     link?: string
@@ -52,12 +55,6 @@ export function TransformJobMixin<Base extends Constructor<RdfResource>>(base: B
 
     @property({ path: cc.cubeGraph })
     cubeGraph!: NamedNode
-
-    @property.literal({ path: schema.name })
-    label!: string
-
-    @property.literal({ path: dcterms.created, type: Date, initial: () => new Date() })
-    created!: Date
   }
 
   return Impl
@@ -65,7 +62,7 @@ export function TransformJobMixin<Base extends Constructor<RdfResource>>(base: B
 
 TransformJobMixin.appliesTo = cc.TransformJob
 
-type RequiredProperties = 'label' | 'cubeGraph' | 'tableCollection'
+type RequiredProperties = 'name' | 'cubeGraph' | 'tableCollection'
 
 export const createTransform = initializer<TransformJob, RequiredProperties>(TransformJobMixin, {
   types: [cc.Job, cc.TransformJob],
@@ -73,7 +70,7 @@ export const createTransform = initializer<TransformJob, RequiredProperties>(Tra
 })
 
 export function PublishJobMixin<Base extends Constructor<RdfResource>>(base: Base): Mixin {
-  class Impl extends base implements Partial<PublishJob> {
+  class Impl extends ResourceMixin(ActionMixin(base)) implements Partial<PublishJob> {
     @property({ path: cc.project })
     project!: NamedNode
   }
@@ -82,3 +79,10 @@ export function PublishJobMixin<Base extends Constructor<RdfResource>>(base: Bas
 }
 
 PublishJobMixin.appliesTo = cc.PublishJob
+
+type RequiredPropertiesPublish = 'name' | 'project'
+
+export const createPublish = initializer<PublishJob, RequiredPropertiesPublish>(PublishJobMixin, {
+  types: [cc.Job, cc.PublishJob],
+  actionStatus: schema.PotentialActionStatus,
+})

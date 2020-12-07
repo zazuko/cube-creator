@@ -87,7 +87,7 @@ export async function updateJobStatus({ jobUri, executionUrl, log, status, error
 
 async function loadTables(job: TransformJob, log: Logger): Promise<Table[]> {
   if (job.tableCollection.load) {
-    log.info(`Will transform project ${job.label}`)
+    log.info(`Will transform project ${job.name}`)
     const { representation } = await job.tableCollection.load()
 
     if (representation?.root) {

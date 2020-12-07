@@ -33,6 +33,12 @@ cc:Job
         ] ;
     ] .
 
+cc:TransformJob
+  a hydra:Class .
+
+cc:PublishJob
+  a hydra:Class .
+
 cc:JobCollection
   a
     hydra:Class ;
@@ -46,7 +52,7 @@ cc:JobCollection
       hydra:method
         "POST" ;
       hydra:expects
-        #cc:TransformJob, 
+        cc:TransformJob , 
         <shape/job/trigger> ;
       code:implementedBy
         [
@@ -54,6 +60,25 @@ cc:JobCollection
             code:EcmaScript ;
           code:link
             <file:handlers/jobs#transform> ;
+        ] ;
+    ],  
+    [
+      a
+        hydra:Operation,
+        cc:PublishAction ;
+      hydra:title
+        "Start publication" ;
+      hydra:method
+        "POST" ;
+      hydra:expects
+        cc:PublishJob , 
+        <shape/job/trigger> ;
+      code:implementedBy
+        [
+          a
+            code:EcmaScript ;
+          code:link
+            <file:handlers/jobs#publish> ;
         ] ;
     ]
 .
