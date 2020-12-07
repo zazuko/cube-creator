@@ -39,4 +39,8 @@ RUN yarn install --production --frozen-lockfile
 COPY --from=builder /app/dist/cli ./cli/
 COPY --from=builder /app/dist/packages/ ./packages/
 
+# build with `docker build --build-arg COMMIT=$(git rev-parse HEAD)`
+ARG COMMIT
+ENV SENTRY_RELEASE=cube-creator-cli@$COMMIT
+
 ENTRYPOINT ["node", "cli/index.js"]

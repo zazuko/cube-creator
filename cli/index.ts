@@ -37,6 +37,8 @@ async function main() {
     .option('-v, --variable <name=value>', 'Pipeline variables', parseVariables, new Map())
     .option('--debug', 'Print diagnostic information to standard output')
     .option('--enable-buffer-monitor', 'enable histogram of buffer usage')
+    .option('--sentry-dsn', 'Sentry DSN')
+    .option('--sentry-environment', 'Sentry environment')
     .option('--auth-param <name=value>', 'Additional variables to pass to the token endpoint', parseVariables, new Map())
     .action(transform(pipelines.TransformFiles, log))
 
