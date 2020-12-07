@@ -54,8 +54,6 @@ describe('lib/commands/publish', function () {
     })
 
     it('cube meta data has been copied', async function () {
-      
-
       expect(cubePointer.namedNode(ns.targetCube())).to.matchShape({
         property: [{
           path: dcterms.identifier,
