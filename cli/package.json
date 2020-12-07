@@ -18,6 +18,8 @@
     "@rdfjs/namespace": "^1.1.0",
     "@rdfjs/term-map": "^1.0.0",
     "@rdfjs/term-set": "^1.0.1",
+    "@sentry/node": "^5.29.0",
+    "@sentry/tracing": "^5.29.0",
     "@tpluscode/rdf-ns-builders": "^0.4",
     "@tpluscode/rdfine": "^0.5.16",
     "alcaeus": "^1.0.1",
