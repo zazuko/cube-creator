@@ -14,7 +14,7 @@ HEADERS {
 }
 
 With Class api:Table {
-    Expect Operation cc:CreateColumnMappingAction {
+    Expect Operation cc:CreateLiteralColumnMappingAction {
         Invoke {
             Content-Type "text/turtle"
 
@@ -23,7 +23,8 @@ With Class api:Table {
             prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
             prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 
-            <>  cc:sourceColumn <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/year> ;
+            <>  a cc:LiteralColumnMapping ;
+                cc:sourceColumn <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/year> ;
                 cc:targetProperty "dimension/year-built" ;
                 cc:datatype xsd:date ;
                 cc:language "en" ;
@@ -33,6 +34,7 @@ With Class api:Table {
             Expect Status 201
 
             Expect Type <https://cube-creator.zazuko.com/vocab#ColumnMapping>
+            Expect Type <https://cube-creator.zazuko.com/vocab#LiteralColumnMapping>
             Expect Property cc:targetProperty "dimension/year-built"
             Expect Property cc:sourceColumn {
                 Expect Id <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/year>
@@ -52,11 +54,63 @@ With Class api:Table {
             prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
             prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 
-            <>  cc:sourceColumn <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/year> ;
-                cc:targetProperty "dimension/year" ;
+            <>  a cc:LiteralColumnMapping ;
+                cc:sourceColumn <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/year> ;
+                cc:targetProperty "dimension/year-built" ;
                 cc:datatype xsd:date ;
                 cc:language "en" ;
                 cc:defaultValue "2000-01-01" .
+            ```
+        } => {
+            Expect Status 400
+        }
+    }
+}
+
+With Class api:Table {
+    Expect Operation cc:CreateReferenceColumnMappingAction {
+        Invoke {
+            Content-Type "text/turtle"
+
+            ```
+            prefix cc: <https://cube-creator.zazuko.com/vocab#>
+            prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+            prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+
+            <>  a cc:ReferenceColumnMapping ;
+                cc:targetProperty "dimension/station" ;
+                cc:referencedTable <cube-project/ubd/csv-mapping/table-station> ;
+                cc:identifierMapping [
+                    cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/station> ;
+                    cc:referencedColumn <cube-project/ubd/csv-source/stations/column/station-id> ;
+                ] .
+            ```
+        } => {
+            Expect Status 201
+
+            Expect Type <https://cube-creator.zazuko.com/vocab#ColumnMapping>
+            Expect Type <https://cube-creator.zazuko.com/vocab#ReferenceColumnMapping>
+            Expect Property cc:targetProperty "dimension/station"
+            Expect Property cc:referencedTable {
+                Expect Id <https://cube-creator.lndo.site/cube-project/ubd/csv-mapping/table-station>
+            }
+        }
+
+        Invoke {
+            Content-Type "text/turtle"
+
+            ```
+            prefix cc: <https://cube-creator.zazuko.com/vocab#>
+            prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+            prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+
+            <>  a cc:ReferenceColumnMapping ;
+                cc:targetProperty "dimension/station" ;
+                cc:referencedTable <cube-project/ubd/csv-mapping/table-station> ;
+                cc:identifierMapping [
+                    cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/station> ;
+                    cc:referencedColumn <cube-project/ubd/csv-source/stations/column/station-id> ;
+                ] .
             ```
         } => {
             Expect Status 400
