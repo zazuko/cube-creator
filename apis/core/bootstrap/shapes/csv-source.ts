@@ -3,11 +3,12 @@ import { csvw, dash, hydra, rdfs, schema, sh, xsd } from '@tpluscode/rdf-ns-buil
 import { turtle } from '@tpluscode/rdf-string'
 import $rdf from 'rdf-ext'
 
-const csvSourceDialect = $rdf.blankNode('csvSourceDialect')
+const shapeId = shape('csv-source/update')
+const csvSourceDialect = $rdf.namedNode(shapeId.value + '#csvSourceDialect')
 
 export const CSVSourceShape = turtle`
-${shape('csv-source/update')} {
-  ${shape('csv-source/update')} a ${sh.NodeShape}, ${hydra.Resource} ;
+${shapeId} {
+  ${shapeId} a ${sh.NodeShape}, ${hydra.Resource} ;
     ${sh.targetClass} ${cc.CSVSource} ;
     ${rdfs.label} "CSV source file" ;
     ${sh.property} [
