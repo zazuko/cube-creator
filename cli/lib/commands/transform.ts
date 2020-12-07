@@ -1,6 +1,5 @@
 import path from 'path'
 import * as Sentry from '@sentry/node'
-import '@sentry/tracing'
 import { NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import { fileToDataset } from 'barnard59'
@@ -31,25 +30,13 @@ interface RunOptions {
   }
   enableBufferMonitor?: boolean
   authParam?: Map<string, string>
-  sentryDsn?: string
-  sentryEnvironment?: string
 }
 
 export default function (pipelineId: NamedNode, log: Debugger) {
   const basePath = path.resolve(__dirname, '../../')
 
   return async function (command: RunOptions) {
-    const { to, job, debug = false, enableBufferMonitor = false, variable = new Map(), graphStore, executionUrl, sentryDsn, sentryEnvironment } = command
-
-    Sentry.init({
-      dsn: sentryDsn,
-      environment: sentryEnvironment,
-      release: process.env.SENTRY_RELEASE,
-      integrations: [
-        new Sentry.Integrations.Http({ tracing: true }),
-      ],
-      tracesSampleRate: 1.0,
-    })
+    const { to, job, debug = false, enableBufferMonitor = false, variable = new Map(), graphStore, executionUrl } = command
 
     const transaction = Sentry.startTransaction({
       op: 'transform',
@@ -124,10 +111,6 @@ export default function (pipelineId: NamedNode, log: Debugger) {
           error,
         })
 
-        throw error
-      })
-      .catch(error => {
-        Sentry.captureException(error)
         throw error
       })
       .finally(() => transaction.finish())

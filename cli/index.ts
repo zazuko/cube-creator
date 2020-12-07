@@ -1,5 +1,7 @@
 import program from 'commander'
 import debug from 'debug'
+import * as Sentry from '@sentry/node'
+import '@sentry/tracing'
 import namespace from '@rdfjs/namespace'
 import transform from './lib/commands/transform'
 
@@ -25,6 +27,16 @@ function parseVariables(str: string, all: Map<string, string>) {
 }
 
 async function main() {
+  Sentry.init({
+    dsn: process.env.SENTRY_DSN,
+    environment: process.env.SENTRY_ENVIRONMENT,
+    release: process.env.SENTRY_RELEASE,
+    integrations: [
+      new Sentry.Integrations.Http({ tracing: true }),
+    ],
+    tracesSampleRate: 1.0,
+  })
+
   program
     .name('docker run --rm zazuko/cube-creator-cli')
 
@@ -37,8 +49,6 @@ async function main() {
     .option('-v, --variable <name=value>', 'Pipeline variables', parseVariables, new Map())
     .option('--debug', 'Print diagnostic information to standard output')
     .option('--enable-buffer-monitor', 'enable histogram of buffer usage')
-    .option('--sentry-dsn', 'Sentry DSN')
-    .option('--sentry-environment', 'Sentry environment')
     .option('--auth-param <name=value>', 'Additional variables to pass to the token endpoint', parseVariables, new Map())
     .action(transform(pipelines.Entrypoint, log))
 
@@ -58,6 +68,7 @@ async function main() {
 
 main()
   .catch(e => {
+    Sentry.captureException(e)
     log(e)
     process.exit(1)
   })
