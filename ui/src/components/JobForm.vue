@@ -1,7 +1,7 @@
 <template>
   <div>
-    <p v-if="hasNoOptions && !error">
-      No settings to fill in. Just hit the button below to start the transformation.
+    <p>
+      {{ operation.description }}
     </p>
     <hydra-operation-form
       :operation="operation"
@@ -40,10 +40,6 @@ export default class JobForm extends Vue {
 
   async mounted (): Promise<void> {
     this.shape = await api.fetchOperationShape(this.operation)
-  }
-
-  get hasNoOptions (): boolean {
-    return this.shape?.property.length === 0
   }
 
   async onSubmit (): Promise<void> {

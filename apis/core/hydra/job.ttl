@@ -49,10 +49,12 @@ cc:JobCollection
         cc:TransformAction ;
       hydra:title
         "Start transformation" ;
+      hydra:description
+        "Apply CSV mapping to generate cube data out of CSV files" ;
       hydra:method
         "POST" ;
       hydra:expects
-        cc:TransformJob , 
+        cc:TransformJob ,
         <shape/job/trigger> ;
       code:implementedBy
         [
@@ -61,17 +63,19 @@ cc:JobCollection
           code:link
             <file:handlers/jobs#transform> ;
         ] ;
-    ],  
+    ],
     [
       a
         hydra:Operation,
         cc:PublishAction ;
       hydra:title
         "Start publication" ;
+      hydra:description
+        "Publish current version of the cube to public database" ;
       hydra:method
         "POST" ;
       hydra:expects
-        cc:PublishJob , 
+        cc:PublishJob ,
         <shape/job/trigger> ;
       code:implementedBy
         [

@@ -83,8 +83,13 @@ export function serializeDimensionMetadata (dimension: DimensionMetadata): Dimen
 export function serializeJobCollection (collection: JobCollection): JobCollection {
   return Object.freeze({
     ...serializeResource(collection),
+    actions: {
+      ...serializeActions(collection.actions),
+      createTransform: collection.actions.createTransform,
+      createPublish: collection.actions.createPublish,
+    },
     member: collection.member.map(Object.freeze),
-  }) as JobCollection
+  }) as unknown as JobCollection
 }
 
 export function serializeResource (resource: RdfResource): RdfResource {

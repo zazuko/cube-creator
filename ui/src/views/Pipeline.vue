@@ -1,10 +1,21 @@
 <template>
   <div v-if="mapping && jobCollection">
-    <job-form
-      v-if="jobCollection.actions.create"
-      :operation="jobCollection.actions.create"
-      class="box container-narrow"
-    />
+    <div class="columns container-narrow">
+      <div class="column">
+        <job-form
+          v-if="jobCollection.actions.createTransform"
+          :operation="jobCollection.actions.createTransform"
+          class="box"
+        />
+      </div>
+      <div class="column">
+        <job-form
+          v-if="jobCollection.actions.createPublish"
+          :operation="jobCollection.actions.createPublish"
+          class="box"
+        />
+      </div>
+    </div>
 
     <div class="jobs content" v-show="jobs.length > 0">
       <h3 class="title is-5">

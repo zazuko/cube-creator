@@ -7,7 +7,8 @@ export default function mixin<Base extends Constructor> (base: Base): Mixin {
   return class extends base implements AdditionalActions {
     get _additionalActions () {
       return {
-        create: ns.cc.TransformAction
+        createTransform: ns.cc.TransformAction,
+        createPublish: ns.cc.PublishAction,
       }
     }
   }
