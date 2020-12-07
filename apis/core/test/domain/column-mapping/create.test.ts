@@ -216,7 +216,7 @@ describe('domain/column-mapping/create', () => {
     })
   })
 
-  it('do not throw if same dimension metadata with same targetProperty is added twice', async () => {
+  it('do not throw if same column mapping with same targetProperty is added twice', async () => {
     // given
     const resource = clownface({ dataset: $rdf.dataset() })
       .node($rdf.namedNode(''))
@@ -231,7 +231,7 @@ describe('domain/column-mapping/create', () => {
     expect(createdAgain).to.be.ok
   })
 
-  it('throw if same dimension metadata with same targetProperty is added twice to an observation table', async () => {
+  it('throw if same column mapping with same targetProperty is added twice to an observation table', async () => {
     // given
     const resource = clownface({ dataset: $rdf.dataset() })
       .node($rdf.namedNode(''))

@@ -75,6 +75,13 @@ describe('domain/column-mapping/update', () => {
       .addOut(cc.targetProperty, $rdf.namedNode('test'))
       .addOut(cc.datatype, xsd.integer)
 
+    const otherColumnMappingObservation = clownface({ dataset: $rdf.dataset() })
+      .node($rdf.namedNode('otherColumnMappingObservation'))
+      .addOut(rdf.type, cc.ColumnMapping)
+      .addOut(rdf.type, hydra.Resource)
+      .addOut(cc.sourceColumn, $rdf.namedNode('my-other-column'))
+      .addOut(cc.targetProperty, $rdf.namedNode('other'))
+
     observationTable = clownface({ dataset: $rdf.dataset() })
       .namedNode('myObservationTable')
       .addOut(rdf.type, cc.Table)
@@ -82,6 +89,7 @@ describe('domain/column-mapping/update', () => {
       .addOut(cc.csvMapping, csvMapping)
       .addOut(cc.csvSource, csvSource)
       .addOut(cc.columnMapping, columnMappingObservation)
+      .addOut(cc.columnMapping, otherColumnMappingObservation)
 
     dimensionMetadata = clownface({ dataset: $rdf.dataset() })
       .namedNode('myDimensionMetadata')
@@ -99,6 +107,7 @@ describe('domain/column-mapping/update', () => {
       columnMapping,
       otherColumnMapping,
       columnMappingObservation,
+      otherColumnMappingObservation,
     ])
 
     getDimensionMetaDataCollection = sinon.stub().resolves(dimensionMetadata.term.value)
@@ -213,15 +222,28 @@ describe('domain/column-mapping/update', () => {
     await expect(promise).to.have.rejectedWith(NotFoundError)
   })
 
-  it('throw if targetProperty already in use', async () => {
+  it.only('throw if targetProperty already in use on observation table', async () => {
+    getTableForColumnMapping.resolves(observationTable.term.value)
+
     const resource = clownface({ dataset: $rdf.dataset() })
-      .node($rdf.namedNode('columnMapping'))
+      .node($rdf.namedNode('columnMappingObservation'))
       .addOut(cc.sourceColumn, $rdf.namedNode('my-column'))
       .addOut(cc.targetProperty, $rdf.namedNode('other'))
 
     const promise = updateColumnMapping({ resource, store, dimensionMetadataQueries, tableQueries })
 
     await expect(promise).to.have.rejectedWith(DomainError)
+  })
+
+  it('do not throw if targetProperty already in use on non-observation table', async () => {
+    const resource = clownface({ dataset: $rdf.dataset() })
+      .node($rdf.namedNode('columnMapping'))
+      .addOut(cc.sourceColumn, $rdf.namedNode('my-column'))
+      .addOut(cc.targetProperty, $rdf.namedNode('other'))
+
+    const columnMapping = await updateColumnMapping({ resource, store, dimensionMetadataQueries, tableQueries })
+
+    expect(columnMapping.out(cc.targetProperty).value).to.eq('other')
   })
 
   it('change targetProperty for obeservation table', async () => {
