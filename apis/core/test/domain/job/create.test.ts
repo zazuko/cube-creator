@@ -43,6 +43,8 @@ describe('domain/job/create', () => {
     expect(job.out(schema.name).value).to.be.ok
     expect(job.out(dcterms.created).value).to.be.ok
     expect(job.out(schema.actionStatus).term).to.deep.eq(schema.PotentialActionStatus)
+    expect(job.out(rdf.type).values).to.contain(cc.Job.value)
+    expect(job.out(rdf.type).values).to.contain(cc.TransformJob.value)
   })
 
   it('creates a publish job', async () => {
@@ -57,5 +59,7 @@ describe('domain/job/create', () => {
     expect(job.out(schema.name).value).to.be.ok
     expect(job.out(dcterms.created).value).to.be.ok
     expect(job.out(schema.actionStatus).term).to.deep.eq(schema.PotentialActionStatus)
+    expect(job.out(rdf.type).values).to.contain(cc.Job.value)
+    expect(job.out(rdf.type).values).to.contain(cc.PublishJob.value)
   })
 })
