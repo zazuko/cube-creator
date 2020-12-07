@@ -56,9 +56,7 @@ export async function updateColumnMapping({
         const column = await store.getResource<CsvColumn>(mappingExists.sourceColumn?.id)
         throw new DomainError(`Target property already mapped from column ${column?.name}`)
       }
-    }
 
-    if (table.types.has(cc.ObservationTable)) {
       const csvMapping = await store.getResource<CsvMapping>(table.csvMapping.id)
       if (!csvMapping) {
         throw new NotFoundError(csvMapping)
