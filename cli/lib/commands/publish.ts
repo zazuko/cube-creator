@@ -20,7 +20,7 @@ const ns = {
 
 interface RunOptions {
   debug: boolean
-  job: string
+  jobUri: string
   executionUrl?: string
   variable?: Map<string, string | undefined>
   graphStore?: {
@@ -41,7 +41,7 @@ export default function (pipelineId: NamedNode, log: Debugger) {
   const basePath = path.resolve(__dirname, '../../')
 
   return async function (command: RunOptions) {
-    const { job, debug = false, enableBufferMonitor = false, variable = new Map(), graphStore, publishStore, executionUrl } = command
+    const { jobUri, debug = false, enableBufferMonitor = false, variable = new Map(), graphStore, publishStore, executionUrl } = command
 
     log.enabled = debug
     const authConfig = {
@@ -54,9 +54,12 @@ export default function (pipelineId: NamedNode, log: Debugger) {
 
     setupAuthentication(authConfig, log)
 
-    log('Running job %s', job)
+    log('Running job %s', jobUri)
+
+    const [job, namespace] = await getJob(jobUri)
+
     const pipeline = clownface({ dataset }).namedNode(pipelineId)
-    variable.set('jobUri', job)
+    variable.set('jobUri', jobUri)
     variable.set(names.executionUrl, executionUrl)
     variable.set('graph-store-endpoint', graphStore?.endpoint || process.env.GRAPH_STORE_ENDPOINT)
     variable.set('graph-store-user', graphStore?.user || process.env.GRAPH_STORE_USER)
@@ -64,7 +67,9 @@ export default function (pipelineId: NamedNode, log: Debugger) {
     variable.set('publish-graph-store-endpoint', publishStore?.endpoint || process.env.GRAPH_STORE_ENDPOINT)
     variable.set('publish-graph-store-user', publishStore?.user || process.env.GRAPH_STORE_USER)
     variable.set('publish-graph-store-password', publishStore?.password || process.env.GRAPH_STORE_PASSWORD)
-    variable.set('target-graph', await getTargetGraph(job))
+    variable.set('target-graph', job.publishGraph)
+    variable.set('revision', job.revision)
+    variable.set('namespace', namespace)
 
     pipeline.addOut(ns.pipelines.variables, set => {
       variable.forEach((value, key) => {
@@ -113,7 +118,7 @@ export default function (pipelineId: NamedNode, log: Debugger) {
   }
 }
 
-async function getTargetGraph(jobUri: string): Promise<string> {
+async function getJob(jobUri: string): Promise<[PublishJob, string]> {
   const jobResource = await Hydra.loadResource<PublishJob>(jobUri)
   const job = jobResource.representation?.root
   if (!job) {
@@ -134,5 +139,5 @@ async function getTargetGraph(jobUri: string): Promise<string> {
     throw new Error(`Can not determine target graph for job ${jobUri}`)
   }
 
-  return datasetResource.representation?.root?.hasPart[0].id.value
+  return [job, datasetResource.representation?.root?.hasPart[0].id.value]
 }
