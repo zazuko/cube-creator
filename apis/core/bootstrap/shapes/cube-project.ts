@@ -37,6 +37,16 @@ ${shape('cube-project/create')} {
       ${sh.nodeKind} ${sh.IRI} ;
       ${sh.order} 30 ;
     ] ;
+    ${sh.property} [
+      ${sh.name} "Publish graph" ;
+      ${sh.description} "A named graph URI where cubes will be published from this project" ;
+      ${sh.path} ${cc.publishGraph} ;
+      ${sh.minLength} 1 ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+      ${sh.nodeKind} ${sh.IRI} ;
+      ${sh.order} 40 ;
+    ] ;
   .
 
   ${shape('cube-project/create#CSV')}

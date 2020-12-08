@@ -19,6 +19,7 @@ export interface Project extends RdfResource {
   creator: NamedNode
   label: string
   jobCollection: Link<JobCollection>
+  publishGraph: NamedNode
   publishedRevision: number
 }
 
@@ -38,6 +39,9 @@ export function ProjectMixin<Base extends Constructor>(base: Base): Mixin {
 
     @property({ initial: childResource('cube-data') })
     cubeGraph!: NamedNode
+
+    @property()
+    publishGraph!: NamedNode
 
     @property.literal({ path: cc.latestPublishedRevision, type: Number })
     publishedRevision?: number

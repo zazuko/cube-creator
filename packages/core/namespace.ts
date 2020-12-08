@@ -56,6 +56,7 @@ type CubeCreatorProperty =
   'jobCollection' |
   'dimensionMetadata' |
   'observations' |
+  'publishGraph' |
   'latestPublishedRevision' |
   'revision'
 

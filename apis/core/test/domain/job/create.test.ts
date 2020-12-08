@@ -7,12 +7,14 @@ import { cc } from '@cube-creator/core/namespace'
 import '../../../lib/domain'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import { createPublishJob, createTransformJob } from '../../../lib/domain/job/create'
+import { DomainError } from '../../../lib/errors'
 
 describe('domain/job/create', () => {
   let store: TestResourceStore
   const project = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('myProject') })
     .addOut(cc.csvMapping, $rdf.namedNode('myCsvMapping'))
     .addOut(cc.cubeGraph, $rdf.namedNode('myCubeGraph'))
+    .addOut(cc.publishGraph, $rdf.namedNode('publishGraph'))
     .addOut(rdf.type, cc.CubeProject)
   const tableCollection = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('myTables') })
   const csvMapping = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('myCsvMapping') })
@@ -71,6 +73,17 @@ describe('domain/job/create', () => {
 
       // then
       expect(job.out(cc.revision).term).to.deep.eq($rdf.literal('4', xsd.integer))
+    })
+
+    it('throws when project has no publish graph', async () => {
+      // given
+      project.deleteOut(cc.publishGraph)
+
+      // when
+      const promise = createPublishJob({ resource: jobCollection.term, store })
+
+      // then
+      await expect(promise).rejectedWith(DomainError)
     })
   })
 })
