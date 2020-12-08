@@ -45,6 +45,8 @@ export async function updateProject({
     }
   }
 
+  storedProject.updatePublishGraph(resource.out(cc.publishGraph).term)
+
   await store.save()
 
   return storedProject

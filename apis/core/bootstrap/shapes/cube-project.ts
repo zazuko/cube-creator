@@ -73,10 +73,20 @@ ${shape('cube-project/update')} {
       ${sh.order} 10 ;
     ] ;
     ${sh.property} [
+      ${sh.name} "Publish graph" ;
+      ${sh.description} "A named graph URI where cubes will be published from this project" ;
+      ${sh.path} ${cc.publishGraph} ;
+      ${sh.minLength} 1 ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+      ${sh.nodeKind} ${sh.IRI} ;
+      ${sh.order} 20 ;
+    ] ;
+    ${sh.property} [
       ${sh.path} ${cc.csvMapping} ;
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
-      ${sh.order} 20 ;
+      ${sh.order} 30 ;
       ${sh.node} [
         ${sh.property} [
           ${sh.name} "Cube namespace" ;

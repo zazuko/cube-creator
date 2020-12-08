@@ -1,6 +1,6 @@
 import { Project, CsvMapping } from '@cube-creator/model'
 import { Constructor } from '@tpluscode/rdfine'
-import { NamedNode } from 'rdf-js'
+import { NamedNode, Term } from 'rdf-js'
 import { create as createMapping } from '@cube-creator/model/CsvMapping'
 import { ResourceStore } from '../../ResourceStore'
 import * as id from '../identifiers'
@@ -9,6 +9,7 @@ import { cc } from '@cube-creator/core/namespace'
 import * as Hydra from '@rdfine/hydra'
 import { rdf } from '@tpluscode/rdf-ns-builders'
 import { childResource } from '@cube-creator/model/lib/resourceIdentifiers'
+import { DomainError } from '../../errors'
 
 interface ApiProject {
   identifier: string
@@ -16,6 +17,7 @@ interface ApiProject {
   initializeCsvMapping(store: ResourceStore, namespace: NamedNode): CsvMapping
   initializeJobCollection(store: ResourceStore): void
   incrementPublishedRevision(): void
+  updatePublishGraph(publishGraph: Term | undefined): void
 }
 
 declare module '@cube-creator/model' {
@@ -74,6 +76,18 @@ export default function Mixin<Base extends Constructor<Omit<Project, keyof ApiPr
 
     incrementPublishedRevision() {
       this.publishedRevision = this.nextRevision
+    }
+
+    updatePublishGraph(publishGraph: Term | undefined) {
+      if (!publishGraph || publishGraph.termType !== 'NamedNode') {
+        throw new DomainError(`Invalid publish graph. Expended NamedNode, got ${publishGraph?.termType}`)
+      }
+
+      if (publishGraph.equals(this.publishGraph)) {
+        return
+      }
+
+      this.publishGraph = publishGraph
     }
   }
 
