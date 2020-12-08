@@ -108,6 +108,15 @@ export const uriEditor: Lazy<SingleEditorComponent> = {
   }
 }
 
+export const datePickerEditor: Lazy<SingleEditorComponent> = {
+  editor: dash.DatePickerEditor,
+  async lazyRender () {
+    await import('./DatePickerEditor.vue').then(createCustomElement('cc-date-picker'))
+
+    return ({ value }, { update }) => html`<cc-date-picker .value="${value.object?.value}" .update="${update}"></cc-date-picker>`
+  },
+}
+
 export const propertyEditor: Lazy<SingleEditorComponent> = {
   editor: ns.editor.PropertyEditor,
   async lazyRender () {
