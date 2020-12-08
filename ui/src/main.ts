@@ -26,24 +26,22 @@ Vue.use(Buefy, {
   defaultTooltipDelay: 200,
 })
 
-if (window.APP_CONFIG.sentry) {
-  Sentry.init({
-    Vue: Vue,
-    dsn: window.APP_CONFIG.sentry.dsn,
-    environment: window.APP_CONFIG.sentry.environment,
-    release: process.env.VUE_APP_SENTRY_RELEASE,
-    attachProps: true,
-    tracesSampleRate: 1,
-    integrations: [
-      new Integrations.BrowserTracing({
-        routingInstrumentation: Sentry.vueRouterInstrumentation(router)
-      })
-    ],
-    tracingOptions: {
-      trackComponents: true
-    }
-  })
-}
+Sentry.init({
+  Vue,
+  dsn: window.APP_CONFIG.sentry?.dsn,
+  environment: window.APP_CONFIG.sentry?.environment,
+  release: process.env.VUE_APP_SENTRY_RELEASE,
+  attachProps: true,
+  tracesSampleRate: 1,
+  integrations: [
+    new Integrations.BrowserTracing({
+      routingInstrumentation: Sentry.vueRouterInstrumentation(router)
+    })
+  ],
+  tracingOptions: {
+    trackComponents: true
+  }
+})
 
 Vue.config.productionTip = false
 
