@@ -104,6 +104,8 @@ export function serializeDimensionMetadata (dimension: DimensionMetadata): Dimen
     ...serializeResource(dimension),
     name: dimension.name,
     about: dimension.about,
+    description: dimension.description,
+    scaleOfMeasure: dimension.scaleOfMeasure,
   })
 }
 
