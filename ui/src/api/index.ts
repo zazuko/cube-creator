@@ -116,5 +116,5 @@ export const api = {
     if (response.response?.xhr.status !== 204) {
       throw await APIError.fromResponse(response)
     }
-  }
+  },
 }
