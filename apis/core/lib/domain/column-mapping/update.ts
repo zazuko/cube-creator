@@ -55,7 +55,7 @@ export async function updateLiteralColumnMapping({
   columnMapping.language = resource.out(cc.language).value
   columnMapping.defaultValue = resource.out(cc.defaultValue).term
 
-  store.save()
+  await store.save()
   return columnMapping.pointer
 }
 
@@ -98,7 +98,7 @@ export async function updateReferenceColumnMapping({
       )
     }))
 
-  store.save()
+  await store.save()
   return columnMapping.pointer
 }
 

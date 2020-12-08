@@ -58,7 +58,7 @@ export async function createColumnMapping({
     })
   }
 
-  store.save()
+  await store.save()
 
   return columnMapping.pointer
 }
