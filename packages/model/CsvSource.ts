@@ -17,6 +17,7 @@ import { blankNode } from '@rdf-esm/data-model'
 export interface CsvSource extends RdfResource {
   associatedMedia: Schema.MediaObject
   name: string
+  error?: string
   dialect: Csvw.Dialect
   csvMapping: Link<CsvMapping>
   columns: CsvColumn[]
@@ -34,6 +35,9 @@ export function CsvSourceMixin<Base extends Constructor>(base: Base): Mixin {
 
     @property.literal({ path: schema.name })
     name!: string
+
+    @property.literal({ path: schema.error })
+    error?: string
 
     @property.resource({ path: csvw.dialect, as: [DialectMixin], initial: () => blankNode() })
     dialect!: Csvw.Dialect
