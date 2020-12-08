@@ -55,7 +55,7 @@ async function main() {
     }
 
     if (publishJob) {
-      doPublish({ job: publishJob, debug: true }).catch((e) => log(e))
+      doPublish({ jobUri: publishJob, debug: true }).catch((e) => log(e))
     }
     return res.status(202).end()
   }))
