@@ -36,23 +36,12 @@ export async function updateProject({
     storedProject.pointer.addOut(rdfs.label, newLabel)
   }
 
-  const newNamespace = resource.out(cc.csvMapping).out(cc.namespace).term
+  const newNamespace = resource.out(cc.csvMapping).out(cc.namespace).term as NamedNode
   if (newNamespace) {
     const csvMapping = await store.getResource<CsvMapping>(project.out(cc.csvMapping).term)
-    const csvMappingPointer = csvMapping?.pointer
 
-    if (csvMappingPointer) {
-      const namespacesDataset = csvMappingPointer.dataset.match(null, cc.namespace)
-      const namespaces = []
-      for (const q of namespacesDataset) {
-        namespaces.push(q)
-      }
-
-      const namespace = namespaces[0]
-      if (namespace) {
-        csvMappingPointer.dataset.delete($rdf.quad(csvMappingPointer.term, cc.namespace, namespace.object))
-      }
-      csvMappingPointer.addOut(cc.namespace, newNamespace)
+    if (csvMapping) {
+      csvMapping.namespace = newNamespace
     }
   }
 

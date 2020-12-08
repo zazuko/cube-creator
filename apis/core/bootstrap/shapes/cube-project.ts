@@ -74,6 +74,9 @@ ${shape('cube-project/update')} {
     ] ;
     ${sh.property} [
       ${sh.path} ${cc.csvMapping} ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+      ${sh.order} 20 ;
       ${sh.node} [
         ${sh.property} [
           ${sh.name} "Cube namespace" ;
