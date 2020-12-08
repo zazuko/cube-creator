@@ -32,7 +32,7 @@ export async function injectMetadata(jobUri: string) {
     throw new Error(`Dataset ${project.dataset} not loaded`)
   }
 
-  const datasetTriples = dataset.pointer.dataset//.match(null, null, null, dataset.id)
+  const datasetTriples = dataset.pointer.dataset.match(null, null, null, dataset.id)
 
   return obj(function (quad: Quad, _, callback) {
     const visited = new TermSet()
