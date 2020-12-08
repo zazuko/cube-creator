@@ -20,6 +20,25 @@ cc:CubeProject
     [
       a
         hydra:Operation,
+        schema:UpdateAction ;
+      hydra:title
+        "Edit Project" ;
+      hydra:method
+        "PUT" ;
+      hydra:expects
+        cc:CubeProject,
+        <shape/cube-project/update> ;
+      code:implementedBy
+        [
+          a
+            code:EcmaScript ;
+          code:link
+            <file:handlers/cube-projects#put> ;
+        ] ;
+    ] ,
+    [
+      a
+        hydra:Operation,
         schema:DeleteAction ;
       hydra:title
         "Delete Project" ;
@@ -67,5 +86,9 @@ cc:ProjectsCollection
     ] .
 
 <shape/cube-project/create>
+  a
+    sh:Shape .
+
+<shape/cube-project/update>
   a
     sh:Shape .

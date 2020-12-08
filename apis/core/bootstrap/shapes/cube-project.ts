@@ -59,4 +59,33 @@ ${shape('cube-project/create')} {
     ${rdfs.comment} "Add metadata to a Cube resulting of another pipeline" ;
   .
 }
+
+${shape('cube-project/update')} {
+  ${shape('cube-project/update')} a ${sh.NodeShape}, ${hydra.Resource} ;
+    ${sh.targetClass} ${cc.CubeProject} ;
+    ${rdfs.label} "Cube Project" ;
+    ${sh.property} [
+      ${sh.name} "Project name" ;
+      ${sh.path} ${rdfs.label} ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+      ${sh.minLength} 1 ;
+      ${sh.order} 10 ;
+    ] ;
+    ${sh.property} [
+      ${sh.path} ${cc.csvMapping} ;
+      ${sh.node} [
+        ${sh.property} [
+          ${sh.name} "Cube namespace" ;
+          ${sh.description} "A URI that will be used as default prefix for all the custom properties created during the mapping." ;
+          ${sh.path} ${cc.namespace} ;
+          ${sh.pattern} "[#/]$" ;
+          ${sh.maxCount} 1 ;
+          ${sh.nodeKind} ${sh.IRI} ;
+          ${sh.order} 20 ;
+        ]
+      ]
+    ] ;
+  .
+}
 `
