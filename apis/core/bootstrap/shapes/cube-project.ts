@@ -83,6 +83,7 @@ ${shape('cube-project/update')} {
           ${sh.description} "A URI that will be used as default prefix for all the custom properties created during the mapping." ;
           ${sh.path} ${cc.namespace} ;
           ${sh.pattern} "[#/]$" ;
+          ${sh.minCount} 1 ;
           ${sh.maxCount} 1 ;
           ${sh.nodeKind} ${sh.IRI} ;
           ${sh.order} 20 ;
