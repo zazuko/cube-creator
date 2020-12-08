@@ -28,6 +28,10 @@ export interface PublishJob extends Job {
   publishGraph: NamedNode
 }
 
+export function isPublishJob(job: Job): job is PublishJob {
+  return job.types.has(cc.PublishJob)
+}
+
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface JobCollection extends Collection<Job> {
 

@@ -1,20 +1,16 @@
 import { NamedNode } from 'rdf-js'
 import { GraphPointer } from 'clownface'
-import { Job, JobMixin, Project, PublishJob } from '@cube-creator/model'
+import { Job, JobMixin, Project } from '@cube-creator/model'
+import { isPublishJob } from '@cube-creator/model/Job'
 import RdfResource from '@tpluscode/rdfine'
 import { ResourceStore } from '../../ResourceStore'
 import { resourceStore } from '../resources'
 import { NotFoundError } from '../../errors'
 import { schema } from '@tpluscode/rdf-ns-builders'
-import { cc } from '@cube-creator/core/namespace'
 
 interface JobUpdateParams {
   resource: GraphPointer<NamedNode>
   store?: ResourceStore
-}
-
-function isPublishJob(job: Job): job is PublishJob {
-  return job.types.has(cc.PublishJob)
 }
 
 export async function update({ resource, store = resourceStore() }: JobUpdateParams): Promise<GraphPointer> {
