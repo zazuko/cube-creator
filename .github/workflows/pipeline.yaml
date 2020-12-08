@@ -30,15 +30,29 @@ jobs:
       - uses: actions/setup-node@v1.4.4
         with:
           node-version: 14
-      - run: yarn install --ci
+
+      - name: Retrieve yarn cache
+        uses: actions/cache@v2
+        env:
+          cache-name: yarn-cache
+        with:
+          path: ~/.cache
+          key: ${{ runner.os }}-yarn-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - run: yarn install --ci --prefer-offline
+
       - name: transform pipeline
         if: github.event.inputs.transform_job != ''
         run: yarn ts-node index.ts transform --job "${{ github.event.inputs.transform_job }}" --execution-url ${{ env.EXECUTION_URL }} --to ${{ github.event.inputs.to }} --debug
         working-directory: cli
+
       - name: publish pipeline
         if: github.event.inputs.publish_job != ''
         run: yarn ts-node index.ts publish --job "${{ github.event.inputs.publish_job }}" --execution-url ${{ env.EXECUTION_URL }} --debug
         working-directory: cli
+
       - name: Output artifact
         if: github.event.inputs.to == 'filesystem'
         uses: actions/upload-artifact@v2
