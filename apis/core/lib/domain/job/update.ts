@@ -1,6 +1,7 @@
 import { NamedNode } from 'rdf-js'
 import { GraphPointer } from 'clownface'
-import { Job, JobMixin } from '@cube-creator/model'
+import { Job, JobMixin, Project } from '@cube-creator/model'
+import { isPublishJob } from '@cube-creator/model/Job'
 import RdfResource from '@tpluscode/rdfine'
 import { ResourceStore } from '../../ResourceStore'
 import { resourceStore } from '../resources'
@@ -21,6 +22,11 @@ export async function update({ resource, store = resourceStore() }: JobUpdatePar
 
   if (changes.actionStatus) {
     job.actionStatus = changes.actionStatus
+
+    if (changes.actionStatus.equals(schema.CompletedActionStatus) && isPublishJob(job)) {
+      const project = await store.getResource<Project>(job.project)
+      project?.incrementPublishedRevision()
+    }
   }
 
   if (changes.seeAlso.length) {

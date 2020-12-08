@@ -13,10 +13,13 @@ describe('CSV mapping flow', () => {
   it('Creates a new project', () => {
     cy.contains('.button', 'New project').click()
 
-    cy.contains('.label', 'Project name')
-      .next()
+    cy.contains('.form-property', 'Project name')
       .find('input')
       .type('My project')
+
+    cy.contains('.form-property', 'Publish graph')
+      .find('input')
+      .type('http://example.com/published-cube')
 
     cy.get('form').submit()
 

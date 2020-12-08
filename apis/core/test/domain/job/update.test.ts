@@ -4,7 +4,7 @@ import clownface, { GraphPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import DatasetExt from 'rdf-ext/lib/Dataset'
-import { rdf, rdfs, schema } from '@tpluscode/rdf-ns-builders'
+import { rdf, rdfs, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import { update } from '../../../lib/domain/job/update'
@@ -12,15 +12,21 @@ import '../../../lib/domain'
 
 describe('domain/job/update', () => {
   let job: GraphPointer<NamedNode, DatasetExt>
+  let project: GraphPointer<NamedNode, DatasetExt>
   let store: TestResourceStore
 
   beforeEach(() => {
     job = clownface({ dataset: $rdf.dataset() })
       .namedNode('job')
       .addOut(rdf.type, cc.Job)
+    project = clownface({ dataset: $rdf.dataset() })
+      .namedNode('project')
+      .addOut(rdf.type, cc.CubeProject)
+      .addOut(cc.latestPublishedRevision, 2)
 
     store = new TestResourceStore([
       job,
+      project,
     ])
   })
 
@@ -123,6 +129,34 @@ describe('domain/job/update', () => {
         },
         minCount: 1,
       },
+    })
+  })
+
+  describe('publish job', () => {
+    it("increments project's cc:publishedRevision when succeeded", async () => {
+      // given
+      const resource = clownface({ dataset: $rdf.dataset() })
+        .namedNode('job')
+        .addOut(schema.actionStatus, schema.CompletedActionStatus)
+      job
+        .addOut(rdf.type, cc.PublishJob)
+        .addOut(cc.project, project)
+
+      // when
+      await update({
+        resource,
+        store,
+      })
+
+      // then
+      expect(project).to.matchShape({
+        property: {
+          path: cc.latestPublishedRevision,
+          hasValue: $rdf.literal('3', xsd.integer),
+          minCount: 1,
+          maxCount: 1,
+        },
+      })
     })
   })
 })

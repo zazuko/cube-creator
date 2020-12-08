@@ -22,7 +22,8 @@ With Class api:EntryPoint {
 
                 <> cc:projectSourceKind <https://cube-creator.lndo.site/shape/cube-project/create#CSV> ;
                    rdfs:label "Test Project" ;
-                   cc:namespace <http://example.com/test-cube/> .
+                   cc:namespace <http://example.com/test-cube/> ;
+                   cc:publishGraph <http://data.zazuko.com/> .
                 ```
             } => {
                 Expect Status 201
@@ -34,6 +35,7 @@ With Class api:EntryPoint {
                 }
                 Expect Property dcterms:creator
                 Expect Property cc:cubeGraph
+                Expect Property cc:publishGraph
 
                 // Project dataset
                 Expect Link cc:dataset {

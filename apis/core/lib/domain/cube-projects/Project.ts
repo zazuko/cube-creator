@@ -12,8 +12,10 @@ import { childResource } from '@cube-creator/model/lib/resourceIdentifiers'
 
 interface ApiProject {
   identifier: string
+  nextRevision: number
   initializeCsvMapping(store: ResourceStore, namespace: NamedNode): CsvMapping
   initializeJobCollection(store: ResourceStore): void
+  incrementPublishedRevision(): void
 }
 
 declare module '@cube-creator/model' {
@@ -26,6 +28,10 @@ export default function Mixin<Base extends Constructor<Omit<Project, keyof ApiPr
   class Project extends Resource implements ApiProject {
     get identifier() {
       return this.id.value.substring(this.id.value.lastIndexOf('/') + 1)
+    }
+
+    get nextRevision() {
+      return this.publishedRevision ? this.publishedRevision + 1 : 1
     }
 
     initializeCsvMapping(store: ResourceStore, namespace: NamedNode) {
@@ -64,6 +70,10 @@ export default function Mixin<Base extends Constructor<Omit<Project, keyof ApiPr
           property: cc.project,
         }],
       })
+    }
+
+    incrementPublishedRevision() {
+      this.publishedRevision = this.nextRevision
     }
   }
 

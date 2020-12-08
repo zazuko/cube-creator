@@ -15,7 +15,7 @@ export const client = new StreamClient({
   storeUrl: 'http://db.cube-creator.lndo.site/cube-creator/data',
 })
 
-const parsingClient = new ParsingClient({
+export const parsingClient = new ParsingClient({
   updateUrl: 'http://db.cube-creator.lndo.site/cube-creator/update',
   endpointUrl: 'http://db.cube-creator.lndo.site/cube-creator/query',
   storeUrl: 'http://db.cube-creator.lndo.site/cube-creator/data',

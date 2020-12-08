@@ -55,7 +55,10 @@ type CubeCreatorProperty =
   'cube' |
   'jobCollection' |
   'dimensionMetadata' |
-  'observations'
+  'observations' |
+  'publishGraph' |
+  'latestPublishedRevision' |
+  'revision'
 
 type OtherTerms =
   'dash'

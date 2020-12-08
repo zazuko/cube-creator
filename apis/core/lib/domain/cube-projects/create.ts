@@ -8,6 +8,7 @@ import * as DimensionMetadata from '@cube-creator/model/DimensionMetadata'
 import { ResourceStore } from '../../ResourceStore'
 import * as id from '../identifiers'
 import { resourceStore } from '../resources'
+import { DomainError } from '../../errors'
 
 interface CreateProjectCommand {
   projectsCollection: GraphPointer<NamedNode>
@@ -26,10 +27,15 @@ export async function createProject({
   if (!label) {
     throw new Error('Missing project name')
   }
+  const publishGraph = resource.out(cc.publishGraph).term
+  if (!publishGraph || publishGraph.termType !== 'NamedNode') {
+    throw new DomainError('Missing publish graph or not a named node')
+  }
 
   const project = Project.create(await store.createMember(projectsCollection.term, id.cubeProject(label)), {
     creator: user,
     label,
+    publishGraph,
   })
 
   project.initializeJobCollection(store)

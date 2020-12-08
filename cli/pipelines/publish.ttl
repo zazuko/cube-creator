@@ -4,9 +4,7 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 
 <#Main> a :Pipeline ;
-  :steps [ :stepList ( <#loadGraphStep> <#injectMetadata> <#streamOutputStep> ) ] .
-
-
+  :steps [ :stepList ( <#loadGraphStep> <#injectCubeRevision> <#injectMetadata> <#streamOutputStep> ) ] .
 
 <#loadGraphStep>
   a                  :Step ;
@@ -31,6 +29,14 @@ _:get
                        code:value "graph-store-user"^^:VariableName ] ;
   code:arguments     [ code:name  "password" ;
                        code:value "graph-store-password"^^:VariableName ] .
+
+<#injectCubeRevision>
+  a :Step ;
+  code:implementedBy [ code:link <file:../lib/cube#injectRevision> ;
+                       a         code:EcmaScript ] ;
+  code:arguments ( [ a code:EcmaScript ;
+                     code:link <file:../lib/cube#injectRevision> ] ) ;
+  .
 
 <#injectMetadata>
   a                  :Step ;
@@ -60,7 +66,7 @@ _:setGraph
 _:upload
   a                  :Step ;
   code:implementedBy [ a         code:EcmaScript ;
-                       code:link <node:barnard59-graph-store#put> ] ;
+                       code:link <node:barnard59-graph-store#post> ] ;
   code:arguments     [ code:name  "endpoint" ;
                        code:value "publish-graph-store-endpoint"^^:VariableName ] ;
   code:arguments     [ code:name  "user" ;

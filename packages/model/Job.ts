@@ -24,6 +24,12 @@ export interface TransformJob extends Job {
 
 export interface PublishJob extends Job {
   project: NamedNode
+  revision: number
+  publishGraph: NamedNode
+}
+
+export function isPublishJob(job: Job): job is PublishJob {
+  return job.types.has(cc.PublishJob)
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -73,6 +79,12 @@ export function PublishJobMixin<Base extends Constructor<RdfResource>>(base: Bas
   class Impl extends ResourceMixin(ActionMixin(base)) implements Partial<PublishJob> {
     @property({ path: cc.project })
     project!: NamedNode
+
+    @property.literal({ path: cc.revision, type: Number })
+    revision!: number
+
+    @property({ path: cc.publishGraph })
+    publishGraph!: NamedNode
   }
 
   return Impl
@@ -80,7 +92,7 @@ export function PublishJobMixin<Base extends Constructor<RdfResource>>(base: Bas
 
 PublishJobMixin.appliesTo = cc.PublishJob
 
-type RequiredPropertiesPublish = 'name' | 'project'
+type RequiredPropertiesPublish = 'name' | 'project' | 'revision' | 'publishGraph'
 
 export const createPublish = initializer<PublishJob, RequiredPropertiesPublish>(PublishJobMixin, {
   types: [cc.Job, cc.PublishJob],

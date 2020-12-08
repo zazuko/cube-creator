@@ -19,6 +19,8 @@ export interface Project extends RdfResource {
   creator: NamedNode
   label: string
   jobCollection: Link<JobCollection>
+  publishGraph: NamedNode
+  publishedRevision: number
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -38,6 +40,12 @@ export function ProjectMixin<Base extends Constructor>(base: Base): Mixin {
     @property({ initial: childResource('cube-data') })
     cubeGraph!: NamedNode
 
+    @property()
+    publishGraph!: NamedNode
+
+    @property.literal({ path: cc.latestPublishedRevision, type: Number })
+    publishedRevision?: number
+
     @property({ path: dcterms.creator })
     creator!: NamedNode
 
@@ -50,6 +58,6 @@ export function ProjectMixin<Base extends Constructor>(base: Base): Mixin {
 
 ProjectMixin.appliesTo = cc.CubeProject
 
-type MandatoryFields = 'creator' | 'label'
+type MandatoryFields = 'creator' | 'label' | 'publishGraph'
 
 export const create = initializer<Project, MandatoryFields>(ProjectMixin)
