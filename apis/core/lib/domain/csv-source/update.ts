@@ -34,6 +34,7 @@ export async function update({
   if (csvSource.setDialect(changed.dialect) && csvSource.associatedMedia.identifierLiteral) {
     try {
       csvSource.pointer.deleteOut(schema.error)
+      csvSource.columns = []
 
       const fileStream = await fileStorage.loadFile(csvSource.associatedMedia.identifierLiteral) as Readable
       const head = await loadFileHeadString(fileStream, 500)
@@ -41,9 +42,9 @@ export async function update({
         delimiter: csvSource.dialect.delimiter,
         quote: csvSource.dialect.quoteChar,
       })
+
       const sampleCol = sampleValues(header, rows)
 
-      csvSource.columns = []
       for (let index = 0; index < header.length; index++) {
         const name = header[index]
         const column = csvSource.appendColumn({ name })
