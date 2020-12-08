@@ -3,7 +3,7 @@ import debug from 'debug'
 import * as Sentry from '@sentry/node'
 import '@sentry/tracing'
 import namespace from '@rdfjs/namespace'
-import transform from './lib/commands/transform'
+import { transform, publish } from './lib/commands'
 
 const log = debug('cube-creator')
 log.enabled = false
@@ -58,7 +58,7 @@ async function main() {
     .option('--debug', 'Print diagnostic information to standard output')
     .option('--enable-buffer-monitor', 'enable histogram of buffer usage')
     .option('--auth-param <name=value>', 'Additional variables to pass to the token endpoint', parseVariables, new Map())
-    .action(transform(pipelines.Entrypoint, log))
+    .action(publish(pipelines.Entrypoint, log))
 
   return program.parseAsync(process.argv)
 }
