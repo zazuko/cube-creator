@@ -17,7 +17,7 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { Term } from 'rdf-js'
 import type RdfResource from '@tpluscode/rdfine/RdfResource'
-import TermDisplay from './TermDisplay'
+import TermDisplay from './TermDisplay.vue'
 
 type Value = RdfResource | Term | undefined
 

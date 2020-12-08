@@ -9,6 +9,7 @@ import { initializer } from './lib/initializer'
 export interface DimensionMetadata extends RdfResource {
   about: NamedNode
   name: Literal[]
+  description: Literal[]
   scaleOfMeasure?: NamedNode
 }
 
@@ -24,6 +25,9 @@ function DimensionMetadataMixin<Base extends Constructor>(base: Base): Mixin {
 
     @property({ values: 'array' })
     name!: Literal[]
+
+    @property({ values: 'array' })
+    description!: Literal[]
 
     @property({ path: scale.scaleOfMeasure })
     scaleOfMeasure?: NamedNode

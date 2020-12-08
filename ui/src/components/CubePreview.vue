@@ -29,13 +29,7 @@
       </tr>
       <tr>
         <th v-for="dimension in dimensions" :key="dimension.id.value">
-          <term-with-language :values="dimension.name" :selected-language="selectedLanguage">
-            Missing dimension name
-          </term-with-language>
-          <hydra-operation-button
-            :operation="dimension.actions.edit"
-            :to="{ name: 'DimensionEdit', params: { dimensionId: dimension.clientPath } }"
-          />
+          <cube-preview-dimension :dimension="dimension" :selected-language="selectedLanguage" />
         </th>
         <th v-if="dimensions.length === 0" class="has-text-grey has-text-centered">
           No dimensions defined
@@ -98,12 +92,19 @@ import Remote, { RemoteData } from '@/remote'
 import HydraOperationButton from './HydraOperationButton.vue'
 import TermWithLanguage from './TermWithLanguage.vue'
 import LoadingBlock from './LoadingBlock.vue'
+import CubePreviewDimension from './CubePreviewDimension.vue'
 import CubePreviewValue from './CubePreviewValue.vue'
 
 const languages = ['en', 'fr', 'de', 'it']
 
 @Component({
-  components: { CubePreviewValue, HydraOperationButton, LoadingBlock, TermWithLanguage },
+  components: {
+    CubePreviewDimension,
+    CubePreviewValue,
+    HydraOperationButton,
+    LoadingBlock,
+    TermWithLanguage,
+  },
 })
 export default class extends Vue {
   @Prop() cubeMetadata!: Dataset
