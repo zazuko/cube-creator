@@ -34,7 +34,7 @@ export function injectRevision(this: Context) {
   return map(({ subject, predicate, object, graph }: Quad) => {
     return rdf.quad(
       rebase(subject),
-      rebase(predicate),
+      predicate,
       rebase(object),
       graph)
   })

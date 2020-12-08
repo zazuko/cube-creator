@@ -120,25 +120,25 @@ describe('lib/commands/publish', function () {
           path: cube.observedBy,
           minCount: 1,
         }, {
-          path: targetCube('dimension/year'),
+          path: ns.baseCube('dimension/year'),
           hasValue: $rdf.literal('2002', xsd.gYear),
           minCount: 1,
           maxCount: 1,
         }, {
-          path: targetCube('dimension/value'),
+          path: ns.baseCube('dimension/value'),
           hasValue: $rdf.literal('6.1', xsd.float),
           minCount: 1,
           maxCount: 1,
         }, {
-          path: targetCube('station'),
+          path: ns.baseCube('station'),
           minCount: 1,
           maxCount: 1,
         }, {
-          path: targetCube('pollutant'),
+          path: ns.baseCube('pollutant'),
           minCount: 1,
           maxCount: 1,
         }, {
-          path: targetCube('unit-id'),
+          path: ns.baseCube('unit-id'),
           hasValue: $rdf.literal('µg/m3'),
           minCount: 1,
           maxCount: 1,
@@ -157,10 +157,10 @@ describe('lib/commands/publish', function () {
         },
       })
 
-      expect(cubePointer.namedNode(targetCube('shape/')).out(sh.property).has(sh.path, targetCube('dimension/year'))).to.matchShape({
+      expect(cubePointer.namedNode(targetCube('shape/')).out(sh.property).has(sh.path, ns.baseCube('dimension/year'))).to.matchShape({
         property: {
           path: sh.path,
-          hasValue: targetCube('dimension/year'),
+          hasValue: ns.baseCube('dimension/year'),
           minCount: 1,
         },
       })
