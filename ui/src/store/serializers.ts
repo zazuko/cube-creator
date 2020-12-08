@@ -20,6 +20,7 @@ export function serializeSource (source: CsvSource): CsvSource {
   return Object.freeze({
     ...serializeResource(source),
     name: source.name,
+    error: source.error,
     columns: source.columns.map(serializeColumn),
     dialect: source.dialect,
     csvMapping: source.csvMapping,
