@@ -22,8 +22,11 @@ type CubeCreatorClass =
   'Job' |
   'JobCollection' |
   'TransformAction' |
+  'PublishAction' |
   'DimensionMetadataCollection' |
-  'Observations'
+  'Observations' |
+  'TransformJob' |
+  'PublishJob'
 
 type CubeCreatorProperty =
   'projectSourceKind' |

@@ -12,11 +12,18 @@ import { schema, dcterms, rdfs } from '@tpluscode/rdf-ns-builders'
 import { initializer } from './lib/initializer'
 
 export interface Job extends Action, Rdfs.Resource, RdfResource {
-  tableCollection: Link<TableCollection>
-  cubeGraph: NamedNode
-  label: string
   created: Date
   link?: string
+  name: string
+}
+
+export interface TransformJob extends Job {
+  cubeGraph: NamedNode
+  tableCollection: Link<TableCollection>
+}
+
+export interface PublishJob extends Job {
+  project: NamedNode
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -26,20 +33,14 @@ export interface JobCollection extends Collection<Job> {
 
 export function JobMixin<Base extends Constructor<RdfResource>>(base: Base): Mixin {
   class Impl extends ResourceMixin(ActionMixin(base)) implements Partial<Job> {
-    @property.resource({ path: cc.tables })
-    tableCollection!: Link<TableCollection>
-
-    @property({ path: cc.cubeGraph })
-    cubeGraph!: NamedNode
+    @property.literal({ path: dcterms.created, type: Date, initial: () => new Date() })
+    created!: Date
 
     @property.literal({ path: schema.name })
-    label!: string
+    name!: string
 
     @property.literal({ path: rdfs.seeAlso })
     link?: string
-
-    @property.literal({ path: dcterms.created, type: Date, initial: () => new Date() })
-    created!: Date
   }
 
   return Impl
@@ -47,9 +48,41 @@ export function JobMixin<Base extends Constructor<RdfResource>>(base: Base): Mix
 
 JobMixin.appliesTo = cc.Job
 
-type RequiredProperties = 'label' | 'cubeGraph' | 'tableCollection'
+export function TransformJobMixin<Base extends Constructor<RdfResource>>(base: Base): Mixin {
+  class Impl extends ResourceMixin(ActionMixin(base)) implements Partial<TransformJob> {
+    @property.resource({ path: cc.tables })
+    tableCollection!: Link<TableCollection>
 
-export const create = initializer<Job, RequiredProperties>(JobMixin, {
-  types: [cc.Job],
+    @property({ path: cc.cubeGraph })
+    cubeGraph!: NamedNode
+  }
+
+  return Impl
+}
+
+TransformJobMixin.appliesTo = cc.TransformJob
+
+type RequiredProperties = 'name' | 'cubeGraph' | 'tableCollection'
+
+export const createTransform = initializer<TransformJob, RequiredProperties>(TransformJobMixin, {
+  types: [cc.Job, cc.TransformJob],
+  actionStatus: schema.PotentialActionStatus,
+})
+
+export function PublishJobMixin<Base extends Constructor<RdfResource>>(base: Base): Mixin {
+  class Impl extends ResourceMixin(ActionMixin(base)) implements Partial<PublishJob> {
+    @property({ path: cc.project })
+    project!: NamedNode
+  }
+
+  return Impl
+}
+
+PublishJobMixin.appliesTo = cc.PublishJob
+
+type RequiredPropertiesPublish = 'name' | 'project'
+
+export const createPublish = initializer<PublishJob, RequiredPropertiesPublish>(PublishJobMixin, {
+  types: [cc.Job, cc.PublishJob],
   actionStatus: schema.PotentialActionStatus,
 })

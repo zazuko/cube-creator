@@ -8,23 +8,37 @@ HEADERS {
 }
 
 With Class cc:JobCollection {
-    Expect Operation cc:TransformAction {
-        Invoke {
-            Expect Status 201
-            Expect Header Location [job]
-        }
-    }
+
 
     Expect Operation cc:TransformAction {
         Invoke {
-            Content-Type "application/ld+json"
+            Content-Type "text/turtle"
 
             ```
-            {}
+            PREFIX cc: <https://cube-creator.zazuko.com/vocab#>
+
+            <> a cc:TransformJob .
             ```
         } => {
             Expect Status 201
             Expect Header Location [job]
         }
     }
+
+    Expect Operation cc:PublishAction {
+        Invoke {
+            Content-Type "text/turtle"
+
+            ```
+            PREFIX cc: <https://cube-creator.zazuko.com/vocab#>
+
+            <> a cc:PublishJob .
+            ```
+        } => {
+            Expect Status 201
+            Expect Header Location [job]
+        }
+    }
+
+     
 }

@@ -1,7 +1,7 @@
 <template>
   <div>
-    <p v-if="hasNoOptions && !error">
-      No settings to fill in. Just hit the button below to start the transformation.
+    <p>
+      {{ operation.description }}
     </p>
     <hydra-operation-form
       :operation="operation"
@@ -24,7 +24,8 @@ import type { Shape } from '@rdfine/shacl'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
-import { schema } from '@tpluscode/rdf-ns-builders'
+import { rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
+import { NamedNode } from 'rdf-js'
 
 @Component({
   components: { HydraOperationForm },
@@ -32,17 +33,21 @@ import { schema } from '@tpluscode/rdf-ns-builders'
 export default class JobForm extends Vue {
   @Prop() operation!: RuntimeOperation
 
-  resource: GraphPointer = Object.freeze(clownface({ dataset: dataset() }).namedNode('').addOut(schema.name, 'test'));
+  resource: GraphPointer = Object.freeze(clownface({ dataset: dataset() }).namedNode('').addOut(schema.name, 'test')).addOut(rdf.type, this.resourceType);
   shape: Shape | null = null;
   error: ErrorDetails | null = null;
   isSubmitting = false;
 
-  async mounted (): Promise<void> {
-    this.shape = await api.fetchOperationShape(this.operation)
+  get resourceType (): NamedNode {
+    const type = this.operation.expects.find((expect) => !expect.types.has(sh.Shape))
+
+    if (!type) throw new Error('Operation expected type not found')
+
+    return type.id as NamedNode
   }
 
-  get hasNoOptions (): boolean {
-    return this.shape?.property.length === 0
+  async mounted (): Promise<void> {
+    this.shape = await api.fetchOperationShape(this.operation)
   }
 
   async onSubmit (): Promise<void> {
