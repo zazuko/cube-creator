@@ -38,7 +38,7 @@ export async function injectMetadata(jobUri: string) {
     const visited = new TermSet()
     const copyChildren = (subject: QuadObject) => {
       if (subject && subject.termType !== 'Literal' && !visited.has(subject)) {
-        [...datasetTriples.match(subject, null, null, dataset.id)].forEach(item => {
+        [...datasetTriples.match(subject)].forEach(item => {
           this.push($rdf.triple(subject, item.predicate, item.object))
           visited.add(subject)
           copyChildren(item.object)
