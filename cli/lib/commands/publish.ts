@@ -20,7 +20,7 @@ const ns = {
 
 interface RunOptions {
   debug: boolean
-  jobUri: string
+  job: string
   executionUrl?: string
   variable?: Map<string, string | undefined>
   graphStore?: {
@@ -41,7 +41,7 @@ export default function (pipelineId: NamedNode, log: Debugger) {
   const basePath = path.resolve(__dirname, '../../')
 
   return async function (command: RunOptions) {
-    const { jobUri, debug = false, enableBufferMonitor = false, variable = new Map(), graphStore, publishStore, executionUrl } = command
+    const { job: jobUri, debug = false, enableBufferMonitor = false, variable = new Map(), graphStore, publishStore, executionUrl } = command
 
     log.enabled = debug
     const authConfig = {

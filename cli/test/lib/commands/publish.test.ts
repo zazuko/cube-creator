@@ -37,7 +37,7 @@ describe('lib/commands/publish', function () {
       // when
       await runner({
         debug: true,
-        jobUri: `${env.API_CORE_BASE}cube-project/ubd/csv-mapping/jobs/test-publish-job`,
+        job: `${env.API_CORE_BASE}cube-project/ubd/csv-mapping/jobs/test-publish-job`,
         executionUrl,
       })
       await new Promise((resolve) =>
