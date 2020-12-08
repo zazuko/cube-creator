@@ -18,6 +18,11 @@ describe('CSV mapping flow', () => {
       .find('input')
       .type('My project')
 
+    cy.contains('.label', 'Publish graph')
+      .next()
+      .find('input')
+      .type('http://example.com/published-cube')
+
     cy.get('form').submit()
 
     cy.contains('.message', 'successfully created').should('be.visible')

@@ -27,6 +27,7 @@ describe('domain/cube-projects/create', () => {
     const resource = clownface({ dataset: $rdf.dataset() })
       .namedNode('')
       .addOut(rdfs.label, 'Foo bar project')
+      .addOut(cc.publishGraph, $rdf.namedNode('http://example.com/published-cube'))
 
     // when
     const project = await createProject({ resource, store, projectsCollection, user })
@@ -43,6 +44,7 @@ describe('domain/cube-projects/create', () => {
       .namedNode('')
       .addOut(rdfs.label, 'Foo bar project')
       .addOut(cc.projectSourceKind, 'Existing Cube')
+      .addOut(cc.publishGraph, $rdf.namedNode('http://example.com/published-cube'))
 
     // when
     const project = await createProject({ resource, store, projectsCollection, user })
@@ -56,6 +58,7 @@ describe('domain/cube-projects/create', () => {
     const resource = clownface({ dataset: $rdf.dataset() })
       .namedNode('')
       .addOut(rdfs.label, 'Foo bar project')
+      .addOut(cc.publishGraph, $rdf.namedNode('http://example.com/published-cube'))
 
     // when
     const project = await createProject({ resource, store, projectsCollection, user })
@@ -78,6 +81,7 @@ describe('domain/cube-projects/create', () => {
     const resource = clownface({ dataset: $rdf.dataset() })
       .namedNode('')
       .addOut(rdfs.label, 'Foo bar project')
+      .addOut(cc.publishGraph, $rdf.namedNode('http://example.com/published-cube'))
 
     // when
     const project = await createProject({ resource, store, projectsCollection, user })
@@ -100,6 +104,7 @@ describe('domain/cube-projects/create', () => {
     const resource = clownface({ dataset: $rdf.dataset() })
       .namedNode('')
       .addOut(rdfs.label, 'Foo bar project')
+      .addOut(cc.publishGraph, $rdf.namedNode('http://example.com/published-cube'))
 
     // when
     const project = await createProject({ resource, store, projectsCollection, user })
@@ -148,6 +153,7 @@ describe('domain/cube-projects/create', () => {
         .namedNode('')
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(cc.namespace, $rdf.namedNode('http://example.com'))
+        .addOut(cc.publishGraph, $rdf.namedNode('http://example.com/published-cube'))
         .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
 
       // when
@@ -164,6 +170,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(cc.namespace, $rdf.namedNode('http://example.com'))
         .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
+        .addOut(cc.publishGraph, $rdf.namedNode('http://example.com/published-cube'))
 
       // when
       const project = await createProject({ resource, store, projectsCollection, user })
@@ -193,6 +200,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(cc.namespace, $rdf.namedNode('http://example.com'))
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
+        .addOut(cc.publishGraph, $rdf.namedNode('http://example.com/published-cube'))
 
       // when
       const project = await createProject({ resource, store, projectsCollection, user })
@@ -228,6 +236,7 @@ describe('domain/cube-projects/create', () => {
         .namedNode('')
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
+        .addOut(cc.publishGraph, $rdf.namedNode('http://example.com/published-cube'))
 
       // when
       const project = await createProject({ resource, store, projectsCollection, user })
@@ -252,6 +261,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(cc.namespace, $rdf.namedNode('http://example.com'))
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
+        .addOut(cc.publishGraph, $rdf.namedNode('http://example.com/published-cube'))
 
       // when
       const project = await createProject({ resource, store, projectsCollection, user })
@@ -288,6 +298,7 @@ describe('domain/cube-projects/create', () => {
         .namedNode('')
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
+        .addOut(cc.publishGraph, $rdf.namedNode('http://example.com/published-cube'))
 
       // when
       const project = await createProject({ resource, store, projectsCollection, user })
@@ -333,6 +344,7 @@ describe('domain/cube-projects/create', () => {
         .namedNode('')
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
+        .addOut(cc.publishGraph, $rdf.namedNode('http://example.com/published-cube'))
 
       // when
       const project = await createProject({ resource, store, projectsCollection, user })

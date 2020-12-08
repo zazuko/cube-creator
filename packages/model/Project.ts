@@ -58,6 +58,6 @@ export function ProjectMixin<Base extends Constructor>(base: Base): Mixin {
 
 ProjectMixin.appliesTo = cc.CubeProject
 
-type MandatoryFields = 'creator' | 'label'
+type MandatoryFields = 'creator' | 'label' | 'publishGraph'
 
 export const create = initializer<Project, MandatoryFields>(ProjectMixin)
