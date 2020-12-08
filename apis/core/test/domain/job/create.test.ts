@@ -62,6 +62,7 @@ describe('domain/job/create', () => {
       expect(job.out(schema.actionStatus).term).to.deep.eq(schema.PotentialActionStatus)
       expect(job.out(rdf.type).values).to.contain(cc.Job.value)
       expect(job.out(rdf.type).values).to.contain(cc.PublishJob.value)
+      expect(job.out(cc.publishGraph).term).to.deep.eq($rdf.namedNode('publishGraph'))
     })
 
     it('sets next revision to job resource', async () => {

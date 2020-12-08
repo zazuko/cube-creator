@@ -68,6 +68,7 @@ export async function createPublishJob({
     project: projectPointer,
     name: 'Publish job',
     revision: project.nextRevision,
+    publishGraph: project.publishGraph,
   })
 
   await store.save()

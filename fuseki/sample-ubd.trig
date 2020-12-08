@@ -31,6 +31,11 @@ graph <cube-project/ubd> {
   .
 }
 
+<https://lindas.admin.ch/foen/cube> void:inDataset <ubd-example> .
+graph <https://lindas.admin.ch/foen/cube> {
+  <https://environment.ld.admin.ch/foen/ubd/28/1> a cube:Cube .
+}
+
 <cube-project/ubd/dataset> void:inDataset <ubd-example> .
 graph <cube-project/ubd/dataset> {
   <cube-project/ubd/dataset>
@@ -482,5 +487,7 @@ graph <cube-project/ubd/csv-mapping/jobs/test-publish-job> {
     dcterms:created "2020-10-29T12:01:70"^^xsd:dateTime ;
     rdfs:seeAlso <https://github.com/zazuko/cube-creator/actions/runs/345020889> ;
     schema:actionStatus schema:PotentialActionStatus ;
+    cc:publishGraph <https://lindas.admin.ch/foen/cube> ;
+    cc:revision 2 ;
   .
 }
