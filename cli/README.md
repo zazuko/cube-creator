@@ -4,7 +4,18 @@ Dockerized runner of Cube Creator projects
 
 ## Running
 
-The general syntax of the runner to transform:
+```
+Usage: docker run --rm zazuko/cube-creator-cli [options] [command]
+
+Options:
+  -h, --help           output usage information
+
+Commands:
+  transform [options]  Transforms source files to RDF
+  publish [options]    publish cube to store
+```
+
+### Command `transform`
 
 ```
 Usage: docker run --rm zazuko/cube-creator-cli transform [options]
@@ -12,11 +23,34 @@ Usage: docker run --rm zazuko/cube-creator-cli transform [options]
 Transforms source files to RDF
 
 Options:
-  --to <targetName>            Target to write triples (built-in: 'stdout', 'filesystem', 'graph-store')
-  --job <job>                  URL of a Data Cube Curation project job
-  --debug                      Print diagnostic information to standard output
-  -h, --help                   output usage information
+  --to <targetName>               (required) Target to write triples (built-in: 'stdout', 'filesystem', 'graph-store')
+  --job <job>                     (required) URL of a Cube Creator project job
+  --execution-url <executionUrl>  Link to job execution
+  -v, --variable <name=value>     Pipeline variables (default: {})
+  --debug                         Print diagnostic information to standard output
+  --enable-buffer-monitor         enable histogram of buffer usage
+  --auth-param <name=value>       Additional variables to pass to the token endpoint (default: {})
+  -h, --help                      output usage information
 ```
+
+### Command `publish`
+
+```
+Usage: docker run --rm zazuko/cube-creator-cli publish [options]
+
+Publish cube to store
+
+Options:
+  --job <job>                     (required) URL of a Cube Creator project job
+  --execution-url <executionUrl>  Link to job execution
+  -v, --variable <name=value>     Pipeline variables (default: {})
+  --debug                         Print diagnostic information to standard output
+  --enable-buffer-monitor         enable histogram of buffer usage
+  --auth-param <name=value>       Additional variables to pass to the token endpoint (default: {})
+  -h, --help                      output usage information
+```
+
+## Parameters
 
 The possible options and their arguments are described below. Each argument is
 provided by the `-v, --variable` option. For example

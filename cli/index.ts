@@ -40,7 +40,7 @@ async function main() {
   program
     .command('transform')
     .description('Transforms source files to RDF')
-    .requiredOption('--to <targetName>', "(required) Target to write triples (built-in: 'stdout', 'filesystem', 's3', 'graph-store')")
+    .requiredOption('--to <targetName>', "(required) Target to write triples (built-in: 'stdout', 'filesystem', 'graph-store')")
     .requiredOption('--job <job>', '(required) URL of a Cube Creator project job')
     .option('--execution-url <executionUrl>', 'Link to job execution')
     .option('-v, --variable <name=value>', 'Pipeline variables', parseVariables, new Map())
@@ -51,7 +51,7 @@ async function main() {
 
   program
     .command('publish')
-    .description('publish cube to store')
+    .description('Publish cube to store')
     .requiredOption('--job <job>', '(required) URL of a Cube Creator project job')
     .option('--execution-url <executionUrl>', 'Link to job execution')
     .option('-v, --variable <name=value>', 'Pipeline variables', parseVariables, new Map())
