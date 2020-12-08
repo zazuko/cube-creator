@@ -56,10 +56,13 @@ export async function createPublishJob({
     throw new Error('Project not found from jobs collection')
   }
 
+  const project = (await store.getResource<Project>(projectPointer))!
+
   const jobPointer = await store.createMember(jobCollection.term, id.job(jobCollection))
   Job.createPublish(jobPointer, {
     project: projectPointer,
     name: 'Publish job',
+    revision: project.nextRevision,
   })
 
   await store.save()
