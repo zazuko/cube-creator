@@ -47,6 +47,11 @@ export function loadFileHeadString(
     }
   })
 
+  // handle potential last line of file without \n
+  stream.on('end', () => {
+    if (partialLine.length > 0 && lines.length <= uniqueLines) { lines.push(partialLine) }
+  })
+
   return new Promise<string>(function (resolve, reject) {
     stream.on('close', () => resolve(lines.join('\n')))
     stream.on('error', reject)

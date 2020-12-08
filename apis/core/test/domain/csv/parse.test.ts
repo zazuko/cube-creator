@@ -32,4 +32,12 @@ describe('domain/csv/parse', () => {
     expect(lines1[0]).to.eq(firstLine2)
     expect(lines2.length).to.eq(21)
   })
+
+  it('parses all lines on short file', async () => {
+    const path = resolve(__dirname, '../../fixtures/CH_yearly_air_immission_unit_id.csv')
+
+    const input = await loadFileHeadString(createReadStream(path))
+    const lines = input?.split('\n') || []
+    expect(lines.length).be.eq(11)
+  })
 })
