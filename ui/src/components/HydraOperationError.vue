@@ -1,18 +1,20 @@
 <template>
   <b-message v-if="error" type="is-danger" :title="error.title" class="error-message">
-    <p v-if="error.detail">
-      {{ error.detail }}
-    </p>
-    <ul v-if="error.report">
-      <li v-for="(reportError, reportIndex) in error.report" :key="reportIndex">
-        {{ shrink(reportError.path) }}
-        <ul>
-          <li v-for="(message, messageIndex) in reportError.message" :key="messageIndex">
-            {{ message }}
-          </li>
-        </ul>
-      </li>
-    </ul>
+    <div class="content">
+      <p v-if="error.detail">
+        {{ error.detail }}
+      </p>
+      <ul v-if="error.report">
+        <li v-for="(reportError, reportIndex) in error.report" :key="reportIndex">
+          {{ shrink(reportError.path) }}
+          <ul>
+            <li v-for="(message, messageIndex) in reportError.message" :key="messageIndex">
+              {{ message }}
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
   </b-message>
 </template>
 
