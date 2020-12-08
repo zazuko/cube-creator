@@ -3,7 +3,7 @@ import { cc } from '@cube-creator/core/namespace'
 import { ResourceStore } from '../../ResourceStore'
 import { resourceStore } from '../resources'
 import { NamedNode, Term } from 'rdf-js'
-import { CsvColumn, CsvMapping, CsvSource, DimensionMetadataCollection, LiteralColumnMapping, ReferenceColumnMapping, Table } from '@cube-creator/model'
+import { CsvMapping, CsvSource, DimensionMetadataCollection, LiteralColumnMapping, ReferenceColumnMapping, Table } from '@cube-creator/model'
 import * as DimensionMetadataQueries from '../queries/dimension-metadata'
 import { findMapping } from './lib'
 import { NotFoundError, DomainError } from '../../errors'
@@ -37,10 +37,13 @@ export async function createColumnMapping({
     }
   }
 
+  const source = await store.getResource<CsvSource>(table.csvSource?.id)
+  if (!source) throw new NotFoundError(table.csvSource?.id)
+
   const resourceTypes = new TermSet(resource.out(rdf.type).terms)
   const columnMapping = resourceTypes.has(cc.ReferenceColumnMapping)
-    ? await createReferenceColumnMapping({ targetProperty, table, resource, store })
-    : await createLiteralColumnMapping({ targetProperty, table, resource, store })
+    ? await createReferenceColumnMapping({ targetProperty, table, source, resource, store })
+    : await createLiteralColumnMapping({ targetProperty, table, source, resource, store })
 
   if (table.types.has(cc.ObservationTable)) {
     const csvMapping = await store.getResource<CsvMapping>(table.csvMapping.id)
@@ -66,13 +69,13 @@ export async function createColumnMapping({
 interface CreateLiteralColumnMappingCommand {
   targetProperty: Term
   table: Table
+  source: CsvSource
   resource: GraphPointer
   store: ResourceStore
 }
 
-async function createLiteralColumnMapping({ targetProperty, table, resource, store }: CreateLiteralColumnMappingCommand): Promise<LiteralColumnMapping> {
+async function createLiteralColumnMapping({ targetProperty, table, source, resource, store }: CreateLiteralColumnMappingCommand): Promise<LiteralColumnMapping> {
   const columnId = resource.out(cc.sourceColumn).term as NamedNode
-  const source = await store.getResource<CsvSource>(table.csvSource?.id)
   const column = source?.columns.find(({ id }) => id.equals(columnId))
 
   if (!column) {
@@ -92,30 +95,27 @@ async function createLiteralColumnMapping({ targetProperty, table, resource, sto
 interface CreateReferenceColumnMappingCommand {
   targetProperty: Term
   table: Table
+  source: CsvSource
   resource: GraphPointer
   store: ResourceStore
 }
 
-async function createReferenceColumnMapping({ targetProperty, table, resource, store }: CreateReferenceColumnMappingCommand): Promise<ReferenceColumnMapping> {
+async function createReferenceColumnMapping({ targetProperty, table, source, resource, store }: CreateReferenceColumnMappingCommand): Promise<ReferenceColumnMapping> {
   const referencedTableId = resource.out(cc.referencedTable).term
   const referencedTable = await store.getResource<Table>(referencedTableId)
+  if (!referencedTable) throw new NotFoundError(referencedTableId)
 
-  if (!referencedTable) {
-    throw new NotFoundError(referencedTableId)
-  }
+  const referencedSource = await store.getResource<CsvSource>(referencedTable.csvSource?.id)
+  if (!referencedSource) throw new NotFoundError(referencedTable.csvSource?.id)
 
   const identifierMappings = await Promise.all(resource.out(cc.identifierMapping).map(async (identifierMapping) => {
     const sourceColumnId = identifierMapping.out(cc.sourceColumn).term!
-    const sourceColumn = await store.getResource<CsvColumn>(identifierMapping.out(cc.sourceColumn).term!)
-    if (!sourceColumn) {
-      throw new NotFoundError(sourceColumnId)
-    }
+    const sourceColumn = source.columns.find(({ id }) => id.equals(sourceColumnId))
+    if (!sourceColumn) throw new DomainError(`${sourceColumnId} not found in source`)
 
     const referencedColumnId = identifierMapping.out(cc.referencedColumn).term!
-    const referencedColumn = await store.getResource<CsvColumn>(referencedColumnId)
-    if (!referencedColumn) {
-      throw new NotFoundError(referencedColumnId)
-    }
+    const referencedColumn = referencedSource.columns.find(({ id }) => id.equals(referencedColumnId))
+    if (!referencedColumn) throw new DomainError(`${referencedColumnId} not found in referenced source`)
 
     return {
       sourceColumn,
