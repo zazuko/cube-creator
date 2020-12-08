@@ -26,9 +26,6 @@ async function main() {
   const app = express()
 
   Sentry.init({
-    dsn: env.maybe.SENTRY_DSN,
-    environment: env.maybe.SENTRY_ENVIRONMENT,
-    release: env.maybe.SENTRY_RELEASE,
     integrations: [
       new Sentry.Integrations.Http({ tracing: true }),
       new Tracing.Integrations.Express({ app }),

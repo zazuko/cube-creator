@@ -28,9 +28,6 @@ function parseVariables(str: string, all: Map<string, string>) {
 
 async function main() {
   Sentry.init({
-    dsn: process.env.SENTRY_DSN,
-    environment: process.env.SENTRY_ENVIRONMENT,
-    release: process.env.SENTRY_RELEASE,
     integrations: [
       new Sentry.Integrations.Http({ tracing: true }),
     ],
