@@ -67,7 +67,7 @@
       </tr>
       <tr v-else v-for="observation in observations.data" :key="observation.id.value">
         <td v-for="dimension in dimensions" :key="dimension.clientPath" :class="dimensionClasses(dimension)">
-          <term-display :term="observation[dimension.about.value]" />
+          <cube-preview-value :value="observation[dimension.about.value]" />
         </td>
       </tr>
     </tbody>
@@ -98,12 +98,12 @@ import Remote, { RemoteData } from '@/remote'
 import HydraOperationButton from './HydraOperationButton.vue'
 import TermWithLanguage from './TermWithLanguage.vue'
 import LoadingBlock from './LoadingBlock.vue'
-import TermDisplay from './TermDisplay.vue'
+import CubePreviewValue from './CubePreviewValue.vue'
 
 const languages = ['en', 'fr', 'de', 'it']
 
 @Component({
-  components: { HydraOperationButton, LoadingBlock, TermDisplay, TermWithLanguage },
+  components: { CubePreviewValue, HydraOperationButton, LoadingBlock, TermWithLanguage },
 })
 export default class extends Vue {
   @Prop() cubeMetadata!: Dataset
