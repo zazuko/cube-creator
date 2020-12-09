@@ -24,6 +24,8 @@ jobs:
       PUBLISH_GRAPH_STORE_ENDPOINT: ${{ secrets.GRAPH_STORE_ENDPOINT }}
       PUBLISH_GRAPH_STORE_USER: ${{ secrets.GRAPH_STORE_USER }}
       PUBLISH_GRAPH_STORE_PASSWORD: ${{ secrets.GRAPH_STORE_PASSWORD }}
+      SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+      SENTRY_ENVIRONMENT: ${{ secrets.SENTRY_ENVIRONMENT }}
       EXECUTION_URL: "https://${{ github.repository }}/actions/runs/${{ github.run_id }}"
     steps:
       - uses: actions/checkout@v2
