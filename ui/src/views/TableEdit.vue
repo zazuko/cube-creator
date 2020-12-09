@@ -44,8 +44,12 @@ export default class TableCreateView extends Vue {
       this.shape = await api.fetchOperationShape(this.operation)
     }
 
-    this.resource = this.table?.pointer ?? null
-    this.resource?.addOut(cc.isObservationTable, this.table?.isObservationTable ?? false)
+    // Fetch fresh table to avoid superfluous quads in the dataset
+    if (this.table) {
+      const table = await api.fetchResource<Table>(this.table.id.value)
+      this.resource = table.pointer
+        .addOut(cc.isObservationTable, table.isObservationTable)
+    }
   }
 
   get table (): Table | null {
