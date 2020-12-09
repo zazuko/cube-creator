@@ -58,7 +58,9 @@ export default class CubeDesignerView extends Vue {
 
   async mounted (): Promise<void> {
     await this.$store.dispatch('project/fetchCSVMapping')
-    this.$store.dispatch('project/fetchJobCollection')
+    const jobCollection = await this.$store.dispatch('project/fetchJobCollection')
+    console.log(jobCollection)
+    console.log(jobCollection.toJSON())
   }
 }
 </script>
