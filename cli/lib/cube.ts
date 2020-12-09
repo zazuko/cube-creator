@@ -19,13 +19,17 @@ export function getCubeId({ ptr }: { ptr: GraphPointer }) {
   return ptr.out(cc.cube).term || ''
 }
 
-export function injectRevision(this: Context) {
-  const cubeNamespace = this.variables.get('namespace')
+export function injectRevision(this: Pick<Context, 'variables'>) {
+  let cubeNamespace: string = this.variables.get('namespace')
   const revision = this.variables.get('revision')
 
+  if (cubeNamespace.endsWith('/')) {
+    cubeNamespace = cubeNamespace.slice(0, -1)
+  }
+
   function rebase<T extends Term>(term: T): T {
-    if (term.termType === 'NamedNode') {
-      return rdf.namedNode(term.value.replace(new RegExp(`^${cubeNamespace}`), `${cubeNamespace}${revision}/`)) as any
+    if (term.termType === 'NamedNode' && term.value.startsWith(cubeNamespace)) {
+      return rdf.namedNode(term.value.replace(new RegExp(`^${cubeNamespace}/?`), `${cubeNamespace}/${revision}/`)) as any
     }
 
     return term
