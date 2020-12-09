@@ -249,7 +249,7 @@ describe('domain/cube-projects/create', () => {
           nodeKind: sh.IRI,
           minCount: 1,
           maxCount: 1,
-          pattern: `^${env.API_CORE_BASE}cube/foo-bar-project-.+$`,
+          pattern: `^${env.API_CORE_BASE}cube/foo-bar-project-[a-zA-Z0-9]+/$`,
         }],
       })
     })
