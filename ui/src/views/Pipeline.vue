@@ -18,19 +18,17 @@
     </div>
 
     <div class="jobs content">
-      <h3 class="title is-5">
-        Previous jobs
-      </h3>
-      <ul v-if="jobs.length > 0">
-        <li v-for="job in jobs" :key="job.clientPath">
-          <a v-if="job.link" :href="job.link" target="_blank">
-            {{ job.created | format-date }} ({{ job.name }})
-          </a>
-          <span v-else>
-            {{ job.created | format-date }} ({{ job.name }})
-          </span>
-        </li>
-      </ul>
+      <div class="is-flex is-align-items-center mb-3">
+        <h3 class="title is-5 mb-0">
+          Previous jobs
+        </h3>
+        <b-tooltip label="Refresh">
+          <b-button @click="fetchJobs" icon-left="sync" type="is-text" size="is-small" />
+        </b-tooltip>
+      </div>
+      <div v-if="jobs.length > 0" class="panel container-narrow">
+        <job-item v-for="job in jobs" :key="job.clientPath" :job="job" />
+      </div>
       <p v-else class="has-text-grey">
         No jobs yet
       </p>
@@ -44,23 +42,32 @@ import { Component, Vue } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import JobForm from '@/components/JobForm.vue'
+import JobItem from '@/components/JobItem.vue'
 import { CsvMapping, JobCollection, Job } from '@cube-creator/model'
 
 const projectNS = namespace('project')
 
 @Component({
-  components: { LoadingBlock, JobForm },
+  components: { LoadingBlock, JobForm, JobItem },
 })
 export default class CubeDesignerView extends Vue {
   @projectNS.State('csvMapping') mapping!: CsvMapping | null;
   @projectNS.State('jobCollection') jobCollection!: JobCollection | null;
-  @projectNS.Getter('jobs') jobs!: Job[];
 
   async mounted (): Promise<void> {
     await this.$store.dispatch('project/fetchCSVMapping')
-    const jobCollection = await this.$store.dispatch('project/fetchJobCollection')
-    console.log(jobCollection)
-    console.log(jobCollection.toJSON())
+    this.fetchJobs()
+  }
+
+  get jobs (): Job[] {
+    if (!this.jobCollection) return []
+
+    const jobs = this.jobCollection.member
+    return jobs.sort(({ created: created1 }, { created: created2 }) => created2.getTime() - created1.getTime())
+  }
+
+  fetchJobs (): void {
+    this.$store.dispatch('project/fetchJobCollection')
   }
 }
 </script>

@@ -58,12 +58,6 @@ const getters: GetterTree<ProjectState, RootState> = {
     return state.dimensionMetadataCollection?.hasPart || []
   },
 
-  jobs (state) {
-    const jobs = state.jobCollection?.member || []
-
-    return jobs.sort(({ created: created1 }, { created: created2 }) => created2.getTime() - created1.getTime())
-  },
-
   findSource (_state, getters) {
     return (id: string) =>
       getters.sources.find(({ clientPath }: { clientPath: string}) => clientPath === id)
