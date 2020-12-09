@@ -9,7 +9,6 @@ import { TestResourceStore } from '../../support/TestResourceStore'
 import type * as DimensionMetadataQueries from '../../../lib/domain/queries/dimension-metadata'
 import type * as TableQueries from '../../../lib/domain/queries/table'
 import '../../../lib/domain'
-import { NotFoundError } from '../../../lib/errors'
 import { NamedNode } from 'rdf-js'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import { deleteColumnMapping } from '../../../lib/domain/column-mapping/delete'
@@ -138,6 +137,6 @@ describe('domain/column-mapping/delete', () => {
     const resource = $rdf.namedNode('columnMapping-foo')
     const promise = deleteColumnMapping({ resource, store, dimensionMetadataQueries, tableQueries })
 
-    await expect(promise).to.have.rejectedWith(NotFoundError)
+    await expect(promise).to.have.rejected
   })
 })
