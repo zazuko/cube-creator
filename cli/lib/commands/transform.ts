@@ -1,5 +1,4 @@
 import path from 'path'
-import * as Sentry from '@sentry/node'
 import { NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import { fileToDataset } from 'barnard59'
@@ -37,16 +36,6 @@ export default function (pipelineId: NamedNode, log: Debugger) {
 
   return async function (command: RunOptions) {
     const { to, job, debug = false, enableBufferMonitor = false, variable = new Map(), graphStore, executionUrl } = command
-
-    const transaction = Sentry.startTransaction({
-      op: 'transform',
-      name: 'Transform',
-      data: {
-        job,
-      },
-    })
-
-    Sentry.configureScope(scope => scope.setSpan(transaction))
 
     log.enabled = debug
 
@@ -113,6 +102,5 @@ export default function (pipelineId: NamedNode, log: Debugger) {
 
         throw error
       })
-      .finally(() => transaction.finish())
   }
 }
