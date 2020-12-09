@@ -13,7 +13,7 @@ export function cubeProject(label: string): NamedNode {
 }
 
 export function cube(project: Project): NamedNode {
-  return $rdf.namedNode(`${env.API_CORE_BASE}cube/${project.identifier}`)
+  return $rdf.namedNode(`${env.API_CORE_BASE}cube/${project.identifier}/`)
 }
 
 export function csvMapping(project: Project): NamedNode {
