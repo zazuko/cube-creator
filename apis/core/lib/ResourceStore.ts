@@ -10,7 +10,6 @@ import { warn } from '@hydrofoil/labyrinth/lib/logger'
 import { sparql } from '@tpluscode/rdf-string'
 import TermSet from '@rdfjs/term-set'
 import RdfResource, { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
-import { NotFoundError } from './errors'
 
 interface ResourceCreationOptions {
   implicitlyDereferencable?: boolean
@@ -142,7 +141,7 @@ export default class implements ResourceStore {
       if (opts?.allowMissing) {
         return undefined as any
       }
-      throw new NotFoundError(term)
+      throw new Error(`Resource ${id} not found`)
     }
 
     return resource
