@@ -1,11 +1,10 @@
 import { GraphPointer } from 'clownface'
-import { Dataset, Literal, NamedNode, Quad } from 'rdf-js'
+import { NamedNode } from 'rdf-js'
 import { cc } from '@cube-creator/core/namespace'
-import $rdf from 'rdf-ext'
 import { ResourceStore } from '../../ResourceStore'
 import { resourceStore } from '../resources'
 import { rdfs } from '@tpluscode/rdf-ns-builders'
-import { CsvMapping, Project } from '@cube-creator/model'
+import { CsvMapping, Project, Dataset } from '@cube-creator/model'
 
 interface UpdateProjectCommand {
   resource: GraphPointer
@@ -20,21 +19,16 @@ export async function updateProject({
 }: UpdateProjectCommand): Promise<Project> {
   const storedProject = await store.getResource<Project>(resource.term)
 
-  const oldLabel = storedProject.pointer.out(rdfs.label).term as Literal
-
-  const newLabel = resource.out(rdfs.label).term
-  if (newLabel && oldLabel) {
-    const dataset = storedProject.pointer.dataset as Dataset<Quad, Quad>
-    dataset.delete($rdf.quad(project.term, rdfs.label, oldLabel))
-  }
-  if (newLabel) {
-    storedProject.pointer.addOut(rdfs.label, newLabel)
-  }
+  storedProject.rename(resource.out(rdfs.label).value!)
 
   const newNamespace = resource.out(cc.csvMapping).out(cc.namespace).term as NamedNode
-  if (newNamespace) {
-    const csvMapping = await store.getResource<CsvMapping>(project.out(cc.csvMapping).term)
-    csvMapping.namespace = newNamespace
+  const csvMapping = await store.getResource<CsvMapping>(project.out(cc.csvMapping).term, { allowMissing: true })
+  if (csvMapping) {
+    const currentNamespace = csvMapping.updateNamespace(newNamespace)
+    if (!currentNamespace.equals(newNamespace)) {
+      const dataset = await store.getResource<Dataset>(storedProject.dataset?.id)
+      dataset.renameCube(currentNamespace, newNamespace)
+    }
   }
 
   storedProject.updatePublishGraph(resource.out(cc.publishGraph).term)

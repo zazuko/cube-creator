@@ -18,6 +18,7 @@ interface ApiProject {
   initializeJobCollection(store: ResourceStore): void
   incrementPublishedRevision(): void
   updatePublishGraph(publishGraph: Term | undefined): void
+  rename(name: string | undefined): void
 }
 
 declare module '@cube-creator/model' {
@@ -88,6 +89,14 @@ export default function Mixin<Base extends Constructor<Omit<Project, keyof ApiPr
       }
 
       this.publishGraph = publishGraph
+    }
+
+    rename(label: string | undefined): void {
+      if (!label) {
+        throw new DomainError('Label cannot be empty')
+      }
+
+      this.label = label
     }
   }
 
