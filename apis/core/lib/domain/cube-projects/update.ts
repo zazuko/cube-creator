@@ -4,7 +4,7 @@ import { cc } from '@cube-creator/core/namespace'
 import { ResourceStore } from '../../ResourceStore'
 import { resourceStore } from '../resources'
 import { rdfs } from '@tpluscode/rdf-ns-builders'
-import { CsvMapping, Project, Dataset } from '@cube-creator/model'
+import { CsvMapping, Project, Dataset, DimensionMetadataCollection } from '@cube-creator/model'
 
 interface UpdateProjectCommand {
   resource: GraphPointer
@@ -28,6 +28,8 @@ export async function updateProject({
     if (!currentNamespace.equals(newNamespace)) {
       const dataset = await store.getResource<Dataset>(storedProject.dataset?.id)
       dataset.renameCube(currentNamespace, newNamespace)
+      const metadata = await store.getResource<DimensionMetadataCollection>(dataset.dimensionMetadata.id)
+      metadata.renameDimensions(currentNamespace, newNamespace)
     }
   }
 
