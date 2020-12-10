@@ -110,6 +110,17 @@ describe('lib/commands/publish', function () {
       })
     })
 
+    it('sets cube version', async function () {
+      expect(cubePointer.namedNode(targetCube())).to.matchShape({
+        property: [{
+          path: schema.version,
+          hasValue: $rdf.literal('2', xsd.integer),
+          minCount: 1,
+          maxCount: 1,
+        }],
+      })
+    })
+
     it('observation data has been copied', async function () {
       expect(cubePointer.namedNode(targetCube('observation/blBAS-2002-annualmean'))).to.matchShape({
         property: [{

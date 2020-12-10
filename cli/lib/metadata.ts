@@ -1,16 +1,17 @@
 import { obj } from 'through2'
 import { Quad, Quad_Object as QuadObject } from 'rdf-js'
 import $rdf from 'rdf-ext'
-import { rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
+import { rdf, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import { cc, cube } from '@cube-creator/core/namespace'
 import { Project, PublishJob } from '@cube-creator/model'
 import { Hydra } from 'alcaeus/node'
 import * as Models from '@cube-creator/model'
 import TermSet from '@rdfjs/term-set'
+import type { Context } from 'barnard59-core/lib/Pipeline'
 
 Hydra.resources.factory.addMixin(...Object.values(Models))
 
-export async function injectMetadata(jobUri: string) {
+async function loadDataset(jobUri: string) {
   const jobResource = await Hydra.loadResource<PublishJob>(jobUri)
   const job = jobResource.representation?.root
   if (!job) {
@@ -32,6 +33,12 @@ export async function injectMetadata(jobUri: string) {
     throw new Error(`Dataset ${project.dataset} not loaded`)
   }
 
+  return dataset
+}
+
+export async function injectMetadata(this: Context, jobUri: string) {
+  const revision: number = this.variables.get('revision')
+  const dataset = await loadDataset(jobUri)
   const datasetTriples = dataset.pointer.dataset.match(null, null, null, dataset.id)
 
   return obj(function (quad: Quad, _, callback) {
@@ -48,7 +55,9 @@ export async function injectMetadata(jobUri: string) {
 
     // Cube Metadata
     if (rdf.type.equals(quad.predicate) && quad.object.equals(cube.Cube)) {
-      [...datasetTriples.match(dataset.id)]
+      this.push($rdf.quad(quad.subject, schema.version, $rdf.literal(revision.toString(), xsd.integer)))
+
+      ;[...datasetTriples.match(dataset.id)]
         .filter(q => !q.predicate.equals(schema.hasPart) && !q.predicate.equals(cc.dimensionMetadata))
         .forEach(metadata => {
           this.push($rdf.triple(quad.subject, metadata.predicate, metadata.object))
