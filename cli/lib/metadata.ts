@@ -1,7 +1,7 @@
 import { obj } from 'through2'
-import { Quad, Quad_Object as QuadObject } from 'rdf-js'
+import { Quad, Quad_Object as QuadObject, Quad_Subject as QuadSubject, Term } from 'rdf-js'
 import $rdf from 'rdf-ext'
-import { rdf, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
+import { dcterms, rdf, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import { cc, cube } from '@cube-creator/core/namespace'
 import { Project, PublishJob } from '@cube-creator/model'
 import { Hydra } from 'alcaeus/node'
@@ -40,6 +40,8 @@ export async function injectMetadata(this: Context, jobUri: string) {
   const revision: number = this.variables.get('revision')
   const dataset = await loadDataset(jobUri)
   const datasetTriples = dataset.pointer.dataset.match(null, null, null, dataset.id)
+  const previousCubes: Map<Term, QuadSubject> = this.variables.get('previousCubes')
+  const modifiedDate = $rdf.literal(new Date().toISOString(), xsd.dateTime)
 
   return obj(function (quad: Quad, _, callback) {
     const visited = new TermSet()
@@ -56,8 +58,15 @@ export async function injectMetadata(this: Context, jobUri: string) {
     // Cube Metadata
     if (rdf.type.equals(quad.predicate) && quad.object.equals(cube.Cube)) {
       this.push($rdf.quad(quad.subject, schema.version, $rdf.literal(revision.toString(), xsd.integer)))
+      this.push($rdf.quad(quad.subject, schema.dateModified, modifiedDate))
+      this.push($rdf.quad(quad.subject, dcterms.modified, modifiedDate))
 
-      ;[...datasetTriples.match(dataset.id)]
+      const previousCube = previousCubes.get(quad.subject)
+      if (previousCube) {
+        this.push($rdf.quad(previousCube, schema.validThrough, modifiedDate))
+      }
+
+      [...datasetTriples.match(dataset.id)]
         .filter(q => !q.predicate.equals(schema.hasPart) && !q.predicate.equals(cc.dimensionMetadata))
         .forEach(metadata => {
           this.push($rdf.triple(quad.subject, metadata.predicate, metadata.object))
