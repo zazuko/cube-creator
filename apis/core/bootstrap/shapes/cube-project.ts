@@ -1,5 +1,5 @@
 import { cc, shape } from '@cube-creator/core/namespace'
-import { hydra, rdfs, sh } from '@tpluscode/rdf-ns-builders'
+import { dash, hydra, rdfs, sh } from '@tpluscode/rdf-ns-builders'
 import { turtle } from '@tpluscode/rdf-string'
 
 export const CubeProjectShape = turtle`
@@ -46,6 +46,8 @@ ${shape('cube-project/create')} {
       ${sh.maxCount} 1 ;
       ${sh.nodeKind} ${sh.IRI} ;
       ${sh.order} 40 ;
+      ${dash.hidden} true ;
+      ${sh.defaultValue} <https://lindas.admin.ch/foen/cube> ;
     ] ;
   .
 
