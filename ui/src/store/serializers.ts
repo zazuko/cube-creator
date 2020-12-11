@@ -123,7 +123,7 @@ export function serializeDimensionMetadata (dimension: DimensionMetadata): Dimen
 }
 
 export function serializeJobCollection (collection: JobCollection): JobCollection {
-  const members = (collection as any)[hydra.member.value] ?? [] as Job[]
+  const members = collection.getArray<Job>(hydra.member)
 
   return Object.freeze({
     ...serializeResource(collection),
