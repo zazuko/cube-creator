@@ -1,8 +1,20 @@
 import { Actions } from '@/api/mixins/ApiResource'
 import { cc } from '@cube-creator/core/namespace'
-import { ColumnMapping, CsvColumn, CsvSource, DimensionMetadata, DimensionMetadataCollection, JobCollection, SourcesCollection, Table, TableCollection } from '@cube-creator/model'
+import {
+  ColumnMapping,
+  CsvColumn,
+  CsvSource,
+  DimensionMetadata,
+  DimensionMetadataCollection,
+  Job,
+  JobCollection,
+  SourcesCollection,
+  Table,
+  TableCollection,
+} from '@cube-creator/model'
 import { IdentifierMapping, LiteralColumnMapping, ReferenceColumnMapping } from '@cube-creator/model/ColumnMapping'
 import { Link } from '@cube-creator/model/lib/Link'
+import { hydra } from '@tpluscode/rdf-ns-builders'
 import { RdfResource } from '@tpluscode/rdfine/RdfResource'
 
 export function serializeSourcesCollection (collection: SourcesCollection): SourcesCollection {
@@ -111,6 +123,8 @@ export function serializeDimensionMetadata (dimension: DimensionMetadata): Dimen
 }
 
 export function serializeJobCollection (collection: JobCollection): JobCollection {
+  const members = collection.getArray<Job>(hydra.member)
+
   return Object.freeze({
     ...serializeResource(collection),
     actions: {
@@ -118,7 +132,7 @@ export function serializeJobCollection (collection: JobCollection): JobCollectio
       createTransform: collection.actions.createTransform,
       createPublish: collection.actions.createPublish,
     },
-    member: collection.member.map(Object.freeze),
+    member: members.map(Object.freeze),
   }) as unknown as JobCollection
 }
 
