@@ -48,22 +48,29 @@ function mappedLiteralColumn({ csvMapping, columnMapping, column }: CsvwBuilding
   return csvwColumn
 }
 
-async function mappedReferenceColumn({ csvMapping, columnMapping, resources }: CsvwBuildingContext & { columnMapping: ReferenceColumnMapping }): Promise<Initializer<Csvw.Column>> {
+async function mappedReferenceColumn({ csvMapping, columnMapping, source, resources }: CsvwBuildingContext & { columnMapping: ReferenceColumnMapping }): Promise<Initializer<Csvw.Column>> {
   const csvwColumn: Initializer<Csvw.Column> = {
     propertyUrl: csvMapping.createIdentifier(columnMapping.targetProperty).value,
   }
 
+  const referencedTable = await resources.getResource<Table>(columnMapping.referencedTable.id)
+  if (!referencedTable.csvSource) {
+    throw new Error(`Table ${columnMapping.referencedTable.id} not linked to a source`)
+  }
+
+  const referencedSource = await resources.getResource<CsvSource>(referencedTable.csvSource.id)
+
   const identifierMappings = columnMapping.identifierMapping
   const columnNameMap = await identifierMappings.reduce<Promise<Map<string, string>>>(async (mapP, mapping) => {
     const map = await mapP
-    const sourceColumn = await resources.getResource<CsvColumn>(mapping.sourceColumn.id, { allowMissing: true })
-    const referencedColumn = await resources.getResource<CsvColumn>(mapping.referencedColumn.id, { allowMissing: true })
 
+    const sourceColumn = source.columns.find(({ id }) => id.equals(mapping.sourceColumn.id))
     if (!sourceColumn) {
       warning(`Column ${mapping.sourceColumn.id} not found`)
       return map
     }
 
+    const referencedColumn = referencedSource.columns.find(({ id }) => id.equals(mapping.referencedColumn.id))
     if (!referencedColumn) {
       warning(`Column ${mapping.referencedColumn.id} not found`)
       return map
@@ -76,8 +83,6 @@ async function mappedReferenceColumn({ csvMapping, columnMapping, resources }: C
 
     return Promise.resolve(map)
   }, Promise.resolve(new Map<string, string>()))
-
-  const referencedTable = await resources.getResource<Table>(columnMapping.referencedTable.id)
 
   if (typeof referencedTable.identifierTemplate === 'string') {
     const uriTemplate = parse(referencedTable.identifierTemplate)
