@@ -26,7 +26,7 @@
 import { Prop, Component, Vue } from 'vue-property-decorator'
 import { PropertyObjectState, PropertyState } from '@hydrofoil/shaperone-core/models/forms'
 import { TemplateResult } from 'lit-element'
-import { dash } from '@tpluscode/rdf-ns-builders'
+import '@rdfine/dash/extensions/sh/PropertyShape'
 import RenderWcTemplate from './RenderWcTemplate.vue'
 
 @Component({
@@ -39,7 +39,7 @@ export default class extends Vue {
   @Prop() renderMultiEditor!: () => TemplateResult;
 
   get isHidden (): boolean {
-    return !!this.property.shape.pointer.out(dash.hidden).value
+    return this.property.shape.hidden === true
   }
 }
 </script>

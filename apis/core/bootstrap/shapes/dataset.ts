@@ -195,12 +195,13 @@ ${shapeId} {
       ${sh.order} 150 ;
     ] ;
     ${sh.property} [
-      ${sh.name} "Last Update" ;
-      ${sh.path} ${dcterms.modified} ;
+      ${sh.name} "Creation Date" ;
+      ${sh.path} ${schema.dateCreated} ;
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
       ${sh.datatype} ${xsd.date} ;
-      ${sh.order} 160 ;
+      ${dash.hidden} true ;
+      ${sh.equals} ${dcterms.issued} ;
     ] ;
   .
 

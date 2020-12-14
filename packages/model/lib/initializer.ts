@@ -9,15 +9,18 @@ type MandatoryFields<T, TRequired extends Extract<keyof T, string>> = Pick<Requi
 type InitializerFunction<T, TRequired extends Extract<keyof T, string> = never> =
     (pointer: GraphPointer<ResourceIdentifier>, init: MandatoryFields<T, TRequired> & Initializer<T>) => T
 
-export function initializer<T>(mixin: Mixin, defaults?: Initializer<T>): (pointer: GraphPointer<ResourceIdentifier>) => T
-export function initializer<T, TRequired extends Extract<keyof T, string>>(mixin: Mixin, defaults?: Initializer<T>): InitializerFunction<T, TRequired>
-export function initializer<T, TRequired extends Extract<keyof T, string>>(mixin: Mixin, defaults?: Initializer<T>): InitializerFunction<T, TRequired> {
+type Defaults<T> = Initializer<T> | (() => Initializer<T>)
+
+export function initializer<T>(mixin: Mixin, defaults?: Defaults<T>): (pointer: GraphPointer<ResourceIdentifier>) => T
+export function initializer<T, TRequired extends Extract<keyof T, string>>(mixin: Mixin, defaults?: Defaults<T>): InitializerFunction<T, TRequired>
+export function initializer<T, TRequired extends Extract<keyof T, string>>(mixin: Mixin, defaults?: Defaults<T>): InitializerFunction<T, TRequired> {
   return (pointer, init): T => {
     if (pointer.term.termType !== 'NamedNode' && pointer.term.termType !== 'BlankNode') {
       throw new Error('A resource must have a NamedNode identifier')
     }
 
-    const combinedInit = { ...(defaults || {}), ...(init || {}) }
+    const defaultInit = typeof defaults === 'function' ? defaults() : defaults
+    const combinedInit = { ...(defaultInit || {}), ...(init || {}) }
 
     const resource = new (mixin(RdfResourceImpl))(pointer, combinedInit)
     if (mixin.appliesTo) {
