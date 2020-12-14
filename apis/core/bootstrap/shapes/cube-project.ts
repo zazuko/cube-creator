@@ -85,22 +85,14 @@ ${shape('cube-project/update')} {
       ${sh.order} 20 ;
     ] ;
     ${sh.property} [
-      ${sh.path} ${cc.csvMapping} ;
+      ${sh.name} "Cube namespace" ;
+      ${sh.description} "A URI that will be used as default prefix for all the custom properties created during the mapping." ;
+      ${sh.path} ${cc.namespace} ;
+      ${sh.pattern} "[#/]$" ;
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
+      ${sh.nodeKind} ${sh.IRI} ;
       ${sh.order} 30 ;
-      ${sh.node} [
-        ${sh.property} [
-          ${sh.name} "Cube namespace" ;
-          ${sh.description} "A URI that will be used as default prefix for all the custom properties created during the mapping." ;
-          ${sh.path} ${cc.namespace} ;
-          ${sh.pattern} "[#/]$" ;
-          ${sh.minCount} 1 ;
-          ${sh.maxCount} 1 ;
-          ${sh.nodeKind} ${sh.IRI} ;
-          ${sh.order} 20 ;
-        ]
-      ]
     ] ;
   .
 }

@@ -38,6 +38,7 @@ import { Project } from '@cube-creator/model'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import { GraphPointer } from 'clownface'
 import { Shape } from '@rdfine/shacl'
+import { cc } from '@cube-creator/core/namespace'
 import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 
@@ -61,7 +62,8 @@ export default class CubeProjectEditView extends Vue {
       this.shape = await api.fetchOperationShape(operation)
     }
 
-    this.resource = Object.freeze(this.project?.pointer) ?? null
+    const namespace = this.project.csvMapping?.namespace ?? ''
+    this.resource = Object.freeze(this.project.pointer.addOut(cc.namespace, namespace))
   }
 
   async updateProject (): Promise<void> {
