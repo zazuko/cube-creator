@@ -41,7 +41,7 @@ export async function injectMetadata(this: Context, jobUri: string) {
   const dataset = await loadDataset(jobUri)
   const datasetTriples = dataset.pointer.dataset.match(null, null, null, dataset.id)
   const previousCubes: Map<Term, QuadSubject> = this.variables.get('previousCubes')
-  const timestamp = $rdf.literal(this.variables.get('timestamp').toISOString(), xsd.dateTime)
+  const timestamp = $rdf.literal(this.variables.get('timestamp'), xsd.dateTime)
 
   return obj(function (quad: Quad, _, callback) {
     const visited = new TermSet()

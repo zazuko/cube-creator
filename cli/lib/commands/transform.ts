@@ -8,7 +8,7 @@ import Runner from 'barnard59/lib/runner'
 import bufferDebug from 'barnard59/lib/bufferDebug'
 import clownface from 'clownface'
 import namespace from '@rdfjs/namespace'
-import { rdf, schema } from '@tpluscode/rdf-ns-builders'
+import { rdf, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import { names } from '../variables'
 import { updateJobStatus } from '../job'
 
@@ -59,7 +59,7 @@ export default function (pipelineId: NamedNode, log: Debugger) {
     variable.set('graph-store-password', graphStore?.password || process.env.GRAPH_STORE_PASSWORD)
 
     const timestamp = new Date()
-    variable.set('timestamp', timestamp)
+    variable.set('timestamp', $rdf.literal(timestamp.toISOString(), xsd.dateTime))
 
     pipeline.addOut(ns.pipelines.variables, set => {
       variable.forEach((value, key) => {

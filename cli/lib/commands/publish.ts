@@ -72,7 +72,7 @@ export default function (pipelineId: NamedNode, log: Debugger) {
     variable.set('namespace', namespace)
 
     const timestamp = new Date()
-    variable.set('timestamp', timestamp)
+    variable.set('timestamp', timestamp.toISOString())
 
     pipeline.addOut(ns.pipelines.variables, set => {
       variable.forEach((value, key) => {
