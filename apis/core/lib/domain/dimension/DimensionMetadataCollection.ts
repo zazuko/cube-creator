@@ -57,8 +57,10 @@ export default function Mixin<Base extends Constructor<Omit<DimensionMetadataCol
     addDimensionMetadata(params: CreateColumnMetadata): DimensionMetadata.DimensionMetadata {
       const identifier = params.csvMapping.createIdentifier(params.columnMapping.targetProperty)
 
-      if (this.hasPart.some((dimMeta) => dimMeta.about === identifier)) {
-        throw new Error(`Dimension Metadata with identifier ${identifier.value} already exists`)
+      const existingDim = this.hasPart.find(dimMeta => dimMeta.about.equals(identifier))
+
+      if (existingDim) {
+        return existingDim
       }
 
       const dimensionMetadata = DimensionMetadata.create(this.pointer.node(this.getId(params.columnMapping)), {
