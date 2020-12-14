@@ -1,8 +1,8 @@
 <template>
   <form @submit.prevent="$emit('submit')">
-    <hydra-operation-error :error="error" />
-
     <cc-form :resource.prop="resource" :shapes.prop="shapePointer" no-editor-switches />
+
+    <hydra-operation-error :error="error" class="mt-4" />
 
     <form-submit-cancel
       :submit-label="_submitLabel"

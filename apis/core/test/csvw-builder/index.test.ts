@@ -1,6 +1,6 @@
 import { describe, it, beforeEach } from 'mocha'
 import { expect } from 'chai'
-import clownface from 'clownface'
+import clownface, { AnyContext, AnyPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import * as CsvMapping from '@cube-creator/model/CsvMapping'
 import * as CsvSource from '@cube-creator/model/CsvSource'
@@ -14,24 +14,26 @@ import '../../lib/domain'
 import { TestResourceStore } from '../support/TestResourceStore'
 import { findColumn } from './support'
 import { schema, xsd } from '@tpluscode/rdf-ns-builders'
+import DatasetExt from 'rdf-ext/lib/Dataset'
 
 describe('lib/csvw-builder', () => {
+  let graph: AnyPointer<AnyContext, DatasetExt>
   let table: Table.Table
   let csvSource: CsvSource.CsvSource
   let csvMapping: CsvMapping.CsvMapping
   let resources: TestResourceStore
 
   beforeEach(() => {
-    const graph = clownface({ dataset: $rdf.dataset() })
+    graph = clownface({ dataset: $rdf.dataset() })
     const csvSourcePointer = graph.namedNode('csv-mapping')
     const csvMappingPointer = graph.namedNode('table-source')
 
-    csvMapping = CsvMapping.create(csvSourcePointer, {
+    csvMapping = CsvMapping.create(csvMappingPointer, {
       namespace: $rdf.namedNode('http://example.com/test-cube/'),
       project: $rdf.namedNode('project') as any,
     })
 
-    csvSource = CsvSource.create(csvMappingPointer, {
+    csvSource = CsvSource.create(csvSourcePointer, {
       name: 'test-observation.csv',
       csvMapping,
       dialect: {
@@ -212,6 +214,45 @@ describe('lib/csvw-builder', () => {
     // then
     const csvwColumn = findColumn(csvw, 'JAHR')
     expect(csvwColumn?.lang).to.eq('de-DE')
+  })
+
+  it('maps column from reference column mapping', async () => {
+    // given
+    const stationSource = CsvSource.create(graph.namedNode('station-source'), {
+      name: 'test-station.csv',
+      csvMapping,
+      dialect: { delimiter: '-', quoteChar: '""' },
+    })
+    stationSource.columns = [
+      CsvColumn.fromPointer(stationSource.pointer.namedNode('column-station-id'), { name: 'ID' }),
+    ]
+    resources.push(stationSource.pointer as any)
+    const stationTable = Table.create(graph.namedNode('table-station'), {
+      name: 'test station table',
+      identifierTemplate: 'Station/{ID}',
+      csvMapping,
+      csvSource: stationSource,
+    })
+    resources.push(stationTable.pointer as any)
+    csvSource.columns = [
+      CsvColumn.fromPointer(csvSource.pointer.namedNode('column-station'), { name: 'STATION' }),
+    ]
+    const columnMapping = ColumnMapping.referenceFromPointer(clownface({ dataset: $rdf.dataset() }).namedNode('station-mapping'), {
+      targetProperty: $rdf.namedNode('station'),
+      referencedTable: stationTable,
+      identifierMapping: [
+        { sourceColumn: $rdf.namedNode('column-station'), referencedColumn: $rdf.namedNode('column-station-id') },
+      ],
+    })
+    resources.push(columnMapping.pointer as any)
+    table.columnMappings = [columnMapping] as any
+
+    // when
+    const csvw = await buildCsvw({ table, resources })
+
+    // then
+    const csvwColumn = findColumn(csvw, $rdf.namedNode('station'))
+    expect(csvwColumn?.valueUrl).to.eq('http://example.com/test-cube/Station/{STATION}')
   })
 
   it('adds a cc:cube virtual column to output of observation table', async () => {

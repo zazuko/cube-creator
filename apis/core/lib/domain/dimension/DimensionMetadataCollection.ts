@@ -7,7 +7,7 @@ import * as DimensionMetadata from '@cube-creator/model/DimensionMetadata'
 import $rdf from 'rdf-ext'
 import { shrink } from '@zazuko/rdf-vocabularies'
 import { ResourceStore } from '../../ResourceStore'
-import { Term } from 'rdf-js'
+import { NamedNode, Term } from 'rdf-js'
 
 interface CreateColumnMetadata {
   store: ResourceStore
@@ -25,6 +25,7 @@ interface ApiDimensionMetadataCollection {
   deleteDimension(dimension: DimensionMetadata.DimensionMetadata): void
   addDimensionMetadata(params: CreateColumnMetadata): DimensionMetadata.DimensionMetadata
   find(params: FindDimensionMetadata | Term): DimensionMetadata.DimensionMetadata | undefined
+  renameDimensions(oldCube: NamedNode, newCube: NamedNode): void
 }
 
 declare module '@cube-creator/model' {
@@ -72,6 +73,17 @@ export default function Mixin<Base extends Constructor<Omit<DimensionMetadataCol
     find(params: FindDimensionMetadata | Term): DimensionMetadata.DimensionMetadata | undefined {
       const identifier = 'termType' in params ? params : params.csvMapping.createIdentifier(params.targetProperty)
       return this.hasPart.find(part => identifier.equals(part.about))
+    }
+
+    renameDimensions(oldCube: NamedNode, newCube: NamedNode | undefined) {
+      if (!newCube) {
+        return
+      }
+
+      const pattern = new RegExp(`^${oldCube.value}`)
+      for (const dimension of this.hasPart) {
+        dimension.about = $rdf.namedNode(dimension.about.value.replace(pattern, newCube.value))
+      }
     }
 
     private getId(mapping: ColumnMapping) {

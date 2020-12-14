@@ -1,7 +1,5 @@
 <template>
   <form @submit.prevent="onSubmit">
-    <hydra-operation-error :error="error" />
-
     <b-field label="Link to table">
       <b-select v-model="data.referencedTable" placeholder="Select a table">
         <option v-for="table in tables" :key="table.clientPath" :value="table">
@@ -37,6 +35,8 @@
       </div>
       <loading-block v-else />
     </b-field>
+
+    <hydra-operation-error :error="error" class="mt-4" />
 
     <form-submit-cancel
       :submit-label="operation.title"
