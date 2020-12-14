@@ -189,7 +189,6 @@ ${shapeId} {
     ${sh.property} [
       ${sh.name} "Creation Date" ;
       ${sh.path} ${dcterms.issued} ;
-      ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
       ${sh.datatype} ${xsd.date} ;
       ${sh.order} 150 ;
@@ -204,7 +203,6 @@ ${shapeId} {
     ${sh.property} [
       ${sh.name} "Creation Date" ;
       ${sh.path} ${schema.dateCreated} ;
-      ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
       ${sh.datatype} ${xsd.date} ;
       ${dash.hidden} true ;

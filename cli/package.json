@@ -71,6 +71,7 @@
     "@types/rdfjs__formats-common": "^2.0.0",
     "@types/rdfjs__namespace": "^1.1.1",
     "@types/rdfjs__sink-map": "^1.0.0",
+    "@types/rdfjs__term-map": "^1.0.1",
     "@types/rdfjs__term-set": "^1.0.2",
     "@types/readable-stream": "^2.3.9",
     "@types/sparql-http-client": "^2",
