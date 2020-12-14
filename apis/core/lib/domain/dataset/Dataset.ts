@@ -6,6 +6,7 @@ import * as Cube from '@cube-creator/model/Cube'
 
 interface ApiDataset {
   addCube(cube: NamedNode, creator: NamedNode): void
+  setPublishedDate(publishDate: Date): void
 }
 
 declare module '@cube-creator/model' {
@@ -14,11 +15,15 @@ declare module '@cube-creator/model' {
 }
 
 export default function Mixin<Base extends Constructor<Omit<Dataset, keyof ApiDataset>>>(Resource: Base) {
-  return class extends Resource {
+  return class extends Resource implements ApiDataset {
     addCube(cube: NamedNode, creator: NamedNode) {
       Cube.create(this.pointer.node(cube), { creator })
 
       this.pointer.addOut(schema.hasPart, cube)
+    }
+
+    setPublishedDate(publishDate: Date): void {
+      this.published = publishDate
     }
   }
 }

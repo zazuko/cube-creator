@@ -15,6 +15,7 @@ export interface Dataset extends RdfResource {
   dimensionMetadata: Link<DimensionMetadataCollection>
   title: Literal[]
   created: Date
+  published: Date
 }
 
 export function DatasetMixin<Base extends Constructor>(Resource: Base): Mixin {
@@ -34,6 +35,9 @@ export function DatasetMixin<Base extends Constructor>(Resource: Base): Mixin {
 
     @property.literal({ path: dcterms.issued, type: Date, datatype: xsd.date })
     created!: Date
+
+    @property.literal({ path: schema.datePublished, type: Date, datatype: xsd.date })
+    published!: Date
   }
 
   return Impl

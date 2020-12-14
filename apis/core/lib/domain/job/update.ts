@@ -1,6 +1,6 @@
 import { NamedNode } from 'rdf-js'
 import { GraphPointer } from 'clownface'
-import { Job, JobMixin, Project } from '@cube-creator/model'
+import { Job, JobMixin, Project, Dataset } from '@cube-creator/model'
 import { isPublishJob } from '@cube-creator/model/Job'
 import RdfResource from '@tpluscode/rdfine'
 import { ResourceStore } from '../../ResourceStore'
@@ -16,12 +16,19 @@ export async function update({ resource, store = resourceStore() }: JobUpdatePar
   const changes = RdfResource.factory.createEntity<Job>(resource, [JobMixin])
   const job = await store.getResource<Job>(resource.term)
 
+  job.modified = changes.modified
+
   if (changes.actionStatus) {
     job.actionStatus = changes.actionStatus
 
     if (changes.actionStatus.equals(schema.CompletedActionStatus) && isPublishJob(job)) {
       const project = await store.getResource<Project>(job.project)
-      project?.incrementPublishedRevision()
+      project.incrementPublishedRevision()
+
+      const dataset = await store.getResource<Dataset>(project.dataset.id)
+      if (job.revision === 1) {
+        dataset.setPublishedDate(job.modified)
+      }
     }
   }
 

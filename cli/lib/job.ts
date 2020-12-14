@@ -43,10 +43,11 @@ interface JobStatusUpdate {
   executionUrl: string | undefined
   log: Logger
   status: Schema.ActionStatusType
+  modified: Date
   error?: Error
 }
 
-export async function updateJobStatus({ jobUri, executionUrl, log, status, error }: JobStatusUpdate) {
+export async function updateJobStatus({ jobUri, executionUrl, log, status, error, modified }: JobStatusUpdate) {
   try {
     const { representation } = await Hydra.loadResource<Job>(jobUri)
     const job = representation?.root
@@ -64,6 +65,7 @@ export async function updateJobStatus({ jobUri, executionUrl, log, status, error
       return
     }
 
+    job.modified = modified
     job.actionStatus = status
     if (executionUrl) {
       job.seeAlso = $rdf.namedNode(executionUrl) as any
@@ -112,6 +114,7 @@ export class JobIterator extends stream.Readable {
         const job = await loadTransformJob(jobUri, log, variables)
         await updateJobStatus({
           jobUri,
+          modified: new Date(),
           executionUrl: variables.get(names.executionUrl),
           log,
           status: schema.ActiveActionStatus,

@@ -195,6 +195,13 @@ ${shapeId} {
       ${sh.order} 150 ;
     ] ;
     ${sh.property} [
+      ${sh.name} "Date published" ;
+      ${sh.path} ${schema.datePublished} ;
+      ${sh.maxCount} 1 ;
+      ${sh.datatype} ${xsd.date} ;
+      ${sh.order} 160 ;
+    ] ;
+    ${sh.property} [
       ${sh.name} "Creation Date" ;
       ${sh.path} ${schema.dateCreated} ;
       ${sh.minCount} 1 ;

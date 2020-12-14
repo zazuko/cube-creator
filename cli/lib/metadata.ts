@@ -41,7 +41,7 @@ export async function injectMetadata(this: Context, jobUri: string) {
   const dataset = await loadDataset(jobUri)
   const datasetTriples = dataset.pointer.dataset.match(null, null, null, dataset.id)
   const previousCubes: Map<Term, QuadSubject> = this.variables.get('previousCubes')
-  const modifiedDate = $rdf.literal(new Date().toISOString(), xsd.dateTime)
+  const timestamp = $rdf.literal(this.variables.get('timestamp').toISOString(), xsd.dateTime)
 
   return obj(function (quad: Quad, _, callback) {
     const visited = new TermSet()
@@ -58,12 +58,16 @@ export async function injectMetadata(this: Context, jobUri: string) {
     // Cube Metadata
     if (rdf.type.equals(quad.predicate) && quad.object.equals(cube.Cube)) {
       this.push($rdf.quad(quad.subject, schema.version, $rdf.literal(revision.toString(), xsd.integer)))
-      this.push($rdf.quad(quad.subject, schema.dateModified, modifiedDate))
-      this.push($rdf.quad(quad.subject, dcterms.modified, modifiedDate))
+      this.push($rdf.quad(quad.subject, schema.dateModified, timestamp))
+      this.push($rdf.quad(quad.subject, dcterms.modified, timestamp))
+
+      if (revision === 1) {
+        this.push($rdf.quad(quad.subject, schema.datePublished, timestamp))
+      }
 
       const previousCube = previousCubes.get(quad.subject)
       if (previousCube) {
-        this.push($rdf.quad(previousCube, schema.validThrough, modifiedDate))
+        this.push($rdf.quad(previousCube, schema.validThrough, timestamp))
       }
 
       [...datasetTriples.match(dataset.id)]
