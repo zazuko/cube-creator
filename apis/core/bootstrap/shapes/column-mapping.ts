@@ -43,7 +43,6 @@ ${literalShapeId} {
     ${sh.property} [
       ${sh.name} "Data type" ;
       ${sh.path} ${cc.datatype} ;
-      ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
       ${sh.nodeKind} ${sh.IRI} ;
       ${sh.in} (
