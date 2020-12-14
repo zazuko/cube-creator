@@ -3,6 +3,7 @@ import { ResourceStore } from '../../ResourceStore'
 import { cc } from '@cube-creator/core/namespace'
 import * as DimensionMetadataQueries from '../queries/dimension-metadata'
 import * as TableQueries from '../queries/table'
+import * as ColumnMappingQueries from '../queries/column-mapping'
 import { deleteColumnMapping } from '../column-mapping/delete'
 
 interface DeleteTableCommand {
@@ -10,16 +11,18 @@ interface DeleteTableCommand {
   store: ResourceStore
   dimensionMetadataQueries?: Pick<typeof DimensionMetadataQueries, 'getDimensionMetaDataCollection'>
   tableQueries?: Pick<typeof TableQueries, 'getTableForColumnMapping'>
+  columnMappingQueries?: Pick<typeof ColumnMappingQueries, 'dimensionIsUsedByOtherMapping'>
 }
 
 export async function deleteTable({
-  resource: tableTerm,,
+  resource: tableTerm,
   store,
   dimensionMetadataQueries: { getDimensionMetaDataCollection } = DimensionMetadataQueries,
   tableQueries: { getTableForColumnMapping } = TableQueries,
+  columnMappingQueries: { dimensionIsUsedByOtherMapping } = ColumnMappingQueries,
 }: DeleteTableCommand): Promise<void> {
   if (tableTerm.termType !== 'NamedNode') return
-  
+
   const table = await store.get(tableTerm, { allowMissing: true })
   if (!table) return
 
@@ -32,6 +35,7 @@ export async function deleteTable({
         store,
         dimensionMetadataQueries: { getDimensionMetaDataCollection },
         tableQueries: { getTableForColumnMapping },
+        columnMappingQueries: { dimensionIsUsedByOtherMapping },
       })
     }
   }

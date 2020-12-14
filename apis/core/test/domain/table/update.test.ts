@@ -9,6 +9,7 @@ import { cc } from '@cube-creator/core/namespace'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import { NamedNode } from 'rdf-js'
 import type * as DimensionMetadataQueries from '../../../lib/domain/queries/dimension-metadata'
+import type * as ColumnMappingQueries from '../../../lib/domain/queries/column-mapping'
 import '../../../lib/domain'
 import { updateTable } from '../../../lib/domain/table/update'
 
@@ -16,6 +17,8 @@ describe('domain/table/update', () => {
   let store: TestResourceStore
   let dimensionMetadataQueries: typeof DimensionMetadataQueries
   let getDimensionMetaDataCollection: sinon.SinonStub
+  let columnMappingQueries: typeof ColumnMappingQueries
+  let dimensionIsUsedByOtherMapping: sinon.SinonStub
   let dimensionMetadata: GraphPointer<NamedNode, DatasetExt>
 
   beforeEach(() => {
@@ -86,6 +89,11 @@ describe('domain/table/update', () => {
 
     getDimensionMetaDataCollection = sinon.stub().resolves(dimensionMetadata.term.value)
     dimensionMetadataQueries = { getDimensionMetaDataCollection }
+
+    dimensionIsUsedByOtherMapping = sinon.stub().resolves(false)
+    columnMappingQueries = {
+      dimensionIsUsedByOtherMapping,
+    }
   })
 
   it('updates simple properties', async () => {
@@ -98,7 +106,7 @@ describe('domain/table/update', () => {
       .addOut(cc.isObservationTable, false)
 
     // when
-    const table = await updateTable({ resource, store, dimensionMetadataQueries })
+    const table = await updateTable({ resource, store, dimensionMetadataQueries, columnMappingQueries })
 
     // then
     expect(table).to.matchShape({
@@ -131,7 +139,7 @@ describe('domain/table/update', () => {
       .addOut(cc.isObservationTable, true)
 
     // when
-    const table = await updateTable({ resource, store, dimensionMetadataQueries })
+    const table = await updateTable({ resource, store, dimensionMetadataQueries, columnMappingQueries })
 
     // then
     expect(table).to.matchShape({
@@ -171,7 +179,7 @@ describe('domain/table/update', () => {
       .addOut(cc.isObservationTable, false)
 
     // when
-    const table = await updateTable({ resource, store, dimensionMetadataQueries })
+    const table = await updateTable({ resource, store, dimensionMetadataQueries, columnMappingQueries })
 
     // then
     expect(table).to.matchShape({
@@ -188,6 +196,38 @@ describe('domain/table/update', () => {
         path: schema.hasPart,
         minCount: 0,
         maxCount: 0,
+      }],
+    })
+  })
+
+  it('is not an observation table anymore but shared dimension', async () => {
+    // given
+    dimensionIsUsedByOtherMapping.resolves(true)
+    const resource = clownface({ dataset: $rdf.dataset() })
+      .namedNode('myObservationTable')
+      .addOut(schema.name, 'the other name')
+      .addOut(schema.color, '#bababa')
+      .addOut(cc.identifierTemplate, '{id}')
+      .addOut(cc.isObservationTable, false)
+
+    // when
+    const table = await updateTable({ resource, store, dimensionMetadataQueries, columnMappingQueries })
+
+    // then
+    expect(table).to.matchShape({
+      property: [{
+        path: rdf.type,
+        hasValue: cc.Table,
+        maxCount: 1,
+        minCount: 1,
+      }],
+    })
+
+    expect(dimensionMetadata).to.matchShape({
+      property: [{
+        path: schema.hasPart,
+        minCount: 1,
+        maxCount: 1,
       }],
     })
   })

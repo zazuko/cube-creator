@@ -10,6 +10,7 @@ import { TestResourceStore } from '../../support/TestResourceStore'
 import { NamedNode } from 'rdf-js'
 import type * as DimensionMetadataQueries from '../../../lib/domain/queries/dimension-metadata'
 import type * as TableQueries from '../../../lib/domain/queries/table'
+import type * as ColumnMappingQueries from '../../../lib/domain/queries/column-mapping'
 import '../../../lib/domain'
 import { deleteTable } from '../../../lib/domain/table/delete'
 import { ColumnMapping, Table } from '@cube-creator/model'
@@ -21,6 +22,8 @@ describe('domain/table/delete', () => {
   const getLinkedTablesForSource = sinon.stub()
   const getTablesForMapping = sinon.stub()
   let tableQueries: typeof TableQueries
+  let columnMappingQueries: typeof ColumnMappingQueries
+  let dimensionIsUsedByOtherMapping: sinon.SinonStub
   let columnMapping : GraphPointer<NamedNode, DatasetExt>
   let table : GraphPointer<NamedNode, DatasetExt>
   let columnMappingObservation : GraphPointer<NamedNode, DatasetExt>
@@ -101,13 +104,18 @@ describe('domain/table/delete', () => {
       getTablesForMapping,
       getTableForColumnMapping,
     }
+
+    dimensionIsUsedByOtherMapping = sinon.stub().resolves(false)
+    columnMappingQueries = {
+      dimensionIsUsedByOtherMapping,
+    }
   })
 
   it('deletes the table', async () => {
     // given
 
     // when
-    await deleteTable({ resource: table.term, store, dimensionMetadataQueries, tableQueries })
+    await deleteTable({ resource: table.term, store, dimensionMetadataQueries, tableQueries, columnMappingQueries })
 
     // then
     const deletedTable = await store.getResource<Table>(table.term, { allowMissing: true })
@@ -121,7 +129,7 @@ describe('domain/table/delete', () => {
     // given
 
     // when
-    await deleteTable({ resource: observationTable.term, store, dimensionMetadataQueries, tableQueries })
+    await deleteTable({ resource: observationTable.term, store, dimensionMetadataQueries, tableQueries, columnMappingQueries })
 
     // then
     const deletedTable = await store.getResource<Table>(observationTable.term, { allowMissing: true })
