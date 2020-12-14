@@ -21,7 +21,7 @@ export async function updateProject({
 
   storedProject.rename(resource.out(rdfs.label).value!)
 
-  const newNamespace = resource.out(cc.csvMapping).out(cc.namespace).term as NamedNode
+  const newNamespace = resource.out(cc.namespace).term as NamedNode
   const csvMapping = await store.getResource<CsvMapping>(project.out(cc.csvMapping).term, { allowMissing: true })
   if (csvMapping) {
     const currentNamespace = csvMapping.updateNamespace(newNamespace)

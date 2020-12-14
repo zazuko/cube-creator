@@ -44,9 +44,6 @@ describe('domain/cube-projects/update', () => {
       resource
         .deleteOut(cc.publishGraph)
         .addOut(cc.publishGraph, $rdf.namedNode('http://published.cubes/changed'))
-        .addOut(cc.csvMapping, mapping => {
-          mapping.addOut(cc.namespace, $rdf.namedNode('http://created.namespace/'))
-        })
 
       const editedProject = await updateProject({
         resource,
@@ -64,13 +61,12 @@ describe('domain/cube-projects/update', () => {
       })
     })
 
-    it('edits a CSV Mapping resource', async () => {
+    it('updates namespace', async () => {
       const resource = projectPointer(project.term)
         .deleteOut(rdfs.label)
         .addOut(rdfs.label, 'Edited name')
-        .addOut(cc.csvMapping, mapping => {
-          mapping.addOut(cc.namespace, $rdf.namedNode('http://edited.namespace/'))
-        })
+        .deleteOut(cc.namespace)
+        .addOut(cc.namespace, $rdf.namedNode('http://edited.namespace/'))
 
       const editedProject = await updateProject({
         resource,
@@ -87,9 +83,6 @@ describe('domain/cube-projects/update', () => {
     it('does not touch cube if namespace does not change', async () => {
       // given
       const resource = projectPointer(project.term)
-        .addOut(cc.csvMapping, mapping => {
-          mapping.addOut(cc.namespace, $rdf.namedNode('http://created.namespace/'))
-        })
       const datasetBefore = (await store.get(project.out(cc.dataset).term)).dataset.toCanonical()
 
       // when
@@ -107,9 +100,6 @@ describe('domain/cube-projects/update', () => {
     it('does not touch cube metadata if namespace does not change', async () => {
       // given
       const resource = projectPointer(project.term)
-        .addOut(cc.csvMapping, mapping => {
-          mapping.addOut(cc.namespace, $rdf.namedNode('http://created.namespace/'))
-        })
       const dataset = await store.getResource<Dataset>(project.out(cc.dataset).term)
       const metadataBefore = await store.get(dataset?.dimensionMetadata.id)
 
@@ -132,9 +122,8 @@ describe('domain/cube-projects/update', () => {
         .addOut(rdfs.label, 'Cube')
       const namespace = $rdf.namedNode('http://edited.namespace/')
       const resource = projectPointer(project.term)
-        .addOut(cc.csvMapping, mapping => {
-          mapping.addOut(cc.namespace, namespace)
-        })
+        .deleteOut(cc.namespace)
+        .addOut(cc.namespace, namespace)
 
       // when
       const editedProject = await updateProject({
@@ -173,9 +162,8 @@ describe('domain/cube-projects/update', () => {
       })
       const namespace = $rdf.namedNode('http://edited.namespace/')
       const resource = projectPointer(project.term)
-        .addOut(cc.csvMapping, mapping => {
-          mapping.addOut(cc.namespace, namespace)
-        })
+        .deleteOut(cc.namespace)
+        .addOut(cc.namespace, namespace)
 
       // when
       await updateProject({
