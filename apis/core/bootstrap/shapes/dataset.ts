@@ -1,4 +1,4 @@
-import { cc, shape, freq } from '@cube-creator/core/namespace'
+import { shape, freq } from '@cube-creator/core/namespace'
 import { hydra, rdfs, sh, dcat, dcterms, xsd, rdf, vcard, schema, _void, dash } from '@tpluscode/rdf-ns-builders'
 import { turtle } from '@tpluscode/rdf-string'
 import $rdf from 'rdf-ext'
@@ -57,23 +57,17 @@ ${shapeId} {
       ${sh.order} 30 ;
     ] ;
     ${sh.property} [
-      ${sh.name} "Publish on Swiss Open Data" ;
-      ${sh.path} ${cc.publishOnOpendata} ;
-      ${sh.minCount} 1 ;
-      ${sh.maxCount} 1 ;
-      ${sh.datatype} ${xsd.boolean} ;
-      ${sh.defaultValue} ${false} ;
-      ${sh.order} 40 ;
-    ] ;
-    ${sh.property} [
-      ${sh.name} "Publish on Visualize" ;
-      ${sh.path} ${cc.publishOnVisualize} ;
-      ${sh.minCount} 1 ;
-      ${sh.maxCount} 1 ;
-      ${sh.datatype} ${xsd.boolean} ;
-      ${sh.defaultValue} ${false} ;
-      ${sh.order} 50 ;
-    ] ;
+        ${sh.name} "Publish to" ;
+        ${sh.path} ${schema.workExample} ;
+        ${sh.minCount} 0 ;
+        ${sh.maxCount} 2 ;
+        ${sh.in} 
+            (
+                <https://ld.admin.ch/application/visualize>
+                <https://ld.admin.ch/application/opendataswiss>
+            ) ;
+        ${sh.order} 40 ;
+      ] ;    
     ${sh.property} [
       ${sh.name} "Data refresh interval" ;
       ${sh.path} ${dcterms.accrualPeriodicity} ;
@@ -244,6 +238,12 @@ ${shapeId} {
   ] ;
 .
 
+
+<https://ld.admin.ch/application/visualize> a skos:Concept ;
+  rdfs:label "Visualize" .
+
+<https://ld.admin.ch/application/opendataswiss> a skos:Concept ;
+  rdfs:label "opendata.swiss" .
 
 freq:annual a skos:Concept ;
     rdfs:label "Annual"@en ;
