@@ -83,6 +83,7 @@ describe('CSV mapping flow', () => {
       .type('schema:identifier')
 
     cy.contains('Data type')
+      .click()
       .find('select')
       .select('string')
 
