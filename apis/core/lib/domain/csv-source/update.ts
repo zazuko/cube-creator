@@ -4,7 +4,6 @@ import { CsvSource } from '@cube-creator/model'
 import RdfResource from '@tpluscode/rdfine'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { ResourceStore } from '../../ResourceStore'
-import { resourceStore } from '../resources'
 import { error } from '../../log'
 import { Readable } from 'stream'
 import * as s3 from '../../storage/s3'
@@ -14,13 +13,13 @@ import { sampleValues } from '../csv/sample-values'
 
 interface UpdateCsvSourceCommand {
   resource: GraphPointer<NamedNode>
-  store?: ResourceStore
+  store: ResourceStore
   fileStorage?: s3.FileStorage
 }
 
 export async function update({
   resource,
-  store = resourceStore(),
+  store,
   fileStorage = s3,
 }: UpdateCsvSourceCommand): Promise<GraphPointer> {
   const changed = RdfResource.factory.createEntity<CsvSource>(resource)
@@ -52,6 +51,5 @@ export async function update({
     }
   }
 
-  await store.save()
   return csvSource.pointer
 }

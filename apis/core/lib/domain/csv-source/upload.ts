@@ -11,7 +11,6 @@ import { loadFileHeadString } from '../csv/file-head'
 import { sniffParse } from '../csv'
 import * as CsvSourceQueries from '../queries/csv-source'
 import { Conflict } from 'http-errors'
-import { resourceStore } from '../resources'
 import { sampleValues } from '../csv/sample-values'
 import { CsvMapping } from '@cube-creator/model'
 
@@ -19,7 +18,7 @@ interface UploadCSVCommand {
   file: Readable | Buffer
   fileName: string
   resource: NamedNode
-  store?: ResourceStore
+  store: ResourceStore
   fileStorage?: s3.FileStorage
   csvSourceQueries?: Pick<typeof CsvSourceQueries, 'sourceWithFilenameExists'>
 }
@@ -28,7 +27,7 @@ export async function uploadFile({
   file,
   fileName,
   resource,
-  store = resourceStore(),
+  store,
   fileStorage = s3,
   csvSourceQueries: { sourceWithFilenameExists } = CsvSourceQueries,
 }: UploadCSVCommand): Promise<GraphPointer> {
@@ -66,8 +65,6 @@ export async function uploadFile({
     error(err)
     csvSource.pointer.addOut(schema.error, err.message)
   }
-
-  await store.save()
 
   return csvSource.pointer
 }

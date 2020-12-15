@@ -19,7 +19,9 @@ export const post = protectedResource(
       projectsCollection: clownface(req.hydra.resource),
       resource: await req.resource(),
       user,
+      store: req.resourceStore(),
     })
+    await req.resourceStore().save()
 
     res.status(201)
     res.header('Location', project.value)
@@ -34,7 +36,9 @@ export const put = protectedResource(
     await updateProject({
       resource: await req.resource(),
       project: project,
+      store: req.resourceStore(),
     })
+    await req.resourceStore().save()
 
     res.status(201)
     res.header('Location', project.value)
@@ -45,7 +49,12 @@ export const put = protectedResource(
 export const remove = protectedResource(
   asyncMiddleware(async (req, res) => {
     const project = req.hydra.resource.term
-    await deleteProject({ resource: project })
+    await deleteProject({
+      resource: project,
+      store: req.resourceStore(),
+    })
+    await req.resourceStore().save()
+
     res.sendStatus(204)
   }),
 )

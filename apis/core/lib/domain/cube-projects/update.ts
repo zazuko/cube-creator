@@ -2,20 +2,19 @@ import { GraphPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'
 import { cc } from '@cube-creator/core/namespace'
 import { ResourceStore } from '../../ResourceStore'
-import { resourceStore } from '../resources'
 import { rdfs } from '@tpluscode/rdf-ns-builders'
 import { CsvMapping, Project, Dataset, DimensionMetadataCollection } from '@cube-creator/model'
 
 interface UpdateProjectCommand {
   resource: GraphPointer
   project: GraphPointer<NamedNode>
-  store?: ResourceStore
+  store: ResourceStore
 }
 
 export async function updateProject({
   resource,
   project,
-  store = resourceStore(),
+  store,
 }: UpdateProjectCommand): Promise<Project> {
   const storedProject = await store.getResource<Project>(resource.term)
 
@@ -34,8 +33,6 @@ export async function updateProject({
   }
 
   storedProject.updatePublishGraph(resource.out(cc.publishGraph).term)
-
-  await store.save()
 
   return storedProject
 }

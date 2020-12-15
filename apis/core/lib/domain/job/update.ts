@@ -4,15 +4,14 @@ import { Job, JobMixin, Project } from '@cube-creator/model'
 import { isPublishJob } from '@cube-creator/model/Job'
 import RdfResource from '@tpluscode/rdfine'
 import { ResourceStore } from '../../ResourceStore'
-import { resourceStore } from '../resources'
 import { schema } from '@tpluscode/rdf-ns-builders'
 
 interface JobUpdateParams {
   resource: GraphPointer<NamedNode>
-  store?: ResourceStore
+  store: ResourceStore
 }
 
-export async function update({ resource, store = resourceStore() }: JobUpdateParams): Promise<GraphPointer> {
+export async function update({ resource, store }: JobUpdateParams): Promise<GraphPointer> {
   const changes = RdfResource.factory.createEntity<Job>(resource, [JobMixin])
   const job = await store.getResource<Job>(resource.term)
 
@@ -39,6 +38,5 @@ export async function update({ resource, store = resourceStore() }: JobUpdatePar
     job.error = undefined
   }
 
-  await store.save()
   return job.pointer
 }

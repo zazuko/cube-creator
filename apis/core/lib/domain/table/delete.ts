@@ -1,24 +1,16 @@
 import { NamedNode, Term } from 'rdf-js'
 import { ResourceStore } from '../../ResourceStore'
-import { resourceStore } from '../resources'
 import { cc } from '@cube-creator/core/namespace'
 
 interface DeleteTableCommand {
   resource: NamedNode
-  store?: ResourceStore
+  store: ResourceStore
 }
 
 export async function deleteTable({
-  resource,
-  store = resourceStore(),
+  resource: tableTerm,
+  store,
 }: DeleteTableCommand): Promise<void> {
-  await deleteTableWithoutSave(resource, store)
-
-  // Save changes
-  await store.save()
-}
-
-export async function deleteTableWithoutSave(tableTerm: Term, store: ResourceStore): Promise<void> {
   if (tableTerm.termType !== 'NamedNode') return
 
   const table = await store.get(tableTerm, { allowMissing: true })

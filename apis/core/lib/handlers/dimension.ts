@@ -13,7 +13,9 @@ export const put = protectedResource(
     const updated = await update({
       metadataCollection: req.hydra.resource.term,
       dimensionMetadata: await req.resource(),
+      store: req.resourceStore(),
     })
+    await req.resourceStore().save()
 
     return res.dataset(updated.dataset)
   }),

@@ -46,13 +46,6 @@ export interface ResourceStore {
   createMember(collection: Term, id: NamedNode, options?: ResourceCreationOptions): Promise<GraphPointer<NamedNode, DatasetExt>>
 
   /**
-   * Replaces the resources in the triple store by inserting default graph
-   * quads from each graph pointer into a named graph identified by that
-   * graph pointer
-   */
-  save(): Promise<void>
-
-  /**
    * Removes the named graph from the triple store
    */
   delete(id: NamedNode): void

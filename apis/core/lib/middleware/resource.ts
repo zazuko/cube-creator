@@ -3,10 +3,14 @@ import clownface, { GraphPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
+import once from 'once'
+import ResourceStoreImpl from '../ResourceStore'
+import { streamClient } from '../query-client'
 
 declare module 'express-serve-static-core' {
   export interface Request {
     resource(): Promise<GraphPointer<NamedNode>>
+    resourceStore(): ResourceStoreImpl
   }
 }
 
@@ -35,6 +39,10 @@ export function resource(req: express.Request, res: unknown, next: express.NextF
 
     return pointer
   }
+
+  req.resourceStore = once(() => {
+    return new ResourceStoreImpl(streamClient)
+  })
 
   next()
 }

@@ -1,19 +1,18 @@
 import * as Table from '@cube-creator/model/Table'
 import { NamedNode } from 'rdf-js'
 import { ResourceStore } from '../../ResourceStore'
-import { resourceStore } from '../resources'
 import { NotFoundError } from '../../errors'
 import { buildCsvw } from '../../csvw-builder'
 import '../../domain'
 
 interface Command {
   tableResource: NamedNode
-  resources?: ResourceStore
+  resources: ResourceStore
 }
 
 export async function createCsvw({
   tableResource,
-  resources = resourceStore(),
+  resources,
 }: Command) {
   const tablePointer = await resources.get(tableResource)
   if (!tablePointer) {
