@@ -7,7 +7,7 @@ import StreamQuery from 'sparql-http-client/StreamQuery'
 import StreamStore from 'sparql-http-client/StreamStore'
 import ResourceStore from '../lib/ResourceStore'
 import { ex } from './support/namespace'
-import { hydra, rdf, schema } from '@tpluscode/rdf-ns-builders'
+import { hydra, rdf, rdfs, schema } from '@tpluscode/rdf-ns-builders'
 import { manages } from '../lib/resources/hydraManages'
 
 describe('ResourceStore', () => {
@@ -17,7 +17,6 @@ describe('ResourceStore', () => {
 
   beforeEach(() => {
     query = sinon.createStubInstance(StreamQuery)
-    store = sinon.createStubInstance(StreamStore)
 
     client = {
       query,
@@ -29,7 +28,9 @@ describe('ResourceStore', () => {
     it('loads resource from sparql endpoint', async () => {
       // given
       const store = new ResourceStore(client)
-      query.construct.resolves($rdf.dataset().toStream())
+      query.construct.resolves($rdf.dataset([
+        $rdf.quad(ex.Foo, rdfs.label, $rdf.literal('foo')),
+      ]).toStream())
 
       // when
       await store.get(ex.Foo)
@@ -41,7 +42,9 @@ describe('ResourceStore', () => {
     it('called twice returns same object', async () => {
       // given
       const store = new ResourceStore(client)
-      query.construct.resolves($rdf.dataset().toStream())
+      query.construct.resolves($rdf.dataset([
+        $rdf.quad(ex.Foo, rdfs.label, $rdf.literal('foo')),
+      ]).toStream())
       const expected = await store.get(ex.Foo)
 
       // when
@@ -162,6 +165,70 @@ describe('ResourceStore', () => {
       // then
       expect(client.query.update).to.have.been.calledOnce
       expect(query.update.firstCall.args[0]).to.matchSnapshot(this)
+    })
+
+    it('does not update store if nothing changes', async () => {
+      // given
+      const store = new ResourceStore(client)
+      query.construct.callsFake(async () => $rdf.dataset([
+        $rdf.quad(ex.Resource, rdfs.label, $rdf.literal('foo')),
+      ]).toStream())
+
+      // when
+      await store.get('foo')
+      await store.get('bar')
+      await store.get('baz')
+      await store.save()
+
+      //
+      expect(client.query.update).not.to.have.been.called
+    })
+
+    it('only saves changed resources', async function () {
+      // given
+      const store = new ResourceStore(client)
+      query.construct.callsFake(async () => $rdf.dataset([
+        $rdf.quad($rdf.namedNode('baz'), rdfs.label, $rdf.literal('foo')),
+      ]).toStream())
+
+      // when
+      await store.get('foo')
+      await store.get('bar')
+      ;(await store.get('baz')).deleteOut(rdfs.label).addOut(rdfs.label, 'Baz changed')
+      await store.save()
+
+      // then
+      expect(client.query.update).to.have.been.calledOnce
+      expect(query.update.firstCall.args[0]).to.matchSnapshot(this)
+    })
+
+    it('only deletes graph if all resource triples were removed', async function () {
+      // given
+      const store = new ResourceStore(client)
+      query.construct.resolves($rdf.dataset([
+        $rdf.quad($rdf.namedNode('baz'), rdfs.label, $rdf.literal('foo')),
+        $rdf.quad($rdf.namedNode('baz'), rdfs.comment, $rdf.literal('bar')),
+      ]).toStream())
+
+      // when
+      ;(await store.get('baz')).deleteOut()
+      await store.save()
+
+      // then
+      expect(client.query.update).to.have.been.calledOnce
+      expect(query.update.firstCall.args[0]).to.matchSnapshot(this)
+    })
+
+    it('does not save created resource if it has not triples', async function () {
+      // given
+      const store = new ResourceStore(client)
+
+      // when
+      await store.create(ex.Foo, { implicitlyDereferencable: false })
+      await store.save()
+
+      // then
+      expect(client.query.update).not.to.have.been.called
     })
   })
 

@@ -3,6 +3,7 @@ import { NamedNode, Quad, Term } from 'rdf-js'
 import cf, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import DatasetExt from 'rdf-ext/lib/Dataset'
+import { ChangelogDataset } from './ChangelogDataset'
 import { CONSTRUCT, INSERT } from '@tpluscode/sparql-builder'
 import TermMap from '@rdfjs/term-map'
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
@@ -29,8 +30,8 @@ export interface ResourceStore {
    * Gets all triples from a named graph and returns a graph pointer to a resource
    * identified by the same URI
    */
-  get(id: string | Term | undefined, opts?: GetOptions): Promise<GraphPointer<NamedNode, DatasetExt>>
-  get(id: string | Term | undefined, opts: { allowMissing: true }): Promise<GraphPointer<NamedNode, DatasetExt> | undefined>
+  get(id: string | Term | undefined, opts?: GetOptions): Promise<GraphPointer<NamedNode>>
+  get(id: string | Term | undefined, opts: { allowMissing: true }): Promise<GraphPointer<NamedNode> | undefined>
 
   getResource<T extends RdfResourceCore>(id: string | Term | undefined, opts?: GetOptions): Promise<T>
   getResource<T extends RdfResourceCore>(id: string | Term | undefined, opts: { allowMissing: true }): Promise<T> | undefined
@@ -38,12 +39,12 @@ export interface ResourceStore {
   /**
    * Creates a new resource a puts in the in-memory store
    */
-  create(id: Term, options?: ResourceCreationOptions): GraphPointer<NamedNode, DatasetExt>
+  create(id: Term, options?: ResourceCreationOptions): GraphPointer<NamedNode>
 
   /**
    * Create a new collection member, initialized according to `hydra:manages` entries
    */
-  createMember(collection: Term, id: NamedNode, options?: ResourceCreationOptions): Promise<GraphPointer<NamedNode, DatasetExt>>
+  createMember(collection: Term, id: NamedNode, options?: ResourceCreationOptions): Promise<GraphPointer<NamedNode>>
 
   /**
    * Removes the named graph from the triple store
@@ -52,8 +53,8 @@ export interface ResourceStore {
 }
 
 interface TripleStoreFacade {
-  loadResource(term: NamedNode): Promise<GraphPointer<NamedNode, DatasetExt> | undefined>
-  writeChanges(resources: Map<Term, GraphPointer>, deletedResources: Iterable<NamedNode>): Promise<void>
+  loadResource(term: NamedNode): Promise<GraphPointer<NamedNode, ChangelogDataset> | undefined>
+  writeChanges(resources: Map<Term, GraphPointer<NamedNode, ChangelogDataset>>, deletedResources: Iterable<NamedNode>): Promise<void>
 }
 
 function toTriple({ subject, predicate, object }: Quad) {
@@ -67,12 +68,18 @@ class SparqlStoreFacade implements TripleStoreFacade {
     this.__client = client
   }
 
-  async loadResource(term: NamedNode): Promise<GraphPointer<NamedNode, DatasetExt>> {
+  async loadResource(term: NamedNode): Promise<GraphPointer<NamedNode, ChangelogDataset<DatasetExt>> | undefined> {
     const stream = await CONSTRUCT`?s ?p ?o`
       .WHERE`GRAPH ${term} { ?s ?p ?o }`
       .execute(this.__client.query)
 
-    return cf({ dataset: await $rdf.dataset().import(stream), term })
+    const resource = cf({ dataset: new ChangelogDataset(await $rdf.dataset().import(stream)), term })
+
+    if (!resource.dataset.size) {
+      return undefined
+    }
+
+    return resource
   }
 
   deleteQuery(terms: Iterable<NamedNode>) {
@@ -84,22 +91,38 @@ class SparqlStoreFacade implements TripleStoreFacade {
     return deleteQuery
   }
 
-  writeChanges(resources: Map<NamedNode, GraphPointer>, deletedResources: Iterable<NamedNode>): Promise<void> {
-    const deleteGraphs = this.deleteQuery([...deletedResources, ...resources.keys()])
-    const insertData = [...resources.entries()].reduce((insert, [graph, { dataset }]) => {
-      return insert.DATA`GRAPH ${graph} {
-        ${[...dataset].map(toTriple)}
-      }`
-    }, INSERT.DATA``)._getTemplateResult()
+  async writeChanges(resources: Map<NamedNode, GraphPointer<NamedNode, ChangelogDataset>>, deletedResources: Iterable<NamedNode>): Promise<void> {
+    const graphsToDelete = new TermSet([...deletedResources])
+    let shouldUpdate = graphsToDelete.size > 0
+    let insertData = INSERT.DATA``
 
-    const query = sparql`${deleteGraphs}\n${insertData}`
-    return this.__client.query.update(query.toString())
+    for (const [id, pointer] of resources.entries()) {
+      if (!pointer.dataset.changes.added.size && !pointer.dataset.changes.deleted.size) {
+        continue
+      }
+      shouldUpdate = true
+
+      if (pointer.dataset.size === 0) {
+        graphsToDelete.add(id)
+      } else {
+        graphsToDelete.add(id)
+        insertData = insertData.DATA`GRAPH ${id} {
+          ${[...pointer.dataset].map(toTriple)}
+        }`
+      }
+    }
+
+    if (shouldUpdate) {
+      const deleteGraphs = this.deleteQuery(graphsToDelete)
+      const query = sparql`${deleteGraphs}\n${insertData}`
+      await this.__client.query.update(query.toString())
+    }
   }
 }
 
 export default class implements ResourceStore {
   private readonly __storage: TripleStoreFacade
-  private readonly __resources: TermMap<NamedNode, GraphPointer<NamedNode, DatasetExt>>
+  private readonly __resources: TermMap<NamedNode, GraphPointer<NamedNode, ChangelogDataset>>
   private readonly __deletedGraphs: TermSet<NamedNode>
 
   constructor(clientOrStore: StreamClient | TripleStoreFacade) {
@@ -108,8 +131,8 @@ export default class implements ResourceStore {
     this.__deletedGraphs = new TermSet()
   }
 
-  async get(id: string | Term | undefined, opts?: GetOptions): Promise<GraphPointer<NamedNode, DatasetExt>> {
-    let resource: GraphPointer<NamedNode, DatasetExt> | undefined
+  async get(id: string | Term | undefined, opts?: GetOptions): Promise<GraphPointer<NamedNode>> {
+    let resource: GraphPointer<NamedNode, ChangelogDataset> | undefined
     let term: NamedNode | undefined
     if (typeof id === 'string') {
       term = $rdf.namedNode(id)
@@ -134,7 +157,7 @@ export default class implements ResourceStore {
       if (opts?.allowMissing) {
         return undefined as any
       }
-      throw new Error(`Resource ${id} not found`)
+      throw new Error(`Resource ${term?.value} not found`)
     }
 
     return resource
@@ -152,7 +175,7 @@ export default class implements ResourceStore {
     this.__deletedGraphs.clear()
   }
 
-  create(id: NamedNode, { implicitlyDereferencable = true }: ResourceCreationOptions = {}): GraphPointer<NamedNode, DatasetExt> {
+  create(id: NamedNode, { implicitlyDereferencable = true }: ResourceCreationOptions = {}): GraphPointer<NamedNode, ChangelogDataset> {
     if (id.termType !== 'NamedNode') {
       throw new Error('Resource must be identified by a NamedNode')
     }
@@ -161,7 +184,7 @@ export default class implements ResourceStore {
       throw new Error(`Resource <${id.value}> already exists`)
     }
 
-    const pointer = cf({ dataset: $rdf.dataset(), term: id })
+    const pointer = cf({ dataset: new ChangelogDataset($rdf.dataset()), term: id })
 
     if (implicitlyDereferencable) {
       pointer.addOut(rdf.type, hydra.Resource)
@@ -171,7 +194,7 @@ export default class implements ResourceStore {
     return pointer
   }
 
-  async createMember(collectionId: NamedNode, id: NamedNode, options?: ResourceCreationOptions): Promise<GraphPointer<NamedNode, DatasetExt>> {
+  async createMember(collectionId: NamedNode, id: NamedNode, options?: ResourceCreationOptions): Promise<GraphPointer<NamedNode, ChangelogDataset>> {
     const member = this.create(id, options)
     const collection = await this.get(collectionId)
 

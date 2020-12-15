@@ -35,7 +35,7 @@ export const shaclMiddleware = (options: ShaclMiddlewareOptions) => asyncMiddlew
   await Promise.all(req.hydra.operation.out(hydra.expects).map(async (expects) => {
     if (expects.term.termType !== 'NamedNode') return
 
-    const pointer = await resources.get(expects.term)
+    const pointer = await resources.get(expects.term, { allowMissing: true })
     if (pointer?.has(rdf.type, [sh.NodeShape]).values.length) {
       await shapes.addAll([...pointer.dataset])
 

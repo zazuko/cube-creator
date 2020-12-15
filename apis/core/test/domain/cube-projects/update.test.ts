@@ -83,7 +83,7 @@ describe('domain/cube-projects/update', () => {
     it('does not touch cube if namespace does not change', async () => {
       // given
       const resource = projectPointer(project.term)
-      const datasetBefore = (await store.get(project.out(cc.dataset).term)).dataset.toCanonical()
+      const datasetBefore = $rdf.dataset([...(await store.get(project.out(cc.dataset).term)).dataset]).toCanonical()
 
       // when
       const editedProject = await updateProject({
@@ -93,7 +93,7 @@ describe('domain/cube-projects/update', () => {
       })
 
       // then
-      const datasetAfter = (await store.get(editedProject.dataset.id)).dataset.toCanonical()
+      const datasetAfter = $rdf.dataset([...(await store.get(editedProject.dataset.id)).dataset]).toCanonical()
       expect(datasetAfter).to.eq(datasetBefore)
     })
 
@@ -111,8 +111,8 @@ describe('domain/cube-projects/update', () => {
       })
 
       // then
-      const metadataAfter = (await store.get(dataset?.dimensionMetadata.id)).dataset.toCanonical()
-      expect(metadataAfter).to.eq(metadataBefore.dataset.toCanonical())
+      const metadataAfter = $rdf.dataset([...(await store.get(dataset?.dimensionMetadata.id)).dataset]).toCanonical()
+      expect(metadataAfter).to.eq($rdf.dataset([...metadataBefore.dataset]).toCanonical())
     })
 
     it('renames cube if namespace changes', async () => {

@@ -28,7 +28,9 @@ export async function update({
   })
   datasetResource.deleteOut()
 
-  datasetResource.dataset.addAll([...resource.dataset])
+  for (const quad of resource.dataset) {
+    datasetResource.dataset.add(quad)
+  }
 
   // Make sure the type is correct
   datasetResource.addOut(rdf.type, hydra.Resource)

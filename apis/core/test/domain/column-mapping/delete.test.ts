@@ -124,6 +124,7 @@ describe('domain/column-mapping/delete', () => {
     const dimensionMetadataCount = dimensionMetadataCollection.node($rdf.namedNode('myDimension')).out().values.length
 
     await deleteColumnMapping({ resource: resourceId, store, dimensionMetadataQueries, tableQueries })
+    await store.save()
 
     const columnMapping = await store.getResource<ColumnMapping>(resourceId, { allowMissing: true })
     expect(columnMapping).to.eq(undefined)
