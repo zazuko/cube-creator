@@ -66,6 +66,30 @@ describe('ResourceStore', () => {
       expect(actual).to.eq(expected)
       expect(client.query.construct).to.not.have.been.called
     })
+
+    it('returns "undefined" when it is allowed resource comes back empty', async () => {
+      // given
+      const store = new ResourceStore(client)
+      query.construct.resolves($rdf.dataset().toStream())
+
+      // when
+      const resource = await store.get('foo', { allowMissing: true })
+
+      // then
+      expect(resource).to.be.undefined
+    })
+
+    it('throws if resource comes back empty', async () => {
+      // given
+      const store = new ResourceStore(client)
+      query.construct.resolves($rdf.dataset().toStream())
+
+      // when
+      const promise = store.get('foo')
+
+      // then
+      await expect(promise).to.be.rejected
+    })
   })
 
   describe('create', () => {
