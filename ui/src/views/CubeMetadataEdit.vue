@@ -66,7 +66,7 @@ export default class CubeMetadataEdit extends Vue {
 
       this.$store.dispatch('project/fetchCubeMetadata')
 
-      this.$store.dispatch('app/showMessage', {
+      this.$buefy.toast.open({
         message: 'Cube metadata was saved',
         type: 'is-success',
       })

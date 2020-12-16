@@ -19,7 +19,7 @@ describe('CSV mapping flow', () => {
 
     cy.get('form').submit()
 
-    cy.contains('.message', 'successfully created').should('be.visible')
+    cy.contains('successfully created').should('be.visible')
     cy.contains('h2', 'My project').should('be.visible')
   })
 
@@ -62,7 +62,7 @@ describe('CSV mapping flow', () => {
 
     cy.get('form').submit()
 
-    cy.contains('.message', 'Table My observations was successfully created').should('be.visible')
+    cy.contains('Table My observations was successfully created').should('be.visible')
     cy.contains('.mapper-table', 'My observations').should('be.visible')
     cy.get('[data-icon=eye]').should('be.visible')
   })
@@ -94,7 +94,7 @@ describe('CSV mapping flow', () => {
     cy.get('form')
       .submit()
 
-    cy.contains('.message', 'Column mapping was successfully created').should('be.visible')
+    cy.contains('Column mapping was successfully created').should('be.visible')
     cy.contains('.mapper-table', 'schema:identifier').should('be.visible')
   })
 
@@ -115,7 +115,7 @@ describe('CSV mapping flow', () => {
 
     cy.get('form').submit()
 
-    cy.contains('.message', 'Table My secondary table was successfully created').should('be.visible')
+    cy.contains('Table My secondary table was successfully created').should('be.visible')
     cy.contains('.mapper-table', 'My secondary table').should('be.visible')
       .find('[data-icon=eye]').should('not.be.visible')
   })
@@ -137,7 +137,7 @@ describe('CSV mapping flow', () => {
     cy.get('form')
       .submit()
 
-    cy.contains('.message', 'Column mapping was successfully created').should('be.visible')
+    cy.contains('Column mapping was successfully created').should('be.visible')
     cy.contains('.mapper-table', 'the-other').should('be.visible')
   })
 
@@ -147,7 +147,7 @@ describe('CSV mapping flow', () => {
 
     cy.contains('.button', 'Delete').click()
 
-    cy.contains('.message', 'Table My secondary table deleted successfully').should('be.visible')
+    cy.contains('Table My secondary table deleted successfully').should('be.visible')
     cy.contains('.mapper-table', 'My secondary table').should('not.be.visible')
   })
 })

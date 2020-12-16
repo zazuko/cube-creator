@@ -89,7 +89,7 @@ export default class CubeProjectEditView extends Vue {
 
       this.$store.dispatch('project/refreshTableCollection')
 
-      this.$store.dispatch('app/showMessage', {
+      this.$buefy.toast.open({
         message: 'Column mapping was successfully updated',
         type: 'is-success',
       })
