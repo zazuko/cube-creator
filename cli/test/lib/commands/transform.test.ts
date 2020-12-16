@@ -13,7 +13,7 @@ import { cc, cube } from '@cube-creator/core/namespace'
 import clownface from 'clownface'
 
 describe('lib/commands/transform', function () {
-  this.timeout(200000)
+  this.timeout(360 * 1000)
 
   const executionUrl = 'http://example.com/transformation-test'
 
@@ -22,113 +22,90 @@ describe('lib/commands/transform', function () {
     await insertTestData('fuseki/sample-ubd.trig')
   })
 
-  it('produces triples', async function () {
-    // given
-    const runner = transform($rdf.namedNode('urn:pipeline:cube-creator#Main'), debug('test'))
+  describe('successful job', () => {
+    const job = `${env.API_CORE_BASE}cube-project/ubd/csv-mapping/jobs/test-job`
 
-    // when
-    await runner({
-      to: 'graph-store',
-      debug: true,
-      job: `${env.API_CORE_BASE}cube-project/ubd/csv-mapping/jobs/test-job`,
-      executionUrl,
-    })
-    await new Promise((resolve) =>
-      setTimeout(resolve, 100),
-    )
+    before(async () => {
+      // given
+      const runner = transform($rdf.namedNode('urn:pipeline:cube-creator#Main'), debug('test'))
 
-    // then
-    const expectedGraph = $rdf.namedNode(`${env.API_CORE_BASE}cube-project/ubd/cube-data`)
-    const dataset = await $rdf.dataset().import(await CONSTRUCT`?s ?p ?o`
-      .FROM(expectedGraph)
-      .WHERE`?s ?p ?o`
-      .execute(client.query))
-
-    const cubePointer = clownface({ dataset })
-    expect(cubePointer.has(rdf.type, sh.NodeShape).terms.length).to.eq(1)
-    expect(cubePointer.namedNode('https://environment.ld.admin.ch/foen/ubd/28/observation/blBAS-2000-annualmean')).to.matchShape({
-      property: [{
-        path: rdf.type,
-        hasValue: cube.Observation,
-        minCount: 1,
-      }, {
-        path: cube.observedBy,
-        minCount: 1,
-      }, {
-        path: $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/dimension/year'),
-        hasValue: $rdf.literal('2000', xsd.gYear),
-        minCount: 1,
-        maxCount: 1,
-      }, {
-        path: $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/dimension/value'),
-        hasValue: $rdf.literal('4.7', xsd.float),
-        minCount: 1,
-        maxCount: 1,
-      }, {
-        path: $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/station'),
-        hasValue: $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/station/blBAS'),
-        minCount: 1,
-        maxCount: 1,
-      }],
-    })
-    expect(cubePointer.namedNode('https://environment.ld.admin.ch/foen/ubd/28/station/blBAS')).to.matchShape({
-      property: [{
-        path: schema.identifier,
-        hasValue: 'blBAS',
-        minCount: 1,
-        maxCount: 1,
-      }, {
-        path: rdfs.label,
-        minCount: 1,
-      }],
-    })
-  })
-
-  it('does not output cc:cube as dimension property', async () => {
-    // given
-    const runner = transform($rdf.namedNode('urn:pipeline:cube-creator#Main'), debug('test'))
-
-    // when
-    await runner({
-      to: 'graph-store',
-      debug: true,
-      job: `${env.API_CORE_BASE}cube-project/ubd/csv-mapping/jobs/test-job`,
-      executionUrl,
+      // when
+      await runner({
+        to: 'graph-store',
+        debug: true,
+        job,
+        executionUrl,
+      })
     })
 
-    // then
-    const hasCubeProperty = await ASK`<https://environment.ld.admin.ch/foen/ubd/28/shape/> ${sh.property}/${sh.path} ${cc.cube} .`
-      .FROM($rdf.namedNode(`${env.API_CORE_BASE}cube-project/ubd/cube-data`))
-      .execute(client.query)
-    expect(hasCubeProperty).to.eq(false)
-  })
+    it('produces triples', async () => {
+      const expectedGraph = $rdf.namedNode(`${env.API_CORE_BASE}cube-project/ubd/cube-data`)
+      const dataset = await $rdf.dataset().import(await CONSTRUCT`?s ?p ?o`
+        .FROM(expectedGraph)
+        .WHERE`?s ?p ?o`
+        .execute(client.query))
 
-  it('updates job when pipeline ends successfully', async function () {
-    // given
-    const jobUri = `${env.API_CORE_BASE}cube-project/ubd/csv-mapping/jobs/test-job`
-    const runner = transform($rdf.namedNode('urn:pipeline:cube-creator#Main'), debug('test'))
-
-    // when
-    await runner({
-      to: 'graph-store',
-      debug: true,
-      job: jobUri,
-      executionUrl,
+      const cubePointer = clownface({ dataset })
+      expect(cubePointer.has(rdf.type, sh.NodeShape).terms.length).to.eq(1)
+      expect(cubePointer.namedNode('https://environment.ld.admin.ch/foen/ubd/28/observation/so2-blBAS-2000-annualmean')).to.matchShape({
+        property: [{
+          path: rdf.type,
+          hasValue: cube.Observation,
+          minCount: 1,
+        }, {
+          path: cube.observedBy,
+          minCount: 1,
+        }, {
+          path: $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/dimension/year'),
+          hasValue: $rdf.literal('2000', xsd.gYear),
+          minCount: 1,
+          maxCount: 1,
+        }, {
+          path: $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/dimension/value'),
+          hasValue: $rdf.literal('4.7', xsd.float),
+          minCount: 1,
+          maxCount: 1,
+        }, {
+          path: $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/station'),
+          hasValue: $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/station/blBAS'),
+          minCount: 1,
+          maxCount: 1,
+        }],
+      })
+      expect(cubePointer.namedNode('https://environment.ld.admin.ch/foen/ubd/28/station/blBAS')).to.matchShape({
+        property: [{
+          path: schema.identifier,
+          hasValue: 'blBAS',
+          minCount: 1,
+          maxCount: 1,
+        }, {
+          path: rdfs.label,
+          minCount: 1,
+        }],
+      })
     })
 
-    // then
-    const job = await Hydra.loadResource(jobUri)
-    expect(job.representation?.root).to.matchShape({
-      property: [{
-        path: schema.actionStatus,
-        hasValue: schema.CompletedActionStatus,
-        minCount: 1,
-        maxCount: 1,
-      }, {
-        path: rdfs.seeAlso,
-        minCount: 1,
-        nodeKind: sh.IRI,
-      }],
+    it('does not output cc:cube as dimension property', async () => {
+      const hasCubeProperty = await ASK`<https://environment.ld.admin.ch/foen/ubd/28/shape/> ${sh.property}/${sh.path} ${cc.cube} .`
+        .FROM($rdf.namedNode(`${env.API_CORE_BASE}cube-project/ubd/cube-data`))
+        .execute(client.query)
+      expect(hasCubeProperty).to.eq(false)
+    })
+
+    it('updates job', async () => {
+      const { representation } = await Hydra.loadResource(job)
+      expect(representation?.root).to.matchShape({
+        property: [{
+          path: schema.actionStatus,
+          hasValue: schema.CompletedActionStatus,
+          minCount: 1,
+          maxCount: 1,
+        }, {
+          path: rdfs.seeAlso,
+          minCount: 1,
+          nodeKind: sh.IRI,
+        }],
+      })
     })
   })
 

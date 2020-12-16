@@ -350,7 +350,7 @@ graph <cube-project/ubd/csv-mapping/table-observation> {
     schema:name "Observations" ;
     schema:color "#AAAAAA" ;
     # cc:identifierTemplate "ammonia/observation/{STATION}-{YEAR}-annualmean" ;
-    cc:identifierTemplate "{station_id}-{year}-{aggregation_id}" ;
+    cc:identifierTemplate "{pollutant_id}-{station_id}-{year}-{aggregation_id}" ;
     cc:columnMapping <cube-project/ubd/csv-mapping/table-observation/column-mapping-1> ;
     cc:columnMapping <cube-project/ubd/csv-mapping/table-observation/column-mapping-2> ;
     cc:columnMapping <cube-project/ubd/csv-mapping/table-observation/column-mapping-3> ;
