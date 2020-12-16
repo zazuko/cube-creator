@@ -69,10 +69,9 @@ async function main() {
         preferHydraCollection,
         expectsDisambiguate,
       ],
+      error: Sentry.Handlers.errorHandler(),
     },
   })
-
-  app.use(Sentry.Handlers.errorHandler())
 
   await bootstrap(env.STORE_GRAPH_ENDPOINT, baseUri)
 
