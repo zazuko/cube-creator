@@ -23,16 +23,16 @@ export async function getObservations({ cubeId, sourceGraph, filters, templatePa
     throw new DomainError(`Cube not found: '${cubeId}'`)
   }
 
-  const view = createView(cube)
+  const view = createView(cube, pageSize || DEFAULT_PAGE_SIZE)
   if (filters) {
     populateFilters(view, filters)
   }
 
   const observations = await view.observations()
   return createHydraCollection({
-    observations: observations.slice(0, pageSize || DEFAULT_PAGE_SIZE),
+    observations,
     templateParams,
     template,
-    totalItems: observations.length,
+    totalItems: 0,
   })
 }

@@ -10406,7 +10406,7 @@ rdf-canonize@^1.0.3:
 
 rdf-cube-view-query@zazuko/rdf-cube-view-query:
   version "0.0.0"
-  resolved "https://codeload.github.com/zazuko/rdf-cube-view-query/tar.gz/6694e982fd94b9369d18d423e3e67f89c79f13fe"
+  resolved "https://codeload.github.com/zazuko/rdf-cube-view-query/tar.gz/a44dfb94113a9d227ac893a079158410de1649a0"
   dependencies:
     "@rdfjs/namespace" "^1.1.0"
     "@rdfjs/term-map" "^1.0.0"
