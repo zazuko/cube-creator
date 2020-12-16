@@ -116,6 +116,7 @@ describe('domain/table/delete', () => {
 
     // when
     await deleteTable({ resource: table.term, store, dimensionMetadataQueries, tableQueries, columnMappingQueries })
+    await store.save()
 
     // then
     const deletedTable = await store.getResource<Table>(table.term, { allowMissing: true })
@@ -130,6 +131,7 @@ describe('domain/table/delete', () => {
 
     // when
     await deleteTable({ resource: observationTable.term, store, dimensionMetadataQueries, tableQueries, columnMappingQueries })
+    await store.save()
 
     // then
     const deletedTable = await store.getResource<Table>(observationTable.term, { allowMissing: true })

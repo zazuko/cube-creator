@@ -10424,14 +10424,6 @@ rdf-data-factory@^1.0.2:
   dependencies:
     "@types/rdf-js" "^4.0.0"
 
-rdf-dataset-changelog@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/rdf-dataset-changelog/-/rdf-dataset-changelog-1.0.0.tgz#8c07e657da9e6db1d3861e41be06aedaa9559def"
-  integrity sha512-kWEbjWPKgm57uFsyX81iS2kJqUY6qH7HCpZFzaOYlrNhYQetG+ZLr/f8ppZu131rzAX0RpdMoVmfvqr5yGcigA==
-  dependencies:
-    "@rdfjs/data-model" "^1.1.2"
-    "@rdfjs/dataset" "^1.0.1"
-
 rdf-dataset-ext@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/rdf-dataset-ext/-/rdf-dataset-ext-1.0.0.tgz#efddc7242baeec8e37a4a41a40b777c09b1ae873"
