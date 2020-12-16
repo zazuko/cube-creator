@@ -82,33 +82,6 @@ describe('lib/domain/observations', () => {
     })
 
     // then
-    expect(lib.createHydraCollection).to.have.been.calledWith(sinon.match({
-      observations: {
-        length: 20,
-      },
-    }))
-  })
-
-  it('passes subset of observations to collection', async () => {
-    // given
-    observations.push({})
-    observations.push({})
-
-    // when
-    await getObservations({
-      cubeId: 'cube',
-      sourceGraph: 'cube-data',
-      templateParams,
-      template,
-      pageSize: 1,
-    })
-
-    // then
-    expect(lib.createHydraCollection).to.have.been.calledWith(sinon.match({
-      observations: {
-        length: 1,
-      },
-      totalItems: 2,
-    }))
+    expect(lib.createView).to.have.been.calledWith(sinon.match.any, 20)
   })
 })
