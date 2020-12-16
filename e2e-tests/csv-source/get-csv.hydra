@@ -62,7 +62,7 @@ With Class cc:CSVSource {
             Accept "text/csv"
         } => {
             Expect Status 200
-            Expect Header Content-Type 'text/csv; charset=utf-8'
+            Expect Header Content-Type 'application/octet-stream'
         }
 
         Invoke {

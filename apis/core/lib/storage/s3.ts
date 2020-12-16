@@ -41,6 +41,13 @@ export async function deleteFile(path: string): Promise<PromiseResult<aws.S3.Del
     .promise()
 }
 
+export function getDownloadLink(path: string): string {
+  return s3.getSignedUrl('getObject', {
+    ...defaultS3Options,
+    Key: path,
+  })
+}
+
 export async function loadFile(path: string): Promise<Readable | null> {
   const file = await s3.getObject({
     ...defaultS3Options,
