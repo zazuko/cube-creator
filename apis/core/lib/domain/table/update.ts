@@ -5,6 +5,7 @@ import { GraphPointer } from 'clownface'
 import { ResourceStore } from '../../ResourceStore'
 import * as DimensionMetadataQueries from '../queries/dimension-metadata'
 import { cc } from '@cube-creator/core/namespace'
+import * as ColumnMappingQueries from '../queries/column-mapping'
 
 const trueTerm = $rdf.literal('true', xsd.boolean)
 
@@ -12,12 +13,14 @@ interface UpdateTableCommand {
   resource: GraphPointer
   store: ResourceStore
   dimensionMetadataQueries?: Pick<typeof DimensionMetadataQueries, 'getDimensionMetaDataCollection'>
+  columnMappingQueries?: Pick<typeof ColumnMappingQueries, 'dimensionIsUsedByOtherMapping'>
 }
 
 export async function updateTable({
   resource,
   store,
   dimensionMetadataQueries: { getDimensionMetaDataCollection } = DimensionMetadataQueries,
+  columnMappingQueries: { dimensionIsUsedByOtherMapping } = ColumnMappingQueries,
 } : UpdateTableCommand): Promise<GraphPointer> {
   const table = await store.getResource<Table>(resource.term)
 
@@ -53,8 +56,8 @@ export async function updateTable({
         dimensionMetaDataCollection.addDimensionMetadata({ store, columnMapping, csvMapping })
       } else {
         const dimensionMetadata = dimensionMetaDataCollection.find({ csvMapping, targetProperty: columnMapping.targetProperty })
-
-        if (dimensionMetadata) {
+        const isInUse = await dimensionIsUsedByOtherMapping(columnMapping.id)
+        if (dimensionMetadata && !isInUse) {
           dimensionMetaDataCollection.deleteDimension(dimensionMetadata)
         }
       }

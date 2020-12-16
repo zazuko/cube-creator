@@ -5,12 +5,14 @@ import { ColumnMapping, CsvMapping, DimensionMetadataCollection, Table } from '@
 import { ResourceStore } from '../../ResourceStore'
 import * as DimensionMetadataQueries from '../queries/dimension-metadata'
 import * as TableQueries from '../queries/table'
+import * as ColumnMappingQueries from '../queries/column-mapping'
 
 interface DeleteColumnMappingCommand {
   resource: NamedNode
   store: ResourceStore
   dimensionMetadataQueries?: Pick<typeof DimensionMetadataQueries, 'getDimensionMetaDataCollection'>
   tableQueries?: Pick<typeof TableQueries, 'getTableForColumnMapping'>
+  columnMappingQueries?: Pick<typeof ColumnMappingQueries, 'dimensionIsUsedByOtherMapping'>
 }
 
 export async function deleteColumnMapping({
@@ -18,6 +20,7 @@ export async function deleteColumnMapping({
   store,
   dimensionMetadataQueries: { getDimensionMetaDataCollection } = DimensionMetadataQueries,
   tableQueries: { getTableForColumnMapping } = TableQueries,
+  columnMappingQueries: { dimensionIsUsedByOtherMapping } = ColumnMappingQueries,
 }: DeleteColumnMappingCommand): Promise<void> {
   const columnMapping = await store.getResource<ColumnMapping>(resource)
 
@@ -32,7 +35,8 @@ export async function deleteColumnMapping({
     const dimensionMetaDataCollection = await store.getResource<DimensionMetadataCollection>(dimensionMetaDataCollectionPointer)
 
     const dimension = dimensionMetaDataCollection.find({ csvMapping, targetProperty: columnMapping.targetProperty })
-    if (dimension && dimension.id.termType === 'NamedNode') {
+    const isInUse = await dimensionIsUsedByOtherMapping(columnMapping.id)
+    if (dimension && dimension.id.termType === 'NamedNode' && !isInUse) {
       dimensionMetaDataCollection.deleteDimension(dimension)
     }
   }

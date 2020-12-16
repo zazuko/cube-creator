@@ -186,6 +186,33 @@ describe('domain/column-mapping/create', () => {
     })
   })
 
+  it('reuses existing Dimension Metadata for column', async () => {
+    // given
+    dimensionMetadata.addOut(schema.hasPart, $rdf.namedNode('dimensions/existingDimension'), dimension => {
+      dimension.addOut(schema.about, $rdf.namedNode('existingDimension'))
+        .addOut(schema.name, $rdf.literal('Year', 'en'))
+    })
+
+    store.push(dimensionMetadata)
+
+    const resource = clownface({ dataset: $rdf.dataset() })
+      .node($rdf.namedNode(''))
+      .addOut(cc.sourceColumn, $rdf.namedNode('my-column'))
+      .addOut(cc.targetProperty, $rdf.namedNode('existingDimension'))
+
+    // when
+    await createColumnMapping({ resource, store, tableId: observationTable.term, dimensionMetadataQueries })
+
+    // then
+    expect(dimensionMetadata).to.matchShape({
+      property: {
+        path: schema.hasPart,
+        minCount: 1,
+        maxCount: 1,
+      },
+    })
+  })
+
   it('creates Dimension Metadata for column, literal property', async () => {
     // given
     const resource = clownface({ dataset: $rdf.dataset() })
