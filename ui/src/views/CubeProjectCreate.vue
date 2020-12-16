@@ -58,7 +58,7 @@ export default class extends Vue {
         resource: this.resource,
       })
 
-      this.$store.dispatch('app/showMessage', {
+      this.$buefy.toast.open({
         message: `Project ${project.title} successfully created`,
         type: 'is-success',
       })

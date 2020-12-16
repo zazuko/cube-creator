@@ -4,6 +4,7 @@ import { api } from '@/api'
 import { RootState } from '../types'
 import { GraphPointer } from 'clownface'
 import RdfResourceImpl, { ResourceIdentifier } from '@tpluscode/rdfine'
+import { ToastProgrammatic as Toast } from 'buefy'
 
 export interface APIState {
   entrypoint: null | RdfResource,
@@ -35,11 +36,10 @@ const actions: ActionTree<APIState, RootState> = {
     try {
       await api.invokeDeleteOperation(operation)
 
-      context.commit('app/pushMessage', {
-        title: operation.title,
+      Toast.open({
         message: successMessage,
         type: 'is-success',
-      }, { root: true })
+      })
 
       context.dispatch(callbackAction, {}, { root: true })
     } catch (e) {

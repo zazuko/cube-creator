@@ -60,7 +60,7 @@ export default class JobForm extends Vue {
         resource: this.resource,
       })
 
-      this.$store.dispatch('app/showMessage', {
+      this.$buefy.toast.open({
         message: 'Transformation was started',
         type: 'is-success',
       })

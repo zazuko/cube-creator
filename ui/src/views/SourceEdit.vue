@@ -70,7 +70,7 @@ export default class CubeProjectEditView extends Vue {
 
       this.$store.dispatch('project/refreshSourcesCollection')
 
-      this.$store.dispatch('app/showMessage', {
+      this.$buefy.toast.open({
         message: 'Settings successfully saved',
         type: 'is-success',
       })
