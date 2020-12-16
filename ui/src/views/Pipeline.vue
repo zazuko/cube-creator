@@ -1,5 +1,5 @@
 <template>
-  <div v-if="mapping && jobCollection">
+  <div v-if="jobCollection">
     <div class="columns container-narrow">
       <div class="column">
         <job-form
@@ -43,7 +43,7 @@ import { namespace } from 'vuex-class'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import JobForm from '@/components/JobForm.vue'
 import JobItem from '@/components/JobItem.vue'
-import { CsvMapping, JobCollection, Job } from '@cube-creator/model'
+import { JobCollection, Job } from '@cube-creator/model'
 
 const projectNS = namespace('project')
 
@@ -51,11 +51,9 @@ const projectNS = namespace('project')
   components: { LoadingBlock, JobForm, JobItem },
 })
 export default class CubeDesignerView extends Vue {
-  @projectNS.State('csvMapping') mapping!: CsvMapping | null;
   @projectNS.State('jobCollection') jobCollection!: JobCollection | null;
 
-  async mounted (): Promise<void> {
-    await this.$store.dispatch('project/fetchCSVMapping')
+  mounted (): void {
     this.fetchJobs()
   }
 
