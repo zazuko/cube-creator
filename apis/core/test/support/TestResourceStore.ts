@@ -1,11 +1,12 @@
 import { NamedNode, Term } from 'rdf-js'
 import DatasetExt from 'rdf-ext/lib/Dataset'
-import { GraphPointer } from 'clownface'
+import clownface, { GraphPointer } from 'clownface'
 import TermMap from '@rdfjs/term-map'
 import ResourceStore from '../../lib/ResourceStore'
+import { ChangelogDataset } from '../../lib/ChangelogDataset'
 
 class InMemoryStorage {
-  private readonly __resources: TermMap<NamedNode, GraphPointer<NamedNode, DatasetExt>>
+  private readonly __resources: TermMap<NamedNode, GraphPointer<NamedNode, ChangelogDataset<DatasetExt>>>
 
   constructor(pointers: GraphPointer<NamedNode, DatasetExt>[]) {
     this.__resources = new TermMap()
@@ -14,7 +15,7 @@ class InMemoryStorage {
     }
   }
 
-  async loadResource(term: NamedNode): Promise<GraphPointer<NamedNode, DatasetExt> | undefined> {
+  async loadResource(term: NamedNode): Promise<GraphPointer<NamedNode, ChangelogDataset<DatasetExt>> | undefined> {
     return this.__resources.get(term)
   }
 
@@ -25,8 +26,9 @@ class InMemoryStorage {
     return Promise.resolve()
   }
 
-  push(pointer: GraphPointer<NamedNode, any>) {
-    this.__resources.set(pointer.term, pointer)
+  push(pointer: GraphPointer<NamedNode, DatasetExt>) {
+    const changelogPointer = clownface({ dataset: new ChangelogDataset(pointer.dataset) }).node(pointer.term)
+    this.__resources.set(pointer.term, changelogPointer)
   }
 }
 

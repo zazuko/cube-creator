@@ -1,7 +1,6 @@
 import { GraphPointer } from 'clownface'
 import { cc } from '@cube-creator/core/namespace'
 import { ResourceStore } from '../../ResourceStore'
-import { resourceStore } from '../resources'
 import { NamedNode } from 'rdf-js'
 import {
   ColumnMapping,
@@ -21,14 +20,14 @@ import { createIdentifierMapping } from '@cube-creator/model/ColumnMapping'
 
 interface UpdateColumnMappingCommand {
   resource: GraphPointer
-  store?: ResourceStore
+  store: ResourceStore
   dimensionMetadataQueries?: Pick<typeof DimensionMetadataQueries, 'getDimensionMetaDataCollection'>
   tableQueries?: Pick<typeof TableQueries, 'getTableForColumnMapping'>
 }
 
 export async function updateLiteralColumnMapping({
   resource,
-  store = resourceStore(),
+  store,
   dimensionMetadataQueries = DimensionMetadataQueries,
   tableQueries = TableQueries,
 }: UpdateColumnMappingCommand): Promise<GraphPointer> {
@@ -55,13 +54,12 @@ export async function updateLiteralColumnMapping({
   columnMapping.language = resource.out(cc.language).value
   columnMapping.defaultValue = resource.out(cc.defaultValue).term
 
-  await store.save()
   return columnMapping.pointer
 }
 
 export async function updateReferenceColumnMapping({
   resource,
-  store = resourceStore(),
+  store,
   dimensionMetadataQueries = DimensionMetadataQueries,
   tableQueries = TableQueries,
 }: UpdateColumnMappingCommand): Promise<GraphPointer> {
@@ -98,13 +96,12 @@ export async function updateReferenceColumnMapping({
       )
     }))
 
-  await store.save()
   return columnMapping.pointer
 }
 
 async function updateColumnMapping<T extends ColumnMapping>({
   resource,
-  store = resourceStore(),
+  store,
   dimensionMetadataQueries: { getDimensionMetaDataCollection } = DimensionMetadataQueries,
   tableQueries: { getTableForColumnMapping } = TableQueries,
 }: UpdateColumnMappingCommand): Promise<{ columnMapping: T; table: Table }> {

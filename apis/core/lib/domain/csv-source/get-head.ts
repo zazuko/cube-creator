@@ -3,16 +3,15 @@ import { NamedNode } from 'rdf-js'
 import { ResourceStore } from '../../ResourceStore'
 import { loadFile } from '../../storage/s3'
 import { loadFileHeadString } from '../csv/file-head'
-import { resourceStore } from '../resources'
 
 interface GetCSVHeadCommand {
   resource: NamedNode
-  store?: ResourceStore
+  store: ResourceStore
 }
 
 export async function getCSVHead({
   resource,
-  store = resourceStore(),
+  store,
 }: GetCSVHeadCommand): Promise<string> {
   const csvSource = await store.get(resource)
   const path = csvSource.out(schema.associatedMedia).out(schema.identifier).term

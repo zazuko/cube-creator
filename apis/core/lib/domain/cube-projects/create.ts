@@ -7,20 +7,19 @@ import * as Dataset from '@cube-creator/model/Dataset'
 import * as DimensionMetadata from '@cube-creator/model/DimensionMetadata'
 import { ResourceStore } from '../../ResourceStore'
 import * as id from '../identifiers'
-import { resourceStore } from '../resources'
 import { DomainError } from '../../errors'
 
 interface CreateProjectCommand {
   projectsCollection: GraphPointer<NamedNode>
   resource: GraphPointer
-  store?: ResourceStore
+  store: ResourceStore
   user: NamedNode
 }
 
 export async function createProject({
   projectsCollection,
   resource,
-  store = resourceStore(),
+  store,
   user,
 }: CreateProjectCommand): Promise<Project.Project> {
   const label = resource.out(rdfs.label).value
@@ -53,6 +52,5 @@ export async function createProject({
     dataset.addCube(csvMapping.namespace, user)
   }
 
-  await store.save()
   return project
 }

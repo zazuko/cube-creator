@@ -5,19 +5,18 @@ import { GraphPointer } from 'clownface'
 import { ResourceStore } from '../../ResourceStore'
 import * as DimensionMetadataQueries from '../queries/dimension-metadata'
 import { cc } from '@cube-creator/core/namespace'
-import { resourceStore } from '../resources'
 
 const trueTerm = $rdf.literal('true', xsd.boolean)
 
 interface UpdateTableCommand {
   resource: GraphPointer
-  store?: ResourceStore
+  store: ResourceStore
   dimensionMetadataQueries?: Pick<typeof DimensionMetadataQueries, 'getDimensionMetaDataCollection'>
 }
 
 export async function updateTable({
   resource,
-  store = resourceStore(),
+  store,
   dimensionMetadataQueries: { getDimensionMetaDataCollection } = DimensionMetadataQueries,
 } : UpdateTableCommand): Promise<GraphPointer> {
   const table = await store.getResource<Table>(resource.term)
@@ -64,6 +63,5 @@ export async function updateTable({
     isObservationTable ? table.types.add(cc.ObservationTable) : table.types.delete(cc.ObservationTable)
   }
 
-  await store.save()
   return table.pointer
 }

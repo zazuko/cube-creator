@@ -2,7 +2,6 @@ import { GraphPointer } from 'clownface'
 import { csvw, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import { ResourceStore } from '../../ResourceStore'
-import { resourceStore } from '../resources'
 import { NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import { CsvColumn, CsvMapping, CsvSource, DimensionMetadataCollection } from '@cube-creator/model'
@@ -13,14 +12,14 @@ const trueTerm = $rdf.literal('true', xsd.boolean)
 interface CreateTableCommand {
   tableCollection: GraphPointer<NamedNode>
   resource: GraphPointer
-  store?: ResourceStore
+  store: ResourceStore
   dimensionMetadataQueries?: Pick<typeof DimensionMetadataQueries, 'getDimensionMetaDataCollection'>
 }
 
 export async function createTable({
   tableCollection,
   resource,
-  store = resourceStore(),
+  store,
   dimensionMetadataQueries: { getDimensionMetaDataCollection } = DimensionMetadataQueries,
 }: CreateTableCommand): Promise<GraphPointer> {
   const label = resource.out(schema.name)
@@ -78,7 +77,6 @@ export async function createTable({
       return columnMapping
     })
 
-  await store.save()
   return table.pointer
 }
 

@@ -1,8 +1,8 @@
 import { NamedNode } from 'rdf-js'
 import { ResourceStore } from '../../ResourceStore'
-import { deleteSourceWithoutSave } from '../csv-source/delete'
+import { deleteSource } from '../csv-source/delete'
 import { cc } from '@cube-creator/core/namespace'
-import { deleteTableWithoutSave } from '../table/delete'
+import { deleteTable } from '../table/delete'
 import { getTablesForMapping } from '../queries/table'
 
 export async function deleteMapping(csvMapping: NamedNode, store: ResourceStore): Promise<void> {
@@ -11,7 +11,7 @@ export async function deleteMapping(csvMapping: NamedNode, store: ResourceStore)
 
   const sources = csvMappingResource.out(cc.csvSource).terms
   for await (const source of sources) {
-    await deleteSourceWithoutSave({ resource: source, store })
+    await deleteSource({ resource: source, store })
   }
 
   const sourceCollection = csvMappingResource.out(cc.csvSourceCollection).term
@@ -21,7 +21,10 @@ export async function deleteMapping(csvMapping: NamedNode, store: ResourceStore)
 
   const tables = getTablesForMapping(csvMapping)
   for await (const table of tables) {
-    await deleteTableWithoutSave(table, store)
+    await deleteTable({
+      resource: table,
+      store,
+    })
   }
 
   const tableCollection = csvMappingResource.out(cc.tables).term

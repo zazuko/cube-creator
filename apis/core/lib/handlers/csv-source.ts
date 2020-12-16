@@ -31,7 +31,10 @@ export const post = labyrinth.protectedResource(
       file: req,
       fileName: fileName,
       resource: csvMapping,
+      store: req.resourceStore(),
     })
+    await req.resourceStore().save()
+
     res.status(201)
     res.header('Location', fileLocation.value)
     await res.dataset(fileLocation.dataset)
@@ -43,7 +46,9 @@ export const put = labyrinth.protectedResource(
   asyncMiddleware(async (req, res) => {
     const { dataset } = await update({
       resource: await req.resource(),
+      store: req.resourceStore(),
     })
+    await req.resourceStore().save()
 
     return res.dataset(dataset)
   }),
@@ -58,6 +63,7 @@ const getCSVSource = asyncMiddleware(async (req, res, next) => {
 
   const head = await getCSVHead({
     resource: csvSource,
+    store: req.resourceStore(),
   })
 
   res.type('text/csv')
@@ -71,7 +77,10 @@ export const remove = labyrinth.protectedResource(
     const csvSource = req.hydra.resource.term
     await deleteSource({
       resource: csvSource,
+      store: req.resourceStore(),
     })
+    await req.resourceStore().save()
+
     res.sendStatus(204)
   }),
 )

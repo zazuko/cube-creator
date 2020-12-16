@@ -3,19 +3,18 @@ import { dcat, hydra, rdf, schema, _void } from '@tpluscode/rdf-ns-builders'
 import { GraphPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'
 import { ResourceStore } from '../../ResourceStore'
-import { resourceStore } from '../resources'
 
 interface AddMetaDataCommand {
   dataset: GraphPointer<NamedNode>
   resource: GraphPointer
-  store?: ResourceStore
+  store: ResourceStore
 
 }
 
 export async function update({
   dataset,
   resource,
-  store = resourceStore(),
+  store,
 }: AddMetaDataCommand): Promise<GraphPointer> {
   const datasetResource = await store.get(dataset.term)
 
@@ -29,7 +28,9 @@ export async function update({
   })
   datasetResource.deleteOut()
 
-  datasetResource.dataset.addAll([...resource.dataset])
+  for (const quad of resource.dataset) {
+    datasetResource.dataset.add(quad)
+  }
 
   // Make sure the type is correct
   datasetResource.addOut(rdf.type, hydra.Resource)
@@ -39,8 +40,6 @@ export async function update({
 
   hasPart.forEach(child => datasetResource.addOut(schema.hasPart, child))
   dimensionMetadata.forEach(child => datasetResource.addOut(cc.dimensionMetadata, child))
-
-  await store.save()
 
   return datasetResource
 }

@@ -5,6 +5,7 @@ import { createCsvw } from '../../domain/table/csvw'
 export const get = protectedResource(asyncMiddleware(async (req, res) => {
   const csvwTable = await createCsvw({
     tableResource: req.hydra.resource.term,
+    resources: req.resourceStore(),
   })
 
   return res.dataset(csvwTable.pointer.dataset)

@@ -3,20 +3,19 @@ import $rdf from 'rdf-ext'
 import { cc } from '@cube-creator/core/namespace'
 import { ColumnMapping, CsvMapping, DimensionMetadataCollection, Table } from '@cube-creator/model'
 import { ResourceStore } from '../../ResourceStore'
-import { resourceStore } from '../resources'
 import * as DimensionMetadataQueries from '../queries/dimension-metadata'
 import * as TableQueries from '../queries/table'
 
 interface DeleteColumnMappingCommand {
   resource: NamedNode
-  store?: ResourceStore
+  store: ResourceStore
   dimensionMetadataQueries?: Pick<typeof DimensionMetadataQueries, 'getDimensionMetaDataCollection'>
   tableQueries?: Pick<typeof TableQueries, 'getTableForColumnMapping'>
 }
 
 export async function deleteColumnMapping({
   resource,
-  store = resourceStore(),
+  store,
   dimensionMetadataQueries: { getDimensionMetaDataCollection } = DimensionMetadataQueries,
   tableQueries: { getTableForColumnMapping } = TableQueries,
 }: DeleteColumnMappingCommand): Promise<void> {
@@ -40,5 +39,4 @@ export async function deleteColumnMapping({
 
   // Delete Graph
   store.delete(resource)
-  await store.save()
 }

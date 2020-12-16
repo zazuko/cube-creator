@@ -17,7 +17,9 @@ export const put = protectedResource(
     const dataset = await update({
       dataset: clownface(req.hydra.resource),
       resource: await req.resource(),
+      store: req.resourceStore(),
     })
+    await req.resourceStore().save()
 
     res.status(200)
     await res.dataset(dataset.dataset)

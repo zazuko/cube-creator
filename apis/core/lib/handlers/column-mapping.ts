@@ -10,7 +10,9 @@ export const postLiteral = protectedResource(shaclValidate, asyncMiddleware(asyn
   const columnMapping = await createColumnMapping({
     tableId: req.hydra.resource.term,
     resource: await req.resource(),
+    store: req.resourceStore(),
   })
+  await req.resourceStore().save()
 
   res.status(201)
   res.header('Location', columnMapping.value)
@@ -21,7 +23,9 @@ export const postReference = protectedResource(shaclValidate, asyncMiddleware(as
   const columnMapping = await createColumnMapping({
     tableId: req.hydra.resource.term,
     resource: await req.resource(),
+    store: req.resourceStore(),
   })
+  await req.resourceStore().save()
 
   res.status(201)
   res.header('Location', columnMapping.value)
@@ -31,7 +35,9 @@ export const postReference = protectedResource(shaclValidate, asyncMiddleware(as
 export const putLiteral = protectedResource(shaclValidate, asyncMiddleware(async (req, res) => {
   const columnMapping = await updateLiteralColumnMapping({
     resource: await req.resource(),
+    store: req.resourceStore(),
   })
+  await req.resourceStore().save()
 
   await res.dataset(columnMapping.dataset)
 }))
@@ -39,7 +45,9 @@ export const putLiteral = protectedResource(shaclValidate, asyncMiddleware(async
 export const putReference = protectedResource(shaclValidate, asyncMiddleware(async (req, res) => {
   const columnMapping = await updateReferenceColumnMapping({
     resource: await req.resource(),
+    store: req.resourceStore(),
   })
+  await req.resourceStore().save()
 
   await res.dataset(columnMapping.dataset)
 }))
@@ -47,7 +55,11 @@ export const putReference = protectedResource(shaclValidate, asyncMiddleware(asy
 export const remove = labyrinth.protectedResource(
   asyncMiddleware(async (req, res) => {
     const columnMapping = req.hydra.resource
-    await deleteColumnMapping({ resource: columnMapping.term })
+    await deleteColumnMapping({
+      resource: columnMapping.term,
+      store: req.resourceStore(),
+    })
+    await req.resourceStore().save()
     res.sendStatus(204)
   }),
 )

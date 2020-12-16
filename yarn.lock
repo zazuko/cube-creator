@@ -3327,34 +3327,7 @@ balanced-match@^1.0.0:
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
   integrity sha1-ibTRmasr7kneFk6gK4nORi1xt2c=
 
-barnard59-base@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/barnard59-base/-/barnard59-base-0.0.1.tgz#25dc0e52632357c913e361736e271eeccd196390"
-  integrity sha512-nerc7N7xBMVKGOajbSi1yNXGawS6z02UAo79UhLOaA7/Nn9LbUF/IzxTivXc4fatb7dE4qM8yKaaeYTj+sbjNQ==
-  dependencies:
-    "@rdfjs/formats-common" "^2.0.0"
-    duplexify "^3.6.1"
-    nodeify-fetch "^2.0.0"
-    rdf-ext "^1.1.2"
-    rdf-transform-triple-to-quad "^1.0.1"
-    readable-stream "^3.0.6"
-    through2 "^2.0.3"
-
-barnard59-base@^0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/barnard59-base/-/barnard59-base-0.0.4.tgz#71ca9c8ef1e6018fb758af12bd74ae14397624e8"
-  integrity sha512-u7m8A9Mjq+O4iLjB4FbLwjTnGh+fAsIc5c5W1XpHMYLzgYcQhVjYPIjPOEb9QycbuzmoYS3Bvsx89k9K4ADBMQ==
-  dependencies:
-    "@rdfjs/formats-common" "^2.0.0"
-    duplexify "^3.6.1"
-    lodash "^4.17.15"
-    nodeify-fetch "^2.0.0"
-    rdf-ext "^1.1.2"
-    rdf-transform-triple-to-quad "^1.0.1"
-    readable-stream "^3.0.6"
-    through2 "^2.0.3"
-
-barnard59-base@^0.0.5:
+barnard59-base@0.0.5, barnard59-base@^0.0.1, barnard59-base@^0.0.4, barnard59-base@^0.0.5:
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/barnard59-base/-/barnard59-base-0.0.5.tgz#ae0130a4d8a547cfa4d53558ccc1b46aa5b390c0"
   integrity sha512-4E+8OODtFtCAs5i7mmuKxvu/SuToNq3nB2Cn5p0hkAxIY/NKj5NxLe9gyUG888mTvZVdZRIPY2Xy/09xjL+OQg==
@@ -10450,6 +10423,14 @@ rdf-data-factory@^1.0.2:
   integrity sha512-ZIIwEkLcV7cTc+atvQFzAETFVRHz1BRe/MhdkZqYse8vxskErj8/bF/Ittc3B5c0GTyw6O3jVF2V7xBRGyRoSQ==
   dependencies:
     "@types/rdf-js" "^4.0.0"
+
+rdf-dataset-changelog@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/rdf-dataset-changelog/-/rdf-dataset-changelog-1.0.0.tgz#8c07e657da9e6db1d3861e41be06aedaa9559def"
+  integrity sha512-kWEbjWPKgm57uFsyX81iS2kJqUY6qH7HCpZFzaOYlrNhYQetG+ZLr/f8ppZu131rzAX0RpdMoVmfvqr5yGcigA==
+  dependencies:
+    "@rdfjs/data-model" "^1.1.2"
+    "@rdfjs/dataset" "^1.0.1"
 
 rdf-dataset-ext@^1.0.0:
   version "1.0.0"

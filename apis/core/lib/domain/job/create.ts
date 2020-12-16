@@ -4,23 +4,22 @@ import { NamedNode } from 'rdf-js'
 import * as Job from '@cube-creator/model/Job'
 import { CsvMapping, Project } from '@cube-creator/model'
 import { ResourceStore } from '../../ResourceStore'
-import { resourceStore } from '../resources'
 import * as id from '../identifiers'
 import { DomainError } from '../../errors'
 
 interface StartTransformationCommand {
   resource: NamedNode
-  store?: ResourceStore
+  store: ResourceStore
 }
 
 interface StartPublicationCommand {
   resource: NamedNode
-  store?: ResourceStore
+  store: ResourceStore
 }
 
 export async function createTransformJob({
   resource,
-  store = resourceStore(),
+  store,
 }: StartTransformationCommand): Promise<GraphPointer<NamedNode>> {
   const jobCollection = await store.get(resource)
   const project = await store.getResource<Project>(jobCollection.out(cc.project).term)
@@ -33,14 +32,12 @@ export async function createTransformJob({
     tableCollection: csvMapping.tableCollection,
   })
 
-  await store.save()
-
   return jobPointer
 }
 
 export async function createPublishJob({
   resource,
-  store = resourceStore(),
+  store,
 }: StartPublicationCommand): Promise<GraphPointer<NamedNode>> {
   const jobCollection = (await store.get(resource))!
   const projectPointer = jobCollection.out(cc.project).term
@@ -62,8 +59,6 @@ export async function createPublishJob({
     revision: project.nextRevision,
     publishGraph: project.publishGraph,
   })
-
-  await store.save()
 
   return jobPointer
 }

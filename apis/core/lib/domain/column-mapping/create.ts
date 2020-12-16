@@ -1,7 +1,6 @@
 import { GraphPointer } from 'clownface'
 import { cc } from '@cube-creator/core/namespace'
 import { ResourceStore } from '../../ResourceStore'
-import { resourceStore } from '../resources'
 import { NamedNode, Term } from 'rdf-js'
 import { CsvMapping, CsvSource, DimensionMetadataCollection, LiteralColumnMapping, ReferenceColumnMapping, Table } from '@cube-creator/model'
 import * as DimensionMetadataQueries from '../queries/dimension-metadata'
@@ -13,14 +12,14 @@ import TermSet from '@rdfjs/term-set'
 interface CreateColumnMappingCommand {
   tableId: NamedNode
   resource: GraphPointer
-  store?: ResourceStore
+  store: ResourceStore
   dimensionMetadataQueries?: Pick<typeof DimensionMetadataQueries, 'getDimensionMetaDataCollection'>
 }
 
 export async function createColumnMapping({
   tableId,
   resource,
-  store = resourceStore(),
+  store,
   dimensionMetadataQueries: { getDimensionMetaDataCollection } = DimensionMetadataQueries,
 }: CreateColumnMappingCommand): Promise<GraphPointer> {
   const table = await store.getResource<Table>(tableId)
@@ -49,8 +48,6 @@ export async function createColumnMapping({
       store, columnMapping, csvMapping,
     })
   }
-
-  await store.save()
 
   return columnMapping.pointer
 }

@@ -10,7 +10,9 @@ export const post = protectedResource(
     const table = await createTable({
       tableCollection: clownface(req.hydra.resource),
       resource: await req.resource(),
+      store: req.resourceStore(),
     })
+    await req.resourceStore().save()
 
     res.status(201)
     res.header('Location', table.value)

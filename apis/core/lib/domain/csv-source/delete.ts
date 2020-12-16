@@ -1,6 +1,5 @@
 import { NamedNode, Term } from 'rdf-js'
 import { ResourceStore } from '../../ResourceStore'
-import { resourceStore } from '../resources'
 import * as s3 from '../../storage/s3'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
@@ -10,26 +9,14 @@ import { Table } from '@cube-creator/model'
 
 interface DeleteSourceCommand {
   resource: NamedNode | Term
-  store?: ResourceStore
+  store: ResourceStore
   fileStorage?: s3.FileStorage
   tableQueries?: Pick<typeof TableQueries, 'getLinkedTablesForSource'>
 }
 
 export async function deleteSource({
   resource,
-  store = resourceStore(),
-  fileStorage = s3,
-  tableQueries: { getLinkedTablesForSource } = TableQueries,
-}: DeleteSourceCommand): Promise<void> {
-  await deleteSourceWithoutSave({ resource, store, fileStorage, tableQueries: { getLinkedTablesForSource } })
-
-  // Save changes
-  await store.save()
-}
-
-export async function deleteSourceWithoutSave({
-  resource,
-  store = resourceStore(),
+  store,
   fileStorage = s3,
   tableQueries: { getLinkedTablesForSource } = TableQueries,
 }: DeleteSourceCommand): Promise<void> {

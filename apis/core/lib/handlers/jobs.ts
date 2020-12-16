@@ -19,7 +19,9 @@ export const transform = protectedResource(
 
     const job = await createTransformJob({
       resource: req.hydra.resource.term,
+      store: req.resourceStore(),
     })
+    await req.resourceStore().save()
 
     await trigger(job, await req.resource())
 
@@ -38,7 +40,9 @@ export const publish = protectedResource(
 
     const job = await createPublishJob({
       resource: req.hydra.resource.term,
+      store: req.resourceStore(),
     })
+    await req.resourceStore().save()
 
     await trigger(job, await req.resource())
 
@@ -53,7 +57,9 @@ export const patch = protectedResource(
   asyncMiddleware(async (req, res) => {
     const { dataset } = await update({
       resource: await req.resource(),
+      store: req.resourceStore(),
     })
+    await req.resourceStore().save()
 
     return res.dataset(dataset)
   }),

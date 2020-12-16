@@ -8,7 +8,9 @@ export const put = protectedResource(
   asyncMiddleware(async (req, res) => {
     const table = await updateTable({
       resource: await req.resource(),
+      store: req.resourceStore(),
     })
+    await req.resourceStore().save()
 
     return res.dataset(table.dataset)
   }),

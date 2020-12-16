@@ -5,12 +5,13 @@ import { Term, Quad, NamedNode } from 'rdf-js'
 import { hydra, rdf, sh } from '@tpluscode/rdf-ns-builders'
 import SHACLValidator from 'rdf-validate-shacl'
 import clownface, { GraphPointer } from 'clownface'
-import { resourceStore } from '../domain/resources'
+import ResourceStoreImpl, { ResourceStore } from '../ResourceStore'
+import { streamClient } from '../query-client'
 import { ProblemDocument } from 'http-problem-details'
 import { loadResourcesTypes } from '../domain/queries/resources-types'
 
 interface ShaclMiddlewareOptions {
-  createResourceStore: typeof resourceStore
+  createResourceStore(): ResourceStore
   loadResourcesTypes(ids: Term[]): Promise<Quad[]>
   getTargetNode?(req: Request, res: Response): NamedNode
 }
@@ -34,7 +35,7 @@ export const shaclMiddleware = (options: ShaclMiddlewareOptions) => asyncMiddlew
   await Promise.all(req.hydra.operation.out(hydra.expects).map(async (expects) => {
     if (expects.term.termType !== 'NamedNode') return
 
-    const pointer = await resources.get(expects.term)
+    const pointer = await resources.get(expects.term, { allowMissing: true })
     if (pointer?.has(rdf.type, [sh.NodeShape]).values.length) {
       await shapes.addAll([...pointer.dataset])
 
@@ -82,12 +83,12 @@ export const shaclMiddleware = (options: ShaclMiddlewareOptions) => asyncMiddlew
 })
 
 export const shaclValidate = shaclMiddleware({
-  createResourceStore: resourceStore,
+  createResourceStore: () => new ResourceStoreImpl(streamClient),
   loadResourcesTypes,
 })
 
 export const shaclValidateTargetNode = ({ getTargetNode }: Pick<Required<ShaclMiddlewareOptions>, 'getTargetNode'>) => shaclMiddleware({
-  createResourceStore: resourceStore,
+  createResourceStore: () => new ResourceStoreImpl(streamClient),
   loadResourcesTypes,
   getTargetNode,
 })
