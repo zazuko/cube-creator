@@ -1,82 +1,86 @@
 <template>
-  <table class="table is-condensed is-bordered cube-preview">
-    <thead>
-      <tr>
-        <th :colspan="dimensions.length || 1">
-          <div class="level">
-            <div class="level-left">
-              <div class="level-item">
-                <term-with-language :values="cubeMetadata.title" :selected-language="selectedLanguage">
-                  Missing cube title
-                </term-with-language>
+  <div class="table-container cube-preview">
+    <table class="table is-condensed is-bordered">
+      <thead>
+        <tr>
+          <th :colspan="dimensions.length || 1">
+            <div class="level">
+              <div class="level-left">
+                <div class="level-item">
+                  <term-with-language :values="cubeMetadata.title" :selected-language="selectedLanguage">
+                    Missing cube title
+                  </term-with-language>
+                </div>
+                <div class="level-item">
+                  <hydra-operation-button :operation="cubeMetadata.actions.edit" :to="{ name: 'CubeMetadataEdit' }" />
+                </div>
               </div>
-              <div class="level-item">
-                <hydra-operation-button :operation="cubeMetadata.actions.edit" :to="{ name: 'CubeMetadataEdit' }" />
+              <div class="level-right">
+                <b-select v-model="selectedLanguage" class="level-item" title="Language">
+                  <option v-for="language in languages" :key="language" :value="language">
+                    {{ language }}
+                  </option>
+                </b-select>
               </div>
             </div>
-            <div class="level-right">
-              <b-tooltip class="level-item" label="Refresh data">
+          </th>
+        </tr>
+        <tr>
+          <th v-for="dimension in dimensions" :key="dimension.id.value">
+            <cube-preview-dimension :dimension="dimension" :selected-language="selectedLanguage" />
+          </th>
+          <th v-if="dimensions.length === 0" class="has-text-grey has-text-centered">
+            No dimensions defined
+          </th>
+        </tr>
+      </thead>
+      <tbody class="is-family-monospace">
+        <tr v-if="observations.isLoading">
+          <td :colspan="tableWidth">
+            <loading-block />
+          </td>
+        </tr>
+        <tr v-else-if="observations.error">
+          <td :colspan="tableWidth">
+            <b-message type="is-danger">
+              {{ observations.error }}
+            </b-message>
+          </td>
+        </tr>
+        <tr v-else-if="observations.data.length === 0">
+          <td :colspan="tableWidth">
+            <p class="has-text-grey has-text-centered">
+              No observations available. Did you already
+              <router-link :to="{ name: 'Pipeline' }">
+                run a transformation
+              </router-link>?
+            </p>
+          </td>
+        </tr>
+        <tr v-else v-for="observation in observations.data" :key="observation.id.value">
+          <td v-for="dimension in dimensions" :key="dimension.clientPath" :class="dimensionClasses(dimension)">
+            <cube-preview-value :value="observation[dimension.about.value]" />
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td :colspan="tableWidth">
+            <div class="is-flex">
+              <b-tooltip class="mr-2" label="Refresh data">
                 <b-button icon-left="sync" @click="fetchCubeData" />
               </b-tooltip>
-              <b-select v-model="selectedLanguage" class="level-item" title="Language">
-                <option v-for="language in languages" :key="language" :value="language">
-                  {{ language }}
+              <b-select v-model="pageSize" title="Page size">
+                <option v-for="pageSizeOption in pageSizes" :key="pageSizeOption" :native-value="pageSizeOption">
+                  {{ pageSizeOption }}
                 </option>
               </b-select>
             </div>
-          </div>
-        </th>
-      </tr>
-      <tr>
-        <th v-for="dimension in dimensions" :key="dimension.id.value">
-          <cube-preview-dimension :dimension="dimension" :selected-language="selectedLanguage" />
-        </th>
-        <th v-if="dimensions.length === 0" class="has-text-grey has-text-centered">
-          No dimensions defined
-        </th>
-      </tr>
-    </thead>
-    <tbody class="is-family-monospace">
-      <tr v-if="observations.isLoading">
-        <td :colspan="tableWidth">
-          <loading-block />
-        </td>
-      </tr>
-      <tr v-else-if="observations.error">
-        <td :colspan="tableWidth">
-          <b-message type="is-danger">
-            {{ observations.error }}
-          </b-message>
-        </td>
-      </tr>
-      <tr v-else-if="observations.data.length === 0">
-        <td :colspan="tableWidth">
-          <p class="has-text-grey has-text-centered">
-            No observations available. Did you already
-            <router-link :to="{ name: 'Pipeline' }">
-              run a transformation
-            </router-link>?
-          </p>
-        </td>
-      </tr>
-      <tr v-else v-for="observation in observations.data" :key="observation.id.value">
-        <td v-for="dimension in dimensions" :key="dimension.clientPath" :class="dimensionClasses(dimension)">
-          <cube-preview-value :value="observation[dimension.about.value]" />
-        </td>
-      </tr>
-    </tbody>
-    <tfoot>
-      <tr>
-        <td :colspan="tableWidth" class="has-text-right">
-          <b-select v-model="pageSize" title="Page size">
-            <option v-for="pageSizeOption in pageSizes" :key="pageSizeOption" :native-value="pageSizeOption">
-              {{ pageSizeOption }}
-            </option>
-          </b-select>
-        </td>
-      </tr>
-    </tfoot>
-  </table>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
 </template>
 
 <script lang="ts">
