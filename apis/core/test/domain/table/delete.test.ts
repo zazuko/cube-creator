@@ -142,4 +142,22 @@ describe('domain/table/delete', () => {
 
     expect(dimensionMetadataCollection.out(schema.hasPart).values.length).to.eq(0)
   })
+
+  it('deletes the observation table but not the used dimensions', async () => {
+    // given
+    dimensionIsUsedByOtherMapping.resolves(true)
+
+    // when
+    await deleteTable({ resource: observationTable.term, store, dimensionMetadataQueries, tableQueries, columnMappingQueries })
+    await store.save()
+
+    // then
+    const deletedTable = await store.getResource<Table>(observationTable.term, { allowMissing: true })
+    expect(deletedTable).to.eq(undefined)
+
+    const deletedColumnMapping = await store.getResource<ColumnMapping>(columnMappingObservation.term, { allowMissing: true })
+    expect(deletedColumnMapping).to.eq(undefined)
+
+    expect(dimensionMetadataCollection.out(schema.hasPart).values.length).to.eq(1)
+  })
 })
