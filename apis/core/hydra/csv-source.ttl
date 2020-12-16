@@ -1,9 +1,10 @@
-BASE          <urn:hydra-box:api>
-PREFIX cc:    <https://cube-creator.zazuko.com/vocab#>
-prefix hydra: <http://www.w3.org/ns/hydra/core#>
-prefix code:  <https://code.described.at/>
-prefix schema:   <http://schema.org/>
+BASE           <urn:hydra-box:api>
+PREFIX cc:     <https://cube-creator.zazuko.com/vocab#>
+prefix hydra:  <http://www.w3.org/ns/hydra/core#>
+prefix code:   <https://code.described.at/>
+prefix schema: <http://schema.org/>
 prefix sh:     <http://www.w3.org/ns/shacl#>
+prefix query:  <http://hypermedia.app/query#>
 
 cc:CSVSourceCollection
   a
@@ -29,6 +30,13 @@ cc:CSVSourceCollection
 cc:CSVSource
   a
     hydra:Class ;
+  query:preprocess
+    [
+      a
+        code:EcmaScript ;
+      code:link
+        <file:handlers/csv-source#presignUrl> ;
+    ] ;
   hydra:supportedOperation
     [
       a
@@ -61,7 +69,7 @@ cc:CSVSource
           code:link
             <file:handlers/csv-source#remove> ;
         ]
-    ] ,
+    ],
     [
       a
         hydra:Operation,
