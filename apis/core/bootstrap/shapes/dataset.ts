@@ -39,7 +39,7 @@ ${shapeId} {
     ] ;
     ${sh.property} [
       ${sh.name} "Description" ;
-      ${sh.path} ${dcterms.comment} ;
+      ${sh.path} ${dcterms.description} ;
       ${sh.minCount} 0 ;
       ${sh.minLength} 1 ;
       ${sh.datatype} ${rdf.langString} ;
