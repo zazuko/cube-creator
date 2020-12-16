@@ -1,4 +1,4 @@
-/* eslint-disable import/no-duplicates */
+/* eslint-disable import/no-duplicates,@typescript-eslint/no-empty-interface */
 declare module 'rdf-cube-view-query' {
   import View = require('rdf-cube-view-query/lib/View')
   import Cube = require('rdf-cube-view-query/lib/Cube')
@@ -15,9 +15,29 @@ declare module 'rdf-cube-view-query' {
   export = _export
 }
 
+declare module 'rdf-cube-view-query/lib/query/ViewQuery' {
+  import type { GraphPointer } from 'clownface'
+
+  namespace ViewQuery {
+    interface ViewQuery {
+      view: GraphPointer
+      build(): void
+      query: any
+    }
+  }
+
+  interface ViewQuery extends ViewQuery.ViewQuery {}
+  class ViewQuery implements ViewQuery.ViewQuery {
+    constructor(viewPointer: GraphPointer)
+  }
+
+  export = ViewQuery
+}
+
 declare module 'rdf-cube-view-query/lib/View' {
   import { DatasetCore, NamedNode, Term } from 'rdf-js'
   import type { GraphPointer } from 'clownface'
+  import ViewQuery = require('rdf-cube-view-query/lib/query/ViewQuery')
   import Node = require('rdf-cube-view-query/lib/Node')
   import Cube = require('rdf-cube-view-query/lib/Cube')
   import Dimension = require('rdf-cube-view-query/lib/Dimension')
@@ -26,16 +46,17 @@ declare module 'rdf-cube-view-query/lib/View' {
 
   namespace View {
     interface View extends Node.Node {
+      dimensions: Dimension[]
       dimension(arg: { cubeDimension: string | Term | GraphPointer | undefined }): Dimension | null
       observations(): Promise<Observation[]>
+      observationsQuery(): ViewQuery
     }
   }
 
+  interface View extends View.View {}
   class View extends Node implements View.View {
     constructor (arg?: { parent: Node.Node; term: Term; dataset: DatasetCore; graph: NamedNode; dimensions: any[]; filters: any[] })
     static fromCube(cube: Cube.Cube): View.View
-    dimension(arg: { cubeDimension: string | Term | GraphPointer | undefined }): Dimension | null
-    observations(): Promise<Observation[]>
   }
 
   export = View
