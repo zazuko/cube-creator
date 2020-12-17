@@ -6,6 +6,7 @@ import * as path from 'path'
 import * as Sentry from '@sentry/node'
 import * as Tracing from '@sentry/tracing'
 import { hydraBox } from '@hydrofoil/labyrinth'
+import { problemJson } from '@hydrofoil/labyrinth/errors'
 import cors from 'cors'
 import { error, log } from './lib/log'
 import authentication from './lib/auth'
@@ -63,15 +64,16 @@ async function main() {
       user: env.maybe.STORE_ENDPOINTS_USERNAME,
       password: env.maybe.STORE_ENDPOINTS_PASSWORD,
     },
-    errorMappers,
     middleware: {
       operations: [
         preferHydraCollection,
         expectsDisambiguate,
       ],
-      error: Sentry.Handlers.errorHandler(),
     },
   })
+
+  app.use(Sentry.Handlers.errorHandler())
+  app.use(problemJson({ errorMappers, captureNotFound: true }))
 
   await bootstrap(env.STORE_GRAPH_ENDPOINT, baseUri)
 
