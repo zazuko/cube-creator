@@ -15,8 +15,21 @@ export default class DatePickerEditor extends Vue {
   }
 
   onUpdate (value: Date): void {
-    const stringValue = value.toISOString().substring(0, 10)
+    const stringValue = dateToString(value)
     this.update(stringValue)
   }
+}
+
+/**
+ * Format Date as ISO8061 string while respecting the date's timezone:
+ *
+ * > dateToString(new Date('2020-04-13T00:00:00.000+02:00'))
+ * '2020-04-13'
+ */
+function dateToString (date: Date): string {
+  const tzoffset = (new Date()).getTimezoneOffset() * 60000
+  const localISOTime = (new Date(date.getTime() - tzoffset)).toISOString()
+
+  return localISOTime.substring(0, 10)
 }
 </script>
