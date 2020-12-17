@@ -5,6 +5,7 @@
     :shape="shape"
     :error="error"
     :is-submitting="isSubmitting"
+    :submit-label="submitLabel"
     @submit="onSubmit"
     @cancel="$emit('cancel')"
   />
@@ -36,6 +37,7 @@ export default class extends Vue {
   @Prop({ required: true }) operation!: RuntimeOperation
   @Prop({ default: null }) error!: ErrorDetails | null
   @Prop({ default: false }) isSubmitting!: boolean
+  @Prop() submitLabel?: string
 
   @projectNS.Getter('findTable') findTable!: (id: string) => Table
   @projectNS.Getter('findSource') findSource!: (id: string) => CsvSource

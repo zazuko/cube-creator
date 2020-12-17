@@ -8,6 +8,7 @@
       :source="source"
       :error="error"
       :is-submitting="isSubmitting"
+      submit-label="Update column mapping"
       @submit="onSubmit"
       @cancel="onCancel"
     />
@@ -19,6 +20,7 @@
       :operation="operation"
       :error="error"
       :is-submitting="isSubmitting"
+      submit-label="Update link"
       @submit="onSubmit"
       @cancel="onCancel"
     />

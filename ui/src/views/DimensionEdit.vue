@@ -10,6 +10,7 @@
       :shape="shape"
       :error="error"
       :is-submitting="isSubmitting"
+      submit-label="Update dimension metadata"
       @submit="onSubmit"
       @cancel="onCancel"
     />
