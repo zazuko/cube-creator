@@ -7,6 +7,7 @@
       :shape="shape"
       :error="error"
       :is-submitting="isSubmitting"
+      submit-label="Update table"
       @submit="onSubmit"
       @cancel="onCancel"
     />

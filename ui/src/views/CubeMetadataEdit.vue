@@ -7,6 +7,7 @@
       :shape="shape"
       :error="error"
       :is-submitting="isSubmitting"
+      submit-label="Update cube metadata"
       @submit="onSubmit"
       @cancel="onCancel"
     />

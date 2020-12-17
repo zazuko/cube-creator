@@ -39,7 +39,7 @@
     <hydra-operation-error :error="error" class="mt-4" />
 
     <form-submit-cancel
-      :submit-label="operation.title"
+      :submit-label="submitLabel"
       :is-submitting="isSubmitting"
       @cancel="$emit('cancel')"
     />
@@ -85,6 +85,7 @@ export default class extends Vue {
   @Prop({ required: true }) operation!: RuntimeOperation
   @Prop({ default: null }) error!: ErrorDetails | null
   @Prop({ default: false }) isSubmitting!: boolean
+  @Prop() submitLabel?: string
 
   @projectNS.Getter('findTable') findTable!: (id: string) => Table
   @projectNS.Getter('getTable') getTable!: (id: Term) => Table
