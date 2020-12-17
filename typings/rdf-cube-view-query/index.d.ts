@@ -94,9 +94,11 @@ declare module 'rdf-cube-view-query/lib/Cube' {
   namespace Cube {
     interface Cube extends Node.Node {
       clear(): void
+      source: Source
     }
   }
 
+  interface Cube extends Cube.Cube {}
   class Cube extends Node implements Cube.Cube {
     constructor(arg: { parent?: Node.Node; term?: Term; dataset?: DatasetCore; graph?: NamedNode; source: Source.Source })
   }

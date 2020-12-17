@@ -9,7 +9,7 @@ import { Collection, CollectionMixin, IriTemplate } from '@rdfine/hydra'
 import { cc } from '@cube-creator/core/namespace'
 import $rdf from 'rdf-ext'
 import { Term } from 'rdf-js'
-import { hydra, xsd } from '@tpluscode/rdf-ns-builders'
+import { hydra } from '@tpluscode/rdf-ns-builders'
 
 export function createSource(sourceGraph: string): Source {
   return new CubeQuery.Source({
@@ -47,7 +47,7 @@ export function createView(cube: Cube, pageSize: number): View {
       .addOut(ns.view.direction, ns.view.Ascending)
 
     projection.addList(ns.view.orderBy, order)
-    projection.addOut(ns.view.limit, $rdf.literal(`${pageSize}`, xsd.int))
+    projection.addOut(ns.view.limit, pageSize)
   })
 
   return view
