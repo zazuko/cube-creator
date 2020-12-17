@@ -1139,10 +1139,10 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
-"@hydrofoil/labyrinth@^0.1.18":
-  version "0.1.18"
-  resolved "https://registry.yarnpkg.com/@hydrofoil/labyrinth/-/labyrinth-0.1.18.tgz#9043af9bb3c33c86584a70b8f87123f067e6d8ae"
-  integrity sha512-m6Xe+FP2tb/Oam6+va3oqfUppmcz/TGqLDKEMWD0oFdXs3zgD5d7oKcZ0KxgUv5BKbzs9dfvO3xAr3P4PyuL7A==
+"@hydrofoil/labyrinth@^0.2":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@hydrofoil/labyrinth/-/labyrinth-0.2.0.tgz#1cc72d7cf1007fd58d4f154c019e7cee9ddf8d62"
+  integrity sha512-0WELTDT4QQXE9O0yQIuxVhQ8sVUQxFKGsO9LqHe5Z5HS27UO//AgaLyUYFsvCujsFIvmQxYYjM4ogwdF4cRW3g==
   dependencies:
     "@fcostarodrigo/walk" "^5.0.0"
     "@rdfine/hydra" "^0.6"
