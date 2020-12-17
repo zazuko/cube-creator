@@ -47,7 +47,11 @@
           <b-tag v-if="columnMapping.referencedTable" rounded :style="{ 'background-color': getTable(columnMapping.referencedTable.id).color }">
             <property-display :term="columnMapping.targetProperty" />
           </b-tag>
-          <property-display v-else :term="columnMapping.targetProperty" />
+          <span v-else>
+            <property-display :term="columnMapping.targetProperty" />
+            <span v-if="columnMapping.datatype" class="has-text-grey"> (<property-display :term="columnMapping.datatype" />)</span>
+            <span v-if="columnMapping.language" class="has-text-grey"> (language: {{ columnMapping.language.value }})</span>
+          </span>
         </div>
       </div>
       <div class="level-right">
