@@ -182,19 +182,27 @@ ${shapeId} {
     ] ;
     ${sh.property} [
       ${sh.name} "Creation Date" ;
+      ${sh.description} "Date when dataset has been assembled. It defaults to when project is created" ;
       ${sh.path} ${dcterms.issued} ;
-      ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
       ${sh.datatype} ${xsd.date} ;
       ${sh.order} 150 ;
     ] ;
     ${sh.property} [
-      ${sh.name} "Last Update" ;
-      ${sh.path} ${dcterms.modified} ;
-      ${sh.minCount} 1 ;
+      ${sh.name} "Date published" ;
+      ${sh.path} ${schema.datePublished} ;
+      ${sh.description} "Date when dataset is first published to the portal. It is set automatically but can be changed later" ;
       ${sh.maxCount} 1 ;
       ${sh.datatype} ${xsd.date} ;
       ${sh.order} 160 ;
+    ] ;
+    ${sh.property} [
+      ${sh.name} "Creation Date" ;
+      ${sh.path} ${schema.dateCreated} ;
+      ${sh.maxCount} 1 ;
+      ${sh.datatype} ${xsd.date} ;
+      ${dash.hidden} true ;
+      ${sh.equals} ${dcterms.issued} ;
     ] ;
   .
 

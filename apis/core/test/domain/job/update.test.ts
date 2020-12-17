@@ -4,7 +4,7 @@ import clownface, { GraphPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import DatasetExt from 'rdf-ext/lib/Dataset'
-import { rdf, rdfs, schema, xsd } from '@tpluscode/rdf-ns-builders'
+import { dcterms, rdf, rdfs, schema, xsd, _void } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import { update } from '../../../lib/domain/job/update'
@@ -13,6 +13,7 @@ import '../../../lib/domain'
 describe('domain/job/update', () => {
   let job: GraphPointer<NamedNode, DatasetExt>
   let project: GraphPointer<NamedNode, DatasetExt>
+  let dataset: GraphPointer<NamedNode, DatasetExt>
   let store: TestResourceStore
 
   beforeEach(() => {
@@ -23,10 +24,15 @@ describe('domain/job/update', () => {
       .namedNode('project')
       .addOut(rdf.type, cc.CubeProject)
       .addOut(cc.latestPublishedRevision, 2)
+      .addOut(cc.dataset, $rdf.namedNode('dataset'))
+    dataset = clownface({ dataset: $rdf.dataset() })
+      .namedNode('dataset')
+      .addOut(rdf.type, _void.Dataset)
 
     store = new TestResourceStore([
       job,
       project,
+      dataset,
     ])
   })
 
@@ -153,6 +159,63 @@ describe('domain/job/update', () => {
         property: {
           path: cc.latestPublishedRevision,
           hasValue: $rdf.literal('3', xsd.integer),
+          minCount: 1,
+          maxCount: 1,
+        },
+      })
+    })
+
+    it('sets dataset published date on first revision', async () => {
+      // given
+      const resource = clownface({ dataset: $rdf.dataset() })
+        .namedNode('job')
+        .addOut(schema.actionStatus, schema.CompletedActionStatus)
+        .addOut(dcterms.modified, $rdf.literal('2020-12-12T11:30:30', xsd.dateTime))
+      job
+        .addOut(rdf.type, cc.PublishJob)
+        .addOut(cc.project, project)
+        .addOut(cc.revision, 1)
+
+      // when
+      await update({
+        resource,
+        store,
+      })
+
+      // then
+      expect(dataset).to.matchShape({
+        property: {
+          path: schema.datePublished,
+          hasValue: $rdf.literal('2020-12-12', xsd.date),
+          minCount: 1,
+          maxCount: 1,
+        },
+      })
+    })
+
+    it('does not change dataset published date on revision>1', async () => {
+      // given
+      const resource = clownface({ dataset: $rdf.dataset() })
+        .namedNode('job')
+        .addOut(schema.actionStatus, schema.CompletedActionStatus)
+        .addOut(dcterms.modified, $rdf.literal('2020-12-12T11:30:30', xsd.dateTime))
+      job
+        .addOut(rdf.type, cc.PublishJob)
+        .addOut(cc.project, project)
+        .addOut(cc.revision, 20)
+      dataset.addOut(schema.datePublished, $rdf.literal('2020-10-12', xsd.date))
+
+      // when
+      await update({
+        resource,
+        store,
+      })
+
+      // then
+      expect(dataset).to.matchShape({
+        property: {
+          path: schema.datePublished,
+          hasValue: $rdf.literal('2020-10-12', xsd.date),
           minCount: 1,
           maxCount: 1,
         },

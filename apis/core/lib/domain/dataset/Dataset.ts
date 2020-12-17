@@ -8,6 +8,7 @@ import * as Cube from '@cube-creator/model/Cube'
 interface ApiDataset {
   addCube(cube: NamedNode, creator: NamedNode): void
   renameCube(cube: NamedNode, newId: NamedNode): void
+  setPublishedDate(publishDate: Date): void
 }
 
 declare module '@cube-creator/model' {
@@ -37,6 +38,10 @@ export default function Mixin<Base extends Constructor<Omit<Dataset, keyof ApiDa
           quad.graph,
         ))
       }
+    }
+
+    setPublishedDate(publishDate: Date): void {
+      this.published = publishDate
     }
   }
 }

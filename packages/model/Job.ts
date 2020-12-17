@@ -13,6 +13,7 @@ import { initializer } from './lib/initializer'
 
 export interface Job extends Action, Rdfs.Resource, RdfResource {
   created: Date
+  modified: Date
   link?: string
   name: string
 }
@@ -41,6 +42,9 @@ export function JobMixin<Base extends Constructor<RdfResource>>(base: Base): Mix
   class Impl extends ResourceMixin(ActionMixin(base)) implements Partial<Job> {
     @property.literal({ path: dcterms.created, type: Date, initial: () => new Date() })
     created!: Date
+
+    @property.literal({ path: dcterms.modified, type: Date })
+    modified!: Date
 
     @property.literal({ path: schema.name })
     name!: string

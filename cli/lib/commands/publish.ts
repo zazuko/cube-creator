@@ -71,6 +71,9 @@ export default function (pipelineId: NamedNode, log: Debugger) {
     variable.set('revision', job.revision)
     variable.set('namespace', namespace)
 
+    const timestamp = new Date()
+    variable.set('timestamp', timestamp.toISOString())
+
     pipeline.addOut(ns.pipelines.variables, set => {
       variable.forEach((value, key) => {
         if (!value) return
@@ -100,6 +103,7 @@ export default function (pipelineId: NamedNode, log: Debugger) {
       .then(() =>
         updateJobStatus({
           log: run.pipeline.context.log,
+          modified: timestamp,
           jobUri: run.pipeline.context.variables.get(names.jobUri),
           executionUrl: run.pipeline.context.variables.get(names.executionUrl),
           status: schema.CompletedActionStatus,
@@ -107,6 +111,7 @@ export default function (pipelineId: NamedNode, log: Debugger) {
       .catch(async (error) => {
         await updateJobStatus({
           log: run.pipeline.context.log,
+          modified: timestamp,
           jobUri: run.pipeline.context.variables.get(names.jobUri),
           executionUrl: run.pipeline.context.variables.get(names.executionUrl),
           status: schema.FailedActionStatus,

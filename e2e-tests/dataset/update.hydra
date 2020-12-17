@@ -58,7 +58,7 @@ With Class void:Dataset {
                 dcat:theme <http://opendata.swiss/themes/agriculture>;
                 dcat:landingPage "https://test.lindas.admin.ch/sparql/" ;
                 dcterms:issued "2015-08-06"^^xsd:date;
-                dcterms:modified "2020-10-12"^^xsd:date;
+                schema:dateCreated "2015-08-06"^^xsd:date;
                 .
 
             ```

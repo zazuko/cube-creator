@@ -10,6 +10,7 @@ import { TestResourceStore } from '../../support/TestResourceStore'
 import '../../../lib/domain'
 import env from '@cube-creator/core/env'
 import { Dataset } from '@cube-creator/model'
+import { Project } from '@cube-creator/model/Project'
 
 describe('domain/cube-projects/create', () => {
   let store: TestResourceStore
@@ -53,26 +54,50 @@ describe('domain/cube-projects/create', () => {
     expect(project.csvMapping).to.be.undefined
   })
 
-  it('initializes a void:Dataset resource', async function () {
-    // given
-    const resource = clownface({ dataset: $rdf.dataset() })
-      .namedNode('')
-      .addOut(rdfs.label, 'Foo bar project')
-      .addOut(cc.publishGraph, $rdf.namedNode('http://example.com/published-cube'))
+  describe('initializes a void:Dataset resource', () => {
+    let project: Project
 
-    // when
-    const project = await createProject({ resource, store, projectsCollection, user })
+    beforeEach(async () => {
+      // given
+      const resource = clownface({ dataset: $rdf.dataset() })
+        .namedNode('')
+        .addOut(rdfs.label, 'Foo bar project')
+        .addOut(cc.publishGraph, $rdf.namedNode('http://example.com/published-cube'))
 
-    // then
-    const dataset = await store.get(project.dataset.id)
-    expect(dataset).to.matchShape({
-      property: [{
-        path: rdf.type,
-        [sh.hasValue.value]: [schema.Dataset, _void.Dataset, dcat.Dataset],
-      }, {
-        path: cc.dimensionMetadata,
-        minCount: 1,
-      }],
+      // when
+      project = await createProject({ resource, store, projectsCollection, user })
+    })
+
+    it('creates metadata placeholders', async () => {
+      // then
+      const dataset = await store.get(project.dataset.id)
+      expect(dataset).to.matchShape({
+        property: [{
+          path: rdf.type,
+          [sh.hasValue.value]: [schema.Dataset, _void.Dataset, dcat.Dataset],
+        }, {
+          path: cc.dimensionMetadata,
+          minCount: 1,
+        }],
+      })
+    })
+
+    it('sets default creation dates', async () => {
+      // then
+      const dataset = await store.get(project.dataset.id)
+      expect(dataset).to.matchShape({
+        property: [{
+          path: dcterms.issued,
+          datatype: xsd.date,
+          minCount: 1,
+          maxCount: 1,
+        }, {
+          path: schema.dateCreated,
+          [sh.equals.value]: dcterms.issued,
+          minCount: 1,
+          maxCount: 1,
+        }],
+      })
     })
   })
 

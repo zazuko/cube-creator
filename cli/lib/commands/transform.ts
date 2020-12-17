@@ -8,7 +8,7 @@ import Runner from 'barnard59/lib/runner'
 import bufferDebug from 'barnard59/lib/bufferDebug'
 import clownface from 'clownface'
 import namespace from '@rdfjs/namespace'
-import { rdf, schema } from '@tpluscode/rdf-ns-builders'
+import { rdf, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import { names } from '../variables'
 import { updateJobStatus } from '../job'
 
@@ -58,6 +58,9 @@ export default function (pipelineId: NamedNode, log: Debugger) {
     variable.set('graph-store-user', graphStore?.user || process.env.GRAPH_STORE_USER)
     variable.set('graph-store-password', graphStore?.password || process.env.GRAPH_STORE_PASSWORD)
 
+    const timestamp = new Date()
+    variable.set('timestamp', $rdf.literal(timestamp.toISOString(), xsd.dateTime))
+
     pipeline.addOut(ns.pipelines.variables, set => {
       variable.forEach((value, key) => {
         if (!value) return
@@ -87,6 +90,7 @@ export default function (pipelineId: NamedNode, log: Debugger) {
       .then(() =>
         updateJobStatus({
           log: run.pipeline.context.log,
+          modified: timestamp,
           jobUri: run.pipeline.context.variables.get(names.jobUri),
           executionUrl: run.pipeline.context.variables.get(names.executionUrl),
           status: schema.CompletedActionStatus,
@@ -94,6 +98,7 @@ export default function (pipelineId: NamedNode, log: Debugger) {
       .catch(async (error) => {
         await updateJobStatus({
           log: run.pipeline.context.log,
+          modified: timestamp,
           jobUri: run.pipeline.context.variables.get(names.jobUri),
           executionUrl: run.pipeline.context.variables.get(names.executionUrl),
           status: schema.FailedActionStatus,

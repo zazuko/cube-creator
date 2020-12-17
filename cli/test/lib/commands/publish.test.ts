@@ -110,6 +110,45 @@ describe('lib/commands/publish', function () {
       })
     })
 
+    it('sets cube version', async function () {
+      expect(cubePointer.namedNode(targetCube())).to.matchShape({
+        property: [{
+          path: schema.version,
+          hasValue: $rdf.literal('2', xsd.integer),
+          minCount: 1,
+          maxCount: 1,
+        }],
+      })
+    })
+
+    it('adds modified date to published cube', async function () {
+      expect(cubePointer.namedNode(targetCube())).to.matchShape({
+        property: [{
+          path: schema.dateModified,
+          datatype: xsd.dateTime,
+          minCount: 1,
+          maxCount: 1,
+        }, {
+          path: dcterms.modified,
+          datatype: xsd.dateTime,
+          minCount: 1,
+          maxCount: 1,
+          [sh.equals.value]: schema.dateModified,
+        }],
+      })
+    })
+
+    it('"deprecates" previous cube', async function () {
+      expect(cubePointer.namedNode(ns.baseCube('1/'))).to.matchShape({
+        property: [{
+          path: schema.validThrough,
+          datatype: xsd.dateTime,
+          minCount: 1,
+          maxCount: 1,
+        }],
+      })
+    })
+
     it('observation data has been copied', async function () {
       expect(cubePointer.namedNode(targetCube('observation/blBAS-2002-annualmean'))).to.matchShape({
         property: [{
