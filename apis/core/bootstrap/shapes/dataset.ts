@@ -188,6 +188,7 @@ ${shapeId} {
     ] ;
     ${sh.property} [
       ${sh.name} "Creation Date" ;
+      ${sh.description} "Date when dataset has been assembled. It defaults to when project is created" ;
       ${sh.path} ${dcterms.issued} ;
       ${sh.maxCount} 1 ;
       ${sh.datatype} ${xsd.date} ;
@@ -196,6 +197,7 @@ ${shapeId} {
     ${sh.property} [
       ${sh.name} "Date published" ;
       ${sh.path} ${schema.datePublished} ;
+      ${sh.description} "Date when dataset is first published to the portal. It is set automatically but can be changed later" ;
       ${sh.maxCount} 1 ;
       ${sh.datatype} ${xsd.date} ;
       ${sh.order} 160 ;
