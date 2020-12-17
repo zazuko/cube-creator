@@ -4,18 +4,48 @@ import * as sinon from 'sinon'
 import clownface, { AnyPointer, GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import { View } from 'rdf-cube-view-query/lib/View'
+import Cube from 'rdf-cube-view-query/lib/Cube'
+import Source from 'rdf-cube-view-query/lib/Source'
 import * as ns from '@cube-creator/core/namespace'
-import { hydra, rdf, schema, xsd } from '@tpluscode/rdf-ns-builders'
+import { hydra, rdf, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import { IriTemplate } from '@rdfine/hydra'
 import { IriTemplateBundle } from '@rdfine/hydra/bundles'
 import RdfResource from '@tpluscode/rdfine/RdfResource'
-import { populateFilters, createHydraCollection } from '../../../../lib/domain/observations/lib'
+import { populateFilters, createHydraCollection, createView } from '../../../../lib/domain/observations/lib'
 import { Term } from 'rdf-js'
-import { cc } from '@cube-creator/core/namespace'
 
 RdfResource.factory.addMixin(...IriTemplateBundle)
 
 describe('lib/domain/observations/lib', () => {
+  describe('createView', () => {
+    it('initializes a projection with view:limit', () => {
+      // given
+      const cube = new Cube({
+        source: new Source({ endpointUrl: '' }),
+      })
+      cube.ptr
+        .addOut(ns.cube.observationConstraint, shape => {
+          shape.addOut(sh.property, schema.name)
+        })
+
+      // when
+      const { ptr } = createView(cube, 10)
+
+      // then
+      expect(ptr).to.matchShape({
+        property: [{
+          path: ns.view.projection,
+          node: {
+            property: {
+              path: ns.view.limit,
+              hasValue: $rdf.literal('10', xsd.integer),
+            },
+          },
+        }],
+      })
+    })
+  })
+
   describe('populateFilters', () => {
     let filter: AnyPointer
     let view: View
@@ -149,8 +179,8 @@ describe('lib/domain/observations/lib', () => {
     before(() => {
       templateParams = clownface({ dataset: $rdf.dataset() })
         .blankNode()
-        .addOut(cc.cube, 'CUBE')
-        .addOut(cc.cubeGraph, 'GRAPH')
+        .addOut(ns.cc.cube, 'CUBE')
+        .addOut(ns.cc.cubeGraph, 'GRAPH')
         .addOut(ns.view.view, 'FILTERS')
         .addOut(hydra.limit, $rdf.literal('20', xsd.integer))
       const templatePointer = clownface({ dataset: $rdf.dataset() })
@@ -160,10 +190,10 @@ describe('lib/domain/observations/lib', () => {
         initializer: {
           template: '/observations?cube={cube}&graph={graph}{&view,pageSize}',
           mapping: [{
-            property: cc.cube,
+            property: ns.cc.cube,
             variable: 'cube',
           }, {
-            property: cc.cubeGraph,
+            property: ns.cc.cubeGraph,
             variable: 'graph',
           }, {
             property: ns.view.view,
