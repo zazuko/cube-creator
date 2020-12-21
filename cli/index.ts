@@ -65,8 +65,9 @@ async function main() {
 }
 
 main()
-  .catch(e => {
+  .catch(async e => {
     Sentry.captureException(e)
     log(e)
+    await Sentry.close(2000)
     process.exit(1)
   })
