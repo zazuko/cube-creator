@@ -1,11 +1,29 @@
 import { shape, freq } from '@cube-creator/core/namespace'
 import { hydra, rdfs, sh, dcat, dcterms, xsd, rdf, vcard, schema, _void, dash } from '@tpluscode/rdf-ns-builders'
-import { turtle } from '@tpluscode/rdf-string'
+import { sparql, turtle } from '@tpluscode/rdf-string'
 import $rdf from 'rdf-ext'
+import { lindasQuery } from '../lib/query'
 
 const shapeId = shape('dataset/edit-metadata')
 const temporalFromTo = $rdf.namedNode(shapeId.value + '#temporalFromTo')
 const vcardOrganization = $rdf.namedNode(shapeId.value + '#vcardOrganization')
+
+const themesQuery = sparql`prefix cat: <https://register.ld.admin.ch/opendataswiss/category/>
+
+construct {
+  ?c a ${hydra.Collection} .
+  ?c ${hydra.member} ?theme .
+  ?theme ${rdfs.label} ?name ; ?p ?o .
+} WHERE {
+  BIND ( iri('http://app.cube-creator.lndo.site/themes') as ?c )
+
+  graph   <https://lindas.admin.ch/sfa/opendataswiss> {
+    ?theme a ${schema.DefinedTerm} ;
+      ${schema.name} ?name ;
+      ${schema.inDefinedTermSet} <https://register.ld.admin.ch/opendataswiss/category> ;
+      ?p ?o .
+  }
+}`
 
 export const DatasetShape = turtle`
 @prefix cld: <http://purl.org/cld/terms/> .
@@ -61,13 +79,13 @@ ${shapeId} {
         ${sh.path} ${schema.workExample} ;
         ${sh.minCount} 0 ;
         ${sh.maxCount} 2 ;
-        ${sh.in} 
+        ${sh.in}
             (
                 <https://ld.admin.ch/application/visualize>
                 <https://ld.admin.ch/application/opendataswiss>
             ) ;
         ${sh.order} 40 ;
-      ] ;    
+      ] ;
     ${sh.property} [
       ${sh.name} "Data refresh interval" ;
       ${sh.path} ${dcterms.accrualPeriodicity} ;
@@ -126,33 +144,8 @@ ${shapeId} {
       ${sh.minLength} 1 ;
       ${sh.order} 100 ;
       ${sh.nodeKind} ${sh.IRI} ;
-      ${sh.in}
-      (
-        <http://opendata.swiss/themes/administration>
-        <http://opendata.swiss/themes/agriculture>
-        <http://opendata.swiss/themes/construction>
-        <http://opendata.swiss/themes/crime>
-        <http://opendata.swiss/themes/culture>
-        <http://opendata.swiss/themes/education>
-        <http://opendata.swiss/themes/energy>
-        <http://opendata.swiss/themes/finances>
-        <http://opendata.swiss/themes/geography>
-        <http://opendata.swiss/themes/health>
-        <http://opendata.swiss/themes/industry>
-        <http://opendata.swiss/themes/legislation>
-        <http://opendata.swiss/themes/mobility>
-        <http://opendata.swiss/themes/national-economy>
-        <http://opendata.swiss/themes/politics>
-        <http://opendata.swiss/themes/population>
-        <http://opendata.swiss/themes/prices>
-        <http://opendata.swiss/themes/public-order>
-        <http://opendata.swiss/themes/social-security>
-        <http://opendata.swiss/themes/statistical-basis>
-        <http://opendata.swiss/themes/territory>
-        <http://opendata.swiss/themes/tourism>
-        <http://opendata.swiss/themes/trade>
-        <http://opendata.swiss/themes/work>
-      ) ;
+      ${sh.class} ${schema.DefinedTerm} ;
+      ${hydra.collection} ${lindasQuery(themesQuery)} ;
     ] ;
     ${sh.property} [
       ${sh.name} "Tags" ;

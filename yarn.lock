@@ -1169,10 +1169,10 @@
     rdf-loaders-registry "^0.2.0"
     sparql-http-client "^2.2.2"
 
-"@hydrofoil/shaperone-core@0.4.1":
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-core/-/shaperone-core-0.4.1.tgz#fad2cf0d26950825936c440514852386f8b74d03"
-  integrity sha512-2y4NAgdVdZwBCZWzYpe+Jx+ShXXSGVB+iQ/Gac3pW12ybh11cybXmQX0RZ1KQnO7mMpvyNGLkxxP1BCB/p/ZIw==
+"@hydrofoil/shaperone-core@0.4.3", "@hydrofoil/shaperone-core@^0.4.3":
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-core/-/shaperone-core-0.4.3.tgz#18301a772c19ad9059f610299dd091973297ea3c"
+  integrity sha512-jfEzdw36xNExazu1p9H7h5IMCr9l/A5UL70u4fgZEkSINgS0T3VjyH9ZDfYKNG2MOXNWcHEz3UhIOQh43KfNfg==
   dependencies:
     "@captaincodeman/rdx" "^1.0.0-rc.8"
     "@rdf-esm/data-model" "^0.5.3"
@@ -1189,13 +1189,23 @@
     clownface "^1.1.0"
     immer "^7.0.9"
 
-"@hydrofoil/shaperone-wc@^0.2.3":
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-wc/-/shaperone-wc-0.2.3.tgz#5e874a22d59b88da64c6eec3e57aedacc4fc181a"
-  integrity sha512-iK1RbCRmNkz8CqvsUAo77yBQqgndKKGbGpQ5fpmyKM8YZFsMWn94XXkv1lDKB2yEdOqS52eAHPEtWjdOxFkI/A==
+"@hydrofoil/shaperone-hydra@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-hydra/-/shaperone-hydra-0.1.1.tgz#1bcfc41fa5cc56a3ea7b48ed938e1a7d235fefaa"
+  integrity sha512-kL2DkSE9F6G2Y3OXVvkDqADnYa76WNhKajAq1Heo+eMO6xh3IIxqsmMb0dJpcRZsfI77HSTiBsRBsbpOzRQDAw==
+  dependencies:
+    "@hydrofoil/shaperone-core" "^0.4.3"
+    "@rdf-esm/term-map" "^0.5.0"
+    "@tpluscode/rdf-ns-builders" "^0.4.0"
+    alcaeus "^1"
+
+"@hydrofoil/shaperone-wc@^0.2.5":
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-wc/-/shaperone-wc-0.2.5.tgz#504eb7e9897c13b8659bbb014a4f51b697cbac71"
+  integrity sha512-nwWLtO18PvXDh8+dP+G5UbU7uveRnrYoq1S/HoZEZEOuq3+ESeQ3TRS8megCb6GpZLFgsZvlUOYQYzaecxc9zw==
   dependencies:
     "@captaincodeman/rdx" "^1.0.0-rc.8"
-    "@hydrofoil/shaperone-core" "0.4.1"
+    "@hydrofoil/shaperone-core" "0.4.3"
     "@rdf-esm/data-model" "^0.5.4"
     "@rdf-esm/term-map" "^0.5.0"
     "@rdfine/shacl" "^0.7.3"
@@ -1454,7 +1464,7 @@
     rdf-transform-triple-to-quad "^1.0.2"
     readable-stream "^3.6.0"
 
-"@rdfjs/fetch-lite@^2.0.1":
+"@rdfjs/fetch-lite@^2.0.1", "@rdfjs/fetch-lite@^2.1.0":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@rdfjs/fetch-lite/-/fetch-lite-2.1.0.tgz#36205713cdd72304b1eda91de1e7d147fad3a3f7"
   integrity sha512-7P2+QBjSJ/oeN2CRySIrG0IHat7UDqf7KfpZ9IP/MhWN3AneTpuURlOVAKcP/tedsSdlf2ihnzO38C6uAd7ppQ==
@@ -1462,6 +1472,15 @@
     isstream "^0.1.2"
     nodeify-fetch "^2.2.1"
     readable-stream "^3.3.0"
+
+"@rdfjs/fetch@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@rdfjs/fetch/-/fetch-2.1.0.tgz#d10b18b02cf2b7789bd950a721431e7944d4581b"
+  integrity sha512-1bhXqGfbQQKHrmuZOmUUQmCpDNQC25fksYoGXUvlQ80kWuk8r/PdcdUmzApCp7HSyHFUjmgH89Pkym/9WXyDkQ==
+  dependencies:
+    "@rdfjs/dataset" "^1.0.1"
+    "@rdfjs/fetch-lite" "^2.1.0"
+    "@rdfjs/formats-common" "^2.0.1"
 
 "@rdfjs/formats-common@^2.0.0", "@rdfjs/formats-common@^2.0.1", "@rdfjs/formats-common@^2.1", "@rdfjs/formats-common@^2.1.0":
   version "2.1.0"
@@ -2085,6 +2104,22 @@
     "@types/express" "*"
     "@types/rdf-js" "*"
     "@types/rdfjs__formats-common" "*"
+
+"@types/rdfjs__fetch-lite@*":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@types/rdfjs__fetch-lite/-/rdfjs__fetch-lite-2.0.2.tgz#d129b6fa8f5120db9d7fb72a6e8ac5f7f7457f02"
+  integrity sha512-rtLBHX9FidyLLKTJXBx5krJ+iBLuDS3R7Biqmpy02Nibc227vpErdDTJ4gn14jncsua2d2xckgz3G6ShP8foBw==
+  dependencies:
+    "@types/rdf-js" "*"
+    "@types/rdfjs__formats-common" "*"
+
+"@types/rdfjs__fetch@^2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@types/rdfjs__fetch/-/rdfjs__fetch-2.0.2.tgz#d04557d38cb232d4cc433f0c865aab77e0804e9c"
+  integrity sha512-HNjGH7ameGnPmu8xAlHXUxZ+EYHzRjNYyl30QxLbHXiQtMDEMGcgzIuFXVLTz5xgXQ7ZtZVZPK6HX/KcFttuNA==
+  dependencies:
+    "@types/rdf-js" "*"
+    "@types/rdfjs__fetch-lite" "*"
 
 "@types/rdfjs__formats-common@*":
   version "2.0.0"
@@ -2945,10 +2980,10 @@ ajv@^6.1.0, ajv@^6.10.0, ajv@^6.10.2, ajv@^6.12.2, ajv@^6.12.3, ajv@^6.12.4, ajv
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
-alcaeus@1.0.1, alcaeus@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/alcaeus/-/alcaeus-1.0.1.tgz#2c84bf47b3fdd51cb8d89828011e0cb029bcf618"
-  integrity sha512-FGZYR/hB2TfSiBcfwnp37pIYGf0daKLmktnuYHE1fXxRqVz5UBGyJ0uuUsxYiSsx8BU5j2AMeVRQ8iRUbNA7WQ==
+alcaeus@^1, alcaeus@^1.0.1, alcaeus@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/alcaeus/-/alcaeus-1.1.0.tgz#a1a8db4e67b461569daf3fee2f45ca74334f7696"
+  integrity sha512-aha77VsyQUOOdzsBppakfWx9XNyEY4NPgrOza0IaB09EETyMhGC+ssyS/tNnKnk8JrdZj0VXIs4cmXe7EqL7nQ==
   dependencies:
     "@rdf-esm/data-model" "^0.5.3"
     "@rdf-esm/formats-common" "^0.5.3"
