@@ -24,6 +24,22 @@ async function loadRemoteResourceTypes(id: Term, fetch: typeof rdfFetch): Promis
   }
 }
 
+function loadLocalResourceTypes(local: TermSet, sparql: typeof parsingClient) {
+  if (!local.size) {
+    return []
+  }
+
+  return CONSTRUCT`?resource ${rdf.type} ?type`
+    .WHERE`
+      values ?resource {
+        ${[...local]}
+      }
+    `
+    .WHERE`GRAPH ?g {
+        ?resource a ?type .
+    }`.execute(sparql.query)
+}
+
 export async function loadResourcesTypes(ids: Term[], { sparql = parsingClient, fetch = rdfFetch }: Clients = {}): Promise<Quad[]> {
   const { local, remote } = ids.reduce((separated, id) => {
     if (id.value.startsWith(env.API_CORE_BASE)) {
@@ -39,15 +55,7 @@ export async function loadResourcesTypes(ids: Term[], { sparql = parsingClient, 
   })
 
   const typesFoundRemotely = Promise.all(remote)
-  const typesFoundLocally = CONSTRUCT`?resource ${rdf.type} ?type`
-    .WHERE`
-      values ?resource {
-        ${[...local]}
-      }
-    `
-    .WHERE`GRAPH ?g {
-        ?resource a ?type .
-    }`.execute(sparql.query)
+  const typesFoundLocally = loadLocalResourceTypes(local, sparql)
 
   return [
     ...await typesFoundLocally,
