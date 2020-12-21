@@ -35,8 +35,12 @@ Hydra.resources.factory.addMixin(...ShapeBundle)
 Hydra.defaultHeaders = ({ uri }) => {
   const headers = new Headers()
 
+  if (!uri.startsWith(rootURL)) {
+    return headers
+  }
+
   const token = store.state.auth.access_token
-  if (token && uri.startsWith(rootURL)) {
+  if (token) {
     headers.set('Authorization', `Bearer ${token}`)
   }
 
