@@ -85,6 +85,8 @@ export function serializeLiteralColumnMapping (columnMapping: LiteralColumnMappi
     ...serializeResource(columnMapping),
     targetProperty: columnMapping.targetProperty,
     sourceColumn: Object.freeze(columnMapping.sourceColumn),
+    datatype: columnMapping.datatype,
+    language: columnMapping.language,
   })
 }
 
