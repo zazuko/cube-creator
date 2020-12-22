@@ -56,7 +56,7 @@ export function serializeTableCollection (collection: TableCollection): TableCol
 }
 
 export function serializeTable (table: Table): Table {
-  return Object.freeze({
+  return {
     ...serializeResource(table),
     actions: {
       ...serializeActions(table.actions),
@@ -71,7 +71,7 @@ export function serializeTable (table: Table): Table {
     columnMappings: table.columnMappings.map(serializeColumnMapping),
     csvMapping: table.csvMapping,
     csvw: table.csvw,
-  })
+  }
 }
 
 export function serializeColumnMapping (columnMapping: ColumnMapping): ReferenceColumnMapping | LiteralColumnMapping {

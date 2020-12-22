@@ -84,12 +84,12 @@ export default class CubeProjectEditView extends Vue {
     this.isSubmitting = true
 
     try {
-      await this.$store.dispatch('api/invokeSaveOperation', {
+      const columnMapping = await this.$store.dispatch('api/invokeSaveOperation', {
         operation: this.operation,
         resource,
       })
 
-      this.$store.dispatch('project/refreshTableCollection')
+      this.$store.commit('project/storeUpdatedColumnMapping', { table: this.table, columnMapping })
 
       this.$buefy.toast.open({
         message: 'Column mapping was successfully updated',
