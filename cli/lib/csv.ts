@@ -8,8 +8,9 @@ import { Hydra } from 'alcaeus/node'
 import { readable } from 'duplex-to'
 import { CsvSource } from '@cube-creator/model'
 import fetch from 'node-fetch'
+import type { Context } from 'barnard59-core/lib/Pipeline'
 
-export function openFromCsvw(csvw: Csvw.Table) {
+export function openFromCsvw(this: Context, csvw: Csvw.Table) {
   const csvStream = new PassThrough()
 
   Promise.resolve().then(async () => {
@@ -24,6 +25,7 @@ export function openFromCsvw(csvw: Csvw.Table) {
       return
     }
 
+    this.log.info(`Downloading CSV from ${representation.root.associatedMedia.contentUrl.value}`)
     const csvResponse = await fetch(representation.root.associatedMedia.contentUrl.value)
 
     if (!csvResponse?.ok || !csvResponse.body) {
