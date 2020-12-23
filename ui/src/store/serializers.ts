@@ -4,6 +4,8 @@ import {
   ColumnMapping,
   CsvColumn,
   CsvSource,
+  Cube,
+  Dataset,
   DimensionMetadata,
   DimensionMetadataCollection,
   Job,
@@ -14,7 +16,7 @@ import {
 } from '@cube-creator/model'
 import { IdentifierMapping, LiteralColumnMapping, ReferenceColumnMapping } from '@cube-creator/model/ColumnMapping'
 import { Link } from '@cube-creator/model/lib/Link'
-import { hydra } from '@tpluscode/rdf-ns-builders'
+import { dcterms, hydra } from '@tpluscode/rdf-ns-builders'
 import { RdfResource } from '@tpluscode/rdfine/RdfResource'
 
 export function serializeSourcesCollection (collection: SourcesCollection): SourcesCollection {
@@ -146,6 +148,24 @@ export function serializeJob (job: Job): Job {
     actionStatus: job.actionStatus,
     link: job.link,
   }) as Job
+}
+
+export function serializeCubeMetadata (cubeMetadata: Dataset): Dataset {
+  return {
+    ...serializeResource(cubeMetadata),
+    title: cubeMetadata.pointer.out(dcterms.title).terms,
+    hasPart: cubeMetadata.hasPart.map(serializeCube),
+    dimensionMetadata: serializeLink(cubeMetadata.dimensionMetadata),
+  } as Dataset
+}
+
+export function serializeCube (cube: Cube): Cube {
+  return {
+    id: cube.id,
+    observations: cube.observations,
+    creator: cube.creator,
+    dateCreated: cube.dateCreated,
+  } as Cube
 }
 
 export function serializeResource (resource: RdfResource): RdfResource {
