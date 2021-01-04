@@ -157,6 +157,8 @@ export default class extends Vue {
     }
 
     if (!this.cube.observations) {
+      // Fake wait to make it clear that something is happening
+      await sleep(200)
       this.observations = Remote.loaded([])
       return
     }
@@ -174,6 +176,10 @@ export default class extends Vue {
       this.observations = Remote.error(e.toString())
     }
   }
+}
+
+async function sleep (duration: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, duration))
 }
 </script>
 

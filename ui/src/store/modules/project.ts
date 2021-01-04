@@ -15,6 +15,7 @@ import {
 } from '@cube-creator/model'
 import {
   serializeColumnMapping,
+  serializeCubeMetadata,
   serializeDimensionMetadataCollection,
   serializeJobCollection,
   serializeSourcesCollection,
@@ -280,7 +281,7 @@ const mutations: MutationTree<ProjectState> = {
   },
 
   storeCubeMetadata (state, cubeMetadata) {
-    state.cubeMetadata = Object.freeze(cubeMetadata)
+    state.cubeMetadata = cubeMetadata ? serializeCubeMetadata(cubeMetadata) : null
   },
 
   storeDimensionMetadataCollection (state, collection) {
