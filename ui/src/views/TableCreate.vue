@@ -134,7 +134,7 @@ export default class TableCreateView extends Vue {
         resource: this.resource,
       })
 
-      this.$store.dispatch('project/refreshTableCollection')
+      this.$store.commit('project/storeTable', table)
 
       this.$buefy.toast.open({
         message: `Table ${table.name} was successfully created`,

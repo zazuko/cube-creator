@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import { ActionTree, MutationTree, GetterTree } from 'vuex'
 import { api } from '@/api'
 import { RootState } from '../types'
@@ -13,10 +14,12 @@ import {
   CsvSource,
 } from '@cube-creator/model'
 import {
+  serializeColumnMapping,
   serializeCubeMetadata,
   serializeDimensionMetadataCollection,
   serializeJobCollection,
   serializeSourcesCollection,
+  serializeTable,
   serializeTableCollection,
 } from '../serializers'
 import { Term } from 'rdf-js'
@@ -26,9 +29,9 @@ export interface ProjectState {
   project: null | Project,
   csvMapping: null | CsvMapping,
   sourcesCollection: null | SourcesCollection,
-  sources: null | Map<string, CsvSource>,
+  sources: Record<string, CsvSource>,
   tableCollection: null | TableCollection,
-  tables: null | Map<string, Table>,
+  tables: Record<string, Table>,
   cubeMetadata: null | Dataset,
   dimensionMetadataCollection: null | DimensionMetadataCollection,
   jobCollection: null | JobCollection,
@@ -38,9 +41,9 @@ const initialState = {
   project: null,
   csvMapping: null,
   sourcesCollection: null,
-  sources: null,
+  sources: {},
   tableCollection: null,
-  tables: null,
+  tables: {},
   cubeMetadata: null,
   dimensionMetadataCollection: null,
   jobCollection: null,
@@ -48,11 +51,11 @@ const initialState = {
 
 const getters: GetterTree<ProjectState, RootState> = {
   sources (state) {
-    return [...(state.sources?.values() ?? [])]
+    return Object.values(state.sources)
   },
 
   tables (state) {
-    return [...(state.tables?.values() ?? [])]
+    return Object.values(state.tables)
   },
 
   dimensions (state) {
@@ -66,7 +69,7 @@ const getters: GetterTree<ProjectState, RootState> = {
 
   getSource (state) {
     return (uri: Term): CsvSource => {
-      const source = state.sources?.get(uri.value)
+      const source = state.sources[uri.value]
       if (!source) throw new Error(`Source not found: ${uri.value}`)
       return source
     }
@@ -79,8 +82,8 @@ const getters: GetterTree<ProjectState, RootState> = {
 
   getTable (state) {
     return (uri: Term): Table => {
-      const table = state.tables?.get(uri.value)
-      if (!table) throw new Error(`Source not found: ${uri.value}`)
+      const table = state.tables[uri.value]
+      if (!table) throw new Error(`Table not found: ${uri.value}`)
       return table
     }
   },
@@ -256,6 +259,27 @@ const mutations: MutationTree<ProjectState> = {
     state.tables = indexResources(state.tableCollection?.member || [], ({ id }: Table) => id.value)
   },
 
+  storeTable (state, table) {
+    Vue.set(state.tables, table.id.value, serializeTable(table))
+  },
+
+  storeNewColumnMapping (state, { table, columnMapping }) {
+    const storedTable = state.tables[table.id.value]
+    if (!storedTable) throw new Error(`Table not found: ${table.id.value}`)
+
+    const serializedColumnMapping = serializeColumnMapping(columnMapping)
+    storedTable.columnMappings.push(serializedColumnMapping)
+  },
+
+  storeUpdatedColumnMapping (state, { table, columnMapping }) {
+    const storedTable = state.tables[table.id.value]
+    if (!storedTable) throw new Error(`Table not found: ${table.id.value}`)
+
+    const serializedColumnMapping = serializeColumnMapping(columnMapping)
+    const index = storedTable.columnMappings.findIndex(({ id }) => id.equals(columnMapping.id))
+    Vue.set(storedTable.columnMappings, index, serializedColumnMapping)
+  },
+
   storeCubeMetadata (state, cubeMetadata) {
     state.cubeMetadata = cubeMetadata ? serializeCubeMetadata(cubeMetadata) : null
   },
@@ -277,9 +301,11 @@ export default {
   mutations,
 }
 
-function indexResources<T extends RdfResource> (array: T[], indexFunction: (item: T) => string): Map<string, T> {
+function indexResources<T extends RdfResource> (array: T[], indexFunction: (item: T) => string): Record<string, T> {
   return array.reduce((acc, item) => {
-    acc.set(indexFunction(item), item)
-    return acc
-  }, new Map<string, T>())
+    return {
+      ...acc,
+      [indexFunction(item)]: item,
+    }
+  }, {})
 }

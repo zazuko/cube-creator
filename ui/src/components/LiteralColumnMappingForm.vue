@@ -71,7 +71,6 @@ export default class extends Vue {
   }
 
   onSubmit (): void {
-    console.log(this.resource)
     this.$emit('submit', this.resource)
   }
 }
