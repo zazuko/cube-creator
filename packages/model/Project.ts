@@ -4,7 +4,8 @@ import { Constructor, namespace, property, RdfResource } from '@tpluscode/rdfine
 import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import { cc } from '@cube-creator/core/namespace'
 import { NamedNode } from 'rdf-js'
-import { dcterms } from '@tpluscode/rdf-ns-builders'
+import { dcterms, schema } from '@tpluscode/rdf-ns-builders'
+import type { Organization } from '@rdfine/schema'
 import { initializer } from './lib/initializer'
 import { childResource } from './lib/resourceIdentifiers'
 import { Link } from './lib/Link'
@@ -19,7 +20,8 @@ export interface Project extends RdfResource {
   creator: NamedNode
   label: string
   jobCollection: Link<JobCollection>
-  publishGraph: NamedNode
+  cubeIdentifier: string
+  maintainer: Organization
   publishedRevision: number
 }
 
@@ -40,8 +42,11 @@ export function ProjectMixin<Base extends Constructor>(base: Base): Mixin {
     @property({ initial: childResource('cube-data') })
     cubeGraph!: NamedNode
 
-    @property()
-    publishGraph!: NamedNode
+    @property.literal()
+    cubeIdentifier!: string
+
+    @property.resource({ path: schema.maintainer })
+    maintainer!: Organization
 
     @property.literal({ path: cc.latestPublishedRevision, type: Number })
     publishedRevision?: number
@@ -58,6 +63,6 @@ export function ProjectMixin<Base extends Constructor>(base: Base): Mixin {
 
 ProjectMixin.appliesTo = cc.CubeProject
 
-type MandatoryFields = 'creator' | 'label' | 'publishGraph'
+type MandatoryFields = 'creator' | 'label' | 'maintainer' | 'cubeIdentifier'
 
 export const create = initializer<Project, MandatoryFields>(ProjectMixin)

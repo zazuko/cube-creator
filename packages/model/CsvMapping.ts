@@ -10,7 +10,6 @@ import { NamedNode, Term } from 'rdf-js'
 import { Project } from './Project'
 
 export interface CsvMapping extends RdfResource {
-  namespace: NamedNode
   sources: CsvSource[]
   sourcesCollection: Link<SourcesCollection>
   tableCollection: Link<TableCollection>
@@ -20,9 +19,6 @@ export interface CsvMapping extends RdfResource {
 
 export function CsvMappingMixin<Base extends Constructor>(base: Base): Mixin {
   class Impl extends base implements Partial<CsvMapping> {
-    @property({ path: cc.namespace })
-    namespace!: NamedNode
-
     @property.resource({ path: cc.csvSource, values: 'array' })
     sources!: CsvSource[]
 
@@ -58,6 +54,6 @@ export function CsvMappingMixin<Base extends Constructor>(base: Base): Mixin {
 
 CsvMappingMixin.appliesTo = cc.CsvMapping
 
-type RequiredProperties = 'namespace' | 'project'
+type RequiredProperties = 'project'
 
 export const create = initializer<CsvMapping, RequiredProperties>(CsvMappingMixin)
