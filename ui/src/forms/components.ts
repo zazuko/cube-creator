@@ -1,4 +1,8 @@
 import { html, SingleEditorComponent, Lazy } from '@hydrofoil/shaperone-wc'
+import {
+  EnumSelectEditor, enumSelect as enumSelectCore,
+  InstancesSelectEditor, instancesSelect as instancesSelectCore
+} from '@hydrofoil/shaperone-core/components'
 import * as ns from '@cube-creator/core/namespace'
 import { dash, xsd } from '@tpluscode/rdf-ns-builders'
 import $rdf from '@rdfjs/data-model'
@@ -40,25 +44,27 @@ export const textAreaWithLang: Lazy<SingleEditorComponent> = {
   }
 }
 
-export const instanceSelect: Lazy<SingleEditorComponent> = {
-  editor: dash.InstancesSelectEditor,
+export const instanceSelect: Lazy<InstancesSelectEditor> = {
+  ...instancesSelectCore,
   async lazyRender () {
     await import('./BulmaSelect.vue').then(createCustomElement('b-select'))
 
     return ({ property, value }, { update }) => html`<b-select .property="${property.shape}"
                           .update="${update}"
+                          .options="${value.componentState.instances}"
                           .value="${value.object?.term}"></b-select>`
   }
 }
 
-export const enumSelect: Lazy<SingleEditorComponent> = {
-  editor: dash.EnumSelectEditor,
+export const enumSelect: Lazy<EnumSelectEditor> = {
+  ...enumSelectCore,
   async lazyRender () {
     await import('./BulmaSelect.vue').then(createCustomElement('b-select'))
 
     return ({ property, value }, { update }) =>
       html`<b-select .property="${property.shape}"
                           .update="${update}"
+                          .options="${value.componentState.choices}"
                           .value="${value.object?.term}"></b-select>`
   }
 }

@@ -32,8 +32,12 @@ Hydra.resources.factory.addMixin(JobCollectionMixin)
 Hydra.resources.factory.addMixin(...ShapeBundle)
 
 // Inject the access token in all requests if present
-Hydra.defaultHeaders = () => {
+Hydra.defaultHeaders = ({ uri }) => {
   const headers = new Headers()
+
+  if (!uri.startsWith(rootURL)) {
+    return headers
+  }
 
   const token = store.state.auth.access_token
   if (token) {

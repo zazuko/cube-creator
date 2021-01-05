@@ -31,7 +31,7 @@ import { namespace } from 'vuex-class'
 import clownface, { GraphPointer } from 'clownface'
 import { RuntimeOperation } from 'alcaeus'
 import { dataset } from '@rdf-esm/dataset'
-import { csvw } from '@tpluscode/rdf-ns-builders'
+import { csvw, hydra } from '@tpluscode/rdf-ns-builders'
 import type { Shape } from '@rdfine/shacl'
 import * as ns from '@cube-creator/core/namespace'
 import SidePane from '@/components/SidePane.vue'
@@ -85,7 +85,7 @@ export default class TableCreateView extends Vue {
 
     if (shape) {
       const sourceProperty: any = shape.property.find(p => p.class?.equals(ns.cc.CSVSource))
-      sourceProperty[ns.hashi.collection.value] = this.sourcesCollection
+      sourceProperty[hydra.collection.value] = this.sourcesCollection
     }
 
     return shape

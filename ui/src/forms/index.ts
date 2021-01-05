@@ -3,6 +3,7 @@ import { html } from 'lit-element'
 import { repeat } from 'lit-html/directives/repeat'
 import { DefaultStrategy } from '@hydrofoil/shaperone-wc/renderer/DefaultStrategy'
 import { PropertyRenderStrategy, ObjectRenderStrategy, FocusNodeRenderStrategy } from '@hydrofoil/shaperone-wc/lib/renderer'
+import { instancesSelector } from '@hydrofoil/shaperone-hydra/components'
 import { ShaperoneForm } from '@hydrofoil/shaperone-wc/ShaperoneForm'
 import * as Components from './components'
 import * as Matchers from './matchers'
@@ -48,8 +49,10 @@ renderer.setStrategy({
   object: objectStrategy,
 })
 components.pushComponents(Components)
+components.decorate(instancesSelector.decorator())
 
 editors.addMatchers(Matchers)
+editors.decorate(instancesSelector.matcher)
 editors.addMetadata(Metadata)
 
 class Form extends ShaperoneForm {
