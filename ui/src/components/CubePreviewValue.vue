@@ -2,9 +2,11 @@
   <span v-if="!value" class="has-text-grey">
     {{ missingValue }}
   </span>
-  <span v-else-if="isResource" class="tag is-rounded is-small">
-    <term-display :term="value.id" />
-  </span>
+  <router-link v-else-if="isResource" :to="{ name: 'ResourcePreview', params: { resourceId: value.id.value } }" class="tag is-rounded is-small">
+    <term-with-language :values="label" :selected-language="selectedLanguage">
+      <term-display :term="value.id" />
+    </term-with-language>
+  </router-link>
   <span v-else-if="isTerm">
     <term-display :term="value" />
   </span>
@@ -17,16 +19,25 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { Term } from 'rdf-js'
 import type RdfResource from '@tpluscode/rdfine/RdfResource'
+import { schema } from '@tpluscode/rdf-ns-builders'
 import TermDisplay from './TermDisplay.vue'
+import TermWithLanguage from './TermWithLanguage.vue'
 
 type Value = RdfResource | Term | undefined
 
 @Component({
-  components: { TermDisplay },
+  components: { TermDisplay, TermWithLanguage },
 })
 export default class extends Vue {
-  @Prop() value: Value
+  @Prop({ required: true }) value: Value
   @Prop({ default: '' }) missingValue?: string
+  @Prop({ required: true }) selectedLanguage!: string
+
+  get label (): Term[] {
+    if (!isResource(this.value)) return []
+
+    return this.value.pointer.out(schema.name).terms
+  }
 
   get isResource (): boolean {
     return isResource(this.value)
