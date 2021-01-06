@@ -1,4 +1,4 @@
-import { DatasetCore, NamedNode } from 'rdf-js'
+import { DatasetCore, NamedNode, Term } from 'rdf-js'
 import { Organization, OrganizationMixin as SchemaOrganizationMixin } from '@rdfine/schema'
 import { Constructor, namespace, property, ResourceIdentifier } from '@tpluscode/rdfine'
 import { cc } from '@cube-creator/core/namespace'
@@ -6,9 +6,15 @@ import { schema } from '@tpluscode/rdf-ns-builders'
 import RdfResourceImpl, { Initializer, RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import type { GraphPointer } from 'clownface'
 
+interface CreateIdentifier {
+  cubeIdentifier: string
+  termName?: string | Term
+}
+
 interface OrganizationEx {
   publishGraph: NamedNode
   namespace: NamedNode
+  createIdentifier(params: CreateIdentifier): NamedNode
 }
 
 declare module '@rdfine/schema' {
@@ -24,6 +30,32 @@ export function OrganizationMixin<Base extends Constructor<Omit<Organization, ke
 
     @property()
     namespace!: NamedNode
+
+    createIdentifier({ cubeIdentifier, termName }: CreateIdentifier): NamedNode {
+      const namespace = this.namespace.value.match(/[/#]$/) ? this.namespace.value : `${this.namespace.value}/`
+      let base = namespace + cubeIdentifier
+
+      if (!termName) {
+        return this.pointer.namedNode(base).term
+      }
+
+      if (!base.match(/[/#]$/)) {
+        base += '/'
+      }
+
+      if (typeof termName === 'string') {
+        return this.pointer.namedNode(base + termName).term
+      }
+
+      if (termName.termType === 'Literal') {
+        return this.pointer.namedNode(base + termName.value).term
+      }
+      if (termName.termType === 'NamedNode') {
+        return termName
+      }
+
+      throw new Error(`Unexpected identifier template type ${termName.termType}`)
+    }
   }
 
   return Impl

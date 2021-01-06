@@ -10,7 +10,8 @@ cc:CubeProject
   a
     hydra:Class ;
   query:include
-    cc:csvMapping ;
+    cc:csvMapping,
+    schema:maintainer ;
   hydra:supportedProperty
     [ hydra:property
         cc:dataset ],
