@@ -11,6 +11,7 @@ import { warn } from '@hydrofoil/labyrinth/lib/logger'
 import { sparql } from '@tpluscode/rdf-string'
 import TermSet from '@rdfjs/term-set'
 import RdfResource, { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
+import { Link } from '@cube-creator/model/lib/Link'
 
 interface ResourceCreationOptions {
   implicitlyDereferencable?: boolean
@@ -33,8 +34,8 @@ export interface ResourceStore {
   get(id: string | Term | undefined, opts?: GetOptions): Promise<GraphPointer<NamedNode>>
   get(id: string | Term | undefined, opts: { allowMissing: true }): Promise<GraphPointer<NamedNode> | undefined>
 
-  getResource<T extends RdfResourceCore>(id: string | Term | undefined, opts?: GetOptions): Promise<T>
-  getResource<T extends RdfResourceCore>(id: string | Term | undefined, opts: { allowMissing: true }): Promise<T> | undefined
+  getResource<T extends RdfResourceCore>(id: string | Term | undefined | Link<T>, opts?: GetOptions): Promise<T>
+  getResource<T extends RdfResourceCore>(id: string | Term | undefined | Link<T>, opts: { allowMissing: true }): Promise<T> | undefined
 
   /**
    * Creates a new resource a puts in the in-memory store
@@ -131,15 +132,19 @@ export default class implements ResourceStore {
     this.__deletedGraphs = new TermSet()
   }
 
-  async get(id: string | Term | undefined, opts?: GetOptions): Promise<GraphPointer<NamedNode>> {
+  async get(id: string | Term | undefined | Link<any>, opts?: GetOptions): Promise<GraphPointer<NamedNode>> {
     let resource: GraphPointer<NamedNode, ChangelogDataset> | undefined
-    let term: NamedNode | undefined
-    if (typeof id === 'string') {
+    let term: Term | undefined
+    if (typeof id === 'object' && 'id' in id) {
+      term = id.id
+    } else if (typeof id === 'string') {
       term = $rdf.namedNode(id)
-    } else if (id && id.termType !== 'NamedNode') {
-      throw new Error('Loaded resource id must be NamedNode')
-    } else {
+    } else if (typeof id === 'object' && 'termType' in id) {
       term = id
+    }
+
+    if (term && term.termType !== 'NamedNode') {
+      throw new Error('Loaded resource id must be NamedNode')
     }
 
     if (term) {
@@ -163,7 +168,7 @@ export default class implements ResourceStore {
     return resource
   }
 
-  async getResource<T extends RdfResourceCore>(id: string | Term | undefined, opts?: GetOptions):Promise<T | undefined> {
+  async getResource<T extends RdfResourceCore>(id: string | Term | undefined | Link<T>, opts?: GetOptions):Promise<T | undefined> {
     const pointer = await this.get(id, opts)
     if (!pointer) return undefined
 

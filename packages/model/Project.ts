@@ -21,7 +21,7 @@ export interface Project extends RdfResource {
   label: string
   jobCollection: Link<JobCollection>
   cubeIdentifier: string
-  maintainer: Organization
+  maintainer: Link<Organization>
   publishedRevision: number
 }
 
@@ -46,7 +46,7 @@ export function ProjectMixin<Base extends Constructor>(base: Base): Mixin {
     cubeIdentifier!: string
 
     @property.resource({ path: schema.maintainer })
-    maintainer!: Organization
+    maintainer!: Link<Organization>
 
     @property.literal({ path: cc.latestPublishedRevision, type: Number })
     publishedRevision?: number

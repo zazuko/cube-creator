@@ -1,6 +1,6 @@
+import { Term } from 'rdf-js'
 import { Project, CsvMapping } from '@cube-creator/model'
 import { Constructor } from '@tpluscode/rdfine'
-import { NamedNode, Term } from 'rdf-js'
 import { create as createMapping } from '@cube-creator/model/CsvMapping'
 import { ResourceStore } from '../../ResourceStore'
 import * as id from '../identifiers'
@@ -14,10 +14,11 @@ import { DomainError } from '../../errors'
 interface ApiProject {
   identifier: string
   nextRevision: number
-  initializeCsvMapping(store: ResourceStore, namespace: NamedNode): CsvMapping
+  initializeCsvMapping(store: ResourceStore): CsvMapping
   initializeJobCollection(store: ResourceStore): void
   incrementPublishedRevision(): void
-  updatePublishGraph(publishGraph: Term | undefined): void
+  updateCubeIdentifier(id: string | undefined): { before: string; after: string }
+  updateMaintainer(organization: Term | undefined): { before: Term; after: Term }
   rename(name: string | undefined): void
 }
 
@@ -37,13 +38,12 @@ export default function Mixin<Base extends Constructor<Omit<Project, keyof ApiPr
       return this.publishedRevision ? this.publishedRevision + 1 : 1
     }
 
-    initializeCsvMapping(store: ResourceStore, namespace: NamedNode) {
+    initializeCsvMapping(store: ResourceStore) {
       if (this.csvMapping) {
         throw new Error('CSV Mapping already exists')
       }
 
       const mapping = createMapping(store.create(id.csvMapping(this)), {
-        namespace,
         project: this,
       })
 
@@ -79,16 +79,36 @@ export default function Mixin<Base extends Constructor<Omit<Project, keyof ApiPr
       this.publishedRevision = this.nextRevision
     }
 
-    updatePublishGraph(publishGraph: Term | undefined) {
-      if (!publishGraph || publishGraph.termType !== 'NamedNode') {
-        throw new DomainError(`Invalid publish graph. Expended NamedNode, got ${publishGraph?.termType}`)
+    updateCubeIdentifier(after: string | undefined) {
+      if (!after) {
+        throw new DomainError('Cube identifier cannot be empty')
       }
 
-      if (publishGraph.equals(this.publishGraph)) {
-        return
+      const before = this.cubeIdentifier
+      if (before === after) {
+        return { before: after, after }
       }
 
-      this.publishGraph = publishGraph
+      this.cubeIdentifier = after
+      return { before, after }
+    }
+
+    updateMaintainer(org: Term | undefined) {
+      if (!org || org.termType !== 'NamedNode') {
+        throw new DomainError('Organization must be a named node')
+      }
+
+      const before = this.maintainer.id
+      if (before.equals(org)) {
+        return { before, after: org }
+      }
+
+      this.maintainer = org as any
+
+      return {
+        before,
+        after: org,
+      }
     }
 
     rename(label: string | undefined): void {

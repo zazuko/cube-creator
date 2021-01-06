@@ -35,7 +35,6 @@ export const put = protectedResource(
     const project = clownface(req.hydra.resource)
     await updateProject({
       resource: await req.resource(),
-      project: project,
       store: req.resourceStore(),
     })
     await req.resourceStore().save()

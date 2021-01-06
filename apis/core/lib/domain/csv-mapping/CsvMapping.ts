@@ -9,7 +9,6 @@ import * as Table from '@cube-creator/model/Table'
 import { ResourceStore } from '../../ResourceStore'
 import * as id from '../identifiers'
 import { NamedNode } from 'rdf-js'
-import { DomainError } from '../../errors'
 
 RdfResource.factory.addMixin(...Object.values(Hydra))
 
@@ -30,7 +29,6 @@ interface ApiCsvMapping {
   initializeTableCollection(store: ResourceStore): void
   addSource(store: ResourceStore, params: AddSource): CsvSource.CsvSource
   addTable(store: ResourceStore, params: AddTable): Promise<Table.Table>
-  updateNamespace(newNamespace: NamedNode | undefined): NamedNode
 }
 
 declare module '@cube-creator/model' {
@@ -104,20 +102,6 @@ export default function Mixin<Base extends Constructor<Omit<CsvMapping, keyof Ap
         identifierTemplate,
         color,
       })
-    }
-
-    updateNamespace(newNamespace: NamedNode | undefined) {
-      if (!newNamespace) {
-        throw new DomainError('Namespace cannot be empty')
-      }
-
-      if (!this.namespace.equals(newNamespace)) {
-        const current = this.namespace
-        this.namespace = newNamespace
-        return current
-      }
-
-      return this.namespace
     }
   }
 }

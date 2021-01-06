@@ -1,4 +1,5 @@
-import { ColumnMapping, CsvMapping, DimensionMetadataCollection, Table } from '@cube-creator/model'
+import { ColumnMapping, DimensionMetadataCollection, Project, Table } from '@cube-creator/model'
+import type { Organization } from '@rdfine/schema'
 import { schema, xsd } from '@tpluscode/rdf-ns-builders'
 import $rdf from 'rdf-ext'
 import { GraphPointer } from 'clownface'
@@ -6,6 +7,7 @@ import { ResourceStore } from '../../ResourceStore'
 import * as DimensionMetadataQueries from '../queries/dimension-metadata'
 import { cc } from '@cube-creator/core/namespace'
 import * as ColumnMappingQueries from '../queries/column-mapping'
+import { findOrganization } from '../organization/query'
 
 const trueTerm = $rdf.literal('true', xsd.boolean)
 
@@ -42,7 +44,9 @@ export async function updateTable({
   }
   table.identifierTemplate = identifierTemplate.value
 
-  const csvMapping = await store.getResource<CsvMapping>(table.csvMapping.id)
+  const { projectId, organizationId } = await findOrganization({ table })
+  const organization = await store.getResource<Organization>(organizationId)
+  const { cubeIdentifier } = await store.getResource<Project>(projectId)
 
   const isObservationTable = trueTerm.equals(resource.out(cc.isObservationTable).term)
   if (table.isObservationTable !== isObservationTable) {
@@ -53,9 +57,9 @@ export async function updateTable({
       const columnMapping = await store.getResource<ColumnMapping>(columnMappingPointer.id)
 
       if (isObservationTable) {
-        dimensionMetaDataCollection.addDimensionMetadata({ store, columnMapping, csvMapping })
+        dimensionMetaDataCollection.addDimensionMetadata({ cubeIdentifier, store, columnMapping, organization })
       } else {
-        const dimensionMetadata = dimensionMetaDataCollection.find({ csvMapping, targetProperty: columnMapping.targetProperty })
+        const dimensionMetadata = dimensionMetaDataCollection.find({ cubeIdentifier, organization, targetProperty: columnMapping.targetProperty })
         const isInUse = await dimensionIsUsedByOtherMapping(columnMapping.id)
         if (dimensionMetadata && !isInUse) {
           dimensionMetaDataCollection.deleteDimension(dimensionMetadata)

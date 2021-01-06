@@ -13,8 +13,10 @@ import { buildCsvw } from '../../lib/csvw-builder'
 import '../../lib/domain'
 import { TestResourceStore } from '../support/TestResourceStore'
 import { findColumn } from './support'
-import { schema, xsd } from '@tpluscode/rdf-ns-builders'
+import { rdf, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import DatasetExt from 'rdf-ext/lib/Dataset'
+import * as sinon from 'sinon'
+import * as orgQueries from '../../lib/domain/organization/query'
 
 describe('lib/csvw-builder', () => {
   let graph: AnyPointer<AnyContext, DatasetExt>
@@ -24,13 +26,23 @@ describe('lib/csvw-builder', () => {
   let resources: TestResourceStore
 
   beforeEach(() => {
+    sinon.restore()
+
     graph = clownface({ dataset: $rdf.dataset() })
     const csvSourcePointer = graph.namedNode('csv-mapping')
     const csvMappingPointer = graph.namedNode('table-source')
+    const organization = clownface({ dataset: $rdf.dataset() })
+      .namedNode('org')
+      .addOut(rdf.type, schema.Organization)
+      .addOut(cc.namespace, 'http://example.com/')
+    const project = clownface({ dataset: $rdf.dataset() })
+      .namedNode('project')
+      .addOut(rdf.type, cc.CubeProject)
+      .addOut(schema.maintainer, organization)
+      .addOut(cc.cubeIdentifier, 'test-cube')
 
     csvMapping = CsvMapping.create(csvMappingPointer, {
-      namespace: $rdf.namedNode('http://example.com/test-cube/'),
-      project: $rdf.namedNode('project') as any,
+      project: $rdf.namedNode('project'),
     })
 
     csvSource = CsvSource.create(csvSourcePointer, {
@@ -52,7 +64,14 @@ describe('lib/csvw-builder', () => {
     resources = new TestResourceStore([
       csvSourcePointer,
       csvMappingPointer,
+      project,
+      organization,
     ])
+
+    sinon.stub(orgQueries, 'findOrganization').resolves({
+      projectId: project.term,
+      organizationId: organization.term,
+    })
   })
 
   it("create a csvw resource with table's csvw URI", async () => {
@@ -276,7 +295,7 @@ describe('lib/csvw-builder', () => {
         minCount: 1,
       }, {
         path: ns.csvw.valueUrl,
-        hasValue: 'http://example.com/test-cube/',
+        hasValue: 'http://example.com/test-cube',
         nodeKind: ns.sh.Literal,
         minCount: 1,
       }],

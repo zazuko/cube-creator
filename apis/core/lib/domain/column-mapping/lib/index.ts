@@ -1,9 +1,13 @@
-import { ColumnMapping, CsvMapping, Table } from '@cube-creator/model'
+import { ColumnMapping, Project, Table } from '@cube-creator/model'
+import type { Organization } from '@rdfine/schema'
 import { Term } from 'rdf-js'
 import { ResourceStore } from '../../../ResourceStore'
+import { findOrganization } from '../../organization/query'
 
 export async function findMapping(table: Table, targetProperty: Term, store: ResourceStore): Promise<ColumnMapping | null> {
-  const csvMapping = await store.getResource<CsvMapping>(table.csvMapping.id)
+  const { organizationId, projectId } = await findOrganization({ table })
+  const { cubeIdentifier } = await store.getResource<Project>(projectId)
+  const organization = await store.getResource<Organization>(organizationId)
 
   for (const columnMappingLink of table.columnMappings) {
     const columnMapping = await store.getResource<ColumnMapping>(columnMappingLink.id, { allowMissing: true })
@@ -15,7 +19,10 @@ export async function findMapping(table: Table, targetProperty: Term, store: Res
       return columnMapping
     }
 
-    const effectiveProperty = csvMapping.createIdentifier(targetProperty)
+    const effectiveProperty = organization.createIdentifier({
+      cubeIdentifier,
+      termName: targetProperty,
+    })
     if (columnMapping.targetProperty.equals(effectiveProperty)) {
       return columnMapping
     }

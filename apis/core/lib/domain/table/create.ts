@@ -4,8 +4,10 @@ import { cc } from '@cube-creator/core/namespace'
 import { ResourceStore } from '../../ResourceStore'
 import { NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
-import { CsvColumn, CsvMapping, CsvSource, DimensionMetadataCollection } from '@cube-creator/model'
+import { CsvColumn, CsvMapping, CsvSource, DimensionMetadataCollection, Project } from '@cube-creator/model'
 import * as DimensionMetadataQueries from '../queries/dimension-metadata'
+import type { Organization } from '@rdfine/schema'
+import { findOrganization } from '../organization/query'
 
 const trueTerm = $rdf.literal('true', xsd.boolean)
 
@@ -35,6 +37,9 @@ export async function createTable({
   const csvMapping = await store.getResource<CsvMapping>(csvMappingPointer.term)
   const csvSourceId = resource.out(cc.csvSource).term
   const csvSource = await store.getResource<CsvSource>(csvSourceId)
+  const { organizationId, projectId } = await findOrganization({ csvMapping })
+  const organization = await store.getResource<Organization>(organizationId)
+  const { cubeIdentifier } = await store.getResource<Project>(projectId)
 
   const columns = [...csvSource.columns]
 
@@ -70,7 +75,7 @@ export async function createTable({
 
       if (table.types.has(cc.ObservationTable)) {
         dimensionMetaDataCollection.addDimensionMetadata({
-          store, columnMapping, csvMapping,
+          store, columnMapping, organization, cubeIdentifier,
         })
       }
 

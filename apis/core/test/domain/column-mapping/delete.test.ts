@@ -14,6 +14,7 @@ import { NamedNode } from 'rdf-js'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import { deleteColumnMapping } from '../../../lib/domain/column-mapping/delete'
 import { ColumnMapping } from '@cube-creator/model'
+import * as orgQueries from '../../../lib/domain/organization/query'
 
 describe('domain/column-mapping/delete', () => {
   let store: TestResourceStore
@@ -31,10 +32,21 @@ describe('domain/column-mapping/delete', () => {
   let observationTable: GraphPointer<NamedNode, DatasetExt>
 
   beforeEach(() => {
+    sinon.restore()
+
+    const organization = clownface({ dataset: $rdf.dataset() })
+      .namedNode('org')
+      .addOut(rdf.type, schema.Organization)
+      .addOut(cc.namespace, 'http://example.com/')
+    const project = clownface({ dataset: $rdf.dataset() })
+      .namedNode('project')
+      .addOut(rdf.type, cc.CubeProject)
+      .addOut(schema.maintainer, organization)
+      .addOut(cc.cubeIdentifier, 'test-cube')
+
     const csvMapping = clownface({ dataset: $rdf.dataset() })
       .namedNode('csv-mapping')
       .addOut(rdf.type, cc.CsvMapping)
-      .addOut(cc.namespace, 'http://example.com/')
     const csvSource = clownface({ dataset: $rdf.dataset() })
       .namedNode('foo')
       .addOut(rdf.type, cc.CSVSource)
@@ -107,6 +119,8 @@ describe('domain/column-mapping/delete', () => {
       columnMapping,
       otherColumnMapping,
       columnMappingObservation,
+      project,
+      organization,
     ])
 
     getDimensionMetaDataCollection = sinon.stub().resolves(dimensionMetadataCollection.term.value)
@@ -122,6 +136,11 @@ describe('domain/column-mapping/delete', () => {
     columnMappingQueries = {
       dimensionIsUsedByOtherMapping,
     }
+
+    sinon.stub(orgQueries, 'findOrganization').resolves({
+      projectId: project.term,
+      organizationId: organization.term,
+    })
   })
 
   it('deletes a column mapping and its dimensions', async () => {

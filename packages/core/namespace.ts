@@ -58,7 +58,8 @@ type CubeCreatorProperty =
   'observations' |
   'publishGraph' |
   'latestPublishedRevision' |
-  'revision'
+  'revision' |
+  'cubeIdentifier'
 
 type OtherTerms =
   'dash'

@@ -1,9 +1,10 @@
-import { NamedNode } from 'rdf-js'
-import type { Organization } from '@rdfine/schema'
-import { Constructor, namespace, property } from '@tpluscode/rdfine'
+import { DatasetCore, NamedNode } from 'rdf-js'
+import { Organization, OrganizationMixin as SchemaOrganizationMixin } from '@rdfine/schema'
+import { Constructor, namespace, property, ResourceIdentifier } from '@tpluscode/rdfine'
 import { cc } from '@cube-creator/core/namespace'
 import { schema } from '@tpluscode/rdf-ns-builders'
-import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
+import RdfResourceImpl, { Initializer, RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
+import type { GraphPointer } from 'clownface'
 
 interface OrganizationEx {
   publishGraph: NamedNode
@@ -28,4 +29,13 @@ export function OrganizationMixin<Base extends Constructor<Omit<Organization, ke
   return Impl
 }
 
-OrganizationMixin.appliesTo = schema.Organisation
+OrganizationMixin.appliesTo = schema.Organization
+
+export const fromPointer = <D extends DatasetCore>(pointer: GraphPointer<ResourceIdentifier, D>, initializer: Initializer<Organization<D>> = {}): Organization<D> => {
+  return RdfResourceImpl.factory.createEntity(pointer, [OrganizationMixin, SchemaOrganizationMixin], {
+    initializer: {
+      ...initializer,
+      types: [schema.Organization],
+    },
+  })
+}

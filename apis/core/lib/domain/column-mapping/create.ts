@@ -2,12 +2,21 @@ import { GraphPointer } from 'clownface'
 import { cc } from '@cube-creator/core/namespace'
 import { ResourceStore } from '../../ResourceStore'
 import { NamedNode, Term } from 'rdf-js'
-import { CsvMapping, CsvSource, DimensionMetadataCollection, LiteralColumnMapping, ReferenceColumnMapping, Table } from '@cube-creator/model'
+import {
+  CsvSource,
+  DimensionMetadataCollection,
+  LiteralColumnMapping,
+  Project,
+  ReferenceColumnMapping,
+  Table,
+} from '@cube-creator/model'
 import * as DimensionMetadataQueries from '../queries/dimension-metadata'
 import { findMapping } from './lib'
 import { NotFoundError, DomainError } from '../../errors'
 import { rdf } from '@tpluscode/rdf-ns-builders'
 import TermSet from '@rdfjs/term-set'
+import type { Organization } from '@rdfine/schema'
+import { findOrganization } from '../organization/query'
 
 interface CreateColumnMappingCommand {
   tableId: NamedNode
@@ -40,12 +49,17 @@ export async function createColumnMapping({
     : await createLiteralColumnMapping({ targetProperty, table, source, resource, store })
 
   if (table.types.has(cc.ObservationTable)) {
-    const csvMapping = await store.getResource<CsvMapping>(table.csvMapping.id)
+    const { organizationId, projectId } = await findOrganization({ table })
+    const organization = await store.getResource<Organization>(organizationId)
+    const { cubeIdentifier } = await store.getResource<Project>(projectId)
     const dimensionMetaDataCollectionPointer = await getDimensionMetaDataCollection(table.csvMapping.id)
     const dimensionMetaDataCollection = await store.getResource<DimensionMetadataCollection>(dimensionMetaDataCollectionPointer)
 
     dimensionMetaDataCollection.addDimensionMetadata({
-      store, columnMapping, csvMapping,
+      store,
+      columnMapping,
+      organization,
+      cubeIdentifier,
     })
   }
 

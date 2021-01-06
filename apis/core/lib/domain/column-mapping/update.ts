@@ -4,10 +4,10 @@ import { ResourceStore } from '../../ResourceStore'
 import { NamedNode } from 'rdf-js'
 import {
   ColumnMapping,
-  CsvMapping,
   CsvSource,
   DimensionMetadataCollection,
   LiteralColumnMapping,
+  Project,
   ReferenceColumnMapping,
   Table,
 } from '@cube-creator/model'
@@ -17,6 +17,8 @@ import { findMapping } from './lib'
 import { NotFoundError, DomainError } from '../../errors'
 import * as id from '../identifiers'
 import { createIdentifierMapping } from '@cube-creator/model/ColumnMapping'
+import { findOrganization } from '../organization/query'
+import type { Organization } from '@rdfine/schema'
 
 interface UpdateColumnMappingCommand {
   resource: GraphPointer
@@ -119,15 +121,21 @@ async function updateColumnMapping<T extends ColumnMapping>({
         throw new DomainError('Target property already mapped')
       }
 
-      const csvMapping = await store.getResource<CsvMapping>(table.csvMapping.id)
+      const { organizationId, projectId } = await findOrganization({ table })
+      const organization = await store.getResource<Organization>(organizationId)
+      const { cubeIdentifier } = await store.getResource<Project>(projectId)
       const dimensionMetaDataCollectionPointer = await getDimensionMetaDataCollection(table.csvMapping.id)
       const dimensionMetaDataCollection = await store.getResource<DimensionMetadataCollection>(dimensionMetaDataCollectionPointer)
 
-      const dimension = dimensionMetaDataCollection.find({ csvMapping, targetProperty: columnMapping.targetProperty })
+      const dimension = dimensionMetaDataCollection.find({ cubeIdentifier, organization, targetProperty: columnMapping.targetProperty })
       if (!dimension) {
         throw new NotFoundError(dimension)
       }
-      dimension.about = csvMapping.createIdentifier(targetProperty)
+
+      dimension.about = organization.createIdentifier({
+        cubeIdentifier,
+        termName: targetProperty,
+      })
     }
 
     columnMapping.targetProperty = targetProperty
