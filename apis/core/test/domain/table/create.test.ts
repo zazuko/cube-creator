@@ -12,6 +12,9 @@ import { NamedNode } from 'rdf-js'
 import type * as DimensionMetadataQueries from '../../../lib/domain/queries/dimension-metadata'
 import '../../../lib/domain'
 import * as orgQueries from '../../../lib/domain/organization/query'
+import * as Organization from '@cube-creator/model/Organization'
+import { namedNode } from '../../support/clownface'
+import * as Project from '@cube-creator/model/Project'
 
 describe('domain/table/create', () => {
   let store: TestResourceStore
@@ -24,15 +27,13 @@ describe('domain/table/create', () => {
   beforeEach(() => {
     sinon.restore()
 
-    const organization = clownface({ dataset: $rdf.dataset() })
-      .namedNode('org')
-      .addOut(rdf.type, schema.Organization)
-      .addOut(cc.namespace, 'http://example.com/')
-    const project = clownface({ dataset: $rdf.dataset() })
-      .namedNode('project')
-      .addOut(rdf.type, cc.CubeProject)
-      .addOut(schema.maintainer, organization)
-      .addOut(cc.cubeIdentifier, 'test-cube')
+    const organization = Organization.fromPointer(namedNode('org'), {
+      namespace: $rdf.namedNode('http://example.com/'),
+    })
+    const project = Project.fromPointer(namedNode('project'), {
+      maintainer: organization,
+      cubeIdentifier: 'test-cube',
+    })
     const csvMapping = clownface({ dataset: $rdf.dataset() })
       .namedNode('myCsvMapping')
       .addOut(rdf.type, cc.CsvMapping)
@@ -59,8 +60,8 @@ describe('domain/table/create', () => {
     dimensionMetadataQueries = { getDimensionMetaDataCollection }
 
     sinon.stub(orgQueries, 'findOrganization').resolves({
-      projectId: project.term,
-      organizationId: organization.term,
+      projectId: project.id,
+      organizationId: organization.id,
     })
   })
 

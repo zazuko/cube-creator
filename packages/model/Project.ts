@@ -1,9 +1,11 @@
 import { ResourceMixin } from '@rdfine/rdfs'
 import { CsvMapping, CsvMappingMixin } from './CsvMapping'
-import { Constructor, namespace, property, RdfResource } from '@tpluscode/rdfine'
+import { Constructor, namespace, property, RdfResource, ResourceIdentifier } from '@tpluscode/rdfine'
+import type { GraphPointer } from 'clownface'
+import RdfResourceImpl, { Initializer, RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import { cc } from '@cube-creator/core/namespace'
-import { NamedNode } from 'rdf-js'
+import { DatasetCore, NamedNode } from 'rdf-js'
 import { dcterms, schema } from '@tpluscode/rdf-ns-builders'
 import type { Organization } from '@rdfine/schema'
 import { initializer } from './lib/initializer'
@@ -66,3 +68,12 @@ ProjectMixin.appliesTo = cc.CubeProject
 type MandatoryFields = 'creator' | 'label' | 'maintainer' | 'cubeIdentifier'
 
 export const create = initializer<Project, MandatoryFields>(ProjectMixin)
+
+export const fromPointer = <D extends DatasetCore>(pointer: GraphPointer<ResourceIdentifier, D>, initializer: Initializer<Project> = {}): Project & RdfResourceCore<D> => {
+  return RdfResourceImpl.factory.createEntity(pointer, [ProjectMixin], {
+    initializer: {
+      ...initializer,
+      types: [cc.CubeProject],
+    },
+  })
+}

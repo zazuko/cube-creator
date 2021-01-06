@@ -15,6 +15,9 @@ import DatasetExt from 'rdf-ext/lib/Dataset'
 import { deleteColumnMapping } from '../../../lib/domain/column-mapping/delete'
 import { ColumnMapping } from '@cube-creator/model'
 import * as orgQueries from '../../../lib/domain/organization/query'
+import * as Organization from '@cube-creator/model/Organization'
+import * as Project from '@cube-creator/model/Project'
+import { namedNode } from '../../support/clownface'
 
 describe('domain/column-mapping/delete', () => {
   let store: TestResourceStore
@@ -34,15 +37,13 @@ describe('domain/column-mapping/delete', () => {
   beforeEach(() => {
     sinon.restore()
 
-    const organization = clownface({ dataset: $rdf.dataset() })
-      .namedNode('org')
-      .addOut(rdf.type, schema.Organization)
-      .addOut(cc.namespace, 'http://example.com/')
-    const project = clownface({ dataset: $rdf.dataset() })
-      .namedNode('project')
-      .addOut(rdf.type, cc.CubeProject)
-      .addOut(schema.maintainer, organization)
-      .addOut(cc.cubeIdentifier, 'test-cube')
+    const organization = Organization.fromPointer(namedNode('org'), {
+      namespace: $rdf.namedNode('http://example.com/'),
+    })
+    const project = Project.fromPointer(namedNode('project'), {
+      maintainer: organization,
+      cubeIdentifier: 'test-cube',
+    })
 
     const csvMapping = clownface({ dataset: $rdf.dataset() })
       .namedNode('csv-mapping')
@@ -138,8 +139,8 @@ describe('domain/column-mapping/delete', () => {
     }
 
     sinon.stub(orgQueries, 'findOrganization').resolves({
-      projectId: project.term,
-      organizationId: organization.term,
+      projectId: project.id,
+      organizationId: organization.id,
     })
   })
 

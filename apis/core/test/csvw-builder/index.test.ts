@@ -7,16 +7,19 @@ import * as CsvSource from '@cube-creator/model/CsvSource'
 import * as CsvColumn from '@cube-creator/model/CsvColumn'
 import * as ColumnMapping from '@cube-creator/model/ColumnMapping'
 import * as Table from '@cube-creator/model/Table'
+import * as Organization from '@cube-creator/model/Organization'
+import * as Project from '@cube-creator/model/Project'
 import { cc } from '@cube-creator/core/namespace'
 import * as ns from '@tpluscode/rdf-ns-builders'
 import { buildCsvw } from '../../lib/csvw-builder'
 import '../../lib/domain'
 import { TestResourceStore } from '../support/TestResourceStore'
 import { findColumn } from './support'
-import { rdf, schema, xsd } from '@tpluscode/rdf-ns-builders'
+import { schema, xsd } from '@tpluscode/rdf-ns-builders'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import * as sinon from 'sinon'
 import * as orgQueries from '../../lib/domain/organization/query'
+import { namedNode } from '../support/clownface'
 
 describe('lib/csvw-builder', () => {
   let graph: AnyPointer<AnyContext, DatasetExt>
@@ -31,15 +34,13 @@ describe('lib/csvw-builder', () => {
     graph = clownface({ dataset: $rdf.dataset() })
     const csvSourcePointer = graph.namedNode('csv-mapping')
     const csvMappingPointer = graph.namedNode('table-source')
-    const organization = clownface({ dataset: $rdf.dataset() })
-      .namedNode('org')
-      .addOut(rdf.type, schema.Organization)
-      .addOut(cc.namespace, 'http://example.com/')
-    const project = clownface({ dataset: $rdf.dataset() })
-      .namedNode('project')
-      .addOut(rdf.type, cc.CubeProject)
-      .addOut(schema.maintainer, organization)
-      .addOut(cc.cubeIdentifier, 'test-cube')
+    const organization = Organization.fromPointer(namedNode('org'), {
+      namespace: $rdf.namedNode('http://example.com/'),
+    })
+    const project = Project.fromPointer(namedNode('project'), {
+      maintainer: organization,
+      cubeIdentifier: 'test-cube',
+    })
 
     csvMapping = CsvMapping.create(csvMappingPointer, {
       project: $rdf.namedNode('project'),
@@ -69,8 +70,8 @@ describe('lib/csvw-builder', () => {
     ])
 
     sinon.stub(orgQueries, 'findOrganization').resolves({
-      projectId: project.term,
-      organizationId: organization.term,
+      projectId: project.id,
+      organizationId: organization.id,
     })
   })
 

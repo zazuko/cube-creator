@@ -8,19 +8,19 @@ import { cc, cube, shape } from '@cube-creator/core/namespace'
 import { createProject } from '../../../lib/domain/cube-projects/create'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import '../../../lib/domain'
-import env from '@cube-creator/core/env'
 import { Dataset } from '@cube-creator/model'
 import { Project } from '@cube-creator/model/Project'
 import { fromPointer } from '@cube-creator/model/Organization'
 import * as sinon from 'sinon'
 import * as orgQueries from '../../../lib/domain/organization/query'
+import { namedNode } from '../../support/clownface'
 
 describe('domain/cube-projects/create', () => {
   let store: TestResourceStore
   const user = $rdf.namedNode('userId')
-  const projectsCollection = clownface({ dataset: $rdf.dataset() }).namedNode('projects')
+  const projectsCollection = namedNode('projects')
 
-  const organization = fromPointer(clownface({ dataset: $rdf.dataset() }).namedNode('org'), {
+  const organization = fromPointer(namedNode('org'), {
     publishGraph: $rdf.namedNode('http://example.com/published-cube'),
     namespace: $rdf.namedNode('http://example.com/'),
   })

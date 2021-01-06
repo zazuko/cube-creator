@@ -5,6 +5,8 @@ import clownface, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import { csvw, hydra, rdf, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
+import * as Organization from '@cube-creator/model/Organization'
+import * as Project from '@cube-creator/model/Project'
 import { createColumnMapping } from '../../../lib/domain/column-mapping/create'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import type * as DimensionMetadataQueries from '../../../lib/domain/queries/dimension-metadata'
@@ -13,6 +15,7 @@ import '../../../lib/domain'
 import { DomainError } from '../../../lib/errors'
 import { NamedNode } from 'rdf-js'
 import DatasetExt from 'rdf-ext/lib/Dataset'
+import { namedNode } from '../../support/clownface'
 
 describe('domain/column-mapping/create', () => {
   let store: TestResourceStore
@@ -50,15 +53,13 @@ describe('domain/column-mapping/create', () => {
       .namedNode('myDimensionMetadata')
       .addOut(rdf.type, cc.DimensionMetadataCollection)
 
-    const organization = clownface({ dataset: $rdf.dataset() })
-      .namedNode('org')
-      .addOut(rdf.type, schema.Organization)
-      .addOut(cc.namespace, 'http://example.com/')
-    const project = clownface({ dataset: $rdf.dataset() })
-      .namedNode('project')
-      .addOut(rdf.type, cc.CubeProject)
-      .addOut(schema.maintainer, organization)
-      .addOut(cc.cubeIdentifier, 'test-cube')
+    const organization = Organization.fromPointer(namedNode('org'), {
+      namespace: $rdf.namedNode('http://example.com/'),
+    })
+    const project = Project.fromPointer(namedNode('project'), {
+      maintainer: organization,
+      cubeIdentifier: 'test-cube',
+    })
 
     store = new TestResourceStore([
       table,
@@ -73,8 +74,8 @@ describe('domain/column-mapping/create', () => {
     getDimensionMetaDataCollection = sinon.stub().resolves(dimensionMetadata.term.value)
     dimensionMetadataQueries = { getDimensionMetaDataCollection }
     sinon.stub(orgQueries, 'findOrganization').resolves({
-      projectId: project.term,
-      organizationId: organization.term,
+      projectId: project.id,
+      organizationId: organization.id,
     })
   })
 
