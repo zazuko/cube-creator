@@ -11,7 +11,7 @@ type InitializerFunction<T, TRequired extends Extract<keyof T, string> = never> 
 
 type Defaults<T> = Initializer<T> | (() => Initializer<T>)
 
-export function initializer<T>(mixin: Mixin, defaults?: Defaults<T>): (pointer: GraphPointer<ResourceIdentifier>) => T
+export function initializer<T>(mixin: Mixin, defaults?: Defaults<T>): (pointer: GraphPointer<ResourceIdentifier>, init?: Initializer<T>) => T
 export function initializer<T, TRequired extends Extract<keyof T, string>>(mixin: Mixin, defaults?: Defaults<T>): InitializerFunction<T, TRequired>
 export function initializer<T, TRequired extends Extract<keyof T, string>>(mixin: Mixin, defaults?: Defaults<T>): InitializerFunction<T, TRequired> {
   return (pointer, init): T => {

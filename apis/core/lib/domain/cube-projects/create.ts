@@ -43,7 +43,9 @@ export async function createProject({
   })
 
   project.initializeJobCollection(store)
-  const dataset = Dataset.create(store.create(project.dataset.id))
+  const dataset = Dataset.create(store.create(project.dataset.id), {
+    [dcterms.identifier.value]: project.cubeIdentifier,
+  })
 
   DimensionMetadata.createCollection(store.create(dataset.dimensionMetadata.id))
 
