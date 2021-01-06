@@ -46,10 +46,15 @@ describe('lib/commands/publish', function () {
 
       // then
       const project = $rdf.namedNode('https://cube-creator.lndo.site/cube-project/ubd')
-      const [{ expectedGraph }] = await SELECT`?expectedGraph ?revision`
-        .FROM(project)
+      const [{ expectedGraph }] = await SELECT`?expectedGraph`
         .WHERE`
-          ${project} ${cc.publishGraph} ?expectedGraph .
+          graph ${project} {
+            ${project} ${schema.maintainer} ?org .
+          }
+
+          graph ?org {
+            ?org ${cc.publishGraph} ?expectedGraph .
+          }
         `
         .execute(parsingClient.query)
 

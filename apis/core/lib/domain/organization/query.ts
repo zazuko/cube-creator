@@ -23,23 +23,23 @@ export async function findOrganization(findBy: FindOrganization, client = parsin
 
   let query = SELECT`${organization} ${project}`
     .WHERE`graph ${project} {
-      ${project} ${schema.maintainer} {organization}
+      ${project} ${schema.maintainer} ${organization} .
     }`
 
   if ('csvMapping' in findBy) {
     query = query.WHERE`
-      graph ${findBy.csvMapping} {
-        ${findBy.csvMapping} ${cc.project} ${project}
+      graph ${project} {
+        ${project} ${cc.csvMapping} ${findBy.csvMapping.id} .
       }
     `
   } else {
     query = query.WHERE`
-      graph ${findBy.table} {
-        ${findBy.table} ${cc.csvMapping} ?mapping
+      graph ${project} {
+        ${project} ${cc.csvMapping} ?mapping .
       }
 
-      graph ?mapping {
-        ?mapping ${cc.project} ${project}
+      graph ${findBy.table.id} {
+        ${findBy.table.id} ${cc.csvMapping} ?mapping
       }
     `
   }
