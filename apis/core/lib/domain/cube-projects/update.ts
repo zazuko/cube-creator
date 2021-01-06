@@ -1,7 +1,6 @@
 import { GraphPointer } from 'clownface'
-import { cc } from '@cube-creator/core/namespace'
 import { ResourceStore } from '../../ResourceStore'
-import { rdfs, schema } from '@tpluscode/rdf-ns-builders'
+import { dcterms, rdfs, schema } from '@tpluscode/rdf-ns-builders'
 import { Project } from '@cube-creator/model'
 import type { Organization } from '@rdfine/schema'
 
@@ -17,7 +16,7 @@ export async function updateProject({
   const project = await store.getResource<Project>(resource.term)
 
   project.rename(resource.out(rdfs.label).value)
-  const identifier = project.updateCubeIdentifier(resource.out(cc.cubeIdentifier).value)
+  const identifier = project.updateCubeIdentifier(resource.out(dcterms.identifier).value)
   const maintainer = project.updateMaintainer(resource.out(schema.maintainer).term)
 
   if (identifier.before !== identifier.after || !maintainer.after.equals(maintainer.before)) {

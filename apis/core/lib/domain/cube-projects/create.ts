@@ -1,6 +1,6 @@
 import { GraphPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'
-import { rdfs, schema } from '@tpluscode/rdf-ns-builders'
+import { dcterms, rdfs, schema } from '@tpluscode/rdf-ns-builders'
 import { cc, shape } from '@cube-creator/core/namespace'
 import * as Project from '@cube-creator/model/Project'
 import * as Dataset from '@cube-creator/model/Dataset'
@@ -30,7 +30,7 @@ export async function createProject({
   if (!maintainer || maintainer.termType !== 'NamedNode') {
     throw new DomainError('Missing organization or not a named node')
   }
-  const cubeIdentifier = resource.out(cc.cubeIdentifier).value
+  const cubeIdentifier = resource.out(dcterms.identifier).value
   if (!cubeIdentifier) {
     throw new Error('Missing cube identifier name')
   }

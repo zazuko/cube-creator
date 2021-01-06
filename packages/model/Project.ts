@@ -44,7 +44,7 @@ export function ProjectMixin<Base extends Constructor>(base: Base): Mixin {
     @property({ initial: childResource('cube-data') })
     cubeGraph!: NamedNode
 
-    @property.literal()
+    @property.literal({ path: dcterms.identifier })
     cubeIdentifier!: string
 
     @property.resource({ path: schema.maintainer })

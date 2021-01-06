@@ -1,5 +1,5 @@
 import { cc, shape } from '@cube-creator/core/namespace'
-import { dash, hydra, rdfs, schema, sh } from '@tpluscode/rdf-ns-builders'
+import { dash, dcterms, hydra, rdfs, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { turtle } from '@tpluscode/rdf-string'
 import $rdf from 'rdf-ext'
 
@@ -34,7 +34,7 @@ ${shape('cube-project/create')} {
     ${sh.property} [
       ${sh.name} "Cube identifier" ;
       ${sh.description} "A unique, URL-safe string to identify the cube" ;
-      ${sh.path} ${cc.cubeIdentifier} ;
+      ${sh.path} ${dcterms.identifier} ;
       ${sh.minLength} 1 ;
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
@@ -80,7 +80,7 @@ ${shape('cube-project/update')} {
     ${sh.property} [
       ${sh.name} "Cube identifier" ;
       ${sh.description} "A unique, URL-safe string to identify the cube" ;
-      ${sh.path} ${cc.cubeIdentifier} ;
+      ${sh.path} ${dcterms.identifier} ;
       ${sh.minLength} 1 ;
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;

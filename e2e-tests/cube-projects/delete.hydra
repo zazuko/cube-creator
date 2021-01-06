@@ -23,7 +23,7 @@ With Class api:EntryPoint {
 
                 <> cc:projectSourceKind <https://cube-creator.lndo.site/shape/cube-project/create#CSV> ;
                    rdfs:label "Test Project" ;
-                   cc:cubeIdentifier "test-cube" ;
+                   dcterms:identifier "test-cube" ;
                    schema:maintainer <https://cube-creator.lndo.site/organization/bafu> .
                 ```
             } => {

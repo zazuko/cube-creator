@@ -42,7 +42,7 @@ describe('domain/cube-projects/create', () => {
     const resource = clownface({ dataset: $rdf.dataset() })
       .namedNode('')
       .addOut(rdfs.label, 'Foo bar project')
-      .addOut(cc.cubeIdentifier, 'ubd/28')
+      .addOut(dcterms.identifier, 'ubd/28')
       .addOut(schema.maintainer, organization.id)
 
     // when
@@ -60,7 +60,7 @@ describe('domain/cube-projects/create', () => {
       .namedNode('')
       .addOut(rdfs.label, 'Foo bar project')
       .addOut(cc.projectSourceKind, 'Existing Cube')
-      .addOut(cc.cubeIdentifier, 'ubd/28')
+      .addOut(dcterms.identifier, 'ubd/28')
       .addOut(schema.maintainer, organization.id)
 
     // when
@@ -78,7 +78,7 @@ describe('domain/cube-projects/create', () => {
       const resource = clownface({ dataset: $rdf.dataset() })
         .namedNode('')
         .addOut(rdfs.label, 'Foo bar project')
-        .addOut(cc.cubeIdentifier, 'ubd/28')
+        .addOut(dcterms.identifier, 'ubd/28')
         .addOut(schema.maintainer, organization.id)
 
       // when
@@ -123,7 +123,7 @@ describe('domain/cube-projects/create', () => {
     const resource = clownface({ dataset: $rdf.dataset() })
       .namedNode('')
       .addOut(rdfs.label, 'Foo bar project')
-      .addOut(cc.cubeIdentifier, 'ubd/28')
+      .addOut(dcterms.identifier, 'ubd/28')
       .addOut(schema.maintainer, organization.id)
 
     // when
@@ -147,7 +147,7 @@ describe('domain/cube-projects/create', () => {
     const resource = clownface({ dataset: $rdf.dataset() })
       .namedNode('')
       .addOut(rdfs.label, 'Foo bar project')
-      .addOut(cc.cubeIdentifier, 'ubd/28')
+      .addOut(dcterms.identifier, 'ubd/28')
       .addOut(schema.maintainer, organization.id)
 
     // when
@@ -197,7 +197,7 @@ describe('domain/cube-projects/create', () => {
         .namedNode('')
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(schema.maintainer, organization.id)
-        .addOut(cc.cubeIdentifier, 'ubd/28')
+        .addOut(dcterms.identifier, 'ubd/28')
         .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
 
       // when
@@ -213,7 +213,7 @@ describe('domain/cube-projects/create', () => {
         .namedNode('')
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(schema.maintainer, organization.id)
-        .addOut(cc.cubeIdentifier, 'ubd/28')
+        .addOut(dcterms.identifier, 'ubd/28')
         .addOut(cc.publishGraph, $rdf.namedNode('http://example.com/published-cube'))
 
       // when
@@ -243,7 +243,7 @@ describe('domain/cube-projects/create', () => {
         .namedNode('')
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
-        .addOut(cc.cubeIdentifier, 'ubd/28')
+        .addOut(dcterms.identifier, 'ubd/28')
         .addOut(schema.maintainer, organization.id)
 
       // when
@@ -275,7 +275,7 @@ describe('domain/cube-projects/create', () => {
         .namedNode('')
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
-        .addOut(cc.cubeIdentifier, 'ubd/28')
+        .addOut(dcterms.identifier, 'ubd/28')
         .addOut(schema.maintainer, organization.id)
 
       // when
@@ -313,7 +313,7 @@ describe('domain/cube-projects/create', () => {
         .namedNode('')
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
-        .addOut(cc.cubeIdentifier, 'ubd/28')
+        .addOut(dcterms.identifier, 'ubd/28')
         .addOut(schema.maintainer, organization.id)
 
       // when
@@ -360,7 +360,7 @@ describe('domain/cube-projects/create', () => {
         .namedNode('')
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
-        .addOut(cc.cubeIdentifier, 'ubd/28')
+        .addOut(dcterms.identifier, 'ubd/28')
         .addOut(schema.maintainer, organization.id)
 
       // when

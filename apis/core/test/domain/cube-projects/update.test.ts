@@ -5,7 +5,7 @@ import $rdf from 'rdf-ext'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import { NamedNode } from 'rdf-js'
 import { ResourceIdentifier } from '@tpluscode/rdfine'
-import { rdfs, schema } from '@tpluscode/rdf-ns-builders'
+import { dcterms, rdfs, schema } from '@tpluscode/rdf-ns-builders'
 import { cc, shape } from '@cube-creator/core/namespace'
 import { createProject } from '../../../lib/domain/cube-projects/create'
 import { TestResourceStore } from '../../support/TestResourceStore'
@@ -34,7 +34,7 @@ describe('domain/cube-projects/update', () => {
       .node(id)
       .addOut(rdfs.label, 'Created name')
       .addOut(schema.maintainer, bafu.id)
-      .addOut(cc.cubeIdentifier, 'cube')
+      .addOut(dcterms.identifier, 'cube')
       .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
   }
 
@@ -154,8 +154,8 @@ describe('domain/cube-projects/update', () => {
       beforeEach(async () => {
         const resource = projectPointer(project.term)
         resource
-          .deleteOut(cc.cubeIdentifier)
-          .addOut(cc.cubeIdentifier, 'new/cube')
+          .deleteOut(dcterms.identifier)
+          .addOut(dcterms.identifier, 'new/cube')
 
         editedProject = await updateProject({
           resource,
@@ -164,7 +164,7 @@ describe('domain/cube-projects/update', () => {
       })
 
       it('updates project resource', async () => {
-        expect(editedProject.pointer.out(cc.cubeIdentifier).value).to.eq('new/cube')
+        expect(editedProject.pointer.out(dcterms.identifier).value).to.eq('new/cube')
       })
 
       it('renames cube', async () => {
