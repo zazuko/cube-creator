@@ -21,7 +21,7 @@ import ColumnMappingCreate from '@/views/ColumnMappingCreate.vue'
 import CubeDesigner from '@/views/CubeDesigner.vue'
 import CubeMetadataEdit from '@/views/CubeMetadataEdit.vue'
 import DimensionEdit from '@/views/DimensionEdit.vue'
-import Pipeline from '@/views/Pipeline.vue'
+import Publication from '@/views/Publication.vue'
 import PageNotFound from '@/views/PageNotFound.vue'
 import Logout from '@/views/Logout.vue'
 import NotAuthorized from '@/views/NotAuthorized.vue'
@@ -117,9 +117,9 @@ const routes: Array<RouteConfig> = [
             ],
           },
           {
-            path: 'pipeline',
-            name: 'Pipeline',
-            component: Pipeline,
+            path: 'publication',
+            name: 'Publication',
+            component: Publication,
           },
         ],
       },

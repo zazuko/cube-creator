@@ -1,37 +1,39 @@
 <template>
   <div v-if="project">
-    <div class="tabs project-tabs is-boxed">
+    <div class="tabs is-boxed mb-0 mt-2">
       <ul>
-        <li class="tab">
-          <h2 class="project-title">
-            {{ project.title }}
-          </h2>
-        </li>
+        <router-link :to="{ name: 'CubeProjectEdit' }" v-slot="{ href, isActive, navigate }">
+          <li :class="{ 'is-active': isActive }">
+            <b-tooltip label="Project settings">
+              <a :href="href" @click="navigate">
+                <h2 class="has-text-weight-bold">
+                  {{ project.title }}
+                </h2>
+                <b-icon icon="cog" class="ml-1" />
+              </a>
+            </b-tooltip>
+          </li>
+        </router-link>
         <router-link v-if="hasCSVMapping" :to="{ name: 'CSVMapping' }" v-slot="{ href, isActive, navigate }">
           <li :class="{ 'is-active': isActive }">
-            <a :href="href" @click="navigate">CSV Mapping</a>
+            <a :href="href" @click="navigate">1. CSV Mapping</a>
           </li>
         </router-link>
         <router-link :to="{ name: 'CubeDesigner' }" v-slot="{ href, isActive, navigate }">
           <li :class="{ 'is-active': isActive }">
-            <a :href="href" @click="navigate">Cube Designer</a>
+            <a :href="href" @click="navigate">2. Cube Designer</a>
           </li>
         </router-link>
-        <router-link :to="{ name: 'Pipeline' }" v-slot="{ href, isActive, navigate }">
+        <router-link :to="{ name: 'Publication' }" v-slot="{ href, isActive, navigate }">
           <li :class="{ 'is-active': isActive }">
             <a :href="href" @click="navigate">
-              Pipeline
+              3. Publication
             </a>
           </li>
         </router-link>
-        <router-link :to="{ name: 'CubeProjectEdit' }" v-slot="{ href, isActive, navigate }" v-if="project.actions.delete || project.actions.edit">
-          <li :class="{ 'is-active': isActive }" class="tab-right">
-            <a :href="href" @click="navigate">
-              <b-icon icon="cog" />
-              Project settings
-            </a>
-          </li>
-        </router-link>
+        <li class="tab-right pr-4" v-if="jobCollection">
+          <transform-job-button :job-collection="jobCollection" :transform-jobs="transformJobs" />
+        </li>
       </ul>
     </div>
 
@@ -44,20 +46,32 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { State } from 'vuex-class'
-import { Project } from '@cube-creator/model'
+import { namespace } from 'vuex-class'
+import { Job, JobCollection, Project } from '@cube-creator/model'
 import PageContent from '@/components/PageContent.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
+import TransformJobButton from '@/components/TransformJobButton.vue'
+
+const projectNS = namespace('project')
 
 @Component({
-  components: { PageContent, LoadingBlock },
+  components: { PageContent, LoadingBlock, TransformJobButton },
 })
 export default class CubeProjectView extends Vue {
-  @State('project', { namespace: 'project' }) project!: Project | null;
+  @projectNS.State('project') project!: Project | null;
+  @projectNS.State('jobCollection') jobCollection!: JobCollection | null;
+  @projectNS.Getter('transformJobs') transformJobs!: Job[];
+
+  poller: number | null = null
 
   async mounted (): Promise<void> {
     const id = this.$router.currentRoute.params.id
     await this.$store.dispatch('project/fetchProject', id)
+
+    // Poll jobs
+    this.poller = window.setInterval(() => {
+      this.$store.dispatch('project/fetchJobCollection')
+    }, 3000)
 
     if (this.$router.currentRoute.name === 'CubeProject') {
       if (this.hasCSVMapping) {
@@ -68,6 +82,12 @@ export default class CubeProjectView extends Vue {
     }
   }
 
+  beforeDestroy (): void {
+    if (this.poller) {
+      clearInterval(this.poller)
+    }
+  }
+
   get hasCSVMapping (): boolean {
     return !!this.project?.csvMapping
   }
@@ -75,15 +95,9 @@ export default class CubeProjectView extends Vue {
 </script>
 
 <style scoped>
-.tabs.project-tabs {
-  margin-bottom: 0;
-  margin-top: 0.5rem;
-}
-
-.project-title {
-  font-weight: bold;
-  padding: 0.5rem 1rem;
-  margin-right: 1rem;
+.tabs {
+  /* Fix dropdown displayed under page content */
+  overflow: visible;
 }
 
 .tab-right {
