@@ -2,7 +2,7 @@
   <b-select placeholder="Select" @input="update" :value="value">
     <option
       v-for="[option, label] in options"
-      :value="option.term"
+      :value="option.term.value"
       :key="option.value"
     >
       {{ label }}

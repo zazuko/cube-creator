@@ -17,6 +17,14 @@ describe('CSV mapping flow', () => {
       .find('input')
       .type('My project')
 
+    cy.contains('.form-property', 'Cube identifier')
+      .find('input')
+      .type('ubd/28')
+
+    cy.contains('.form-property', 'Organization')
+      .find('select')
+      .select('https://cube-creator.lndo.site/organization/bafu')
+
     cy.get('form').submit()
 
     cy.contains('successfully created').should('be.visible')
