@@ -97,6 +97,7 @@ ${shape('cube-project/update')} {
       ${sh.maxCount} 1 ;
       ${sh.nodeKind} ${sh.IRI} ;
       ${dash.editor} ${dash.InstancesSelectEditor} ;
+      ${hydra.collection} <organizations> ;
       ${sh.order} 40 ;
     ] ;
   .
