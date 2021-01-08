@@ -21,6 +21,7 @@ import ColumnMappingCreate from '@/views/ColumnMappingCreate.vue'
 import CubeDesigner from '@/views/CubeDesigner.vue'
 import CubeMetadataEdit from '@/views/CubeMetadataEdit.vue'
 import DimensionEdit from '@/views/DimensionEdit.vue'
+import ResourcePreview from '@/views/ResourcePreview.vue'
 import Publication from '@/views/Publication.vue'
 import PageNotFound from '@/views/PageNotFound.vue'
 import Logout from '@/views/Logout.vue'
@@ -113,7 +114,12 @@ const routes: Array<RouteConfig> = [
                 path: 'dimension/:dimensionId/edit',
                 name: 'DimensionEdit',
                 component: DimensionEdit,
-              }
+              },
+              {
+                path: 'resource/:resourceId',
+                name: 'ResourcePreview',
+                component: ResourcePreview,
+              },
             ],
           },
           {

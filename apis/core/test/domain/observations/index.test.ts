@@ -1,7 +1,7 @@
 import { describe, it, beforeEach, before, after } from 'mocha'
 import { expect } from 'chai'
 import clownface, { GraphPointer } from 'clownface'
-import { Term } from 'rdf-js'
+import { Quad, Term } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import { IriTemplate } from '@rdfine/hydra'
 import * as sinon from 'sinon'
@@ -25,6 +25,7 @@ describe('lib/domain/observations', () => {
       },
     },
   } as any
+  const loadResourceLabels = () => new Promise<Quad[]>((resolve) => resolve([]))
 
   before(() => {
     sinon.stub(lib, 'createSource').returns(sinon.createStubInstance(Source, {
@@ -61,6 +62,7 @@ describe('lib/domain/observations', () => {
       sourceGraph: 'cube-data',
       templateParams,
       template,
+      loadResourceLabels,
     })
 
     // then
@@ -79,6 +81,7 @@ describe('lib/domain/observations', () => {
       sourceGraph: 'cube-data',
       templateParams,
       template,
+      loadResourceLabels,
     })
 
     // then

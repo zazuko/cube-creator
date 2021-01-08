@@ -59,7 +59,7 @@
         </tr>
         <tr v-else v-for="observation in observations.data" :key="observation.id.value">
           <td v-for="dimension in dimensions" :key="dimension.clientPath" :class="dimensionClasses(dimension)">
-            <cube-preview-value :value="observation[dimension.about.value]" />
+            <cube-preview-value :value="observation[dimension.about.value]" :selected-language="selectedLanguage" />
           </td>
         </tr>
       </tbody>
