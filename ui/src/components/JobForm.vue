@@ -24,7 +24,7 @@ import type { Shape } from '@rdfine/shacl'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
-import { rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
+import { rdf, sh } from '@tpluscode/rdf-ns-builders'
 import { NamedNode } from 'rdf-js'
 
 @Component({
@@ -33,10 +33,10 @@ import { NamedNode } from 'rdf-js'
 export default class JobForm extends Vue {
   @Prop() operation!: RuntimeOperation
 
-  resource: GraphPointer = Object.freeze(clownface({ dataset: dataset() }).namedNode('').addOut(schema.name, 'test')).addOut(rdf.type, this.resourceType);
-  shape: Shape | null = null;
-  error: ErrorDetails | null = null;
-  isSubmitting = false;
+  resource: GraphPointer = Object.freeze(clownface({ dataset: dataset() }).namedNode('').addOut(rdf.type, this.resourceType))
+  shape: Shape | null = null
+  error: ErrorDetails | null = null
+  isSubmitting = false
 
   get resourceType (): NamedNode {
     const type = this.operation.expects.find((expect) => !expect.types.has(sh.Shape))
