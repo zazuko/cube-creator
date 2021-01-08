@@ -17,19 +17,6 @@ prefix vcard: <http://www.w3.org/2006/vcard/ns#>
 
 <ubd-example> a void:Dataset .
 
-<organization/bafu> void:inDataset <ubd-example> .
-graph <organization/bafu> {
-  <organization/bafu>
-    a schema:Organization ;
-    cc:publishGraph  <https://lindas.admin.ch/foen/cube> ;
-    cc:namespace <https://environment.ld.admin.ch/foen/> ;
-    rdfs:label "Bundesamt für Umwelt BAFU"@de ;
-    rdfs:label "Office fédéral de l'environnement OFEV"@fr ;
-    rdfs:label "Ufficio federale dell'ambiente UFAM"@it ;
-    rdfs:label "Federal Office for the Environment FOEN"@en ;
-  .
-}
-
 <cube-project/ubd> void:inDataset <ubd-example> .
 graph <cube-project/ubd> {
   <cube-project/ubd>
