@@ -12,7 +12,7 @@ describe('domain/csv/parse', () => {
     const { dialect, header, rows } = await sniffParse(input.toString())
     const [lastRow] = rows.slice(-1)
 
-    expect(dialect).to.deep.eq({ delimiter: ',', quote: '"' })
+    expect(dialect).to.contain({ delimiter: ',', quote: '"' })
     expect(header).to.deep.eq(['aggregation_id', 'aggregation_name_de', 'aggregation_name_fr', 'aggregation_name_it', 'aggregation_name_en'])
     expect(lastRow).to.deep.eq(['dosisaot40f', 'Dosis AOT40f', 'Dose AOT40f', 'Dose AOT40f', 'Dosis AOT40f'])
   })
