@@ -26,7 +26,7 @@ export function serializeSourcesCollection (collection: SourcesCollection): Sour
       ...serializeActions(collection.actions),
       upload: collection.actions.upload,
     },
-    member: collection.member.map(serializeSource),
+    member: collection.getArray<CsvSource>(hydra.member).map(serializeSource),
   }) as unknown as SourcesCollection
 }
 
