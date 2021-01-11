@@ -53,7 +53,7 @@ export function serializeColumn (column: CsvColumn): CsvColumn {
 export function serializeTableCollection (collection: TableCollection): TableCollection {
   return Object.freeze({
     ...serializeResource(collection),
-    member: collection.member.map(serializeTable),
+    member: collection.getArray<Table>(hydra.member).map(serializeTable),
   }) as TableCollection
 }
 
