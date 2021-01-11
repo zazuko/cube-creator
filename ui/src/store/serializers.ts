@@ -26,7 +26,7 @@ export function serializeSourcesCollection (collection: SourcesCollection): Sour
       ...serializeActions(collection.actions),
       upload: collection.actions.upload,
     },
-    member: collection.member.map(serializeSource),
+    member: collection.getArray<CsvSource>(hydra.member).map(serializeSource),
   }) as unknown as SourcesCollection
 }
 
@@ -146,7 +146,7 @@ export function serializeJob (job: Job): Job {
     name: job.name,
     created: job.created,
     actionStatus: job.actionStatus,
-    link: job.link,
+    link: job.link ? serializeLink(job.link) : null,
   }) as Job
 }
 
