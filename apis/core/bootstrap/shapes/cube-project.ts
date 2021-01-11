@@ -33,7 +33,7 @@ ${shape('cube-project/create')} {
     ] ;
     ${sh.property} [
       ${sh.name} "Cube identifier" ;
-      ${sh.description} "A unique, URL-safe string to identify the cube" ;
+      ${sh.description} "A unique, URL-safe string to identify the cube (only letters, digits, -, . and _)" ;
       ${sh.path} ${dcterms.identifier} ;
       ${sh.minLength} 1 ;
       ${sh.minCount} 1 ;
@@ -80,7 +80,7 @@ ${shape('cube-project/update')} {
     ] ;
     ${sh.property} [
       ${sh.name} "Cube identifier" ;
-      ${sh.description} "A unique, URL-safe string to identify the cube" ;
+      ${sh.description} "A unique, URL-safe string to identify the cube (only letters, digits, -, . and _)" ;
       ${sh.path} ${dcterms.identifier} ;
       ${sh.minLength} 1 ;
       ${sh.minCount} 1 ;
