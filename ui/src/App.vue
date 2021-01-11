@@ -1,7 +1,8 @@
 <template>
-  <div id="app">
+  <div id="app" class="is-flex is-flex-direction-column">
     <nav-bar />
-    <div class="main">
+
+    <div class="main is-flex-grow-1">
       <router-view />
     </div>
 
@@ -22,6 +23,12 @@
     </div>
 
     <b-loading :active="isLoading" :is-full-page="true" />
+
+    <footer class="mt-6 px-4 py-3 has-background-light">
+      <p class="has-text-right is-size-7">
+        version {{ release }}
+      </p>
+    </footer>
   </div>
 </template>
 
@@ -41,6 +48,10 @@ export default class App extends Vue {
   @appNS.State('loading') isLoading!: boolean
   @appNS.State('messages') messages!: Message[]
 
+  get release (): string {
+    return process.env.VUE_APP_RELEASE || '?'
+  }
+
   mounted (): void {
     this.$store.dispatch('app/loadCommonRDFProperties')
   }
@@ -58,6 +69,12 @@ export default class App extends Vue {
   }
 }
 </script>
+
+<style>
+html, body, #app {
+  min-height: 100vh;
+}
+</style>
 
 <style scoped>
 .messages {
