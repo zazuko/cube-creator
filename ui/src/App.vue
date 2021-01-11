@@ -49,7 +49,8 @@ export default class App extends Vue {
   @appNS.State('messages') messages!: Message[]
 
   get release (): string {
-    return process.env.VUE_APP_RELEASE || '?'
+    const commit = process.env.VUE_APP_COMMIT?.slice(0, 7) ?? 'dev'
+    return `${process.env.VUE_APP_VERSION} (${commit})`
   }
 
   mounted (): void {
