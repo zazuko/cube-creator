@@ -79,7 +79,7 @@ describe('lib/commands/transform', function () {
           minCount: 1,
           maxCount: 1,
         }, {
-          path: rdfs.label,
+          path: schema.name,
           minCount: 1,
         }],
       })
