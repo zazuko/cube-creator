@@ -21,6 +21,7 @@ export function parse(csv: string, options: CSVparse.Options): Promise<{ header:
 export async function sniffParse(csv: string): Promise<{ dialect: {delimiter: string; quote: string}; header: any[]; rows: any[] }> {
   const detectedCsvFormat = sniffer.sniff(csv)
   const csvDialect = {
+    bom: true,
     delimiter: detectedCsvFormat.delimiter,
     quote: detectedCsvFormat.quoteChar || '',
   }
