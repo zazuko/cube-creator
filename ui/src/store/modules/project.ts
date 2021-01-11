@@ -12,6 +12,7 @@ import {
   Dataset,
   DimensionMetadataCollection,
   CsvSource,
+  Job,
 } from '@cube-creator/model'
 import {
   serializeColumnMapping,
@@ -24,6 +25,7 @@ import {
 } from '../serializers'
 import { Term } from 'rdf-js'
 import { RdfResource } from 'alcaeus'
+import { cc } from '@cube-creator/core/namespace'
 import type { Organization } from '@rdfine/schema'
 
 export interface CreateIdentifier {
@@ -108,6 +110,20 @@ const getters: GetterTree<ProjectState, RootState> = {
     return (id: string) =>
       getters.dimensions.find(({ clientPath }: { clientPath: string }) => clientPath === id)
   },
+
+  jobs (state): Job[] {
+    const jobs = state.jobCollection?.member ?? []
+
+    return jobs.sort(({ created: created1 }, { created: created2 }) => created2.getTime() - created1.getTime())
+  },
+
+  transformJobs (state, getters): Job[] {
+    return getters.jobs.filter((job: Job) => job.types.has(cc.TransformJob))
+  },
+
+  publishJobs (state, getters): Job[] {
+    return getters.jobs.filter((job: Job) => job.types.has(cc.PublishJob))
+  },
 }
 
 const actions: ActionTree<ProjectState, RootState> = {
@@ -117,6 +133,9 @@ const actions: ActionTree<ProjectState, RootState> = {
     const project = await api.fetchResource(id)
 
     context.commit('storeProject', project)
+
+    context.commit('storeJobCollection', null)
+    context.dispatch('fetchJobCollection')
 
     return project
   },
@@ -160,8 +179,6 @@ const actions: ActionTree<ProjectState, RootState> = {
     if (!id) {
       throw new Error('Project does not have a jobCollection')
     }
-
-    context.commit('storeJobCollection', null)
 
     const collection = await api.fetchResource<JobCollection>(id)
     context.commit('storeJobCollection', collection)
