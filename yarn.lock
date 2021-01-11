@@ -1380,9 +1380,9 @@
     "@tpluscode/rdfine" "^0.5.17"
 
 "@rdfine/rdfs@^0.6.3":
-  version "0.6.3"
-  resolved "https://registry.yarnpkg.com/@rdfine/rdfs/-/rdfs-0.6.3.tgz#4e10aa5a46338331c7c62300500474688bed96a2"
-  integrity sha512-eh4HGONpwZUWFUVQn8PBsvhzobHa1P0CYZMOkJvh1PIeK5qaQsufBGGFUkhWuQkrIeXiBD3Uz2C4bxq/pYD3Vw==
+  version "0.6.4"
+  resolved "https://registry.yarnpkg.com/@rdfine/rdfs/-/rdfs-0.6.4.tgz#6aef5cae8f6860b5422155d5b60883aaff9b0cd6"
+  integrity sha512-c9C4fampN6nNIH1FhofqeuoH8yAFHFnhvvFqB74IpgOf7l5ogYNKjHopaCmeAcdsNrtEaHCwN9ggFW1hFptrmw==
   dependencies:
     "@rdf-esm/data-model" "^0.5.3"
     "@rdfine/rdf" "^0.5.3"
