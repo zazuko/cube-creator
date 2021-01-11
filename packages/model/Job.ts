@@ -14,7 +14,7 @@ import { initializer } from './lib/initializer'
 export interface Job extends Action, Rdfs.Resource, RdfResource {
   created: Date
   modified: Date
-  link?: string
+  link?: RdfResource
   name: string
 }
 
@@ -49,8 +49,8 @@ export function JobMixin<Base extends Constructor<RdfResource>>(base: Base): Mix
     @property.literal({ path: schema.name })
     name!: string
 
-    @property.literal({ path: rdfs.seeAlso })
-    link?: string
+    @property.resource({ path: rdfs.seeAlso })
+    link?: RdfResource
   }
 
   return Impl
