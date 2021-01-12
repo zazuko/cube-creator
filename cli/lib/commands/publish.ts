@@ -64,7 +64,7 @@ export default function (pipelineId: NamedNode, log: Debugger) {
 
     const timestamp = new Date()
     variable.set('timestamp', $rdf.literal(timestamp.toISOString(), xsd.dateTime))
-    variable.set('target-graph', job.publishGraph.value)
+    variable.set('target-graph', process.env.PUBLISH_GRAPH_OVERRIDE || job.publishGraph.value)
     variable.set('revision', job.revision)
     variable.set('namespace', namespace)
     variable.set('cubeIdentifier', cubeIdentifier)

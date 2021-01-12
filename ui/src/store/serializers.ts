@@ -26,7 +26,7 @@ export function serializeSourcesCollection (collection: SourcesCollection): Sour
       ...serializeActions(collection.actions),
       upload: collection.actions.upload,
     },
-    member: collection.getArray<CsvSource>(hydra.member).map(serializeSource),
+    member: collection.member.map(serializeSource),
   }) as unknown as SourcesCollection
 }
 
@@ -127,7 +127,7 @@ export function serializeDimensionMetadata (dimension: DimensionMetadata): Dimen
 }
 
 export function serializeJobCollection (collection: JobCollection): JobCollection {
-  const members = collection.getArray<Job>(hydra.member)
+  const members = collection.member
 
   return Object.freeze({
     ...serializeResource(collection),

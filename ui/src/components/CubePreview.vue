@@ -50,10 +50,7 @@
         <tr v-else-if="observations.data.length === 0">
           <td :colspan="tableWidth">
             <p class="has-text-grey has-text-centered">
-              No observations available. Did you already
-              <router-link :to="{ name: 'Pipeline' }">
-                run a transformation
-              </router-link>?
+              No observations available. Did you already run a transformation?
             </p>
           </td>
         </tr>
