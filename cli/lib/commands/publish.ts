@@ -67,7 +67,7 @@ export default function (pipelineId: NamedNode, log: Debugger) {
     variable.set('publish-graph-store-endpoint', publishStore?.endpoint || process.env.PUBLISH_GRAPH_STORE_ENDPOINT)
     variable.set('publish-graph-store-user', publishStore?.user || process.env.PUBLISH_GRAPH_STORE_USER)
     variable.set('publish-graph-store-password', publishStore?.password || process.env.PUBLISH_GRAPH_STORE_PASSWORD)
-    variable.set('target-graph', job.publishGraph)
+    variable.set('target-graph', process.env.PUBLISH_GRAPH_OVERRIDE || job.publishGraph)
     variable.set('revision', job.revision)
     variable.set('namespace', namespace)
 
