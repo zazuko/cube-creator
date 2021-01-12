@@ -1,5 +1,5 @@
 import { obj } from 'through2'
-import { Quad, Quad_Object as QuadObject, Quad_Subject as QuadSubject, Term } from 'rdf-js'
+import { Quad, Quad_Object as QuadObject } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import { dcterms, rdf, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import { cc, cube } from '@cube-creator/core/namespace'
@@ -37,11 +37,12 @@ async function loadDataset(jobUri: string) {
 }
 
 export async function injectMetadata(this: Context, jobUri: string) {
-  const revision: number = this.variables.get('revision')
+  const revision = this.variables.get('revision')
+  const cubeIdentifier = this.variables.get('cubeIdentifier')
   const dataset = await loadDataset(jobUri)
   const datasetTriples = dataset.pointer.dataset.match(null, null, null, dataset.id)
-  const previousCubes: Map<Term, QuadSubject> = this.variables.get('previousCubes')
-  const timestamp = $rdf.literal(this.variables.get('timestamp'), xsd.dateTime)
+  const previousCubes = this.variables.get('previousCubes')
+  const timestamp = this.variables.get('timestamp')
 
   return obj(function (quad: Quad, _, callback) {
     const visited = new TermSet()
@@ -60,6 +61,7 @@ export async function injectMetadata(this: Context, jobUri: string) {
       this.push($rdf.quad(quad.subject, schema.version, $rdf.literal(revision.toString(), xsd.integer)))
       this.push($rdf.quad(quad.subject, schema.dateModified, timestamp))
       this.push($rdf.quad(quad.subject, dcterms.modified, timestamp))
+      this.push($rdf.quad(quad.subject, dcterms.identifier, $rdf.literal(cubeIdentifier)))
 
       if (revision === 1) {
         this.push($rdf.quad(quad.subject, schema.datePublished, timestamp))

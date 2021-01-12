@@ -44,7 +44,6 @@ graph <cube-project/ubd/dataset> {
     a void:Dataset, hydra:Resource, schema:Dataset, dcat:Dataset ;
     schema:hasPart <https://environment.ld.admin.ch/foen/ubd/28/> ;
     cc:dimensionMetadata <cube-project/ubd/dimensions-metadata> ;
-    dcterms:identifier 'UBD28@BAFU' ;
     dcterms:title 'UBD28' ;
     dcat:contactPoint [ vcard:fn 'Test Name' ;
                         vcard:hasEmail 'test@mail.ch' ] ;

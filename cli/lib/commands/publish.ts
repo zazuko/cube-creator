@@ -6,23 +6,18 @@ import { Debugger } from 'debug'
 import { setupAuthentication } from '../auth'
 import Runner from 'barnard59/lib/runner'
 import bufferDebug from 'barnard59/lib/bufferDebug'
-import clownface from 'clownface'
-import namespace from '@rdfjs/namespace'
-import { rdf, schema } from '@tpluscode/rdf-ns-builders'
-import { names } from '../variables'
+import { schema, xsd } from '@tpluscode/rdf-ns-builders'
+import type { Variables } from 'barnard59-core/lib/Pipeline'
 import { updateJobStatus } from '../job'
 import { Hydra } from 'alcaeus/node'
 import { Project, PublishJob } from '@cube-creator/model'
-
-const ns = {
-  pipelines: namespace('https://pipeline.described.at/'),
-}
+import '../variables'
 
 interface RunOptions {
   debug: boolean
   job: string
   executionUrl?: string
-  variable?: Map<string, string | undefined>
+  variable?: Variables
   graphStore?: {
     endpoint: string
     user: string
@@ -40,8 +35,8 @@ interface RunOptions {
 export default function (pipelineId: NamedNode, log: Debugger) {
   const basePath = path.resolve(__dirname, '../../')
 
-  return async function (command: RunOptions) {
-    const { job: jobUri, debug = false, enableBufferMonitor = false, variable = new Map(), graphStore, publishStore, executionUrl } = command
+  return async function ({ variable = new Map(), ...command }: RunOptions) {
+    const { job: jobUri, debug = false, enableBufferMonitor = false, graphStore, publishStore, executionUrl } = command
 
     log.enabled = debug
     const authConfig = {
@@ -56,41 +51,30 @@ export default function (pipelineId: NamedNode, log: Debugger) {
 
     log('Running job %s', jobUri)
 
-    const [job, namespace] = await getJob(jobUri)
+    const { job, namespace, cubeIdentifier } = await getJob(jobUri)
 
-    const pipeline = clownface({ dataset }).namedNode(pipelineId)
     variable.set('jobUri', jobUri)
-    variable.set(names.executionUrl, executionUrl)
+    variable.set('executionUrl', executionUrl)
     variable.set('graph-store-endpoint', graphStore?.endpoint || process.env.GRAPH_STORE_ENDPOINT)
     variable.set('graph-store-user', graphStore?.user || process.env.GRAPH_STORE_USER)
     variable.set('graph-store-password', graphStore?.password || process.env.GRAPH_STORE_PASSWORD)
     variable.set('publish-graph-store-endpoint', publishStore?.endpoint || process.env.PUBLISH_GRAPH_STORE_ENDPOINT)
     variable.set('publish-graph-store-user', publishStore?.user || process.env.PUBLISH_GRAPH_STORE_USER)
     variable.set('publish-graph-store-password', publishStore?.password || process.env.PUBLISH_GRAPH_STORE_PASSWORD)
-    variable.set('target-graph', job.publishGraph)
-    variable.set('revision', job.revision)
-    variable.set('namespace', namespace)
 
     const timestamp = new Date()
-    variable.set('timestamp', timestamp.toISOString())
-
-    pipeline.addOut(ns.pipelines.variables, set => {
-      variable.forEach((value, key) => {
-        if (!value) return
-
-        set.addOut(ns.pipelines.variable, variable => {
-          variable.addOut(rdf.type, ns.pipelines.Variable)
-            .addOut(ns.pipelines('name'), key)
-            .addOut(ns.pipelines.value, value)
-        })
-      })
-    })
+    variable.set('timestamp', $rdf.literal(timestamp.toISOString(), xsd.dateTime))
+    variable.set('target-graph', job.publishGraph.value)
+    variable.set('revision', job.revision)
+    variable.set('namespace', namespace)
+    variable.set('cubeIdentifier', cubeIdentifier)
 
     const run = Runner.create({
       basePath: path.resolve(basePath, 'pipelines'),
       outputStream: process.stdout,
       term: pipelineId.value,
       dataset,
+      variable,
     })
 
     Runner.log.enabled = debug
@@ -104,16 +88,16 @@ export default function (pipelineId: NamedNode, log: Debugger) {
         updateJobStatus({
           log: run.pipeline.context.log,
           modified: timestamp,
-          jobUri: run.pipeline.context.variables.get(names.jobUri),
-          executionUrl: run.pipeline.context.variables.get(names.executionUrl),
+          jobUri: run.pipeline.context.variables.get('jobUri'),
+          executionUrl: run.pipeline.context.variables.get('executionUrl'),
           status: schema.CompletedActionStatus,
         }))
       .catch(async (error) => {
         await updateJobStatus({
           log: run.pipeline.context.log,
           modified: timestamp,
-          jobUri: run.pipeline.context.variables.get(names.jobUri),
-          executionUrl: run.pipeline.context.variables.get(names.executionUrl),
+          jobUri: run.pipeline.context.variables.get('jobUri'),
+          executionUrl: run.pipeline.context.variables.get('executionUrl'),
           status: schema.FailedActionStatus,
           error,
         })
@@ -123,7 +107,11 @@ export default function (pipelineId: NamedNode, log: Debugger) {
   }
 }
 
-async function getJob(jobUri: string): Promise<[PublishJob, string]> {
+async function getJob(jobUri: string): Promise<{
+  job: PublishJob
+  namespace: string
+  cubeIdentifier: string
+}> {
   const jobResource = await Hydra.loadResource<PublishJob>(jobUri)
   const job = jobResource.representation?.root
   if (!job) {
@@ -144,5 +132,9 @@ async function getJob(jobUri: string): Promise<[PublishJob, string]> {
     throw new Error(`Can not determine target graph for job ${jobUri}`)
   }
 
-  return [job, datasetResource.representation?.root?.hasPart[0].id.value]
+  return {
+    job,
+    namespace: datasetResource.representation?.root?.hasPart[0].id.value,
+    cubeIdentifier: project.cubeIdentifier,
+  }
 }

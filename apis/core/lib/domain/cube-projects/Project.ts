@@ -12,7 +12,6 @@ import { childResource } from '@cube-creator/model/lib/resourceIdentifiers'
 import { DomainError } from '../../errors'
 
 interface ApiProject {
-  identifier: string
   nextRevision: number
   initializeCsvMapping(store: ResourceStore): CsvMapping
   initializeJobCollection(store: ResourceStore): void
@@ -30,10 +29,6 @@ declare module '@cube-creator/model' {
 
 export default function Mixin<Base extends Constructor<Omit<Project, keyof ApiProject>>>(Resource: Base) {
   class Project extends Resource implements ApiProject {
-    get identifier() {
-      return this.id.value.substring(this.id.value.lastIndexOf('/') + 1)
-    }
-
     get nextRevision() {
       return this.publishedRevision ? this.publishedRevision + 1 : 1
     }

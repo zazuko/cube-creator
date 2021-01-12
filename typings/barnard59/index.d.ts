@@ -8,7 +8,7 @@ declare module 'barnard59/lib/runner' {
   import { DatasetCore } from 'rdf-js'
   import { Writable } from 'stream'
   import type { Debugger } from 'debug'
-  import type Pipeline from 'barnard59-core/lib/Pipeline'
+  import type * as Pipeline from 'barnard59-core/lib/Pipeline'
 
   type Runner = {
     pipeline: Pipeline
@@ -20,7 +20,7 @@ declare module 'barnard59/lib/runner' {
     basePath: string
     outputStream: Writable
     term: string
-    variable?: Map<string, string>
+    variable?: Pipeline.Variables
   }
 
   function create(options: RunnerInit): Runner
