@@ -34,7 +34,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import SidePane from '@/components/SidePane.vue'
 import FormSubmitCancel from '@/components/FormSubmitCancel.vue'
-import { APIErrorConflict, APIErrorValidation } from '@/api/errors'
+import { APIErrorConflict, APIErrorValidation, APIPayloadTooLarge } from '@/api/errors'
 
 @Component({
   components: { SidePane, FormSubmitCancel },
@@ -58,6 +58,8 @@ export default class CSVUploadView extends Vue {
         this.error = 'Cannot upload a file with the same name twice'
       } else if (e instanceof APIErrorValidation) {
         this.error = e.details?.title ?? null
+      } else if (e instanceof APIPayloadTooLarge) {
+        this.error = 'CSV file is too large'
       } else {
         console.error(e)
         this.error = e.toString()
