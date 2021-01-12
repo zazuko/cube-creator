@@ -1,25 +1,63 @@
 <template>
-  <side-pane :is-open="true" title="Resource preview" @close="onCancel">
-    <b-message type="is-warning" title="Work in progress">
-      This pane will show details about the selected resource.
-    </b-message>
+  <side-pane :is-open="true" title="Resource preview" @close="onCancel" style="width: 50%;">
+    <h3 class="is-title is-size-6 mb-4">
+      <term-display :term="resourceId" class="tag is-rounded has-text-weight-bold" />
+    </h3>
+    <table v-if="resource" class="table is-fullwidth">
+      <tr v-for="([predicate, objects], index) in properties" :key="index">
+        <td class="has-text-weight-semibold">
+          <term-display :term="predicate" />
+        </td>
+        <td>
+          <p v-for="(object, objectIndex) in objects" :key="objectIndex">
+            <term-display :term="object" :show-language="true" />
+          </p>
+        </td>
+      </tr>
+    </table>
+    <loading-block v-else />
   </side-pane>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import type RdfResource from '@tpluscode/rdfine/RdfResource'
+import { namespace } from 'vuex-class'
+import $rdf from '@rdfjs/data-model'
+import { Term } from 'rdf-js'
+import TermSet from '@rdf-esm/term-set'
+import { GraphPointer } from 'clownface'
+import { Project } from '@cube-creator/model'
 import SidePane from '@/components/SidePane.vue'
+import LoadingBlock from '@/components/LoadingBlock.vue'
+import TermDisplay from '@/components/TermDisplay.vue'
+import { api } from '@/api'
+
+const projectNS = namespace('project')
 
 @Component({
-  components: { SidePane },
+  components: { LoadingBlock, SidePane, TermDisplay },
 })
-export default class extends Vue {
-  resourceId = this.$route.params.resourceId
-  resource: RdfResource | null = null
+export default class ResourcePreview extends Vue {
+  @projectNS.State('project') project!: Project | null
+
+  resourceId = $rdf.namedNode(this.$route.params.resourceId)
+  resource: GraphPointer | null = null
+  properties: [Term, Term[]][] = []
 
   async mounted (): Promise<void> {
-    // TODO: load resource
+    const cubeGraph = this.project?.cubeGraph
+    if (!cubeGraph) throw new Error('Project does not have a cubeGraph')
+
+    const url = new URL(cubeGraph.value)
+    url.searchParams.append('resource', this.resourceId.value)
+    const responseResource = await api.fetchResource(url.href)
+
+    const resource = responseResource.pointer.namedNode(this.resourceId)
+    const resourceQuads = [...responseResource.pointer.dataset.match(this.resourceId, null, null, $rdf.namedNode(url.href))]
+    const resourcePredicates = new TermSet(resourceQuads.map(({ predicate }) => predicate))
+
+    this.resource = resource
+    this.properties = [...resourcePredicates].map((predicate) => [predicate, resource.out(predicate).terms])
   }
 
   onCancel (): void {

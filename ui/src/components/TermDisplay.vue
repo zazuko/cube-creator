@@ -1,6 +1,6 @@
 <template>
   <b-tooltip :label="displayFull" :active="displayShort !== displayFull">
-    {{ displayShort }}
+    {{ displayShort }}<span v-if="showLanguage && term.language" class="has-text-grey-light">@{{ term.language }}</span>
   </b-tooltip>
 </template>
 
@@ -12,6 +12,7 @@ import { shrink } from '@/rdf-properties'
 @Component
 export default class extends Vue {
   @Prop({ required: true }) term!: Term
+  @Prop({ default: false }) showLanguage!: boolean
 
   get displayShort (): string {
     if (this.term.termType === 'NamedNode') {
