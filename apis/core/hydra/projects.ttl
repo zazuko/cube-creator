@@ -5,6 +5,7 @@ prefix code:   <https://code.described.at/>
 prefix query:  <http://hypermedia.app/query#>
 prefix sh:     <http://www.w3.org/ns/shacl#>
 PREFIX schema: <http://schema.org/>
+prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
 cc:CubeProject
   a
@@ -51,7 +52,15 @@ cc:CubeProject
           code:link
             <file:handlers/cube-projects#remove> ;
         ] ;
-    ] .
+    ] ;
+  hydra:supportedProperty
+    [
+      a
+        hydra:SupportedProperty ;
+      hydra:property
+        cc:cubeGraph ;
+    ] ;
+.
 
 cc:csvMapping
   a
@@ -92,3 +101,25 @@ cc:ProjectsCollection
 <shape/cube-project/update>
   a
     sh:Shape .
+
+cc:cubeGraph
+  a
+    rdf:Property,
+    hydra:Link ;
+  hydra:supportedOperation
+    [
+      a
+        hydra:Operation ;
+      hydra:title
+        "Describe a resource inside the cube data" ;
+      hydra:method
+        "GET" ;
+      code:implementedBy
+        [
+          a
+            code:EcmaScript ;
+          code:link
+            <file:handlers/cube-data#get> ;
+        ] ;
+    ] ;
+.
