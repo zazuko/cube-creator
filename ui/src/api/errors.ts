@@ -46,6 +46,8 @@ export class APIError extends Error {
         return new APIErrorValidation(details, response)
       case 409:
         return new APIErrorConflict(details, response)
+      case 413:
+        return new APIPayloadTooLarge(details, response)
       case 401:
       case 403:
         return new APIErrorAuthorization(details, response)
@@ -58,4 +60,5 @@ export class APIError extends Error {
 export class APIErrorNotFound extends APIError {}
 export class APIErrorValidation extends APIError {}
 export class APIErrorConflict extends APIError {}
+export class APIPayloadTooLarge extends APIError {}
 export class APIErrorAuthorization extends APIError {}
