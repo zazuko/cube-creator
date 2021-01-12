@@ -4,21 +4,19 @@ import * as s3 from '../../storage/s3'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import $rdf from 'rdf-ext'
-import * as TableQueries from '../queries/table'
+import { getLinkedTablesForSource } from '../queries/table'
 import { deleteTable } from '../table/delete'
 
 interface DeleteSourceCommand {
   resource: NamedNode | Term
   store: ResourceStore
   fileStorage?: s3.FileStorage
-  tableQueries?: Pick<typeof TableQueries, 'getLinkedTablesForSource'>
 }
 
 export async function deleteSource({
   resource,
   store,
   fileStorage = s3,
-  tableQueries: { getLinkedTablesForSource } = TableQueries,
 }: DeleteSourceCommand): Promise<void> {
   if (resource.termType !== 'NamedNode') return
 

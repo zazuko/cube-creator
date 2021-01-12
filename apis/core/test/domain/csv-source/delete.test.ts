@@ -7,16 +7,13 @@ import { rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import clownface from 'clownface'
 import type { FileStorage } from '../../../lib/storage/s3'
-import type * as TableQueries from '../../../lib/domain/queries/table'
+import * as TableQueries from '../../../lib/domain/queries/table'
 import '../../../lib/domain'
 import { deleteSource } from '../../../lib/domain/csv-source/delete'
+import * as DeleteTable from '../../../lib/domain/table/delete'
 
 describe('domain/csv-sources/delete', () => {
   let fileStorage: FileStorage
-  let tableQueries: typeof TableQueries
-  let getLinkedTablesForSource: sinon.SinonStub
-  let getTablesForMapping: sinon.SinonStub
-  const getTableForColumnMapping = sinon.stub()
 
   beforeEach(() => {
     fileStorage = {
@@ -25,17 +22,16 @@ describe('domain/csv-sources/delete', () => {
       deleteFile: sinon.spy(),
     }
 
-    function * tableGenerator() {
-      yield 'table'
+    async function * tableGenerator() {
+      yield $rdf.namedNode('table')
     }
 
-    getLinkedTablesForSource = sinon.stub().returns(tableGenerator())
-    getTablesForMapping = sinon.stub().returns(tableGenerator())
-    tableQueries = {
-      getLinkedTablesForSource,
-      getTablesForMapping,
-      getTableForColumnMapping,
-    }
+    sinon.restore()
+    sinon.stub(TableQueries, 'getLinkedTablesForSource').returns(tableGenerator())
+    sinon.stub(TableQueries, 'getTablesForMapping').returns(tableGenerator())
+    sinon.stub(TableQueries, 'getTableForColumnMapping')
+
+    sinon.stub(DeleteTable, 'deleteTable')
   })
   const csvSource = clownface({ dataset: $rdf.dataset() })
     .namedNode('source')
@@ -57,11 +53,13 @@ describe('domain/csv-sources/delete', () => {
       csvSource, table,
     ])
     // when
-    await deleteSource({ resource: csvSource.term, store: store, fileStorage, tableQueries })
+    await deleteSource({ resource: csvSource.term, store: store, fileStorage })
 
     // then
     expect(fileStorage.deleteFile).calledOnceWithExactly('FileKey')
     expect(csvMapping.out(cc.csvSource).term).to.be.undefined
-    expect(table.out(cc.csvSource).term).to.be.undefined
+    expect(DeleteTable.deleteTable).to.have.been.calledWith(sinon.match({
+      resource: table.term,
+    }))
   })
 })
