@@ -16,7 +16,7 @@ import {
 } from '@cube-creator/model'
 import { IdentifierMapping, LiteralColumnMapping, ReferenceColumnMapping } from '@cube-creator/model/ColumnMapping'
 import { Link } from '@cube-creator/model/lib/Link'
-import { dcterms, hydra } from '@tpluscode/rdf-ns-builders'
+import { dcterms } from '@tpluscode/rdf-ns-builders'
 import { RdfResource } from '@tpluscode/rdfine/RdfResource'
 
 export function serializeSourcesCollection (collection: SourcesCollection): SourcesCollection {
@@ -127,7 +127,7 @@ export function serializeDimensionMetadata (dimension: DimensionMetadata): Dimen
 }
 
 export function serializeJobCollection (collection: JobCollection): JobCollection {
-  const members = collection.member
+  const members = collection.member ?? []
 
   return Object.freeze({
     ...serializeResource(collection),
