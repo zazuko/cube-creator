@@ -5,10 +5,10 @@ import { DefaultStrategy } from '@hydrofoil/shaperone-wc/renderer/DefaultStrateg
 import { PropertyRenderStrategy, ObjectRenderStrategy, FocusNodeRenderStrategy } from '@hydrofoil/shaperone-wc/lib/renderer'
 import { instancesSelector } from '@hydrofoil/shaperone-hydra/components'
 import { ShaperoneForm } from '@hydrofoil/shaperone-wc/ShaperoneForm'
-import * as Components from './components'
+import * as Editors from './editors'
 import * as Matchers from './matchers'
 import { Metadata } from './metadata'
-import { createCustomElement } from '@/forms/bulma'
+import { createCustomElement } from './custom-element'
 
 export const focusNodeStrategy: FocusNodeRenderStrategy = ({ focusNode, renderGroup }) => html`
   <div class="fieldset" part="focus-node">
@@ -48,7 +48,7 @@ renderer.setStrategy({
   property: propertyStrategy,
   object: objectStrategy,
 })
-components.pushComponents(Components)
+components.pushComponents(Editors)
 components.decorate(instancesSelector.decorator())
 
 editors.addMatchers(Matchers)
