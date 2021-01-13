@@ -13,7 +13,9 @@ export default class extends Vue {
   @Prop() selectedLanguage!: string
 
   get value (): string | undefined {
-    const term = this.values?.find(({ language }) => language === this.selectedLanguage)
+    const term =
+      this.values?.find(({ language }) => language === this.selectedLanguage) ||
+      this.values?.find(({ language }) => !language)
 
     return term?.value
   }
