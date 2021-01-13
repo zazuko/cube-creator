@@ -51,7 +51,8 @@ export async function getObservations({
     observations,
     templateParams,
     template,
-    totalItems: 0,
+    totalItems: 0, // TODO: query for the total number of observations
+    pageSize,
   })
 
   // Load labels for linked resources

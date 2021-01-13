@@ -220,6 +220,7 @@ describe('lib/domain/observations/lib', () => {
         template,
         observations,
         totalItems: 10,
+        pageSize: 1,
       })
 
       // then
@@ -233,6 +234,7 @@ describe('lib/domain/observations/lib', () => {
         template,
         observations,
         totalItems: 10,
+        pageSize: 1,
       })
 
       // then
