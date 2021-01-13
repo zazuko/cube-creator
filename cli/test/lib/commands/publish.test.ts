@@ -4,7 +4,7 @@ import { expect } from 'chai'
 import $rdf from 'rdf-ext'
 import { CONSTRUCT, SELECT } from '@tpluscode/sparql-builder'
 import debug from 'debug'
-import { dcat, dcterms, rdf, schema, sh, vcard, xsd } from '@tpluscode/rdf-ns-builders'
+import { csvw, dcat, dcterms, rdf, schema, sh, vcard, xsd } from '@tpluscode/rdf-ns-builders'
 import { setupEnv } from '../../support/env'
 import { client, parsingClient, insertTestData } from '@cube-creator/testing/lib'
 import { cc, cube, scale } from '@cube-creator/core/namespace'
@@ -230,6 +230,18 @@ describe('lib/commands/publish', function () {
           minCount: 1,
         },
       })
+    })
+
+    it('removes all csvw triples', async () => {
+      const distinctCsvwProps = await SELECT.DISTINCT`(count(distinct ?p) as ?count)`
+        .FROM($rdf.namedNode(`${env.API_CORE_BASE}cube-project/ubd/cube-data`))
+        .WHERE`
+          ?s ?p ?o .
+          filter (regex(str(?p), str(${csvw()})))
+        `
+        .execute(parsingClient.query)
+
+      expect(distinctCsvwProps[0].count.value).to.eq('0')
     })
   })
 })

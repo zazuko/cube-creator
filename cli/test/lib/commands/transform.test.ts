@@ -2,13 +2,13 @@ import env from '@cube-creator/core/env'
 import { before, describe, it } from 'mocha'
 import { expect } from 'chai'
 import $rdf from 'rdf-ext'
-import { ASK, CONSTRUCT } from '@tpluscode/sparql-builder'
+import { ASK, CONSTRUCT, SELECT } from '@tpluscode/sparql-builder'
 import debug from 'debug'
 import { Hydra } from 'alcaeus/node'
-import { rdf, rdfs, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
+import { csvw, rdf, rdfs, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import transform from '../../../lib/commands/transform'
 import { setupEnv } from '../../support/env'
-import { client, insertTestData } from '@cube-creator/testing/lib'
+import { client, insertTestData, parsingClient } from '@cube-creator/testing/lib'
 import { cc, cube } from '@cube-creator/core/namespace'
 import clownface from 'clownface'
 
@@ -90,6 +90,19 @@ describe('lib/commands/transform', function () {
         .FROM($rdf.namedNode(`${env.API_CORE_BASE}cube-project/ubd/cube-data`))
         .execute(client.query)
       expect(hasCubeProperty).to.eq(false)
+    })
+
+    it('removes all CSVW triples but csvw:describes', async () => {
+      const distinctCsvwProps = await SELECT.DISTINCT`?prop`
+        .FROM($rdf.namedNode(`${env.API_CORE_BASE}cube-project/ubd/cube-data`))
+        .WHERE`
+          ?s ?prop ?o .
+          filter (regex(str(?prop), str(${csvw()})))
+        `
+        .execute(parsingClient.query)
+
+      expect(distinctCsvwProps).to.have.length(1)
+      expect(distinctCsvwProps[0].prop).to.deep.eq(csvw.describes)
     })
 
     it('updates job', async () => {
