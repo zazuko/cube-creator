@@ -30,6 +30,7 @@ export const query = protectedResource(
     }
 
     const pageSize = Number.parseInt(query.out(hydra.limit).value || '0')
+    const pageIndex = Number.parseInt(query.out(hydra.pageIndex).value || '1')
     const sourceGraph = query.out(cc.cubeGraph).value
     if (!sourceGraph) {
       return next(new error.BadRequest("Missing 'graph' query parameter"))
@@ -52,6 +53,7 @@ export const query = protectedResource(
     const collection = await getObservations({
       sourceGraph,
       pageSize,
+      pageIndex,
       cubeId,
       template,
       filters,
