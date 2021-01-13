@@ -61,13 +61,30 @@ interface HydraCollectionParams {
   totalItems: number
 }
 
+function pageId(template: IriTemplate, params: GraphPointer, pageIndexOffset?: number) {
+  const templateParams = clownface({
+    dataset: $rdf.dataset([...params.dataset]),
+    term: params.term,
+  })
+
+  if (pageIndexOffset) {
+    const pageIndex = Number.parseInt(templateParams.out(hydra.pageIndex).value || '1')
+    if (pageIndex === 1) {
+      return undefined
+    }
+
+    templateParams.deleteOut(hydra.pageIndex).addOut(hydra.pageIndex, pageIndex + pageIndexOffset)
+  }
+
+  return $rdf.namedNode(new URL(template.expand(templateParams), env.API_CORE_BASE).toString())
+}
+
 export function createHydraCollection({ templateParams, template, observations, totalItems }: HydraCollectionParams): Collection {
   const collectionId = template.expand(
     clownface({ dataset: $rdf.dataset() }).blankNode()
       .addOut(cc.cube, templateParams.out(cc.cube))
       .addOut(cc.cubeGraph, templateParams.out(cc.cubeGraph)),
   )
-  const viewId = template.expand(templateParams)
 
   const collectionPointer = clownface({ dataset: $rdf.dataset() })
     .namedNode(new URL(collectionId, env.API_CORE_BASE).toString())
@@ -77,7 +94,9 @@ export function createHydraCollection({ templateParams, template, observations, 
     totalItems,
     view: {
       types: [hydra.PartialCollectionView],
-      id: new URL(viewId, env.API_CORE_BASE).toString(),
+      id: pageId(template, templateParams),
+      next: pageId(template, templateParams, 1),
+      previous: pageId(template, templateParams, -1),
     },
   }) as any
 }
