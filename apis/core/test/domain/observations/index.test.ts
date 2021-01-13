@@ -85,6 +85,48 @@ describe('lib/domain/observations', () => {
     })
 
     // then
-    expect(lib.createView).to.have.been.calledWith(sinon.match.any, 20)
+    expect(lib.createView).to.have.been.calledWith(sinon.match.any, 20, sinon.match.any)
+  })
+
+  it('passes offset 0 if pageIndex is not provided', async () => {
+    // given
+    for (let i = 0; i < 100; i++) {
+      observations.push({})
+    }
+
+    // when
+    await getObservations({
+      cubeId: 'cube',
+      sourceGraph: 'cube-data',
+      templateParams,
+      template,
+      loadResourceLabels,
+    })
+
+    // then
+    expect(lib.createView).to.have.been.calledWith(sinon.match.any, sinon.match.any, 0)
+  })
+
+  it('computes offset from pageSize and pageIndex', async () => {
+    // given
+    for (let i = 0; i < 100; i++) {
+      observations.push({})
+    }
+    const pageSize = 10
+    const pageIndex = 5
+
+    // when
+    await getObservations({
+      cubeId: 'cube',
+      sourceGraph: 'cube-data',
+      templateParams,
+      template,
+      pageSize,
+      pageIndex,
+      loadResourceLabels,
+    })
+
+    // then
+    expect(lib.createView).to.have.been.calledWith(sinon.match.any, 10, 40)
   })
 })

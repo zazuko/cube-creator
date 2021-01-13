@@ -18,7 +18,7 @@ RdfResource.factory.addMixin(...IriTemplateBundle)
 
 describe('lib/domain/observations/lib', () => {
   describe('createView', () => {
-    it('initializes a projection with view:limit', () => {
+    it('initializes a projection with view:limit and view:offset', () => {
       // given
       const cube = new Cube({
         source: new Source({ endpointUrl: '' }),
@@ -29,17 +29,23 @@ describe('lib/domain/observations/lib', () => {
         })
 
       // when
-      const { ptr } = createView(cube, 10)
+      const { ptr } = createView(cube, 10, 100)
 
       // then
       expect(ptr).to.matchShape({
         property: [{
           path: ns.view.projection,
           node: {
-            property: {
-              path: ns.view.limit,
-              hasValue: $rdf.literal('10', xsd.integer),
-            },
+            property: [
+              {
+                path: ns.view.limit,
+                hasValue: $rdf.literal('10', xsd.integer),
+              },
+              {
+                path: ns.view.offset,
+                hasValue: $rdf.literal('100', xsd.integer),
+              },
+            ],
           },
         }],
       })

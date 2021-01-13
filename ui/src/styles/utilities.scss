@@ -1,0 +1,24 @@
+
+.gap-1 > *:not(:last-child) {
+    @extend .mr-1;
+}
+
+.gap-2 > *:not(:last-child) {
+    @extend .mr-2;
+}
+
+.gap-3 > *:not(:last-child) {
+    @extend .mr-3;
+}
+
+.gap-4 > *:not(:last-child) {
+    @extend .mr-4;
+}
+
+.gap-5 > *:not(:last-child) {
+    @extend .mr-5;
+}
+
+.gap-6 > *:not(:last-child) {
+    @extend .mr-6;
+}

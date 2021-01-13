@@ -100,7 +100,19 @@ graph <cube-project/ubd/cube-data> {
   <https://environment.ld.admin.ch/foen/ubd/28/observation/>
     a                 cube:ObservationSet ;
     cube:observation  <https://environment.ld.admin.ch/foen/ubd/28/observation/blBAS-1999-annualmean> ,
-                      <https://environment.ld.admin.ch/foen/ubd/28/observation/blBAS-2002-annualmean> ;
+                      <https://environment.ld.admin.ch/foen/ubd/28/observation/blBAS-2002-annualmean> ,
+                      <https://environment.ld.admin.ch/foen/ubd/28/observation/blBAS-2003-annualmean> ;
+  .
+
+  <https://environment.ld.admin.ch/foen/ubd/28/observation/blBAS-2003-annualmean>
+    a                cube:Observation ;
+    cube:observedBy  <https://ld.stadt-zuerich.ch/> ;
+    <https://environment.ld.admin.ch/foen/ubd/28/aggregation>     <https://environment.ld.admin.ch/foen/ubd/28/aggregation/annualmean> ;
+    <https://environment.ld.admin.ch/foen/ubd/28/dimension/value> "6.2"^^xsd:float ;
+    <https://environment.ld.admin.ch/foen/ubd/28/dimension/year>  "2003"^^xsd:gYear ;
+    <https://environment.ld.admin.ch/foen/ubd/28/pollutant>       <https://environment.ld.admin.ch/foen/ubd/28/pollutant/so2> ;
+    <https://environment.ld.admin.ch/foen/ubd/28/station>         <https://environment.ld.admin.ch/foen/ubd/28/station/blBAS> ;
+    <https://environment.ld.admin.ch/foen/ubd/28/unit-id>         "µg/m3" ;
   .
 
   <https://environment.ld.admin.ch/foen/ubd/28/observation/blBAS-2002-annualmean>

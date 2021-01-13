@@ -1,6 +1,6 @@
 <template>
   <div class="table-container cube-preview">
-    <table class="table is-condensed is-bordered">
+    <table class="table is-condensed is-bordered is-striped">
       <thead>
         <tr>
           <th :colspan="dimensions.length || 1">
@@ -25,7 +25,7 @@
             </div>
           </th>
         </tr>
-        <tr>
+        <tr class="has-background-light">
           <th v-for="dimension in dimensions" :key="dimension.id.value">
             <cube-preview-dimension :dimension="dimension" :selected-language="selectedLanguage" />
           </th>
@@ -62,16 +62,35 @@
       </tbody>
       <tfoot>
         <tr>
-          <td :colspan="tableWidth">
-            <div class="is-flex">
-              <b-tooltip class="mr-2" label="Refresh data">
+          <td :colspan="tableWidth" class="has-background-light">
+            <div class="is-flex gap-4">
+              <div class="is-flex is-align-items-center gap-1">
+                <span class="pr-1">Page {{ page }}</span>
+                <b-tooltip label="Previous page">
+                  <b-button
+                    icon-left="chevron-left"
+                    @click="page = page - 1"
+                    :disabled="!observations.data || page === 1"
+                  />
+                </b-tooltip>
+                <b-tooltip label="Next page">
+                  <b-button
+                    icon-left="chevron-right"
+                    @click="page = page + 1"
+                    :disabled="!observations.data || observations.data.length === 0"
+                  />
+                </b-tooltip>
+              </div>
+              <b-tooltip label="Page size">
+                <b-select v-model="pageSize" title="Page size">
+                  <option v-for="pageSizeOption in pageSizes" :key="pageSizeOption" :native-value="pageSizeOption">
+                    {{ pageSizeOption }}
+                  </option>
+                </b-select>
+              </b-tooltip>
+              <b-tooltip label="Refresh data">
                 <b-button icon-left="sync" @click="fetchCubeData" />
               </b-tooltip>
-              <b-select v-model="pageSize" title="Page size">
-                <option v-for="pageSizeOption in pageSizes" :key="pageSizeOption" :native-value="pageSizeOption">
-                  {{ pageSizeOption }}
-                </option>
-              </b-select>
             </div>
           </td>
         </tr>
@@ -114,6 +133,7 @@ export default class extends Vue {
   languages = languages
   selectedLanguage = 'en'
   pageSize = 10
+  page = 1
   pageSizes = [10, 20, 50, 100]
   observations: RemoteData<any[]> = Remote.loading()
 
@@ -145,6 +165,12 @@ export default class extends Vue {
   }
 
   @Watch('pageSize')
+  resetPage (): void {
+    this.page = 1
+  }
+
+  @Watch('pageSize')
+  @Watch('page')
   async fetchCubeData (): Promise<void> {
     this.observations = Remote.loading()
 
@@ -163,6 +189,7 @@ export default class extends Vue {
     const filters = clownface({ dataset: $rdf.dataset() })
       .blankNode()
       .addOut(hydra.limit, this.pageSize)
+      .addOut(hydra.pageIndex, this.page)
 
     const uri = this.cube.observations.expand(filters)
 

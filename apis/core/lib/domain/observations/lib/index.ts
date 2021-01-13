@@ -38,7 +38,7 @@ export function populateFilters(view: View, filters: AnyPointer): void {
     })
 }
 
-export function createView(cube: Cube, pageSize: number): View {
+export function createView(cube: Cube, pageSize: number, offset: number): View {
   const view = CubeQuery.View.fromCube(cube)
 
   view.ptr.addOut(ns.view.projection, projection => {
@@ -48,6 +48,7 @@ export function createView(cube: Cube, pageSize: number): View {
 
     projection.addList(ns.view.orderBy, order)
     projection.addOut(ns.view.limit, pageSize)
+    projection.addOut(ns.view.offset, offset)
   })
 
   return view

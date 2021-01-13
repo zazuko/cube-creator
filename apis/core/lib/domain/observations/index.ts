@@ -8,6 +8,7 @@ import { loadResourceLabels as _loadResourceLabels } from '../queries/observatio
 import { Quad, Term } from 'rdf-js'
 
 const DEFAULT_PAGE_SIZE = 20
+const DEFAULT_PAGE_INDEX = 1
 
 interface Params {
   cubeId: string
@@ -16,6 +17,7 @@ interface Params {
   template: IriTemplate
   filters?: AnyPointer
   pageSize?: number
+  pageIndex?: number
   loadResourceLabels?: (ids: Term[]) => Promise<Quad[]>
 }
 
@@ -25,7 +27,8 @@ export async function getObservations({
   filters,
   templateParams,
   template,
-  pageSize,
+  pageSize = DEFAULT_PAGE_SIZE,
+  pageIndex = DEFAULT_PAGE_INDEX,
   loadResourceLabels = _loadResourceLabels,
 }: Params): Promise<Collection> {
   const source = createSource(sourceGraph)
@@ -36,7 +39,8 @@ export async function getObservations({
     throw new DomainError(`Cube not found: '${cubeId}'`)
   }
 
-  const view = createView(cube, pageSize || DEFAULT_PAGE_SIZE)
+  const offset = pageSize * (pageIndex - 1)
+  const view = createView(cube, pageSize, offset)
   if (filters) {
     populateFilters(view, filters)
   }

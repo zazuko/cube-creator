@@ -29,7 +29,10 @@ export const query = protectedResource(
       return next(new error.BadRequest("Missing 'cube' query parameter"))
     }
 
-    const pageSize = Number.parseInt(query.out(hydra.limit).value || '0')
+    const pageSizeParam = query.out(hydra.limit).value
+    const pageSize = pageSizeParam ? Number.parseInt(pageSizeParam) : undefined
+    const pageIndexParam = query.out(hydra.pageIndex).value
+    const pageIndex = pageIndexParam ? Number.parseInt(pageIndexParam) : undefined
     const sourceGraph = query.out(cc.cubeGraph).value
     if (!sourceGraph) {
       return next(new error.BadRequest("Missing 'graph' query parameter"))
@@ -52,6 +55,7 @@ export const query = protectedResource(
     const collection = await getObservations({
       sourceGraph,
       pageSize,
+      pageIndex,
       cubeId,
       template,
       filters,
