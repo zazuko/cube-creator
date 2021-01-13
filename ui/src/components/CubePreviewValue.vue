@@ -4,11 +4,11 @@
   </span>
   <router-link v-else-if="isResource" :to="{ name: 'ResourcePreview', params: { resourceId: value.id.value } }" class="tag is-rounded is-small">
     <term-with-language :values="label" :selected-language="selectedLanguage">
-      <term-display :term="value.id" />
+      <term-display :term="value.id" :base="cubeUri" />
     </term-with-language>
   </router-link>
   <span v-else-if="isTerm">
-    <term-display :term="value" />
+    <term-display :term="value" :base="cubeUri" />
   </span>
   <span v-else class="has-background-danger-light">
     Cannot display value
@@ -32,6 +32,7 @@ export default class extends Vue {
   @Prop({ required: true }) value: Value
   @Prop({ default: '' }) missingValue?: string
   @Prop({ required: true }) selectedLanguage!: string
+  @Prop({ required: true }) cubeUri!: string
 
   get label (): Term[] {
     if (!isResource(this.value)) return []

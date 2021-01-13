@@ -1,16 +1,16 @@
 <template>
   <side-pane :is-open="true" title="Resource preview" @close="onCancel" style="width: 50%;">
     <h3 class="is-title is-size-6 mb-4">
-      <term-display :term="resourceId" class="tag is-rounded has-text-weight-bold" />
+      <term-display :term="resourceId" :base="cubeUri" class="tag is-rounded has-text-weight-bold" />
     </h3>
     <table v-if="resource" class="table is-fullwidth">
       <tr v-for="([predicate, objects], index) in properties" :key="index">
         <td class="has-text-weight-semibold">
-          <term-display :term="predicate" />
+          <term-display :term="predicate" :base="cubeUri" />
         </td>
         <td>
           <p v-for="(object, objectIndex) in objects" :key="objectIndex">
-            <term-display :term="object" :show-language="true" />
+            <term-display :term="object" :show-language="true" :base="cubeUri" />
           </p>
         </td>
       </tr>
@@ -32,7 +32,7 @@ import $rdf from '@rdfjs/data-model'
 import { Term } from 'rdf-js'
 import TermSet from '@rdf-esm/term-set'
 import { GraphPointer } from 'clownface'
-import { Project } from '@cube-creator/model'
+import { Dataset, Project } from '@cube-creator/model'
 import SidePane from '@/components/SidePane.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import TermDisplay from '@/components/TermDisplay.vue'
@@ -45,6 +45,11 @@ const projectNS = namespace('project')
 })
 export default class ResourcePreview extends Vue {
   @projectNS.State('project') project!: Project | null
+  @projectNS.State('cubeMetadata') cubeMetadata!: Dataset | null
+
+  get cubeUri (): string | undefined {
+    return this.cubeMetadata?.hasPart[0]?.id.value
+  }
 
   resourceId = $rdf.namedNode(this.$route.params.resourceId)
   resource: GraphPointer | null = null
