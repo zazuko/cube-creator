@@ -5,6 +5,7 @@ import '@sentry/tracing'
 import namespace from '@rdfjs/namespace'
 import { transform, publish } from './lib/commands'
 import { capture } from './lib/telemetry'
+import './lib/variables'
 
 const log = debug('cube-creator')
 log.enabled = false

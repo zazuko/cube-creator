@@ -9,13 +9,14 @@ import { insertTestData } from '@cube-creator/testing/lib'
 import { setupEnv } from '../support/env'
 import { Table } from '@rdfine/csvw'
 import { log } from '../support/logger'
+import type { Variables } from 'barnard59-core/lib/Pipeline'
 
 Hydra.baseUri = env.API_CORE_BASE
 
 describe('lib/job', function () {
   this.timeout(20000)
 
-  let variables: Map<string, string>
+  let variables: Variables
 
   before(async () => {
     setupEnv()
@@ -23,7 +24,7 @@ describe('lib/job', function () {
   })
 
   beforeEach(() => {
-    variables = new Map([
+    variables = new Map<any, any>([
       ['executionUrl', 'http://foo.runner/job/bar'],
     ])
   })

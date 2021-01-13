@@ -63,7 +63,7 @@ describe('lib/cube', () => {
       it(`ensures a slash between base and version (term = ${term}; namespace = ${namespace})`, async () => {
         // given
         const context = {
-          variables: new Map<string, any>([
+          variables: new Map<any, any>([
             ['namespace', 'http://example.com/cube/' + namespace],
             ['revision', 5],
           ]),
@@ -87,7 +87,7 @@ describe('lib/cube', () => {
     it('adds previous cube id to variables', async () => {
       // given
       const context = {
-        variables: new Map<string, any>([
+        variables: new Map<any, any>([
           ['namespace', 'http://example.com/cube/foo/'],
           ['revision', 5],
         ]),
@@ -108,7 +108,7 @@ describe('lib/cube', () => {
     it('does not add previous cube to variables on first publish', async () => {
       // given
       const context = {
-        variables: new Map<string, any>([
+        variables: new Map<any, any>([
           ['namespace', 'http://example.com/cube/foo/'],
           ['revision', 1],
         ]),

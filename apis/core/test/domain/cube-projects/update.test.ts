@@ -5,32 +5,44 @@ import $rdf from 'rdf-ext'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import { NamedNode } from 'rdf-js'
 import { ResourceIdentifier } from '@tpluscode/rdfine'
-import { rdfs, schema } from '@tpluscode/rdf-ns-builders'
+import { dcterms, rdfs, schema } from '@tpluscode/rdf-ns-builders'
 import { cc, shape } from '@cube-creator/core/namespace'
 import { createProject } from '../../../lib/domain/cube-projects/create'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import '../../../lib/domain'
-import { CsvMapping, Dataset } from '@cube-creator/model'
+import { Dataset, Project } from '@cube-creator/model'
+import { fromPointer } from '@cube-creator/model/Organization'
 import { updateProject } from '../../../lib/domain/cube-projects/update'
 
 describe('domain/cube-projects/update', () => {
   let store: TestResourceStore
   const user = $rdf.namedNode('userId')
   const projectsCollection = clownface({ dataset: $rdf.dataset() }).namedNode('projects')
+
+  const bafu = fromPointer(clownface({ dataset: $rdf.dataset() }).namedNode('bafu'), {
+    namespace: $rdf.namedNode('http://bafu.namespace/'),
+    publishGraph: $rdf.namedNode('http://bafu.cubes/'),
+  })
+  const bar = fromPointer(clownface({ dataset: $rdf.dataset() }).namedNode('bar'), {
+    namespace: $rdf.namedNode('http://bar.namespace/'),
+    publishGraph: $rdf.namedNode('http://bar.cubes/'),
+  })
   let project: GraphPointer<NamedNode, DatasetExt>
 
   function projectPointer(id: ResourceIdentifier = $rdf.namedNode('')) {
     return clownface({ dataset: $rdf.dataset() })
       .node(id)
       .addOut(rdfs.label, 'Created name')
-      .addOut(cc.namespace, $rdf.namedNode('http://created.namespace/'))
-      .addOut(cc.publishGraph, $rdf.namedNode('http://published.cubes/'))
+      .addOut(schema.maintainer, bafu.id)
+      .addOut(dcterms.identifier, 'cube')
       .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
   }
 
   beforeEach(async () => {
     store = new TestResourceStore([
       projectsCollection,
+      bafu,
+      bar,
     ])
 
     const resource = projectPointer()
@@ -39,48 +51,163 @@ describe('domain/cube-projects/update', () => {
   })
 
   describe('CSV project', () => {
-    it('updates publishGraph', async () => {
+    beforeEach(async () => {
+      const datasetBefore = await store.get(project.out(cc.dataset).term)
+      datasetBefore.out(schema.hasPart)
+        .addOut(rdfs.label, 'Cube')
+
+      const dataset = await store.getResource<Dataset>(project.out(cc.dataset).term)
+      const metadataBefore = await store.get(dataset?.dimensionMetadata.id)
+      metadataBefore.addOut(schema.hasPart, dimension => {
+        dimension
+          .addOut(schema.about, $rdf.namedNode('http://bafu.namespace/cube/year'))
+          .addOut(rdfs.label, $rdf.literal('Jahr', 'de'))
+      })
+    })
+
+    it('updates name', async () => {
+      // given
       const resource = projectPointer(project.term)
       resource
-        .deleteOut(cc.publishGraph)
-        .addOut(cc.publishGraph, $rdf.namedNode('http://published.cubes/changed'))
-
-      const editedProject = await updateProject({
-        resource,
-        project,
-        store,
-      })
-
-      expect(editedProject).to.matchShape({
-        property: {
-          path: cc.publishGraph,
-          hasValue: $rdf.namedNode('http://published.cubes/changed'),
-          minCount: 1,
-          maxCount: 1,
-        },
-      })
-    })
-
-    it('updates namespace', async () => {
-      const resource = projectPointer(project.term)
         .deleteOut(rdfs.label)
         .addOut(rdfs.label, 'Edited name')
-        .deleteOut(cc.namespace)
-        .addOut(cc.namespace, $rdf.namedNode('http://edited.namespace/'))
 
+      // when
       const editedProject = await updateProject({
         resource,
-        project,
         store,
       })
 
+      // then
       expect(editedProject.pointer.out(rdfs.label).term?.value).to.eq('Edited name')
-
-      const namespace = await store.getResource<CsvMapping>(editedProject.pointer.out(cc.csvMapping).term)
-      expect(namespace?.pointer.out(cc.namespace).term?.value).to.eq('http://edited.namespace/')
     })
 
-    it('does not touch cube if namespace does not change', async () => {
+    describe('when maintainer changes', () => {
+      let editedProject: Project
+
+      beforeEach(async () => {
+        const resource = projectPointer(project.term)
+        resource
+          .deleteOut(schema.maintainer)
+          .addOut(schema.maintainer, bar.id)
+
+        editedProject = await updateProject({
+          resource,
+          store,
+        })
+      })
+
+      it('updates project resource', () => {
+        expect(editedProject).to.matchShape({
+          property: {
+            path: schema.maintainer,
+            hasValue: bar.id,
+            minCount: 1,
+            maxCount: 1,
+          },
+        })
+      })
+
+      it('renames cube', async () => {
+        const datasetAfter = await store.get(editedProject.dataset.id)
+        expect(datasetAfter).to.matchShape({
+          property: {
+            path: schema.hasPart,
+            minCount: 1,
+            hasValue: $rdf.namedNode('http://bar.namespace/cube'),
+            node: {
+              property: {
+                path: rdfs.label,
+                hasValue: $rdf.literal('Cube'),
+                minCount: 1,
+                maxCount: 1,
+              },
+            },
+          },
+        })
+      })
+
+      it('rebases metadata properties', async () => {
+        const dataset = await store.getResource<Dataset>(editedProject.pointer.out(cc.dataset).term)
+        const metadataAfter = await store.get(dataset?.dimensionMetadata.id)
+
+        expect(metadataAfter).to.matchShape({
+          property: {
+            path: schema.hasPart,
+            node: {
+              property: [{
+                path: schema.about,
+                hasValue: $rdf.namedNode('http://bar.namespace/cube/year'),
+              }, {
+                path: rdfs.label,
+                hasValue: $rdf.literal('Jahr', 'de'),
+              }],
+            },
+          },
+        })
+      })
+    })
+
+    describe('when cube identifier changes', function () {
+      let editedProject: Project
+
+      beforeEach(async () => {
+        const resource = projectPointer(project.term)
+        resource
+          .deleteOut(dcterms.identifier)
+          .addOut(dcterms.identifier, 'new/cube')
+
+        editedProject = await updateProject({
+          resource,
+          store,
+        })
+      })
+
+      it('updates project resource', async () => {
+        expect(editedProject.pointer.out(dcterms.identifier).value).to.eq('new/cube')
+      })
+
+      it('renames cube', async () => {
+        const datasetAfter = await store.get(editedProject.dataset.id)
+        expect(datasetAfter).to.matchShape({
+          property: {
+            path: schema.hasPart,
+            minCount: 1,
+            hasValue: $rdf.namedNode('http://bafu.namespace/new/cube'),
+            node: {
+              property: {
+                path: rdfs.label,
+                hasValue: $rdf.literal('Cube'),
+                minCount: 1,
+                maxCount: 1,
+              },
+            },
+          },
+        })
+      })
+
+      it('rebases metadata properties', async () => {
+        const dataset = await store.getResource<Dataset>(editedProject.pointer.out(cc.dataset).term)
+        const metadataAfter = await store.get(dataset?.dimensionMetadata.id)
+
+        expect(metadataAfter).to.matchShape({
+          property: {
+            path: schema.hasPart,
+            node: {
+              property: [{
+                path: schema.about,
+                hasValue: $rdf.namedNode('http://bafu.namespace/new/cube/year'),
+              }, {
+                path: rdfs.label,
+                hasValue: $rdf.literal('Jahr', 'de'),
+              }],
+            },
+          },
+        })
+      })
+    })
+
+    it('does not touch cube if nothing changes', async () => {
       // given
       const resource = projectPointer(project.term)
       const datasetBefore = $rdf.dataset([...(await store.get(project.out(cc.dataset).term)).dataset]).toCanonical()
@@ -88,7 +215,6 @@ describe('domain/cube-projects/update', () => {
       // when
       const editedProject = await updateProject({
         resource,
-        project,
         store,
       })
 
@@ -97,7 +223,7 @@ describe('domain/cube-projects/update', () => {
       expect(datasetAfter).to.eq(datasetBefore)
     })
 
-    it('does not touch cube metadata if namespace does not change', async () => {
+    it('does not touch cube metadata if nothing changes', async () => {
       // given
       const resource = projectPointer(project.term)
       const dataset = await store.getResource<Dataset>(project.out(cc.dataset).term)
@@ -106,88 +232,12 @@ describe('domain/cube-projects/update', () => {
       // when
       await updateProject({
         resource,
-        project,
         store,
       })
 
       // then
       const metadataAfter = $rdf.dataset([...(await store.get(dataset?.dimensionMetadata.id)).dataset]).toCanonical()
       expect(metadataAfter).to.eq($rdf.dataset([...metadataBefore.dataset]).toCanonical())
-    })
-
-    it('renames cube if namespace changes', async () => {
-      // given
-      const datasetBefore = await store.get(project.out(cc.dataset).term)
-      datasetBefore.out(schema.hasPart)
-        .addOut(rdfs.label, 'Cube')
-      const namespace = $rdf.namedNode('http://edited.namespace/')
-      const resource = projectPointer(project.term)
-        .deleteOut(cc.namespace)
-        .addOut(cc.namespace, namespace)
-
-      // when
-      const editedProject = await updateProject({
-        resource,
-        project,
-        store,
-      })
-
-      // then
-      const datasetAfter = await store.get(editedProject.dataset.id)
-      expect(datasetAfter).to.matchShape({
-        property: {
-          path: schema.hasPart,
-          minCount: 1,
-          hasValue: namespace,
-          node: {
-            property: {
-              path: rdfs.label,
-              hasValue: $rdf.literal('Cube'),
-              minCount: 1,
-              maxCount: 1,
-            },
-          },
-        },
-      })
-    })
-
-    it('rebases metadata properties when namespace changes', async () => {
-      // given
-      const dataset = await store.getResource<Dataset>(project.out(cc.dataset).term)
-      const metadataBefore = await store.get(dataset?.dimensionMetadata.id)
-      metadataBefore.addOut(schema.hasPart, dimension => {
-        dimension
-          .addOut(schema.about, $rdf.namedNode('http://created.namespace/year'))
-          .addOut(rdfs.label, $rdf.literal('Jahr', 'de'))
-      })
-      const namespace = $rdf.namedNode('http://edited.namespace/')
-      const resource = projectPointer(project.term)
-        .deleteOut(cc.namespace)
-        .addOut(cc.namespace, namespace)
-
-      // when
-      await updateProject({
-        resource,
-        project,
-        store,
-      })
-
-      // then
-      const metadataAfter = await store.get(dataset?.dimensionMetadata.id)
-      expect(metadataAfter).to.matchShape({
-        property: {
-          path: schema.hasPart,
-          node: {
-            property: [{
-              path: schema.about,
-              hasValue: $rdf.namedNode('http://edited.namespace/year'),
-            }, {
-              path: rdfs.label,
-              hasValue: $rdf.literal('Jahr', 'de'),
-            }],
-          },
-        },
-      })
     })
   })
 })

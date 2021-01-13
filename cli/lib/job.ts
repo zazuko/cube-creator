@@ -6,9 +6,8 @@ import type * as Schema from '@rdfine/schema'
 import * as Models from '@cube-creator/model'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import type Logger from 'barnard59-core/lib/logger'
-import type { Context } from 'barnard59-core/lib/Pipeline'
+import type { Context, Variables } from 'barnard59-core/lib/Pipeline'
 import $rdf from 'rdf-ext'
-import { names } from './variables'
 import { ThingMixin } from '@rdfine/schema'
 
 Hydra.resources.factory.addMixin(...Object.values(Models))
@@ -18,7 +17,7 @@ Hydra.resources.factory.addMixin(ThingMixin)
 interface Params {
   jobUri: string
   log: Logger
-  variables: Map<string, any>
+  variables: Variables
 }
 
 async function loadTransformJob(jobUri: string, log: Logger, variables: Params['variables']): Promise<TransformJob> {
@@ -115,7 +114,7 @@ export class JobIterator extends stream.Readable {
         await updateJobStatus({
           jobUri,
           modified: new Date(),
-          executionUrl: variables.get(names.executionUrl),
+          executionUrl: variables.get('executionUrl'),
           log,
           status: schema.ActiveActionStatus,
         })

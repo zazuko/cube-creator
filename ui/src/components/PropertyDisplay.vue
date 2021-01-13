@@ -8,21 +8,22 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
 import { Term } from 'rdf-js'
-import { expandWithBase, shrink } from '@/rdf-properties'
+import { shrink } from '@/rdf-properties'
+import { CreateIdentifier } from '@/store/modules/project'
 
 const projectNS = namespace('project')
 
 @Component
 export default class PropertyDisplay extends Vue {
   @Prop() term!: Term
-  @projectNS.State((state) => state.csvMapping?.namespace.value || '') projectPrefix!: string
+  @projectNS.State((state) => state.createIdentifier) createIdentifier!: CreateIdentifier
 
   get value (): string {
     return this.term.value || ''
   }
 
   get expanded (): string {
-    return expandWithBase(this.value, this.projectPrefix)
+    return this.createIdentifier(this.value)
   }
 
   get shrunk (): string {

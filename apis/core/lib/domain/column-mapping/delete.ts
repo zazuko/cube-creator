@@ -1,11 +1,13 @@
 import { NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import { cc } from '@cube-creator/core/namespace'
-import { ColumnMapping, CsvMapping, DimensionMetadataCollection, Table } from '@cube-creator/model'
+import type { Organization } from '@rdfine/schema'
+import { ColumnMapping, DimensionMetadataCollection, Project, Table } from '@cube-creator/model'
 import { ResourceStore } from '../../ResourceStore'
 import * as DimensionMetadataQueries from '../queries/dimension-metadata'
 import * as TableQueries from '../queries/table'
 import * as ColumnMappingQueries from '../queries/column-mapping'
+import { findOrganization } from '../organization/query'
 
 interface DeleteColumnMappingCommand {
   resource: NamedNode
@@ -30,11 +32,13 @@ export async function deleteColumnMapping({
   table.pointer.dataset.delete($rdf.quad(table.pointer.term, cc.columnMapping, columnMapping.id))
 
   if (table.isObservationTable) {
-    const csvMapping = await store.getResource<CsvMapping>(table.csvMapping.id)
+    const { organizationId, projectId } = await findOrganization({ table })
+    const organization = await store.getResource<Organization>(organizationId)
+    const { cubeIdentifier } = await store.getResource<Project>(projectId)
     const dimensionMetaDataCollectionPointer = await getDimensionMetaDataCollection(table.csvMapping.id)
     const dimensionMetaDataCollection = await store.getResource<DimensionMetadataCollection>(dimensionMetaDataCollectionPointer)
 
-    const dimension = dimensionMetaDataCollection.find({ csvMapping, targetProperty: columnMapping.targetProperty })
+    const dimension = dimensionMetaDataCollection.find({ cubeIdentifier, organization, targetProperty: columnMapping.targetProperty })
     const isInUse = await dimensionIsUsedByOtherMapping(columnMapping.id)
     if (dimension && dimension.id.termType === 'NamedNode' && !isInUse) {
       dimensionMetaDataCollection.deleteDimension(dimension)

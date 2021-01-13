@@ -22,7 +22,7 @@
     "@sentry/tracing": "^5.29.0",
     "@tpluscode/rdf-ns-builders": "^0.4.0",
     "@tpluscode/rdf-string": "^0.2.21",
-    "@tpluscode/rdfine": "^0.5.19",
+    "@tpluscode/rdfine": "^0.5.22",
     "@tpluscode/sparql-builder": "^0.3.9",
     "@types/content-disposition": "^0.5.3",
     "@types/rdfjs__term-set": "^1.0.2",

@@ -4,11 +4,12 @@ import clownface, { GraphPointer } from 'clownface'
 import TermMap from '@rdfjs/term-map'
 import ResourceStore from '../../lib/ResourceStore'
 import { ChangelogDataset } from '../../lib/ChangelogDataset'
+import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 
 class InMemoryStorage {
   private readonly __resources: TermMap<NamedNode, GraphPointer<NamedNode, ChangelogDataset<DatasetExt>>>
 
-  constructor(pointers: GraphPointer<NamedNode, DatasetExt>[]) {
+  constructor(pointers: Array<GraphPointer<NamedNode, DatasetExt> | RdfResourceCore<DatasetExt>>) {
     this.__resources = new TermMap()
     for (const pointer of pointers) {
       this.push(pointer)
@@ -26,18 +27,23 @@ class InMemoryStorage {
     return Promise.resolve()
   }
 
-  push(pointer: GraphPointer<NamedNode, DatasetExt>) {
+  push(pointerOrResource: GraphPointer<NamedNode, DatasetExt> | RdfResourceCore<DatasetExt>) {
+    const pointer = 'id' in pointerOrResource ? pointerOrResource.pointer : pointerOrResource
+    if (pointer.term.termType !== 'NamedNode') {
+      throw new Error('Pointer must be named node')
+    }
+
     const changelogPointer = clownface({ dataset: new ChangelogDataset(pointer.dataset) }).node(pointer.term)
     this.__resources.set(pointer.term, changelogPointer)
   }
 }
 
 export class TestResourceStore extends ResourceStore {
-  constructor(pointers: GraphPointer<NamedNode, DatasetExt>[]) {
+  constructor(pointers: Array<GraphPointer<NamedNode, DatasetExt> | RdfResourceCore<DatasetExt>>) {
     const resources = new InMemoryStorage(pointers)
     super(resources)
-    this.push = (pointer: GraphPointer<any, DatasetExt>) => resources.push(pointer)
+    this.push = (pointer: GraphPointer<any, DatasetExt> | RdfResourceCore<DatasetExt>) => resources.push(pointer)
   }
 
-  readonly push: (pointer: GraphPointer<Term, DatasetExt>) => void
+  readonly push: (pointer: GraphPointer<Term, DatasetExt> | RdfResourceCore<DatasetExt>) => void
 }

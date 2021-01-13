@@ -1,6 +1,5 @@
 import { describe, it, beforeEach } from 'mocha'
 import { expect } from 'chai'
-import clownface from 'clownface'
 import $rdf from 'rdf-ext'
 import { dcterms, rdf, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
@@ -8,28 +7,41 @@ import '../../../lib/domain'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import { createPublishJob, createTransformJob } from '../../../lib/domain/job/create'
 import { DomainError } from '../../../lib/errors'
+import * as sinon from 'sinon'
+import * as Organization from '@cube-creator/model/Organization'
+import { namedNode } from '../../support/clownface'
+import * as Project from '@cube-creator/model/Project'
 
 describe('domain/job/create', () => {
   let store: TestResourceStore
-  const project = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('myProject') })
-    .addOut(cc.csvMapping, $rdf.namedNode('myCsvMapping'))
-    .addOut(cc.cubeGraph, $rdf.namedNode('myCubeGraph'))
-    .addOut(cc.publishGraph, $rdf.namedNode('publishGraph'))
-    .addOut(rdf.type, cc.CubeProject)
-  const tableCollection = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('myTables') })
-  const csvMapping = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('myCsvMapping') })
-    .addOut(cc.project, project)
+
+  const organization = Organization.fromPointer(namedNode('org'), {
+    namespace: $rdf.namedNode('http://example.com/'),
+    publishGraph: $rdf.namedNode('publishGraph'),
+  })
+  const project = Project.fromPointer(namedNode('myProject'), {
+    csvMapping: $rdf.namedNode('myCsvMapping'),
+    cubeGraph: $rdf.namedNode('myCubeGraph'),
+    maintainer: organization,
+    cubeIdentifier: 'test-cube',
+  })
+  const tableCollection = namedNode('myTables')
+  const csvMapping = namedNode('myCsvMapping')
+    .addOut(cc.project, project.id)
     .addOut(cc.tables, tableCollection)
     .addOut(rdf.type, cc.CsvMapping)
-  const jobCollection = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('jobs') })
-    .addOut(cc.project, project)
+  const jobCollection = namedNode('jobs')
+    .addOut(cc.project, project.id)
 
   beforeEach(() => {
+    sinon.restore()
+
     store = new TestResourceStore([
       project,
       csvMapping,
       tableCollection,
       jobCollection,
+      organization,
     ])
   })
 
@@ -67,7 +79,7 @@ describe('domain/job/create', () => {
 
     it('sets next revision to job resource', async () => {
       // given
-      project.addOut(cc.latestPublishedRevision, 3)
+      project.pointer.addOut(cc.latestPublishedRevision, 3)
 
       // when
       const job = await createPublishJob({ resource: jobCollection.term, store })
@@ -76,9 +88,9 @@ describe('domain/job/create', () => {
       expect(job.out(cc.revision).term).to.deep.eq($rdf.literal('4', xsd.integer))
     })
 
-    it('throws when project has no publish graph', async () => {
+    it('throws when organization has no publish graph', async () => {
       // given
-      project.deleteOut(cc.publishGraph)
+      organization.pointer.deleteOut(cc.publishGraph)
 
       // when
       const promise = createPublishJob({ resource: jobCollection.term, store })

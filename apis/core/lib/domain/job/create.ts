@@ -47,8 +47,9 @@ export async function createPublishJob({
   }
 
   const project = await store.getResource<Project>(projectPointer)
+  const organization = await store.getResource(project.maintainer)
 
-  if (!project.publishGraph) {
+  if (!organization.publishGraph) {
     throw new DomainError('Cannot publish cube. Project does not have publish graph')
   }
 
@@ -57,7 +58,7 @@ export async function createPublishJob({
     project: projectPointer,
     name: 'Publish job',
     revision: project.nextRevision,
-    publishGraph: project.publishGraph,
+    publishGraph: organization.publishGraph,
   })
 
   return jobPointer

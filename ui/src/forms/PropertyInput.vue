@@ -16,7 +16,8 @@ import { Term } from 'rdf-js'
 import * as $rdf from '@rdf-esm/data-model'
 import store from '@/store'
 import { RootState } from '@/store/types'
-import { expand, expandWithBase, shrink } from '@/rdf-properties'
+import { expand, shrink } from '@/rdf-properties'
+import { CreateIdentifier } from '@/store/modules/project'
 
 const projectNS = namespace('project')
 const appNS = namespace('app')
@@ -35,7 +36,7 @@ export default class extends Vue {
     // Do nothing
   }
 
-  @projectNS.State((state) => state.csvMapping.namespace.value) projectPrefix!: string
+  @projectNS.State((state) => state.createIdentifier) createIdentifier!: CreateIdentifier
   @appNS.State('commonRDFProperties') rdfProperties!: string[]
 
   get textValue (): string {
@@ -56,7 +57,7 @@ export default class extends Vue {
     }
 
     if (this.value.termType === 'Literal') {
-      return expandWithBase(this.value.value, this.projectPrefix)
+      return this.createIdentifier(this.value.value)
     } else {
       return this.value.value
     }

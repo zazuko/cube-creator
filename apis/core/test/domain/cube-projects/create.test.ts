@@ -8,19 +8,33 @@ import { cc, cube, shape } from '@cube-creator/core/namespace'
 import { createProject } from '../../../lib/domain/cube-projects/create'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import '../../../lib/domain'
-import env from '@cube-creator/core/env'
 import { Dataset } from '@cube-creator/model'
 import { Project } from '@cube-creator/model/Project'
+import { fromPointer } from '@cube-creator/model/Organization'
+import * as sinon from 'sinon'
+import * as orgQueries from '../../../lib/domain/organization/query'
+import { namedNode } from '../../support/clownface'
 
 describe('domain/cube-projects/create', () => {
   let store: TestResourceStore
   const user = $rdf.namedNode('userId')
-  const projectsCollection = clownface({ dataset: $rdf.dataset() }).namedNode('projects')
+  const projectsCollection = namedNode('projects')
+
+  const organization = fromPointer(namedNode('org'), {
+    publishGraph: $rdf.namedNode('http://example.com/published-cube'),
+    namespace: $rdf.namedNode('http://example.com/'),
+  })
 
   beforeEach(() => {
     store = new TestResourceStore([
       projectsCollection,
+      organization,
     ])
+
+    sinon.restore()
+    sinon.stub(orgQueries, 'findOrganization').resolves({
+      organizationId: organization.id,
+    })
   })
 
   it('creates identifier by slugifying rdfs:label', async () => {
@@ -28,7 +42,8 @@ describe('domain/cube-projects/create', () => {
     const resource = clownface({ dataset: $rdf.dataset() })
       .namedNode('')
       .addOut(rdfs.label, 'Foo bar project')
-      .addOut(cc.publishGraph, $rdf.namedNode('http://example.com/published-cube'))
+      .addOut(dcterms.identifier, 'ubd/28')
+      .addOut(schema.maintainer, organization.id)
 
     // when
     const project = await createProject({ resource, store, projectsCollection, user })
@@ -45,7 +60,8 @@ describe('domain/cube-projects/create', () => {
       .namedNode('')
       .addOut(rdfs.label, 'Foo bar project')
       .addOut(cc.projectSourceKind, 'Existing Cube')
-      .addOut(cc.publishGraph, $rdf.namedNode('http://example.com/published-cube'))
+      .addOut(dcterms.identifier, 'ubd/28')
+      .addOut(schema.maintainer, organization.id)
 
     // when
     const project = await createProject({ resource, store, projectsCollection, user })
@@ -62,7 +78,8 @@ describe('domain/cube-projects/create', () => {
       const resource = clownface({ dataset: $rdf.dataset() })
         .namedNode('')
         .addOut(rdfs.label, 'Foo bar project')
-        .addOut(cc.publishGraph, $rdf.namedNode('http://example.com/published-cube'))
+        .addOut(dcterms.identifier, 'ubd/28')
+        .addOut(schema.maintainer, organization.id)
 
       // when
       project = await createProject({ resource, store, projectsCollection, user })
@@ -99,6 +116,19 @@ describe('domain/cube-projects/create', () => {
         }],
       })
     })
+
+    it('sets cube identifier as metadata identifier', async () => {
+      // then
+      const dataset = await store.get(project.dataset.id)
+      expect(dataset).to.matchShape({
+        property: [{
+          path: dcterms.identifier,
+          hasValue: 'ubd/28',
+          minCount: 1,
+          maxCount: 1,
+        }],
+      })
+    })
   })
 
   it('initializes a dimension metadata collection resource', async function () {
@@ -106,7 +136,8 @@ describe('domain/cube-projects/create', () => {
     const resource = clownface({ dataset: $rdf.dataset() })
       .namedNode('')
       .addOut(rdfs.label, 'Foo bar project')
-      .addOut(cc.publishGraph, $rdf.namedNode('http://example.com/published-cube'))
+      .addOut(dcterms.identifier, 'ubd/28')
+      .addOut(schema.maintainer, organization.id)
 
     // when
     const project = await createProject({ resource, store, projectsCollection, user })
@@ -129,7 +160,8 @@ describe('domain/cube-projects/create', () => {
     const resource = clownface({ dataset: $rdf.dataset() })
       .namedNode('')
       .addOut(rdfs.label, 'Foo bar project')
-      .addOut(cc.publishGraph, $rdf.namedNode('http://example.com/published-cube'))
+      .addOut(dcterms.identifier, 'ubd/28')
+      .addOut(schema.maintainer, organization.id)
 
     // when
     const project = await createProject({ resource, store, projectsCollection, user })
@@ -177,8 +209,8 @@ describe('domain/cube-projects/create', () => {
       const resource = clownface({ dataset: $rdf.dataset() })
         .namedNode('')
         .addOut(rdfs.label, 'Foo bar project')
-        .addOut(cc.namespace, $rdf.namedNode('http://example.com'))
-        .addOut(cc.publishGraph, $rdf.namedNode('http://example.com/published-cube'))
+        .addOut(schema.maintainer, organization.id)
+        .addOut(dcterms.identifier, 'ubd/28')
         .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
 
       // when
@@ -193,8 +225,8 @@ describe('domain/cube-projects/create', () => {
       const resource = clownface({ dataset: $rdf.dataset() })
         .namedNode('')
         .addOut(rdfs.label, 'Foo bar project')
-        .addOut(cc.namespace, $rdf.namedNode('http://example.com'))
-        .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
+        .addOut(schema.maintainer, organization.id)
+        .addOut(dcterms.identifier, 'ubd/28')
         .addOut(cc.publishGraph, $rdf.namedNode('http://example.com/published-cube'))
 
       // when
@@ -222,10 +254,10 @@ describe('domain/cube-projects/create', () => {
       // given
       const resource = clownface({ dataset: $rdf.dataset() })
         .namedNode('')
-        .addOut(cc.namespace, $rdf.namedNode('http://example.com'))
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
-        .addOut(cc.publishGraph, $rdf.namedNode('http://example.com/published-cube'))
+        .addOut(dcterms.identifier, 'ubd/28')
+        .addOut(schema.maintainer, organization.id)
 
       // when
       const project = await createProject({ resource, store, projectsCollection, user })
@@ -246,47 +278,18 @@ describe('domain/cube-projects/create', () => {
           nodeKind: sh.IRI,
           minCount: 1,
           maxCount: 1,
-        }, {
-          path: cc.namespace,
-          nodeKind: sh.IRI,
-          minCount: 1,
-          maxCount: 1,
         }],
       })
     })
 
-    it('generates a mapping namespace if none was given', async () => {
+    it("generates dataset's cube id", async function () {
       // given
       const resource = clownface({ dataset: $rdf.dataset() })
         .namedNode('')
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
-        .addOut(cc.publishGraph, $rdf.namedNode('http://example.com/published-cube'))
-
-      // when
-      const project = await createProject({ resource, store, projectsCollection, user })
-
-      // then
-      const csvMapping = await store.get(project.csvMapping?.id as NamedNode)
-      expect(csvMapping).to.matchShape({
-        property: [{
-          path: cc.namespace,
-          nodeKind: sh.IRI,
-          minCount: 1,
-          maxCount: 1,
-          pattern: `^${env.API_CORE_BASE}cube/foo-bar-project-[a-zA-Z0-9]+/$`,
-        }],
-      })
-    })
-
-    it("adds cc:namespace value as dataset's cube", async function () {
-      // given
-      const resource = clownface({ dataset: $rdf.dataset() })
-        .namedNode('')
-        .addOut(cc.namespace, $rdf.namedNode('http://example.com'))
-        .addOut(rdfs.label, 'Foo bar project')
-        .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
-        .addOut(cc.publishGraph, $rdf.namedNode('http://example.com/published-cube'))
+        .addOut(dcterms.identifier, 'ubd/28')
+        .addOut(schema.maintainer, organization.id)
 
       // when
       const project = await createProject({ resource, store, projectsCollection, user })
@@ -299,7 +302,7 @@ describe('domain/cube-projects/create', () => {
           hasValue: _void.Dataset,
         }, {
           path: schema.hasPart,
-          hasValue: $rdf.namedNode('http://example.com'),
+          hasValue: $rdf.namedNode('http://example.com/ubd/28'),
           node: {
             property: [{
               path: rdf.type,
@@ -323,7 +326,8 @@ describe('domain/cube-projects/create', () => {
         .namedNode('')
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
-        .addOut(cc.publishGraph, $rdf.namedNode('http://example.com/published-cube'))
+        .addOut(dcterms.identifier, 'ubd/28')
+        .addOut(schema.maintainer, organization.id)
 
       // when
       const project = await createProject({ resource, store, projectsCollection, user })
@@ -369,7 +373,8 @@ describe('domain/cube-projects/create', () => {
         .namedNode('')
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
-        .addOut(cc.publishGraph, $rdf.namedNode('http://example.com/published-cube'))
+        .addOut(dcterms.identifier, 'ubd/28')
+        .addOut(schema.maintainer, organization.id)
 
       // when
       const project = await createProject({ resource, store, projectsCollection, user })

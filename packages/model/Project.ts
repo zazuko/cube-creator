@@ -1,10 +1,13 @@
 import { ResourceMixin } from '@rdfine/rdfs'
 import { CsvMapping, CsvMappingMixin } from './CsvMapping'
-import { Constructor, namespace, property, RdfResource } from '@tpluscode/rdfine'
+import { Constructor, namespace, property, RdfResource, ResourceIdentifier } from '@tpluscode/rdfine'
+import type { GraphPointer } from 'clownface'
+import RdfResourceImpl, { Initializer, RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import { cc } from '@cube-creator/core/namespace'
-import { NamedNode } from 'rdf-js'
-import { dcterms } from '@tpluscode/rdf-ns-builders'
+import { DatasetCore, NamedNode } from 'rdf-js'
+import { dcterms, schema } from '@tpluscode/rdf-ns-builders'
+import type { Organization } from '@rdfine/schema'
 import { initializer } from './lib/initializer'
 import { childResource } from './lib/resourceIdentifiers'
 import { Link } from './lib/Link'
@@ -19,7 +22,8 @@ export interface Project extends RdfResource {
   creator: NamedNode
   label: string
   jobCollection: Link<JobCollection>
-  publishGraph: NamedNode
+  cubeIdentifier: string
+  maintainer: Link<Organization>
   publishedRevision: number
 }
 
@@ -40,8 +44,11 @@ export function ProjectMixin<Base extends Constructor>(base: Base): Mixin {
     @property({ initial: childResource('cube-data') })
     cubeGraph!: NamedNode
 
-    @property()
-    publishGraph!: NamedNode
+    @property.literal({ path: dcterms.identifier })
+    cubeIdentifier!: string
+
+    @property.resource({ path: schema.maintainer })
+    maintainer!: Link<Organization>
 
     @property.literal({ path: cc.latestPublishedRevision, type: Number })
     publishedRevision?: number
@@ -58,6 +65,15 @@ export function ProjectMixin<Base extends Constructor>(base: Base): Mixin {
 
 ProjectMixin.appliesTo = cc.CubeProject
 
-type MandatoryFields = 'creator' | 'label' | 'publishGraph'
+type MandatoryFields = 'creator' | 'label' | 'maintainer' | 'cubeIdentifier'
 
 export const create = initializer<Project, MandatoryFields>(ProjectMixin)
+
+export const fromPointer = <D extends DatasetCore>(pointer: GraphPointer<ResourceIdentifier, D>, initializer: Initializer<Project> = {}): Project & RdfResourceCore<D> => {
+  return RdfResourceImpl.factory.createEntity(pointer, [ProjectMixin], {
+    initializer: {
+      ...initializer,
+      types: [cc.CubeProject],
+    },
+  })
+}

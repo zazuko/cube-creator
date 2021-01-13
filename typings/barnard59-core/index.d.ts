@@ -29,9 +29,18 @@ declare module 'barnard59-core/lib/Pipeline' {
   import stream from 'stream'
 
   namespace Pipeline {
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
+    interface VariableNames {}
+
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    interface Variables extends Map<keyof VariableNames, any> {
+      get<K extends keyof VariableNames>(key: K): VariableNames[typeof key]
+      set<K extends keyof VariableNames>(key: K, value: VariableNames[typeof key] | undefined): this
+    }
+
     interface Context {
       log: Logger
-      variables: Map<any, any>
+      variables: Variables
     }
   }
 

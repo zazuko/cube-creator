@@ -26,8 +26,14 @@ import {
 import { Term } from 'rdf-js'
 import { RdfResource } from 'alcaeus'
 import { cc } from '@cube-creator/core/namespace'
+import type { Organization } from '@rdfine/schema'
+
+export interface CreateIdentifier {
+  (term: string): string
+}
 
 export interface ProjectState {
+  createIdentifier: null | CreateIdentifier,
   project: null | Project,
   csvMapping: null | CsvMapping,
   sourcesCollection: null | SourcesCollection,
@@ -40,6 +46,7 @@ export interface ProjectState {
 }
 
 const initialState = {
+  createIdentifier: null,
   project: null,
   csvMapping: null,
   sourcesCollection: null,
@@ -258,8 +265,19 @@ const actions: ActionTree<ProjectState, RootState> = {
 }
 
 const mutations: MutationTree<ProjectState> = {
-  storeProject (state, project) {
+  storeProject (state, project: Project) {
     state.project = Object.freeze(project)
+    if (project) {
+      const { cubeIdentifier } = project
+      state.createIdentifier = (termName: string) => {
+        return (project.maintainer as Organization).createIdentifier({
+          termName,
+          cubeIdentifier,
+        }).value
+      }
+    } else {
+      state.createIdentifier = null
+    }
   },
 
   storeCSVMapping (state, mapping) {

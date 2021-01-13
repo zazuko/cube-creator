@@ -38,14 +38,6 @@ ${shapeId} {
     ${sh.targetClass} ${_void.Dataset} ;
     ${rdfs.label} "Cube Metadata" ;
     ${sh.property} [
-      ${sh.name} "Identifier" ;
-      ${sh.path} ${dcterms.identifier} ;
-      ${sh.minCount} 1 ;
-      ${sh.maxCount} 1 ;
-      ${sh.minLength} 1 ;
-      ${sh.order} 0 ;
-    ] ;
-    ${sh.property} [
       ${sh.name} "Title" ;
       ${sh.path} ${dcterms.title} ;
       ${sh.minCount} 1 ;

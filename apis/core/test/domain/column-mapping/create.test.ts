@@ -5,13 +5,17 @@ import clownface, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import { csvw, hydra, rdf, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
+import * as Organization from '@cube-creator/model/Organization'
+import * as Project from '@cube-creator/model/Project'
 import { createColumnMapping } from '../../../lib/domain/column-mapping/create'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import type * as DimensionMetadataQueries from '../../../lib/domain/queries/dimension-metadata'
+import * as orgQueries from '../../../lib/domain/organization/query'
 import '../../../lib/domain'
 import { DomainError } from '../../../lib/errors'
 import { NamedNode } from 'rdf-js'
 import DatasetExt from 'rdf-ext/lib/Dataset'
+import { namedNode } from '../../support/clownface'
 
 describe('domain/column-mapping/create', () => {
   let store: TestResourceStore
@@ -22,10 +26,11 @@ describe('domain/column-mapping/create', () => {
   let dimensionMetadata: GraphPointer<NamedNode, DatasetExt>
 
   beforeEach(() => {
+    sinon.restore()
+
     const csvMapping = clownface({ dataset: $rdf.dataset() })
       .namedNode('csv-mapping')
       .addOut(rdf.type, cc.CsvMapping)
-      .addOut(cc.namespace, 'http://example.com/')
     const csvSource = clownface({ dataset: $rdf.dataset() })
       .namedNode('foo')
       .addOut(rdf.type, cc.CSVSource)
@@ -48,16 +53,30 @@ describe('domain/column-mapping/create', () => {
       .namedNode('myDimensionMetadata')
       .addOut(rdf.type, cc.DimensionMetadataCollection)
 
+    const organization = Organization.fromPointer(namedNode('org'), {
+      namespace: $rdf.namedNode('http://example.com/'),
+    })
+    const project = Project.fromPointer(namedNode('project'), {
+      maintainer: organization,
+      cubeIdentifier: 'test-cube',
+    })
+
     store = new TestResourceStore([
       table,
       observationTable,
       csvMapping,
       csvSource,
       dimensionMetadata,
+      organization,
+      project,
     ])
 
     getDimensionMetaDataCollection = sinon.stub().resolves(dimensionMetadata.term.value)
     dimensionMetadataQueries = { getDimensionMetaDataCollection }
+    sinon.stub(orgQueries, 'findOrganization').resolves({
+      projectId: project.id,
+      organizationId: organization.id,
+    })
   })
 
   it('creates identifier by slugifying the column schema:name', async () => {
@@ -238,7 +257,7 @@ describe('domain/column-mapping/create', () => {
         path: schema.about,
         minCount: 1,
         maxCount: 1,
-        hasValue: $rdf.namedNode('http://example.com/testLiteral'),
+        hasValue: $rdf.namedNode('http://example.com/test-cube/testLiteral'),
       },
     })
   })
@@ -316,7 +335,7 @@ describe('domain/column-mapping/create', () => {
       const existingMapping = clownface({ dataset: $rdf.dataset() })
         .namedNode('mapping')
         .addOut(rdf.type, cc.ColumnMapping)
-        .addOut(cc.targetProperty, $rdf.namedNode('http://example.com/year'))
+        .addOut(cc.targetProperty, $rdf.namedNode('http://example.com/test-cube/year'))
       store.push(existingMapping)
       observationTable.addOut(cc.columnMapping, existingMapping)
       const resource = clownface({ dataset: $rdf.dataset() })

@@ -5,11 +5,12 @@ import StreamClient from 'sparql-http-client/StreamClient'
 import { cubeProjects } from './cube-projects'
 import { log } from '../lib/log'
 import { entrypoint } from './entrypoint'
+import { organizations } from './organizations'
 import shapes from './shapes'
 import env from '@cube-creator/core/env'
 
 const parser = new Parser()
-const initialResources = [cubeProjects, entrypoint, ...shapes]
+const initialResources = [cubeProjects, entrypoint, organizations, ...shapes]
 
 export async function bootstrap(storeUrl: string, base: string) {
   const client = new StreamClient({

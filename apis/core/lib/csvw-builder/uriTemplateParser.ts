@@ -43,6 +43,10 @@ class ParsedTemplateWrapper implements ParsedTemplate {
       return this.toString()
     }
 
+    if (!baseUri.match('[#/]$')) {
+      return `${baseUri}/${this.toString()}`
+    }
+
     return baseUri + this.toString()
   }
 }

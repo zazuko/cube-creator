@@ -29,12 +29,6 @@ export function expand (uri: string): string {
   }
 }
 
-export function expandWithBase (uri: string, baseUri: string): string {
-  if (uri && !uri.includes(':')) return `${baseUri}${uri}`
-
-  return expand(uri)
-}
-
 export function shrink (uri: string): string {
   return _shrink(uri) || uri
 }

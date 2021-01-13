@@ -46,10 +46,15 @@ describe('lib/commands/publish', function () {
 
       // then
       const project = $rdf.namedNode('https://cube-creator.lndo.site/cube-project/ubd')
-      const [{ expectedGraph }] = await SELECT`?expectedGraph ?revision`
-        .FROM(project)
+      const [{ expectedGraph }] = await SELECT`?expectedGraph`
         .WHERE`
-          ${project} ${cc.publishGraph} ?expectedGraph .
+          graph ${project} {
+            ${project} ${schema.maintainer} ?org .
+          }
+
+          graph ?org {
+            ?org ${cc.publishGraph} ?expectedGraph .
+          }
         `
         .execute(parsingClient.query)
 
@@ -79,11 +84,6 @@ describe('lib/commands/publish', function () {
     it('cube meta data has been copied', async function () {
       expect(cubePointer.namedNode(targetCube())).to.matchShape({
         property: [{
-          path: dcterms.identifier,
-          hasValue: $rdf.literal('UBD28@BAFU'),
-          minCount: 1,
-          maxCount: 1,
-        }, {
           path: dcterms.title,
           hasValue: $rdf.literal('UBD28'),
           minCount: 1,
@@ -134,6 +134,17 @@ describe('lib/commands/publish', function () {
           minCount: 1,
           maxCount: 1,
           [sh.equals.value]: schema.dateModified,
+        }],
+      })
+    })
+
+    it('adds project identifier to dataset metadata', async function () {
+      expect(cubePointer.namedNode(targetCube())).to.matchShape({
+        property: [{
+          path: dcterms.identifier,
+          hasValue: $rdf.literal('ubd/28/'),
+          minCount: 1,
+          maxCount: 1,
         }],
       })
     })

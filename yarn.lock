@@ -1851,7 +1851,7 @@
     "@tpluscode/rdf-ns-builders" "^0.4"
     "@zazuko/rdf-vocabularies" "^2020.11.2"
 
-"@tpluscode/rdfine@^0.5.10", "@tpluscode/rdfine@^0.5.15", "@tpluscode/rdfine@^0.5.17", "@tpluscode/rdfine@^0.5.18", "@tpluscode/rdfine@^0.5.19", "@tpluscode/rdfine@^0.5.20":
+"@tpluscode/rdfine@^0.5.10", "@tpluscode/rdfine@^0.5.15", "@tpluscode/rdfine@^0.5.17", "@tpluscode/rdfine@^0.5.18", "@tpluscode/rdfine@^0.5.19", "@tpluscode/rdfine@^0.5.20", "@tpluscode/rdfine@^0.5.22":
   version "0.5.22"
   resolved "https://registry.yarnpkg.com/@tpluscode/rdfine/-/rdfine-0.5.22.tgz#ff3745cb632e7ec3ea69035dca61bbe27632d402"
   integrity sha512-JWOsstu2Sm4er9zP6cmZZNCh57Cj7uTA2zCfjAEBZKafsXzx6xyY0piKYmYwuaMpF0m6x3ftfCSvjfL2htZ+mg==

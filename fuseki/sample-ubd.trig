@@ -23,7 +23,8 @@ graph <cube-project/ubd> {
     a cc:CubeProject, hydra:Resource ;
     cc:dataset  <cube-project/ubd/dataset> ;
     cc:cubeGraph  <cube-project/ubd/cube-data> ;
-    cc:publishGraph  <https://lindas.admin.ch/foen/cube> ;
+    schema:maintainer <organization/bafu> ;
+    dcterms:identifier "ubd/28/" ;
     cc:latestPublishedRevision 1 ;
     cc:csvMapping <cube-project/ubd/csv-mapping> ;
     dcterms:creator <user> ;
@@ -43,7 +44,6 @@ graph <cube-project/ubd/dataset> {
     a void:Dataset, hydra:Resource, schema:Dataset, dcat:Dataset ;
     schema:hasPart <https://environment.ld.admin.ch/foen/ubd/28/> ;
     cc:dimensionMetadata <cube-project/ubd/dimensions-metadata> ;
-    dcterms:identifier 'UBD28@BAFU' ;
     dcterms:title 'UBD28' ;
     dcat:contactPoint [ vcard:fn 'Test Name' ;
                         vcard:hasEmail 'test@mail.ch' ] ;
@@ -196,7 +196,6 @@ graph <cube-project/ubd/csv-mapping> {
     cc:csvSource <cube-project/ubd/csv-source/ubd> ;
     cc:csvSourceCollection <cube-project/ubd/csv-mapping/sources> ;
     cc:tables <cube-project/ubd/csv-mapping/tables> ;
-    cc:namespace <https://environment.ld.admin.ch/foen/ubd/28/> ;
   .
 }
 
@@ -396,7 +395,7 @@ graph <cube-project/ubd/csv-mapping/table-observation/column-mapping-3> {
 graph <cube-project/ubd/csv-mapping/table-observation/column-mapping-4> {
   <cube-project/ubd/csv-mapping/table-observation/column-mapping-4> a cc:ColumnMapping, cc:LiteralColumnMapping, hydra:Resource ;
     cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/aggregation> ;
-    cc:targetProperty "project/ubd/csv-mapping/aggregation" ;
+    cc:targetProperty "aggregation" ;
     cc:datatype xsd:float ;
   .
 }
@@ -429,7 +428,7 @@ graph <cube-project/ubd/csv-mapping/table-station/column-mapping-1> {
 graph <cube-project/ubd/csv-mapping/table-station/column-mapping-2> {
   <cube-project/ubd/csv-mapping/table-station/column-mapping-2> a cc:ColumnMapping, cc:LiteralColumnMapping, hydra:Resource ;
     cc:sourceColumn <cube-project/ubd/csv-source/stations/column/station-name-fr> ;
-    cc:targetProperty rdfs:label ;
+    cc:targetProperty schema:name ;
     cc:language "fr" ;
   .
 }
@@ -438,7 +437,7 @@ graph <cube-project/ubd/csv-mapping/table-station/column-mapping-2> {
 graph <cube-project/ubd/csv-mapping/table-station/column-mapping-3> {
   <cube-project/ubd/csv-mapping/table-station/column-mapping-3> a cc:ColumnMapping, cc:LiteralColumnMapping, hydra:Resource ;
     cc:sourceColumn <cube-project/ubd/csv-source/stations/column/station-name-de> ;
-    cc:targetProperty rdfs:label ;
+    cc:targetProperty schema:name ;
     cc:language "de" ;
   .
 }

@@ -1,6 +1,9 @@
 import { cc, shape } from '@cube-creator/core/namespace'
-import { dash, hydra, rdfs, sh } from '@tpluscode/rdf-ns-builders'
+import { dash, dcterms, hydra, rdfs, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { turtle } from '@tpluscode/rdf-string'
+import $rdf from 'rdf-ext'
+
+const cubeIdPattern = $rdf.literal('^[a-zA-Z0-9/\\-._,]+$')
 
 export const CubeProjectShape = turtle`
 ${shape('cube-project/create')} {
@@ -29,25 +32,26 @@ ${shape('cube-project/create')} {
       ${sh.order} 20 ;
     ] ;
     ${sh.property} [
-      ${sh.name} "Cube namespace" ;
-      ${sh.description} "A URI that will be used as default prefix for all the custom properties created during the mapping." ;
-      ${sh.path} ${cc.namespace} ;
-      ${sh.pattern} "[#/]$" ;
-      ${sh.maxCount} 1 ;
-      ${sh.nodeKind} ${sh.IRI} ;
-      ${sh.order} 30 ;
-    ] ;
-    ${sh.property} [
-      ${sh.name} "Publish graph" ;
-      ${sh.description} "A named graph URI where cubes will be published from this project" ;
-      ${sh.path} ${cc.publishGraph} ;
+      ${sh.name} "Cube identifier" ;
+      ${sh.description} "A unique, URL-safe string to identify the cube (only letters, digits, -, . and _)" ;
+      ${sh.path} ${dcterms.identifier} ;
       ${sh.minLength} 1 ;
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
+      ${sh.pattern} ${cubeIdPattern} ;
+      ${sh.order} 30 ;
+    ] ;
+    ${sh.property} [
+      ${sh.name} "Organization" ;
+      ${sh.description} "The owner of the published cube dataset" ;
+      ${sh.path} ${schema.maintainer} ;
+      ${sh.class} ${schema.Organization} ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
       ${sh.nodeKind} ${sh.IRI} ;
+      ${dash.editor} ${dash.InstancesSelectEditor} ;
+      ${hydra.collection} <organizations> ;
       ${sh.order} 40 ;
-      ${dash.hidden} true ;
-      ${sh.defaultValue} <https://lindas.admin.ch/foen/cube> ;
     ] ;
   .
 
@@ -75,24 +79,26 @@ ${shape('cube-project/update')} {
       ${sh.order} 10 ;
     ] ;
     ${sh.property} [
-      ${sh.name} "Publish graph" ;
-      ${sh.description} "A named graph URI where cubes will be published from this project" ;
-      ${sh.path} ${cc.publishGraph} ;
+      ${sh.name} "Cube identifier" ;
+      ${sh.description} "A unique, URL-safe string to identify the cube (only letters, digits, -, . and _)" ;
+      ${sh.path} ${dcterms.identifier} ;
       ${sh.minLength} 1 ;
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
-      ${sh.nodeKind} ${sh.IRI} ;
-      ${sh.order} 20 ;
+      ${sh.pattern} ${cubeIdPattern} ;
+      ${sh.order} 30 ;
     ] ;
     ${sh.property} [
-      ${sh.name} "Cube namespace" ;
-      ${sh.description} "A URI that will be used as default prefix for all the custom properties created during the mapping." ;
-      ${sh.path} ${cc.namespace} ;
-      ${sh.pattern} "[#/]$" ;
+      ${sh.name} "Organization" ;
+      ${sh.description} "The owner of the published cube dataset" ;
+      ${sh.path} ${schema.maintainer} ;
+      ${sh.class} ${schema.Organization} ;
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
       ${sh.nodeKind} ${sh.IRI} ;
-      ${sh.order} 30 ;
+      ${dash.editor} ${dash.InstancesSelectEditor} ;
+      ${hydra.collection} <organizations> ;
+      ${sh.order} 40 ;
     ] ;
   .
 }

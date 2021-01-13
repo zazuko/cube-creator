@@ -13,6 +13,10 @@ import { DomainError, NotFoundError } from '../../../lib/errors'
 import { NamedNode } from 'rdf-js'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import { updateLiteralColumnMapping } from '../../../lib/domain/column-mapping/update'
+import * as orgQueries from '../../../lib/domain/organization/query'
+import * as Organization from '@cube-creator/model/Organization'
+import * as Project from '@cube-creator/model/Project'
+import { namedNode } from '../../support/clownface'
 
 describe('domain/column-mapping/update', () => {
   let store: TestResourceStore
@@ -98,6 +102,14 @@ describe('domain/column-mapping/update', () => {
         dim.addOut(schema.about, $rdf.namedNode('test'))
       })
 
+    const organization = Organization.fromPointer(namedNode('org'), {
+      namespace: $rdf.namedNode('http://example.com/'),
+    })
+    const project = Project.fromPointer(namedNode('project'), {
+      maintainer: organization,
+      cubeIdentifier: 'test-cube',
+    })
+
     store = new TestResourceStore([
       table,
       observationTable,
@@ -108,6 +120,8 @@ describe('domain/column-mapping/update', () => {
       otherColumnMapping,
       columnMappingObservation,
       otherColumnMappingObservation,
+      project,
+      organization,
     ])
 
     getDimensionMetaDataCollection = sinon.stub().resolves(dimensionMetadata.term.value)
@@ -118,6 +132,12 @@ describe('domain/column-mapping/update', () => {
       getTablesForMapping,
       getTableForColumnMapping,
     }
+
+    sinon.restore()
+    sinon.stub(orgQueries, 'findOrganization').resolves({
+      projectId: project.id,
+      organizationId: organization.id,
+    })
   })
 
   it('updates simple properties', async () => {

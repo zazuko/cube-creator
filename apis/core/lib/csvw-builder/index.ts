@@ -1,15 +1,25 @@
 import * as Csvw from '@rdfine/csvw'
 import TermMap from '@rdfjs/term-map'
-import { ColumnMapping, CsvColumn, CsvMapping, CsvSource, LiteralColumnMapping, ReferenceColumnMapping, Table } from '@cube-creator/model'
+import {
+  ColumnMapping,
+  CsvColumn,
+  CsvSource,
+  LiteralColumnMapping,
+  Project,
+  ReferenceColumnMapping,
+  Table,
+} from '@cube-creator/model'
 import cf from 'clownface'
 import $rdf from 'rdf-ext'
 import RdfResource from '@tpluscode/rdfine'
 import { Initializer } from '@tpluscode/rdfine/RdfResource'
+import type { Organization } from '@rdfine/schema'
 import { parse } from './uriTemplateParser'
 import { cc } from '@cube-creator/core/namespace'
 import { ResourceStore } from '../ResourceStore'
 import { warning } from '../log'
 import { Term } from 'rdf-js'
+import { findOrganization } from '../domain/organization/query'
 
 RdfResource.factory.addMixin(
   ...Object.values(Csvw),
@@ -26,15 +36,16 @@ function unmappedColumn({ column }: { column: CsvColumn }): Initializer<Csvw.Col
 }
 
 interface CsvwBuildingContext {
-  csvMapping: CsvMapping
+  cubeIdentifier: string
+  organization: Organization
   source: CsvSource
   resources: ResourceStore
 }
 
-function mappedLiteralColumn({ csvMapping, columnMapping, column }: CsvwBuildingContext & { column: CsvColumn; columnMapping: LiteralColumnMapping }): Initializer<Csvw.Column> {
+function mappedLiteralColumn({ cubeIdentifier, organization, columnMapping, column }: CsvwBuildingContext & { column: CsvColumn; columnMapping: LiteralColumnMapping }): Initializer<Csvw.Column> {
   const csvwColumn: Initializer<Csvw.Column> = {
     title: $rdf.literal(column.name),
-    propertyUrl: csvMapping.createIdentifier(columnMapping.targetProperty).value,
+    propertyUrl: organization.createIdentifier({ cubeIdentifier, termName: columnMapping.targetProperty }).value,
   }
 
   if (columnMapping.datatype) {
@@ -48,9 +59,9 @@ function mappedLiteralColumn({ csvMapping, columnMapping, column }: CsvwBuilding
   return csvwColumn
 }
 
-async function mappedReferenceColumn({ csvMapping, columnMapping, source, resources }: CsvwBuildingContext & { columnMapping: ReferenceColumnMapping }): Promise<Initializer<Csvw.Column>> {
+async function mappedReferenceColumn({ cubeIdentifier, organization, columnMapping, source, resources }: CsvwBuildingContext & { columnMapping: ReferenceColumnMapping }): Promise<Initializer<Csvw.Column>> {
   const csvwColumn: Initializer<Csvw.Column> = {
-    propertyUrl: csvMapping.createIdentifier(columnMapping.targetProperty).value,
+    propertyUrl: organization.createIdentifier({ cubeIdentifier, termName: columnMapping.targetProperty }).value,
   }
 
   const referencedTable = await resources.getResource<Table>(columnMapping.referencedTable.id)
@@ -92,13 +103,15 @@ async function mappedReferenceColumn({ csvMapping, columnMapping, source, resour
       }
     })
 
-    csvwColumn.valueUrl = uriTemplate.toAbsoluteUrl(csvMapping.namespace.value)
+    csvwColumn.valueUrl = uriTemplate.toAbsoluteUrl(organization.createIdentifier({
+      cubeIdentifier,
+    }).value)
   }
 
   return csvwColumn
 }
 
-async function * buildColumns({ table, source, resources, csvMapping }: CsvwBuildingContext & { table: Table }) {
+async function * buildColumns({ cubeIdentifier, table, source, resources, organization }: CsvwBuildingContext & { table: Table }) {
   const unmappedColumns = new TermMap([...source.columns.map<[Term, CsvColumn]>(c => [c.id, c])])
 
   for (const columnMappingLink of table.columnMappings) {
@@ -117,9 +130,9 @@ async function * buildColumns({ table, source, resources, csvMapping }: CsvwBuil
         continue
       }
 
-      yield mappedLiteralColumn({ csvMapping, columnMapping, column, source, resources })
+      yield mappedLiteralColumn({ cubeIdentifier, organization, columnMapping, column, source, resources })
     } else if (isReferenceColumnMapping(columnMapping)) {
-      yield mappedReferenceColumn({ csvMapping, columnMapping, source, resources })
+      yield mappedReferenceColumn({ cubeIdentifier, organization, columnMapping, source, resources })
     }
   }
 
@@ -129,8 +142,10 @@ async function * buildColumns({ table, source, resources, csvMapping }: CsvwBuil
 }
 
 export async function buildCsvw({ table, resources }: { table: Table; resources: ResourceStore }): Promise<Csvw.Table> {
-  const source = await resources.getResource<CsvSource>(table.csvSource?.id)
-  const csvMapping = await resources.getResource<CsvMapping>(table.csvMapping.id)
+  const source = await resources.getResource(table.csvSource)
+  const { projectId, organizationId } = await findOrganization({ table })
+  const organization = await resources.getResource<Organization>(organizationId)
+  const { cubeIdentifier } = await resources.getResource<Project>(projectId)
 
   let template: string
   const column: Initializer<Csvw.Column>[] = []
@@ -140,13 +155,15 @@ export async function buildCsvw({ table, resources }: { table: Table; resources:
     column.push({
       virtual: true,
       propertyUrl: cc.cube.value,
-      valueUrl: csvMapping.namespace.value,
+      valueUrl: organization.createIdentifier({
+        cubeIdentifier,
+      }).value,
     })
   } else {
     template = table.identifierTemplate
   }
 
-  for await (const csvwColumn of buildColumns({ csvMapping, table, source, resources })) {
+  for await (const csvwColumn of buildColumns({ cubeIdentifier, organization, table, source, resources })) {
     column.push(csvwColumn)
   }
 
@@ -156,7 +173,7 @@ export async function buildCsvw({ table, resources }: { table: Table; resources:
       ...source.dialect.toJSON(),
     },
     tableSchema: {
-      aboutUrl: csvMapping.createIdentifier(template).value,
+      aboutUrl: organization.createIdentifier({ cubeIdentifier, termName: template }).value,
       column,
     },
   })

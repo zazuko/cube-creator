@@ -1,7 +1,8 @@
 import { GraphPointer } from 'clownface'
 import { Constructor } from '@tpluscode/rdfine'
+import type { Organization } from '@rdfine/schema'
 import { cc } from '@cube-creator/core/namespace'
-import { ColumnMapping, CsvMapping, DimensionMetadataCollection } from '@cube-creator/model'
+import { ColumnMapping, DimensionMetadataCollection } from '@cube-creator/model'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import * as DimensionMetadata from '@cube-creator/model/DimensionMetadata'
 import $rdf from 'rdf-ext'
@@ -11,12 +12,14 @@ import { NamedNode, Term } from 'rdf-js'
 
 interface CreateColumnMetadata {
   store: ResourceStore
-  csvMapping: CsvMapping
+  cubeIdentifier: string
+  organization: Organization
   columnMapping: ColumnMapping
 }
 
 interface FindDimensionMetadata {
-  csvMapping: CsvMapping
+  cubeIdentifier: string
+  organization: Organization
   targetProperty: Term
 }
 
@@ -54,8 +57,11 @@ export default function Mixin<Base extends Constructor<Omit<DimensionMetadataCol
       this.hasPart = this.hasPart.filter(part => !dimension.id.equals(part.id))
     }
 
-    addDimensionMetadata(params: CreateColumnMetadata): DimensionMetadata.DimensionMetadata {
-      const identifier = params.csvMapping.createIdentifier(params.columnMapping.targetProperty)
+    addDimensionMetadata({ cubeIdentifier, ...params }: CreateColumnMetadata): DimensionMetadata.DimensionMetadata {
+      const identifier = params.organization.createIdentifier({
+        cubeIdentifier,
+        termName: params.columnMapping.targetProperty,
+      })
 
       const existingDim = this.hasPart.find(dimMeta => dimMeta.about.equals(identifier))
 
@@ -73,7 +79,10 @@ export default function Mixin<Base extends Constructor<Omit<DimensionMetadataCol
     }
 
     find(params: FindDimensionMetadata | Term): DimensionMetadata.DimensionMetadata | undefined {
-      const identifier = 'termType' in params ? params : params.csvMapping.createIdentifier(params.targetProperty)
+      const identifier = 'termType' in params ? params : params.organization.createIdentifier({
+        cubeIdentifier: params.cubeIdentifier,
+        termName: params.targetProperty,
+      })
       return this.hasPart.find(part => identifier.equals(part.about))
     }
 
