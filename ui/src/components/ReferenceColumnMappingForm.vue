@@ -60,7 +60,7 @@ import { cc } from '@cube-creator/core/namespace'
 import FormSubmitCancel from '@/components/FormSubmitCancel.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import HydraOperationError from '@/components/HydraOperationError.vue'
-import PropertyInput from '@/forms/PropertyInput.vue'
+import PropertyInput from '@/forms/editors/PropertyInput.vue'
 import { ErrorDetails } from '@/api/errors'
 import { Link } from '@cube-creator/model/lib/Link'
 

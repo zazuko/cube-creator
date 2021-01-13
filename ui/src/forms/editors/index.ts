@@ -6,7 +6,7 @@ import {
 import * as ns from '@cube-creator/core/namespace'
 import { dash, xsd } from '@tpluscode/rdf-ns-builders'
 import $rdf from '@rdfjs/data-model'
-import { createCustomElement } from '@/forms/bulma'
+import { createCustomElement } from '../custom-element'
 
 export const textField: Lazy<SingleEditorComponent> = {
   editor: dash.TextFieldEditor,
