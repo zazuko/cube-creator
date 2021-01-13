@@ -64,10 +64,18 @@ export default function (pipelineId: NamedNode, log: Debugger) {
 
     const timestamp = new Date()
     variable.set('timestamp', $rdf.literal(timestamp.toISOString(), xsd.dateTime))
-    variable.set('target-graph', process.env.PUBLISH_GRAPH_OVERRIDE || job.publishGraph.value)
+
+    variable.set('target-graph', job.publishGraph.value)
+    if (process.env.PUBLISH_GRAPH_OVERRIDE) {
+      log('Overriding target graph from PUBLISH_GRAPH_OVERRIDE')
+      variable.set('target-graph', process.env.PUBLISH_GRAPH_OVERRIDE)
+    }
+    log(`Publishing to graph <${variable.get('target-graph')}>`)
+
     variable.set('revision', job.revision)
     variable.set('namespace', namespace)
     variable.set('cubeIdentifier', cubeIdentifier)
+    log(`Publishing cube <${cubeIdentifier}>`)
 
     const run = Runner.create({
       basePath: path.resolve(basePath, 'pipelines'),
