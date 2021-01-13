@@ -11,7 +11,7 @@ import { createCustomElement } from '../custom-element'
 export const textField: Lazy<SingleEditorComponent> = {
   editor: dash.TextFieldEditor,
   async lazyRender () {
-    await import('./BulmaTextBox.vue').then(createCustomElement('b-textbox'))
+    await import('./TextFieldEditor.vue').then(createCustomElement('b-textbox'))
 
     return ({ value }, { update }) => html`<b-textbox .value="${value.object?.value || ''}" .update="${update}"></b-textbox>`
   }
@@ -47,7 +47,7 @@ export const textAreaWithLang: Lazy<SingleEditorComponent> = {
 export const instanceSelect: Lazy<InstancesSelectEditor> = {
   ...instancesSelectCore,
   async lazyRender () {
-    await import('./BulmaSelect.vue').then(createCustomElement('b-select'))
+    await import('./SelectEditor.vue').then(createCustomElement('b-select'))
 
     return ({ property, value }, { update }) => html`<b-select .property="${property.shape}"
                           .update="${update}"
@@ -59,7 +59,7 @@ export const instanceSelect: Lazy<InstancesSelectEditor> = {
 export const enumSelect: Lazy<EnumSelectEditor> = {
   ...enumSelectCore,
   async lazyRender () {
-    await import('./BulmaSelect.vue').then(createCustomElement('b-select'))
+    await import('./SelectEditor.vue').then(createCustomElement('b-select'))
 
     return ({ property, value }, { update }) =>
       html`<b-select .property="${property.shape}"
@@ -72,7 +72,7 @@ export const enumSelect: Lazy<EnumSelectEditor> = {
 export const radioButtons: Lazy<SingleEditorComponent> = {
   editor: ns.editor.RadioButtons,
   async lazyRender () {
-    await import('./BulmaRadioButtons.vue').then(createCustomElement('b-radio'))
+    await import('./RadioButtons.vue').then(createCustomElement('b-radio'))
 
     return ({ property, value }, { update }) => {
       const items = property.shape.pointer.node(property.shape.in)
@@ -96,7 +96,7 @@ const trueTerm = $rdf.literal('true', xsd.boolean)
 export const checkBox: Lazy<SingleEditorComponent> = {
   editor: ns.editor.Checkbox,
   async lazyRender () {
-    await import('./BulmaCheckbox.vue').then(createCustomElement('cc-checkbox'))
+    await import('./CheckboxEditor.vue').then(createCustomElement('cc-checkbox'))
 
     return ({ value }, { update }) => {
       const booleanValue = trueTerm.equals(value.object?.term)
