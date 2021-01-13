@@ -1,6 +1,6 @@
 <template>
   <div class="table-container cube-preview">
-    <table class="table is-condensed is-bordered">
+    <table class="table is-condensed is-bordered is-striped">
       <thead>
         <tr>
           <th :colspan="dimensions.length || 1">
@@ -25,7 +25,7 @@
             </div>
           </th>
         </tr>
-        <tr>
+        <tr class="has-background-light">
           <th v-for="dimension in dimensions" :key="dimension.id.value">
             <cube-preview-dimension :dimension="dimension" :selected-language="selectedLanguage" />
           </th>
@@ -62,7 +62,7 @@
       </tbody>
       <tfoot>
         <tr>
-          <td :colspan="tableWidth">
+          <td :colspan="tableWidth" class="has-background-light">
             <div class="is-flex gap-4">
               <div class="is-flex is-align-items-center gap-1">
                 <span class="pr-1">Page {{ page }}</span>
