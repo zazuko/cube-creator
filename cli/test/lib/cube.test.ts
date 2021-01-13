@@ -4,6 +4,7 @@ import $rdf from 'rdf-ext'
 import { cc, cube } from '@cube-creator/core/namespace'
 import { getObservationSetId, injectRevision } from '../../lib/cube'
 import { rdf } from '@tpluscode/rdf-ns-builders'
+import { log } from '../support/logger'
 
 describe('lib/cube', () => {
   describe('getObservationSetId', () => {
@@ -63,6 +64,7 @@ describe('lib/cube', () => {
       it(`ensures a slash between base and version (term = ${term}; namespace = ${namespace})`, async () => {
         // given
         const context = {
+          log,
           variables: new Map<any, any>([
             ['namespace', 'http://example.com/cube/' + namespace],
             ['revision', 5],
@@ -87,6 +89,7 @@ describe('lib/cube', () => {
     it('adds previous cube id to variables', async () => {
       // given
       const context = {
+        log,
         variables: new Map<any, any>([
           ['namespace', 'http://example.com/cube/foo/'],
           ['revision', 5],
@@ -108,6 +111,7 @@ describe('lib/cube', () => {
     it('does not add previous cube to variables on first publish', async () => {
       // given
       const context = {
+        log,
         variables: new Map<any, any>([
           ['namespace', 'http://example.com/cube/foo/'],
           ['revision', 1],
