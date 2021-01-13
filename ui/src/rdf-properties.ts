@@ -1,6 +1,7 @@
 import $rdf from '@rdf-esm/dataset'
 import { Quad } from 'rdf-js'
 import { shrink as _shrink } from '@zazuko/rdf-vocabularies/shrink'
+import { expand as _expand } from '@zazuko/rdf-vocabularies/expand'
 import prefixes from '@zazuko/rdf-vocabularies/prefixes'
 import { rdf } from '@tpluscode/rdf-ns-builders'
 
@@ -31,20 +32,4 @@ export function expand (uri: string): string {
 
 export function shrink (uri: string): string {
   return _shrink(uri) || uri
-}
-
-// Copied from @zazuko/rdf-vocabularies
-// TODO: remove after https://github.com/zazuko/rdf-vocabularies/issues/76
-function _expand (prefixed: string): string {
-  const [prefix, term] = prefixed.split(':')
-  if (!prefix || !term) {
-    return ''
-  }
-
-  const baseIRI = prefixes[prefix]
-  if (!baseIRI) {
-    throw new Error(`Unavailable prefix '${prefix}:'`)
-  }
-
-  return `${baseIRI}${term}`
 }
