@@ -13,10 +13,11 @@ import { shrink } from '@/rdf-properties'
 export default class extends Vue {
   @Prop({ required: true }) term!: Term
   @Prop({ default: false }) showLanguage!: boolean
+  @Prop() base?: string
 
   get displayShort (): string {
     if (this.term.termType === 'NamedNode') {
-      return shrink(this.term.value)
+      return shrink(this.term.value, this.base)
     } else {
       return this.term.value
     }

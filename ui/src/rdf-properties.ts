@@ -30,6 +30,10 @@ export function expand (uri: string): string {
   }
 }
 
-export function shrink (uri: string): string {
-  return _shrink(uri) || uri
+export function shrink (uri: string, customBase?: string): string {
+  if (customBase && uri.startsWith(customBase)) {
+    return uri.replace(customBase, '').replace(/^[/#]/, '')
+  } else {
+    return _shrink(uri) || uri
+  }
 }
