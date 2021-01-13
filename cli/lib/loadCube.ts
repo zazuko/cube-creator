@@ -28,5 +28,7 @@ export async function loadCube(this: Pipeline.Context, { jobUri, endpoint, user,
     throw new Error(`Did not find representation of project ${job.project}. Server responded ${projectResource.response?.xhr.status}`)
   }
 
+  this.log.info(`Source graph <${project.cubeGraph.value}>`)
+
   return get({ endpoint, graph: project.cubeGraph.value, user, password })
 }

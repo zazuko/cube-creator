@@ -21,11 +21,13 @@ export function getCubeId({ ptr }: { ptr: GraphPointer }) {
   return ptr.out(cc.cube).term || ''
 }
 
-export function injectRevision(this: Pick<Context, 'variables'>) {
-  let cubeNamespace: string = this.variables.get('namespace')
-  const revision: number = this.variables.get('revision')
+export function injectRevision(this: Pick<Context, 'variables' | 'log'>) {
+  let cubeNamespace = this.variables.get('namespace')
+  const revision = this.variables.get('revision')
   const previousCubes = new TermMap<Term, QuadSubject>()
   this.variables.set('previousCubes', previousCubes)
+
+  this.log.info(`Cube revision ${revision}`)
 
   if (cubeNamespace.endsWith('/')) {
     cubeNamespace = cubeNamespace.slice(0, -1)
