@@ -8,7 +8,7 @@ import { ShaperoneForm } from '@hydrofoil/shaperone-wc/ShaperoneForm'
 import * as Editors from './editors'
 import * as Matchers from './matchers'
 import { Metadata } from './metadata'
-import { createCustomElement } from '@/forms/bulma'
+import { createCustomElement } from './custom-element'
 
 export const focusNodeStrategy: FocusNodeRenderStrategy = ({ focusNode, renderGroup }) => html`
   <div class="fieldset" part="focus-node">
