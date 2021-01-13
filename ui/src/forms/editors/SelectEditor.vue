@@ -27,7 +27,7 @@ export default class extends Vue {
     return this.value?.value || ''
   }
 
-  onInput (value: string) {
+  onInput (value: string): void {
     const selected = this.options.find(opt => opt[0].value === value)?.[0]
     if (selected) {
       this.update(selected.term)
