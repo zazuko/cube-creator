@@ -112,7 +112,7 @@
   a                  :Step ;
   code:implementedBy [ a         code:EcmaScript ;
                        code:link <node:barnard59-base#filter> ] ;
-  code:arguments     ( [ code:link <file:../lib/output-filter#default> ;
+  code:arguments     ( [ code:link <file:../lib/output-filter#fromTransformed> ;
                          a         code:EcmaScript ] ) .
 
 <#toDataset> a :Step;
