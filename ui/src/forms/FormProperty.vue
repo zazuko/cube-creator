@@ -4,9 +4,9 @@
       {{ property.name }}
     </span>
     <b-field v-if="property.shape.description">
-      <p class="help">
+      <vue-markdown class="help">
         {{ property.shape.description }}
-      </p>
+      </vue-markdown>
     </b-field>
     <b-field v-if="property.selectedEditor">
       <render-wc-template :template-result="renderMultiEditor()" />
@@ -29,10 +29,11 @@ import { TemplateResult } from 'lit-element'
 // Makes the hidden property visible to typescript
 // TODO: this will not be necessary in next version of shaperone
 import '@rdfine/dash/extensions/sh/PropertyShape'
+import VueMarkdown from 'vue-markdown/src/VueMarkdown'
 import RenderWcTemplate from './RenderWcTemplate.vue'
 
 @Component({
-  components: { RenderWcTemplate },
+  components: { RenderWcTemplate, VueMarkdown },
 })
 export default class extends Vue {
   @Prop() property!: PropertyState;

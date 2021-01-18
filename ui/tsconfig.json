@@ -31,7 +31,8 @@
     ]
   },
   "files": [
-    "types/global.d.ts"
+    "types/global.d.ts",
+    "types/vue-markdown.d.ts",
   ],
   "include": [
     "src/**/*.ts",
