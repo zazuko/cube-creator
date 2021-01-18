@@ -32,16 +32,22 @@ export function serializeProject (project: Project): Project {
   return Object.freeze({
     ...serializeResource(project),
     csvMapping: Object.freeze(project.csvMapping),
-    dataset: serializeLink(project.dataset),
+    dataset: project.dataset
+      ? serializeLink(project.dataset)
+      : project.dataset,
     cubeGraph: project.cubeGraph,
     creator: project.creator,
     label: project.label,
-    jobCollection: serializeLink(project.jobCollection),
+    jobCollection: project.jobCollection
+      ? serializeLink(project.jobCollection)
+      : project.jobCollection,
     cubeIdentifier: project.cubeIdentifier,
-    maintainer: {
-      ...serializeLink(project.maintainer),
-      label: project.maintainer?.pointer.out(rdfs.label, { language: ['en', 'de', 'fr', ''] }),
-    },
+    maintainer: project.maintainer
+      ? {
+        ...serializeLink(project.maintainer),
+        label: project.maintainer?.pointer.out(rdfs.label, { language: ['en', 'de', 'fr', ''] }),
+      }
+      : project.maintainer,
     publishedRevision: project.publishedRevision,
   })
 }
