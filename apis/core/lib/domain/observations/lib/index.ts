@@ -59,25 +59,51 @@ interface HydraCollectionParams {
   templateParams: GraphPointer
   observations: Record<string, Term>[]
   totalItems: number
+  pageSize: number
 }
 
-export function createHydraCollection({ templateParams, template, observations, totalItems }: HydraCollectionParams): Collection {
+function pageId({ offset, page, template, ...rest }: { template: IriTemplate; templateParams: GraphPointer; page?: number; offset?: number }) {
+  const templateParams = clownface({
+    dataset: $rdf.dataset([...rest.templateParams.dataset]),
+    term: rest.templateParams.term,
+  })
+
+  if (page) {
+    templateParams.deleteOut(hydra.pageIndex).addOut(hydra.pageIndex, page)
+  } else if (offset) {
+    const pageIndex = Number.parseInt(templateParams.out(hydra.pageIndex).value || '1')
+    if (pageIndex === 1) {
+      return undefined
+    }
+
+    templateParams.deleteOut(hydra.pageIndex).addOut(hydra.pageIndex, pageIndex + offset)
+  }
+
+  return $rdf.namedNode(new URL(template.expand(templateParams), env.API_CORE_BASE).toString())
+}
+
+export function createHydraCollection({ templateParams, template, observations, totalItems, pageSize }: HydraCollectionParams): Collection {
   const collectionId = template.expand(
     clownface({ dataset: $rdf.dataset() }).blankNode()
       .addOut(cc.cube, templateParams.out(cc.cube))
       .addOut(cc.cubeGraph, templateParams.out(cc.cubeGraph)),
   )
-  const viewId = template.expand(templateParams)
 
   const collectionPointer = clownface({ dataset: $rdf.dataset() })
     .namedNode(new URL(collectionId, env.API_CORE_BASE).toString())
+
+  const lastPage = Math.ceil(totalItems / pageSize)
 
   return new CollectionMixin.Class(collectionPointer, {
     member: observations,
     totalItems,
     view: {
       types: [hydra.PartialCollectionView],
-      id: new URL(viewId, env.API_CORE_BASE).toString(),
+      id: pageId({ template, templateParams }),
+      first: pageId({ template, templateParams, page: 1 }),
+      next: pageId({ template, templateParams, offset: 1 }),
+      previous: pageId({ template, templateParams, offset: -1 }),
+      last: pageId({ template, templateParams, page: lastPage }),
     },
   }) as any
 }
