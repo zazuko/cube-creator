@@ -3,6 +3,7 @@ import { api } from '@/api'
 import { RootState } from '../types'
 import * as ns from '@cube-creator/core/namespace'
 import { ProjectsCollection } from '@cube-creator/model'
+import { serializeProjectsCollection } from '../serializers'
 
 export interface ProjectsState {
   collection: null | ProjectsCollection,
@@ -29,7 +30,7 @@ const actions: ActionTree<ProjectsState, RootState> = {
 
 const mutations: MutationTree<ProjectsState> = {
   storeCollection (state, collection) {
-    state.collection = Object.freeze(collection)
+    state.collection = collection ? serializeProjectsCollection(collection) : null
   },
 }
 

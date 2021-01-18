@@ -10,14 +10,41 @@ import {
   DimensionMetadataCollection,
   Job,
   JobCollection,
+  Project,
+  ProjectsCollection,
   SourcesCollection,
   Table,
   TableCollection,
 } from '@cube-creator/model'
 import { IdentifierMapping, LiteralColumnMapping, ReferenceColumnMapping } from '@cube-creator/model/ColumnMapping'
 import { Link } from '@cube-creator/model/lib/Link'
-import { dcterms } from '@tpluscode/rdf-ns-builders'
+import { dcterms, rdfs } from '@tpluscode/rdf-ns-builders'
 import { RdfResource } from '@tpluscode/rdfine/RdfResource'
+
+export function serializeProjectsCollection (collection: ProjectsCollection): ProjectsCollection {
+  return Object.freeze({
+    ...serializeResource(collection),
+    member: collection.member.map(serializeProject),
+  }) as ProjectsCollection
+}
+
+export function serializeProject (project: Project): Project {
+  return Object.freeze({
+    ...serializeResource(project),
+    csvMapping: Object.freeze(project.csvMapping),
+    dataset: serializeLink(project.dataset),
+    cubeGraph: project.cubeGraph,
+    creator: project.creator,
+    label: project.label,
+    jobCollection: serializeLink(project.jobCollection),
+    cubeIdentifier: project.cubeIdentifier,
+    maintainer: {
+      ...serializeLink(project.maintainer),
+      label: project.maintainer?.pointer.out(rdfs.label, { language: ['en', 'de', 'fr', ''] }),
+    },
+    publishedRevision: project.publishedRevision,
+  })
+}
 
 export function serializeSourcesCollection (collection: SourcesCollection): SourcesCollection {
   return Object.freeze({

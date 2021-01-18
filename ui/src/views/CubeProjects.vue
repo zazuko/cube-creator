@@ -1,37 +1,45 @@
 <template>
-  <page-content>
-    <div class="level">
-      <div class="level-left">
-        <div class="level-item">
-          <h2 class="title">
-            Cube projects
-          </h2>
-        </div>
-        <div v-if="projectsCollection" class="level-item">
-          <hydra-operation-button
-            :operation="projectsCollection.actions.create"
-            :to="{ name: 'CubeProjectCreate' }"
-            type="is-default"
-            size=""
-          >
-            {{ projectsCollection.actions.create.title }}
-          </hydra-operation-button>
-        </div>
+  <page-content class="container-narrow">
+    <div class="mb-4 is-flex is-align-items-center is-justify-content-space-between">
+      <h2 class="title is-size-4 mb-0">
+        Cube projects
+      </h2>
+      <div v-if="projectsCollection">
+        <hydra-operation-button
+          :operation="projectsCollection.actions.create"
+          :to="{ name: 'CubeProjectCreate' }"
+          type="is-default"
+          size=""
+        >
+          {{ projectsCollection.actions.create.title }}
+        </hydra-operation-button>
       </div>
     </div>
-    <div v-if="projects && projects.length > 0" class="panel container-narrow">
-      <router-link
-        v-for="project in projects"
-        :key="project.id.value"
-        :to="{ name: 'CubeProject', params: { id: project.clientPath } }"
-        class="panel-block"
-      >
-        {{ project.title }}
-      </router-link>
+    <div v-if="projectsCollection">
+      <div v-if="projects.length > 0" class="panel">
+        <router-link
+          v-for="project in projects"
+          :key="project.id.value"
+          :to="{ name: 'CubeProject', params: { id: project.clientPath } }"
+          class="panel-block"
+        >
+          <div class="is-flex-grow-1 is-flex is-justify-content-space-between">
+            <div>
+              <p class="has-text-weight-bold">{{ project.label }}</p>
+              <p class="is-size-7" title="Cube identifier">
+                {{ project.cubeIdentifier }}
+              </p>
+            </div>
+            <div>
+              <span class="tag">{{ project.maintainer.label }}</span>
+            </div>
+          </div>
+        </router-link>
+      </div>
+      <p v-else class="has-text-grey">
+        No projects yet
+      </p>
     </div>
-    <p v-else-if="projects && projects.length === 0" class="has-text-grey">
-      No projects yet
-    </p>
     <loading-block v-else />
 
     <router-view v-if="projectsCollection" />
@@ -40,26 +48,26 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { State } from 'vuex-class'
+import { namespace } from 'vuex-class'
+import { ProjectsCollection, Project } from '@cube-creator/model'
 import PageContent from '@/components/PageContent.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import HydraOperationButton from '@/components/HydraOperationButton.vue'
-import { ProjectsCollection, Project } from '@cube-creator/model'
+
+const projectsNS = namespace('projects')
 
 @Component({
   components: { PageContent, LoadingBlock, HydraOperationButton },
 })
 export default class CubeProjectsView extends Vue {
-  @State('collection', { namespace: 'projects' }) projectsCollection!: ProjectsCollection | null;
+  @projectsNS.State('collection') projectsCollection!: ProjectsCollection | null;
 
   async mounted (): Promise<void> {
     await this.$store.dispatch('projects/fetchCollection')
   }
 
-  get projects (): Project[] | null {
-    if (!this.projectsCollection) return null
-
-    return this.projectsCollection.member
+  get projects (): Project[] {
+    return this.projectsCollection?.member ?? []
   }
 }
 </script>
