@@ -1169,10 +1169,10 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
-"@hydrofoil/labyrinth@^0.2":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@hydrofoil/labyrinth/-/labyrinth-0.2.0.tgz#1cc72d7cf1007fd58d4f154c019e7cee9ddf8d62"
-  integrity sha512-0WELTDT4QQXE9O0yQIuxVhQ8sVUQxFKGsO9LqHe5Z5HS27UO//AgaLyUYFsvCujsFIvmQxYYjM4ogwdF4cRW3g==
+"@hydrofoil/labyrinth@^0.3":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@hydrofoil/labyrinth/-/labyrinth-0.3.0.tgz#4d4cb9c35f04757843f39855c8d7cc69e5628fa3"
+  integrity sha512-480Oxg+glMbZXtJnOIKHQy9xfUtbkSTVUHH4USB5ToA4lpsQRrkNSm2+n8TcFqwBZEX1Orv1Zq/diOVDaK/hmQ==
   dependencies:
     "@fcostarodrigo/walk" "^5.0.0"
     "@rdfine/hydra" "^0.6"
@@ -1194,6 +1194,7 @@
     http-problem-details "^0.1.5"
     http-problem-details-mapper "^0.1.7"
     middleware-async "^1.2.7"
+    once "^1.4.0"
     rdf-ext "^1.3.0"
     rdf-loader-code "^0.3.1"
     rdf-loaders-registry "^0.2.0"
@@ -7267,9 +7268,10 @@ human-signals@^1.1.1:
   resolved "https://registry.yarnpkg.com/human-signals/-/human-signals-1.1.1.tgz#c5b1cd14f50aeae09ab6c59fe63ba3395fe4dfa3"
   integrity sha512-SEQu7vl8KjNL2eoGBLF3+wAjpsNfA9XMlXAYj/3EdaNfAlxKthD1xjEQfGOUhllCGGJVNY34bRr6lPINhNjyZw==
 
-hydra-box@zazuko/hydra-box:
-  version "0.5.1"
-  resolved "https://codeload.github.com/zazuko/hydra-box/tar.gz/14cdcee86662c0c59eea1ab0f0bddaffca7e264b"
+hydra-box@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/hydra-box/-/hydra-box-0.6.1.tgz#a43aab80feffbde5a38d8888b6439558ee9e4472"
+  integrity sha512-dazD3Y7N0yMoFUTNwdL9ROCcVH/ioxz0HFcL7bzW5xzxOtsJI9HGSHW5k8u45VxQ7fGD//jFr29mf0G2FUQEmg==
   dependencies:
     "@rdfjs/data-model" "^1.1.2"
     "@rdfjs/dataset" "^1.0.1"

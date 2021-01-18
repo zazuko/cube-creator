@@ -1,13 +1,15 @@
 declare module 'hydra-box' {
   import { Request, RequestHandler, Router } from 'express'
   import Api = require('hydra-box/Api');
-  import { DatasetCore, Term, NamedNode } from 'rdf-js'
+  import { DatasetCore, Term, NamedNode, Stream } from 'rdf-js'
   import type { GraphPointer } from 'clownface'
 
   namespace hydraBox {
     interface ObjectResource {
-      term: Term
-      dataset: DatasetCore
+      term: NamedNode
+      prefetchDataset: DatasetCore
+      dataset(): Promise<DatasetCore>
+      quadStream(): Stream
       types: Set<Term>
     }
 
@@ -21,16 +23,17 @@ declare module 'hydra-box' {
       forPropertyOperation (term: Term, req: Request): Promise<Array<PropertyResource>>
     }
 
+    interface PotentialOperation {
+      resource: ObjectResource | PropertyResource
+      operation: GraphPointer
+    }
+
     interface HydraBox {
       api: Api
       term: NamedNode
-      resource: {
-        term: NamedNode
-        dataset: DatasetCore
-        types: Set<NamedNode>
-      }
+      resource: ObjectResource & { clownface(): Promise<GraphPointer<NamedNode>> }
       operation: GraphPointer
-      operations: { resource: ObjectResource; operation: GraphPointer }[]
+      operations: PotentialOperation[]
     }
 
     interface Options {

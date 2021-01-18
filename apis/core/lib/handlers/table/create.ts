@@ -12,7 +12,7 @@ export const post = protectedResource(
   shaclValidate,
   asyncMiddleware(async (req, res) => {
     const table = await createTable({
-      tableCollection: clownface(req.hydra.resource),
+      tableCollection: await req.hydra.resource.clownface(),
       resource: await req.resource(),
       store: req.resourceStore(),
     })

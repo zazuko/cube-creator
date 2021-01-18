@@ -15,7 +15,7 @@ export const put = protectedResource(
   shaclValidate,
   asyncMiddleware(async (req, res) => {
     const dataset = await update({
-      dataset: clownface(req.hydra.resource),
+      dataset: await req.hydra.resource.clownface(),
       resource: await req.resource(),
       store: req.resourceStore(),
     })
@@ -42,7 +42,7 @@ export const loadCubes: Enrichment = async (req, dataset) => {
     return
   }
 
-  dataset.any().has(rdf.type, cube.Cube).forEach(cube => {
+  clownface(dataset).any().has(rdf.type, cube.Cube).forEach(cube => {
     cube.addOut(cc.observations, template => {
       return new IriTemplateMixin.Class(template, {
         template: `${env.API_CORE_BASE}observations?cube=${encodeURIComponent(cube.value)}&graph=${encodeURIComponent(graph)}{&view,pageSize,page}`,

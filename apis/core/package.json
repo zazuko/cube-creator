@@ -8,7 +8,7 @@
   "dependencies": {
     "@cube-creator/core": "*",
     "@cube-creator/model": "*",
-    "@hydrofoil/labyrinth": "^0.2",
+    "@hydrofoil/labyrinth": "^0.3",
     "@rdfine/csvw": "^0.6.3",
     "@rdfine/hydra": "^0.6.4",
     "@rdfine/schema": "^0.6.3",
@@ -42,7 +42,7 @@
     "http-errors": "^1.8.0",
     "http-problem-details": "^0.1.5",
     "http-problem-details-mapper": "^0.1.6",
-    "hydra-box": "zazuko/hydra-box",
+    "hydra-box": "^0.6.1",
     "is-stream": "^2",
     "is-uri": "^1.2.0",
     "jwks-rsa": "^1.9.0",
