@@ -1,6 +1,6 @@
 {
   "name": "@cube-creator/cli",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Runs a pipeline to create an RDF data cube",
   "main": "index.js",
   "scripts": {
