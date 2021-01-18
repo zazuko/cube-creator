@@ -19,8 +19,13 @@ describe('lib/middleware/operations', () => {
   }
 
   beforeEach(() => {
+    const dataset = $rdf.dataset()
     resource = {
-      dataset: $rdf.dataset(),
+      prefetchDataset: dataset,
+      dataset: async () => dataset,
+      quadStream() {
+        return dataset.toStream()
+      },
       term: ex.resource,
       types: new TermSet(),
     }

@@ -3,6 +3,7 @@ import { expect } from 'chai'
 import request from 'supertest'
 import express from 'express'
 import $rdf from 'rdf-ext'
+import clownface from 'clownface'
 import { turtle } from '@tpluscode/rdf-string'
 import { cc } from '@cube-creator/core/namespace'
 import { rdfs } from '@tpluscode/rdf-ns-builders'
@@ -13,11 +14,19 @@ describe('middleware/resource', () => {
   it('returns pointer to empty named node if the request term does not appear in body', async function () {
     // given
     const app = express()
+    const dataset = $rdf.dataset()
     app.use(appMock(hydra => {
       hydra.resource = {
         term: $rdf.namedNode('http://example.com/foo/bar'),
         types: new Set(),
-        dataset: $rdf.dataset(),
+        prefetchDataset: dataset,
+        dataset: async () => dataset,
+        quadStream() {
+          return dataset.toStream()
+        },
+        async clownface() {
+          return clownface({ dataset }).node(this.term)
+        },
       }
     }))
     app.use(resource)

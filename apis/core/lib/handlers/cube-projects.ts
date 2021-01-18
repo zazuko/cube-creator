@@ -1,5 +1,4 @@
 import asyncMiddleware from 'middleware-async'
-import clownface from 'clownface'
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
 import { shaclValidate } from '../middleware/shacl'
 import { createProject } from '../domain/cube-projects/create'
@@ -16,7 +15,7 @@ export const post = protectedResource(
     }
 
     const { pointer: project } = await createProject({
-      projectsCollection: clownface(req.hydra.resource),
+      projectsCollection: await req.hydra.resource.clownface(),
       resource: await req.resource(),
       user,
       store: req.resourceStore(),
@@ -32,7 +31,7 @@ export const post = protectedResource(
 export const put = protectedResource(
   shaclValidate,
   asyncMiddleware(async (req, res) => {
-    const project = clownface(req.hydra.resource)
+    const project = await req.hydra.resource.clownface()
     await updateProject({
       resource: await req.resource(),
       store: req.resourceStore(),

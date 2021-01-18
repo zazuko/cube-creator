@@ -4,7 +4,7 @@ import { shaclValidate } from '../middleware/shacl'
 import { update } from '../domain/dimension/update'
 
 export const get = protectedResource(asyncMiddleware((req, res) => {
-  return res.dataset(req.hydra.resource.dataset)
+  return res.quadStream(req.hydra.resource.quadStream())
 }))
 
 export const put = protectedResource(
