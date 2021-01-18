@@ -30,7 +30,7 @@
                 {{ project.cubeIdentifier }}
               </p>
             </div>
-            <div>
+            <div v-if="project.maintainer">
               <span class="tag">{{ project.maintainer.label }}</span>
             </div>
           </div>
