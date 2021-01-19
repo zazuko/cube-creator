@@ -33,13 +33,14 @@ async function loadDataset(jobUri: string) {
     throw new Error(`Dataset ${project.dataset} not loaded`)
   }
 
-  return dataset
+  const { maintainer } = project
+  return { dataset, maintainer }
 }
 
 export async function injectMetadata(this: Context, jobUri: string) {
   const revision = this.variables.get('revision')
   const cubeIdentifier = this.variables.get('cubeIdentifier')
-  const dataset = await loadDataset(jobUri)
+  const { dataset, maintainer } = await loadDataset(jobUri)
   const datasetTriples = dataset.pointer.dataset.match(null, null, null, dataset.id)
   const previousCubes = this.variables.get('previousCubes')
   const timestamp = this.variables.get('timestamp')
@@ -94,7 +95,12 @@ export async function injectMetadata(this: Context, jobUri: string) {
       })
     }
 
-    this.push(quad)
+    if (quad.predicate.equals(cube.observedBy)) {
+      this.push($rdf.quad(quad.subject, cube.observedBy, maintainer.id))
+    } else {
+      this.push(quad)
+    }
+
     callback()
   })
 }

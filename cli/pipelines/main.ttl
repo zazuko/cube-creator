@@ -125,9 +125,6 @@
                        code:link <node:barnard59-rdf/cube.js#toObservation>
                      ] ;
   code:arguments [
-                   code:name "observer";
-                   code:value "https://ld.stadt-zuerich.ch/"
-                 ], [
                       code:name "observations";
                                 code:value [
                                              a code:EcmaScript ;

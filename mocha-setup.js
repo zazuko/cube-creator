@@ -11,9 +11,11 @@ require('dotenv').config({
 require('chai-snapshot-matcher')
 const chai = require('chai')
 const sinonChai = require('sinon-chai')
+const quantifiers = require('chai-quantifiers')
 
 var chaiAsPromised = require('chai-as-promised')
 chai.use(chaiAsPromised)
+chai.use(quantifiers)
 
 require('./packages/testing/lib/chaiShapeMatcher')
 
