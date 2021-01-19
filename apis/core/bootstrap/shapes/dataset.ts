@@ -39,7 +39,7 @@ ${shapeId} {
     ${rdfs.label} "Cube Metadata" ;
     ${sh.property} [
       ${sh.name} "Title" ;
-      ${sh.path} ${dcterms.title} ;
+      ${sh.path} ${schema.name} ;
       ${sh.minCount} 1 ;
       ${sh.minLength} 1 ;
       ${sh.datatype} ${rdf.langString} ;
@@ -48,8 +48,16 @@ ${shapeId} {
       ${sh.order} 10 ;
     ] ;
     ${sh.property} [
+      ${sh.name} "Title (dcat)" ;
+      ${sh.path} ${dcterms.title} ;
+      ${sh.maxCount} 1 ;
+      ${sh.datatype} ${rdf.langString} ;
+      ${dash.hidden} true ;
+      ${sh.equals} ${schema.name} ;
+    ] ;    
+    ${sh.property} [
       ${sh.name} "Description" ;
-      ${sh.path} ${dcterms.description} ;
+      ${sh.path} ${schema.description} ;
       ${sh.minCount} 0 ;
       ${sh.minLength} 1 ;
       ${sh.datatype} ${rdf.langString} ;
@@ -57,6 +65,14 @@ ${shapeId} {
       ${sh.uniqueLang} true ;
       ${sh.order} 20 ;
     ] ;
+    ${sh.property} [
+      ${sh.name} "Description (dcat)" ;
+      ${sh.path} ${dcterms.description} ;
+      ${sh.maxCount} 1 ;
+      ${sh.datatype} ${rdf.langString} ;
+      ${dash.hidden} true ;
+      ${sh.equals} ${schema.description} ;
+    ] ;        
     ${sh.property} [
       ${sh.name} "Status" ;
       ${sh.path} ${schema.creativeWorkStatus} ;
