@@ -213,15 +213,16 @@ describe('lib/commands/publish', function () {
         },
       })
 
-      expect(cubePointer.namedNode(targetCube('shape/')).out(sh.property).has(sh.path, ns.baseCube('dimension/year'))).to.matchShape({
+      const props = cubePointer.namedNode(targetCube('shape/')).out(sh.property)
+      expect(props.has(sh.path, targetCube('dimension/year'))).to.matchShape({
         property: {
           path: sh.path,
-          hasValue: ns.baseCube('dimension/year'),
+          hasValue: targetCube('dimension/year'),
           minCount: 1,
         },
       })
 
-      expect(cubePointer.namedNode(targetCube('shape/')).out(sh.property).has(sh.path, schema.name)).to.matchShape({
+      expect(props.has(sh.path).has(schema.name)).to.matchShape({
         property: {
           path: schema.name,
           hasValue: $rdf.literal('Jahr', 'de'),
@@ -229,7 +230,7 @@ describe('lib/commands/publish', function () {
         },
       })
 
-      expect(cubePointer.namedNode(targetCube('shape/')).out(sh.property).has(sh.path, scale.scaleOfMeasure)).to.matchShape({
+      expect(props.has(sh.path).has(scale.scaleOfMeasure)).to.matchShape({
         property: {
           path: scale.scaleOfMeasure,
           hasValue: scale.Temporal,
