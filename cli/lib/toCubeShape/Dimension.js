@@ -9,6 +9,8 @@ const datatypeParsers = new TermMap([
   [ns.xsd.double, term => parseFloat(term.value)],
   [ns.xsd.float, term => parseFloat(term.value)],
   [ns.xsd.integer, term => parseInt(term.value)],
+  [ns.xsd.decimal, term => parseFloat(term.value)],
+  [ns.xsd.gYear, term => parseInt(term.value)],
 ])
 
 class Dimension {
