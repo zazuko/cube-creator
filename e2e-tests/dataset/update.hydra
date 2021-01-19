@@ -35,15 +35,12 @@ With Class void:Dataset {
 
             <cube-project/ubd/dataset>
                 schema:hasPart <https://environment.ld.admin.ch/foen/ubd/28/> ;
-                dcterms:identifier "UBD0028@bafu.admin.ch" ;
                 rdf:type schema:Dataset ;
                 rdf:type void:Dataset ;
                 rdf:type hydra:Resource ;
                 dcterms:title "Some Title"@en ;
-                dcterms:comment "Some description"@en ;
+                schema:name "Some Title"@en ;
                 schema:creativeWorkStatus "Draft" ;
-                cc:publishOnOpendata true ;
-                cc:publishOnVisualize true ;
                 dcterms:temporal [
                     a dcterms:PeriodOfTime ;
                     schema:startDate "2020-01-01"^^xsd:date ;
