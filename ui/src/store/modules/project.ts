@@ -29,7 +29,7 @@ import { cc } from '@cube-creator/core/namespace'
 import type { Organization } from '@rdfine/schema'
 
 export interface CreateIdentifier {
-  (term: string): string
+  (term: Term): string
 }
 
 export interface ProjectState {
@@ -269,7 +269,7 @@ const mutations: MutationTree<ProjectState> = {
     state.project = Object.freeze(project)
     if (project) {
       const { cubeIdentifier } = project
-      state.createIdentifier = (termName: string) => {
+      state.createIdentifier = (termName: Term) => {
         return (project.maintainer as Organization).createIdentifier({
           termName,
           cubeIdentifier,

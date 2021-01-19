@@ -1,7 +1,7 @@
 <template>
   <side-pane :is-open="true" :title="title" @close="onCancel">
     <b-field label="Dimension property">
-      <property-display v-if="dimension.about" :term="dimension.about" />
+      <term-display v-if="dimension.about" :term="dimension.about" :base="cubeUri" />
     </b-field>
     <hydra-operation-form
       v-if="operation"
@@ -23,19 +23,20 @@ import { RuntimeOperation } from 'alcaeus'
 import { Shape } from '@rdfine/shacl'
 import { GraphPointer } from 'clownface'
 import { namespace } from 'vuex-class'
-import { DimensionMetadata } from '@cube-creator/model'
+import { Dataset, DimensionMetadata } from '@cube-creator/model'
 import SidePane from '@/components/SidePane.vue'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
-import PropertyDisplay from '@/components/PropertyDisplay.vue'
+import TermDisplay from '@/components/TermDisplay.vue'
 import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 
 const projectNS = namespace('project')
 
 @Component({
-  components: { SidePane, HydraOperationForm, PropertyDisplay },
+  components: { SidePane, HydraOperationForm, TermDisplay },
 })
 export default class extends Vue {
+  @projectNS.State('cubeMetadata') cubeMetadata!: Dataset | null
   @projectNS.Getter('findDimension') findDimension!: (id: string) => DimensionMetadata
 
   resource: GraphPointer | null = null;
@@ -49,6 +50,10 @@ export default class extends Vue {
     }
 
     this.resource = this.dimension.pointer
+  }
+
+  get cubeUri (): string | undefined {
+    return this.cubeMetadata?.hasPart[0]?.id.value
   }
 
   get dimension (): DimensionMetadata {

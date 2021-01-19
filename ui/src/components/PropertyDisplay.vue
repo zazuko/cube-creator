@@ -16,14 +16,14 @@ const projectNS = namespace('project')
 @Component
 export default class PropertyDisplay extends Vue {
   @Prop() term!: Term
-  @projectNS.State((state) => state.createIdentifier) createIdentifier!: CreateIdentifier
+  @projectNS.State('createIdentifier') createIdentifier!: CreateIdentifier
 
   get value (): string {
     return this.term.value || ''
   }
 
   get expanded (): string {
-    return this.createIdentifier(this.value)
+    return this.createIdentifier(this.term)
   }
 
   get shrunk (): string {
