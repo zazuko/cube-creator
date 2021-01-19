@@ -411,5 +411,5 @@ freq:weekly a skos:Concept ;
 freq: dcterms:creator [ rdfs:label "Dublin Core Collection Description Task Group" ] ;
     dcterms:modified "2013-05-10"^^dcterms:W3CDTF ;
     dcterms:title "The Collection Description Frequency Namespace"@en .
-
+}
 `
