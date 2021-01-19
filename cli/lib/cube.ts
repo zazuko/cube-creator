@@ -26,6 +26,8 @@ export function injectRevision(this: Pick<Context, 'variables' | 'log'>) {
   const revision = this.variables.get('revision')
   const previousCubes = new TermMap<Term, QuadSubject>()
   this.variables.set('previousCubes', previousCubes)
+  const mappedTerms = new TermMap<Term, Term>()
+  this.variables.set('mappedCubeTerms', mappedTerms)
 
   this.log.info(`Cube revision ${revision}`)
 
@@ -35,7 +37,9 @@ export function injectRevision(this: Pick<Context, 'variables' | 'log'>) {
 
   function rebase<T extends Term>(term: T, rev = revision): T {
     if (term.termType === 'NamedNode' && term.value.startsWith(cubeNamespace)) {
-      return $rdf.namedNode(term.value.replace(new RegExp(`^${cubeNamespace}/?`), `${cubeNamespace}/${rev}/`)) as any
+      const newTerm = $rdf.namedNode(term.value.replace(new RegExp(`^${cubeNamespace}/?`), `${cubeNamespace}/${rev}/`)) as any
+      mappedTerms.set(newTerm, term)
+      return newTerm
     }
 
     return term
