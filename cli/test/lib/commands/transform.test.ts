@@ -92,6 +92,14 @@ describe('lib/commands/transform', function () {
       expect(hasCubeProperty).to.eq(false)
     })
 
+    it('does not output csvw:describes as dimension property', async () => {
+      const hasDescribesProperty = await ASK`<https://environment.ld.admin.ch/foen/ubd/28/shape/> ${sh.property}/${sh.path} ${csvw.describes} .`
+        .FROM($rdf.namedNode(`${env.API_CORE_BASE}cube-project/ubd/cube-data`))
+        .execute(client.query)
+
+      expect(hasDescribesProperty).to.eq(false)
+    })
+
     it('removes all CSVW triples but csvw:describes', async () => {
       const distinctCsvwProps = await SELECT.DISTINCT`?prop`
         .FROM($rdf.namedNode(`${env.API_CORE_BASE}cube-project/ubd/cube-data`))
