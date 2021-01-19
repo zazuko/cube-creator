@@ -11,7 +11,7 @@ import { cc, cube, scale } from '@cube-creator/core/namespace'
 import clownface, { AnyPointer } from 'clownface'
 import publish from '../../../lib/commands/publish'
 import namespace, { NamespaceBuilder } from '@rdfjs/namespace'
-import { NamedNode } from 'rdf-js'
+import { NamedNode, Term } from 'rdf-js'
 
 describe('lib/commands/publish', function () {
   this.timeout(200000)
@@ -194,6 +194,12 @@ describe('lib/commands/publish', function () {
           maxCount: 1,
         }],
       })
+    })
+
+    it('emits organization as cube:observedBy value', async () => {
+      const observedBy = cubePointer.has(cube.observedBy).out(cube.observedBy).terms
+
+      expect(observedBy).to.containAll<Term>(observer => observer.equals($rdf.namedNode(`${env.API_CORE_BASE}organization/bafu`)))
     })
 
     it('dimension meta data has been copied', async function () {
