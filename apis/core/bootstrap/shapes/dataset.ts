@@ -71,6 +71,7 @@ ${shapeId} {
         ${sh.path} ${schema.workExample} ;
         ${sh.minCount} 0 ;
         ${sh.maxCount} 2 ;
+	${sh.nodeKind} ${sh.IRI} ;
         ${sh.in}
             (
                 <https://ld.admin.ch/application/visualize>
