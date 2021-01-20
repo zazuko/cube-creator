@@ -25,10 +25,11 @@ const commonProperties = turtle`
     ${sh.name} "Identifier template" ;
     ${sh.description} "Used to build a unique identifier for each row of this table. Leave empty to get an auto-generated identifier." ;
     ${sh.path} ${cc.identifierTemplate} ;
+    ${sh.defaultValue} "" ;
     ${sh.minCount} 1 ;
     ${sh.maxCount} 1 ;
-    ${sh.defaultValue} "" ;
     ${sh.order} 30 ;
+    ${dash.editor} ${editor.IdentifierTemplateEditor} ;
   ] ;
   ${sh.property} [
     ${sh.name} "Display color" ;

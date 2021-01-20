@@ -4,7 +4,7 @@ import {
   InstancesSelectEditor, instancesSelect as instancesSelectCore
 } from '@hydrofoil/shaperone-core/components'
 import * as ns from '@cube-creator/core/namespace'
-import { dash, xsd } from '@tpluscode/rdf-ns-builders'
+import { dash, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import $rdf from '@rdfjs/data-model'
 import { createCustomElement } from '../custom-element'
 
@@ -138,5 +138,33 @@ export const nestedForm: SingleEditorComponent = {
     const nestedShape = property.shape?.node?.pointer
 
     return html`<cc-form .resource="${value.object}" .shapes="${nestedShape}" class="box"></cc-form>`
+  }
+}
+
+export const identifierTemplateEditor: Lazy<SingleEditorComponent> = {
+  editor: ns.editor.IdentifierTemplateEditor,
+  async lazyRender () {
+    await import('./IdentifierTemplateEditor.vue').then(createCustomElement('identifier-template-editor'))
+
+    return ({ value, updateComponentState, focusNode }, { update }) => {
+      let { tableName, sourceId } = value.componentState
+
+      if (tableName !== focusNode.out(schema.name).value) {
+        tableName = focusNode.out(schema.name).value
+        updateComponentState({ tableName })
+      }
+
+      if (sourceId !== focusNode.out(ns.cc.csvSource).term) {
+        sourceId = focusNode.out(ns.cc.csvSource).term
+        updateComponentState({ sourceId })
+      }
+
+      return html`<identifier-template-editor
+        .value="${value.object?.value || ''}"
+        .update="${update}"
+        .tableName="${tableName}"
+        .sourceId="${sourceId}"
+      ></identifier-template-editor>`
+    }
   }
 }
