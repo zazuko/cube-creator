@@ -75,8 +75,8 @@ const routes: Array<RouteConfig> = [
                 component: SourceEdit,
               },
               {
-                path: 'sources/:sourceId/replace',
-                name: 'CSVReplace',
+                path: 'sources/:sourceId/replace-csv',
+                name: 'SourceReplaceCSV',
                 component: CSVReplace,
               },
               {

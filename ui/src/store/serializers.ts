@@ -66,12 +66,16 @@ export function serializeSourcesCollection (collection: SourcesCollection): Sour
 export function serializeSource (source: CsvSource): CsvSource {
   return Object.freeze({
     ...serializeResource(source),
+    actions: {
+      ...serializeActions(source.actions),
+      replace: source.actions.replace,
+    },
     name: source.name,
     error: source.error,
     columns: source.columns.map(serializeColumn),
     dialect: source.dialect,
     csvMapping: source.csvMapping,
-  }) as CsvSource
+  }) as unknown as CsvSource
 }
 
 export function serializeColumn (column: CsvColumn): CsvColumn {

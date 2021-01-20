@@ -11,6 +11,7 @@ type CubeCreatorClass =
   'CSVSource' |
   'CSVSourceCollection' |
   'UploadCSVAction' |
+  'ReplaceCSVAction' |
   'Table' |
   'TableCollection' |
   'ObservationTable' |
