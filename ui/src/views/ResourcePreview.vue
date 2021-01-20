@@ -53,7 +53,7 @@ const projectNS = namespace('project')
 export default class ResourcePreview extends Vue {
   @projectNS.State('project') project!: Project | null
   @projectNS.State('cubeMetadata') cubeMetadata!: Dataset | null
-  selectedLanguage = 'en' // TODO: Get from store
+  @projectNS.State('selectedLanguage') selectedLanguage!: string
 
   get cubeUri (): string | undefined {
     return this.cubeMetadata?.hasPart[0]?.id.value
