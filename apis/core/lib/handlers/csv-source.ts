@@ -9,6 +9,7 @@ import { cc } from '@cube-creator/core/namespace'
 import { deleteSource } from '../domain/csv-source/delete'
 import { update } from '../domain/csv-source/update'
 import { getPresignedLink, setPresignedLink } from '../domain/csv-source/lib/getDownloadLink'
+import { replaceFile } from '../domain/csv-source/replace'
 
 export const post = labyrinth.protectedResource(
   shaclValidate,
@@ -89,5 +90,21 @@ export const remove = labyrinth.protectedResource(
     await req.resourceStore().save()
 
     res.sendStatus(204)
+  }),
+)
+
+export const replace = labyrinth.protectedResource(
+  shaclValidate,
+  asyncMiddleware(async (req, res) => {
+    const csvSource = await replaceFile({
+      file: req,
+      resource: req.hydra.resource.term,
+      store: req.resourceStore(),
+    })
+    await req.resourceStore().save()
+
+    setPresignedLink(csvSource)
+
+    await res.dataset(csvSource.dataset)
   }),
 )
