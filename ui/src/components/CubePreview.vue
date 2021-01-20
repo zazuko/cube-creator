@@ -16,7 +16,7 @@
                 </div>
               </div>
               <div class="level-right">
-                <b-select v-model="selectedLanguage" class="level-item" title="Language">
+                <b-select :value="selectedLanguage" @input="$emit('selectLanguage', $event)" class="level-item" title="Language">
                   <option v-for="language in languages" :key="language" :value="language">
                     {{ language }}
                   </option>
@@ -127,11 +127,11 @@ const languages = ['en', 'fr', 'de', 'it']
   },
 })
 export default class extends Vue {
-  @Prop() cubeMetadata!: Dataset
-  @Prop() dimensions!: DimensionMetadata[]
+  @Prop({ required: true }) cubeMetadata!: Dataset
+  @Prop({ required: true }) dimensions!: DimensionMetadata[]
+  @Prop({ required: true }) selectedLanguage!: string
 
   languages = languages
-  selectedLanguage = 'en'
   pageSize = 10
   page = 1
   pageSizes = [10, 20, 50, 100]

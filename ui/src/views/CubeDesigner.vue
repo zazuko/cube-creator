@@ -3,6 +3,8 @@
     <CubePreview
       :cube-metadata="cubeMetadata"
       :dimensions="dimensions"
+      :selected-language="selectedLanguage"
+      @selectLanguage="selectLanguage"
     />
 
     <router-view :key="$route.fullPath" />
@@ -24,12 +26,17 @@ const projectNS = namespace('project')
 })
 export default class CubeDesignerView extends Vue {
   @projectNS.State('cubeMetadata') cubeMetadata!: Dataset | null
+  @projectNS.State('selectedLanguage') selectedLanguage!: string
   @projectNS.State('dimensionMetadataCollection') dimensionMetadataCollection!: DimensionMetadataCollection | null
   @projectNS.Getter('dimensions') dimensions!: DimensionMetadata[]
 
   async mounted (): Promise<void> {
     await this.$store.dispatch('project/fetchCubeMetadata')
     this.$store.dispatch('project/fetchDimensionMetadataCollection')
+  }
+
+  selectLanguage (language: string): void {
+    this.$store.dispatch('project/selectLanguage', language)
   }
 }
 </script>
