@@ -27,8 +27,8 @@ const commonProperties = turtle`
     ${sh.path} ${cc.identifierTemplate} ;
     ${sh.minCount} 1 ;
     ${sh.maxCount} 1 ;
-    ${sh.defaultValue} "" ;
     ${sh.order} 30 ;
+    ${dash.editor} ${editor.IdentifierTemplateEditor} ;
   ] ;
   ${sh.property} [
     ${sh.name} "Display color" ;
