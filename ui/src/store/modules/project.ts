@@ -229,6 +229,18 @@ const actions: ActionTree<ProjectState, RootState> = {
     return Promise.all(uploads)
   },
 
+  async replaceCSV (context, files) {
+    const operation = context.state.sources?.id.actions?.replace ?? null
+    const uploads = files.map((file: File) => {
+      const headers = {
+        'content-type': 'text/csv',
+      }
+      return api.invokeSaveOperation(operation, file, headers)
+    })
+
+    return Promise.all(uploads)
+  },
+
   async fetchCubeMetadata (context) {
     const project = context.state.project
 
