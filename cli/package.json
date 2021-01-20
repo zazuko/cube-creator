@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "postinstall": "mkdir -p output; touch .env",
-    "transform": "dotenv -e ./.env -e ./.test.env -- yarn start",
-    "start": "ts-node index.ts transform --job \"$TRANSFORM_JOB\" --to filesystem --debug",
+    "transform": "dotenv -e ./.env -e ./.test.env -- sh -c 'ts-node index.ts transform --job \"$TRANSFORM_JOB\" --debug'",
+    "publish": "dotenv -e ./.env -e ./.test.env -- sh -c 'ts-node index.ts publish --job \"$PUBLISH_JOB\" --debug'",
     "build": "tsc"
   },
   "dependencies": {
