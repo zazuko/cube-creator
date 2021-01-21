@@ -100,6 +100,18 @@ describe('lib/commands/transform', function () {
       expect(hasDescribesProperty).to.eq(false)
     })
 
+    it('all observations are named nodes', async () => {
+      const hasDescribesProperty = await ASK`
+        ?observation a ${cube.Observation} .
+
+        FILTER ( BNODE (?observation) )
+      `
+        .FROM($rdf.namedNode(`${env.API_CORE_BASE}cube-project/ubd/cube-data`))
+        .execute(client.query)
+
+      expect(hasDescribesProperty).to.eq(false)
+    })
+
     it('removes all CSVW triples but csvw:describes', async () => {
       const distinctCsvwProps = await SELECT.DISTINCT`?prop`
         .FROM($rdf.namedNode(`${env.API_CORE_BASE}cube-project/ubd/cube-data`))
