@@ -18,6 +18,5 @@ declare module 'barnard59-core/lib/Pipeline' {
     previousCubes: Map<Term, QuadSubject>
     isObservationTable: boolean
     graph: string
-    mappedCubeTerms: Map<Term, Term>
   }
 }
