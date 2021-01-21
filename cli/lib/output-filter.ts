@@ -27,8 +27,12 @@ function removeDefaultProperties(quad: Quad): boolean {
   return !quad.predicate.value.startsWith('#')
 }
 
-export function fromTransformed(quad: Quad): boolean {
+export function keepCsvwDescribes(quad: Quad): boolean {
   return removeCsvwTriples(quad, true) && removeDefaultProperties(quad)
+}
+
+export function excludeAllCsvw(quad: Quad): boolean {
+  return removeCsvwTriples(quad, false) && removeDefaultProperties(quad)
 }
 
 export function fromPublished(quad: Quad): boolean {
