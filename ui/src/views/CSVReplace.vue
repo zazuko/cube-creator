@@ -76,7 +76,7 @@ export default class CSVUploadView extends Vue {
       this.$router.push({ name: 'CSVMapping' })
     } catch (e) {
       if (e instanceof APIErrorValidation) {
-        this.error = e.details.detail ?? { detail: e.toString() }
+        this.error = e.details?.detail ?? e.toString()
         console.log(e)
       } else if (e instanceof APIPayloadTooLarge) {
         this.error = 'CSV file is too large'
