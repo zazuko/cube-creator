@@ -42,16 +42,17 @@ export async function replaceFile({
 
     const parserOptions = {
       to: 1,
-      ...csvSource.dialect,
+      bom: true,
+      delimiter: csvSource.dialect.delimiter,
+      quote: csvSource.dialect.quoteChar,
     }
 
     const { header } = await parse(head, parserOptions)
 
-    csvSource.columns.forEach(column => {
-      if (!header.includes(column.name)) {
-        throw new DomainError(`The column ${column.name} is missing!`)
-      }
-    })
+    const missingColumns = csvSource.columns.filter((column) => !header.includes(column.name)).map((column) => column.name)
+    if (missingColumns.length > 0) {
+      throw new DomainError(`The columns "${missingColumns.toString()}" are missing in this file`)
+    }
 
     // copy new
     const tempFile = await fileStorage.loadFile(tempKey)

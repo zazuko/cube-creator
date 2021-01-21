@@ -45,6 +45,7 @@ export async function updateColumns(csvSource: CsvSource, fileStorage: s3.FileSt
     const fileStream = await fileStorage.loadFile(csvSource.associatedMedia.identifierLiteral) as Readable
     const head = await loadFileHeadString(fileStream, 500)
     const { header, rows } = await parse(head, {
+      bom: true,
       delimiter: csvSource.dialect.delimiter,
       quote: csvSource.dialect.quoteChar,
     })
