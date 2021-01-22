@@ -255,7 +255,7 @@ ${shapeId} {
   rdfs:label "opendata.swiss" .
 
 <https://ld.admin.ch/definedTerm/creativeWorkStatus/published> a schema:DefinedTerm;
-  rdfs:label "Publish" .
+  rdfs:label "Published" .
 
 <https://ld.admin.ch/definedTerm/creativeWorkStatus/draft> a schema:DefinedTerm;
   rdfs:label "Draft" .
