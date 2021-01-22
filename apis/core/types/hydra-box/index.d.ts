@@ -3,13 +3,15 @@ declare module 'hydra-box' {
   import Api = require('hydra-box/Api');
   import { DatasetCore, Term, NamedNode, Stream } from 'rdf-js'
   import type { GraphPointer } from 'clownface'
+  import { Readable } from 'stream'
+  import DatasetExt from 'rdf-ext/lib/Dataset'
 
   namespace hydraBox {
     interface ObjectResource {
       term: NamedNode
       prefetchDataset: DatasetCore
       dataset(): Promise<DatasetCore>
-      quadStream(): Stream
+      quadStream(): Stream & Readable
       types: Set<Term>
     }
 
@@ -31,7 +33,7 @@ declare module 'hydra-box' {
     interface HydraBox {
       api: Api
       term: NamedNode
-      resource: ObjectResource & { clownface(): Promise<GraphPointer<NamedNode>> }
+      resource: ObjectResource & { clownface(): Promise<GraphPointer<NamedNode, DatasetExt>> }
       operation: GraphPointer
       operations: PotentialOperation[]
     }
