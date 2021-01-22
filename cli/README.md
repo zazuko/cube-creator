@@ -118,19 +118,12 @@ Here's an example of converting local files using a locally-built image:
 
 ### from sources
 
-If it is necessary to debug, the CLI can be started directly from sources. The `package.json` has a `transform` script which loads environment variables from a [`.env`](https://npm.im/dotenv) file (you have to create it locally as it is not committed).
+If it is necessary to debug, the CLI can be started directly from sources. The `package.json` has a `transform` and `publish` scripts which load environment variables from a [`.env`](https://npm.im/dotenv) file (you have to create it locally as it is not committed).
 
-The script is missing the output parameter so that it can be provided from the command line. For example to print the result to the standard output run
-
-```
-yarn transform --to stdout 
-```
-
-or
+The `transform` script is missing the output parameter so that it can be provided from the command line. For example to print the result to the standard output run
 
 ```
 npm run transform -- --to stdout
 ```
 
 Note the additional double dash which `npm` needs.
-Also note that `yarn` has to be installed on the system in both cases.

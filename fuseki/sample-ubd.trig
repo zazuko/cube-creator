@@ -106,7 +106,7 @@ graph <cube-project/ubd/cube-data> {
 
   <https://environment.ld.admin.ch/foen/ubd/28/observation/blBAS-2003-annualmean>
     a                cube:Observation ;
-    cube:observedBy  <https://ld.stadt-zuerich.ch/> ;
+    cube:observedBy  <urn:will:replace> ;
     <https://environment.ld.admin.ch/foen/ubd/28/aggregation>     <https://environment.ld.admin.ch/foen/ubd/28/aggregation/annualmean> ;
     <https://environment.ld.admin.ch/foen/ubd/28/dimension/value> "6.2"^^xsd:float ;
     <https://environment.ld.admin.ch/foen/ubd/28/dimension/year>  "2003"^^xsd:gYear ;
@@ -117,7 +117,7 @@ graph <cube-project/ubd/cube-data> {
 
   <https://environment.ld.admin.ch/foen/ubd/28/observation/blBAS-2002-annualmean>
     a                cube:Observation ;
-    cube:observedBy  <https://ld.stadt-zuerich.ch/> ;
+    cube:observedBy  <urn:will:replace> ;
     <https://environment.ld.admin.ch/foen/ubd/28/aggregation>     <https://environment.ld.admin.ch/foen/ubd/28/aggregation/annualmean> ;
     <https://environment.ld.admin.ch/foen/ubd/28/dimension/value> "6.1"^^xsd:float ;
     <https://environment.ld.admin.ch/foen/ubd/28/dimension/year>  "2002"^^xsd:gYear ;
@@ -128,7 +128,7 @@ graph <cube-project/ubd/cube-data> {
 
 <https://environment.ld.admin.ch/foen/ubd/28/observation/blBAS-1999-annualmean>
     a                cube:Observation ;
-    cube:observedBy  <https://ld.stadt-zuerich.ch/> ;
+    cube:observedBy  <urn:will:replace> ;
     <https://environment.ld.admin.ch/foen/ubd/28/aggregation>     <https://environment.ld.admin.ch/foen/ubd/28/aggregation/annualmean> ;
     <https://environment.ld.admin.ch/foen/ubd/28/dimension/value> "5.4"^^xsd:float ;
     <https://environment.ld.admin.ch/foen/ubd/28/dimension/year>  "1999"^^xsd:gYear ;

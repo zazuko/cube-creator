@@ -8,7 +8,7 @@
     </term-with-language>
   </router-link>
   <span v-else-if="isTerm">
-    <term-display :term="value" :base="cubeUri" />
+    <term-display :term="value" :base="cubeUri" :show-language="showLanguage" />
   </span>
   <span v-else class="has-background-danger-light">
     Cannot display value
@@ -33,6 +33,7 @@ export default class extends Vue {
   @Prop({ default: '' }) missingValue?: string
   @Prop({ required: true }) selectedLanguage!: string
   @Prop({ required: true }) cubeUri!: string
+  @Prop({ default: false }) showLanguage!: boolean
 
   get label (): Term[] {
     if (!isResource(this.value)) return []

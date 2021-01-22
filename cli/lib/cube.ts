@@ -5,7 +5,7 @@ import { GraphPointer } from 'clownface'
 import type { Context } from 'barnard59-core/lib/Pipeline'
 import map from 'barnard59-base/lib/map'
 import TermMap from '@rdfjs/term-map'
-import { rdf } from '@tpluscode/rdf-ns-builders'
+import { rdf, sh } from '@tpluscode/rdf-ns-builders'
 
 export const getObservationSetId = ({ dataset }: { dataset: DatasetCore }) => {
   const cubeId = [...dataset.match(null, cc.cube)][0].object.value
@@ -46,6 +46,11 @@ export function injectRevision(this: Pick<Context, 'variables' | 'log'>) {
 
     if (revision > 1 && predicate.equals(rdf.type) && object.equals(cube.Cube)) {
       previousCubes.set(rebasedSub, rebase(subject, revision - 1))
+    }
+
+    // do not inject revision into dimension URI used in Constraint Shape
+    if (predicate.equals(sh.path)) {
+      return $rdf.quad(rebasedSub, predicate, object, graph)
     }
 
     return $rdf.quad(

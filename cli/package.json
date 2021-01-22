@@ -1,12 +1,12 @@
 {
   "name": "@cube-creator/cli",
-  "version": "0.1.7",
+  "version": "0.1.10",
   "description": "Runs a pipeline to create an RDF data cube",
   "main": "index.js",
   "scripts": {
     "postinstall": "mkdir -p output; touch .env",
-    "transform": "dotenv -e ./.env -e ./.test.env -- yarn start",
-    "start": "ts-node index.ts transform --job \"$TRANSFORM_JOB\" --to filesystem --debug",
+    "transform": "dotenv -e ./.env -e ./.test.env -- sh -c 'ts-node index.ts transform --job \"$TRANSFORM_JOB\" --debug'",
+    "publish": "dotenv -e ./.env -e ./.test.env -- sh -c 'ts-node index.ts publish --job \"$PUBLISH_JOB\" --debug'",
     "build": "tsc"
   },
   "dependencies": {
@@ -59,6 +59,7 @@
     "@types/body-parser": "^1.19.0",
     "@types/chai": "^4.2.13",
     "@types/chai-as-promised": "^7.1.3",
+    "@types/chai-quantifiers": "^1.0.0",
     "@types/clownface": "^1.0.3",
     "@types/cors": "^2.8.7",
     "@types/debug": "^4.1.5",
@@ -77,6 +78,7 @@
     "@types/sparql-http-client": "^2",
     "@types/through2": "^2.0.36",
     "chai": "^4.2.0",
+    "chai-quantifiers": "^1.0.13",
     "dotenv": "^8.2.0",
     "dotenv-cli": "^3.1.0",
     "mocha": "^8.1.3",

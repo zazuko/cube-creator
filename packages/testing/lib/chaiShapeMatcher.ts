@@ -62,6 +62,10 @@ chai.Assertion.addMethod('matchShape', function (shapeInit: Initializer<NodeShap
     throw new Error(`Cannot match given object to a SHACL Shape. Expecting a rdfine object, graph pointer or RDF/JS dataset. Got ${obj?.constructor.name}`)
   }
 
+  if (!targetNode.length) {
+    throw new Error('No nodes found to validate in data graph')
+  }
+
   const shape = new NodeShapeMixin.Class(
     clownface({ dataset: $rdf.dataset() }).blankNode(),
     { ...shapeInit, targetNode })

@@ -29,7 +29,7 @@ import { cc } from '@cube-creator/core/namespace'
 import type { Organization } from '@rdfine/schema'
 
 export interface CreateIdentifier {
-  (term: string): string
+  (term: Term): string
 }
 
 export interface ProjectState {
@@ -43,6 +43,7 @@ export interface ProjectState {
   cubeMetadata: null | Dataset,
   dimensionMetadataCollection: null | DimensionMetadataCollection,
   jobCollection: null | JobCollection,
+  selectedLanguage: string,
 }
 
 const initialState = {
@@ -56,6 +57,7 @@ const initialState = {
   cubeMetadata: null,
   dimensionMetadataCollection: null,
   jobCollection: null,
+  selectedLanguage: 'en',
 }
 
 const getters: GetterTree<ProjectState, RootState> = {
@@ -262,6 +264,10 @@ const actions: ActionTree<ProjectState, RootState> = {
 
     return collection
   },
+
+  selectLanguage (context, language) {
+    context.commit('storeSelectedLanguage', language)
+  },
 }
 
 const mutations: MutationTree<ProjectState> = {
@@ -269,7 +275,7 @@ const mutations: MutationTree<ProjectState> = {
     state.project = Object.freeze(project)
     if (project) {
       const { cubeIdentifier } = project
-      state.createIdentifier = (termName: string) => {
+      state.createIdentifier = (termName: Term) => {
         return (project.maintainer as Organization).createIdentifier({
           termName,
           cubeIdentifier,
@@ -326,6 +332,10 @@ const mutations: MutationTree<ProjectState> = {
   storeJobCollection (state, collection) {
     state.jobCollection = collection ? serializeJobCollection(collection) : null
   },
+
+  storeSelectedLanguage (state, language) {
+    state.selectedLanguage = language
+  }
 }
 
 export default {

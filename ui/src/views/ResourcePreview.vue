@@ -10,7 +10,12 @@
         </td>
         <td>
           <p v-for="(object, objectIndex) in objects" :key="objectIndex">
-            <term-display :term="object" :show-language="true" :base="cubeUri" />
+            <cube-preview-value
+              :value="object"
+              :cube-uri="cubeUri"
+              :selected-language="selectedLanguage"
+              :show-language="true"
+            />
           </p>
         </td>
       </tr>
@@ -36,16 +41,19 @@ import { Dataset, Project } from '@cube-creator/model'
 import SidePane from '@/components/SidePane.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import TermDisplay from '@/components/TermDisplay.vue'
+import CubePreviewValue from '@/components/CubePreviewValue.vue'
 import { api } from '@/api'
+import RdfResource from '@tpluscode/rdfine/RdfResource'
 
 const projectNS = namespace('project')
 
 @Component({
-  components: { LoadingBlock, SidePane, TermDisplay },
+  components: { CubePreviewValue, LoadingBlock, SidePane, TermDisplay },
 })
 export default class ResourcePreview extends Vue {
   @projectNS.State('project') project!: Project | null
   @projectNS.State('cubeMetadata') cubeMetadata!: Dataset | null
+  @projectNS.State('selectedLanguage') selectedLanguage!: string
 
   get cubeUri (): string | undefined {
     return this.cubeMetadata?.hasPart[0]?.id.value
@@ -53,7 +61,7 @@ export default class ResourcePreview extends Vue {
 
   resourceId = $rdf.namedNode(this.$route.params.resourceId)
   resource: GraphPointer | null = null
-  properties: [Term, Term[]][] = []
+  properties: [Term, (Term | RdfResource)[]][] = []
 
   async mounted (): Promise<void> {
     const cubeGraph = this.project?.cubeGraph
@@ -68,7 +76,17 @@ export default class ResourcePreview extends Vue {
     const resourcePredicates = new TermSet(resourceQuads.map(({ predicate }) => predicate))
 
     this.resource = resource
-    this.properties = [...resourcePredicates].map((predicate) => [predicate, resource.out(predicate).terms])
+    this.properties = [...resourcePredicates].map((predicate) => {
+      const values = resource.out(predicate).map((pointer: GraphPointer) => {
+        if (pointer.term.termType === 'NamedNode') {
+          return RdfResource.factory.createEntity(pointer)
+        } else {
+          return pointer.term
+        }
+      })
+
+      return [predicate, values]
+    })
   }
 
   onCancel (): void {

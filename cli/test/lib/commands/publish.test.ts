@@ -2,7 +2,7 @@ import env from '@cube-creator/core/env'
 import { before, describe, it } from 'mocha'
 import { expect } from 'chai'
 import $rdf from 'rdf-ext'
-import { CONSTRUCT, SELECT } from '@tpluscode/sparql-builder'
+import { ASK, CONSTRUCT, SELECT } from '@tpluscode/sparql-builder'
 import debug from 'debug'
 import { csvw, dcat, dcterms, rdf, schema, sh, vcard, xsd } from '@tpluscode/rdf-ns-builders'
 import { setupEnv } from '../../support/env'
@@ -11,7 +11,7 @@ import { cc, cube, scale } from '@cube-creator/core/namespace'
 import clownface, { AnyPointer } from 'clownface'
 import publish from '../../../lib/commands/publish'
 import namespace, { NamespaceBuilder } from '@rdfjs/namespace'
-import { NamedNode } from 'rdf-js'
+import { NamedNode, Term } from 'rdf-js'
 
 describe('lib/commands/publish', function () {
   this.timeout(200000)
@@ -196,6 +196,12 @@ describe('lib/commands/publish', function () {
       })
     })
 
+    it('emits organization as cube:observedBy value', async () => {
+      const observedBy = cubePointer.has(cube.observedBy).out(cube.observedBy).terms
+
+      expect(observedBy).to.containAll<Term>(observer => observer.equals($rdf.namedNode(`${env.API_CORE_BASE}organization/bafu`)))
+    })
+
     it('dimension meta data has been copied', async function () {
       expect(cubePointer.has(rdf.type, sh.NodeShape).term).to.deep.eq(targetCube('shape/'))
       expect(cubePointer.has(rdf.type, sh.NodeShape).terms.length).to.eq(1)
@@ -207,7 +213,8 @@ describe('lib/commands/publish', function () {
         },
       })
 
-      expect(cubePointer.namedNode(targetCube('shape/')).out(sh.property).has(sh.path, ns.baseCube('dimension/year'))).to.matchShape({
+      const props = cubePointer.namedNode(targetCube('shape/')).out(sh.property)
+      expect(props.has(sh.path, ns.baseCube('dimension/year'))).to.matchShape({
         property: {
           path: sh.path,
           hasValue: ns.baseCube('dimension/year'),
@@ -215,7 +222,7 @@ describe('lib/commands/publish', function () {
         },
       })
 
-      expect(cubePointer.namedNode(targetCube('shape/')).out(sh.property).has(sh.path, schema.name)).to.matchShape({
+      expect(props.has(sh.path).has(schema.name)).to.matchShape({
         property: {
           path: schema.name,
           hasValue: $rdf.literal('Jahr', 'de'),
@@ -223,7 +230,7 @@ describe('lib/commands/publish', function () {
         },
       })
 
-      expect(cubePointer.namedNode(targetCube('shape/')).out(sh.property).has(sh.path, scale.scaleOfMeasure)).to.matchShape({
+      expect(props.has(sh.path).has(scale.scaleOfMeasure)).to.matchShape({
         property: {
           path: scale.scaleOfMeasure,
           hasValue: scale.Temporal,
@@ -234,7 +241,7 @@ describe('lib/commands/publish', function () {
 
     it('removes all csvw triples', async () => {
       const distinctCsvwProps = await SELECT.DISTINCT`(count(distinct ?p) as ?count)`
-        .FROM($rdf.namedNode(`${env.API_CORE_BASE}cube-project/ubd/cube-data`))
+        .FROM($rdf.namedNode('https://lindas.admin.ch/foen/cube'))
         .WHERE`
           ?s ?p ?o .
           filter (regex(str(?p), str(${csvw()})))
@@ -242,6 +249,24 @@ describe('lib/commands/publish', function () {
         .execute(parsingClient.query)
 
       expect(distinctCsvwProps[0].count.value).to.eq('0')
+    })
+
+    it('does not inject revision into dimension predicates', async () => {
+      const anyObservationPredicateHasRevision = await ASK`
+        ?observation a ${cube.Observation} .
+        ?observation ?dimension ?value .
+
+        FILTER ( REGEX (str(?dimension), str(${targetCube()}) ) )
+      `.FROM($rdf.namedNode('https://lindas.admin.ch/foen/cube')).execute(client.query)
+      const anyShapePropertyHasRevision = await ASK`
+        ?shape a ${cube.Constraint} .
+        ?shape ${sh.property}/${sh.path} ?dimension .
+
+        FILTER ( REGEX (str(?dimension), str(${targetCube()}) ) )
+      `.FROM($rdf.namedNode('https://lindas.admin.ch/foen/cube')).execute(client.query)
+
+      expect(anyObservationPredicateHasRevision).to.be.false
+      expect(anyShapePropertyHasRevision).to.be.false
     })
   })
 })

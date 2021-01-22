@@ -57,7 +57,7 @@ export default class extends Vue {
     }
 
     if (this.value.termType === 'Literal') {
-      return this.createIdentifier(this.value.value)
+      return this.createIdentifier(this.value)
     } else {
       return this.value.value
     }
