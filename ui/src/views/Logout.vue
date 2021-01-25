@@ -21,7 +21,7 @@ const authNS = namespace('auth')
 
 @Component
 export default class LogoutView extends Vue {
-  @authNS.Getter('oidcisAuthenticated') isAuthenticated!: boolean
+  @authNS.Getter('oidcIsAuthenticated') isAuthenticated!: boolean
 
   mounted (): void {
     if (this.isAuthenticated) {
