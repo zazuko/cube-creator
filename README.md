@@ -41,6 +41,14 @@ Commit messages usually follow the guidelines from [Conventional Commits](https:
 
 To submit a bug or a feature request please create an issue in this repository.
 
+## Deployment
+
+Two docker images are pushed [by GitHub Actions](./.github/workflows/docker.yaml) to Docker Hub: [`docker.io/zazuko/cube-creator-api`](https://hub.docker.com/r/zazuko/cube-creator-api) and [`docker.io/zazuko/cube-creator-app`](https://hub.docker.com/r/zazuko/cube-creator-app).
+
+Commits on the default branch generate a `:edge-sha-[COMMIT]` docker tag which is automatically deployed to the `test` environment.
+Semver-compatible git tags (`vX.Y.Z`) generate multiple docker tags: `vX`, `vX.Y` and `vX.Y.Z`. Those are automatically deployed to the `integration` environment.
+Deployments to the production environment are done by manually changing the docker tag in the Kubernetes manifests repository.
+
 ## E2E tests
 
 There are two types of e2e tests:
