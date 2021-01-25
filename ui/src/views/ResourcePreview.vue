@@ -20,13 +20,7 @@
         </td>
       </tr>
     </table>
-    <div v-else class="is-flex is-flex-direction-column has-text-grey is-align-items-center">
-      <loading-block />
-      <p>
-        We are aware that it is <em>really</em> slow at the moment.
-        It will get faster in a future version :)
-      </p>
-    </div>
+    <loading-block v-else />
   </side-pane>
 </template>
 
