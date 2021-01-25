@@ -32,6 +32,7 @@ Sentry.init({
   environment: window.APP_CONFIG.sentry?.environment,
   release: process.env.VUE_APP_SENTRY_RELEASE,
   attachProps: true,
+  logErrors: true,
   tracesSampleRate: 1,
   integrations: [
     new Integrations.BrowserTracing({
