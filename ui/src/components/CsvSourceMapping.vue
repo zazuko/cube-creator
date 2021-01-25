@@ -97,7 +97,7 @@
 </template>
 
 <script lang="ts">
-import { Prop, Component, Vue } from 'vue-property-decorator'
+import { Prop, Component, Vue, Watch } from 'vue-property-decorator'
 import { CsvSource, Table, TableCollection, CsvColumn, ColumnMapping } from '@cube-creator/model'
 import MapperTable from './MapperTable.vue'
 import HydraOperationButton from './HydraOperationButton.vue'
@@ -114,13 +114,22 @@ export default class CsvSourceMapping extends Vue {
   @Prop() readonly tables!: Table[];
   @Prop() readonly tableCollection!: TableCollection;
 
-  selectedColumnsMap: Record<string, boolean> = this.source.columns
-    .reduce((acc, { clientPath }) => ({ ...acc, [clientPath]: false }), {})
+  selectedColumnsMap = this.prepareSelectedColumnsMap()
 
   get selectedColumns (): string[] {
     return Object.entries(this.selectedColumnsMap)
       .filter(([, isSelected]) => isSelected)
       .map(([columnId]) => columnId)
+  }
+
+  @Watch('$route')
+  resetSelectedColumnsMap (): void {
+    this.selectedColumnsMap = this.prepareSelectedColumnsMap()
+  }
+
+  prepareSelectedColumnsMap (): Record<string, boolean> {
+    return this.source.columns
+      .reduce((acc, { clientPath }) => ({ ...acc, [clientPath]: false }), {})
   }
 
   get sourceTables (): Table[] {
