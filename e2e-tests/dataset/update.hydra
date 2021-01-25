@@ -40,7 +40,7 @@ With Class void:Dataset {
                 rdf:type hydra:Resource ;
                 dcterms:title "Some Title"@en ;
                 schema:name "Some Title"@en ;
-                schema:creativeWorkStatus "Draft" ;
+                schema:creativeWorkStatus <https://ld.admin.ch/definedTerm/creativeWorkStatus/draft> ;
                 dcterms:temporal [
                     a dcterms:PeriodOfTime ;
                     schema:startDate "2020-01-01"^^xsd:date ;

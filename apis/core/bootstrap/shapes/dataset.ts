@@ -46,11 +46,13 @@ ${shapeId} {
       ${sh.languageIn} ("en" "de" "fr" "it") ;
       ${sh.uniqueLang} true ;
       ${sh.order} 10 ;
+      ${sh.description} "Provide a publishable title describing the cube. It is mandatory to define the language." ;
     ] ;
     ${sh.property} [
       ${sh.name} "Title (dcat)" ;
       ${sh.path} ${dcterms.title} ;
-      ${sh.maxCount} 1 ;
+      ${sh.minCount} 1 ;
+      ${sh.minLength} 1 ;
       ${sh.datatype} ${rdf.langString} ;
       ${dash.hidden} true ;
       ${sh.equals} ${schema.name} ;
@@ -58,17 +60,17 @@ ${shapeId} {
     ${sh.property} [
       ${sh.name} "Description" ;
       ${sh.path} ${schema.description} ;
-      ${sh.minCount} 0 ;
       ${sh.minLength} 1 ;
       ${sh.datatype} ${rdf.langString} ;
       ${sh.languageIn} ("en" "de" "fr" "it") ;
       ${sh.uniqueLang} true ;
       ${sh.order} 20 ;
+      ${sh.description} "A short description about the provided cube." ;
     ] ;
     ${sh.property} [
       ${sh.name} "Description (dcat)" ;
       ${sh.path} ${dcterms.description} ;
-      ${sh.maxCount} 1 ;
+      ${sh.minLength} 1 ;
       ${sh.datatype} ${rdf.langString} ;
       ${dash.hidden} true ;
       ${sh.equals} ${schema.description} ;
@@ -78,9 +80,15 @@ ${shapeId} {
       ${sh.path} ${schema.creativeWorkStatus} ;
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
-      ${sh.in} ("Draft" "Published") ;
-      ${sh.defaultValue} "Draft" ;
+      ${sh.nodeKind} ${sh.IRI} ;
+      ${sh.in}
+          (
+              <https://ld.admin.ch/definedTerm/creativeWorkStatus/draft>
+              <https://ld.admin.ch/definedTerm/creativeWorkStatus/published>
+          ) ;
+      ${sh.defaultValue} <https://ld.admin.ch/definedTerm/creativeWorkStatus/draft> ;
       ${sh.order} 30 ;
+      ${sh.description} "Only published datasets will be listed in the external tools. A draft will be nevertheless be public." ;
     ] ;
     ${sh.property} [
         ${sh.name} "Publish to" ;
@@ -94,6 +102,7 @@ ${shapeId} {
                 <https://ld.admin.ch/application/opendataswiss>
             ) ;
         ${sh.order} 40 ;
+        ${sh.description} "Add the Applications where the tool is used." ;
       ] ;
     ${sh.property} [
       ${sh.name} "Data refresh interval" ;
@@ -120,15 +129,17 @@ ${shapeId} {
           ${freq.continuous}
           ${freq.irregular} ) ;
       ${sh.order} 60 ;
+      ${sh.description} "The intervall in which the dataset is updated with new values.";
     ] ;
     ${sh.property} [
       ${sh.name} "Data period" ;
       ${sh.path} ${dcterms.temporal} ;
-      ${sh.minCount} 1 ;
+      ${sh.minCount} 0 ;
       ${dash.editor} ${dash.DetailsEditor} ;
       ${sh.node} ${temporalFromTo} ;
       ${sh.class} ${dcterms.PeriodOfTime} ;
       ${sh.order} 70 ;
+      ${sh.description} "The period of time this dataset is covering.";
     ] ;
     ${sh.property} [
       ${sh.name} "Publisher" ;
@@ -165,24 +176,12 @@ ${shapeId} {
     ${sh.property} [
       ${sh.name} "Landing page" ;
       ${sh.path} ${dcat.landingPage} ;
-      ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
       ${sh.minLength} 1 ;
       ${sh.order} 120 ;
+      ${sh.description} "A public website describing the dataset.";
     ] ;
-    ${sh.property} [
-      ${sh.name} "Relation" ;
-      ${sh.path} ${dcterms.relation} ;
-      ${sh.minLength} 1 ;
-      ${sh.order} 130 ;
-    ] ;
-    ${sh.property} [
-      ${sh.name} "See also" ;
-      ${sh.path} ${rdfs.seeAlso} ;
-      ${sh.minLength} 1 ;
-      ${sh.order} 140 ;
-    ] ;
-    ${sh.property} [
+   ${sh.property} [
       ${sh.name} "Creation Date" ;
       ${sh.description} "Date when dataset has been assembled. It defaults to when project is created" ;
       ${sh.path} ${dcterms.issued} ;
@@ -250,10 +249,16 @@ ${shapeId} {
 
 
 <https://ld.admin.ch/application/visualize> a skos:Concept ;
-  rdfs:label "Visualize" .
+  rdfs:label "visualize.admin.ch  " .
 
 <https://ld.admin.ch/application/opendataswiss> a skos:Concept ;
   rdfs:label "opendata.swiss" .
+
+<https://ld.admin.ch/definedTerm/creativeWorkStatus/published> a schema:DefinedTerm;
+  rdfs:label "Published" .
+
+<https://ld.admin.ch/definedTerm/creativeWorkStatus/draft> a schema:DefinedTerm;
+  rdfs:label "Draft" .
 
 freq:annual a skos:Concept ;
     rdfs:label "Annual"@en ;
