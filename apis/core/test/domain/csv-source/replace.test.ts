@@ -54,7 +54,7 @@ describe('domain/csv-sources/replace', () => {
             .addOut(schema.name, 'unit_id')
             .addOut(dtype.order, 0)
         })
-        .addOut(csvw.column, $rdf.namedNode('column/unit_name_de') ,column => {
+        .addOut(csvw.column, $rdf.namedNode('column/unit_name_de'), column => {
           column.addOut(rdf.type, csvw.Column)
             .addOut(schema.name, 'unit_name_de')
             .addOut(dtype.order, 1)
