@@ -7,7 +7,7 @@ import { loadFileHeadString } from '../csv/file-head'
 import { parse } from '../csv'
 import { CsvSource } from '@cube-creator/model'
 import { nanoid } from 'nanoid'
-import { updateColumns } from './update'
+import { createOrUpdateColumns } from './update'
 import { DomainError } from '../../errors'
 
 interface ReplaceCSVCommand {
@@ -27,7 +27,7 @@ export async function replaceFile({
 
   const key = csvSource.associatedMedia.identifierLiteral
   if (!key) {
-    throw new DomainError('S3 key is missing for')
+    throw new DomainError(`S3 key is missing for ${resource}`)
   }
 
   const tempKey = `temp/${nanoid()}`
@@ -65,7 +65,7 @@ export async function replaceFile({
   }
 
   // call update
-  await updateColumns(csvSource, fileStorage)
+  await createOrUpdateColumns(csvSource, fileStorage)
 
   return csvSource.pointer
 }

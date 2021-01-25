@@ -9,8 +9,9 @@ import type * as Csvw from '@rdfine/csvw'
 import * as id from '../identifiers'
 import { DialectMixin } from '@rdfine/csvw'
 
-interface AppendColumn {
+interface CreateOrUpdateColumn {
   name: string
+  order: number
 }
 
 interface ApiCsvSource {
@@ -21,7 +22,7 @@ interface ApiCsvSource {
    * Returns true if the dialect has actually changed
    */
   setDialect(dialect: Partial<Csvw.Dialect>): boolean
-  appendColumn(params: AppendColumn): CsvColumn.CsvColumn
+  appendOrUpdateColumn(params: CreateOrUpdateColumn): CsvColumn.CsvColumn
 }
 
 declare module '@cube-creator/model' {
@@ -65,15 +66,21 @@ export default function Mixin<Base extends Constructor<Omit<CsvSource, keyof Api
       return true
     }
 
-    appendColumn({ name }: AppendColumn): CsvColumn.CsvColumn {
-      const order = this.columns.length
+    appendOrUpdateColumn({ name, order }: CreateOrUpdateColumn): CsvColumn.CsvColumn {
+      let column: CsvColumn.CsvColumn | undefined
+      column = this.columns.find(column => column.name === name)
 
-      const column = CsvColumn.create(this.pointer.node(id.column(this, name)), {
-        name,
-        order,
-      })
+      if (column) {
+        column.order = order
+      } else {
+        column = CsvColumn.create(this.pointer.node(id.column(this, name)), {
+          name,
+          order,
+        })
 
-      this.pointer.addOut(csvw.column, column.id)
+        this.pointer.addOut(csvw.column, column.id)
+      }
+
       return column
     }
   }

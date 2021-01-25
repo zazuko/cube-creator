@@ -27,20 +27,20 @@ export async function update({
 
   csvSource.name = changed.name
   if (csvSource.setDialect(changed.dialect) && csvSource.associatedMedia.identifierLiteral) {
-    await updateColumns(csvSource, fileStorage)
+    csvSource.pointer.deleteOut(schema.error)
+    csvSource.columns = []
+
+    await createOrUpdateColumns(csvSource, fileStorage)
   }
 
   return csvSource.pointer
 }
 
-export async function updateColumns(csvSource: CsvSource, fileStorage: s3.FileStorage): Promise<void> {
+export async function createOrUpdateColumns(csvSource: CsvSource, fileStorage: s3.FileStorage): Promise<void> {
   try {
     if (!csvSource.associatedMedia.identifierLiteral) {
       throw new Error('Key to file missing')
     }
-
-    csvSource.pointer.deleteOut(schema.error)
-    csvSource.columns = []
 
     const fileStream = await fileStorage.loadFile(csvSource.associatedMedia.identifierLiteral) as Readable
     const head = await loadFileHeadString(fileStream, 500)
@@ -54,7 +54,7 @@ export async function updateColumns(csvSource: CsvSource, fileStorage: s3.FileSt
 
     for (let index = 0; index < header.length; index++) {
       const name = header[index]
-      const column = csvSource.appendColumn({ name })
+      const column = csvSource.appendOrUpdateColumn({ name, order: index })
       column.samples = sampleCol[index]
     }
   } catch (err) {
