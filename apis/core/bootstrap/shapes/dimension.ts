@@ -1,6 +1,27 @@
 import { shape, scale } from '@cube-creator/core/namespace'
-import { turtle } from '@tpluscode/rdf-string'
-import { dash, hydra, rdf, rdfs, schema, sh } from '@tpluscode/rdf-ns-builders'
+import { sparql, turtle } from '@tpluscode/rdf-string'
+import { lindasQuery } from '../lib/query'
+import { dash, hydra, qudt, rdf, rdfs, schema, sh } from '@tpluscode/rdf-ns-builders'
+
+const unitsQuery = sparql`
+CONSTRUCT {
+  ?c a ${hydra.Collection} .
+  ?c ${hydra.member} ?unit .
+  ?unit ${rdfs.label} ?name .
+} WHERE {
+  BIND ( iri('http://app.cube-creator.lndo.site/units') as ?c )
+
+  GRAPH <https://lindas.admin.ch/ontologies> {
+    ?unit a <http://qudt.org/schema/qudt/Unit> ;
+      ${rdfs.label} ?label .
+
+    OPTIONAL { ?unit ${qudt.ucumCode} ?ucumCode . }
+
+    OPTIONAL { ?unit ${qudt.symbol} ?symbol . }
+
+    BIND(CONCAT(COALESCE(?symbol, ?ucumCode, "?"), " - ", ?label) AS ?name) .
+  }
+}`
 
 export const DimensionMetadataShape = turtle`
 ${shape('dimension/metadata')} {
@@ -31,6 +52,15 @@ ${shape('dimension/metadata')} {
       ) ;
       ${sh.maxCount} 1 ;
       ${sh.order} 20 ;
+    ] , [
+      ${sh.name} "Unit" ;
+      ${sh.path} ${schema.unit} ;
+      ${sh.order} 25 ;
+      ${sh.maxCount} 1 ;
+      ${sh.nodeKind} ${sh.IRI} ;
+      ${sh.class} ${qudt.Unit} ;
+      ${hydra.collection} ${lindasQuery(unitsQuery)} ;
+      ${dash.editor} ${dash.AutoCompleteEditor} ;
     ] , [
       ${sh.name} "Description" ;
       ${sh.path} ${schema.description} ;

@@ -9,6 +9,7 @@ import * as Editors from './editors'
 import * as Matchers from './matchers'
 import { Metadata } from './metadata'
 import { createCustomElement } from './custom-element'
+import { dash } from '@tpluscode/rdf-ns-builders'
 
 export const focusNodeStrategy: FocusNodeRenderStrategy = ({ focusNode, renderGroup }) => html`
   <div class="fieldset" part="focus-node">
@@ -49,7 +50,12 @@ renderer.setStrategy({
   object: objectStrategy,
 })
 components.pushComponents(Editors)
-components.decorate(instancesSelector.decorator())
+components.decorate({
+  ...instancesSelector.decorator(),
+  applicableTo ({ editor }) {
+    return editor.equals(dash.InstancesSelectEditor) || editor.equals(dash.AutoCompleteEditor)
+  },
+})
 
 editors.addMatchers(Matchers)
 editors.decorate(instancesSelector.matcher)
