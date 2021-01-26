@@ -11,6 +11,7 @@ type CubeCreatorClass =
   'CSVSource' |
   'CSVSourceCollection' |
   'UploadCSVAction' |
+  'ReplaceCSVAction' |
   'Table' |
   'TableCollection' |
   'ObservationTable' |
@@ -26,7 +27,8 @@ type CubeCreatorClass =
   'DimensionMetadataCollection' |
   'Observations' |
   'TransformJob' |
-  'PublishJob'
+  'PublishJob' |
+  'ReplaceCSVAction'
 
 type CubeCreatorProperty =
   'projectSourceKind' |
