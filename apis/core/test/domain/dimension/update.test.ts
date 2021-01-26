@@ -5,7 +5,7 @@ import { NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import { rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
-import { cc, scale } from '@cube-creator/core/namespace'
+import { cc, qudt } from '@cube-creator/core/namespace'
 import { update } from '../../../lib/domain/dimension/update'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import { ex } from '../../support/namespace'
@@ -22,7 +22,7 @@ describe('domain/dimension/update', function () {
       .addOut(schema.hasPart, $rdf.namedNode('dimension'), dimension => {
         dimension.addOut(schema.about, ex.dimension)
           .addOut(schema.name, $rdf.literal('Year', 'en'))
-          .addOut(scale.scaleOfMeasure, scale.Continuous)
+          .addOut(qudt.scaleType, qudt.IntervalScale)
       })
     store = new TestResourceStore([
       metadataCollection,
@@ -38,7 +38,7 @@ describe('domain/dimension/update', function () {
         $rdf.literal('Jahr', 'de'),
         $rdf.literal('Year', 'en'),
       ])
-      .addOut(scale.scaleOfMeasure, scale.Temporal)
+      .addOut(qudt.scaleType, qudt.IntervalScale)
       .addOut(schema.description, [
         $rdf.literal('Das Jahr', 'de'),
         $rdf.literal('The year', 'en'),

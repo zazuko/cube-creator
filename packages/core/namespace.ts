@@ -71,11 +71,11 @@ type MetaDataProperty =
 
 type CubeCreatorTerms = CubeCreatorClass | CubeCreatorProperty | OtherTerms | MetaDataProperty
 
-prefixes.scale = 'http://ns.bergnet.org/cube/scale/'
 prefixes.freq = 'http://purl.org/cld/freq/'
 prefixes.cube = 'http://ns.bergnet.org/cube/'
 prefixes.view = 'http://ns.bergnet.org/cube-view/'
 
+export const qudt = namespace('http://qudt.org/schema/qudt/')
 export const query = namespace('http://hypermedia.app/query#')
 export const cube = namespace(prefixes.cube)
 export const view = namespace(prefixes.view)
@@ -83,4 +83,3 @@ export const hydraBox = namespace('http://hydra-box.org/schema/')
 export const cc = namespace<CubeCreatorTerms>('https://cube-creator.zazuko.com/vocab#')
 export const editor = namespace(cc.dash.value)
 export const freq = namespace(prefixes.freq)
-export const scale = namespace(prefixes.scale)

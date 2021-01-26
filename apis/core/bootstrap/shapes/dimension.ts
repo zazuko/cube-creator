@@ -1,4 +1,4 @@
-import { shape, scale } from '@cube-creator/core/namespace'
+import { shape, qudt } from '@cube-creator/core/namespace'
 import { turtle } from '@tpluscode/rdf-string'
 import { dash, hydra, rdf, rdfs, schema, sh } from '@tpluscode/rdf-ns-builders'
 
@@ -18,16 +18,12 @@ ${shape('dimension/metadata')} {
       ${sh.order} 10 ;
     ] , [
       ${sh.name} "Scale of measure" ;
-      ${sh.path} ${scale.scaleOfMeasure} ;
+      ${sh.path} ${qudt.scaleType} ;
       ${sh.in} (
-        ${scale.Categorical}
-        ${scale.Continuous}
-        ${scale.Discrete}
-        ${scale.Nominal}
-        ${scale.Ordinal}
-        ${scale.Numerical}
-        ${scale.Spatial}
-        ${scale.Temporal}
+        ${qudt.NominalScale}
+        ${qudt.OrdinalScale}
+        ${qudt.IntervalScale}
+        ${qudt.RatioScale}
       ) ;
       ${sh.maxCount} 1 ;
       ${sh.order} 20 ;
@@ -50,13 +46,9 @@ ${shape('dimension/metadata')} {
     ]
   .
 
-  ${scale.Categorical} ${rdfs.label} "Categorical"@en .
-  ${scale.Continuous} ${rdfs.label} "Continuous"@en .
-  ${scale.Discrete} ${rdfs.label} "Discrete"@en .
-  ${scale.Nominal} ${rdfs.label} "Nominal"@en .
-  ${scale.Ordinal} ${rdfs.label} "Ordinal"@en .
-  ${scale.Numerical} ${rdfs.label} "Numerical"@en .
-  ${scale.Spatial} ${rdfs.label} "Spatial"@en .
-  ${scale.Temporal} ${rdfs.label} "Temporal"@en .
+  ${qudt.NominalScale} ${rdfs.label} "Nominal Scale"@en .
+  ${qudt.OrdinalScale} ${rdfs.label} "Ordinal Scale"@en .
+  ${qudt.IntervalScale} ${rdfs.label} "Interval Scale"@en .
+  ${qudt.RatioScale} ${rdfs.label} "Ratio Scale"@en .
 }
 `
