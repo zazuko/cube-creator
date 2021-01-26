@@ -4,6 +4,7 @@ PREFIX void:   <http://rdfs.org/ns/void#>
 PREFIX cube:   <http://ns.bergnet.org/cube/>
 PREFIX hydra:  <http://www.w3.org/ns/hydra/core#>
 PREFIX qudt:   <http://qudt.org/schema/qudt/>
+PREFIX prov:   <http://www.w3.org/ns/prov#>
 
 ENTRYPOINT "cube-project/ubd/dimensions-metadata/aggregation"
 
@@ -38,5 +39,12 @@ With Operation schema:UpdateAction {
         }
         Expect Property schema:name "Aggregation"
         Expect Property schema:description "The aggregation"
+
+        Expect Link cc:dimensionMapping {
+            Expect Type prov:Dictionary
+            Expect Property schema:about {
+                Expect Id <https://environment.ld.admin.ch/foen/ubd/28/aggregation>
+            }
+        }
     }
 }

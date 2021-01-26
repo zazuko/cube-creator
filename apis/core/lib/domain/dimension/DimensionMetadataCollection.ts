@@ -24,7 +24,7 @@ interface FindDimensionMetadata {
 }
 
 interface ApiDimensionMetadataCollection {
-  updateDimension(dimension: GraphPointer): void
+  updateDimension(dimension: GraphPointer): DimensionMetadata.DimensionMetadata
   deleteDimension(dimension: DimensionMetadata.DimensionMetadata): void
   addDimensionMetadata(params: CreateColumnMetadata): DimensionMetadata.DimensionMetadata
   find(params: FindDimensionMetadata | Term): DimensionMetadata.DimensionMetadata | undefined
@@ -39,7 +39,7 @@ declare module '@cube-creator/model' {
 
 export default function Mixin<Base extends Constructor<Omit<DimensionMetadataCollection, keyof ApiDimensionMetadataCollection>>>(Resource: Base) {
   return class extends Resource implements ApiDimensionMetadataCollection {
-    updateDimension(dimension: GraphPointer): void {
+    updateDimension(dimension: GraphPointer): DimensionMetadata.DimensionMetadata {
       const found = this.find(dimension.out(schema.about).term!)
       if (!found) {
         throw new Error('Dimension not found')
@@ -49,6 +49,8 @@ export default function Mixin<Base extends Constructor<Omit<DimensionMetadataCol
       for (const quad of dimension.dataset.match(dimension.term)) {
         found.pointer.addOut(quad.predicate, quad.object)
       }
+
+      return found
     }
 
     deleteDimension(dimension: DimensionMetadata.DimensionMetadata): void {
