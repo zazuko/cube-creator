@@ -39,7 +39,7 @@
     </div>
     <div class="panel-block">
       <span>Identifier template:</span>
-      <code class="identifier-template">{{ table.identifierTemplate }}</code>
+      <code class="identifier-template">{{ table.identifierTemplate || 'auto' }}</code>
     </div>
     <div v-for="columnMapping in table.columnMappings" :key="columnMapping.id.value" class="panel-block">
       <div class="level-left">
