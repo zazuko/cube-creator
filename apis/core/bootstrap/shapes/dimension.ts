@@ -2,6 +2,9 @@ import { shape, scale } from '@cube-creator/core/namespace'
 import { sparql, turtle } from '@tpluscode/rdf-string'
 import { lindasQuery } from '../lib/query'
 import { dash, hydra, qudt, rdf, rdfs, schema, sh } from '@tpluscode/rdf-ns-builders'
+import namespace from '@rdfjs/namespace'
+
+const sou = namespace('http://qudt.org/vocab/sou/')
 
 const unitsQuery = sparql`
 CONSTRUCT {
@@ -15,11 +18,18 @@ CONSTRUCT {
     ?unit a <http://qudt.org/schema/qudt/Unit> ;
       ${rdfs.label} ?label .
 
-    OPTIONAL { ?unit ${qudt.ucumCode} ?ucumCode . }
+    FILTER (lang(?label) = "en")
+
+    FILTER NOT EXISTS {?unit ${qudt.unitOfSystem} ${sou.SOU_IMPERIAL} . }
+    FILTER NOT EXISTS {?unit ${qudt.unitOfSystem} ${sou.SOU_USCSUS} . }
+    FILTER NOT EXISTS {?unit ${qudt.unitOfSystem} ${sou.SOU_PLANCK} . }
+    FILTER NOT EXISTS {?unit a ${qudt.CurrencyUnit} . }
 
     OPTIONAL { ?unit ${qudt.symbol} ?symbol . }
 
-    BIND(CONCAT(COALESCE(?symbol, ?ucumCode, "?"), " - ", ?label) AS ?name) .
+    ?unit ${qudt.ucumCode} ?ucumCode .
+
+    BIND(CONCAT(STR(COALESCE(?symbol, ?ucumCode, "?")), " - ", ?label) AS ?name)
   }
 }`
 
