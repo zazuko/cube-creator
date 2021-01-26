@@ -7,7 +7,14 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { Term } from 'rdf-js'
-import { scale } from '@cube-creator/core/namespace'
+import { qudt } from '@tpluscode/rdf-ns-builders'
+
+const icons: Record<string, string> = {
+  [qudt.NominalScale.value]: 'list-ul',
+  [qudt.OrdinalScale.value]: 'list-ul',
+  [qudt.IntervalScale.value]: 'clock',
+  [qudt.RatioScale.value]: 'clock',
+}
 
 @Component
 export default class extends Vue {
@@ -20,16 +27,7 @@ export default class extends Vue {
   get icon (): string {
     const scaleOfMeasure = this.scaleOfMeasure?.value ?? ''
 
-    return {
-      [scale.Categorical.value]: 'list-ul',
-      [scale.Continuous.value]: 'chart-line',
-      [scale.Discrete.value]: 'chart-bar',
-      [scale.Nominal.value]: 'list-ul',
-      [scale.Ordinal.value]: 'list-ul',
-      [scale.Numerical.value]: 'chart-line',
-      [scale.Spatial.value]: 'globe-europe',
-      [scale.Temporal.value]: 'clock',
-    }[scaleOfMeasure] || 'question-circle'
+    return icons[scaleOfMeasure] || 'question-circle'
   }
 }
 </script>

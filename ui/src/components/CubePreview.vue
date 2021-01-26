@@ -103,10 +103,9 @@
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import clownface from 'clownface'
 import { Collection } from 'alcaeus'
-import { hydra } from '@tpluscode/rdf-ns-builders'
+import { hydra, qudt } from '@tpluscode/rdf-ns-builders'
 import * as $rdf from '@rdf-esm/dataset'
 import type { Cube, Dataset, DimensionMetadata } from '@cube-creator/model'
-import { scale } from '@cube-creator/core/namespace'
 import { api } from '@/api'
 import Remote, { RemoteData } from '@/remote'
 import HydraOperationButton from './HydraOperationButton.vue'
@@ -153,10 +152,8 @@ export default class extends Vue {
     const scaleOfMeasure = dimension.scaleOfMeasure
 
     if (
-      scale.Numerical.equals(scaleOfMeasure) ||
-      scale.Continuous.equals(scaleOfMeasure) ||
-      scale.Discrete.equals(scaleOfMeasure) ||
-      scale.Temporal.equals(scaleOfMeasure)
+      qudt.RatioScale.equals(scaleOfMeasure) ||
+      qudt.IntervalScale.equals(scaleOfMeasure)
     ) {
       return 'has-text-right'
     }

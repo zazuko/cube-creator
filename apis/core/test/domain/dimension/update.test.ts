@@ -4,8 +4,8 @@ import clownface, { GraphPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import DatasetExt from 'rdf-ext/lib/Dataset'
-import { rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
-import { cc, qudt } from '@cube-creator/core/namespace'
+import { rdf, schema, sh, qudt } from '@tpluscode/rdf-ns-builders'
+import { cc } from '@cube-creator/core/namespace'
 import { update } from '../../../lib/domain/dimension/update'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import { ex } from '../../support/namespace'
@@ -60,8 +60,8 @@ describe('domain/dimension/update', function () {
         minCount: 1,
         maxCount: 1,
       }, {
-        path: scale.scaleOfMeasure,
-        hasValue: scale.Temporal,
+        path: qudt.scaleType,
+        hasValue: qudt.IntervalScale,
         minCount: 1,
         maxCount: 1,
       }, {

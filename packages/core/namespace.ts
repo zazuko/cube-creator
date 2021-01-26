@@ -75,7 +75,6 @@ prefixes.freq = 'http://purl.org/cld/freq/'
 prefixes.cube = 'http://ns.bergnet.org/cube/'
 prefixes.view = 'http://ns.bergnet.org/cube-view/'
 
-export const qudt = namespace('http://qudt.org/schema/qudt/')
 export const query = namespace('http://hypermedia.app/query#')
 export const cube = namespace(prefixes.cube)
 export const view = namespace(prefixes.view)

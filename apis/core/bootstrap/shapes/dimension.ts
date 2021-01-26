@@ -1,6 +1,6 @@
-import { shape, qudt } from '@cube-creator/core/namespace'
+import { shape } from '@cube-creator/core/namespace'
 import { turtle } from '@tpluscode/rdf-string'
-import { dash, hydra, rdf, rdfs, schema, sh } from '@tpluscode/rdf-ns-builders'
+import { dash, hydra, rdf, rdfs, schema, sh, qudt } from '@tpluscode/rdf-ns-builders'
 
 export const DimensionMetadataShape = turtle`
 ${shape('dimension/metadata')} {
