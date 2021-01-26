@@ -46,7 +46,7 @@ ${shapeId} {
       ${sh.languageIn} ("en" "de" "fr" "it") ;
       ${sh.uniqueLang} true ;
       ${sh.order} 10 ;
-      ${sh.description} "A publishable title describing the cube. You can add multiple entries for different [languages](https://gitlab.ldbar.ch/bafu/cube-creator-documentation/-/wikis/(2)-Meta-Data-and-Manual-Validation-in-Cube-Preview#languages). It is mandatory to define the language for each entry and advised to not have multiple entries for the same language." ;
+      ${sh.description} "A publishable title describing the cube. Please add entries for all [languages](https://gitlab.ldbar.ch/bafu/cube-creator-documentation/-/wikis/(2)-Meta-Data-and-Manual-Validation-in-Cube-Preview#languages)." ;
     ] ;
     ${sh.property} [
       ${sh.name} "Title (dcat)" ;
