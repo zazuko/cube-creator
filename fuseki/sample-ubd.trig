@@ -31,6 +31,7 @@ graph <cube-project/ubd> {
     rdfs:label "UBD28 Project" ;
     cc:jobCollection <cube-project/ubd/jobs> ;
   .
+  <user> schema:name "User Name"
 }
 
 <https://lindas.admin.ch/foen/cube> void:inDataset <ubd-example> .

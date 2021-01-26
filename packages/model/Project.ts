@@ -7,7 +7,7 @@ import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import { cc } from '@cube-creator/core/namespace'
 import { DatasetCore, NamedNode } from 'rdf-js'
 import { dcterms, schema } from '@tpluscode/rdf-ns-builders'
-import type { Organization } from '@rdfine/schema'
+import { Organization, Person, PersonMixin } from '@rdfine/schema'
 import { initializer } from './lib/initializer'
 import { childResource } from './lib/resourceIdentifiers'
 import { Link } from './lib/Link'
@@ -19,7 +19,7 @@ export interface Project extends RdfResource {
   csvMapping?: CsvMapping
   dataset: Link<Dataset>
   cubeGraph: NamedNode
-  creator: NamedNode
+  creator: Person
   label: string
   jobCollection: Link<JobCollection>
   cubeIdentifier: string
@@ -53,8 +53,8 @@ export function ProjectMixin<Base extends Constructor>(base: Base): Mixin {
     @property.literal({ path: cc.latestPublishedRevision, type: Number })
     publishedRevision?: number
 
-    @property({ path: dcterms.creator })
-    creator!: NamedNode
+    @property.resource({ path: dcterms.creator, as: [PersonMixin] })
+    creator!: Person
 
     @property.resource({ path: cc.jobCollection })
     jobCollection!: Link<JobCollection>
