@@ -25,14 +25,15 @@ describe('domain/dimension/update', function () {
     metadataCollection = namedNode('dimension')
       .addOut(rdf.type, cc.DimensionMetadataCollection)
       .addOut(schema.hasPart, $rdf.namedNode('dimension/pollutant'), dimension => {
-        dimension.addOut(schema.about, ex.dimension)
+        dimension.addOut(schema.about, ex.pollutantDimension)
           .addOut(schema.name, $rdf.literal('Year', 'en'))
           .addOut(qudt.scaleType, qudt.IntervalScale)
       })
       .addOut(schema.hasPart, $rdf.namedNode('dimension/station'), dimension => {
-        dimension.addOut(schema.about, ex.dimension)
+        dimension.addOut(schema.about, ex.stationDimension)
           .addOut(schema.name, $rdf.literal('Station', 'en'))
           .addOut(scale.scaleOfMeasure, scale.Nominal)
+          .addOut(cc.dimensionMapping, ex.stationMappingResource)
       })
     store = new TestResourceStore([
       metadataCollection,
@@ -46,7 +47,7 @@ describe('domain/dimension/update', function () {
   it('replaces all triples about a dimension', async () => {
     // given
     const dimensionMetadata = namedNode('dimension/pollutant')
-      .addOut(schema.about, ex.dimension)
+      .addOut(schema.about, ex.pollutantDimension)
       .addOut(schema.name, [
         $rdf.literal('Jahr', 'de'),
         $rdf.literal('Year', 'en'),
@@ -69,7 +70,7 @@ describe('domain/dimension/update', function () {
     expect(updated).to.matchShape({
       property: [{
         path: schema.about,
-        hasValue: ex.dimension,
+        hasValue: ex.pollutantDimension,
         minCount: 1,
         maxCount: 1,
       }, {
@@ -100,7 +101,7 @@ describe('domain/dimension/update', function () {
   it('initializes a dimension mapping resource when scale of measure is set to Nominal', async () => {
     // given
     const dimensionMetadata = namedNode('dimension/pollutant')
-      .addOut(schema.about, ex.dimension)
+      .addOut(schema.about, ex.pollutantDimension)
       .addOut(scale.scaleOfMeasure, scale.Nominal)
     findProject.resolves(ex('project/test'))
 
@@ -132,7 +133,7 @@ describe('domain/dimension/update', function () {
         path: schema.about,
         minCount: 1,
         maxCount: 1,
-        hasValue: ex.dimension,
+        hasValue: ex.pollutantDimension,
       }],
     })
   })
@@ -140,7 +141,7 @@ describe('domain/dimension/update', function () {
   it('deletes the dimension mapping resource when scale of measure changes to anything but Nominal', async () => {
     // given
     const dimensionMetadata = namedNode('dimension/station')
-      .addOut(schema.about, ex.dimension)
+      .addOut(schema.about, ex.stationDimension)
       .addOut(scale.scaleOfMeasure, scale.Temporal)
 
     // when
@@ -160,5 +161,53 @@ describe('domain/dimension/update', function () {
       }],
     })
     expect(mappingResource).to.be.undefined
+  })
+
+  it('deletes the dimension mapping resource when scale of measure is removed', async () => {
+    // given
+    const dimensionMetadata = namedNode('dimension/station')
+      .addOut(schema.about, ex.stationDimension)
+
+    // when
+    const updated = await update({
+      store,
+      metadataCollection: metadataCollection.term,
+      dimensionMetadata,
+    })
+    const mappingResource = await store.get(updated.out(cc.dimensionMapping).term, { allowMissing: true })
+
+    // then
+    expect(updated).to.matchShape({
+      property: [{
+        path: cc.dimensionMapping,
+        minCount: 0,
+        maxCount: 0,
+      }],
+    })
+    expect(mappingResource).to.be.undefined
+  })
+
+  it('keeps dimension mapping resource unchanged when scale of measure does not change', async () => {
+    // given
+    const dimensionMetadata = namedNode('dimension/station')
+      .addOut(schema.about, ex.stationDimension)
+      .addOut(scale.scaleOfMeasure, scale.Nominal)
+
+    // when
+    const updated = await update({
+      store,
+      metadataCollection: metadataCollection.term,
+      dimensionMetadata,
+    })
+
+    // then
+    expect(updated).to.matchShape({
+      property: [{
+        path: cc.dimensionMapping,
+        minCount: 1,
+        maxCount: 1,
+        hasValue: ex.stationMappingResource,
+      }],
+    })
   })
 })
