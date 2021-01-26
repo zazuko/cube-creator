@@ -45,11 +45,14 @@ export default function Mixin<Base extends Constructor<Omit<DimensionMetadataCol
         throw new Error('Dimension not found')
       }
 
+      const dimensionMappings = found.mappings
+
       found.pointer.deleteOut()
       for (const quad of dimension.dataset.match(dimension.term)) {
         found.pointer.addOut(quad.predicate, quad.object)
       }
 
+      found.mappings = dimensionMappings
       return found
     }
 
