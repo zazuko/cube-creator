@@ -1,3 +1,4 @@
+import { Person } from '@rdfine/schema'
 import { Actions } from '@/api/mixins/ApiResource'
 import { cc } from '@cube-creator/core/namespace'
 import {
@@ -36,7 +37,9 @@ export function serializeProject (project: Project): Project {
       ? serializeLink(project.dataset)
       : project.dataset,
     cubeGraph: project.cubeGraph,
-    creator: project.creator,
+    creator: project.creator
+      ? serializePerson(project.creator)
+      : project.creator,
     label: project.label,
     jobCollection: project.jobCollection
       ? serializeLink(project.jobCollection)
@@ -50,6 +53,13 @@ export function serializeProject (project: Project): Project {
       : project.maintainer,
     publishedRevision: project.publishedRevision,
   })
+}
+
+export function serializePerson (person: Person): Person {
+  return Object.freeze({
+    ...serializeResource(person),
+    name: person.name,
+  }) as Person
 }
 
 export function serializeSourcesCollection (collection: SourcesCollection): SourcesCollection {
