@@ -74,6 +74,7 @@ cc:CSVSource
       a
         hydra:Operation,
         schema:UpdateAction ;
+        
       hydra:title
         "Edit CSV settings" ;
       hydra:method
@@ -87,6 +88,22 @@ cc:CSVSource
             code:EcmaScript ;
           code:link
             <file:handlers/csv-source#put> ;
+        ]
+    ],
+    [
+      a
+        hydra:Operation,
+          cc:ReplaceCSVAction ;
+      hydra:title
+        "Replace CSV-File" ;
+      hydra:method
+        "PATCH" ;
+      code:implementedBy
+        [
+          a
+            code:EcmaScript ;
+          code:link
+            <file:handlers/csv-source#replace> ;
         ]
     ] ;
 .

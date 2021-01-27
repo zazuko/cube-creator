@@ -32,6 +32,7 @@ export default class extends Vue {
   @Prop() value!: string | undefined
   @Prop() update!: (newValue: string) => void
   @Prop() tableName!: string
+  @Prop() isObservationTable!: boolean
   @Prop() sourceId?: Term
   @Prop({ default: true }) autoPrefill!: boolean // TODO: Should only be true on table creation
 
@@ -99,13 +100,17 @@ export default class extends Vue {
   }
 
   @Watch('tableName')
+  @Watch('isObservationTable')
   prefill (): void {
     if (this.wasModified) return
 
     if (!this.tableName) return
 
-    const prefix = this.tableName.replace(' ', '')
-    const prefillValue = `${prefix}/{REPLACE}`
+    const prefix = this.tableName.split(' ').join('')
+    const prefillValue = !this.isObservationTable
+      ? `${prefix}/{REPLACE}`
+      : ''
+
     this.update(prefillValue)
     this.$emit('input', prefillValue)
   }

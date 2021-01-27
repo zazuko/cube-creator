@@ -14,6 +14,11 @@
                   :to="{ name: 'SourceEdit', params: { sourceId: source.clientPath } }"
                 />
                 <hydra-operation-button
+                  :operation="source.actions.replace"
+                  icon="upload"
+                  :to="{ name: 'SourceReplaceCSV', params: { sourceId: source.clientPath } }"
+                />
+                <hydra-operation-button
                   :operation="source.actions.delete"
                   @click="deleteSource(source)"
                 />

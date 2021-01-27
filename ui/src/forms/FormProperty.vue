@@ -4,7 +4,7 @@
       {{ property.name }}
     </span>
     <b-field v-if="property.shape.description">
-      <vue-markdown class="help">
+      <vue-markdown class="help" :anchor-attributes="linkAttrs">
         {{ property.shape.description }}
       </vue-markdown>
     </b-field>
@@ -40,6 +40,11 @@ export default class extends Vue {
   @Prop() actions!: any;
   @Prop() renderObject!: (object: PropertyObjectState) => TemplateResult;
   @Prop() renderMultiEditor!: () => TemplateResult;
+
+  linkAttrs = {
+    target: '_blank',
+    rel: 'noopener noreferrer nofollow',
+  }
 
   get isHidden (): boolean {
     return this.property.shape.hidden === true

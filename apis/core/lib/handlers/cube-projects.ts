@@ -9,8 +9,9 @@ export const post = protectedResource(
   shaclValidate,
   asyncMiddleware(async (req, res) => {
     const user = req.user?.id
+    const userName = req.user?.name
 
-    if (!user) {
+    if (!user || !userName) {
       throw new Error('User is not defined')
     }
 
@@ -18,6 +19,7 @@ export const post = protectedResource(
       projectsCollection: await req.hydra.resource.clownface(),
       resource: await req.resource(),
       user,
+      userName,
       store: req.resourceStore(),
     })
     await req.resourceStore().save()

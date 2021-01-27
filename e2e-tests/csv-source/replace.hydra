@@ -1,0 +1,57 @@
+PREFIX cc: <https://cube-creator.zazuko.com/vocab#>
+PREFIX schema: <http://schema.org/>
+
+ENTRYPOINT "cube-project/ubd/csv-mapping/sources"
+
+HEADERS {
+  x-user "john-doe"
+  x-permission "pipelines:write"
+}
+
+With Class cc:CSVSourceCollection {
+    Expect Operation cc:UploadCSVAction {
+        Invoke {
+            Content-Type "text/csv"
+            Content-Disposition "file; filename=replace_test.csv"
+
+            ```
+            column1,column2,column3
+            1,2,test
+            1,2,test
+            1,2,test1
+            1,2,test2
+            ```
+        } => {
+            Expect Status 201
+        }
+    }
+}
+
+With Class cc:CSVSource {
+    Expect Operation cc:ReplaceCSVAction {
+        Invoke {
+            Content-Type "text/csv"
+            ```
+            column1,column4
+            2010,1
+            ```
+        } => {
+            Expect Status 400
+        }
+    
+        Invoke {
+            Content-Type "text/csv"
+            ```
+            column1,column2,column3,column4
+            1,2,test,a
+            1,2,test,b
+            1,2,test1,c
+            1,2,test2,a
+            ```
+        } => {
+            Expect Status 200
+
+            Expect Type <https://cube-creator.zazuko.com/vocab#CSVSource>
+        }
+    }
+}

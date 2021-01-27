@@ -11,7 +11,7 @@ prefix void: <http://rdfs.org/ns/void#>
 prefix cube: <http://ns.bergnet.org/cube/>
 prefix cc: <https://cube-creator.zazuko.com/vocab#>
 prefix sh: <http://www.w3.org/ns/shacl#>
-prefix scale: <http://ns.bergnet.org/cube/scale/>
+prefix qudt: <http://qudt.org/schema/qudt/>
 prefix dcat: <http://www.w3.org/ns/dcat#>
 prefix vcard: <http://www.w3.org/2006/vcard/ns#>
 
@@ -31,6 +31,7 @@ graph <cube-project/ubd> {
     rdfs:label "UBD28 Project" ;
     cc:jobCollection <cube-project/ubd/jobs> ;
   .
+  <user> schema:name "User Name"
 }
 
 <https://lindas.admin.ch/foen/cube> void:inDataset <ubd-example> .
@@ -69,7 +70,7 @@ graph <cube-project/ubd/dimensions-metadata> {
   <cube-project/ubd/dimensions-metadata/dimension-year>
     schema:about <https://environment.ld.admin.ch/foen/ubd/28/dimension/year> ;
     schema:name "Jahr"@de ;
-    scale:scaleOfMeasure scale:Temporal ;
+    qudt:scaleType qudt:IntervalScale ;
   .
 
   <cube-project/ubd/dimensions-metadata/station>

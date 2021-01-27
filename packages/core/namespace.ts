@@ -11,6 +11,7 @@ type CubeCreatorClass =
   'CSVSource' |
   'CSVSourceCollection' |
   'UploadCSVAction' |
+  'ReplaceCSVAction' |
   'Table' |
   'TableCollection' |
   'ObservationTable' |
@@ -26,7 +27,8 @@ type CubeCreatorClass =
   'DimensionMetadataCollection' |
   'Observations' |
   'TransformJob' |
-  'PublishJob'
+  'PublishJob' |
+  'ReplaceCSVAction'
 
 type CubeCreatorProperty =
   'projectSourceKind' |
@@ -69,7 +71,6 @@ type MetaDataProperty =
 
 type CubeCreatorTerms = CubeCreatorClass | CubeCreatorProperty | OtherTerms | MetaDataProperty
 
-prefixes.scale = 'http://ns.bergnet.org/cube/scale/'
 prefixes.freq = 'http://purl.org/cld/freq/'
 prefixes.cube = 'http://ns.bergnet.org/cube/'
 prefixes.view = 'http://ns.bergnet.org/cube-view/'
@@ -81,4 +82,3 @@ export const hydraBox = namespace('http://hydra-box.org/schema/')
 export const cc = namespace<CubeCreatorTerms>('https://cube-creator.zazuko.com/vocab#')
 export const editor = namespace(cc.dash.value)
 export const freq = namespace(prefixes.freq)
-export const scale = namespace(prefixes.scale)
