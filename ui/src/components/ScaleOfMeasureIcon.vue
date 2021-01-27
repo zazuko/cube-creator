@@ -10,10 +10,10 @@ import { Term } from 'rdf-js'
 import { qudt } from '@tpluscode/rdf-ns-builders'
 
 const icons: Record<string, string> = {
-  [qudt.NominalScale.value]: 'list-ul',
+  [qudt.NominalScale.value]: 'th-large',
   [qudt.OrdinalScale.value]: 'list-ul',
-  [qudt.IntervalScale.value]: 'clock',
-  [qudt.RatioScale.value]: 'chart-line',
+  [qudt.IntervalScale.value]: 'chart-line',
+  [qudt.RatioScale.value]: 'balance-scale-right',
 }
 
 @Component
