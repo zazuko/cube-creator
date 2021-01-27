@@ -111,7 +111,7 @@ graph <cube-project/ubd/dimension-mapping/pollutant> {
     prov:hadDictionaryMember [
       a prov:KeyEntityPair ;
       prov:pairKey "co" ;
-      prov:pairEntity <https://environment.ld.admin.ch/foen/ubd/28/pollutant/co> ;
+      prov:pairEntity <http://www.wikidata.org/entity/Q2025> ;
     ] ;
   .
 }
@@ -159,7 +159,7 @@ graph <cube-project/ubd/cube-data> {
     <https://environment.ld.admin.ch/foen/ubd/28/aggregation>     <https://environment.ld.admin.ch/foen/ubd/28/aggregation/annualmean> ;
     <https://environment.ld.admin.ch/foen/ubd/28/dimension/value> "5.4"^^xsd:float ;
     <https://environment.ld.admin.ch/foen/ubd/28/dimension/year>  "1999"^^xsd:gYear ;
-    <https://environment.ld.admin.ch/foen/ubd/28/pollutant>       <https://environment.ld.admin.ch/foen/ubd/28/pollutant/co> ;
+    <https://environment.ld.admin.ch/foen/ubd/28/pollutant>       <http://www.wikidata.org/entity/Q2025> ;
     <https://environment.ld.admin.ch/foen/ubd/28/station>         <https://environment.ld.admin.ch/foen/ubd/28/station/blBAS> ;
     <https://environment.ld.admin.ch/foen/ubd/28/unit-id>         "µg/m3" ;
   .
@@ -192,8 +192,8 @@ graph <cube-project/ubd/cube-data> {
 
   _:pollutant
     sh:in        (
-                   "so2" # <https://environment.ld.admin.ch/foen/ubd/28/pollutant/so2>
-                   <https://environment.ld.admin.ch/foen/ubd/28/pollutant/co>
+                   "so2" # <http://www.wikidata.org/entity/Q5282>
+                   <http://www.wikidata.org/entity/Q2025>
                  ) ;
     sh:maxCount  1 ;
     sh:minCount  1 ;
