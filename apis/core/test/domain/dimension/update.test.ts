@@ -96,49 +96,51 @@ describe('domain/dimension/update', function () {
         minCount: 2,
       }],
     })
+  });
+
+  [scale.Nominal, scale.Ordinal].forEach(_scale => {
+    it(`initializes a dimension mapping resource when scale of measure is set to ${_scale.value}`, async () => {
+      // given
+      const dimensionMetadata = namedNode('dimension/pollutant')
+        .addOut(schema.about, ex.pollutantDimension)
+        .addOut(scale.scaleOfMeasure, _scale)
+      findProject.resolves(ex('project/test'))
+
+      // when
+      const updated = await update({
+        store,
+        metadataCollection: metadataCollection.term,
+        dimensionMetadata,
+      })
+      const mappingResource = await store.get(updated.out(cc.dimensionMapping).term)
+
+      // then
+      expect(updated).to.matchShape({
+        property: [{
+          path: cc.dimensionMapping,
+          minCount: 1,
+          maxCount: 1,
+          nodeKind: sh.IRI,
+          pattern: 'project\\/test\\/dimension-mapping\\/pollutant-.+$',
+        }],
+      })
+      expect(mappingResource).to.matchShape({
+        property: [{
+          path: rdf.type,
+          hasValue: prov.Dictionary,
+          minCount: 2,
+          maxCount: 2,
+        }, {
+          path: schema.about,
+          minCount: 1,
+          maxCount: 1,
+          hasValue: ex.pollutantDimension,
+        }],
+      })
+    })
   })
 
-  it('initializes a dimension mapping resource when scale of measure is set to Nominal', async () => {
-    // given
-    const dimensionMetadata = namedNode('dimension/pollutant')
-      .addOut(schema.about, ex.pollutantDimension)
-      .addOut(scale.scaleOfMeasure, scale.Nominal)
-    findProject.resolves(ex('project/test'))
-
-    // when
-    const updated = await update({
-      store,
-      metadataCollection: metadataCollection.term,
-      dimensionMetadata,
-    })
-    const mappingResource = await store.get(updated.out(cc.dimensionMapping).term)
-
-    // then
-    expect(updated).to.matchShape({
-      property: [{
-        path: cc.dimensionMapping,
-        minCount: 1,
-        maxCount: 1,
-        nodeKind: sh.IRI,
-        pattern: 'project\\/test\\/dimension-mapping\\/pollutant-.+$',
-      }],
-    })
-    expect(mappingResource).to.matchShape({
-      property: [{
-        path: rdf.type,
-        hasValue: prov.Dictionary,
-        minCount: 2,
-        maxCount: 2,
-      }, {
-        path: schema.about,
-        minCount: 1,
-        maxCount: 1,
-        hasValue: ex.pollutantDimension,
-      }],
-    })
-  })
-
-  it('deletes the dimension mapping resource when scale of measure changes to anything but Nominal', async () => {
+  it('deletes the dimension mapping resource when scale of measure changes to anything but Nominal or Ordinal', async () => {
     // given
     const dimensionMetadata = namedNode('dimension/station')
       .addOut(schema.about, ex.stationDimension)

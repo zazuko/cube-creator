@@ -1,11 +1,11 @@
 import clownface, { GraphPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'
 import { DimensionMetadataCollection, Project } from '@cube-creator/model'
-import { scale } from '@cube-creator/core/namespace'
 import { prov, rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { ResourceStore } from '../../ResourceStore'
 import * as id from '../identifiers'
 import { findProject } from '../queries/cube-project'
+import { canBeMappedToManagedDimension } from './DimensionMetadata'
 
 interface UpdateDimensionCommand {
   metadataCollection: NamedNode
@@ -22,7 +22,7 @@ export async function update({
 
   const dimension = metadata.updateDimension(dimensionMetadata)
 
-  if (dimension.scaleOfMeasure?.equals(scale.Nominal) && !dimension.mappings) {
+  if (canBeMappedToManagedDimension(dimension) && !dimension.mappings) {
     const project = await store.getResource<Project>(await findProject(metadata))
 
     const slug = dimension.id.value.substring(dimension.id.value.lastIndexOf('/') + 1)
@@ -32,7 +32,7 @@ export async function update({
       .addOut(schema.about, dimension.about)
 
     dimension.mappings = dimensionMapping.term
-  } else if (!dimension.scaleOfMeasure?.equals(scale.Nominal) && dimension.mappings) {
+  } else if (!canBeMappedToManagedDimension(dimension) && dimension.mappings) {
     store.delete(dimension.mappings)
     dimension.mappings = undefined
   }
