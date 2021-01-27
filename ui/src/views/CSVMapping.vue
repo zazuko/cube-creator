@@ -1,5 +1,5 @@
 <template>
-  <div v-if="mapping && sourcesCollection && tableCollection">
+  <div v-if="mapping && sourcesCollection && tableCollection" class="is-relative">
     <div class="columns">
       <div class="column">
         <div class="level">
@@ -120,6 +120,9 @@ export default class CSVMappingView extends Vue {
   @Watch('columnMappings')
   drawArrows (): void {
     this.$nextTick(() => {
+      const offsetX = this.$el.getBoundingClientRect().x
+      const offsetY = this.$el.getBoundingClientRect().y
+
       this.columnMappings.map((columnMapping) => {
         const targetId = columnMapping.id.value
         const arrowEl = this.$el.querySelector(`[data-arrow-id="${targetId}"]`)
@@ -132,8 +135,8 @@ export default class CSVMappingView extends Vue {
         const targetBox = targetEl.getBoundingClientRect()
 
         const path = `
-          M ${sourceBox.x + sourceBox.width / 2},${sourceBox.y + sourceBox.height / 2}
-          L ${targetBox.x},${targetBox.y + targetBox.height / 2}
+          M ${(sourceBox.x + sourceBox.width / 2) - offsetX},${(sourceBox.y + sourceBox.height / 2) - offsetY}
+          L ${targetBox.x - offsetX},${(targetBox.y + targetBox.height / 2) - offsetY}
         `
         arrowEl.setAttribute('d', path)
       })
