@@ -17,22 +17,6 @@
               />
             </div>
           </div>
-          <div class="level-right">
-            <!-- <p class="level-item">
-              Filter columns:
-            </p>
-            <b-field class="level-item">
-              <b-radio-button v-model="columnFilter" native-value="all" size="is-small">
-                All
-              </b-radio-button>
-              <b-radio-button v-model="columnFilter" native-value="mapped" size="is-small">
-                Mapped
-              </b-radio-button>
-              <b-radio-button v-model="columnFilter" native-value="not-mapped" size="is-small">
-                Not mapped
-              </b-radio-button>
-            </b-field> -->
-          </div>
         </div>
       </div>
       <div class="column is-1">
