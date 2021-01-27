@@ -13,7 +13,7 @@ const icons: Record<string, string> = {
   [qudt.NominalScale.value]: 'list-ul',
   [qudt.OrdinalScale.value]: 'list-ul',
   [qudt.IntervalScale.value]: 'clock',
-  [qudt.RatioScale.value]: 'clock',
+  [qudt.RatioScale.value]: 'chart-line',
 }
 
 @Component
