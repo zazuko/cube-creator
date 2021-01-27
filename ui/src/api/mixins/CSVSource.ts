@@ -15,6 +15,7 @@ export default function mixin<Base extends Constructor> (base: Base): Mixin {
     get _additionalActions () {
       return {
         replace: ns.cc.ReplaceCSVAction,
+        download: ns.cc.GetCSVSourceAction
       }
     }
   }

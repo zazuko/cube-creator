@@ -75,7 +75,8 @@ const getCSVSource: express.RequestHandler = asyncMiddleware(async (req, res, ne
     return next(new Error('s3 key not found'))
   }
 
-  res.redirect(directDownload)
+  res.header('Location', directDownload)
+  res.sendStatus(200)
 })
 
 export const get = labyrinth.protectedResource(getCSVSource, labyrinth.get)

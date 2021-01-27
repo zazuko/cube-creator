@@ -239,6 +239,18 @@ const actions: ActionTree<ProjectState, RootState> = {
     return api.invokeSaveOperation(operation, file, headers)
   },
 
+  async downloadCSV (context, source) {
+    const operation = source.actions.download
+
+    const headers = {
+      accept: 'text/csv'
+    }
+
+    const fileUrl = await api.invokeGetOperation(operation, headers)
+
+    return fileUrl.xhr.headers.get('Location')
+  },
+
   async fetchCubeMetadata (context) {
     const project = context.state.project
 

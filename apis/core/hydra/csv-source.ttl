@@ -43,7 +43,7 @@ cc:CSVSource
         hydra:Operation,
         cc:GetCSVSourceAction ;
       hydra:title
-        "Get CSV Source" ;
+        "Get CSV" ;
       hydra:method
         "GET" ;
       code:implementedBy
