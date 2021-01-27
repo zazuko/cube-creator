@@ -25,6 +25,7 @@ type CubeCreatorClass =
   'TransformAction' |
   'PublishAction' |
   'DimensionMetadataCollection' |
+  'ManagedDimensionsCollection' |
   'Observations' |
   'TransformJob' |
   'PublishJob' |
@@ -61,7 +62,8 @@ type CubeCreatorProperty =
   'publishGraph' |
   'latestPublishedRevision' |
   'revision' |
-  'dimensionMapping'
+  'dimensionMapping' |
+  'managedDimension'
 
 type OtherTerms =
   'dash'
