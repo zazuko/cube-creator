@@ -6,17 +6,18 @@ import { expect } from 'chai'
 import { DESCRIBE } from '@tpluscode/sparql-builder'
 import { parsingClient, client, insertTestData } from '@cube-creator/testing/lib'
 import clownface from 'clownface'
+import TermMap from '@rdfjs/term-map'
 import { replaceValueWithDefinedTerms } from '../../../lib/domain/queries/dimension-mappings'
 
 describe('lib/domain/queries/dimension-mappings @SPARQL', function () {
   this.timeout(20000)
 
   const dimensionMapping = $rdf.namedNode('https://cube-creator.lndo.site/cube-project/ubd/dimension-mapping/pollutant')
-  let terms: Map<string, Term>
+  let terms: Map<Term, Term>
   const sparqlSpy = sinon.spy(client.query, 'update')
 
   beforeEach(async () => {
-    terms = new Map()
+    terms = new TermMap()
     await insertTestData('fuseki/sample-ubd.trig')
 
     sparqlSpy.resetHistory()
@@ -34,7 +35,7 @@ describe('lib/domain/queries/dimension-mappings @SPARQL', function () {
     // given
     const observationId = $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/observation/blBAS-2003-annualmean')
     const definedTerm = $rdf.namedNode('http://www.wikidata.org/entity/Q5282')
-    terms.set('so2', definedTerm)
+    terms.set($rdf.literal('so2'), definedTerm)
 
     // when
     await replaceValueWithDefinedTerms({ dimensionMapping, terms }, client)
