@@ -50,15 +50,15 @@ ${literalShapeId} {
         ${xsd.boolean}
         ${xsd.date}
         ${xsd.dateTime}
-        ${xsd.decimal}
+        # ${xsd.decimal}
         ${xsd.float}
         ${xsd.int}
         ${xsd.string}
         # Less used datatypes, in alphabetical order of the label
         ${xsd.gDay}
-        ${xsd.duration}
-        ${xsd.dayTimeDuration}
-        ${xsd.yearhMonthDuration}
+        # ${xsd.duration}
+        # ${xsd.dayTimeDuration}
+        # ${xsd.yearhMonthDuration}
         ${xsd.gMonth}
         ${xsd.gMonthDay}
         ${xsd.time}
@@ -86,14 +86,14 @@ ${literalShapeId} {
   ${xsd.boolean} ${rdfs.label} "boolean" .
   ${xsd.date} ${rdfs.label} "date" .
   ${xsd.dateTime} ${rdfs.label} "datetime" .
-  ${xsd.decimal} ${rdfs.label} "decimal" .
+#  ${xsd.decimal} ${rdfs.label} "decimal" .
   ${xsd.float} ${rdfs.label} "float" .
   ${xsd.int} ${rdfs.label} "int" .
   ${xsd.string} ${rdfs.label} "string" .
   ${xsd.gDay} ${rdfs.label} "day" .
-  ${xsd.duration} ${rdfs.label} "duration" .
-  ${xsd.dayTimeDuration} ${rdfs.label} "duration (day+time)" .
-  ${xsd.yearhMonthDuration} ${rdfs.label} "duration (year+month)" .
+#  ${xsd.duration} ${rdfs.label} "duration" .
+#  ${xsd.dayTimeDuration} ${rdfs.label} "duration (day+time)" .
+#  ${xsd.yearhMonthDuration} ${rdfs.label} "duration (year+month)" .
   ${xsd.gMonth} ${rdfs.label} "month" .
   ${xsd.gMonthDay} ${rdfs.label} "month+day" .
   ${xsd.time} ${rdfs.label} "time" .
