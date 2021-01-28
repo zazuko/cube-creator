@@ -81,6 +81,21 @@ describe('lib/commands/publish', function () {
       })
     })
 
+    it('adds relation to parent cube', () => {
+      expect(cubePointer.namedNode(ns.baseCube())).matchShape({
+        property: [{
+          path: rdf.type,
+          hasValue: schema.CreativeWork,
+          minCount: 1,
+          maxCount: 1,
+        }, {
+          path: schema.hasPart,
+          hasValue: targetCube(),
+          minCount: 1,
+        }],
+      })
+    })
+
     it('cube meta data has been copied', async function () {
       expect(cubePointer.namedNode(targetCube())).to.matchShape({
         property: [{
