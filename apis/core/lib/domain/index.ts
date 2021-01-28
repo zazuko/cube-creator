@@ -1,4 +1,5 @@
 import { ThingMixin } from '@rdfine/schema'
+import { DictionaryBundle } from '@rdfine/prov/bundles'
 import * as CoreModel from '@cube-creator/model'
 import RdfResourceImpl from '@tpluscode/rdfine'
 import CsvMapping from './csv-mapping/CsvMapping'
@@ -9,6 +10,7 @@ import Dataset from './dataset/Dataset'
 import Resource from './Resource'
 import OrganizationMixin from './organization/Organization'
 import DimensionMetadataCollection from './dimension/DimensionMetadataCollection'
+import { ProvDictionaryMixinEx } from './dimension-mapping/DimensionMapping'
 
 RdfResourceImpl.factory.addMixin(...Object.values(CoreModel))
 RdfResourceImpl.factory.addMixin(CsvMapping)
@@ -19,5 +21,7 @@ RdfResourceImpl.factory.addMixin(Table)
 RdfResourceImpl.factory.addMixin(Resource)
 RdfResourceImpl.factory.addMixin(DimensionMetadataCollection)
 RdfResourceImpl.factory.addMixin(OrganizationMixin)
+RdfResourceImpl.factory.addMixin(ProvDictionaryMixinEx)
 
 RdfResourceImpl.factory.addMixin(ThingMixin)
+RdfResourceImpl.factory.addMixin(...DictionaryBundle)
