@@ -93,9 +93,9 @@ ${shape('dimension/metadata')} {
     ]
   .
 
-  ${qudt.NominalScale} ${rdfs.label} "Nominal Scale"@en .
-  ${qudt.OrdinalScale} ${rdfs.label} "Ordinal Scale"@en .
-  ${qudt.IntervalScale} ${rdfs.label} "Interval Scale"@en .
-  ${qudt.RatioScale} ${rdfs.label} "Ratio Scale"@en .
+  ${qudt.NominalScale} ${rdfs.label} "Nominal"@en .
+  ${qudt.OrdinalScale} ${rdfs.label} "Ordinal"@en .
+  ${qudt.IntervalScale} ${rdfs.label} "Interval"@en .
+  ${qudt.RatioScale} ${rdfs.label} "Ratio"@en .
 }
 `
