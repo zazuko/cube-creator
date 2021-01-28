@@ -32,7 +32,7 @@ describe('domain/dimension/update', function () {
       .addOut(schema.hasPart, $rdf.namedNode('dimension/station'), dimension => {
         dimension.addOut(schema.about, ex.stationDimension)
           .addOut(schema.name, $rdf.literal('Station', 'en'))
-          .addOut(scale.scaleOfMeasure, scale.Nominal)
+          .addOut(qudt.scaleType, qudt.NominalScale)
           .addOut(cc.dimensionMapping, ex.stationMappingResource)
       })
     store = new TestResourceStore([
@@ -98,12 +98,12 @@ describe('domain/dimension/update', function () {
     })
   });
 
-  [scale.Nominal, scale.Ordinal].forEach(_scale => {
+  [qudt.NominalScale, qudt.OrdinalScale].forEach(_scale => {
     it(`initializes a dimension mapping resource when scale of measure is set to ${_scale.value}`, async () => {
       // given
       const dimensionMetadata = namedNode('dimension/pollutant')
         .addOut(schema.about, ex.pollutantDimension)
-        .addOut(scale.scaleOfMeasure, _scale)
+        .addOut(qudt.scaleType, _scale)
       findProject.resolves(ex('project/test'))
 
       // when
@@ -144,7 +144,7 @@ describe('domain/dimension/update', function () {
     // given
     const dimensionMetadata = namedNode('dimension/station')
       .addOut(schema.about, ex.stationDimension)
-      .addOut(scale.scaleOfMeasure, scale.Temporal)
+      .addOut(qudt.scaleType, qudt.IntervalScale)
 
     // when
     const updated = await update({
@@ -193,7 +193,7 @@ describe('domain/dimension/update', function () {
     // given
     const dimensionMetadata = namedNode('dimension/station')
       .addOut(schema.about, ex.stationDimension)
-      .addOut(scale.scaleOfMeasure, scale.Nominal)
+      .addOut(qudt.scaleType, qudt.NominalScale)
 
     // when
     const updated = await update({
