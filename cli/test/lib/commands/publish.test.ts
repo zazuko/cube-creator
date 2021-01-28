@@ -214,7 +214,8 @@ describe('lib/commands/publish', function () {
       })
 
       const props = cubePointer.namedNode(targetCube('shape/')).out(sh.property)
-      expect(props.has(sh.path, ns.baseCube('dimension/year'))).to.matchShape({
+      const yearPropShape = props.has(sh.path, ns.baseCube('dimension/year'))
+      expect(yearPropShape).to.matchShape({
         property: {
           path: sh.path,
           hasValue: ns.baseCube('dimension/year'),
@@ -222,7 +223,7 @@ describe('lib/commands/publish', function () {
         },
       })
 
-      expect(props.has(sh.path).has(schema.name)).to.matchShape({
+      expect(yearPropShape).to.matchShape({
         property: {
           path: schema.name,
           hasValue: $rdf.literal('Jahr', 'de'),
@@ -230,7 +231,7 @@ describe('lib/commands/publish', function () {
         },
       })
 
-      expect(props.has(sh.path).has(qudt.scaleType)).to.matchShape({
+      expect(yearPropShape).to.matchShape({
         property: {
           path: qudt.scaleType,
           hasValue: qudt.IntervalScale,

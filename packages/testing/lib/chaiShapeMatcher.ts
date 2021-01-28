@@ -3,7 +3,7 @@ import type { NodeShape, ValidationResult } from '@rdfine/shacl'
 import { NodeShapeMixin } from '@rdfine/shacl'
 import { ShapeBundle, ValidationResultBundle } from '@rdfine/shacl/bundles'
 import RdfResourceImpl, { Initializer, RdfResource, ResourceIdentifier } from '@tpluscode/rdfine/RdfResource'
-import { BlankNode, DatasetCore, NamedNode, Term } from 'rdf-js'
+import { BlankNode, DatasetCore, NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import clownface, { MultiPointer } from 'clownface'
 import Validator, * as Validate from 'rdf-validate-shacl'
@@ -24,7 +24,7 @@ function isRdfine(shapeLike: any): shapeLike is RdfResource {
 }
 
 function isGraphPointer(shapeLike: any): shapeLike is MultiPointer<NamedNode | BlankNode> {
-  return '_context' in shapeLike && shapeLike.terms.every(({ termType }: Term) => termType === 'BlankNode' || termType === 'NamedNode')
+  return '_context' in shapeLike && (shapeLike.term?.termType === 'BlankNode' || shapeLike.term?.termType === 'NamedNode')
 }
 
 function isDataset(shapeLike: any): shapeLike is DatasetCore {
