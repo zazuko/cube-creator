@@ -5,15 +5,16 @@ import DatasetExt from 'rdf-ext/lib/Dataset'
 import { NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import { GraphPointer } from 'clownface'
-import { prov, schema } from '@tpluscode/rdf-ns-builders'
+import { prov, rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import namespace from '@rdfjs/namespace'
 import httpError from 'http-errors'
 import { update } from '../../../lib/domain/dimension-mapping/update'
 import { TestResourceStore } from '../../support/TestResourceStore'
-import { blankNode, namedNode } from '../../support/clownface'
+import { namedNode } from '../../support/clownface'
 import * as queries from '../../../lib/domain/queries/dimension-mappings'
 import { ex } from '../../support/namespace'
+import '../../../lib/domain'
 
 const wtd = namespace('http://www.wikidata.org/entity/')
 
@@ -33,6 +34,7 @@ describe('domain/dimension-mapping/update', () => {
 
   beforeEach(() => {
     dimensionMapping = namedNode(resource)
+      .addOut(rdf.type, prov.Dictionary)
       .addOut(schema.about, dimension)
       .addOut(cc.managedDimension, ex('managed-dimension/chemical-substance'))
       .addOut(prov.hadDictionaryMember, member => {
@@ -55,7 +57,8 @@ describe('domain/dimension-mapping/update', () => {
 
   it('throws if dimension is missing', async () => {
     // given
-    const mappings = blankNode()
+    const mappings = namedNode(resource)
+      .addOut(rdf.type, prov.Dictionary)
       .addOut(cc.managedDimension, ex('managed-dimension/chemical-substance'))
 
     // when
@@ -72,7 +75,8 @@ describe('domain/dimension-mapping/update', () => {
   describe('adding new mapped values', () => {
     beforeEach(async () => {
       // given
-      const mappings = blankNode()
+      const mappings = namedNode(resource)
+        .addOut(rdf.type, prov.Dictionary)
         .addOut(schema.about, dimension)
         .addOut(cc.managedDimension, ex('managed-dimension/chemical-substance'))
         .addOut(prov.hadDictionaryMember, member => {
@@ -106,8 +110,8 @@ describe('domain/dimension-mapping/update', () => {
     it('calls update query to update cube shape and observations', async () => {
       expect(queries.replaceValueWithDefinedTerms).to.have.been.calledWith(sinon.match(({ terms }: Parameters<typeof queries.replaceValueWithDefinedTerms>[0]) => {
         return terms.size === 2 &&
-          terms.get('As')?.equals(wikidata.arsenic) &&
-          terms.get('Pb')?.equals(wikidata.lead)
+          terms.get($rdf.literal('As'))?.equals(wikidata.arsenic) &&
+          terms.get($rdf.literal('Pb'))?.equals(wikidata.lead)
       }))
     })
 
@@ -174,7 +178,8 @@ describe('domain/dimension-mapping/update', () => {
   describe('setting missing value for an entry', () => {
     beforeEach(async () => {
       // given
-      const mappings = blankNode()
+      const mappings = namedNode(resource)
+        .addOut(rdf.type, prov.Dictionary)
         .addOut(schema.about, dimension)
         .addOut(cc.managedDimension, ex('managed-dimension/chemical-substance'))
         .addOut(prov.hadDictionaryMember, member => {
@@ -198,7 +203,7 @@ describe('domain/dimension-mapping/update', () => {
 
     it('calls update query to update cube shape and observations', async () => {
       expect(queries.replaceValueWithDefinedTerms).to.have.been.calledWith(sinon.match(({ dimensionMapping, terms }: Parameters<typeof queries.replaceValueWithDefinedTerms>[0]) => {
-        return dimensionMapping.equals(resource) && terms.size === 1 && terms.get('so2')?.equals(wikidata.sulphurDioxide)
+        return dimensionMapping.equals(resource) && terms.size === 1 && terms.get($rdf.literal('so2'))?.equals(wikidata.sulphurDioxide)
       }))
     })
 
@@ -249,7 +254,8 @@ describe('domain/dimension-mapping/update', () => {
   describe('removing value for a key', () => {
     beforeEach(async () => {
       // given
-      const mappings = blankNode()
+      const mappings = namedNode(resource)
+        .addOut(rdf.type, prov.Dictionary)
         .addOut(schema.about, dimension)
         .addOut(cc.managedDimension, ex('managed-dimension/chemical-substance'))
         .addOut(prov.hadDictionaryMember, member => {
@@ -311,7 +317,8 @@ describe('domain/dimension-mapping/update', () => {
   describe('removing entries', () => {
     beforeEach(async () => {
       // given
-      const mappings = blankNode()
+      const mappings = namedNode(resource)
+        .addOut(rdf.type, prov.Dictionary)
         .addOut(schema.about, dimension)
         .addOut(cc.managedDimension, ex('managed-dimension/chemical-substance'))
         .addOut(prov.hadDictionaryMember, member => {
@@ -353,7 +360,8 @@ describe('domain/dimension-mapping/update', () => {
   describe('changing managed dimension', () => {
     beforeEach(async () => {
       // given
-      const mappings = blankNode()
+      const mappings = namedNode(resource)
+        .addOut(rdf.type, prov.Dictionary)
         .addOut(schema.about, dimension)
         .addOut(cc.managedDimension, ex('managed-dimension/canton'))
         .addOut(prov.hadDictionaryMember, member => {

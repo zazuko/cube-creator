@@ -3,16 +3,16 @@ import { DELETE } from '@tpluscode/sparql-builder'
 import { sparql } from '@tpluscode/rdf-string'
 import { rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { cc, cube } from '@cube-creator/core/namespace'
-import $rdf from 'rdf-ext'
+import TermMap from '@rdfjs/term-map'
 import { streamClient } from '../../query-client'
 
-export async function replaceValueWithDefinedTerms({ dimensionMapping, terms } : {dimensionMapping: Term; terms: Map<string, Term>}, client = streamClient): Promise<void> {
+export async function replaceValueWithDefinedTerms({ dimensionMapping, terms } : {dimensionMapping: Term; terms: TermMap}, client = streamClient): Promise<void> {
   if (terms.size === 0) {
     return
   }
 
   const pairs = [...terms.entries()].reduce((values, [originalValue, managedTerm]) => {
-    return sparql`${values}\n    ( ${$rdf.literal(originalValue)} ${managedTerm} )`
+    return sparql`${values}\n    ( ${originalValue} ${managedTerm} )`
   }, sparql``)
 
   await DELETE`

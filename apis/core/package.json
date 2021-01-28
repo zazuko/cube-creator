@@ -11,6 +11,7 @@
     "@hydrofoil/labyrinth": "^0.3",
     "@rdfine/csvw": "^0.6.3",
     "@rdfine/hydra": "^0.6.4",
+    "@rdfine/prov": "^0.1.1",
     "@rdfine/schema": "^0.6.3",
     "@rdfjs/express-handler": "^1.2.1",
     "@rdfjs/fetch": "^2.1.0",

@@ -1,55 +1,58 @@
-import { cc } from '@cube-creator/core/namespace'
-import { prov, schema } from '@tpluscode/rdf-ns-builders'
-import { AnyPointer, GraphPointer } from 'clownface'
-import { NamedNode, Term } from 'rdf-js'
+import { prov } from '@tpluscode/rdf-ns-builders'
+import { GraphPointer } from 'clownface'
+import { NamedNode } from 'rdf-js'
 import error from 'http-errors'
 import { ResourceStore } from '../../ResourceStore'
 import { replaceValueWithDefinedTerms } from '../queries/dimension-mappings'
+import { Dictionary, KeyEntityPair } from '@rdfine/prov'
+import * as ProvDictionary from '@rdfine/prov/lib/Dictionary'
+import * as ProvKeyEntryPair from '@rdfine/prov/lib/KeyEntityPair'
+import TermSet from '@rdfjs/term-set'
+import TermMap from '@rdfjs/term-map'
 
 interface UpdateDimensionMapping {
   resource: NamedNode
-  mappings: GraphPointer
+  mappings: GraphPointer<NamedNode>
   store: ResourceStore
 }
 
-function addOrUpdateEntry(addedOrUpdatedKeys: Set<string>, dimensionMappings: GraphPointer, currentEntries: AnyPointer, newEntries: Map<string, Term>) {
-  return (entry: GraphPointer) => {
-    const key = entry.out(prov.pairKey).value
-    const definedTerm = entry.out(prov.pairEntity).term
+function addOrUpdateEntry(addedOrUpdatedKeys: TermSet, dimensionMappings: Dictionary, currentEntries: KeyEntityPair[], newEntries: TermMap) {
+  return (entry: KeyEntityPair) => {
+    const key = entry.pairKey
+    const definedTerm = entry.pairEntity?.id
     if (!key) {
       return
     }
 
     addedOrUpdatedKeys.add(key)
-    let [currentEntry] = currentEntries.has(prov.pairKey, key).toArray()
+    const currentEntry = currentEntries.find(({ pairKey }) => key.equals(pairKey))
     if (!currentEntry) {
-      dimensionMappings.addOut(prov.hadDictionaryMember, entry => {
-        entry.addOut(prov.pairKey, key)
-        currentEntry = entry
-      })
-    }
-
-    const currentValue = currentEntry.out(prov.pairEntity).term
-    if (!currentValue && definedTerm) {
       newEntries.set(key, definedTerm)
-    }
-
-    currentEntry.deleteOut(prov.pairEntity)
-    if (definedTerm) {
-      currentEntry.addOut(prov.pairEntity, definedTerm)
+      const newEntry = ProvKeyEntryPair.fromPointer(dimensionMappings.pointer.blankNode(), {
+        pairKey: key,
+        pairEntity: definedTerm,
+      })
+      dimensionMappings.hadDictionaryMember = [
+        ...dimensionMappings.hadDictionaryMember,
+        newEntry,
+      ]
+    } else {
+      if (!currentEntry.pairEntity && definedTerm) {
+        newEntries.set(key, definedTerm)
+      }
+      currentEntry.pairEntity = definedTerm as any
     }
   }
 }
 
-function removeEntryIfNeeded(addedOrUpdatedKeys: Set<string>) {
-  return (entry: GraphPointer) => {
-    const key = entry.out(prov.pairKey).value
-    if (!(key && !addedOrUpdatedKeys.has(key))) {
+function removeEntryIfNeeded(addedOrUpdatedKeys: TermSet) {
+  return ({ pointer, pairKey }: KeyEntityPair) => {
+    if (!(pairKey && !addedOrUpdatedKeys.has(pairKey))) {
       return
     }
 
-    entry.deleteOut()
-    entry.deleteIn()
+    pointer.deleteOut()
+    pointer.deleteIn()
   }
 }
 
@@ -58,25 +61,27 @@ export async function update({
   mappings,
   store,
 }: UpdateDimensionMapping): Promise<GraphPointer> {
-  const dimensionMappings = await store.get(resource)
-  const currentEntries = dimensionMappings.out(prov.hadDictionaryMember)
-  const managedDimension = mappings.out(cc.managedDimension).term!
-  const dimension = mappings.out(schema.about).term
+  const dimensionMappings = await store.getResource<Dictionary>(resource)
+  const newMappings = ProvDictionary.fromPointer(mappings)
 
-  if (!dimension || !dimension.equals(dimensionMappings.out(schema.about).term)) {
+  const currentEntries = dimensionMappings.hadDictionaryMember
+  const managedDimension = newMappings.managedDimension
+  const dimension = newMappings.about
+
+  if (!dimension || !dimension.equals(dimensionMappings.about)) {
     throw new error.BadRequest('Unexpected value of schema:about')
   }
 
-  if (!managedDimension.equals(dimensionMappings.out(cc.managedDimension).term)) {
-    dimensionMappings.out(prov.hadDictionaryMember).deleteOut().deleteIn()
-    dimensionMappings.deleteOut(cc.managedDimension).addOut(cc.managedDimension, managedDimension)
-    return dimensionMappings
+  if (!managedDimension.equals(dimensionMappings.managedDimension)) {
+    dimensionMappings.pointer.out(prov.hadDictionaryMember).deleteOut().deleteIn()
+    dimensionMappings.managedDimension = managedDimension
+    return dimensionMappings.pointer
   }
 
-  const addedOrUpdatedKeys = new Set<string>()
-  const newEntries = new Map<string, Term>()
+  const addedOrUpdatedKeys = new TermSet()
+  const newEntries = new TermMap()
 
-  mappings.out(prov.hadDictionaryMember)
+  newMappings.hadDictionaryMember
     .forEach(addOrUpdateEntry(addedOrUpdatedKeys, dimensionMappings, currentEntries, newEntries))
 
   currentEntries.forEach(removeEntryIfNeeded(addedOrUpdatedKeys))
@@ -85,5 +90,5 @@ export async function update({
     await replaceValueWithDefinedTerms({ dimensionMapping: resource, terms: newEntries })
   }
 
-  return dimensionMappings
+  return dimensionMappings.pointer
 }
