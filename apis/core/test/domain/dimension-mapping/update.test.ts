@@ -65,6 +65,7 @@ describe('domain/dimension-mapping/update', () => {
       store,
     })
 
+    // then
     await expect(promise).to.have.rejectedWith(httpError.BadRequest)
   })
 

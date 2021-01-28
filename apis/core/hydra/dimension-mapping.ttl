@@ -1,0 +1,23 @@
+BASE <urn:hydra-box:api>
+prefix schema: <http://schema.org/>
+prefix hydra: <http://www.w3.org/ns/hydra/core#>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix code: <https://code.described.at/>
+prefix cc: <https://cube-creator.zazuko.com/vocab#>
+
+prov:Dictionary
+  a hydra:Class ;
+  hydra:supportedOperation
+    [
+      a hydra:Operation, schema:ReplaceAction ;
+      hydra:title "Update mappings" ;
+      hydra:method "PUT" ;
+      hydra:expects <shape/dimension/managed-mapping> ;
+      code:implementedBy
+        [
+          a
+            code:EcmaScript ;
+          code:link
+            <file:handlers/dimension-mapping#put> ;
+        ] ;
+    ] .
