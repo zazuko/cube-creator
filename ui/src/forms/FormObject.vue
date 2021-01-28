@@ -34,5 +34,6 @@ export default class extends Vue {
 
 .form-object-editor {
   flex-grow: 1;
+  max-width: 95%;
 }
 </style>

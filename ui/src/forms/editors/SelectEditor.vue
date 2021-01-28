@@ -1,5 +1,5 @@
 <template>
-  <b-select placeholder="Select" @input="onInput" :value="valueStr">
+  <b-select class="select-editor" placeholder="Select" @input="onInput" :value="valueStr">
     <option
       v-for="[option, label] in options"
       :value="option.term.value"
@@ -9,6 +9,12 @@
     </option>
   </b-select>
 </template>
+
+<style scoped>
+.select-editor {
+  text-overflow:ellipsis
+}
+</style>
 
 <script lang="ts">
 import { Prop, Component, Vue } from 'vue-property-decorator'
