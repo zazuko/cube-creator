@@ -69,7 +69,7 @@ With Class cc:CSVSource {
             Expect Status 204
         }
     }
-    Expect Operation cc:GetCSVSourceAction {
+    Expect Operation schema:DownloadAction {
         Invoke {
         } => {
             Expect Status 404

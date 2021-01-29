@@ -28,8 +28,7 @@ type CubeCreatorClass =
   'Observations' |
   'TransformJob' |
   'PublishJob' |
-  'ReplaceCSVAction' |
-  'GetCSVSourceAction'
+  'ReplaceCSVAction'
 
 type CubeCreatorProperty =
   'projectSourceKind' |

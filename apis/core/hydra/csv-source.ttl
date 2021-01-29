@@ -41,9 +41,9 @@ cc:CSVSource
     [
       a
         hydra:Operation,
-        cc:GetCSVSourceAction ;
+        schema:DownloadAction ;
       hydra:title
-        "Get CSV" ;
+        "Download CSV" ;
       hydra:method
         "GET" ;
       code:implementedBy

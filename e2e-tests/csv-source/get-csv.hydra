@@ -59,7 +59,7 @@ With Class cc:CubeProject {
 
 
 With Class cc:CSVSource {
-    Expect Operation cc:GetCSVSourceAction {
+    Expect Operation schema:DownloadAction {
         Invoke {
             Accept "text/csv"
         } => {
