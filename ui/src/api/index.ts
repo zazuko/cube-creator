@@ -122,10 +122,10 @@ export const api = {
     }
   },
 
-  async invokeGetOperation (operation: RuntimeOperation, headers: Record<string, string> = {}) {
+  async invokeDownloadOperation (operation: RuntimeOperation, headers: Record<string, string> = {}) {
     if (!operation) throw new Error('Operation does not exist')
     const response = await operation.invoke('', headers)
-    if (response.response?.xhr.status !== 200) {
+    if (response.response?.xhr.status !== 305) {
       throw await APIError.fromResponse(response)
     }
 

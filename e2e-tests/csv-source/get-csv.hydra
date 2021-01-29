@@ -63,8 +63,8 @@ With Class cc:CSVSource {
         Invoke {
             Accept "text/csv"
         } => {
-            Expect Status 200
-            Expect Header Content-Type 'application/octet-stream'
+            Expect Status 305
+            Expect Header Location
         }
 
         Invoke {

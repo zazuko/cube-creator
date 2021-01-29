@@ -76,7 +76,7 @@ const getCSVSource: express.RequestHandler = asyncMiddleware(async (req, res, ne
   }
 
   res.header('Location', directDownload)
-  res.sendStatus(200)
+  res.sendStatus(305)
 })
 
 export const get = labyrinth.protectedResource(getCSVSource, labyrinth.get)
