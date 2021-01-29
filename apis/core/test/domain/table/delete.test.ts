@@ -129,10 +129,6 @@ describe('domain/table/delete', () => {
       getTableForColumnMapping,
     }
 
-    async function * mappingGenerator() {
-      yield 'blabla'
-    }
-
     dimensionIsUsedByOtherMapping = sinon.stub().resolves(false)
     getReferencingMappingsForTable = sinon.stub().returns([])
     columnMappingQueries = {
