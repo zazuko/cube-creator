@@ -154,7 +154,19 @@ graph <cube-project/ubd/cube-data> {
     <https://environment.ld.admin.ch/foen/ubd/28/unit-id>         "µg/m3" ;
   .
 
-<https://environment.ld.admin.ch/foen/ubd/28/observation/blBAS-1999-annualmean>
+  <https://environment.ld.admin.ch/foen/ubd/28/observation/blBAS-2004-annualmean>
+    a                cube:Observation ;
+    cube:observedBy  <urn:will:replace> ;
+    <https://environment.ld.admin.ch/foen/ubd/28/aggregation>     <https://environment.ld.admin.ch/foen/ubd/28/aggregation/annualmean> ;
+    <https://environment.ld.admin.ch/foen/ubd/28/dimension/value> "6.1"^^xsd:float ;
+    <https://environment.ld.admin.ch/foen/ubd/28/dimension/year>  "2002"^^xsd:gYear ;
+    # does not appear in constraint shape but adding to check query for missing values
+    <https://environment.ld.admin.ch/foen/ubd/28/pollutant>       "Pb" ;
+    <https://environment.ld.admin.ch/foen/ubd/28/station>         <https://environment.ld.admin.ch/foen/ubd/28/station/blBAS> ;
+    <https://environment.ld.admin.ch/foen/ubd/28/unit-id>         "µg/m3" ;
+  .
+
+  <https://environment.ld.admin.ch/foen/ubd/28/observation/blBAS-1999-annualmean>
     a                cube:Observation ;
     cube:observedBy  <urn:will:replace> ;
     <https://environment.ld.admin.ch/foen/ubd/28/aggregation>     <https://environment.ld.admin.ch/foen/ubd/28/aggregation/annualmean> ;
@@ -194,6 +206,7 @@ graph <cube-project/ubd/cube-data> {
   _:pollutant
     sh:in        (
                    "so2" # <http://www.wikidata.org/entity/Q5282>
+                   "As" # does not appear in observations but adding to check query for missing values
                    <http://www.wikidata.org/entity/Q2025>
                  ) ;
     sh:maxCount  1 ;

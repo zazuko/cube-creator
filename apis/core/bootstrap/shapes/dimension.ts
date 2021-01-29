@@ -105,7 +105,8 @@ ${shape('dimension/managed-mapping')} {
         ${hydra.template} "managed-dimensions/terms{?termSet}" ;
         ${hydra.mapping} [
           ${hydra.variable} "termSet" ;
-          ${hydra.property} ${schema.inDefinedTermSet} ;
+          ${hydra.property} ${cc.managedDimension} ;
+          ${hydra.required} true ;
         ] ;
       ]
     ];
