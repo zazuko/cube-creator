@@ -22,6 +22,7 @@ import * as Project from '@cube-creator/model/Project'
 describe('domain/table/delete', () => {
   let store: TestResourceStore
   let getDimensionMetaDataCollection: sinon.SinonStub
+  let getReferencingMappingsForTable: sinon.SinonStub
   let dimensionMetadataQueries: typeof DimensionMetadataQueries
   const getLinkedTablesForSource = sinon.stub()
   const getTablesForMapping = sinon.stub()
@@ -29,6 +30,7 @@ describe('domain/table/delete', () => {
   let columnMappingQueries: typeof ColumnMappingQueries
   let dimensionIsUsedByOtherMapping: sinon.SinonStub
   let columnMapping : GraphPointer<NamedNode, DatasetExt>
+  let columnMappingReferencing : GraphPointer<NamedNode, DatasetExt>
   let table : GraphPointer<NamedNode, DatasetExt>
   let columnMappingObservation : GraphPointer<NamedNode, DatasetExt>
   let observationTable : GraphPointer<NamedNode, DatasetExt>
@@ -57,10 +59,17 @@ describe('domain/table/delete', () => {
       })
 
     columnMapping = clownface({ dataset: $rdf.dataset() })
-      .node($rdf.namedNode('columnMapping'))
+      .node($rdf.namedNode('referencingColumnMapping'))
       .addOut(rdf.type, cc.ColumnMapping)
       .addOut(rdf.type, hydra.Resource)
       .addOut(cc.sourceColumn, $rdf.namedNode('my-column'))
+      .addOut(cc.targetProperty, $rdf.namedNode('test'))
+
+    columnMappingReferencing = clownface({ dataset: $rdf.dataset() })
+      .node($rdf.namedNode('columnMapping'))
+      .addOut(rdf.type, cc.ReferenceColumnMapping)
+      .addOut(rdf.type, hydra.Resource)
+      .addOut(cc.referencedTable, $rdf.namedNode('myTable'))
       .addOut(cc.targetProperty, $rdf.namedNode('test'))
 
     table = clownface({ dataset: $rdf.dataset() })
@@ -108,6 +117,7 @@ describe('domain/table/delete', () => {
       dimensionMetadataCollection,
       project,
       organization,
+      columnMappingReferencing,
     ])
 
     getDimensionMetaDataCollection = sinon.stub().resolves(dimensionMetadataCollection.term.value)
@@ -119,10 +129,17 @@ describe('domain/table/delete', () => {
       getTableForColumnMapping,
     }
 
+    async function * mappingGenerator() {
+      yield 'blabla'
+    }
+
     dimensionIsUsedByOtherMapping = sinon.stub().resolves(false)
+    getReferencingMappingsForTable = sinon.stub().returns([])
     columnMappingQueries = {
       dimensionIsUsedByOtherMapping,
+      getReferencingMappingsForTable,
     }
+
     sinon.stub(orgQueries, 'findOrganization').resolves({
       projectId: project.id,
       organizationId: organization.id,
@@ -177,5 +194,22 @@ describe('domain/table/delete', () => {
     expect(deletedColumnMapping).to.eq(undefined)
 
     expect(dimensionMetadataCollection.out(schema.hasPart).values.length).to.eq(1)
+  })
+
+  it('deletes referenced mappings', async () => {
+    // given
+    async function * mappingGenerator() {
+      yield columnMappingReferencing.term
+    }
+
+    getReferencingMappingsForTable.returns(mappingGenerator())
+
+    // when
+    await deleteTable({ resource: table.term, store, dimensionMetadataQueries, tableQueries, columnMappingQueries })
+    await store.save()
+
+    // then
+    const deletedColumnMapping = await store.getResource<ColumnMapping>(columnMappingReferencing.term, { allowMissing: true })
+    expect(deletedColumnMapping).to.eq(undefined)
   })
 })
