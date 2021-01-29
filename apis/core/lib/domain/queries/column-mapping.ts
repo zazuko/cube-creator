@@ -15,13 +15,14 @@ export async function dimensionIsUsedByOtherMapping(columnMapping: Term, client 
             }
           
             graph ?table {
-              ?table a ${cc.Table} ;
+              ?table a ${cc.ObservationTable} ;
                 ${cc.columnMapping} ?deletedMapping ;
                 ${cc.csvMapping} ?csvMapping ;
             }
           
             graph ?otherTable {
-              ?otherTable ${cc.csvMapping} ?csvMapping ;
+              ?otherTable a ${cc.ObservationTable} ;
+                          ${cc.csvMapping} ?csvMapping ;
                           ${cc.columnMapping} ?otherMapping ;
             }
           

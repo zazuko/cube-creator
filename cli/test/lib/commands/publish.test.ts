@@ -4,10 +4,10 @@ import { expect } from 'chai'
 import $rdf from 'rdf-ext'
 import { ASK, CONSTRUCT, SELECT } from '@tpluscode/sparql-builder'
 import debug from 'debug'
-import { csvw, dcat, dcterms, rdf, schema, sh, vcard, xsd } from '@tpluscode/rdf-ns-builders'
+import { csvw, dcat, dcterms, qudt, rdf, schema, sh, vcard, xsd } from '@tpluscode/rdf-ns-builders'
 import { setupEnv } from '../../support/env'
 import { client, parsingClient, insertTestData } from '@cube-creator/testing/lib'
-import { cc, cube, scale } from '@cube-creator/core/namespace'
+import { cc, cube } from '@cube-creator/core/namespace'
 import clownface, { AnyPointer } from 'clownface'
 import publish from '../../../lib/commands/publish'
 import namespace, { NamespaceBuilder } from '@rdfjs/namespace'
@@ -78,6 +78,21 @@ describe('lib/commands/publish', function () {
           hasValue: cube.Cube,
           minCount: 1,
         },
+      })
+    })
+
+    it('adds relation to parent cube', () => {
+      expect(cubePointer.namedNode(ns.baseCube())).matchShape({
+        property: [{
+          path: rdf.type,
+          hasValue: schema.CreativeWork,
+          minCount: 1,
+          maxCount: 1,
+        }, {
+          path: schema.hasPart,
+          hasValue: targetCube(),
+          minCount: 1,
+        }],
       })
     })
 
@@ -230,10 +245,10 @@ describe('lib/commands/publish', function () {
         },
       })
 
-      expect(props.has(sh.path).has(scale.scaleOfMeasure)).to.matchShape({
+      expect(props.has(sh.path).has(qudt.scaleType)).to.matchShape({
         property: {
-          path: scale.scaleOfMeasure,
-          hasValue: scale.Temporal,
+          path: qudt.scaleType,
+          hasValue: qudt.IntervalScale,
           minCount: 1,
         },
       })

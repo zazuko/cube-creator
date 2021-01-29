@@ -1,0 +1,37 @@
+@import '~vue-multiselect/dist/vue-multiselect.min.css';
+
+.multiselect__tags {
+    @include control;
+    @extend .select;
+
+    min-height: 0;
+    width: 100%;
+
+    border-color: $input-border-color;
+}
+
+.multiselect__tags:hover {
+    border-color: $input-hover-border-color;
+    color: $input-hover-color;
+}
+
+.multiselect__placeholder, .multiselect__input, .multiselect__single {
+    margin: 0;
+    padding: 0;
+    font-size: inherit;
+    line-height: inherit;
+}
+
+.multiselect--disabled .multiselect__tags {
+    background-color: $input-disabled-background-color;
+    box-shadow: none;
+    color: $input-disabled-color;
+}
+
+.multiselect--disabled .multiselect__select {
+    background-color: $input-disabled-background-color;
+}
+
+.multiselect__content {
+    font-size: $size-normal;
+}

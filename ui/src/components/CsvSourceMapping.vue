@@ -65,6 +65,8 @@
           v-for="column in source.columns"
           :key="column.id.value"
           class="source-column panel-block"
+          @mouseenter="highlightArrows(column)"
+          @mouseleave="unhighlightArrows(column)"
         >
           <b-checkbox :value="selectedColumnsMap[column.clientPath]" @input="selectedColumnsMap[column.clientPath] = $event">
             {{ column.name }}
@@ -79,6 +81,7 @@
               class="source-column-mapping"
               :style="{ 'background-color': table.color }"
               :label="table.name + ' / ' + columnMapping.targetProperty.value"
+              :data-arrow-target="columnMapping.id.value"
             />
           </div>
         </div>
@@ -86,7 +89,13 @@
     </div>
     <div class="column is-1" />
     <div class="column">
-      <mapper-table v-for="table in sourceTables" :key="table.id.value" :table="table" />
+      <mapper-table
+        v-for="table in sourceTables"
+        :key="table.id.value"
+        :table="table"
+        @highlight-arrows="$emit('highlight-arrows', $event)"
+        @unhighlight-arrows="$emit('unhighlight-arrows', $event)"
+      />
       <div v-if="isFirstSource && tables.length === 0" class="content">
         <p>You haven't mapped any tables yet.</p>
         <p>The first step is to define which columns of your CSV will be dimensions of your cube:</p>
@@ -186,6 +195,16 @@ export default class CsvSourceMapping extends Vue {
     const downloadLink = await this.$store.dispatch('project/downloadCSV', source)
     window.open(downloadLink)
   }
+   
+  highlightArrows (column: CsvColumn): void {
+    const ids = this.getColumnMappings(column).map(({ columnMapping }) => columnMapping.id.value)
+    this.$emit('highlight-arrows', ids)
+  }
+
+  unhighlightArrows (column: CsvColumn): void {
+    const ids = this.getColumnMappings(column).map(({ columnMapping }) => columnMapping.id.value)
+    this.$emit('unhighlight-arrows', ids)
+  }
 }
 </script>
 
@@ -200,9 +219,10 @@ export default class CsvSourceMapping extends Vue {
 }
 
 .source-column-mapping {
-  width: 0.6rem;
-  height: 0.6rem;
-  border-radius: 0.6rem;
+  z-index: 10;
+  width: 8px;
+  height: 8px;
+  border-radius: 8px;
 }
 
 .source-column-mapping:not(:last-child) {
