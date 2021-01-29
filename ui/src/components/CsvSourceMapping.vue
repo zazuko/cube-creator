@@ -195,7 +195,7 @@ export default class CsvSourceMapping extends Vue {
     const downloadLink = await this.$store.dispatch('project/downloadCSV', source)
     window.open(downloadLink)
   }
-   
+
   highlightArrows (column: CsvColumn): void {
     const ids = this.getColumnMappings(column).map(({ columnMapping }) => columnMapping.id.value)
     this.$emit('highlight-arrows', ids)
