@@ -1,0 +1,55 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  release:
+    name: Prepeare release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+        with:
+          # This makes Actions fetch all Git history so that Changesets can generate changelogs with the correct commits
+          fetch-depth: 0
+
+      - uses: actions/setup-node@master
+        with:
+          node-version: 14
+
+      - run: yarn
+
+      - name: Create Release Pull Request
+        uses: changesets/action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  tags:
+    name: Create tags
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+    steps:
+      - uses: actions/checkout@master
+      - name: Tag Core API
+        uses: tpluscode/action-autotag@min-version-21
+        with:
+          root: apis/core
+          tag_prefix: cube-creator-api/v
+          minVersion: 0.1.14
+
+      - name: Tag UI
+        uses: tpluscode/action-autotag@min-version-21
+        with:
+          root: ui
+          tag_prefix: cube-creator-app/v
+          minVersion: 0.1.14
+
+      - name: Tag CLI
+        uses: tpluscode/action-autotag@min-version-21
+        with:
+          root: cli
+          tag_prefix: cube-creator-cli/v
+          minVersion: 0.1.14
