@@ -37,7 +37,6 @@
     "duplex-to": "^1.0.0",
     "express": "^4.17.1",
     "get-stream": "^5.1.0",
-    "glob": "^7.1.6",
     "is-stream": "^2.0.0",
     "middleware-async": "^1.2.7",
     "node-fetch": "^2.6.1",
