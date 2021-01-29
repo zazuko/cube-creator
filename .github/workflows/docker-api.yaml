@@ -1,0 +1,63 @@
+name: Build and push API Docker image
+
+on:
+  push:
+    branches:
+      - "**"
+    tags:
+      - "cube-creator-api/v*.*.*"
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-api-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-api-
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        if: github.event_name != 'pull_request'
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Generate image metadata
+        uses: zazuko/action-docker-meta@main
+        id: docker_meta
+        with:
+          images: zazuko/cube-creator-api
+          strip-tag-prefix: cube-creator-api/
+
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          file: ./api.Dockerfile
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.docker_meta.outputs.tags }}
+          labels: ${{ steps.docker_meta.outputs.labels }}
+          build-args: |
+            COMMIT=${{ github.sha }}
+
+      - name: Create Sentry release
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: zazuko
+          SENTRY_PROJECT: cube-creator-api
+          SENTRY_URL: https://sentry.zazuko.com/
+        with:
+          version_prefix: cube-creator-api@
