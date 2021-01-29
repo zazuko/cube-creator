@@ -247,8 +247,10 @@ const actions: ActionTree<ProjectState, RootState> = {
     }
 
     const response = await api.invokeDownloadOperation(operation, headers)
-
-    return response.xhr.headers.get('Location')
+    const downloadLink = response.xhr.headers.get('Location')
+    if (downloadLink) {
+      window.open(downloadLink)
+    }
   },
 
   async fetchCubeMetadata (context) {

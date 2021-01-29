@@ -193,7 +193,6 @@ export default class CsvSourceMapping extends Vue {
 
   async downloadSource (source: CsvSource): Promise<void> {
     const downloadLink = await this.$store.dispatch('project/downloadCSV', source)
-    window.open(downloadLink)
   }
 
   highlightArrows (column: CsvColumn): void {
