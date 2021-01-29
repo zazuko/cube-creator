@@ -19,6 +19,11 @@
                   :to="{ name: 'SourceReplaceCSV', params: { sourceId: source.clientPath } }"
                 />
                 <hydra-operation-button
+                  :operation="source.actions.download"
+                  icon="download"
+                  @click="downloadSource(source)"
+                />
+                <hydra-operation-button
                   :operation="source.actions.delete"
                   @click="deleteSource(source)"
                 />
@@ -184,6 +189,10 @@ export default class CsvSourceMapping extends Vue {
         })
       },
     })
+  }
+
+  async downloadSource (source: CsvSource): Promise<void> {
+    const downloadLink = await this.$store.dispatch('project/downloadCSV', source)
   }
 
   highlightArrows (column: CsvColumn): void {
