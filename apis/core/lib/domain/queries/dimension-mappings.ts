@@ -1,12 +1,37 @@
-import { Term } from 'rdf-js'
-import { DELETE } from '@tpluscode/sparql-builder'
+import { Literal, Term } from 'rdf-js'
+import { DELETE, SELECT } from '@tpluscode/sparql-builder'
 import { sparql } from '@tpluscode/rdf-string'
 import { rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { cc, cube } from '@cube-creator/core/namespace'
 import TermMap from '@rdfjs/term-map'
-import { streamClient } from '../../query-client'
+import { parsingClient, streamClient } from '../../query-client'
+import TermSet from '@rdfjs/term-set'
 
-export async function replaceValueWithDefinedTerms({ dimensionMapping, terms } : {dimensionMapping: Term; terms: TermMap}, client = streamClient): Promise<void> {
+function patternsToFindCubeGraph(dimensionMapping: Term) {
+  return sparql`BIND ( ${dimensionMapping} as ?dimensionMapping )
+
+  graph ?dimensionMapping {
+      ?dimensionMapping ${schema.about} ?dimension .
+    }
+
+    graph ?metadata {
+      ?metadata a ${cc.DimensionMetadataCollection} ; ${schema.hasPart} ?dimensionMetadata .
+      ?dimensionMetadata ${cc.dimensionMapping} ?dimensionMapping ;
+                         ${schema.about} ?dimension .
+    }
+
+    graph ?dataset {
+     ?dataset ${cc.dimensionMetadata} ?metadata .
+    }
+
+    graph ?project {
+      ?project a ${cc.CubeProject} ;
+               ${cc.dataset} ?dataset ;
+               ${cc.cubeGraph} ?cubeGraph .
+    }`
+}
+
+export async function replaceValueWithDefinedTerms({ dimensionMapping, terms }: { dimensionMapping: Term; terms: TermMap }, client = streamClient): Promise<void> {
   if (terms.size === 0) {
     return
   }
@@ -26,30 +51,10 @@ export async function replaceValueWithDefinedTerms({ dimensionMapping, terms } :
       ?observation ?dimension ?managedTerm .
     }
   `.WHERE`
-    BIND ( ${dimensionMapping} as ?dimensionMapping )
-
+   ${patternsToFindCubeGraph(dimensionMapping)}
+  `.WHERE`
     VALUES ( ?originalValue ?managedTerm ) {
       ${pairs}
-    }
-
-    graph ?dimensionMapping {
-      ?dimensionMapping ${schema.about} ?dimension .
-    }
-
-    graph ?metadata {
-      ?metadata a ${cc.DimensionMetadataCollection} ; ${schema.hasPart} ?dimensionMetadata .
-      ?dimensionMetadata ${cc.dimensionMapping} ?dimensionMapping ;
-                         ${schema.about} ?dimension .
-    }
-
-    graph ?dataset {
-     ?dataset ${cc.dimensionMetadata} ?metadata .
-    }
-
-    graph ?project {
-      ?project a ${cc.CubeProject} ;
-               ${cc.dataset} ?dataset ;
-               ${cc.cubeGraph} ?cubeGraph .
     }
 
     graph ?cubeGraph {
@@ -58,9 +63,45 @@ export async function replaceValueWithDefinedTerms({ dimensionMapping, terms } :
 
       OPTIONAL { ?observation ?dimension ?originalValue . }
       OPTIONAL {
-        ?shapeProperty ${sh.in}/${rdf.first}* ?listNode .
+        ?shapeProperty ${sh.in}/${rdf.rest}* ?listNode .
         ?listNode ${rdf.first} ?originalValue .
       }
     }
   `.execute(client.query)
+}
+
+export async function getUnmappedValues(dimensionMapping: Term, dimension: Term, client = parsingClient): Promise<Set<Literal>> {
+  const results = await SELECT`?value`
+    .WHERE`${patternsToFindCubeGraph(dimensionMapping)}`
+    .WHERE`{
+      SELECT ?value
+      WHERE {
+        GRAPH ?cubeGraph {
+            ?shape a ${cube.Constraint} ; ${sh.property}  ?propShape .
+            ?propShape ${sh.path} ${dimension} ;
+                       ${sh.in}/${rdf.rest}* ?listNode .
+            ?listNode ${rdf.first} ?value .
+          }
+      }
+    }
+    UNION
+    {
+      SELECT ?value
+      WHERE {
+        GRAPH ?cubeGraph {
+           ?observation a ${cube.Observation} ; ${dimension} ?value .
+        }
+      }
+    }
+
+    filter ( !isIRI(?value) )`
+    .execute(client.query)
+
+  return results.reduce((missingValues, row) => {
+    if (row.value && row.value.termType === 'Literal') {
+      return missingValues.add(row.value)
+    }
+
+    return missingValues
+  }, new TermSet<Literal>())
 }

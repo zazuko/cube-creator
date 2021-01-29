@@ -1,4 +1,4 @@
-import { NamedNode, Term } from 'rdf-js'
+import { Literal, NamedNode, Term } from 'rdf-js'
 import { Constructor, property } from '@tpluscode/rdfine'
 import { prov, schema } from '@tpluscode/rdf-ns-builders'
 import { Dictionary, KeyEntityPair } from '@rdfine/prov'
@@ -11,6 +11,7 @@ declare module '@rdfine/prov' {
     managedDimension: NamedNode
     replaceEntries(entries: KeyEntityPair[]): Map<Term, Term>
     changeManageDimension(managedDimension: NamedNode): void
+    addMissingEntries(unmappedValues: Set<Literal>): void
   }
 }
 
@@ -64,6 +65,24 @@ export function ProvDictionaryMixinEx<Base extends Constructor<Dictionary>>(Reso
       }
 
       return newEntries
+    }
+
+    addMissingEntries(unmappedValues: Set<Literal>) {
+      const currentEntries = this.hadDictionaryMember
+      const newEntries: any[] = []
+
+      for (const key of unmappedValues) {
+        if (!currentEntries.some(({ pairKey }) => pairKey?.equals(key))) {
+          newEntries.push({
+            pairKey: key,
+          })
+        }
+      }
+
+      this.hadDictionaryMember = [
+        ...currentEntries,
+        ...newEntries,
+      ]
     }
   }
 
