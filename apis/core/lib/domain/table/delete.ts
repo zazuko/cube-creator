@@ -11,7 +11,7 @@ interface DeleteTableCommand {
   store: ResourceStore
   dimensionMetadataQueries?: Pick<typeof DimensionMetadataQueries, 'getDimensionMetaDataCollection'>
   tableQueries?: Pick<typeof TableQueries, 'getTableForColumnMapping'>
-  columnMappingQueries?: Pick<typeof ColumnMappingQueries, 'dimensionIsUsedByOtherMapping'>
+  columnMappingQueries?: Pick<typeof ColumnMappingQueries, 'dimensionIsUsedByOtherMapping'| 'getReferencingMappingsForTable'>
 }
 
 export async function deleteTable({
@@ -19,7 +19,7 @@ export async function deleteTable({
   store,
   dimensionMetadataQueries: { getDimensionMetaDataCollection } = DimensionMetadataQueries,
   tableQueries: { getTableForColumnMapping } = TableQueries,
-  columnMappingQueries: { dimensionIsUsedByOtherMapping } = ColumnMappingQueries,
+  columnMappingQueries: { dimensionIsUsedByOtherMapping, getReferencingMappingsForTable } = ColumnMappingQueries,
 }: DeleteTableCommand): Promise<void> {
   if (tableTerm.termType !== 'NamedNode') return
 
@@ -29,6 +29,20 @@ export async function deleteTable({
   // Delete in columnMappings
   const columnMappings = table.out(cc.columnMapping).terms
   for await (const columnMapping of columnMappings) {
+    if (columnMapping.termType === 'NamedNode') {
+      await deleteColumnMapping({
+        resource: columnMapping,
+        store,
+        dimensionMetadataQueries: { getDimensionMetaDataCollection },
+        tableQueries: { getTableForColumnMapping },
+        columnMappingQueries: { dimensionIsUsedByOtherMapping },
+      })
+    }
+  }
+
+  // Remove mappings from linked tables
+  const referencingColumnMappings = getReferencingMappingsForTable(tableTerm)
+  for await (const columnMapping of referencingColumnMappings) {
     if (columnMapping.termType === 'NamedNode') {
       await deleteColumnMapping({
         resource: columnMapping,

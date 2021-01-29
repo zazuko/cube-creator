@@ -1,7 +1,7 @@
 import { Term } from 'rdf-js'
-import { ASK } from '@tpluscode/sparql-builder'
+import { ASK, SELECT } from '@tpluscode/sparql-builder'
 import { cc } from '@cube-creator/core/namespace'
-import { streamClient } from '../../query-client'
+import { streamClient, parsingClient } from '../../query-client'
 
 export async function dimensionIsUsedByOtherMapping(columnMapping: Term, client = streamClient): Promise<boolean> {
   return ASK`
@@ -34,4 +34,24 @@ export async function dimensionIsUsedByOtherMapping(columnMapping: Term, client 
             filter ( ?otherMapping != ?deletedMapping )
             `
     .execute(client.query)
+}
+
+export async function * getReferencingMappingsForTable(table: Term, client = parsingClient) {
+  const results = await SELECT
+    .DISTINCT`?columnMapping`
+    .WHERE`
+      GRAPH ?columnMapping
+      {
+        ?columnMapping a ${cc.ReferenceColumnMapping} ;
+             ${cc.referencedTable} ${table} .
+      }
+      `
+    .execute(client.query)
+
+  for (const result of results) {
+    const columnMapping = result.columnMapping
+    if (columnMapping.termType === 'NamedNode') {
+      yield columnMapping
+    }
+  }
 }
