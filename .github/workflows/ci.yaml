@@ -11,12 +11,12 @@ jobs:
         with:
           node-version: 14
       - run: yarn install --ci
-      - run: yarn test --grep @SPARQL --invert
+      - run: yarn test
       - name: Install lando
         run: sh e2e-tests/install-lando.sh
       - name: Start site
         run: sh e2e-tests/start-lando.sh
-      - run: yarn test --grep @SPARQL
+      - run: yarn test:queries
       - run: yarn test:cli
         env:
           AUTH_RUNNER_CLIENT_SECRET: ${{ secrets.AUTH_RUNNER_CLIENT_SECRET }}
