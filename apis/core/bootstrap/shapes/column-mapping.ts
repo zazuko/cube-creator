@@ -47,23 +47,23 @@ ${literalShapeId} {
       ${sh.nodeKind} ${sh.IRI} ;
       ${sh.in} (
         # Most used datatypes, in alphabetical order of the label
+        ${xsd.string}
         ${xsd.boolean}
+        ${xsd.int}
+        ${xsd.decimal}
+        ${xsd.time}
         ${xsd.date}
         ${xsd.dateTime}
-        # ${xsd.decimal}
-        ${xsd.float}
-        ${xsd.int}
-        ${xsd.string}
+        # ${xsd.float}
         # Less used datatypes, in alphabetical order of the label
         ${xsd.gDay}
         # ${xsd.duration}
         # ${xsd.dayTimeDuration}
         # ${xsd.yearhMonthDuration}
         ${xsd.gMonth}
-        ${xsd.gMonthDay}
-        ${xsd.time}
+        #${xsd.gMonthDay}
         ${xsd.gYear}
-        ${xsd.gYearMonth}
+        #${xsd.gYearMonth}
       ) ;
       ${sh.order} 40 ;
     ] ;
@@ -86,8 +86,8 @@ ${literalShapeId} {
   ${xsd.boolean} ${rdfs.label} "boolean" .
   ${xsd.date} ${rdfs.label} "date" .
   ${xsd.dateTime} ${rdfs.label} "datetime" .
-#  ${xsd.decimal} ${rdfs.label} "decimal" .
-  ${xsd.float} ${rdfs.label} "float" .
+  ${xsd.decimal} ${rdfs.label} "decimal" .
+#  ${xsd.float} ${rdfs.label} "float" .
   ${xsd.int} ${rdfs.label} "int" .
   ${xsd.string} ${rdfs.label} "string" .
   ${xsd.gDay} ${rdfs.label} "day" .
@@ -95,10 +95,10 @@ ${literalShapeId} {
 #  ${xsd.dayTimeDuration} ${rdfs.label} "duration (day+time)" .
 #  ${xsd.yearhMonthDuration} ${rdfs.label} "duration (year+month)" .
   ${xsd.gMonth} ${rdfs.label} "month" .
-  ${xsd.gMonthDay} ${rdfs.label} "month+day" .
+#  ${xsd.gMonthDay} ${rdfs.label} "month+day" .
   ${xsd.time} ${rdfs.label} "time" .
   ${xsd.gYear} ${rdfs.label} "year" .
-  ${xsd.gYearMonth} ${rdfs.label} "year+month" .
+#  ${xsd.gYearMonth} ${rdfs.label} "year+month" .
 }
 
 ${referenceShapeId} {
