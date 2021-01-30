@@ -67,7 +67,7 @@ ${shape('dimension/metadata')} {
       ${sh.order} 20 ;
     ] , [
       ${sh.name} "Unit" ;
-      ${sh.path} ${schema.unit} ;
+      ${sh.path} ${qudt.unit} ;
       ${sh.order} 25 ;
       ${sh.maxCount} 1 ;
       ${sh.nodeKind} ${sh.IRI} ;
