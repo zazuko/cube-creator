@@ -239,20 +239,6 @@ const actions: ActionTree<ProjectState, RootState> = {
     return api.invokeSaveOperation(operation, file, headers)
   },
 
-  async downloadCSV (context, source) {
-    const operation = source.actions.download
-
-    const headers = {
-      accept: 'text/csv'
-    }
-
-    const response = await api.invokeDownloadOperation(operation, headers)
-    const downloadLink = response.xhr.headers.get('Location')
-    if (downloadLink) {
-      window.open(downloadLink)
-    }
-  },
-
   async fetchCubeMetadata (context) {
     const project = context.state.project
 

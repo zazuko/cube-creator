@@ -121,6 +121,7 @@ import { Prop, Component, Vue, Watch } from 'vue-property-decorator'
 import { CsvSource, Table, TableCollection, CsvColumn, ColumnMapping } from '@cube-creator/model'
 import MapperTable from './MapperTable.vue'
 import HydraOperationButton from './HydraOperationButton.vue'
+import { api } from '@/api'
 
 @Component({
   components: {
@@ -193,7 +194,13 @@ export default class CsvSourceMapping extends Vue {
   }
 
   async downloadSource (source: CsvSource): Promise<void> {
-    const downloadLink = await this.$store.dispatch('project/downloadCSV', source)
+    const headers = { accept: 'text/csv' }
+    const response = await api.invokeDownloadOperation(source.actions.download, headers)
+    const downloadLink = response.xhr.headers.get('Location')
+
+    if (downloadLink) {
+      window.open(downloadLink)
+    }
   }
 
   highlightArrows (column: CsvColumn): void {
