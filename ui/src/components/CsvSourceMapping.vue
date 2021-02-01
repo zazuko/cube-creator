@@ -8,26 +8,6 @@
               <div class="level-item">
                 {{ source.name }}
               </div>
-              <div class="level-item">
-                <hydra-operation-button
-                  :operation="source.actions.edit"
-                  :to="{ name: 'SourceEdit', params: { sourceId: source.clientPath } }"
-                />
-                <hydra-operation-button
-                  :operation="source.actions.replace"
-                  icon="upload"
-                  :to="{ name: 'SourceReplaceCSV', params: { sourceId: source.clientPath } }"
-                />
-                <hydra-operation-button
-                  :operation="source.actions.download"
-                  icon="download"
-                  @click="downloadSource(source)"
-                />
-                <hydra-operation-button
-                  :operation="source.actions.delete"
-                  @click="deleteSource(source)"
-                />
-              </div>
             </div>
             <div class="level-right">
               <b-button
@@ -40,6 +20,33 @@
               >
                 Create table from selected columns
               </b-button>
+              <div class="level-item">
+                <b-dropdown position="is-bottom-left">
+                  <button class="button is-text is-small" slot="trigger">
+                    <b-icon icon="ellipsis-h" />
+                  </button>
+                  <b-dropdown-item v-if="source.actions.edit" has-link>
+                    <router-link :to="{ name: 'SourceEdit', params: { sourceId: source.clientPath } }">
+                      <b-icon icon="pencil-alt" />
+                      {{ source.actions.edit.title }}
+                    </router-link>
+                  </b-dropdown-item>
+                  <b-dropdown-item v-if="source.actions.replace" has-link>
+                    <router-link :to="{ name: 'SourceReplaceCSV', params: { sourceId: source.clientPath } }">
+                      <b-icon icon="upload" />
+                      {{ source.actions.replace.title }}
+                    </router-link>
+                  </b-dropdown-item>
+                  <b-dropdown-item v-if="source.actions.download" @click="downloadSource(source)">
+                    <b-icon icon="download" />
+                    {{ source.actions.download.title }}
+                  </b-dropdown-item>
+                  <b-dropdown-item v-if="source.actions.delete" @click="deleteSource(source)">
+                    <b-icon icon="trash" />
+                    {{ source.actions.delete.title }}
+                  </b-dropdown-item>
+                </b-dropdown>
+              </div>
             </div>
           </div>
         </div>
