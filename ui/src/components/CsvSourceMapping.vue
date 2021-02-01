@@ -2,52 +2,46 @@
   <div class="source-mapping columns">
     <div class="column">
       <div class="source panel">
-        <div class="panel-heading">
-          <div class="level">
-            <div class="level-left">
-              <div class="level-item">
-                {{ source.name }}
-              </div>
-            </div>
-            <div class="level-right">
-              <b-button
-                v-if="tableCollection.actions.create"
-                :disabled="selectedColumns.length === 0"
-                tag="router-link"
-                :to="{ name: 'TableCreate', query: createTableQueryParams }"
-                size="is-small"
-                icon-left="plus"
-              >
-                Create table from selected columns
-              </b-button>
-              <div class="level-item">
-                <b-dropdown position="is-bottom-left">
-                  <button class="button is-text is-small" slot="trigger">
-                    <b-icon icon="ellipsis-h" />
-                  </button>
-                  <b-dropdown-item v-if="source.actions.edit" has-link>
-                    <router-link :to="{ name: 'SourceEdit', params: { sourceId: source.clientPath } }">
-                      <b-icon icon="pencil-alt" />
-                      {{ source.actions.edit.title }}
-                    </router-link>
-                  </b-dropdown-item>
-                  <b-dropdown-item v-if="source.actions.replace" has-link>
-                    <router-link :to="{ name: 'SourceReplaceCSV', params: { sourceId: source.clientPath } }">
-                      <b-icon icon="upload" />
-                      {{ source.actions.replace.title }}
-                    </router-link>
-                  </b-dropdown-item>
-                  <b-dropdown-item v-if="source.actions.download" @click="downloadSource(source)">
-                    <b-icon icon="download" />
-                    {{ source.actions.download.title }}
-                  </b-dropdown-item>
-                  <b-dropdown-item v-if="source.actions.delete" @click="deleteSource(source)">
-                    <b-icon icon="trash" />
-                    {{ source.actions.delete.title }}
-                  </b-dropdown-item>
-                </b-dropdown>
-              </div>
-            </div>
+        <div class="panel-heading is-flex is-align-items-center is-justify-content-space-between">
+          <h4 class="has-text-weight-bold">
+            {{ source.name }}
+          </h4>
+          <div class="is-flex gap-1">
+            <b-button
+              v-if="tableCollection.actions.create"
+              :disabled="selectedColumns.length === 0"
+              tag="router-link"
+              :to="{ name: 'TableCreate', query: createTableQueryParams }"
+              size="is-small"
+              icon-left="plus"
+            >
+              Create table from selected columns
+            </b-button>
+            <b-dropdown position="is-bottom-left" class="has-text-weight-normal">
+              <button class="button is-text is-small" slot="trigger">
+                <b-icon icon="ellipsis-h" />
+              </button>
+              <b-dropdown-item v-if="source.actions.edit" has-link>
+                <router-link :to="{ name: 'SourceEdit', params: { sourceId: source.clientPath } }">
+                  <b-icon icon="pencil-alt" />
+                  {{ source.actions.edit.title }}
+                </router-link>
+              </b-dropdown-item>
+              <b-dropdown-item v-if="source.actions.replace" has-link>
+                <router-link :to="{ name: 'SourceReplaceCSV', params: { sourceId: source.clientPath } }">
+                  <b-icon icon="upload" />
+                  {{ source.actions.replace.title }}
+                </router-link>
+              </b-dropdown-item>
+              <b-dropdown-item v-if="source.actions.download" @click="downloadSource(source)">
+                <b-icon icon="download" />
+                {{ source.actions.download.title }}
+              </b-dropdown-item>
+              <b-dropdown-item v-if="source.actions.delete" @click="deleteSource(source)">
+                <b-icon icon="trash" />
+                {{ source.actions.delete.title }}
+              </b-dropdown-item>
+            </b-dropdown>
           </div>
         </div>
         <b-message v-if="source.error" type="is-danger" class="content">
@@ -71,7 +65,7 @@
         <div
           v-for="column in source.columns"
           :key="column.id.value"
-          class="source-column panel-block"
+          class="panel-block is-flex is-justify-content-space-between"
           @mouseenter="highlightArrows(column)"
           @mouseleave="unhighlightArrows(column)"
         >
@@ -217,11 +211,6 @@ export default class CsvSourceMapping extends Vue {
 <style scoped>
 .source-mapping:not(:last-child) {
   margin-bottom: 2rem;
-}
-
-.source-column {
-  display: flex;
-  justify-content: space-between;
 }
 
 .source-column-mapping {
