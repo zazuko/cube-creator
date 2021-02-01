@@ -1,6 +1,6 @@
 <template>
   <span v-if="value">{{ value }}</span>
-  <span v-else class="has-text-grey"><slot>Missing value</slot></span>
+  <span v-else><slot>Missing value</slot></span>
 </template>
 
 <script lang="ts">
