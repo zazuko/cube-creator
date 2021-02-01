@@ -2,7 +2,9 @@
   <div class="dimension">
     <div class="dimension-header">
       <term-with-language :values="dimension.name" :selected-language="selectedLanguage">
-        Missing name for <em><term-display :term="dimension.about" :base="cubeUri" /></em>
+        <span class="has-text-danger">
+          Missing name for <em><term-display :term="dimension.about" :base="cubeUri" /></em>
+        </span>
       </term-with-language>
       <hydra-operation-button
         :operation="dimension.actions.edit"

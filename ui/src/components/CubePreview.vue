@@ -8,7 +8,7 @@
               <div class="level-left">
                 <div class="level-item">
                   <term-with-language :values="cubeMetadata.title" :selected-language="selectedLanguage">
-                    Missing cube title
+                    <span class="has-text-danger">Missing cube title</span>
                   </term-with-language>
                 </div>
                 <div class="level-item">
