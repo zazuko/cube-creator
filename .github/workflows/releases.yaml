@@ -38,18 +38,18 @@ jobs:
         with:
           root: apis/core
           tag_prefix: cube-creator-api/v
-          minVersion: 0.1.14
+          minVersion: 0.1.15
 
       - name: Tag UI
         uses: tpluscode/action-autotag@min-version-21
         with:
           root: ui
           tag_prefix: cube-creator-app/v
-          minVersion: 0.1.14
+          minVersion: 0.1.15
 
       - name: Tag CLI
         uses: tpluscode/action-autotag@min-version-21
         with:
           root: cli
           tag_prefix: cube-creator-cli/v
-          minVersion: 0.1.14
+          minVersion: 0.1.15
