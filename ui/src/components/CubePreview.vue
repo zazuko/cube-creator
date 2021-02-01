@@ -27,7 +27,7 @@
         </tr>
         <tr class="has-background-light">
           <th v-for="dimension in dimensions" :key="dimension.id.value">
-            <cube-preview-dimension :dimension="dimension" :selected-language="selectedLanguage" />
+            <cube-preview-dimension :dimension="dimension" :selected-language="selectedLanguage" :cube-uri="cube.id.value" />
           </th>
           <th v-if="dimensions.length === 0" class="has-text-grey has-text-centered">
             No dimensions defined
