@@ -57,10 +57,17 @@ For brevity, use npm script `npm run test:e2e --grep pattern`
 
 We use Cypress to run UI e2e tests.
 
+To simplify the tests, we circumvent authentication in the app. For that, the following variables need to be set in `.local.env` before running the UI:
+```
+VUE_APP_E2E=true
+VUE_APP_X_USER=john-doe
+VUE_APP_X_PERMISSION=pipelines:read,pipelines:write
+```
+
 We need a running instance of the app to test. The easiest way is to start lando: `lando start`
 
 Then the following command can be used to run the tests interactively:
 
-`VUE_APP_E2E=true VUE_APP_X_USER=john-doe VUE_APP_X_PERMISSION=pipelines:read,pipelines:write yarn --cwd ui test:e2e --url https://app.cube-creator.lndo.site`
+`yarn --cwd ui test:e2e --url https://app.cube-creator.lndo.site`
 
 The `--headless` option allows running the tests without seeing the browser.
