@@ -18,7 +18,7 @@ services:
         TS_NODE_TRANSPILE_ONLY: "true"
         TS_NODE_PROJECT: apis/core/tsconfig.json
         # This should be kept in sync with api.Dockerfile
-        DEBUG: creator*,hydra*,hydra-box*,labyrinth*
+        DEBUG: creator*,hydra*,hydra-box*,labyrinth*,dimensions*
       depends_on:
         store:
           condition: service_healthy

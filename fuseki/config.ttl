@@ -1,14 +1,15 @@
-@prefix :        <#> .
-@prefix fuseki:  <http://jena.apache.org/fuseki#> .
-@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix tdb:     <http://jena.hpl.hp.com/2008/tdb#> .
-@prefix ja:      <http://jena.hpl.hp.com/2005/11/Assembler#> .
-@prefix dc:      <http://purl.org/dc/elements/1.1/> .
+@prefix : <#> .
+@prefix fuseki: <http://jena.apache.org/fuseki#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix tdb: <http://jena.hpl.hp.com/2008/tdb#> .
+@prefix ja: <http://jena.hpl.hp.com/2005/11/Assembler#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
 
 [] rdf:type fuseki:Server ;
    fuseki:services (
                      <#cube-creator>
+                     <#managed-dimensions>
                    ) .
 
 <#cube-creator> rdf:type fuseki:Service ;
@@ -20,4 +21,19 @@
               fuseki:serviceUpload              "upload" ;   # Non-SPARQL upload service
               fuseki:serviceReadWriteGraphStore "data" ;     # SPARQL Graph store protocol (read and write)
               fuseki:dataset                    [rdf:type tdb:DatasetTDB ; tdb:location "DB" ;] ;
+.
+
+
+<#managed-dimensions> rdf:type fuseki:Service ;
+                      rdfs:label "Managed dimensions database" ;
+                      fuseki:name "managed-dimensions" ;       # http://host:port/read
+                      fuseki:serviceQuery "sparql" ;   # SPARQL query service
+                      fuseki:serviceQuery "query" ;    # SPARQL query service (alt name)
+                      fuseki:serviceUpdate "update" ;   # SPARQL update service
+                      fuseki:serviceUpload "upload" ;   # Non-SPARQL upload service
+                      fuseki:serviceReadWriteGraphStore "data" ;     # SPARQL Graph store protocol (read and write)
+                      fuseki:dataset [
+                                       rdf:type tdb:DatasetTDB ;
+                                       tdb:location "DB" ;
+                                     ] ;
 .

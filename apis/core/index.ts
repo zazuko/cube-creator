@@ -7,6 +7,7 @@ import * as Sentry from '@sentry/node'
 import * as Tracing from '@sentry/tracing'
 import { hydraBox } from '@hydrofoil/labyrinth'
 import { problemJson } from '@hydrofoil/labyrinth/errors'
+import { managedDimensions } from '@cube-creator/managed-dimensions-api'
 import cors from 'cors'
 import { error, log } from './lib/log'
 import authentication from './lib/auth'
@@ -50,10 +51,11 @@ async function main() {
       next()
     }
   })
+  app.use(await authentication())
+  app.use('/managed-dimensions', await managedDimensions())
 
   app.use(resource)
-  app.use(await authentication())
-  await hydraBox(app, {
+  app.use(await hydraBox({
     apiPath,
     codePath,
     baseUri,
@@ -70,7 +72,7 @@ async function main() {
         expectsDisambiguate,
       ],
     },
-  })
+  }))
 
   app.use(Sentry.Handlers.errorHandler())
   app.use(problemJson({ errorMappers, captureNotFound: true }))

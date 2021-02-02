@@ -8,7 +8,8 @@
   "dependencies": {
     "@cube-creator/core": "*",
     "@cube-creator/model": "*",
-    "@hydrofoil/labyrinth": "^0.3",
+    "@cube-creator/managed-dimensions-api": "*",
+    "@hydrofoil/labyrinth": "^0.4",
     "@rdfine/csvw": "^0.6.3",
     "@rdfine/hydra": "^0.6.4",
     "@rdfine/prov": "^0.1.1",
