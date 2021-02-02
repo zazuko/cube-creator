@@ -8,6 +8,7 @@ export interface Actions {
   [key: string]: RuntimeOperation | null,
   create: RuntimeOperation | null,
   edit: RuntimeOperation | null,
+  replace: RuntimeOperation | null,
   delete: RuntimeOperation | null,
 }
 

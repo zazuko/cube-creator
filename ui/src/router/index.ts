@@ -22,11 +22,13 @@ import ColumnMappingCreate from '@/views/ColumnMappingCreate.vue'
 import CubeDesigner from '@/views/CubeDesigner.vue'
 import CubeMetadataEdit from '@/views/CubeMetadataEdit.vue'
 import DimensionEdit from '@/views/DimensionEdit.vue'
+import DimensionMapping from '@/views/DimensionMapping.vue'
 import ResourcePreview from '@/views/ResourcePreview.vue'
 import Publication from '@/views/Publication.vue'
 import PageNotFound from '@/views/PageNotFound.vue'
 import Logout from '@/views/Logout.vue'
 import NotAuthorized from '@/views/NotAuthorized.vue'
+import ManagedDimensions from '@/views/ManagedDimensions.vue'
 
 Vue.use(VueRouter)
 
@@ -122,6 +124,11 @@ const routes: Array<RouteConfig> = [
                 component: DimensionEdit,
               },
               {
+                path: 'dimension/:dimensionId/map',
+                name: 'DimensionMapping',
+                component: DimensionMapping,
+              },
+              {
                 path: 'resource/:resourceId',
                 name: 'ResourcePreview',
                 component: ResourcePreview,
@@ -134,6 +141,11 @@ const routes: Array<RouteConfig> = [
             component: Publication,
           },
         ],
+      },
+      {
+        path: '/managed-dimensions',
+        name: 'ManagedDimensions',
+        component: ManagedDimensions,
       },
     ],
   },

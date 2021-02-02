@@ -171,6 +171,7 @@ export function serializeDimensionMetadata (dimension: DimensionMetadata): Dimen
     about: dimension.about,
     description: dimension.description,
     scaleOfMeasure: dimension.scaleOfMeasure,
+    mappings: dimension.mappings,
   })
 }
 
@@ -236,6 +237,7 @@ export function serializeActions (actions: Actions): Actions {
   return Object.freeze({
     create: actions.create,
     edit: actions.edit,
+    replace: actions.replace,
     delete: actions.delete,
   })
 }
