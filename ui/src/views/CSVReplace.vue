@@ -45,7 +45,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
 import SidePane from '@/components/SidePane.vue'
 import FormSubmitCancel from '@/components/FormSubmitCancel.vue'
-import { APIErrorConflict, APIErrorValidation, APIPayloadTooLarge } from '@/api/errors'
+import { APIErrorValidation, APIPayloadTooLarge } from '@/api/errors'
 import { CsvSource } from '@cube-creator/model'
 
 const projectNS = namespace('project')
