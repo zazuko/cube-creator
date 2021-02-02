@@ -4,6 +4,7 @@ FROM node:lts-alpine AS builder
 WORKDIR /app
 ADD package.json yarn.lock ./
 ADD ./apis/core/package.json ./apis/core/
+ADD ./apis/managed-dimensions/package.json ./apis/managed-dimensions/
 ADD ./packages/core/package.json ./packages/core/
 ADD ./packages/model/package.json ./packages/model/
 ADD ./packages/testing/package.json ./packages/testing/
@@ -26,6 +27,7 @@ WORKDIR /app
 
 ADD package.json yarn.lock ./
 ADD ./apis/core/package.json ./apis/core/
+ADD ./apis/managed-dimensions/package.json ./apis/managed-dimensions/
 ADD ./packages/core/package.json ./packages/core/
 ADD ./packages/model/package.json ./packages/model/
 ADD ./packages/testing/package.json ./packages/testing/
