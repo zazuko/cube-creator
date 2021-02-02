@@ -1,14 +1,18 @@
-import { SELECT } from '@tpluscode/sparql-builder'
+import { DESCRIBE, SELECT } from '@tpluscode/sparql-builder'
 import type HydraBox from 'hydra-box'
 import { NamedNode } from 'rdf-js'
 import { rdf } from '@tpluscode/rdf-ns-builders'
 import TermSet from '@rdfjs/term-set'
 import $rdf from 'rdf-ext'
 import { ParsingClient } from 'sparql-http-client/ParsingClient'
+import { StreamClient } from 'sparql-http-client/StreamClient'
+import once from 'once'
+import { PassThrough } from 'stream'
 
 interface LoaderOptions {
   graph: NamedNode
   sparql: ParsingClient
+  stream: StreamClient
 }
 
 export default class implements HydraBox.ResourceLoader {
@@ -32,15 +36,23 @@ export default class implements HydraBox.ResourceLoader {
       return $rdf.quad(term, rdf.type, type)
     }))
 
+    const fullDataset = () => DESCRIBE`${term}`.FROM(this.options.graph).execute(this.options.stream.query)
+
     return [{
       term,
       types,
       prefetchDataset,
-      async dataset() {
-        return $rdf.dataset()
-      },
+      dataset: once(async () => $rdf.dataset().import(await fullDataset())),
       quadStream() {
-        return $rdf.dataset().toStream()
+        const forward = new PassThrough({
+          objectMode: true,
+        })
+
+        fullDataset()
+          .then(stream => stream.pipe(forward))
+          .catch(err => forward.emit('error', err))
+
+        return forward
       },
     }]
   }

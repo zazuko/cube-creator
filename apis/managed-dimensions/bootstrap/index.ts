@@ -10,11 +10,13 @@ import termSetCollections from './termSetCollections'
 import { sparql } from '../lib/sparql'
 import cantons from './cantons'
 import { dimension } from '../lib/namespace'
+import entrypoint from './entrypoint'
 
 const client = new ParsingClient(sparql)
 
 const resources = [
   termSetCollections,
+  entrypoint,
 ]
 
 function wrapInNamedGraph(data: TurtleTemplateResult) {

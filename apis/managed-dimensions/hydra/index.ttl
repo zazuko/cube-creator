@@ -7,7 +7,19 @@ BASE <urn:hydra-box:api>
 
 <api>
   a hydra:ApiDocumentation ;
+  hydra:entrypoint <> ;
 .
+
+hydra:Resource
+  hydra:supportedOperation
+    [
+      hydra:method "GET" ;
+      code:implementedBy
+        [
+          a code:EcmaScript ;
+          code:link <node:@hydrofoil/labyrinth/resource#get>
+        ]
+    ] .
 
 <api#ManagedDimensions>
   a hydra:Class ;

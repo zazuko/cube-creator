@@ -5,10 +5,11 @@ import httpError from 'http-errors'
 import clownface from 'clownface'
 import $rdf from 'rdf-ext'
 import { graph } from '../env'
+import { md } from '../namespace'
 
 export const get = asyncMiddleware(async (req, res) => {
   const query = await CONSTRUCT`
-    ${req.hydra.resource.term} ${hydra.member} ?termSet .
+    ${req.hydra.resource.term} ${hydra.member} ?termSet ; a ${md.ManagedDimensions}.
     ?termSet ?p ?o .
   `
     .FROM(graph)
@@ -31,7 +32,7 @@ export const getTerms = asyncMiddleware(async (req, res, next) => {
   }
 
   const collection = await $rdf.dataset().import(await CONSTRUCT`
-      ${req.hydra.term} ${hydra.member} ?term .
+      ${req.hydra.term} ${hydra.member} ?term ; a ${md.ManagedDimensionTerms} .
       ?term ?p ?o .
     `
     .FROM(graph)
