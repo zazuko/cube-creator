@@ -162,4 +162,21 @@ describe('CSV mapping flow', () => {
     cy.contains('Table My secondary table deleted successfully').should('be.visible')
     cy.contains('.mapper-table', 'My secondary table').should('not.be.visible')
   })
+
+  it('Deletes project', () => {
+    cy.contains('My project')
+      .click()
+
+    cy.contains('Delete Project')
+      .click()
+
+    cy.contains('Are you sure').should('be.visible')
+
+    cy.get('.modal')
+      .contains('button', 'Delete')
+      .click({ force: true })
+
+    cy.contains('Project My project successfully deleted').should('be.visible')
+    cy.contains('My project').should('not.be.visible')
+  })
 })
