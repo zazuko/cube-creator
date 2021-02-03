@@ -8,7 +8,7 @@ import { setupEnv } from '../support/env'
 import { env } from 'process'
 
 describe('lib/output-mapper', function () {
-  this.timeout(360 * 1000)
+  this.timeout(20 * 1000)
 
   before(async () => {
     setupEnv()
