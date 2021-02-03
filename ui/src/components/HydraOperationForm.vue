@@ -2,12 +2,15 @@
   <form @submit.prevent="$emit('submit')">
     <cc-form :resource.prop="resource" :shapes.prop="shapePointer" no-editor-switches />
 
+    <loading-block v-if="!shape" />
+
     <hydra-operation-error :error="error" class="mt-4" />
 
     <form-submit-cancel
       :submit-label="_submitLabel"
       :is-submitting="isSubmitting"
       :show-cancel="showCancel"
+      :disabled="!shape"
       @cancel="$emit('cancel')"
     />
   </form>
@@ -21,9 +24,10 @@ import type { Shape } from '@rdfine/shacl'
 import FormSubmitCancel from './FormSubmitCancel.vue'
 import HydraOperationError from './HydraOperationError.vue'
 import { ErrorDetails } from '@/api/errors'
+import LoadingBlock from './LoadingBlock.vue'
 
 @Component({
-  components: { FormSubmitCancel, HydraOperationError },
+  components: { FormSubmitCancel, HydraOperationError, LoadingBlock },
 })
 export default class HydraOperationButton extends Vue {
   @Prop({ required: true }) operation!: RuntimeOperation
