@@ -6,7 +6,7 @@ import { Quad } from 'rdf-js'
 import map from 'barnard59-base/lib/map'
 import { Dictionary } from '@rdfine/prov'
 import * as Prov from '@rdfine/prov'
-import { prov } from '@tpluscode/rdf-ns-builders'
+import { hydra, prov } from '@tpluscode/rdf-ns-builders'
 import * as Models from '@cube-creator/model'
 
 Hydra.resources.factory.addMixin(...Object.values(Models))
@@ -42,15 +42,16 @@ async function loadDimensionMapping(mappingUri:string) {
 
 export async function mapDimensions(this: Pick<Context, 'variables'>) {
   Hydra.cacheStrategy.shouldLoad = (previous) => {
-    return !previous.representation.root?.types.has(prov.Dictionary)
+    return !previous.representation.root?.types.has(prov.Dictionary) ||
+    !previous.representation.root?.types.has(hydra.ApiDocumentation)
   }
 
   const jobUri = this.variables.get('jobUri')
   const dimensionMetadataCollection = await loadMetadata(jobUri)
+  const dimensionMetadataList = dimensionMetadataCollection?.hasPart
 
   return map(async ({ subject, predicate, object, graph }: Quad) => {
-    const dimensionMetadata = dimensionMetadataCollection?.hasPart.find(part => predicate.equals(part.about))
-
+    const dimensionMetadata = dimensionMetadataList?.find(part => predicate.equals(part.about))
     if (dimensionMetadata) {
       const mappingTerm = dimensionMetadata.mappings
       if (mappingTerm) {
