@@ -20,7 +20,7 @@ describe('lib/output-mapper', function () {
 
     const context = {
       variables: new Map<any, any>([
-        ['jobUri', `${env.API_CORE_BASE}/cube-project/ubd/csv-mapping/jobs/test-job`],
+        ['jobUri', `${env.API_CORE_BASE}cube-project/ubd/csv-mapping/jobs/test-job`],
       ]),
     }
 
