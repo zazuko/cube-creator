@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="$emit('submit')">
+  <form v-if="shape" @submit.prevent="$emit('submit')">
     <cc-form :resource.prop="resource" :shapes.prop="shapePointer" no-editor-switches />
 
     <hydra-operation-error :error="error" class="mt-4" />
@@ -11,6 +11,7 @@
       @cancel="$emit('cancel')"
     />
   </form>
+  <loading-block v-else />
 </template>
 
 <script lang="ts">
@@ -21,9 +22,10 @@ import type { Shape } from '@rdfine/shacl'
 import FormSubmitCancel from './FormSubmitCancel.vue'
 import HydraOperationError from './HydraOperationError.vue'
 import { ErrorDetails } from '@/api/errors'
+import LoadingBlock from './LoadingBlock.vue'
 
 @Component({
-  components: { FormSubmitCancel, HydraOperationError },
+  components: { FormSubmitCancel, HydraOperationError, LoadingBlock },
 })
 export default class HydraOperationButton extends Vue {
   @Prop({ required: true }) operation!: RuntimeOperation
