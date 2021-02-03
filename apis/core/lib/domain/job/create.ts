@@ -2,7 +2,7 @@ import { cc } from '@cube-creator/core/namespace'
 import { GraphPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'
 import * as Job from '@cube-creator/model/Job'
-import { CsvMapping, Project } from '@cube-creator/model'
+import { CsvMapping, Project, Dataset } from '@cube-creator/model'
 import { ResourceStore } from '../../ResourceStore'
 import * as id from '../identifiers'
 import { DomainError } from '../../errors'
@@ -24,12 +24,14 @@ export async function createTransformJob({
   const jobCollection = await store.get(resource)
   const project = await store.getResource<Project>(jobCollection.out(cc.project).term)
   const csvMapping = await store.getResource<CsvMapping>(project?.csvMapping?.id)
+  const dataset = await store.getResource<Dataset>(project.dataset.id)
 
   const jobPointer = await store.createMember(jobCollection.term, id.job(jobCollection))
   Job.createTransform(jobPointer, {
     cubeGraph: project.cubeGraph,
     name: 'Transformation job',
     tableCollection: csvMapping.tableCollection,
+    dimensionMetadata: dataset.dimensionMetadata,
   })
 
   return jobPointer

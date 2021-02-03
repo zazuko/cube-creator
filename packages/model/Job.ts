@@ -10,6 +10,7 @@ import { Link } from './lib/Link'
 import { NamedNode } from 'rdf-js'
 import { schema, dcterms, rdfs } from '@tpluscode/rdf-ns-builders'
 import { initializer } from './lib/initializer'
+import { DimensionMetadataCollection } from './DimensionMetadata'
 
 export interface Job extends Action, Rdfs.Resource, RdfResource {
   created: Date
@@ -21,6 +22,7 @@ export interface Job extends Action, Rdfs.Resource, RdfResource {
 export interface TransformJob extends Job {
   cubeGraph: NamedNode
   tableCollection: Link<TableCollection>
+  dimensionMetadata: Link<DimensionMetadataCollection>
 }
 
 export interface PublishJob extends Job {
@@ -65,6 +67,9 @@ export function TransformJobMixin<Base extends Constructor<RdfResource>>(base: B
 
     @property({ path: cc.cubeGraph })
     cubeGraph!: NamedNode
+
+    @property.resource({ path: cc.dimensionMetadata })
+    dimensionMetadata!: Link<DimensionMetadataCollection>
   }
 
   return Impl
@@ -72,7 +77,7 @@ export function TransformJobMixin<Base extends Constructor<RdfResource>>(base: B
 
 TransformJobMixin.appliesTo = cc.TransformJob
 
-type RequiredProperties = 'name' | 'cubeGraph' | 'tableCollection'
+type RequiredProperties = 'name' | 'cubeGraph' | 'tableCollection' | 'dimensionMetadata'
 
 export const createTransform = initializer<TransformJob, RequiredProperties>(TransformJobMixin, {
   types: [cc.Job, cc.TransformJob],
