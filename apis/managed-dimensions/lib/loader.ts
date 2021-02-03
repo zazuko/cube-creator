@@ -15,7 +15,7 @@ interface LoaderOptions {
   stream: StreamClient
 }
 
-export default class implements HydraBox.ResourceLoader {
+export default class Loader implements HydraBox.ResourceLoader {
   constructor(private options: LoaderOptions) {
   }
 
