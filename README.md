@@ -41,6 +41,16 @@ Commit messages usually follow the guidelines from [Conventional Commits](https:
 
 To submit a bug or a feature request please create an issue in this repository.
 
+## Release process
+
+All notable changes to the project(s) should be documented using [@atlassian/changesets](https://github.com/atlassian/changesets). When preparing a PR, run `yarn changeset` in the repository which will ask what changed, the affected packages, and create a small markdown file which must be committed to the repository.
+
+Alternatively, that file can be created directly in the browser, courtesy of [Changesets bot](https://github.com/changesets/bot) which creates PR comment summarising the changes included in the PR in question.
+
+Releases are managed automatically by [GitHub actions](.github/workflows/releases.yaml). As PRs get merged to master, the first job creates or updates a pull request which bumps package versions according to the combined information from all accumulated changeset files. Once merged, the second job kicks in which tags the repository and triggers INT deployment.
+
+The package versions can also be bumped manually by running `yarn changeset version` in the repository and committing the result. When pushed, the new versions will be picked up by the aforementioned GitHub workflow job to tag the respository.
+
 ## Deployment
 
 Two docker images are pushed [by GitHub Actions](./.github/workflows/docker.yaml) to Docker Hub: [`docker.io/zazuko/cube-creator-api`](https://hub.docker.com/r/zazuko/cube-creator-api) and [`docker.io/zazuko/cube-creator-app`](https://hub.docker.com/r/zazuko/cube-creator-app).
