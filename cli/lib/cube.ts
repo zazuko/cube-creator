@@ -41,7 +41,7 @@ export function injectRevision(this: Pick<Context, 'variables' | 'log'>) {
     return term
   }
 
-  return map(({ subject, predicate, object, graph }: Quad) => {
+  return map(async ({ subject, predicate, object, graph }: Quad) => {
     const rebasedSub = rebase(subject)
 
     if (revision > 1 && predicate.equals(rdf.type) && object.equals(cube.Cube)) {
