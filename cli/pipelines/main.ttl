@@ -68,6 +68,7 @@
                        <#loadCsvStep>
                        <#parse>
                        <#filterObservationTable>
+                       <#applyMapping>
                        <#toDataset>
                        <#toObservation>
                        <#toCubeShape>
@@ -107,6 +108,11 @@
   code:implementedBy [ code:link <file:../lib/csv#getCsvwTriples> ;
                        a         code:EcmaScript ] ;
   code:arguments     ( "csvw"^^:VariableName ) .
+
+<#applyMapping>
+  a :Step ;
+  code:implementedBy [ code:link <file:../lib/output-mapper#mapDimensions> ;
+                       a         code:EcmaScript ] .
 
 <#filterNonObservationTable>
   a                  :Step ;

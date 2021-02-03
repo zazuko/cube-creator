@@ -24,6 +24,7 @@ describe('domain/job/create', () => {
     cubeGraph: $rdf.namedNode('myCubeGraph'),
     maintainer: organization,
     cubeIdentifier: 'test-cube',
+    dataset: $rdf.namedNode('myDataset'),
   })
   const tableCollection = namedNode('myTables')
   const csvMapping = namedNode('myCsvMapping')
@@ -32,6 +33,9 @@ describe('domain/job/create', () => {
     .addOut(rdf.type, cc.CsvMapping)
   const jobCollection = namedNode('jobs')
     .addOut(cc.project, project.id)
+  const dimensionCollection = namedNode('myDimensionCollection')
+  const dataset = namedNode('myDataset')
+    .addOut(cc.dimensionMetadata, dimensionCollection)
 
   beforeEach(() => {
     sinon.restore()
@@ -41,6 +45,7 @@ describe('domain/job/create', () => {
       csvMapping,
       tableCollection,
       jobCollection,
+      dataset,
       organization,
     ])
   })

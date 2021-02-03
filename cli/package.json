@@ -13,6 +13,7 @@
     "@cube-creator/core": "*",
     "@cube-creator/model": "*",
     "@rdfine/csvw": "^0.6.3",
+    "@rdfine/prov": "^0.1.1",
     "@rdfine/schema": "^0.6.3",
     "@rdfjs/fetch-lite": "^2.0.1",
     "@rdfjs/namespace": "^1.1.0",
