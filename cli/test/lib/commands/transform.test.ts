@@ -8,7 +8,7 @@ import { Hydra } from 'alcaeus/node'
 import { csvw, rdf, rdfs, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import transform from '../../../lib/commands/transform'
 import { setupEnv } from '../../support/env'
-import { client, insertTestData, parsingClient } from '@cube-creator/testing/lib'
+import { ccClients, insertTestProject } from '@cube-creator/testing/lib'
 import { cc, cube } from '@cube-creator/core/namespace'
 import clownface from 'clownface'
 
@@ -19,7 +19,7 @@ describe('lib/commands/transform', function () {
 
   before(async () => {
     setupEnv()
-    await insertTestData('fuseki/sample-ubd.trig')
+    await insertTestProject()
   })
 
   describe('successful job', () => {
@@ -43,7 +43,7 @@ describe('lib/commands/transform', function () {
       const dataset = await $rdf.dataset().import(await CONSTRUCT`?s ?p ?o`
         .FROM(expectedGraph)
         .WHERE`?s ?p ?o`
-        .execute(client.query))
+        .execute(ccClients.streamClient.query))
 
       const cubePointer = clownface({ dataset })
       expect(cubePointer.has(rdf.type, sh.NodeShape).terms.length).to.eq(1)
@@ -88,14 +88,14 @@ describe('lib/commands/transform', function () {
     it('does not output cc:cube as dimension property', async () => {
       const hasCubeProperty = await ASK`<https://environment.ld.admin.ch/foen/ubd/28/shape/> ${sh.property}/${sh.path} ${cc.cube} .`
         .FROM($rdf.namedNode(`${env.API_CORE_BASE}cube-project/ubd/cube-data`))
-        .execute(client.query)
+        .execute(ccClients.streamClient.query)
       expect(hasCubeProperty).to.eq(false)
     })
 
     it('does not output csvw:describes as dimension property', async () => {
       const hasDescribesProperty = await ASK`<https://environment.ld.admin.ch/foen/ubd/28/shape/> ${sh.property}/${sh.path} ${csvw.describes} .`
         .FROM($rdf.namedNode(`${env.API_CORE_BASE}cube-project/ubd/cube-data`))
-        .execute(client.query)
+        .execute(ccClients.streamClient.query)
 
       expect(hasDescribesProperty).to.eq(false)
     })
@@ -107,7 +107,7 @@ describe('lib/commands/transform', function () {
         FILTER ( BNODE (?observation) )
       `
         .FROM($rdf.namedNode(`${env.API_CORE_BASE}cube-project/ubd/cube-data`))
-        .execute(client.query)
+        .execute(ccClients.streamClient.query)
 
       expect(hasDescribesProperty).to.eq(false)
     })
@@ -119,7 +119,7 @@ describe('lib/commands/transform', function () {
           ?s ?prop ?o .
           filter (regex(str(?prop), str(${csvw()})))
         `
-        .execute(parsingClient.query)
+        .execute(ccClients.parsingClient.query)
 
       expect(distinctCsvwProps).to.have.length(1)
       expect(distinctCsvwProps[0].prop).to.deep.eq(csvw.describes)

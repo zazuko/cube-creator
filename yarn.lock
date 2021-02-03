@@ -2236,7 +2236,7 @@
   dependencies:
     "@types/rdf-js" "*"
 
-"@types/rdfjs__express-handler@^1.1.1", "@types/rdfjs__express-handler@*":
+"@types/rdfjs__express-handler@*", "@types/rdfjs__express-handler@^1.1.1":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@types/rdfjs__express-handler/-/rdfjs__express-handler-1.1.2.tgz#3f74c09b015bd36baa0967011b15ec4a2fcf5a88"
   integrity sha512-PMKBU6OC9x/h+9Mbj956slk/FQ4CpPfUagGUbLaFEok6H6DAYZo5c8uxWvVIjqrATHWACscP6jko8zHq6e3fnA==
@@ -4543,6 +4543,11 @@ commander@^5.0.0, commander@^5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-5.1.0.tgz#46abbd1652f8e059bddaef99bbdcb2ad9cf179ae"
   integrity sha512-P0CysNDQ7rtVw4QIQtm+MRxV66vKFSvlsQvGYXZWR3qFU0jlMKHZZZgw8e+8DSah4UDKMqnknRDQz+xuQXQ/Zg==
+
+commander@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-7.0.0.tgz#3e2bbfd8bb6724760980988fb5b22b7ee6b71ab2"
+  integrity sha512-ovx/7NkTrnPuIV8sqk/GjUIIM1+iUQeqA3ye2VNpq9sVoiZsooObWlQy+OPWGI17GDaEoybuAGJm6U8yC077BA==
 
 commander@~2.19.0:
   version "2.19.0"

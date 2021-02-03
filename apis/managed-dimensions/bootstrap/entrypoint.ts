@@ -1,6 +1,6 @@
 import { hydra } from '@tpluscode/rdf-ns-builders'
 import { turtle } from '@tpluscode/rdf-string'
-import { md } from '../lib/namespace'
+import { md } from '@cube-creator/core/namespace'
 
 export default turtle`
 <> a ${hydra.Resource} ;

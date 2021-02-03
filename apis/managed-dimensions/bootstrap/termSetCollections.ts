@@ -1,7 +1,8 @@
 import { turtle } from '@tpluscode/rdf-string'
+import { md } from '@cube-creator/core/namespace'
 
 export default turtle`
-<term-sets> a <api#ManagedDimensions> .
+<term-sets> a ${md.ManagedDimensions} .
 
-<terms> a <api#ManagedDimensionTerms> .
+<terms> a ${md.ManagedDimensionTerms} .
 `

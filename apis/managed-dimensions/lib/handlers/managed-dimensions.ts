@@ -4,18 +4,18 @@ import { asyncMiddleware } from 'middleware-async'
 import httpError from 'http-errors'
 import clownface from 'clownface'
 import $rdf from 'rdf-ext'
-import { graph } from '../env'
-import { md } from '../namespace'
+import { md } from '@cube-creator/core/namespace'
 
 export const get = asyncMiddleware(async (req, res) => {
   const query = await CONSTRUCT`
     ${req.hydra.resource.term} ${hydra.member} ?termSet ; a ${md.ManagedDimensions}.
     ?termSet ?p ?o .
   `
-    .FROM(graph)
     .WHERE`
-      ?termSet a ${schema.DefinedTermSet} .
-      ?termSet ?p ?o .
+      GRAPH ?g {
+        ?termSet a ${schema.DefinedTermSet}, ${md.ManagedDimension} .
+        ?termSet ?p ?o .
+      }
     `
     .execute(req.labyrinth.sparql.query)
 
@@ -35,8 +35,12 @@ export const getTerms = asyncMiddleware(async (req, res, next) => {
       ${req.hydra.term} ${hydra.member} ?term ; a ${md.ManagedDimensionTerms} .
       ?term ?p ?o .
     `
-    .FROM(graph)
-    .WHERE`?term ${schema.inDefinedTermSet} ${termSet.term} ; ?p ?o .`
+    .WHERE`
+      GRAPH ?g {
+        ${termSet.term} a ${md.ManagedDimension} .
+        ?term ${schema.inDefinedTermSet} ${termSet.term} ; ?p ?o .
+      }
+    `
     .execute(req.labyrinth.sparql.query))
 
   if (collection.size === 0) {

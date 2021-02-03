@@ -5,7 +5,7 @@ import env from '@cube-creator/core/env'
 import { rdfs, schema } from '@tpluscode/rdf-ns-builders'
 import $rdf from 'rdf-ext'
 import { JobIterator } from '../../lib/job'
-import { insertTestData } from '@cube-creator/testing/lib'
+import { insertTestProject } from '@cube-creator/testing/lib'
 import { setupEnv } from '../support/env'
 import { Table } from '@rdfine/csvw'
 import { log } from '../support/logger'
@@ -20,7 +20,7 @@ describe('lib/job', function () {
 
   before(async () => {
     setupEnv()
-    await insertTestData('fuseki/sample-ubd.trig')
+    await insertTestProject()
   })
 
   beforeEach(() => {

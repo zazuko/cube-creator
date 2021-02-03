@@ -1,0 +1,40 @@
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix md: <https://cube-creator.zazuko.com/managed-dimensions/vocab#>
+prefix void: <http://rdfs.org/ns/void#>
+prefix schema: <http://schema.org/>
+base <https://cube-creator.lndo.site/managed-dimensions/>
+
+<managed-dimensions> a void:Dataset .
+
+<http://example.com/dimension/colors> void:inDataset <managed-dimensions> .
+graph <http://example.com/dimension/colors> {
+  <http://example.com/dimension/colors>
+    a schema:DefinedTermSet, md:ManagedDimension ;
+    schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
+    schema:name "Colors"@en, "Farben"@de, "I colori"@it, "Les couleurs"@fr ;
+  .
+
+  <http://example.com/dimension/colors/red>
+    a schema:DefinedTerm ;
+    schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
+    schema:identifier "red", "#F00", "#FF0000" ;
+    schema:name "Red"@en, "Rot"@de, "Rouge"@fr, "Rosso"@it ;
+    schema:inDefinedTermSet <http://example.com/dimension/colors> ;
+  .
+
+  <http://example.com/dimension/colors/green>
+    a schema:DefinedTerm ;
+    schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
+    schema:identifier "Green", "#0F0", "#00FF00" ;
+    schema:name "Green"@en, "Grün"@de, "Verde"@fr, "Vert"@it ;
+    schema:inDefinedTermSet <http://example.com/dimension/colors> ;
+  .
+
+  <http://example.com/dimension/colors/blue>
+    a schema:DefinedTerm ;
+    schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
+    schema:identifier "blue", "#00F", "#0000FF" ;
+    schema:name "Blue"@en, "Blau"@de, "Bleu"@fr, "Blu"@it ;
+    schema:inDefinedTermSet <http://example.com/dimension/colors> ;
+  .
+}

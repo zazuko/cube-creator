@@ -6,7 +6,7 @@ import { ASK, CONSTRUCT, SELECT } from '@tpluscode/sparql-builder'
 import debug from 'debug'
 import { csvw, dcat, dcterms, qudt, rdf, schema, sh, vcard, xsd } from '@tpluscode/rdf-ns-builders'
 import { setupEnv } from '../../support/env'
-import { client, parsingClient, insertTestData } from '@cube-creator/testing/lib'
+import { ccClients, insertTestProject } from '@cube-creator/testing/lib'
 import { cc, cube } from '@cube-creator/core/namespace'
 import clownface, { AnyPointer } from 'clownface'
 import publish from '../../../lib/commands/publish'
@@ -24,7 +24,7 @@ describe('lib/commands/publish', function () {
 
   before(async () => {
     setupEnv()
-    await insertTestData('fuseki/sample-ubd.trig')
+    await insertTestProject()
   })
 
   describe('produces triples', async function () {
@@ -56,14 +56,14 @@ describe('lib/commands/publish', function () {
             ?org ${cc.publishGraph} ?expectedGraph .
           }
         `
-        .execute(parsingClient.query)
+        .execute(ccClients.parsingClient.query)
 
       targetCube = namespace(ns.baseCube('2/').value)
 
       const dataset = await $rdf.dataset().import(await CONSTRUCT`?s ?p ?o`
         .FROM(expectedGraph as NamedNode)
         .WHERE`?s ?p ?o`
-        .execute(client.query))
+        .execute(ccClients.streamClient.query))
 
       cubePointer = clownface({ dataset })
     })
@@ -247,7 +247,7 @@ describe('lib/commands/publish', function () {
           ?s ?p ?o .
           filter (regex(str(?p), str(${csvw()})))
         `
-        .execute(parsingClient.query)
+        .execute(ccClients.parsingClient.query)
 
       expect(distinctCsvwProps[0].count.value).to.eq('0')
     })
@@ -258,13 +258,13 @@ describe('lib/commands/publish', function () {
         ?observation ?dimension ?value .
 
         FILTER ( REGEX (str(?dimension), str(${targetCube()}) ) )
-      `.FROM($rdf.namedNode('https://lindas.admin.ch/foen/cube')).execute(client.query)
+      `.FROM($rdf.namedNode('https://lindas.admin.ch/foen/cube')).execute(ccClients.streamClient.query)
       const anyShapePropertyHasRevision = await ASK`
         ?shape a ${cube.Constraint} .
         ?shape ${sh.property}/${sh.path} ?dimension .
 
         FILTER ( REGEX (str(?dimension), str(${targetCube()}) ) )
-      `.FROM($rdf.namedNode('https://lindas.admin.ch/foen/cube')).execute(client.query)
+      `.FROM($rdf.namedNode('https://lindas.admin.ch/foen/cube')).execute(ccClients.streamClient.query)
 
       expect(anyObservationPredicateHasRevision).to.be.false
       expect(anyShapePropertyHasRevision).to.be.false
