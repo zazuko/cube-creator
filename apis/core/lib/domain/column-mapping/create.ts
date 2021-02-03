@@ -108,11 +108,11 @@ async function createReferenceColumnMapping({ targetProperty, table, source, res
   const identifierMappings = await Promise.all(resource.out(cc.identifierMapping).map(async (identifierMapping) => {
     const sourceColumnId = identifierMapping.out(cc.sourceColumn).term!
     const sourceColumn = source.columns.find(({ id }) => id.equals(sourceColumnId))
-    if (!sourceColumn) throw new DomainError(`${sourceColumnId} not found in source`)
+    if (!sourceColumn) throw new DomainError(`${sourceColumnId.value} not found in source`)
 
     const referencedColumnId = identifierMapping.out(cc.referencedColumn).term!
     const referencedColumn = referencedSource.columns.find(({ id }) => id.equals(referencedColumnId))
-    if (!referencedColumn) throw new DomainError(`${referencedColumnId} not found in referenced source`)
+    if (!referencedColumn) throw new DomainError(`${referencedColumnId.value} not found in referenced source`)
 
     return {
       sourceColumn,

@@ -1,4 +1,4 @@
-PREFIX md: <https://cube-creator.lndo.site/managed-dimensions/api#>
+PREFIX md: <https://cube-creator.zazuko.com/managed-dimensions/vocab#>
 PREFIX hydra: <http://www.w3.org/ns/hydra/core#>
 
 ENTRYPOINT "managed-dimensions/"

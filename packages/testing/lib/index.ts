@@ -2,9 +2,8 @@ import fs from 'fs'
 import path from 'path'
 import $rdf from 'rdf-ext'
 import { parsers } from '@rdfjs/formats-common'
-import { SELECT } from '@tpluscode/sparql-builder'
+import { DatasetCore } from 'rdf-js'
 import StreamClient from 'sparql-http-client/StreamClient'
-import env from '@cube-creator/core/env'
 import { _void } from '@tpluscode/rdf-ns-builders'
 import { sparql } from '@tpluscode/rdf-string'
 import ParsingClient from 'sparql-http-client/ParsingClient'
@@ -25,28 +24,20 @@ export const mdClients = {
   streamClient: new StreamClient(endpoints('managed-dimensions')),
 }
 
-const clientOptions = () => ({
-  base: env.API_CORE_BASE,
-})
+async function removeTestGraphs(client: ParsingClient, dataset: DatasetCore) {
+  const graphs = [...dataset.match(null, _void.inDataset)].map(({ subject }) => subject)
 
-async function removeTestGraphs(client: ParsingClient) {
-  const graphs = await SELECT.DISTINCT`?graph`
-    .WHERE`
-      ?graph ${_void.inDataset} ?d.
-    `.execute(client.query, clientOptions())
-
-  const dropGraphs = sparql`${graphs.map(result => sparql`DROP SILENT GRAPH ${result.graph};`)}`.toString()
+  const dropGraphs = sparql`${graphs.map(graph => sparql`DROP SILENT GRAPH ${graph};`)}`.toString()
   return client.query.update(dropGraphs)
 }
 
 const insertTestData = async (pathName: string, { parsingClient, streamClient }: { parsingClient: ParsingClient; streamClient: StreamClient }) => {
-  await removeTestGraphs(parsingClient)
-
   const file = fs.createReadStream(path.resolve(process.cwd(), pathName))
   const stream = parsers.import('application/trig', file)
 
   if (stream) {
     const ds = await $rdf.dataset().import(stream)
+    await removeTestGraphs(parsingClient, ds)
     await streamClient.store.post(ds.toStream())
   }
 }

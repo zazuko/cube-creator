@@ -20,7 +20,7 @@
               fuseki:serviceUpdate              "update" ;   # SPARQL update service
               fuseki:serviceUpload              "upload" ;   # Non-SPARQL upload service
               fuseki:serviceReadWriteGraphStore "data" ;     # SPARQL Graph store protocol (read and write)
-              fuseki:dataset                    [rdf:type tdb:DatasetTDB ; tdb:location "DB" ;] ;
+              fuseki:dataset                    [rdf:type tdb:DatasetTDB ; tdb:location "DB1" ;] ;
 .
 
 
@@ -34,6 +34,6 @@
                       fuseki:serviceReadWriteGraphStore "data" ;     # SPARQL Graph store protocol (read and write)
                       fuseki:dataset [
                                        rdf:type tdb:DatasetTDB ;
-                                       tdb:location "DB" ;
+                                       tdb:location "DB2" ;
                                      ] ;
 .

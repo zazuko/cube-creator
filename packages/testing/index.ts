@@ -13,9 +13,11 @@ async function main() {
   const { inputs } = command.opts()
 
   if (inputs.includes('ubd')) {
+    log('Inserting sample project')
     await insertTestProject()
   }
   if (inputs.includes('dimensions')) {
+    log('Inserting sample managed dimensions')
     return insertTestDimensions()
   }
 }
