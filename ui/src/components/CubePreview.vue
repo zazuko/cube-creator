@@ -8,7 +8,7 @@
               <div class="level-left">
                 <div class="level-item">
                   <term-with-language :values="cubeMetadata.title" :selected-language="selectedLanguage">
-                    Missing cube title
+                    <span class="has-text-danger">Missing cube title</span>
                   </term-with-language>
                 </div>
                 <div class="level-item">
@@ -27,7 +27,7 @@
         </tr>
         <tr class="has-background-light">
           <th v-for="dimension in dimensions" :key="dimension.id.value">
-            <cube-preview-dimension :dimension="dimension" :selected-language="selectedLanguage" />
+            <cube-preview-dimension :dimension="dimension" :selected-language="selectedLanguage" :cube-uri="cube.id.value" />
           </th>
           <th v-if="dimensions.length === 0" class="has-text-grey has-text-centered">
             No dimensions defined
@@ -36,8 +36,8 @@
       </thead>
       <tbody class="is-family-monospace">
         <tr v-if="observations.isLoading">
-          <td :colspan="tableWidth">
-            <loading-block />
+          <td :colspan="tableWidth" class="p-0">
+            <loading-block class="has-background-light is-size-2" :style="`height: calc(38px * ${this.pageSize});`" />
           </td>
         </tr>
         <tr v-else-if="observations.error">
@@ -103,10 +103,9 @@
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import clownface from 'clownface'
 import { Collection } from 'alcaeus'
-import { hydra } from '@tpluscode/rdf-ns-builders'
+import { hydra, qudt } from '@tpluscode/rdf-ns-builders'
 import * as $rdf from '@rdf-esm/dataset'
 import type { Cube, Dataset, DimensionMetadata } from '@cube-creator/model'
-import { scale } from '@cube-creator/core/namespace'
 import { api } from '@/api'
 import Remote, { RemoteData } from '@/remote'
 import HydraOperationButton from './HydraOperationButton.vue'
@@ -153,10 +152,8 @@ export default class extends Vue {
     const scaleOfMeasure = dimension.scaleOfMeasure
 
     if (
-      scale.Numerical.equals(scaleOfMeasure) ||
-      scale.Continuous.equals(scaleOfMeasure) ||
-      scale.Discrete.equals(scaleOfMeasure) ||
-      scale.Temporal.equals(scaleOfMeasure)
+      qudt.RatioScale.equals(scaleOfMeasure) ||
+      qudt.IntervalScale.equals(scaleOfMeasure)
     ) {
       return 'has-text-right'
     }

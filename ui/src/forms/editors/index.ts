@@ -69,6 +69,19 @@ export const enumSelect: Lazy<EnumSelectEditor> = {
   }
 }
 
+export const autoComplete: Lazy<InstancesSelectEditor> = {
+  ...instancesSelectCore,
+  editor: dash.AutoCompleteEditor,
+  async lazyRender () {
+    await import('./AutoCompleteEditor.vue').then(createCustomElement('auto-complete'))
+
+    return ({ property, value }, { update }) => html`<auto-complete .property="${property.shape}"
+                          .update="${update}"
+                          .options="${value.componentState.instances}"
+                          .value="${value.object?.term}"></auto-complete>`
+  }
+}
+
 export const radioButtons: Lazy<SingleEditorComponent> = {
   editor: ns.editor.RadioButtons,
   async lazyRender () {
@@ -147,11 +160,16 @@ export const identifierTemplateEditor: Lazy<SingleEditorComponent> = {
     await import('./IdentifierTemplateEditor.vue').then(createCustomElement('identifier-template-editor'))
 
     return ({ value, updateComponentState, focusNode }, { update }) => {
-      let { tableName, sourceId } = value.componentState
+      let { tableName, isObservationTable, sourceId } = value.componentState
 
       if (tableName !== focusNode.out(schema.name).value) {
         tableName = focusNode.out(schema.name).value
         updateComponentState({ tableName })
+      }
+
+      if (isObservationTable !== focusNode.out(ns.cc.isObservationTable).value) {
+        isObservationTable = focusNode.out(ns.cc.isObservationTable).value === 'true'
+        updateComponentState({ isObservationTable })
       }
 
       if (sourceId !== focusNode.out(ns.cc.csvSource).term) {
@@ -163,6 +181,7 @@ export const identifierTemplateEditor: Lazy<SingleEditorComponent> = {
         .value="${value.object?.value || ''}"
         .update="${update}"
         .tableName="${tableName}"
+        .isObservationTable="${isObservationTable}"
         .sourceId="${sourceId}"
       ></identifier-template-editor>`
     }

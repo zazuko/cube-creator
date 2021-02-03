@@ -58,7 +58,7 @@ export async function uploadFile({
 
     for (let index = 0; index < header.length; index++) {
       const name = header[index]
-      const column = csvSource.appendColumn({ name })
+      const column = csvSource.appendOrUpdateColumn({ name, order: index })
       column.samples = sampleCol[index]
     }
   } catch (err) {

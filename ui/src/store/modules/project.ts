@@ -231,6 +231,14 @@ const actions: ActionTree<ProjectState, RootState> = {
     return Promise.all(uploads)
   },
 
+  async replaceCSV (context, { source, file }) {
+    const operation = source.actions.replace
+    const headers = {
+      'content-type': 'text/csv',
+    }
+    return api.invokeSaveOperation(operation, file, headers)
+  },
+
   async fetchCubeMetadata (context) {
     const project = context.state.project
 

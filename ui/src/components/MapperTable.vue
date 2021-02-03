@@ -39,9 +39,16 @@
     </div>
     <div class="panel-block">
       <span>Identifier template:</span>
-      <code class="identifier-template">{{ table.identifierTemplate }}</code>
+      <code class="identifier-template">{{ table.identifierTemplate || 'auto' }}</code>
     </div>
-    <div v-for="columnMapping in table.columnMappings" :key="columnMapping.id.value" class="panel-block">
+    <div
+      v-for="columnMapping in table.columnMappings"
+      :key="columnMapping.id.value"
+      class="panel-block"
+      :data-column-mapping-id="columnMapping.id.value"
+      @mouseenter="$emit('highlight-arrows', [columnMapping.id.value])"
+      @mouseleave="$emit('unhighlight-arrows', [columnMapping.id.value])"
+    >
       <div class="level-left">
         <div class="level-item">
           <b-tag v-if="columnMapping.referencedTable" rounded :style="{ 'background-color': getTableColor(columnMapping.referencedTable.id) }">

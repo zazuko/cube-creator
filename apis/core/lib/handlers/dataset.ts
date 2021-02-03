@@ -1,10 +1,16 @@
 import asyncMiddleware from 'middleware-async'
 import clownface from 'clownface'
+import $rdf from 'rdf-ext'
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
-import { Enrichment } from '@hydrofoil/labyrinth/lib/middleware/preprocessResource'
+import { loadLinkedResources } from '@hydrofoil/labyrinth/lib/query/eagerLinks'
+import { Quad, Quad_Subject as Subject, Term } from 'rdf-js'
+import TermSet from '@rdfjs/term-set'
+import through, { TransformFunction } from 'through2'
+import { PassThrough } from 'stream'
+import merge from 'merge2'
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
-import { cc, cube, view } from '@cube-creator/core/namespace'
-import { IriTemplateMixin } from '@rdfine/hydra'
+import { cc, cube, query, view } from '@cube-creator/core/namespace'
+import { fromPointer } from '@rdfine/hydra/lib/IriTemplate'
 import { shaclValidate } from '../middleware/shacl'
 import { update } from '../domain/dataset/update'
 import { loadCubeShapes } from '../domain/queries/cube'
@@ -26,26 +32,44 @@ export const put = protectedResource(
   }),
 )
 
-export const loadCubes: Enrichment = async (req, dataset) => {
-  const shapeQuads = await loadCubeShapes(dataset, streamClient)
-  let graph = ''
+export const get = protectedResource(asyncMiddleware(async (req, res) => {
+  const dataset = await req.hydra.resource.clownface()
+  const shapeStream = await loadCubeShapes(req.hydra.resource.term, streamClient)
+  const outStream = new PassThrough({
+    objectMode: true,
+  })
 
-  for await (const quad of shapeQuads) {
+  const types = clownface({
+    dataset: req.hydra.api.dataset,
+    term: dataset.out(rdf.type).terms,
+  })
+  const linkedResources = await loadLinkedResources(dataset, types.out(query.include).toArray(), req.app.sparql)
+
+  merge(dataset.dataset.toStream(), shapeStream, linkedResources.toStream(), { objectMode: true })
+    .pipe(through.obj(injectHydraTemplate()))
+    .pipe(outStream)
+
+  return res.quadStream(outStream)
+}))
+
+function injectHydraTemplate(): TransformFunction {
+  let graph: Term | undefined
+  let cubeId: Subject | undefined
+  const templateAdded = new TermSet()
+
+  return function (quad: Quad, enc, callback) {
+    this.push(quad)
+
     if (quad.predicate.equals(cc.cubeGraph)) {
-      graph = quad.object.value
-    } else {
-      dataset.dataset.add(quad)
+      graph = quad.object
     }
-  }
+    if (quad.predicate.equals(rdf.type) && quad.object.equals(cube.Cube)) {
+      cubeId = quad.subject
+    }
 
-  if (!graph) {
-    return
-  }
-
-  clownface(dataset).any().has(rdf.type, cube.Cube).forEach(cube => {
-    cube.addOut(cc.observations, template => {
-      return new IriTemplateMixin.Class(template, {
-        template: `${env.API_CORE_BASE}observations?cube=${encodeURIComponent(cube.value)}&graph=${encodeURIComponent(graph)}{&view,pageSize,page}`,
+    if (cubeId && graph && !templateAdded.has(cubeId)) {
+      const template = fromPointer(clownface({ dataset: $rdf.dataset() }).blankNode(), {
+        template: `${env.API_CORE_BASE}observations?cube=${encodeURIComponent(cubeId.value)}&graph=${encodeURIComponent(graph.value)}{&view,pageSize,page}`,
         mapping: [{
           property: view.view,
           variable: 'view',
@@ -57,6 +81,13 @@ export const loadCubes: Enrichment = async (req, dataset) => {
           variable: 'page',
         }],
       })
-    })
-  })
+
+      template.pointer.dataset.forEach(chunk => this.push(chunk))
+      this.push($rdf.quad(cubeId, cc.observations, template.id))
+
+      templateAdded.add(cubeId)
+    }
+
+    callback()
+  }
 }

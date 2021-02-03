@@ -2,7 +2,7 @@
   <div v-if="project">
     <div class="tabs is-boxed mb-0 mt-2">
       <ul>
-        <router-link :to="{ name: 'CubeProjectEdit' }" v-slot="{ href, isActive, navigate }">
+        <router-link :to="{ name: 'CubeProjectEdit' }" v-slot="{ href, isActive, navigate }" custom>
           <li :class="{ 'is-active': isActive }">
             <b-tooltip label="Project settings">
               <a :href="href" @click="navigate">
@@ -14,17 +14,17 @@
             </b-tooltip>
           </li>
         </router-link>
-        <router-link v-if="hasCSVMapping" :to="{ name: 'CSVMapping' }" v-slot="{ href, isActive, navigate }">
+        <router-link v-if="hasCSVMapping" :to="{ name: 'CSVMapping' }" v-slot="{ href, isActive, navigate }" custom>
           <li :class="{ 'is-active': isActive }">
             <a :href="href" @click="navigate">1. CSV Mapping</a>
           </li>
         </router-link>
-        <router-link :to="{ name: 'CubeDesigner' }" v-slot="{ href, isActive, navigate }">
+        <router-link :to="{ name: 'CubeDesigner' }" v-slot="{ href, isActive, navigate }" custom>
           <li :class="{ 'is-active': isActive }">
             <a :href="href" @click="navigate">2. Cube Designer</a>
           </li>
         </router-link>
-        <router-link :to="{ name: 'Publication' }" v-slot="{ href, isActive, navigate }">
+        <router-link :to="{ name: 'Publication' }" v-slot="{ href, isActive, navigate }" custom>
           <li :class="{ 'is-active': isActive }">
             <a :href="href" @click="navigate">
               3. Publication

@@ -3,7 +3,7 @@ PREFIX schema: <http://schema.org/>
 PREFIX void:   <http://rdfs.org/ns/void#>
 PREFIX cube:   <http://ns.bergnet.org/cube/>
 PREFIX hydra:  <http://www.w3.org/ns/hydra/core#>
-PREFIX scale:  <http://ns.bergnet.org/cube/scale/>
+PREFIX qudt:   <http://qudt.org/schema/qudt/>
 
 ENTRYPOINT "cube-project/ubd/dimensions-metadata/aggregation"
 
@@ -18,12 +18,12 @@ With Operation schema:UpdateAction {
 
         ```
         base <https://cube-creator.lndo.site/>
-        prefix scale: <http://ns.bergnet.org/cube/scale/>
+        prefix qudt: <http://qudt.org/schema/qudt/>
         PREFIX schema: <http://schema.org/>
 
         <cube-project/ubd/dimensions-metadata/aggregation>
             schema:about <https://environment.ld.admin.ch/foen/ubd/28/aggregation> ;
-            scale:scaleOfMeasure scale:Temporal ;
+            qudt:scaleType qudt:NominalScale ;
             schema:name "Aggregation"@en ;
             schema:description "The aggregation"@en.
         ```
@@ -33,8 +33,8 @@ With Operation schema:UpdateAction {
         Expect Property schema:about {
             Expect Id <https://environment.ld.admin.ch/foen/ubd/28/aggregation>
         }
-        Expect Property scale:scaleOfMeasure {
-            Expect Id scale:Temporal
+        Expect Property qudt:scaleType {
+            Expect Id qudt:NominalScale
         }
         Expect Property schema:name "Aggregation"
         Expect Property schema:description "The aggregation"

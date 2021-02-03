@@ -14,6 +14,7 @@ interface CreateProjectCommand {
   resource: GraphPointer
   store: ResourceStore
   user: NamedNode
+  userName: string
 }
 
 export async function createProject({
@@ -21,6 +22,7 @@ export async function createProject({
   resource,
   store,
   user,
+  userName,
 }: CreateProjectCommand): Promise<Project.Project> {
   const label = resource.out(rdfs.label).value
   if (!label) {
@@ -36,7 +38,7 @@ export async function createProject({
   }
 
   const project = Project.create(await store.createMember(projectsCollection.term, id.cubeProject(label)), {
-    creator: user,
+    creator: { id: user, name: userName },
     label,
     maintainer,
     cubeIdentifier,

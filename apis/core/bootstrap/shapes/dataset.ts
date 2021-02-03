@@ -25,6 +25,22 @@ construct {
   }
 }`
 
+const orgQuery = sparql`prefix cat: <https://register.ld.admin.ch/opendataswiss/org/>
+
+construct {
+  ?c a ${hydra.Collection} .
+  ?c ${hydra.member} ?org .
+  ?org ${rdfs.label} ?name ; ?p ?o .
+} WHERE {
+  BIND ( iri('http://app.cube-creator.lndo.site/org') as ?c )
+
+  graph   <https://lindas.admin.ch/sfa/opendataswiss> {
+    ?org a ${schema.Organization} ;
+      ${schema.name} ?name ;
+      ?p ?o .
+  }
+}`
+
 export const DatasetShape = turtle`
 @prefix cld: <http://purl.org/cld/terms/> .
 @prefix dcam: <http://purl.org/dc/dcam/> .
@@ -46,7 +62,7 @@ ${shapeId} {
       ${sh.languageIn} ("en" "de" "fr" "it") ;
       ${sh.uniqueLang} true ;
       ${sh.order} 10 ;
-      ${sh.description} "Provide a publishable title describing the cube. It is mandatory to define the language." ;
+      ${sh.description} "A publishable title describing the cube. Please add entries for all [languages](https://gitlab.ldbar.ch/bafu/cube-creator-documentation/-/wikis/(2)-Meta-Data-and-Manual-Validation-in-Cube-Preview#languages)." ;
     ] ;
     ${sh.property} [
       ${sh.name} "Title (dcat)" ;
@@ -102,7 +118,7 @@ ${shapeId} {
                 <https://ld.admin.ch/application/opendataswiss>
             ) ;
         ${sh.order} 40 ;
-        ${sh.description} "Add the Applications where the tool is used." ;
+        ${sh.description} "Choose the applications where the dataset shall be listed." ;
       ] ;
     ${sh.property} [
       ${sh.name} "Data refresh interval" ;
@@ -142,14 +158,17 @@ ${shapeId} {
       ${sh.description} "The period of time this dataset is covering.";
     ] ;
     ${sh.property} [
-      ${sh.name} "Publisher" ;
+      ${sh.name} "Opendata.swiss Publisher" ;
       ${sh.path} ${dcterms.publisher} ;
       ${sh.minCount} 0 ;
-      ${sh.datatype} ${rdf.Description} ;
+      ${sh.class} ${schema.Organization} ;
+      ${sh.nodeKind} ${sh.IRI} ;
+      ${hydra.collection} ${lindasQuery(orgQuery)} ;
       ${sh.order} 80 ;
+      ${sh.description} "This is the publishing organization used in opendata.swiss.";
     ] ;
     ${sh.property} [
-      ${sh.name} "Contact Point" ;
+      ${sh.name} "Opendata.swiss Contact Point" ;
       ${sh.path} ${dcat.contactPoint} ;
       ${sh.minCount} 1 ;
       ${dash.editor} ${dash.DetailsEditor} ;
@@ -158,11 +177,12 @@ ${shapeId} {
       ${sh.order} 90 ;
     ] ;
     ${sh.property} [
-      ${sh.name} "Theme" ;
+      ${sh.name} "Opendata.swiss Category" ;
       ${sh.path} ${dcat.theme} ;
       ${sh.minCount} 1 ;
       ${sh.minLength} 1 ;
       ${sh.order} 100 ;
+      ${sh.description} "This is the category used in opendata.swiss.";
       ${sh.nodeKind} ${sh.IRI} ;
       ${sh.class} ${schema.DefinedTerm} ;
       ${hydra.collection} ${lindasQuery(themesQuery)} ;
@@ -172,6 +192,7 @@ ${shapeId} {
       ${sh.path} ${dcat.keyword} ;
       ${sh.minLength} 1 ;
       ${sh.order} 110 ;
+      ${sh.description} "Tags are additional keywords to classify datasets along ad-hoc categories.";
     ] ;
     ${sh.property} [
       ${sh.name} "Landing page" ;

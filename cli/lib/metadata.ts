@@ -38,6 +38,7 @@ async function loadDataset(jobUri: string) {
 }
 
 export async function injectMetadata(this: Context, jobUri: string) {
+  const baseCube = $rdf.namedNode(this.variables.get('namespace'))
   const revision = this.variables.get('revision')
   const cubeIdentifier = this.variables.get('cubeIdentifier')
   const { dataset, maintainer } = await loadDataset(jobUri)
@@ -63,6 +64,8 @@ export async function injectMetadata(this: Context, jobUri: string) {
       this.push($rdf.quad(quad.subject, schema.dateModified, timestamp))
       this.push($rdf.quad(quad.subject, dcterms.modified, timestamp))
       this.push($rdf.quad(quad.subject, dcterms.identifier, $rdf.literal(cubeIdentifier)))
+      this.push($rdf.quad(baseCube, schema.hasPart, quad.subject))
+      this.push($rdf.quad(baseCube, rdf.type, schema.CreativeWork))
 
       if (revision === 1) {
         this.push($rdf.quad(quad.subject, schema.datePublished, timestamp))

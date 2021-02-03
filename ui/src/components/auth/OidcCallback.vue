@@ -1,5 +1,9 @@
 <template>
-  <div>Authenticating...</div>
+  <div class="section">
+    <p>
+      Authenticating...
+    </p>
+  </div>
 </template>
 
 <script>

@@ -17,6 +17,7 @@ import { updateProject } from '../../../lib/domain/cube-projects/update'
 describe('domain/cube-projects/update', () => {
   let store: TestResourceStore
   const user = $rdf.namedNode('userId')
+  const userName = 'User Name'
   const projectsCollection = clownface({ dataset: $rdf.dataset() }).namedNode('projects')
 
   const bafu = fromPointer(clownface({ dataset: $rdf.dataset() }).namedNode('bafu'), {
@@ -47,7 +48,7 @@ describe('domain/cube-projects/update', () => {
 
     const resource = projectPointer()
 
-    project = (await createProject({ resource, store, projectsCollection, user })).pointer as any
+    project = (await createProject({ resource, store, projectsCollection, user, userName })).pointer as any
   })
 
   describe('CSV project', () => {

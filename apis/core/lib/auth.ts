@@ -10,6 +10,7 @@ import * as idOf from './domain/identifiers'
 declare module '@hydrofoil/labyrinth' {
   export interface User {
     sub: string
+    name: string
     permissions: string[]
   }
 }
@@ -45,6 +46,7 @@ function devAuthHandler(req: Request, res: Response, next: NextFunction) {
 
     req.user = {
       sub,
+      name: sub,
       permissions,
     }
 

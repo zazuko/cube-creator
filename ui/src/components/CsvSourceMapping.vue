@@ -2,35 +2,46 @@
   <div class="source-mapping columns">
     <div class="column">
       <div class="source panel">
-        <div class="panel-heading">
-          <div class="level">
-            <div class="level-left">
-              <div class="level-item">
-                {{ source.name }}
-              </div>
-              <div class="level-item">
-                <hydra-operation-button
-                  :operation="source.actions.edit"
-                  :to="{ name: 'SourceEdit', params: { sourceId: source.clientPath } }"
-                />
-                <hydra-operation-button
-                  :operation="source.actions.delete"
-                  @click="deleteSource(source)"
-                />
-              </div>
-            </div>
-            <div class="level-right">
-              <b-button
-                v-if="tableCollection.actions.create"
-                :disabled="selectedColumns.length === 0"
-                tag="router-link"
-                :to="{ name: 'TableCreate', query: createTableQueryParams }"
-                size="is-small"
-                icon-left="plus"
-              >
-                Create table from selected columns
-              </b-button>
-            </div>
+        <div class="panel-heading is-flex is-align-items-center is-justify-content-space-between">
+          <h4 class="has-text-weight-bold">
+            {{ source.name }}
+          </h4>
+          <div class="is-flex gap-1">
+            <b-button
+              v-if="tableCollection.actions.create"
+              :disabled="selectedColumns.length === 0"
+              tag="router-link"
+              :to="{ name: 'TableCreate', query: createTableQueryParams }"
+              size="is-small"
+              icon-left="plus"
+            >
+              Create table from selected columns
+            </b-button>
+            <b-dropdown position="is-bottom-left" class="has-text-weight-normal">
+              <button class="button is-text is-small" slot="trigger">
+                <b-icon icon="ellipsis-h" />
+              </button>
+              <b-dropdown-item v-if="source.actions.edit" has-link>
+                <router-link :to="{ name: 'SourceEdit', params: { sourceId: source.clientPath } }">
+                  <b-icon icon="pencil-alt" />
+                  {{ source.actions.edit.title }}
+                </router-link>
+              </b-dropdown-item>
+              <b-dropdown-item v-if="source.actions.replace" has-link>
+                <router-link :to="{ name: 'SourceReplaceCSV', params: { sourceId: source.clientPath } }">
+                  <b-icon icon="upload" />
+                  {{ source.actions.replace.title }}
+                </router-link>
+              </b-dropdown-item>
+              <b-dropdown-item v-if="source.actions.download" @click="downloadSource(source)">
+                <b-icon icon="download" />
+                {{ source.actions.download.title }}
+              </b-dropdown-item>
+              <b-dropdown-item v-if="source.actions.delete" @click="deleteSource(source)">
+                <b-icon icon="trash" />
+                {{ source.actions.delete.title }}
+              </b-dropdown-item>
+            </b-dropdown>
           </div>
         </div>
         <b-message v-if="source.error" type="is-danger" class="content">
@@ -54,7 +65,9 @@
         <div
           v-for="column in source.columns"
           :key="column.id.value"
-          class="source-column panel-block"
+          class="panel-block is-flex is-justify-content-space-between"
+          @mouseenter="highlightArrows(column)"
+          @mouseleave="unhighlightArrows(column)"
         >
           <b-checkbox :value="selectedColumnsMap[column.clientPath]" @input="selectedColumnsMap[column.clientPath] = $event">
             {{ column.name }}
@@ -69,6 +82,7 @@
               class="source-column-mapping"
               :style="{ 'background-color': table.color }"
               :label="table.name + ' / ' + columnMapping.targetProperty.value"
+              :data-arrow-target="columnMapping.id.value"
             />
           </div>
         </div>
@@ -76,7 +90,13 @@
     </div>
     <div class="column is-1" />
     <div class="column">
-      <mapper-table v-for="table in sourceTables" :key="table.id.value" :table="table" />
+      <mapper-table
+        v-for="table in sourceTables"
+        :key="table.id.value"
+        :table="table"
+        @highlight-arrows="$emit('highlight-arrows', $event)"
+        @unhighlight-arrows="$emit('unhighlight-arrows', $event)"
+      />
       <div v-if="isFirstSource && tables.length === 0" class="content">
         <p>You haven't mapped any tables yet.</p>
         <p>The first step is to define which columns of your CSV will be dimensions of your cube:</p>
@@ -101,6 +121,7 @@ import { Prop, Component, Vue, Watch } from 'vue-property-decorator'
 import { CsvSource, Table, TableCollection, CsvColumn, ColumnMapping } from '@cube-creator/model'
 import MapperTable from './MapperTable.vue'
 import HydraOperationButton from './HydraOperationButton.vue'
+import { api } from '@/api'
 
 @Component({
   components: {
@@ -171,6 +192,26 @@ export default class CsvSourceMapping extends Vue {
       },
     })
   }
+
+  async downloadSource (source: CsvSource): Promise<void> {
+    const headers = { accept: 'text/csv' }
+    const response = await api.invokeDownloadOperation(source.actions.download, headers)
+    const downloadLink = response.xhr.headers.get('Location')
+
+    if (downloadLink) {
+      window.open(downloadLink)
+    }
+  }
+
+  highlightArrows (column: CsvColumn): void {
+    const ids = this.getColumnMappings(column).map(({ columnMapping }) => columnMapping.id.value)
+    this.$emit('highlight-arrows', ids)
+  }
+
+  unhighlightArrows (column: CsvColumn): void {
+    const ids = this.getColumnMappings(column).map(({ columnMapping }) => columnMapping.id.value)
+    this.$emit('unhighlight-arrows', ids)
+  }
 }
 </script>
 
@@ -179,15 +220,11 @@ export default class CsvSourceMapping extends Vue {
   margin-bottom: 2rem;
 }
 
-.source-column {
-  display: flex;
-  justify-content: space-between;
-}
-
 .source-column-mapping {
-  width: 0.6rem;
-  height: 0.6rem;
-  border-radius: 0.6rem;
+  z-index: 10;
+  width: 8px;
+  height: 8px;
+  border-radius: 8px;
 }
 
 .source-column-mapping:not(:last-child) {

@@ -1,4 +1,4 @@
-BASE              <urn:hydra-box:api>
+BASE <urn:hydra-box:api>
 PREFIX cc:        <https://cube-creator.zazuko.com/vocab#>
 prefix hydra:     <http://www.w3.org/ns/hydra/core#>
 prefix hydra-box: <http://hydra-box.org/schema/>
@@ -14,14 +14,20 @@ void:Dataset
     hydra:Class ;
   query:include
     cc:dimensionMetadata ;
-  query:preprocess
+  hydra:supportedOperation
     [
       a
-        code:EcmaScript ;
-      code:link
-        <file:handlers/dataset#loadCubes> ;
-    ] ;
-  hydra:supportedOperation
+        hydra:Operation ;
+      hydra:method
+        "GET" ;
+      code:implementedBy
+        [
+          a
+            code:EcmaScript ;
+          code:link
+            <file:handlers/dataset#get> ;
+        ] ;
+    ],
     [
       a
         hydra:Operation,
@@ -43,7 +49,9 @@ void:Dataset
     ] ;
 .
 
-cc:Observations a hydra:Class ;
+cc:Observations
+  a
+    hydra:Class ;
   hydra:supportedOperation
     [
       a
@@ -73,7 +81,7 @@ cc:Observations a hydra:Class ;
                 true ;
               hydra:variable
                 "cube" ;
-            ] ,
+            ],
             [
               a
                 hydra:IriTemplateMapping ;
@@ -83,7 +91,7 @@ cc:Observations a hydra:Class ;
                 true ;
               hydra:variable
                 "graph" ;
-            ] ,
+            ],
             [
               a
                 hydra:IriTemplateMapping ;
@@ -93,7 +101,7 @@ cc:Observations a hydra:Class ;
                 false ;
               hydra:variable
                 "view" ;
-            ] ,
+            ],
             [
               a
                 hydra:IriTemplateMapping ;
@@ -103,7 +111,7 @@ cc:Observations a hydra:Class ;
                 false ;
               hydra:variable
                 "pageSize" ;
-            ] ,
+            ],
             [
               a
                 hydra:IriTemplateMapping ;
