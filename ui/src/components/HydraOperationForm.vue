@@ -1,6 +1,8 @@
 <template>
-  <form v-if="shape" @submit.prevent="$emit('submit')">
+  <form @submit.prevent="$emit('submit')">
     <cc-form :resource.prop="resource" :shapes.prop="shapePointer" no-editor-switches />
+
+    <loading-block v-if="!shape" />
 
     <hydra-operation-error :error="error" class="mt-4" />
 
@@ -8,10 +10,10 @@
       :submit-label="_submitLabel"
       :is-submitting="isSubmitting"
       :show-cancel="showCancel"
+      :disabled="!shape"
       @cancel="$emit('cancel')"
     />
   </form>
-  <loading-block v-else />
 </template>
 
 <script lang="ts">

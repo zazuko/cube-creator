@@ -123,7 +123,7 @@ describe('CSV mapping flow', () => {
 
     cy.contains('.form-property', 'Identifier template')
       .find('input')
-      .type('{column2}', { parseSpecialCharSequences: false })
+      .type('{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}column2{}}')
 
     cy.get('form').submit()
 
