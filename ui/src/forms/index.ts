@@ -10,6 +10,7 @@ import * as Matchers from './matchers'
 import { Metadata } from './metadata'
 import { createCustomElement } from './custom-element'
 import { dash } from '@tpluscode/rdf-ns-builders'
+import { fieldIf } from '@/forms/decorators'
 
 export const focusNodeStrategy: FocusNodeRenderStrategy = ({ focusNode, renderGroup }) => html`
   <div class="fieldset" part="focus-node">
@@ -56,6 +57,7 @@ components.decorate({
     return editor.equals(dash.InstancesSelectEditor) || editor.equals(dash.AutoCompleteEditor)
   },
 })
+components.decorate(fieldIf)
 
 editors.addMatchers(Matchers)
 editors.decorate(instancesSelector.matcher)

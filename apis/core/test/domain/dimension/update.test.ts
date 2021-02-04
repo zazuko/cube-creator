@@ -4,8 +4,8 @@ import clownface, { GraphPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import DatasetExt from 'rdf-ext/lib/Dataset'
-import { rdf, schema, sh, qudt } from '@tpluscode/rdf-ns-builders'
-import { cc } from '@cube-creator/core/namespace'
+import { rdf, schema, sh, qudt, time } from '@tpluscode/rdf-ns-builders'
+import { cc, cube } from '@cube-creator/core/namespace'
 import { update } from '../../../lib/domain/dimension/update'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import { ex } from '../../support/namespace'
@@ -80,6 +80,53 @@ describe('domain/dimension/update', function () {
         ],
         maxCount: 2,
         minCount: 2,
+      }],
+    })
+  })
+
+  it('replaces child blank nodes recursively', async () => {
+    // given
+    const dimensionMetadata = clownface({ dataset: $rdf.dataset() })
+      .namedNode('dimension')
+      .addOut(schema.about, ex.dimension)
+      .addOut(cube.dataKind, dataKind => {
+        dataKind.addOut(rdf.type, time.GeneralDateTimeDescription)
+        dataKind.addOut(time.unitType, unitType => {
+          unitType.addOut(rdf.type, time.Year)
+        })
+      })
+
+    // when
+    const updated = await update({
+      store,
+      metadataCollection: metadataCollection.term,
+      dimensionMetadata,
+    })
+
+    // then
+    expect(updated).to.matchShape({
+      property: [{
+        path: schema.about,
+      }, {
+        path: cube.dataKind,
+        node: {
+          property: [{
+            path: rdf.type,
+            hasValue: time.GeneralDateTimeDescription,
+            minCount: 1,
+            maxCount: 1,
+          }, {
+            path: time.unitType,
+            node: {
+              property: {
+                path: rdf.type,
+                hasValue: time.Year,
+                minCount: 1,
+                maxCount: 1,
+              },
+            },
+          }],
+        },
       }],
     })
   })

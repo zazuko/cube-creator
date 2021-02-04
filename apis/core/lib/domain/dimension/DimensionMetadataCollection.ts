@@ -8,7 +8,8 @@ import * as DimensionMetadata from '@cube-creator/model/DimensionMetadata'
 import $rdf from 'rdf-ext'
 import { shrink } from '@zazuko/rdf-vocabularies'
 import { ResourceStore } from '../../ResourceStore'
-import { NamedNode, Term } from 'rdf-js'
+import { BlankNode, DatasetCore, NamedNode, Term } from 'rdf-js'
+import TermSet from '@rdfjs/term-set'
 
 interface CreateColumnMetadata {
   store: ResourceStore
@@ -37,18 +38,39 @@ declare module '@cube-creator/model' {
   }
 }
 
+function copyMetadata(pointer: GraphPointer, metadata: DatasetCore, visited = new TermSet<BlankNode>()) {
+  if (pointer.term.termType === 'BlankNode') {
+    if (visited.has(pointer.term)) {
+      return
+    }
+
+    visited.add(pointer.term)
+  }
+
+  for (const quad of metadata.match(pointer.term)) {
+    pointer.addOut(quad.predicate, quad.object)
+
+    if (quad.object.termType === 'BlankNode') {
+      copyMetadata(pointer.node(quad.object), metadata, visited)
+    }
+  }
+}
+
 export default function Mixin<Base extends Constructor<Omit<DimensionMetadataCollection, keyof ApiDimensionMetadataCollection>>>(Resource: Base) {
   return class extends Resource implements ApiDimensionMetadataCollection {
     updateDimension(dimension: GraphPointer): void {
-      const found = this.find(dimension.out(schema.about).term!)
+      let found: DimensionMetadata.DimensionMetadata | undefined
+      const about = dimension.out(schema.about).term
+      if (about) {
+        found = this.find(about)
+      }
       if (!found) {
         throw new Error('Dimension not found')
       }
 
+      found.pointer.out().deleteOut()
       found.pointer.deleteOut()
-      for (const quad of dimension.dataset.match(dimension.term)) {
-        found.pointer.addOut(quad.predicate, quad.object)
-      }
+      copyMetadata(found.pointer, dimension.dataset)
     }
 
     deleteDimension(dimension: DimensionMetadata.DimensionMetadata): void {
