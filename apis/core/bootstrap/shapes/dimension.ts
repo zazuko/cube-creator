@@ -30,7 +30,6 @@ WHERE
               FILTER ( lang(?label) = "en" )
               FILTER NOT EXISTS {?unit ${qudt.unitOfSystem} ${sou.SOU_IMPERIAL} . }
               FILTER NOT EXISTS {?unit ${qudt.unitOfSystem} ${sou.SOU_USCS} . }
-              FILTER NOT EXISTS {?unit ${qudt.unitOfSystem} ${sou.SOU_CGS} . }
               FILTER NOT EXISTS {?unit ${qudt.unitOfSystem} ${sou.SOU_PLANCK} . }
               FILTER NOT EXISTS {?unit a ${qudt.CurrencyUnit} . }
             }
