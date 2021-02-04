@@ -4,7 +4,7 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 
 <#Main> a :Pipeline ;
-  :steps [ :stepList ( <#loadGraphStep> <#injectCubeRevision> <#injectMetadata> <#filter> <#streamOutputStep> ) ] .
+  :steps [ :stepList ( <#loadGraphStep> <#injectCubeRevision> <#injectMetadata> <#filter> <#uniqueBnodes> <#streamOutputStep> ) ] .
 
 <#loadGraphStep>
   a                  :Step ;
@@ -50,6 +50,13 @@ _:get
   code:link <node:barnard59-base#filter> ] ;
   code:arguments     ( [ code:link <file:../lib/output-filter#fromPublished> ;
   a         code:EcmaScript ] ) .
+
+<#uniqueBnodes>
+  a :Step ;
+  code:implementedBy [ a code:EcmaScript ; code:link <node:barnard59-base#map> ] ;
+  code:arguments     ( [ code:link <file:../lib/output-filter#ensureUniqueBnodes> ;
+                         a         code:EcmaScript ] ) ;
+.
 
 <#StreamOutput>
   a :Pipeline, :WritableObjectMode .
