@@ -1384,10 +1384,10 @@
     rdf-loaders-registry "^0.2.0"
     sparql-http-client "^2.2.2"
 
-"@hydrofoil/shaperone-core@0.6.2", "@hydrofoil/shaperone-core@^0.6.0", "@hydrofoil/shaperone-core@^0.6.2":
-  version "0.6.2"
-  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-core/-/shaperone-core-0.6.2.tgz#c9f7c4cbe24dccc6001320b26be937dd20a63790"
-  integrity sha512-lWkd2ICFbZ54qZ9GmvXfpsk7R1ae1/uOOtLGgKv3JfhW5cd8POxIPETaobahb3QN/2L+m0G+/gvjlIZWd4yjJA==
+"@hydrofoil/shaperone-core@^0.6.0", "@hydrofoil/shaperone-core@0.6.3", "@hydrofoil/shaperone-core@^0.6.3":
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-core/-/shaperone-core-0.6.3.tgz#047f189838b785a624b483f1e7123726a730aed7"
+  integrity sha512-L8+VfbV+qNAYXqQsXXXQlH9V2MYqzFvSj5Q8sc6dqAlvKFAaczawJBsHVYJBwZW4hDkqlHbWtA3Z2KHItmGLhA==
   dependencies:
     "@captaincodeman/rdx" "^1.0.0-rc.8"
     "@rdf-esm/data-model" "^0.5.3"
@@ -1416,13 +1416,13 @@
     "@tpluscode/rdfine" "^0.5.20"
     alcaeus "^1.1.1"
 
-"@hydrofoil/shaperone-wc@^0.3.4":
-  version "0.3.4"
-  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-wc/-/shaperone-wc-0.3.4.tgz#4e226a1931f445c6c1d1225b2c307c94508114da"
-  integrity sha512-v1vgXcAsCXUGoeF7y8rYNRrHnBBlcOf+H+qnu4JCECUEX8QWOltcMYgO8fSBpFU15bnEoWT8k7jA8Fej2AIsFw==
+"@hydrofoil/shaperone-wc@^0.3.5":
+  version "0.3.5"
+  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-wc/-/shaperone-wc-0.3.5.tgz#5f4fb90d1d12f3b03bebca020882b927601024ff"
+  integrity sha512-ATSNE19D3yVgNwef0Iyb3y6sk6n2wHdQT5I1zKayUBiEq0kbn6oX62rTXKZloOUpHMm2geRso3UANLYO+DNXiw==
   dependencies:
     "@captaincodeman/rdx" "^1.0.0-rc.8"
-    "@hydrofoil/shaperone-core" "0.6.2"
+    "@hydrofoil/shaperone-core" "0.6.3"
     "@rdf-esm/data-model" "^0.5.4"
     "@rdf-esm/term-map" "^0.5.0"
     "@rdfine/shacl" "^0.7.3"
