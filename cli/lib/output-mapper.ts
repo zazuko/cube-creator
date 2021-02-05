@@ -41,11 +41,6 @@ async function loadDimensionMapping(mappingUri:string) {
 }
 
 export async function mapDimensions(this: Pick<Context, 'variables'>) {
-  Hydra.cacheStrategy.shouldLoad = (previous) => {
-    return !previous.representation.root?.types.has(prov.Dictionary) ||
-    !previous.representation.root?.types.has(hydra.ApiDocumentation)
-  }
-
   const jobUri = this.variables.get('jobUri')
   const dimensionMetadataCollection = await loadMetadata(jobUri)
   const dimensionMetadataList = dimensionMetadataCollection?.hasPart

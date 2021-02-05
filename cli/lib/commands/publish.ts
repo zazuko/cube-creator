@@ -12,6 +12,7 @@ import { updateJobStatus } from '../job'
 import { Hydra } from 'alcaeus/node'
 import { Project, PublishJob } from '@cube-creator/model'
 import '../variables'
+import '../hydra-cache'
 
 interface RunOptions {
   debug: boolean
