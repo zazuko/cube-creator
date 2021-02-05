@@ -3718,9 +3718,10 @@ barnard59-base@^0.0.1:
     readable-stream "^3.0.6"
     through2 "^2.0.3"
 
-barnard59-base@^0.1.0, barnard59-base@zazuko/barnard59-base#master:
-  version "0.1.0"
-  resolved "https://codeload.github.com/zazuko/barnard59-base/tar.gz/dc78283f94ec1f05adda2a7a6f26bc14172c1cf5"
+barnard59-base@^0.1.0, barnard59-base@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/barnard59-base/-/barnard59-base-0.1.1.tgz#1820d672791898b89ebb52a5612310c2b399061d"
+  integrity sha512-QaAL8bq6uyjJGKnEctnIfodcZ/xwZTBJGy0peaU6NUEgYlsDnFWwuZv/5yO8Ae5mK96407WVblut8SCEvZ8aMQ==
   dependencies:
     "@rdfjs/formats-common" "^2.0.0"
     duplexify "^3.6.1"

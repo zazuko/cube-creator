@@ -25,7 +25,7 @@
     "alcaeus": "^1.0.1",
     "aws-sdk": "^2.559.0",
     "barnard59": "^0.1.2",
-    "barnard59-base": "zazuko/barnard59-base#master",
+    "barnard59-base": "^0.1.1",
     "barnard59-formats": "^0.1.0",
     "barnard59-graph-store": "^0.1.0",
     "barnard59-rdf": "zazuko/barnard59-rdf#cube-to-observation",
