@@ -1384,7 +1384,7 @@
     rdf-loaders-registry "^0.2.0"
     sparql-http-client "^2.2.2"
 
-"@hydrofoil/shaperone-core@0.6.2", "@hydrofoil/shaperone-core@^0.6.2":
+"@hydrofoil/shaperone-core@0.6.2", "@hydrofoil/shaperone-core@^0.6.0", "@hydrofoil/shaperone-core@^0.6.2":
   version "0.6.2"
   resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-core/-/shaperone-core-0.6.2.tgz#c9f7c4cbe24dccc6001320b26be937dd20a63790"
   integrity sha512-lWkd2ICFbZ54qZ9GmvXfpsk7R1ae1/uOOtLGgKv3JfhW5cd8POxIPETaobahb3QN/2L+m0G+/gvjlIZWd4yjJA==
@@ -1403,26 +1403,6 @@
     "@zazuko/rdf-vocabularies" "^2020.11.2"
     clownface "^1.2.0"
     immer "^8.0.1"
-
-"@hydrofoil/shaperone-core@^0.6.0":
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-core/-/shaperone-core-0.6.1.tgz#e006325fe2a726054c6700acaa7ec7c38015d1b5"
-  integrity sha512-3uUHigd5F1TR0bVJ7x+3yhmjLVWjSmiIoGV6CUImx30OI1zPcZKtM+h6HDwSvVUswajBd6VseOrWDEeBJmce1g==
-  dependencies:
-    "@captaincodeman/rdx" "^1.0.0-rc.8"
-    "@rdf-esm/data-model" "^0.5.3"
-    "@rdf-esm/dataset" "^0.5.1"
-    "@rdf-esm/namespace" "^0.5.1"
-    "@rdf-esm/term-map" "^0.5.0"
-    "@rdf-esm/term-set" "^0.5.0"
-    "@rdfine/dash" "^0.1.2"
-    "@rdfine/rdfs" "^0.6.3"
-    "@rdfine/shacl" "^0.7.3"
-    "@tpluscode/rdf-ns-builders" "^0.4.0"
-    "@tpluscode/rdfine" "^0.5.18"
-    "@zazuko/rdf-vocabularies" "^2020.11.2"
-    clownface "^1.2.0"
-    immer "^7.0.9"
 
 "@hydrofoil/shaperone-hydra@^0.1.5":
   version "0.1.5"
@@ -7802,11 +7782,6 @@ ignore@^5.0.0, ignore@^5.1.1, ignore@^5.1.4:
   version "5.1.8"
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-5.1.8.tgz#f150a8b50a34289b33e22f5889abd4d8016f0e57"
   integrity sha512-BMpfD7PpiETpBl/A6S498BaIJ6Y/ABT93ETbby2fP00v4EbvPBXWEoaR1UBPKs3iR53pJY7EtZk5KACI57i1Uw==
-
-immer@^7.0.9:
-  version "7.0.15"
-  resolved "https://registry.yarnpkg.com/immer/-/immer-7.0.15.tgz#dc3bc6db87401659d2e737c67a21b227c484a4ad"
-  integrity sha512-yM7jo9+hvYgvdCQdqvhCNRRio0SCXc8xDPzA25SvKWa7b1WVPjLwQs1VYU5JPXjcJPTqAa5NP5dqpORGYBQ2AA==
 
 immer@^8.0.1:
   version "8.0.1"
