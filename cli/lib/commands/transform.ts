@@ -9,6 +9,7 @@ import bufferDebug from 'barnard59/lib/bufferDebug'
 import { schema, xsd } from '@tpluscode/rdf-ns-builders'
 import type { Variables } from 'barnard59-core/lib/Pipeline'
 import { updateJobStatus } from '../job'
+import '../hydra-cache'
 
 interface RunOptions {
   debug: boolean
