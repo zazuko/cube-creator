@@ -8,7 +8,7 @@ import { expect } from 'chai'
 import { rdf, schema, time } from '@tpluscode/rdf-ns-builders'
 import { namedNode } from '../support/clownface'
 import { GraphPointer } from 'clownface'
-import { cube } from '@cube-creator/core/namespace'
+import { meta } from '@cube-creator/core/namespace'
 
 const parser = new Parser()
 
@@ -24,16 +24,16 @@ describe('apis/core/bootstrap/shapes/dimension', () => {
     describe('conforming resource', () => {
       const resources: [string, GraphPointer][] = [
         [
-          'when cube:dataKind is schema:GeoCoordinates',
+          'when meta:dataKind is schema:GeoCoordinates',
           namedNode('test')
             .addOut(schema.about, namedNode('dimension'))
-            .addOut(cube.dataKind, dk => dk.addOut(rdf.type, schema.GeoCoordinates)),
+            .addOut(meta.dataKind, dk => dk.addOut(rdf.type, schema.GeoCoordinates)),
         ],
         [
-          'when cube:dataKind is time:GeneralDateTimeDescription',
+          'when meta:dataKind is time:GeneralDateTimeDescription',
           namedNode('test')
             .addOut(schema.about, namedNode('dimension'))
-            .addOut(cube.dataKind, dk =>
+            .addOut(meta.dataKind, dk =>
               dk.addOut(rdf.type, time.GeneralDateTimeDescription)
                 .addOut(time.unitType, time.unitYear)),
         ],
@@ -50,16 +50,16 @@ describe('apis/core/bootstrap/shapes/dimension', () => {
     describe('non-conforming resource', () => {
       const resources: [string, GraphPointer][] = [
         [
-          'when cube:dataKind time:GeneralDateTimeDescription has no precision unit',
+          'when meta:dataKind time:GeneralDateTimeDescription has no precision unit',
           namedNode('test')
             .addOut(schema.about, namedNode('dimension'))
-            .addOut(cube.dataKind, dk => dk.addOut(rdf.type, time.GeneralDateTimeDescription)),
+            .addOut(meta.dataKind, dk => dk.addOut(rdf.type, time.GeneralDateTimeDescription)),
         ],
         [
-          'when cube:dataKind schema:GeoShape has superfluous properties',
+          'when meta:dataKind schema:GeoShape has superfluous properties',
           namedNode('test')
             .addOut(schema.about, namedNode('dimension'))
-            .addOut(cube.dataKind, dk =>
+            .addOut(meta.dataKind, dk =>
               dk.addOut(rdf.type, schema.GeoShape)
                 .addOut(time.unitType, time.unitMinute)),
         ],

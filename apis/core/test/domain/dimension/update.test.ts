@@ -5,7 +5,7 @@ import { NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import { rdf, schema, sh, qudt, time } from '@tpluscode/rdf-ns-builders'
-import { cc, cube } from '@cube-creator/core/namespace'
+import { cc, meta } from '@cube-creator/core/namespace'
 import { update } from '../../../lib/domain/dimension/update'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import { ex } from '../../support/namespace'
@@ -89,7 +89,7 @@ describe('domain/dimension/update', function () {
     const dimensionMetadata = clownface({ dataset: $rdf.dataset() })
       .namedNode('dimension')
       .addOut(schema.about, ex.dimension)
-      .addOut(cube.dataKind, dataKind => {
+      .addOut(meta.dataKind, dataKind => {
         dataKind.addOut(rdf.type, time.GeneralDateTimeDescription)
         dataKind.addOut(time.unitType, unitType => {
           unitType.addOut(rdf.type, time.Year)
@@ -108,7 +108,7 @@ describe('domain/dimension/update', function () {
       property: [{
         path: schema.about,
       }, {
-        path: cube.dataKind,
+        path: meta.dataKind,
         node: {
           property: [{
             path: rdf.type,
