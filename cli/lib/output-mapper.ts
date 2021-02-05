@@ -6,7 +6,6 @@ import { Quad } from 'rdf-js'
 import map from 'barnard59-base/lib/map'
 import { Dictionary } from '@rdfine/prov'
 import * as Prov from '@rdfine/prov'
-import { hydra, prov } from '@tpluscode/rdf-ns-builders'
 import * as Models from '@cube-creator/model'
 
 Hydra.resources.factory.addMixin(...Object.values(Models))
