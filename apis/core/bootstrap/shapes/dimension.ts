@@ -1,4 +1,4 @@
-import { cube, shape, sh1 } from '@cube-creator/core/namespace'
+import { meta, shape, sh1 } from '@cube-creator/core/namespace'
 import { sparql, turtle } from '@tpluscode/rdf-string'
 import { lindasQuery } from '../lib/query'
 import { dash, hydra, rdf, rdfs, schema, sh, qudt, time } from '@tpluscode/rdf-ns-builders'
@@ -40,7 +40,7 @@ WHERE
 `
 
 const validateDataKindShape = turtle`[
-  ${sh.path} ${cube.dataKind} ;
+  ${sh.path} ${meta.dataKind} ;
   ${dash.hidden} true ;
   ${sh.maxCount} 1 ;
   ${sh.node} [
@@ -125,7 +125,7 @@ ${shape('dimension/metadata')} {
       ${sh.order} 30 ;
     ] , [
       ${sh.name} "Data kind" ;
-      ${sh.path} ${cube.dataKind} ;
+      ${sh.path} ${meta.dataKind} ;
       ${sh.maxCount} 1 ;
       ${sh.nodeKind} ${sh.BlankNode} ;
       ${sh.node} [
