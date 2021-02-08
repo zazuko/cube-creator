@@ -1,7 +1,7 @@
 PREFIX cc:     <https://cube-creator.zazuko.com/vocab#>
 PREFIX schema: <http://schema.org/>
 PREFIX void:   <http://rdfs.org/ns/void#>
-PREFIX cube:   <http://ns.bergnet.org/cube/>
+PREFIX cube:   <https://cube.link/>
 PREFIX hydra:  <http://www.w3.org/ns/hydra/core#>
 
 ENTRYPOINT "cube-project/ubd/dataset"
@@ -16,7 +16,7 @@ HEADERS {
 With Class void:Dataset {
 
     Expect Property schema:hasPart {
-        Expect Type <http://ns.bergnet.org/cube/Cube>
+        Expect Type <https://cube.link/Cube>
     }
 
     Expect Property cc:dimensionMetadata {
@@ -29,7 +29,7 @@ With Class void:Dataset {
 
 With Class cube:Cube {
     Expect Property cube:observationConstraint {
-        Expect Type <http://ns.bergnet.org/cube/Constraint>
+        Expect Type <https://cube.link/Constraint>
     }
 
     // Expect Link cc:observations {
