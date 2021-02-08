@@ -2,6 +2,7 @@ prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 prefix md: <https://cube-creator.zazuko.com/managed-dimensions/vocab#>
 prefix void: <http://rdfs.org/ns/void#>
 prefix schema: <http://schema.org/>
+prefix meta: <https://cube.link/meta/>
 base <https://cube-creator.lndo.site/managed-dimensions/>
 
 <managed-dimensions> a void:Dataset .
@@ -9,7 +10,7 @@ base <https://cube-creator.lndo.site/managed-dimensions/>
 <http://example.com/dimension/countries> void:inDataset <managed-dimensions> .
 graph <http://example.com/dimension/countries> {
   <http://example.com/dimension/countries>
-    a schema:DefinedTermSet, md:ManagedDimension ;
+    a schema:DefinedTermSet, meta:SharedDimension ;
     schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
     schema:name "Countries"@en, "Länder"@de, "Des pays"@fr, "Paesi"@it ;
   .
@@ -26,7 +27,7 @@ graph <http://example.com/dimension/countries> {
 <http://example.com/dimension/colors> void:inDataset <managed-dimensions> .
 graph <http://example.com/dimension/colors> {
   <http://example.com/dimension/colors>
-    a schema:DefinedTermSet, md:ManagedDimension ;
+    a schema:DefinedTermSet, meta:SharedDimension ;
     schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
     schema:name "Colors"@en, "Farben"@de, "I colori"@it, "Les couleurs"@fr ;
   .
