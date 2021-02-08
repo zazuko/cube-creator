@@ -5,9 +5,9 @@ import { ProjectsState } from '@/store/modules/projects'
 import { ProjectState } from '@/store/modules/project'
 
 export interface RootState {
-  app: AppState,
-  auth: VuexOidcState,
-  api: APIState,
-  projects: ProjectsState,
-  project: ProjectState,
+  app: AppState
+  auth: VuexOidcState
+  api: APIState
+  projects: ProjectsState
+  project: ProjectState
 }

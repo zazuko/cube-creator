@@ -5,10 +5,10 @@ import { NamedNode } from 'rdf-js'
 import { RuntimeOperation } from 'alcaeus'
 
 export interface Actions {
-  [key: string]: RuntimeOperation | null,
-  create: RuntimeOperation | null,
-  edit: RuntimeOperation | null,
-  delete: RuntimeOperation | null,
+  [key: string]: RuntimeOperation | null
+  create: RuntimeOperation | null
+  edit: RuntimeOperation | null
+  delete: RuntimeOperation | null
 }
 
 export interface AdditionalActions {

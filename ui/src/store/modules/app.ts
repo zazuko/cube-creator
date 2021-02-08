@@ -3,15 +3,15 @@ import { loadCommonProperties } from '@/rdf-properties'
 import { RootState } from '../types'
 
 export interface Message {
-  title: string;
-  message: string;
-  type: 'is-info' | 'is-success' | 'is-danger';
+  title: string
+  message: string
+  type: 'is-info' | 'is-success' | 'is-danger'
 }
 
 export interface AppState {
-  messages: Message[];
-  loading: boolean;
-  commonRDFProperties: string[];
+  messages: Message[]
+  loading: boolean
+  commonRDFProperties: string[]
 }
 
 const initialState = {

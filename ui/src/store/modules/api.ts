@@ -7,7 +7,7 @@ import RdfResourceImpl, { ResourceIdentifier } from '@tpluscode/rdfine'
 import { ToastProgrammatic as Toast } from 'buefy'
 
 export interface APIState {
-  entrypoint: null | RdfResource,
+  entrypoint: null | RdfResource
 }
 
 const initialState = {

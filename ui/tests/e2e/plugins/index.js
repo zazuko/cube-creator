@@ -6,7 +6,7 @@
 // as explained in the cypress docs
 // https://docs.cypress.io/api/plugins/preprocessors-api.html#Examples
 
-// /* eslint-disable import/no-extraneous-dependencies, global-require */
+/* eslint-disable import/no-extraneous-dependencies, global-require, @typescript-eslint/no-var-requires */
 const webpack = require('@cypress/webpack-preprocessor')
 
 const webpackOptions = {
