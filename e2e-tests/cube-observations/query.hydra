@@ -1,8 +1,8 @@
 PREFIX cc:     <https://cube-creator.zazuko.com/vocab#>
 PREFIX schema: <http://schema.org/>
 PREFIX void:   <http://rdfs.org/ns/void#>
-PREFIX cube:   <http://ns.bergnet.org/cube/>
-PREFIX view:   <http://ns.bergnet.org/cube-view/>
+PREFIX cube:   <https://cube.link/>
+PREFIX view:   <https://cube.link/view/>
 PREFIX hydra:  <http://www.w3.org/ns/hydra/core#>
 
 ENTRYPOINT "cube-project/ubd/dataset"
@@ -20,7 +20,7 @@ With Class void:Dataset {
 
 With Class cube:Cube {
     Expect Link cc:observations (
-        view:view='prefix view: <http://ns.bergnet.org/cube-view/>
+        view:view='prefix view: <https://cube.link/view/>
                    prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 
                    [
@@ -39,7 +39,7 @@ With Class cube:Cube {
     Expect Link cc:observations (
         hydra:limit="1"
         hydra:pageIndex="2"
-        view:view='prefix view: <http://ns.bergnet.org/cube-view/>
+        view:view='prefix view: <https://cube.link/view/>
                    prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 
                    [

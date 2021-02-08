@@ -3772,9 +3772,10 @@ barnard59-graph-store@^0.1.0:
     readable-stream "^3.6.0"
     sparql-http-client "^2.2.2"
 
-barnard59-rdf@zazuko/barnard59-rdf#cube-to-observation:
-  version "0.0.1"
-  resolved "https://codeload.github.com/zazuko/barnard59-rdf/tar.gz/0872cc6f0b57c9a92298f3a426a1c5b5e1ed4601"
+barnard59-rdf@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/barnard59-rdf/-/barnard59-rdf-0.2.0.tgz#b4e40724e948ddb7ae9a2b6c0d74189b1dad2555"
+  integrity sha512-ha9OCE7a/qTb8fJ8Hg11bHcDtVEGguM/KYV9cPjFdZpNQzDrywXi8Ii64XX4CspAuqk4JDcBYgOVf1OOUPsdVQ==
   dependencies:
     "@rdfjs/namespace" "^1.1.0"
     "@rdfjs/term-map" "^1.0.0"
@@ -11255,9 +11256,10 @@ rdf-canonize@^1.0.3:
     node-forge "^0.9.1"
     semver "^6.3.0"
 
-rdf-cube-view-query@zazuko/rdf-cube-view-query:
-  version "0.0.0"
-  resolved "https://codeload.github.com/zazuko/rdf-cube-view-query/tar.gz/a44dfb94113a9d227ac893a079158410de1649a0"
+rdf-cube-view-query@^1:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/rdf-cube-view-query/-/rdf-cube-view-query-1.0.0.tgz#56b8c12b922d78707926a2dac3847cbd0ce5d88d"
+  integrity sha512-1/KLR/q0VoiFDm+RD855uoCR7JFTgB2okBk69WjpUOEUhTRhpJfU/aGy0OBUzWjN4NMIUhDGOTdDGTX4kkAV2w==
   dependencies:
     "@rdfjs/namespace" "^1.1.0"
     "@rdfjs/term-map" "^1.0.0"

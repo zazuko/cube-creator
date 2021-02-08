@@ -7,7 +7,7 @@ prefix query:     <http://hypermedia.app/query#>
 prefix sh:        <http://www.w3.org/ns/shacl#>
 PREFIX schema:    <http://schema.org/>
 PREFIX void:      <http://rdfs.org/ns/void#>
-prefix view:      <http://ns.bergnet.org/cube-view/>
+prefix view:      <https://cube.link/view/>
 
 void:Dataset
   a
