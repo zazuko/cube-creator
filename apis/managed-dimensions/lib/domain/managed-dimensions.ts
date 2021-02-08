@@ -1,6 +1,6 @@
 import { CONSTRUCT } from '@tpluscode/sparql-builder'
 import { hydra, schema } from '@tpluscode/rdf-ns-builders'
-import { md } from '@cube-creator/core/namespace'
+import { md, meta } from '@cube-creator/core/namespace'
 import { NamedNode, Term } from 'rdf-js'
 
 export function getManagedDimensions(term: NamedNode) {
@@ -10,7 +10,7 @@ export function getManagedDimensions(term: NamedNode) {
   `
     .WHERE`
       GRAPH ?g {
-        ?termSet a ${schema.DefinedTermSet}, ${md.ManagedDimension} .
+        ?termSet a ${schema.DefinedTermSet}, ${meta.SharedDimension} .
         ?termSet ?p ?o .
       }
     `
@@ -23,7 +23,7 @@ export function getManagedTerms(managedDimension: Term, collection: NamedNode) {
     `
     .WHERE`
       GRAPH ?g {
-        ${managedDimension} a ${md.ManagedDimension} .
+        ${managedDimension} a ${meta.SharedDimension} .
         ?term ${schema.inDefinedTermSet} ${managedDimension} ; ?p ?o .
       }
     `
