@@ -50,7 +50,7 @@ chai.Assertion.addMethod('matchShape', function (shapeInit: Initializer<NodeShap
   let actual: any
   if (isDataset(obj)) {
     resourceDataset = obj
-    targetNode = shapeInit.targetNode as any
+    targetNode = !isDataset(shapeInit) && shapeInit.targetNode as any
     actual = $rdf.dataset([...resourceDataset]).toString()
   } else if (isRdfine(obj)) {
     resourceDataset = obj.pointer.dataset

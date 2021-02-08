@@ -1,6 +1,6 @@
 import { describe, it, beforeEach } from 'mocha'
 import { expect } from 'chai'
-import { GraphPointer } from 'clownface'
+import clownface, { GraphPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import sinon from 'sinon'
@@ -217,7 +217,7 @@ describe('domain/dimension/update', function () {
     // given
     const dimensionMetadata = clownface({ dataset: $rdf.dataset() })
       .namedNode('dimension')
-      .addOut(schema.about, ex.dimension)
+      .addOut(schema.about, ex.pollutantDimension)
       .addOut(meta.dataKind, dataKind => {
         dataKind.addOut(rdf.type, time.GeneralDateTimeDescription)
         dataKind.addOut(time.unitType, unitType => {
