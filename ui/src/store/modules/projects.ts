@@ -6,7 +6,7 @@ import { ProjectsCollection } from '@cube-creator/model'
 import { serializeProjectsCollection } from '../serializers'
 
 export interface ProjectsState {
-  collection: null | ProjectsCollection,
+  collection: null | ProjectsCollection
 }
 
 const initialState = {

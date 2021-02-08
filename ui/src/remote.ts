@@ -1,8 +1,8 @@
 
 export interface RemoteData<T> {
-  isLoading: boolean;
-  data: T | null;
-  error: string | null;
+  isLoading: boolean
+  data: T | null
+  error: string | null
 }
 
 function loading<T> (): RemoteData<T> {

@@ -1,4 +1,5 @@
 import { meta, shape, sh1 } from '@cube-creator/core/namespace'
+import { supportedLanguages } from '@cube-creator/model/languages'
 import { sparql, turtle } from '@tpluscode/rdf-string'
 import { lindasQuery } from '../lib/query'
 import { dash, hydra, rdf, rdfs, schema, sh, qudt, time } from '@tpluscode/rdf-ns-builders'
@@ -88,7 +89,7 @@ ${shape('dimension/metadata')} {
       ${sh.name} "Name" ;
       ${sh.path} ${schema.name} ;
       ${sh.datatype} ${rdf.langString} ;
-      ${sh.languageIn} ( "en" "de" "fr" "it" ) ;
+      ${sh.languageIn} ( ${supportedLanguages} ) ;
       ${sh.uniqueLang} true ;
       ${sh.defaultValue} ""@en ;
       ${sh.minLength} 1 ;
@@ -117,7 +118,7 @@ ${shape('dimension/metadata')} {
       ${sh.name} "Description" ;
       ${sh.path} ${schema.description} ;
       ${sh.datatype} ${rdf.langString} ;
-      ${sh.languageIn} ( "en" "de" "fr" "it" ) ;
+      ${sh.languageIn} ( ${supportedLanguages} ) ;
       ${sh.uniqueLang} true ;
       ${sh.defaultValue} ""@en ;
       ${sh.minLength} 1 ;

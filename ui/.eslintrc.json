@@ -12,7 +12,9 @@
     "ecmaVersion": 2020
   },
   "rules": {
+    "@typescript-eslint/no-explicit-any": "warn",
     "comma-dangle": "off",
+    "no-console": "off",
     "vue/max-attributes-per-line": "off",
     "vue/component-name-in-template-casing": [
       "error",
