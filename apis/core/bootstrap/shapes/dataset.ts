@@ -1,4 +1,5 @@
 import { shape, freq } from '@cube-creator/core/namespace'
+import { supportedLanguages } from '@cube-creator/model/languages'
 import { hydra, rdfs, sh, dcat, dcterms, xsd, rdf, vcard, schema, _void, dash } from '@tpluscode/rdf-ns-builders'
 import { sparql, turtle } from '@tpluscode/rdf-string'
 import $rdf from 'rdf-ext'
@@ -59,7 +60,7 @@ ${shapeId} {
       ${sh.minCount} 1 ;
       ${sh.minLength} 1 ;
       ${sh.datatype} ${rdf.langString} ;
-      ${sh.languageIn} ("en" "de" "fr" "it") ;
+      ${sh.languageIn} ( ${supportedLanguages} ) ;
       ${sh.uniqueLang} true ;
       ${sh.order} 10 ;
       ${sh.description} "A publishable title describing the cube. Please add entries for all [languages](https://gitlab.ldbar.ch/bafu/cube-creator-documentation/-/wikis/(2)-Meta-Data-and-Manual-Validation-in-Cube-Preview#languages)." ;
@@ -72,13 +73,13 @@ ${shapeId} {
       ${sh.datatype} ${rdf.langString} ;
       ${dash.hidden} true ;
       ${sh.equals} ${schema.name} ;
-    ] ;    
+    ] ;
     ${sh.property} [
       ${sh.name} "Description" ;
       ${sh.path} ${schema.description} ;
       ${sh.minLength} 1 ;
       ${sh.datatype} ${rdf.langString} ;
-      ${sh.languageIn} ("en" "de" "fr" "it") ;
+      ${sh.languageIn} ( ${supportedLanguages} ) ;
       ${sh.uniqueLang} true ;
       ${sh.order} 20 ;
       ${sh.description} "A short description about the provided cube." ;
@@ -90,7 +91,7 @@ ${shapeId} {
       ${sh.datatype} ${rdf.langString} ;
       ${dash.hidden} true ;
       ${sh.equals} ${schema.description} ;
-    ] ;        
+    ] ;
     ${sh.property} [
       ${sh.name} "Status" ;
       ${sh.path} ${schema.creativeWorkStatus} ;
