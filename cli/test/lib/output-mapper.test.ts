@@ -3,7 +3,7 @@ import { expect } from 'chai'
 import $rdf from 'rdf-ext'
 import { cube } from '@cube-creator/core/namespace'
 import { mapDimensions } from '../../lib/output-mapper'
-import { insertTestData } from '@cube-creator/testing/lib'
+import { insertTestProject } from '@cube-creator/testing/lib'
 import { setupEnv } from '../support/env'
 import { env } from 'process'
 
@@ -12,7 +12,7 @@ describe('lib/output-mapper', function () {
 
   before(async () => {
     setupEnv()
-    await insertTestData('fuseki/sample-ubd.trig')
+    await insertTestProject()
   })
 
   describe('mapDimensions', () => {
