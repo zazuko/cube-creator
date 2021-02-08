@@ -25,7 +25,10 @@ jobs:
         uses: changesets/action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+        with:
+          commit: "chore: release"
+          title: "Merge to release"
+        
   tags:
     name: Create tags
     runs-on: ubuntu-latest
