@@ -2,7 +2,9 @@
   <div class="dimension">
     <div class="dimension-header">
       <term-with-language :values="dimension.name" :selected-language="selectedLanguage">
-        Missing dimension name
+        <span class="has-text-danger">
+          Missing name for <em><term-display :term="dimension.about" :base="cubeUri" /></em>
+        </span>
       </term-with-language>
       <hydra-operation-button
         :operation="dimension.actions.edit"
@@ -23,14 +25,16 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import { DimensionMetadata } from '@cube-creator/model'
 import HydraOperationButton from './HydraOperationButton.vue'
 import ScaleOfMeasureIcon from './ScaleOfMeasureIcon.vue'
+import TermDisplay from './TermDisplay.vue'
 import TermWithLanguage from './TermWithLanguage.vue'
 
 @Component({
-  components: { HydraOperationButton, ScaleOfMeasureIcon, TermWithLanguage },
+  components: { HydraOperationButton, ScaleOfMeasureIcon, TermDisplay, TermWithLanguage },
 })
 export default class CubePreviewDimension extends Vue {
   @Prop({ required: true }) dimension!: DimensionMetadata
   @Prop({ required: true }) selectedLanguage!: string
+  @Prop({ required: true }) cubeUri!: string
 
   get description (): string {
     const description = this.dimension.description.find(({ language }) => language === this.selectedLanguage)

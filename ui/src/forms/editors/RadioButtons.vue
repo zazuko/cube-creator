@@ -45,7 +45,10 @@ export default class extends Vue {
   }
 
   emit (value: string): void {
-    this.update(value)
+    const choice = this.choices.find(ptr => ptr.value === value)
+    if (choice) {
+      this.update(choice)
+    }
   }
 }
 </script>

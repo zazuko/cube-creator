@@ -106,8 +106,10 @@ describe('domain/table/update', () => {
     dimensionMetadataQueries = { getDimensionMetaDataCollection }
 
     dimensionIsUsedByOtherMapping = sinon.stub().resolves(false)
+    const getReferencingMappingsForTable = sinon.stub().returns([])
     columnMappingQueries = {
       dimensionIsUsedByOtherMapping,
+      getReferencingMappingsForTable,
     }
 
     sinon.stub(orgQueries, 'findOrganization').resolves({

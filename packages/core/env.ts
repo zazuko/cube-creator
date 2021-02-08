@@ -44,6 +44,7 @@ type ENV_VARS =
   | 'PIPELINE_ENV'
 
 type KnownVariables<T extends string> = {
+  /* eslint-disable-next-line no-unused-vars */
   [P in T]: string
 }
 

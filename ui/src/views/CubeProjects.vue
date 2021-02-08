@@ -25,7 +25,9 @@
         >
           <div class="is-flex-grow-1 is-flex is-justify-content-space-between">
             <div>
-              <p class="has-text-weight-bold">{{ project.label }}</p>
+              <p class="has-text-weight-bold">
+                {{ project.label }}
+              </p>
               <p class="is-size-7" title="Cube identifier">
                 {{ project.cubeIdentifier }}
               </p>

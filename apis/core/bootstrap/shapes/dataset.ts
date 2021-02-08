@@ -25,6 +25,22 @@ construct {
   }
 }`
 
+const orgQuery = sparql`prefix cat: <https://register.ld.admin.ch/opendataswiss/org/>
+
+construct {
+  ?c a ${hydra.Collection} .
+  ?c ${hydra.member} ?org .
+  ?org ${rdfs.label} ?name ; ?p ?o .
+} WHERE {
+  BIND ( iri('http://app.cube-creator.lndo.site/org') as ?c )
+
+  graph   <https://lindas.admin.ch/sfa/opendataswiss> {
+    ?org a ${schema.Organization} ;
+      ${schema.name} ?name ;
+      ?p ?o .
+  }
+}`
+
 export const DatasetShape = turtle`
 @prefix cld: <http://purl.org/cld/terms/> .
 @prefix dcam: <http://purl.org/dc/dcam/> .
@@ -145,7 +161,9 @@ ${shapeId} {
       ${sh.name} "Opendata.swiss Publisher" ;
       ${sh.path} ${dcterms.publisher} ;
       ${sh.minCount} 0 ;
-      ${sh.datatype} ${rdf.Description} ;
+      ${sh.class} ${schema.Organization} ;
+      ${sh.nodeKind} ${sh.IRI} ;
+      ${hydra.collection} ${lindasQuery(orgQuery)} ;
       ${sh.order} 80 ;
       ${sh.description} "This is the publishing organization used in opendata.swiss.";
     ] ;

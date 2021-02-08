@@ -1,5 +1,7 @@
 import clownface, { GraphPointer } from 'clownface'
-import { NamedNode } from 'rdf-js'
+import { NamedNode, Quad } from 'rdf-js'
+import TermSet from '@rdfjs/term-set'
+import $rdf from 'rdf-ext'
 import { DimensionMetadataCollection, Project } from '@cube-creator/model'
 import { prov, rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { ResourceStore } from '../../ResourceStore'
@@ -11,6 +13,23 @@ interface UpdateDimensionCommand {
   metadataCollection: NamedNode
   dimensionMetadata: GraphPointer
   store: ResourceStore
+}
+
+function * extractSubgraph(pointer: GraphPointer, visited = new TermSet()): Iterable<Quad> {
+  if (visited.has(pointer.term)) {
+    return
+  }
+
+  for (const quad of pointer.dataset.match(pointer.term)) {
+    yield quad
+
+    if (quad.object.termType === 'BlankNode') {
+      visited.add(quad.object)
+      for (const child of extractSubgraph(pointer.node(quad.object))) {
+        yield child
+      }
+    }
+  }
 }
 
 export async function update({
@@ -37,6 +56,6 @@ export async function update({
     dimension.mappings = undefined
   }
 
-  const dataset = metadata.pointer.dataset.match(dimensionMetadata.term)
+  const dataset = $rdf.dataset([...extractSubgraph(metadata.pointer.node(dimensionMetadata.term))])
   return clownface({ dataset }).node(dimensionMetadata.term)
 }

@@ -83,12 +83,15 @@ type ManagedDimensionsTerms =
 prefixes.freq = 'http://purl.org/cld/freq/'
 prefixes.cube = 'http://ns.bergnet.org/cube/'
 prefixes.view = 'http://ns.bergnet.org/cube-view/'
+prefixes.meta = 'https://cube.link/meta/'
 
 export const query = namespace('http://hypermedia.app/query#')
 export const cube = namespace(prefixes.cube)
+export const meta = namespace(prefixes.meta)
 export const view = namespace(prefixes.view)
 export const hydraBox = namespace('http://hydra-box.org/schema/')
 export const cc = namespace<CubeCreatorTerms>('https://cube-creator.zazuko.com/vocab#')
 export const md = namespace<ManagedDimensionsTerms>('https://cube-creator.zazuko.com/managed-dimensions/vocab#')
 export const editor = namespace(cc.dash.value)
 export const freq = namespace(prefixes.freq)
+export const sh1 = namespace('https://forms.hypermedia.app/shaperone#')

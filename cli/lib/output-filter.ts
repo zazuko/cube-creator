@@ -1,6 +1,12 @@
-import { Quad } from 'rdf-js'
+import { BlankNode, Quad, Term } from 'rdf-js'
 import { csvw, rdf } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
+import type { Context } from 'barnard59-core/lib/Pipeline'
+import { customAlphabet } from 'nanoid'
+import dict from 'nanoid-dictionary'
+import $rdf from 'rdf-ext'
+
+const nanoid = customAlphabet(dict.alphanumeric, 15)
 
 const csvwNs = csvw().value
 const csvwDescribes = csvw.describes
@@ -37,4 +43,24 @@ export function excludeAllCsvw(quad: Quad): boolean {
 
 export function fromPublished(quad: Quad): boolean {
   return removeCsvwTriples(quad, false)
+}
+
+function rewriteBlankNode<T extends Term>(term: T, uuid: string): T | BlankNode {
+  if (term.termType !== 'BlankNode') {
+    return term
+  }
+
+  return $rdf.blankNode(`${uuid}${term.value}`)
+}
+
+export function ensureUniqueBnodes(this: Context, quad: Quad): Quad {
+  const uuid = this.variables.get('bnodeUuid') ||
+    this.variables.set('bnodeUuid', nanoid()).get('bnodeUuid')
+
+  return $rdf.quad(
+    rewriteBlankNode(quad.subject, uuid),
+    quad.predicate,
+    rewriteBlankNode(quad.object, uuid),
+    quad.graph,
+  )
 }

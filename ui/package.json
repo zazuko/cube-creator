@@ -1,6 +1,6 @@
 {
   "name": "@cube-creator/ui",
-  "version": "0.1.11",
+  "version": "0.1.15",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -17,9 +17,9 @@
     "@fortawesome/free-regular-svg-icons": "^5.15.1",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@fortawesome/vue-fontawesome": "^2.0.0",
-    "@hydrofoil/shaperone-core": "^0.6.1",
+    "@hydrofoil/shaperone-core": "^0.6.3",
     "@hydrofoil/shaperone-hydra": "^0.1.5",
-    "@hydrofoil/shaperone-wc": "^0.3.3",
+    "@hydrofoil/shaperone-wc": "^0.3.5",
     "@rdf-esm/data-model": "^0.5.3",
     "@rdf-esm/dataset": "^0.5.1",
     "@rdfine/shacl": "^0.7.4",
@@ -41,6 +41,7 @@
     "vue-color": "^2.7.1",
     "vue-custom-element": "^3.2.14",
     "vue-markdown": "^2.2.4",
+    "vue-multiselect": "^2.1.6",
     "vue-property-decorator": "^9.0.2",
     "vue-router": "^3.4.7",
     "vuex": "^3.4.0",

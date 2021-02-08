@@ -69,6 +69,19 @@ export const enumSelect: Lazy<EnumSelectEditor> = {
   }
 }
 
+export const autoComplete: Lazy<InstancesSelectEditor> = {
+  ...instancesSelectCore,
+  editor: dash.AutoCompleteEditor,
+  async lazyRender () {
+    await import('./AutoCompleteEditor.vue').then(createCustomElement('auto-complete'))
+
+    return ({ property, value }, { update }) => html`<auto-complete .property="${property.shape}"
+                          .update="${update}"
+                          .options="${value.componentState.instances}"
+                          .value="${value.object?.term}"></auto-complete>`
+  }
+}
+
 export const radioButtons: Lazy<SingleEditorComponent> = {
   editor: ns.editor.RadioButtons,
   async lazyRender () {

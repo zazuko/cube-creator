@@ -79,6 +79,7 @@ export function serializeSource (source: CsvSource): CsvSource {
     actions: {
       ...serializeActions(source.actions),
       replace: source.actions.replace,
+      download: source.actions.download,
     },
     name: source.name,
     error: source.error,

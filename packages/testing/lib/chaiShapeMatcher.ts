@@ -1,18 +1,19 @@
 import chai from 'chai'
 import type { NodeShape, ValidationResult } from '@rdfine/shacl'
-import { NodeShapeMixin } from '@rdfine/shacl'
+import { fromPointer } from '@rdfine/shacl/lib/NodeShape'
 import { ShapeBundle, ValidationResultBundle } from '@rdfine/shacl/bundles'
 import RdfResourceImpl, { Initializer, RdfResource, ResourceIdentifier } from '@tpluscode/rdfine/RdfResource'
 import { BlankNode, DatasetCore, NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import clownface, { MultiPointer } from 'clownface'
 import Validator, * as Validate from 'rdf-validate-shacl'
+import { rdf, sh } from '@tpluscode/rdf-ns-builders'
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Chai {
     interface Assertion {
-      matchShape(shapeInit: Initializer<NodeShape>): void
+      matchShape(shapeInit: Initializer<NodeShape> | DatasetCore): void
     }
   }
 }
@@ -42,7 +43,7 @@ function toJSON(result: Validate.ValidationResult) {
   }
 }
 
-chai.Assertion.addMethod('matchShape', function (shapeInit: Initializer<NodeShape>) {
+chai.Assertion.addMethod('matchShape', function (shapeInit: Initializer<NodeShape> | DatasetCore) {
   const obj = this._obj
   let targetNode: ResourceIdentifier[] = []
   let resourceDataset: DatasetCore
@@ -67,9 +68,16 @@ chai.Assertion.addMethod('matchShape', function (shapeInit: Initializer<NodeShap
     throw new Error('No nodes found to validate in data graph')
   }
 
-  const shape = new NodeShapeMixin.Class(
-    clownface({ dataset: $rdf.dataset() }).blankNode(),
-    { ...shapeInit, targetNode })
+  let shape: NodeShape
+  if (isDataset(shapeInit)) {
+    const [shapePointer] = clownface({ dataset: shapeInit })
+      .has(rdf.type, [sh.Shape, sh.NodeShape]).toArray()
+    shape = fromPointer(shapePointer, { targetNode })
+  } else {
+    shape = fromPointer(
+      clownface({ dataset: $rdf.dataset() }).blankNode(),
+      { ...shapeInit, targetNode })
+  }
 
   const validator = new Validator(shape.pointer.dataset)
   const report = validator.validate(resourceDataset)

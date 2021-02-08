@@ -1,5 +1,6 @@
 import { Hydra } from 'alcaeus/web'
 import { RdfResource, RuntimeOperation } from 'alcaeus'
+import { ResponseWrapper } from 'alcaeus/ResponseWrapper'
 import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import { hydra, sh } from '@tpluscode/rdf-ns-builders'
 import { ShapeBundle } from '@rdfine/shacl/bundles'
@@ -120,5 +121,17 @@ export const api = {
     if (response.response?.xhr.status !== 204) {
       throw await APIError.fromResponse(response)
     }
+  },
+
+  async invokeDownloadOperation (operation: RuntimeOperation | null, headers: Record<string, string> = {}): Promise<ResponseWrapper> {
+    if (!operation) throw new Error('Operation does not exist')
+
+    const response = await operation.invoke('', headers)
+
+    if (response.response?.xhr.status !== 305) {
+      throw await APIError.fromResponse(response)
+    }
+
+    return response.response
   },
 }
