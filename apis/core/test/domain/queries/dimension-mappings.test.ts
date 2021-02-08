@@ -4,7 +4,7 @@ import { Term } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import { expect } from 'chai'
 import { DESCRIBE } from '@tpluscode/sparql-builder'
-import { parsingClient, client, insertTestData } from '@cube-creator/testing/lib'
+import { ccClients, insertTestProject } from '@cube-creator/testing/lib'
 import clownface from 'clownface'
 import TermMap from '@rdfjs/term-map'
 import { replaceValueWithDefinedTerms, getUnmappedValues } from '../../../lib/domain/queries/dimension-mappings'
@@ -15,12 +15,12 @@ describe('lib/domain/queries/dimension-mappings @SPARQL', function () {
   const dimensionMapping = $rdf.namedNode('https://cube-creator.lndo.site/cube-project/ubd/dimension-mapping/pollutant')
 
   beforeEach(async () => {
-    await insertTestData('fuseki/sample-ubd.trig')
+    await insertTestProject()
   })
 
   describe('replaceValueWithDefinedTerms', () => {
     let terms: Map<Term, Term>
-    const sparqlSpy = sinon.spy(client.query, 'update')
+    const sparqlSpy = sinon.spy(ccClients.streamClient.query, 'update')
 
     beforeEach(async () => {
       terms = new TermMap()
@@ -30,7 +30,7 @@ describe('lib/domain/queries/dimension-mappings @SPARQL', function () {
 
     it('does nothing when called without any terms', async () => {
     // when
-      await replaceValueWithDefinedTerms({ dimensionMapping, terms }, client)
+      await replaceValueWithDefinedTerms({ dimensionMapping, terms }, ccClients.streamClient)
 
       // then
       expect(sparqlSpy).not.to.have.been.called
@@ -43,10 +43,10 @@ describe('lib/domain/queries/dimension-mappings @SPARQL', function () {
       terms.set($rdf.literal('so2'), definedTerm)
 
       // when
-      await replaceValueWithDefinedTerms({ dimensionMapping, terms }, client)
+      await replaceValueWithDefinedTerms({ dimensionMapping, terms }, ccClients.streamClient)
 
       // then
-      const quads = await DESCRIBE`${observationId}`.execute(parsingClient.query)
+      const quads = await DESCRIBE`${observationId}`.execute(ccClients.parsingClient.query)
       const observation = clownface({ dataset: $rdf.dataset(quads) }).namedNode(observationId)
       expect(observation).to.matchShape({
         property: {
@@ -64,7 +64,7 @@ describe('lib/domain/queries/dimension-mappings @SPARQL', function () {
 
     it('returns combined unmapped values from shapes and observations', async () => {
       // when
-      const unmappedValues = await getUnmappedValues(dimensionMapping, dimension, parsingClient)
+      const unmappedValues = await getUnmappedValues(dimensionMapping, dimension, ccClients.parsingClient)
 
       // then
       expect(unmappedValues).to.have.property('size', 3)

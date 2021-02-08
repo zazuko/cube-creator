@@ -17,7 +17,7 @@ export function appMock(prepare?: (hydra: HydraBox) => void): express.RequestHan
       operation: cf({ dataset: $rdf.dataset() }).blankNode(),
       api: {
         dataset: $rdf.dataset(),
-        graph: $rdf.defaultGraph(),
+        graph: $rdf.namedNode('foo'),
         term: ex.Api,
       },
     }

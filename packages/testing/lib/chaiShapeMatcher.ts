@@ -47,13 +47,14 @@ chai.Assertion.addMethod('matchShape', function (shapeInit: Initializer<NodeShap
   let targetNode: ResourceIdentifier[] = []
   let resourceDataset: DatasetCore
   let actual: any
-  if (isRdfine(obj)) {
+  if (isDataset(obj)) {
+    resourceDataset = obj
+    targetNode = shapeInit.targetNode as any
+    actual = $rdf.dataset([...resourceDataset]).toString()
+  } else if (isRdfine(obj)) {
     resourceDataset = obj.pointer.dataset
     targetNode.push(obj.id)
     actual = obj.toJSON()
-  } else if (isDataset(obj)) {
-    resourceDataset = obj
-    actual = $rdf.dataset([...resourceDataset]).toString()
   } else if (isGraphPointer(obj)) {
     resourceDataset = obj.dataset
     targetNode = [...obj.terms]

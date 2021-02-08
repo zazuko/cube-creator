@@ -102,9 +102,10 @@ ${shape('dimension/managed-mapping')} {
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
       ${hydra.search} [
-        ${hydra.template} "managed-dimensions/terms{?termSet}" ;
+        ${hydra.variableRepresentation} ${hydra.ExplicitRepresentation} ;
+        ${hydra.template} "managed-dimensions/terms{?dimension}" ;
         ${hydra.mapping} [
-          ${hydra.variable} "termSet" ;
+          ${hydra.variable} "dimension" ;
           ${hydra.property} ${cc.managedDimension} ;
           ${hydra.required} true ;
         ] ;

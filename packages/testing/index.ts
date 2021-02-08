@@ -1,17 +1,25 @@
 import program from 'commander'
 import debug from 'debug'
-import { insertTestData } from './lib'
+import { insertTestDimensions, insertTestProject } from './lib'
 
 const log = debug('testing')
 log.enabled = true
 
-function main() {
+async function main() {
   program
-    .option('-i, --input <input>')
+    .option('-i, --inputs <inputs...>')
 
-  const { input } = program.parse(process.argv)
+  const command = program.parse(process.argv)
+  const { inputs } = command.opts()
 
-  return insertTestData(input)
+  if (inputs.includes('ubd')) {
+    log('Inserting sample project')
+    await insertTestProject()
+  }
+  if (inputs.includes('dimensions')) {
+    log('Inserting sample managed dimensions')
+    return insertTestDimensions()
+  }
 }
 
 main()

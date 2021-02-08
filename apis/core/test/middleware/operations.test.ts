@@ -4,7 +4,7 @@ import request from 'supertest'
 import clownface from 'clownface'
 import $rdf from 'rdf-ext'
 import TermSet from '@rdfjs/term-set'
-import { ObjectResource } from 'hydra-box'
+import { Resource } from 'hydra-box'
 import { turtle } from '@tpluscode/rdf-string'
 import { expectsDisambiguate, preferHydraCollection } from '../../lib/middleware/operations'
 import { appMock, mockResourceMiddleware } from '../support/middleware'
@@ -12,7 +12,7 @@ import { ex } from '../support/namespace'
 import { hydra, rdf, sh } from '@tpluscode/rdf-ns-builders'
 
 describe('lib/middleware/operations', () => {
-  let resource: ObjectResource
+  let resource: Resource
 
   function returnOperations(req: express.Request, res: express.Response) {
     res.send(req.hydra.operations.map(op => op.operation.value))

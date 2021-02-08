@@ -1,0 +1,16 @@
+PREFIX md: <https://cube-creator.zazuko.com/managed-dimensions/vocab#>
+PREFIX hydra: <http://www.w3.org/ns/hydra/core#>
+
+ENTRYPOINT "managed-dimensions/"
+
+HEADERS {
+  x-user "john-doe"
+  x-permission "pipelines:write"
+}
+
+With Class hydra:Resource {
+    Expect Link md:managedDimensions {
+        Expect Type md:ManagedDimensions
+        Expect Property hydra:member
+    }
+}
