@@ -5,7 +5,7 @@ import { NamedNode, Term } from 'rdf-js'
 
 export function getManagedDimensions(term: NamedNode) {
   return CONSTRUCT`
-    ${term} ${hydra.member} ?termSet ; a ${md.ManagedDimensions}.
+    ${term} ${hydra.member} ?termSet ; a ${md.ManagedDimensions}, ${hydra.Collection}.
     ?termSet ?p ?o .
   `
     .WHERE`
