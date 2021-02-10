@@ -18,7 +18,7 @@ export function getManagedDimensions(term: NamedNode) {
 
 export function getManagedTerms(managedDimension: Term, collection: NamedNode) {
   return CONSTRUCT`
-      ${collection} ${hydra.member} ?term ; a ${md.ManagedDimensionTerms} .
+      ${collection} ${hydra.member} ?term ; a ${md.ManagedDimensionTerms}, ${hydra.Collection} .
       ?term ?p ?o .
     `
     .WHERE`

@@ -245,6 +245,7 @@ ${shape('dimension/managed-mapping')} {
       ${sh.name} "Mappings" ;
       ${sh.order} 20 ;
       ${dash.editor} ${dash.DetailsEditor} ;
+      ${sh.class} ${prov.KeyEntityPair} ;
     ]
   .
 
