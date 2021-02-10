@@ -5,6 +5,8 @@ import { ResourceStore } from '../../ResourceStore'
 import { replaceValueWithDefinedTerms } from '../queries/dimension-mappings'
 import { Dictionary } from '@rdfine/prov'
 import { fromPointer } from '@rdfine/prov/lib/Dictionary'
+import * as log from '../../log'
+import { cc } from '@cube-creator/core/namespace'
 
 interface UpdateDimensionMapping {
   resource: NamedNode
@@ -34,8 +36,10 @@ export async function update({
 
   const newEntries = dimensionMappings.replaceEntries(newMappings.hadDictionaryMember)
 
-  if (newEntries.size) {
-    await replaceValueWithDefinedTerms({ dimensionMapping: resource, terms: newEntries })
+  const { applyMappings } = cc
+  if (newEntries.size && mappings.out(applyMappings).value === 'true') {
+    replaceValueWithDefinedTerms({ dimensionMapping: resource, terms: newEntries })
+      .catch((err: Error) => log.error(`Failed to update observations: ${err.message}`))
   }
 
   return dimensionMappings.pointer

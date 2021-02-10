@@ -5,7 +5,7 @@ import DatasetExt from 'rdf-ext/lib/Dataset'
 import { NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import { GraphPointer } from 'clownface'
-import { prov, rdf, schema } from '@tpluscode/rdf-ns-builders'
+import { prov, rdf, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import namespace from '@rdfjs/namespace'
 import httpError from 'http-errors'
@@ -53,7 +53,7 @@ describe('domain/dimension-mapping/update', () => {
     ])
 
     sinon.restore()
-    sinon.stub(queries, 'replaceValueWithDefinedTerms')
+    sinon.stub(queries, 'replaceValueWithDefinedTerms').returns(Promise.resolve())
   })
 
   it('throws if dimension is missing', async () => {
@@ -79,6 +79,7 @@ describe('domain/dimension-mapping/update', () => {
       const mappings = namedNode(resource)
         .addOut(rdf.type, prov.Dictionary)
         .addOut(schema.about, dimension)
+        .addOut(cc.applyMappings, $rdf.literal('true', xsd.boolean))
         .addOut(cc.managedDimension, ex('managed-dimension/chemical-substance'))
         .addOut(prov.hadDictionaryMember, member => {
           member
@@ -201,6 +202,7 @@ describe('domain/dimension-mapping/update', () => {
       const mappings = namedNode(resource)
         .addOut(rdf.type, prov.Dictionary)
         .addOut(schema.about, dimension)
+        .addOut(cc.applyMappings, $rdf.literal('true', xsd.boolean))
         .addOut(cc.managedDimension, ex('managed-dimension/chemical-substance'))
         .addOut(prov.hadDictionaryMember, member => {
           member
@@ -331,6 +333,37 @@ describe('domain/dimension-mapping/update', () => {
           },
         },
       })
+    })
+  })
+
+  describe('updating with "applyMapping" flag set to false', () => {
+    beforeEach(async () => {
+      // given
+      const mappings = namedNode(resource)
+        .addOut(rdf.type, prov.Dictionary)
+        .addOut(schema.about, dimension)
+        .addOut(cc.managedDimension, ex('managed-dimension/chemical-substance'))
+        .addOut(prov.hadDictionaryMember, member => {
+          member
+            .addOut(prov.pairKey, 'co')
+            .addOut(prov.pairEntity, wikidata.carbonMonoxide)
+        })
+        .addOut(prov.hadDictionaryMember, member => {
+          member
+            .addOut(prov.pairKey, 'so2')
+            .addOut(prov.pairEntity, wikidata.sulphurDioxide)
+        })
+
+      // when
+      await update({
+        resource,
+        mappings,
+        store,
+      })
+    })
+
+    it('does not call sparql update', async () => {
+      expect(queries.replaceValueWithDefinedTerms).not.to.have.been.called
     })
   })
 

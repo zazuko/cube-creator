@@ -63,7 +63,8 @@ type CubeCreatorProperty =
   'latestPublishedRevision' |
   'revision' |
   'dimensionMapping' |
-  'managedDimension'
+  'managedDimension' |
+  'applyMappings'
 
 type OtherTerms =
   'dash'
