@@ -78,6 +78,7 @@ With Operation schema:ReplaceAction {
             schema:about <https://environment.ld.admin.ch/foen/ubd/28/pollutant> ;
             cc:managedDimension <managed-dimension/chemical-substance> ;
             prov:hadDictionaryMember [
+                a prov:KeyEntityPair ;
                 prov:pairKey "As" ;
                 prov:pairEntity <http://www.wikidata.org/entity/Q871> ;
             ] .

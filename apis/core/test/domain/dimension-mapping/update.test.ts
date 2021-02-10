@@ -15,6 +15,7 @@ import { namedNode } from '../../support/clownface'
 import * as queries from '../../../lib/domain/queries/dimension-mappings'
 import { ex } from '../../support/namespace'
 import '../../../lib/domain'
+import { placeholderEntity } from '../../../lib/domain/dimension-mapping/DimensionMapping'
 
 const wtd = namespace('http://www.wikidata.org/entity/')
 
@@ -98,6 +99,11 @@ describe('domain/dimension-mapping/update', () => {
             .addOut(prov.pairKey, 'Pb')
             .addOut(prov.pairEntity, wikidata.lead)
         })
+        .addOut(prov.hadDictionaryMember, lead => {
+          lead
+            .addOut(prov.pairKey, 'Unmapped')
+            .addOut(prov.pairEntity, placeholderEntity)
+        })
 
       // when
       await update({
@@ -113,6 +119,20 @@ describe('domain/dimension-mapping/update', () => {
           terms.get($rdf.literal('As'))?.equals(wikidata.arsenic) &&
           terms.get($rdf.literal('Pb'))?.equals(wikidata.lead)
       }))
+    })
+
+    it('skips entries with have placeholder entity', () => {
+      expect(dimensionMapping).to.matchShape({
+        not: {
+          property: {
+            path: prov.hadDictionaryMember,
+            property: [{
+              path: prov.pairKey,
+              hasValue: 'Unmapped',
+            }],
+          },
+        },
+      })
     })
 
     it('creates new dictionary entries for added key', () => {
