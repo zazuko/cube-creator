@@ -70,7 +70,7 @@ export default class CubeProjectView extends Vue {
 
     // Poll jobs
     this.poller = window.setInterval(() => {
-      this.$store.dispatch('project/fetchJobCollection')
+      // this.$store.dispatch('project/fetchJobCollection')
     }, 3000)
 
     if (this.$router.currentRoute.name === 'CubeProject') {
