@@ -29,6 +29,7 @@ import PageNotFound from '@/views/PageNotFound.vue'
 import Logout from '@/views/Logout.vue'
 import NotAuthorized from '@/views/NotAuthorized.vue'
 import ManagedDimensions from '@/views/ManagedDimensions.vue'
+import ManagedDimension from '@/views/ManagedDimension.vue'
 
 Vue.use(VueRouter)
 
@@ -146,6 +147,11 @@ const routes: Array<RouteConfig> = [
         path: '/managed-dimensions',
         name: 'ManagedDimensions',
         component: ManagedDimensions,
+      },
+      {
+        path: '/managed-dimensions/:id',
+        name: 'ManagedDimension',
+        component: ManagedDimension,
       },
     ],
   },

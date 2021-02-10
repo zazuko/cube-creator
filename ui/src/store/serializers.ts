@@ -19,8 +19,9 @@ import {
 } from '@cube-creator/model'
 import { IdentifierMapping, LiteralColumnMapping, ReferenceColumnMapping } from '@cube-creator/model/ColumnMapping'
 import { Link } from '@cube-creator/model/lib/Link'
-import { dcterms, rdfs } from '@tpluscode/rdf-ns-builders'
+import { dcterms, rdfs, schema } from '@tpluscode/rdf-ns-builders'
 import { RdfResource } from '@tpluscode/rdfine/RdfResource'
+import { Collection } from 'alcaeus'
 
 export function serializeProjectsCollection (collection: ProjectsCollection): ProjectsCollection {
   return Object.freeze({
@@ -215,6 +216,20 @@ export function serializeCube (cube: Cube): Cube {
     creator: cube.creator,
     dateCreated: cube.dateCreated,
   } as Cube
+}
+
+export function serializeManagedDimensionCollection (collection: Collection): Collection {
+  return Object.freeze({
+    ...serializeResource(collection),
+    member: collection.member.map(serializeManagedDimension),
+  }) as Collection
+}
+
+export function serializeManagedDimension (dimension: RdfResource): RdfResource {
+  return Object.freeze({
+    ...serializeResource(dimension),
+    name: dimension.pointer.out(schema.name).terms,
+  })
 }
 
 export function serializeResource (resource: RdfResource): RdfResource {
