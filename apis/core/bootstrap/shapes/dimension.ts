@@ -256,6 +256,7 @@ ${shape('dimension/managed-mapping')} {
       ${sh.name} "Original value" ;
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
+      ${sh.order} 10 ;
     ] , [
       ${sh.path} ${prov.pairEntity} ;
       ${sh.name} "Managed term" ;
@@ -271,7 +272,8 @@ ${shape('dimension/managed-mapping')} {
           ${hydra.property} ${cc.managedDimension} ;
           ${hydra.required} true ;
         ] ;
-      ]
+      ] ;
+      ${sh.order} 20 ;
     ];
   .
 }`
