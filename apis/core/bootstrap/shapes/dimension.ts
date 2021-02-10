@@ -4,6 +4,7 @@ import { lindasQuery } from '../lib/query'
 import { dash, hydra, prov, rdf, rdfs, schema, sh, qudt, time } from '@tpluscode/rdf-ns-builders'
 import namespace from '@rdfjs/namespace'
 import $rdf from 'rdf-ext'
+import {placeholderEntity} from '../../lib/domain/dimension-mapping/DimensionMapping';
 
 const sou = namespace('http://qudt.org/vocab/sou/')
 
@@ -261,7 +262,7 @@ ${shape('dimension/managed-mapping')} {
       ${sh.path} ${prov.pairEntity} ;
       ${sh.name} "Managed term" ;
       ${dash.editor} ${dash.InstancesSelectEditor} ;
-      ${sh.nodeKind} ${sh.IRI} ;
+      ${sh.defaultValue} ${placeholderEntity} ;
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
       ${hydra.search} [
