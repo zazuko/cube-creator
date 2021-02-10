@@ -8,7 +8,7 @@ prefix csvw: <http://www.w3.org/ns/csvw#>
 prefix dtype: <http://www.linkedmodel.org/schema/dtype#>
 prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 prefix void: <http://rdfs.org/ns/void#>
-prefix cube: <http://ns.bergnet.org/cube/>
+prefix cube: <https://cube.link/>
 prefix cc: <https://cube-creator.zazuko.com/vocab#>
 prefix sh: <http://www.w3.org/ns/shacl#>
 prefix qudt: <http://qudt.org/schema/qudt/>

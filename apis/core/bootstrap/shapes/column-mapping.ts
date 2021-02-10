@@ -1,4 +1,5 @@
 import { cc, editor, shape } from '@cube-creator/core/namespace'
+import { supportedLanguages } from '@cube-creator/model/languages'
 import { dash, hydra, rdfs, sh, csvw, xsd } from '@tpluscode/rdf-ns-builders'
 import { turtle } from '@tpluscode/rdf-string'
 import $rdf from 'rdf-ext'
@@ -72,7 +73,7 @@ ${literalShapeId} {
       ${sh.path} ${cc.language} ;
       ${sh.maxCount} 1 ;
       ${sh.datatype} ${xsd.string} ;
-      ${sh.in} ("de" "en" "fr" "it") ;
+      ${sh.in} ( ${supportedLanguages} ) ;
       ${sh.order} 50 ;
     ] ;
     ${sh.property} [

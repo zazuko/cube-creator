@@ -106,6 +106,7 @@ import { Collection } from 'alcaeus'
 import { hydra, qudt } from '@tpluscode/rdf-ns-builders'
 import * as $rdf from '@rdf-esm/dataset'
 import type { Cube, Dataset, DimensionMetadata } from '@cube-creator/model'
+import { supportedLanguages } from '@cube-creator/model/languages'
 import { api } from '@/api'
 import Remote, { RemoteData } from '@/remote'
 import HydraOperationButton from './HydraOperationButton.vue'
@@ -113,8 +114,6 @@ import TermWithLanguage from './TermWithLanguage.vue'
 import LoadingBlock from './LoadingBlock.vue'
 import CubePreviewDimension from './CubePreviewDimension.vue'
 import CubePreviewValue from './CubePreviewValue.vue'
-
-const languages = ['en', 'fr', 'de', 'it']
 
 @Component({
   components: {
@@ -130,7 +129,7 @@ export default class extends Vue {
   @Prop({ required: true }) dimensions!: DimensionMetadata[]
   @Prop({ required: true }) selectedLanguage!: string
 
-  languages = languages
+  languages = supportedLanguages.map(({ value }) => value)
   pageSize = 10
   page = 1
   pageSizes = [10, 20, 50, 100]

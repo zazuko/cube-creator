@@ -33,17 +33,17 @@ export interface CreateIdentifier {
 }
 
 export interface ProjectState {
-  createIdentifier: null | CreateIdentifier,
-  project: null | Project,
-  csvMapping: null | CsvMapping,
-  sourcesCollection: null | SourcesCollection,
-  sources: Record<string, CsvSource>,
-  tableCollection: null | TableCollection,
-  tables: Record<string, Table>,
-  cubeMetadata: null | Dataset,
-  dimensionMetadataCollection: null | DimensionMetadataCollection,
-  jobCollection: null | JobCollection,
-  selectedLanguage: string,
+  createIdentifier: null | CreateIdentifier
+  project: null | Project
+  csvMapping: null | CsvMapping
+  sourcesCollection: null | SourcesCollection
+  sources: Record<string, CsvSource>
+  tableCollection: null | TableCollection
+  tables: Record<string, Table>
+  cubeMetadata: null | Dataset
+  dimensionMetadataCollection: null | DimensionMetadataCollection
+  jobCollection: null | JobCollection
+  selectedLanguage: string
 }
 
 const initialState = {

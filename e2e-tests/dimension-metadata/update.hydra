@@ -1,7 +1,7 @@
 PREFIX cc:     <https://cube-creator.zazuko.com/vocab#>
 PREFIX schema: <http://schema.org/>
 PREFIX void:   <http://rdfs.org/ns/void#>
-PREFIX cube:   <http://ns.bergnet.org/cube/>
+PREFIX cube:   <https://cube.link/>
 PREFIX hydra:  <http://www.w3.org/ns/hydra/core#>
 PREFIX qudt:   <http://qudt.org/schema/qudt/>
 PREFIX prov:   <http://www.w3.org/ns/prov#>

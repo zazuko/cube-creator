@@ -29,7 +29,7 @@
     "barnard59-base": "^0.1.1",
     "barnard59-formats": "^0.1.0",
     "barnard59-graph-store": "^0.1.0",
-    "barnard59-rdf": "zazuko/barnard59-rdf#cube-to-observation",
+    "barnard59-rdf": "^0.2.0",
     "body-parser": "^1.19.0",
     "clownface": "^1",
     "commander": "^4.1.1",

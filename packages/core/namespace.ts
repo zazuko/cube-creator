@@ -84,8 +84,8 @@ type MetaTerms =
   'dataKind'
 
 prefixes.freq = 'http://purl.org/cld/freq/'
-prefixes.cube = 'http://ns.bergnet.org/cube/'
-prefixes.view = 'http://ns.bergnet.org/cube-view/'
+prefixes.cube = 'https://cube.link/'
+prefixes.view = 'https://cube.link/view/'
 prefixes.meta = 'https://cube.link/meta/'
 
 export const query = namespace('http://hypermedia.app/query#')

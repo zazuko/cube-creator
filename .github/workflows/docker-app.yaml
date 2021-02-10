@@ -50,6 +50,7 @@ jobs:
           tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
           build-args: |
+            PUBLIC_PATH=/app/
             COMMIT=${{ github.sha }}
 
       - name: Create Sentry release

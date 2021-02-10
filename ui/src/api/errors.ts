@@ -12,8 +12,8 @@ export type ErrorDetails = {
   detail?: string
   link?: {
     href: string
-  },
-  report?: ValidationReport[],
+  }
+  report?: ValidationReport[]
   [key: string]: unknown
 }
 
