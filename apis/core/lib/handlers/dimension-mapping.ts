@@ -5,8 +5,6 @@ import { fromPointer } from '@rdfine/prov/lib/Dictionary'
 import { shaclValidate } from '../middleware/shacl'
 import { update } from '../domain/dimension-mapping/update'
 import { getUnmappedValues } from '../domain/queries/dimension-mappings'
-import { prov } from '@tpluscode/rdf-ns-builders'
-import { cc } from '@cube-creator/core/namespace'
 
 export const put = protectedResource(
   shaclValidate,
@@ -26,7 +24,4 @@ export const prepareEntries: Enrichment = async (req, pointer) => {
   const unmappedValues = await getUnmappedValues(dictionary.id, dictionary.about)
 
   dictionary.addMissingEntries(unmappedValues)
-
-  pointer.out(prov.hadDictionaryMember)
-    .addOut(cc.managedDimension, dictionary.managedDimension)
 }

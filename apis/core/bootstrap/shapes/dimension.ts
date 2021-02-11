@@ -275,6 +275,9 @@ ${shape('dimension/managed-mapping')} {
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
       ${hydra.search} [
+        ${sh.path} [
+          ${sh.inversePath} ${prov.hadDictionaryMember} ;
+        ] ;
         ${hydra.variableRepresentation} ${hydra.ExplicitRepresentation} ;
         ${hydra.template} "managed-dimensions/terms{?dimension}" ;
         ${hydra.mapping} [

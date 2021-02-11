@@ -1385,10 +1385,10 @@
     rdf-loaders-registry "^0.2.0"
     sparql-http-client "^2.2.2"
 
-"@hydrofoil/shaperone-core@^0.6.4", "@hydrofoil/shaperone-core@0.6.5", "@hydrofoil/shaperone-core@^0.6.5":
-  version "0.6.5"
-  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-core/-/shaperone-core-0.6.5.tgz#01a04f3449d7d73b3881be00b669a53db3284086"
-  integrity sha512-uk2Xihsgxzk/5asIrsd02NsP7g2X7gi27yrTvp2L7JdyXuP0tS9lHqNwg7JjLCzFB9Ao5k6+SrOX3AqR+4tKtQ==
+"@hydrofoil/shaperone-core@0.6.6", "@hydrofoil/shaperone-core@^0.6.6":
+  version "0.6.6"
+  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-core/-/shaperone-core-0.6.6.tgz#5f3d122af22f5ae66a987983124d36061ccb17b5"
+  integrity sha512-tQj+GkEDDoEak3p9Fq8mc9KXOIS8EE74nn6f96OT5xL9rbrQsc553NXuyBs5NTimZFevJzuSTyi+WwCfsNQ7WQ==
   dependencies:
     "@captaincodeman/rdx" "^1.0.0-rc.8"
     "@rdf-esm/data-model" "^0.5.3"
@@ -1405,25 +1405,25 @@
     clownface "^1.2.0"
     immer "^8.0.1"
 
-"@hydrofoil/shaperone-hydra@^0.1.6":
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-hydra/-/shaperone-hydra-0.1.6.tgz#131230916cdf250a31db73bc756997ff27fa62c2"
-  integrity sha512-3M1T/VT/7LhkB/4XwGuycFb8w/+FnSgzjTVczrpHlhePe70ekdXKZNCDWkJTSjLyT+MKyaPR99EO+hQQJKCmHQ==
+"@hydrofoil/shaperone-hydra@^0.1.7":
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-hydra/-/shaperone-hydra-0.1.7.tgz#c587c01e2cb5d0ffc9c71406fcb20379c4246481"
+  integrity sha512-1Fnx8vNfA5Ye0VZTMxyLyDWTipXWtuNFeeiFMjvSa1lN+iKY+Z4IDPPB/0b+D08Q625JGzKqQiD7I9jw8QStvA==
   dependencies:
-    "@hydrofoil/shaperone-core" "^0.6.4"
+    "@hydrofoil/shaperone-core" "^0.6.6"
     "@rdf-esm/term-map" "^0.5.0"
     "@rdfine/hydra" "^0.6.4"
     "@tpluscode/rdf-ns-builders" "^0.4.0"
     "@tpluscode/rdfine" "^0.5.20"
     alcaeus "^1.1.1"
 
-"@hydrofoil/shaperone-wc@^0.4.1":
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-wc/-/shaperone-wc-0.4.1.tgz#135c1ffe3037b2aab65505b16a1ddd2922a65610"
-  integrity sha512-CMKSmVRRl/54MOp1IpyOH73tXTikrdONfoRiiF2ndvDyeK2zg1d4HJS90F+JzIHRgdVjlODIgeaTlBnwLzgoJA==
+"@hydrofoil/shaperone-wc@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-wc/-/shaperone-wc-0.4.2.tgz#651e0f0db8c8bb7268b2b75c13886fde643c1cfb"
+  integrity sha512-HaH8zVWVkU43GYqDgU7xahqEv1Yi2jbgQbKrXDE5/Kla13Pd3EelUz+sbh9juY6VQMqz1HHo1JLk4uCTHK7qvw==
   dependencies:
     "@captaincodeman/rdx" "^1.0.0-rc.8"
-    "@hydrofoil/shaperone-core" "0.6.5"
+    "@hydrofoil/shaperone-core" "0.6.6"
     "@rdf-esm/data-model" "^0.5.4"
     "@rdf-esm/term-map" "^0.5.0"
     "@rdfine/shacl" "^0.7.3"
