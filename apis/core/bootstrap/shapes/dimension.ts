@@ -2,7 +2,7 @@ import { cc, meta, shape, sh1 } from '@cube-creator/core/namespace'
 import { supportedLanguages } from '@cube-creator/model/languages'
 import { sparql, turtle } from '@tpluscode/rdf-string'
 import { lindasQuery } from '../lib/query'
-import { dash, hydra, prov, rdf, rdfs, schema, sh, qudt, time } from '@tpluscode/rdf-ns-builders'
+import { dash, hydra, prov, rdf, rdfs, schema, sh, qudt, time, xsd } from '@tpluscode/rdf-ns-builders'
 import namespace from '@rdfjs/namespace'
 import $rdf from 'rdf-ext'
 import { placeholderEntity } from '../../lib/domain/dimension-mapping/DimensionMapping'
@@ -248,6 +248,14 @@ ${shape('dimension/managed-mapping')} {
       ${sh.order} 20 ;
       ${dash.editor} ${dash.DetailsEditor} ;
       ${sh.class} ${prov.KeyEntityPair} ;
+    ] , [
+      ${sh.path} ${cc.applyMappings} ;
+      ${sh.name} "Apply mappings" ;
+      ${sh.description} "If set to true, Cube will be immediately updated with new mappings. Otherwise, running the transformation will be necessary" ;
+      ${sh.order} 30 ;
+      ${sh.datatype} ${xsd.boolean} ;
+      ${sh.defaultValue} false ;
+      ${sh.maxCount} 1 ;
     ]
   .
 

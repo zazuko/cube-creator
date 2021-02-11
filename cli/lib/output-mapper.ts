@@ -2,14 +2,16 @@ import $rdf from 'rdf-ext'
 import { TransformJob } from '@cube-creator/model'
 import { Hydra } from 'alcaeus/node'
 import type { Context } from 'barnard59-core/lib/Pipeline'
-import { Quad } from 'rdf-js'
+import { Quad, Term } from 'rdf-js'
 import map from 'barnard59-base/lib/map'
 import { Dictionary } from '@rdfine/prov'
-import * as Prov from '@rdfine/prov'
+import { prov, schema } from '@tpluscode/rdf-ns-builders'
+import { cc } from '@cube-creator/core/namespace'
+import TermMap from '@rdfjs/term-map'
+import { MultiPointer } from 'clownface'
 import * as Models from '@cube-creator/model'
 
 Hydra.resources.factory.addMixin(...Object.values(Models))
-Hydra.resources.factory.addMixin(...Object.values(Prov))
 
 async function loadMetadata(jobUri: string) {
   const jobResource = await Hydra.loadResource<TransformJob>(jobUri)
@@ -30,33 +32,46 @@ async function loadMetadata(jobUri: string) {
   return dimensionMetadataResource.representation.root
 }
 
-async function loadDimensionMapping(mappingUri:string) {
+async function loadDimensionMapping(mappingUri: string) {
   const mappingResource = await Hydra.loadResource<Dictionary>(mappingUri)
   if (!mappingResource.representation) {
     throw new Error(`Mapping ${mappingUri} not loaded`)
   }
 
-  return mappingResource.representation.root?.hadDictionaryMember
+  return mappingResource.representation.root?.pointer
 }
 
 export async function mapDimensions(this: Pick<Context, 'variables'>) {
+  const mappingCache = new TermMap<Term, MultiPointer | null>()
   const jobUri = this.variables.get('jobUri')
   const dimensionMetadataCollection = await loadMetadata(jobUri)
-  const dimensionMetadataList = dimensionMetadataCollection?.hasPart
 
-  return map(async ({ subject, predicate, object, graph }: Quad) => {
-    const dimensionMetadata = dimensionMetadataList?.find(part => predicate.equals(part.about))
-    if (dimensionMetadata) {
-      const mappingTerm = dimensionMetadata.mappings
-      if (mappingTerm) {
-        const dict = await loadDimensionMapping(mappingTerm.value)
-        const mappedValue = dict?.find(key => key.pairKey?.equals(object))
-        if (mappedValue?.pairEntity) {
-          object = mappedValue.pairEntity.id
-        }
+  function getDimensionMapping(predicate: Term) {
+    let mappingTerm = mappingCache.get(predicate)
+    if (typeof mappingTerm === 'undefined') {
+      mappingTerm = dimensionMetadataCollection?.pointer
+        .out(schema.hasPart)
+        .has(schema.about, predicate)
+        .out(cc.dimensionMapping) || null
+      mappingCache.set(predicate, mappingTerm)
+    }
+
+    return mappingTerm
+  }
+
+  return map(async (quad: Quad) => {
+    const { subject, predicate, object, graph } = quad
+    const mappingTerm = getDimensionMapping(predicate)
+    if (mappingTerm?.value) {
+      const dict = await loadDimensionMapping(mappingTerm.value)
+      const mappedValue = dict?.out(prov.hadDictionaryMember)
+        .has(prov.pairKey, object)
+        .out(prov.pairEntity)
+      if (mappedValue?.term?.termType === 'NamedNode') {
+        return $rdf.quad(subject, predicate, mappedValue.term, graph)
       }
     }
 
-    return $rdf.quad(subject, predicate, object, graph)
+    return quad
   })
 }

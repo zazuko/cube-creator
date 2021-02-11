@@ -3728,19 +3728,6 @@ balanced-match@^1.0.0:
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
   integrity sha1-ibTRmasr7kneFk6gK4nORi1xt2c=
 
-barnard59-base@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/barnard59-base/-/barnard59-base-0.0.1.tgz#25dc0e52632357c913e361736e271eeccd196390"
-  integrity sha512-nerc7N7xBMVKGOajbSi1yNXGawS6z02UAo79UhLOaA7/Nn9LbUF/IzxTivXc4fatb7dE4qM8yKaaeYTj+sbjNQ==
-  dependencies:
-    "@rdfjs/formats-common" "^2.0.0"
-    duplexify "^3.6.1"
-    nodeify-fetch "^2.0.0"
-    rdf-ext "^1.1.2"
-    rdf-transform-triple-to-quad "^1.0.1"
-    readable-stream "^3.0.6"
-    through2 "^2.0.3"
-
 barnard59-base@^0.1.0, barnard59-base@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/barnard59-base/-/barnard59-base-0.1.1.tgz#1820d672791898b89ebb52a5612310c2b399061d"
@@ -3770,17 +3757,17 @@ barnard59-core@^0.1.0:
     readable-stream "^3.0.6"
     readable-to-readable "^0.1.2"
 
-barnard59-formats@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/barnard59-formats/-/barnard59-formats-0.1.0.tgz#f4e046d95cf02ebc767e87ac8f8f1b87ccc45711"
-  integrity sha512-6/xW8w4zngjWwJVYAJjBwthZ/Oy2kpIe46p7AdNi/p++H//FadYGe9UG9HohuVynzi2QXScP6Ew05TqoSmFYeQ==
+barnard59-formats@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/barnard59-formats/-/barnard59-formats-0.1.1.tgz#89afdb3a60d512599b20697992d5589ffe124afa"
+  integrity sha512-Q4MsN2tEoFP33+q1DLz0ifMB0R/UzgR3C4ipA39uN6FpqLcljPCFzpSV99fIEe167bl7astW42p0h2pUb32UVQ==
   dependencies:
     "@rdfjs/parser-jsonld" "^1.1.1"
     "@rdfjs/parser-n3" "^1.1.2"
     "@rdfjs/serializer-jsonld" "^1.2.0"
     "@rdfjs/serializer-ntriples" "^1.0.1"
     "@rdfjs/sink-to-duplex" "^1.0.0"
-    barnard59-base "^0.0.1"
+    barnard59-base "^0.1.0"
     rdf-parser-csvw "^0.14.0"
     rdfxml-streaming-parser "^1.2.0"
 
