@@ -12,7 +12,7 @@
       <render-wc-template :template-result="renderMultiEditor()" />
     </b-field>
     <div v-else v-for="object in property.objects" :key="object.key">
-      <render-wc-template :template-result="renderObject(object)" />
+      <render-wc-template :template-result="renderObject({ object })" />
     </div>
     <div v-if="!property.selectedEditor && property.canAdd">
       <b-tooltip label="Add value">
@@ -38,7 +38,7 @@ import RenderWcTemplate from './RenderWcTemplate.vue'
 export default class extends Vue {
   @Prop() property!: PropertyState;
   @Prop() actions!: any;
-  @Prop() renderObject!: (object: PropertyObjectState) => TemplateResult;
+  @Prop() renderObject!: (arg: { object: PropertyObjectState }) => TemplateResult;
   @Prop() renderMultiEditor!: () => TemplateResult;
 
   linkAttrs = {

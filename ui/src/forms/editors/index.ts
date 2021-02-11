@@ -6,6 +6,8 @@ import {
 import * as ns from '@cube-creator/core/namespace'
 import { dash, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import $rdf from '@rdfjs/data-model'
+import { GraphPointer } from 'clownface'
+import { FocusNode } from '@hydrofoil/shaperone-core'
 import { createCustomElement } from '../custom-element'
 
 export const textField: Lazy<SingleEditorComponent> = {
@@ -145,12 +147,20 @@ export const propertyEditor: Lazy<SingleEditorComponent> = {
   },
 }
 
+function isFocusNode (value?: GraphPointer): value is FocusNode {
+  return value?.term.termType === 'NamedNode' || value?.term.termType === 'BlankNode'
+}
+
 export const nestedForm: SingleEditorComponent = {
   editor: dash.DetailsEditor,
-  render ({ property, value }) {
-    const nestedShape = property.shape?.node?.pointer
+  render ({ property: { shape: { node } }, value, renderer }) {
+    const focusNode = value.object
 
-    return html`<cc-form .resource="${value.object}" .shapes="${nestedShape}" class="box"></cc-form>`
+    if (isFocusNode(focusNode)) {
+      return html`<div class="box">${renderer.renderFocusNode({ focusNode, shape: node })}</div>`
+    }
+
+    return html``
   }
 }
 
