@@ -253,7 +253,7 @@ ${shape('dimension/managed-mapping')} {
       ${sh.name} "Apply mappings" ;
       ${sh.description} "If set to true, Cube will be immediately updated with new mappings. Otherwise, running the transformation will be necessary" ;
       ${sh.order} 30 ;
-      ${sh.datatype} ${xsd.boolean}
+      ${sh.datatype} ${xsd.boolean} ;
       ${sh.defaultValue} false ;
       ${sh.maxCount} 1 ;
     ]
