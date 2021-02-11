@@ -100,10 +100,10 @@ ${shapeId} {
       ${sh.nodeKind} ${sh.IRI} ;
       ${sh.in}
           (
-              <https://ld.admin.ch/definedTerm/CreativeWorkStatus/draft>
-              <https://ld.admin.ch/definedTerm/CreativeWorkStatus/published>
+              <https://ld.admin.ch/definedTerm/CreativeWorkStatus/Draft>
+              <https://ld.admin.ch/definedTerm/CreativeWorkStatus/Published>
           ) ;
-      ${sh.defaultValue} <https://ld.admin.ch/definedTerm/CreativeWorkStatus/draft> ;
+      ${sh.defaultValue} <https://ld.admin.ch/definedTerm/CreativeWorkStatus/Draft> ;
       ${sh.order} 30 ;
       ${sh.description} "Only published datasets will be listed in the external tools. A draft will be nevertheless be public." ;
     ] ;
@@ -159,7 +159,7 @@ ${shapeId} {
       ${sh.description} "The period of time this dataset is covering.";
     ] ;
     ${sh.property} [
-      ${sh.name} "Publisher" ;
+      ${sh.name} "Opendata.swiss Publisher" ;
       ${sh.path} ${dcterms.publisher} ;
       ${sh.nodeKind} ${sh.Literal} ;
       ${sh.minCount} 0 ;
@@ -167,7 +167,7 @@ ${shapeId} {
       ${sh.order} 75 ;
     ] ;
     ${sh.property} [
-      ${sh.name} "Opendata.swiss Publisher" ;
+      ${sh.name} "Opendata.swiss Organisation" ;
       ${sh.path} ${dcterms.creator} ;
       ${sh.minCount} 0 ;
       ${sh.class} ${schema.Organization} ;
@@ -284,10 +284,10 @@ ${shapeId} {
 <https://ld.admin.ch/application/opendataswiss> a skos:Concept ;
   rdfs:label "opendata.swiss" .
 
-<https://ld.admin.ch/definedTerm/CreativeWorkStatus/published> a schema:DefinedTerm;
+<https://ld.admin.ch/definedTerm/CreativeWorkStatus/Published> a schema:DefinedTerm;
   rdfs:label "Published" .
 
-<https://ld.admin.ch/definedTerm/CreativeWorkStatus/draft> a schema:DefinedTerm;
+<https://ld.admin.ch/definedTerm/CreativeWorkStatus/Draft> a schema:DefinedTerm;
   rdfs:label "Draft" .
 
 freq:annual a skos:Concept ;
