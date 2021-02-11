@@ -445,16 +445,5 @@ describe('domain/dimension-mapping/update', () => {
         },
       })
     })
-
-    it('removes all entries', () => {
-      expect(dimensionMapping).to.matchShape({
-        property: {
-          path: prov.hadDictionaryMember,
-          maxCount: 0,
-          minCount: 0,
-        },
-      })
-      expect(dimensionMapping.any().has([prov.pairKey, prov.pairEntity]).terms).to.have.length(0)
-    })
   })
 })

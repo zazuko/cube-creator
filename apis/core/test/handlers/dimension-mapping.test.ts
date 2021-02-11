@@ -49,14 +49,6 @@ describe('lib/handlers/dimension-mapping', () => {
           path: prov.hadDictionaryMember,
           minCount: 3,
           maxCount: 3,
-          node: {
-            property: {
-              path: cc.managedDimension,
-              hasValue: managedDimension,
-              minCount: 1,
-              maxCount: 1,
-            },
-          },
         },
       })
     })

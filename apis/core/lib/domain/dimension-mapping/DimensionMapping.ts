@@ -6,20 +6,24 @@ import { cc } from '@cube-creator/core/namespace'
 import TermMap from '@rdfjs/term-map'
 import $rdf from 'rdf-ext'
 
+interface DictionaryEx {
+  about: NamedNode
+  managedDimension: NamedNode
+  replaceEntries(entries: KeyEntityPair[]): Map<Term, Term>
+  changeManageDimension(managedDimension: NamedNode): void
+  addMissingEntries(unmappedValues: Set<Literal>): void
+}
+
 declare module '@rdfine/prov' {
-  interface Dictionary {
-    about: NamedNode
-    managedDimension: NamedNode
-    replaceEntries(entries: KeyEntityPair[]): Map<Term, Term>
-    changeManageDimension(managedDimension: NamedNode): void
-    addMissingEntries(unmappedValues: Set<Literal>): void
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface Dictionary extends DictionaryEx {
   }
 }
 
 export const placeholderEntity = $rdf.namedNode('urn:placeholder:entity')
 
 export function ProvDictionaryMixinEx<Base extends Constructor<Dictionary>>(Resource: Base) {
-  class ProvDictionaryEx extends Resource {
+  class ProvDictionaryEx extends Resource implements DictionaryEx {
     @property({ path: schema.about })
     about!: NamedNode
 
@@ -27,7 +31,6 @@ export function ProvDictionaryMixinEx<Base extends Constructor<Dictionary>>(Reso
     managedDimension!: NamedNode
 
     changeManageDimension(managedDimension: NamedNode) {
-      this.pointer.out(prov.hadDictionaryMember).deleteOut().deleteIn()
       this.managedDimension = managedDimension
     }
 
