@@ -32,7 +32,7 @@ With Class cube:Cube {
         Expect Type <https://cube.link/Constraint>
     }
 
-    // Expect Link cc:observations {
-    //    Expect Type hydra:Collection
-    // }
+    Expect Property cc:observations {
+        Expect Type hydra:IriTemplate
+    }
 }
