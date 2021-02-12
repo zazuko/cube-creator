@@ -3,19 +3,18 @@ import clownface from 'clownface'
 import $rdf from 'rdf-ext'
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
 import { loadLinkedResources } from '@hydrofoil/labyrinth/lib/query/eagerLinks'
-import { Quad, Quad_Subject as Subject, Term } from 'rdf-js'
-import TermSet from '@rdfjs/term-set'
-import through, { TransformFunction } from 'through2'
+import { Term } from 'rdf-js'
 import { PassThrough } from 'stream'
 import merge from 'merge2'
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
-import { cc, cube, query, view } from '@cube-creator/core/namespace'
+import { cc, query, view } from '@cube-creator/core/namespace'
 import { fromPointer } from '@rdfine/hydra/lib/IriTemplate'
 import { shaclValidate } from '../middleware/shacl'
 import { update } from '../domain/dataset/update'
 import { loadCubeShapes } from '../domain/queries/cube'
 import { streamClient } from '../query-client'
 import env from '@cube-creator/core/env'
+import { getCubesAndGraphs } from '../domain/dataset/queries'
 
 export const put = protectedResource(
   shaclValidate,
@@ -44,50 +43,35 @@ export const get = protectedResource(asyncMiddleware(async (req, res) => {
     term: dataset.out(rdf.type).terms,
   })
   const linkedResources = await loadLinkedResources(dataset, types.out(query.include).toArray(), req.app.sparql)
+  const observationsTemplateStream = await observationTemplate(dataset.term)
 
-  merge(dataset.dataset.toStream(), shapeStream, linkedResources.toStream(), { objectMode: true })
-    .pipe(through.obj(injectHydraTemplate()))
+  merge(dataset.dataset.toStream(), shapeStream, linkedResources.toStream(), observationsTemplateStream, { objectMode: true })
     .pipe(outStream)
 
   return res.quadStream(outStream)
 }))
 
-function injectHydraTemplate(): TransformFunction {
-  let graph: Term | undefined
-  let cubeId: Subject | undefined
-  const templateAdded = new TermSet()
+async function observationTemplate(dataset: Term) {
+  const results = await getCubesAndGraphs(dataset)
+  const cf = clownface({ dataset: $rdf.dataset() })
 
-  return function (quad: Quad, enc, callback) {
-    this.push(quad)
+  for (const { cube, graph } of results) {
+    const template = fromPointer(cf.blankNode(), {
+      template: `${env.API_CORE_BASE}observations?cube=${encodeURIComponent(cube.value)}&graph=${encodeURIComponent(graph.value)}{&view,pageSize,page}`,
+      mapping: [{
+        property: view.view,
+        variable: 'view',
+      }, {
+        property: hydra.limit,
+        variable: 'pageSize',
+      }, {
+        property: hydra.pageIndex,
+        variable: 'page',
+      }],
+    })
 
-    if (quad.predicate.equals(cc.cubeGraph)) {
-      graph = quad.object
-    }
-    if (quad.predicate.equals(rdf.type) && quad.object.equals(cube.Cube)) {
-      cubeId = quad.subject
-    }
-
-    if (cubeId && graph && !templateAdded.has(cubeId)) {
-      const template = fromPointer(clownface({ dataset: $rdf.dataset() }).blankNode(), {
-        template: `${env.API_CORE_BASE}observations?cube=${encodeURIComponent(cubeId.value)}&graph=${encodeURIComponent(graph.value)}{&view,pageSize,page}`,
-        mapping: [{
-          property: view.view,
-          variable: 'view',
-        }, {
-          property: hydra.limit,
-          variable: 'pageSize',
-        }, {
-          property: hydra.pageIndex,
-          variable: 'page',
-        }],
-      })
-
-      template.pointer.dataset.forEach(chunk => this.push(chunk))
-      this.push($rdf.quad(cubeId, cc.observations, template.id))
-
-      templateAdded.add(cubeId)
-    }
-
-    callback()
+    cf.node(cube).addOut(cc.observations, template.id)
   }
+
+  return cf.dataset.toStream()
 }
