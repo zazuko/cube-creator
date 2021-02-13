@@ -1,6 +1,13 @@
 # @cube-creator/core-api
 
+## 0.2.1
+
+### Patch Changes
+
+- 0035c7d: Observations not loading on Cube Designer
+
 ## 0.2.0
+
 ### Minor Changes
 
 - 47619a1: Vocabulary: use https://cube.link/ vocabulary (#510)
