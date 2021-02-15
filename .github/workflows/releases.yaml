@@ -21,27 +21,42 @@ jobs:
 
       - run: yarn
 
+      - name: Generate token
+        id: generate_token
+        uses: tibdex/github-app-token@v1
+        with:
+          app_id: ${{ secrets.GH_APP_ID }}
+          private_key: ${{ secrets.GH_PRIVATE_KEY }}
+
       - name: Create Release Pull Request
         uses: changesets/action@master
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
         with:
           commit: "chore: release"
           title: "Merge to release"
-        
+
   tags:
     name: Create tags
     runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
     steps:
       - uses: actions/checkout@master
+
+      - name: Generate token
+        id: generate_token
+        uses: tibdex/github-app-token@v1
+        with:
+          app_id: ${{ secrets.GH_APP_ID }}
+          private_key: ${{ secrets.GH_PRIVATE_KEY }}
+
       - name: Tag Core API
         uses: tpluscode/action-autotag@min-version-21
         with:
           root: apis/core
           tag_prefix: cube-creator-api/v
           minVersion: 0.1.15
+        env:
+          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
 
       - name: Tag UI
         uses: tpluscode/action-autotag@min-version-21
@@ -49,6 +64,8 @@ jobs:
           root: ui
           tag_prefix: cube-creator-app/v
           minVersion: 0.1.15
+        env:
+          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
 
       - name: Tag CLI
         uses: tpluscode/action-autotag@min-version-21
@@ -56,3 +73,5 @@ jobs:
           root: cli
           tag_prefix: cube-creator-cli/v
           minVersion: 0.1.15
+        env:
+          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
