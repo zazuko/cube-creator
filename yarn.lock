@@ -1385,30 +1385,10 @@
     rdf-loaders-registry "^0.2.0"
     sparql-http-client "^2.2.2"
 
-"@hydrofoil/shaperone-core@0.6.8", "@hydrofoil/shaperone-core@^0.6.8":
+"@hydrofoil/shaperone-core@^0.6.6", "@hydrofoil/shaperone-core@0.6.8", "@hydrofoil/shaperone-core@^0.6.8":
   version "0.6.8"
   resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-core/-/shaperone-core-0.6.8.tgz#b697be545af94a1cae83addfc25820d15d5f3a92"
   integrity sha512-XF2eJh/h2OQhL9R1VYe5jYCYOd7OIE5RBUuI7YTbqsdxTrFYhfVC8uEoF6bM7U5b7i1gOAQE6fcIYhmrFDymWA==
-  dependencies:
-    "@captaincodeman/rdx" "^1.0.0-rc.8"
-    "@rdf-esm/data-model" "^0.5.3"
-    "@rdf-esm/dataset" "^0.5.1"
-    "@rdf-esm/namespace" "^0.5.1"
-    "@rdf-esm/term-map" "^0.5.0"
-    "@rdf-esm/term-set" "^0.5.0"
-    "@rdfine/dash" "^0.1.2"
-    "@rdfine/rdfs" "^0.6.3"
-    "@rdfine/shacl" "^0.7.3"
-    "@tpluscode/rdf-ns-builders" "^0.4.0"
-    "@tpluscode/rdfine" "^0.5.18"
-    "@zazuko/rdf-vocabularies" "^2020.11.2"
-    clownface "^1.2.0"
-    immer "^8.0.1"
-
-"@hydrofoil/shaperone-core@^0.6.6":
-  version "0.6.7"
-  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-core/-/shaperone-core-0.6.7.tgz#97a7c5ac71c67aaf7872a11d9d5f048e273c38f7"
-  integrity sha512-sL0+qa4BkEz3YT1S8j59wI612DJj+kuL0WO4KSK/qcaBkwInjr6PKhpmQ1OoMS7JhJI9hn4X2u0d2C9bWf2NZA==
   dependencies:
     "@captaincodeman/rdx" "^1.0.0-rc.8"
     "@rdf-esm/data-model" "^0.5.3"

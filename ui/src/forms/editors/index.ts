@@ -12,10 +12,6 @@ import { createCustomElement } from '../custom-element'
 import '@rdfine/dash/extensions/sh/PropertyShape'
 import { Literal } from 'rdf-js'
 
-async function loadRadioComponent () {
-  return import('./RadioButtons.vue').then(createCustomElement('b-radio'))
-}
-
 export const textField: Lazy<SingleEditorComponent> = {
   editor: dash.TextFieldEditor,
   async lazyRender () {
@@ -93,7 +89,7 @@ export const autoComplete: Lazy<InstancesSelectEditor> = {
 export const radioButtons: Lazy<SingleEditorComponent> = {
   editor: ns.editor.RadioButtons,
   async lazyRender () {
-    await loadRadioComponent()
+    await import('./RadioButtons.vue').then(createCustomElement('b-radio'))
 
     return ({ property, value }, { update }) => {
       const items = property.shape.pointer.node(property.shape.in)
@@ -211,7 +207,6 @@ interface DictionaryTable {
 export const dictionaryTable: Lazy<MultiEditorComponent<DictionaryTable>> = {
   editor: ns.editor.DictionaryTableEditor,
   lazyRender: async function () {
-    await loadRadioComponent()
     await import('./DictionaryTableEditor.vue').then(createCustomElement('dictionary-table-editor'))
 
     return ({ renderer, property: { objects, shape } }) => {

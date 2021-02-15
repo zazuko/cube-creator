@@ -35,7 +35,6 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { ComponentInstance } from '@hydrofoil/shaperone-core/models/components'
 import { PropertyObjectState } from '@hydrofoil/shaperone-core/models/forms'
 import { prov, sh } from '@tpluscode/rdf-ns-builders'
 import { Term } from 'rdf-js'
@@ -47,7 +46,7 @@ import RenderWcTemplate from '../RenderWcTemplate.vue'
   components: { RenderWcTemplate },
 })
 export default class extends Vue {
-  @Prop() objects!: PropertyObjectState<ComponentInstance>[]
+  @Prop() objects!: PropertyObjectState[]
   @Prop() shape!: PropertyShape
   @Prop() renderer!: PropertyRenderer
 
@@ -62,18 +61,18 @@ export default class extends Vue {
       .term
   }
 
-  get displayedObjects (): PropertyObjectState<ComponentInstance>[] {
+  get displayedObjects (): PropertyObjectState[] {
     const objects = [...this.objects].sort((obj1, obj2) => {
       const key1 = obj1.object?.out(prov.pairKey).value ?? ''
       const key2 = obj2.object?.out(prov.pairKey).value ?? ''
       return key1.localeCompare(key2)
     })
 
-    const isUnmapped = (object: PropertyObjectState<ComponentInstance>) => (
+    const isUnmapped = (object: PropertyObjectState) => (
       !object.object?.out(prov.pairEntity).term ||
       object.object?.out(prov.pairEntity).term?.equals(this.defaultValue)
     )
-    const isMapped = (object: PropertyObjectState<ComponentInstance>) => !isUnmapped(object)
+    const isMapped = (object: PropertyObjectState) => !isUnmapped(object)
 
     if (this.selectedFilter === 'Unmapped') {
       return objects.filter(isUnmapped)
