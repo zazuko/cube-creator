@@ -33,10 +33,7 @@ _:get
 <#injectCubeRevision>
   a :Step ;
   code:implementedBy [ code:link <file:../lib/cube#injectRevision> ;
-                       a         code:EcmaScript ] ;
-  code:arguments ( [ a code:EcmaScript ;
-                     code:link <file:../lib/cube#injectRevision> ] ) ;
-  .
+                       a         code:EcmaScript ] .
 
 <#injectMetadata>
   a                  :Step ;

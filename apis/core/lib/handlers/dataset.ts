@@ -42,7 +42,7 @@ export const get = protectedResource(asyncMiddleware(async (req, res) => {
     dataset: req.hydra.api.dataset,
     term: dataset.out(rdf.type).terms,
   })
-  const linkedResources = await loadLinkedResources(dataset, types.out(query.include).toArray(), req.app.sparql)
+  const linkedResources = await loadLinkedResources(dataset, types.out(query.include).toArray(), req.labyrinth.sparql)
   const observationsTemplateStream = await observationTemplate(dataset.term)
 
   merge(dataset.dataset.toStream(), shapeStream, linkedResources.toStream(), observationsTemplateStream, { objectMode: true })

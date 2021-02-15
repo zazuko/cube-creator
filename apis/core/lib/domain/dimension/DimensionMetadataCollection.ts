@@ -25,7 +25,7 @@ interface FindDimensionMetadata {
 }
 
 interface ApiDimensionMetadataCollection {
-  updateDimension(dimension: GraphPointer): void
+  updateDimension(dimension: GraphPointer): DimensionMetadata.DimensionMetadata
   deleteDimension(dimension: DimensionMetadata.DimensionMetadata): void
   addDimensionMetadata(params: CreateColumnMetadata): DimensionMetadata.DimensionMetadata
   find(params: FindDimensionMetadata | Term): DimensionMetadata.DimensionMetadata | undefined
@@ -58,7 +58,7 @@ function copyMetadata(pointer: GraphPointer, metadata: DatasetCore, visited = ne
 
 export default function Mixin<Base extends Constructor<Omit<DimensionMetadataCollection, keyof ApiDimensionMetadataCollection>>>(Resource: Base) {
   return class extends Resource implements ApiDimensionMetadataCollection {
-    updateDimension(dimension: GraphPointer): void {
+    updateDimension(dimension: GraphPointer): DimensionMetadata.DimensionMetadata {
       let found: DimensionMetadata.DimensionMetadata | undefined
       const about = dimension.out(schema.about).term
       if (about) {
@@ -68,9 +68,14 @@ export default function Mixin<Base extends Constructor<Omit<DimensionMetadataCol
         throw new Error('Dimension not found')
       }
 
+      const dimensionMappings = found.mappings
+
       found.pointer.out().deleteOut()
       found.pointer.deleteOut()
       copyMetadata(found.pointer, dimension.dataset)
+
+      found.mappings = dimensionMappings
+      return found
     }
 
     deleteDimension(dimension: DimensionMetadata.DimensionMetadata): void {

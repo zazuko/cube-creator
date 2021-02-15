@@ -1,0 +1,96 @@
+PREFIX prov: <http://www.w3.org/ns/prov#>
+PREFIX cc: <https://cube-creator.zazuko.com/vocab#>
+PREFIX schema: <http://schema.org/>
+
+ENTRYPOINT "cube-project/ubd/dimension-mapping/pollutant"
+
+HEADERS {
+  x-user "john-doe"
+  x-permission "pipelines:write"
+}
+
+With Operation schema:ReplaceAction {
+    // Missing schema:about
+    Invoke {
+        Content-Type "text/turtle"
+
+        ```
+        base <https://cube-creator.lndo.site/>
+        prefix prov: <http://www.w3.org/ns/prov#>
+        prefix cc: <https://cube-creator.zazuko.com/vocab#>
+
+        <cube-project/ubd/dimension-mapping/pollutant>
+            a prov:Dictionary ;
+            cc:managedDimension <managed-dimension/chemical-substance> .
+        ```
+    } => {
+        Expect Status 400
+    }
+
+    // Missing rdf:type
+    Invoke {
+        Content-Type "text/turtle"
+
+        ```
+        base <https://cube-creator.lndo.site/>
+        prefix schema: <http://schema.org/>
+        prefix cc: <https://cube-creator.zazuko.com/vocab#>
+
+        <cube-project/ubd/dimension-mapping/pollutant>
+            schema:about <https://environment.ld.admin.ch/foen/ubd/28/pollutant> ;
+            cc:managedDimension <managed-dimension/chemical-substance> .
+        ```
+    } => {
+        Expect Status 400
+    }
+
+    // Changed schema:about
+    Invoke {
+        Content-Type "text/turtle"
+
+        ```
+        base <https://cube-creator.lndo.site/>
+        prefix prov: <http://www.w3.org/ns/prov#>
+        prefix schema: <http://schema.org/>
+        prefix cc: <https://cube-creator.zazuko.com/vocab#>
+
+        <cube-project/ubd/dimension-mapping/pollutant>
+            a prov:Dictionary ;
+            schema:about <https://environment.ld.admin.ch/foen/ubd/28/pollutants> ;
+            cc:managedDimension <managed-dimension/chemical-substance> .
+        ```
+    } => {
+        Expect Status 400
+    }
+
+    // Returns representation back
+    Invoke {
+        Content-Type "text/turtle"
+
+        ```
+        base <https://cube-creator.lndo.site/>
+        prefix prov: <http://www.w3.org/ns/prov#>
+        prefix schema: <http://schema.org/>
+        prefix cc: <https://cube-creator.zazuko.com/vocab#>
+
+        <cube-project/ubd/dimension-mapping/pollutant>
+            a prov:Dictionary ;
+            schema:about <https://environment.ld.admin.ch/foen/ubd/28/pollutant> ;
+            cc:managedDimension <managed-dimension/chemical-substance> ;
+            prov:hadDictionaryMember [
+                a prov:KeyEntityPair ;
+                prov:pairKey "As" ;
+                prov:pairEntity <http://www.wikidata.org/entity/Q871> ;
+            ] .
+        ```
+    } => {
+        Expect Status 200
+
+        Expect Property prov:hadDictionaryMember {
+            Expect Property prov:pairKey "As"
+            Expect Property prov:pairEntity {
+                Expect Id <http://www.wikidata.org/entity/Q871>
+            }
+        }
+    }
+}

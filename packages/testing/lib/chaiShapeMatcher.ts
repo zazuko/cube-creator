@@ -3,7 +3,7 @@ import type { NodeShape, ValidationResult } from '@rdfine/shacl'
 import { fromPointer } from '@rdfine/shacl/lib/NodeShape'
 import { ShapeBundle, ValidationResultBundle } from '@rdfine/shacl/bundles'
 import RdfResourceImpl, { Initializer, RdfResource, ResourceIdentifier } from '@tpluscode/rdfine/RdfResource'
-import { BlankNode, DatasetCore, NamedNode, Term } from 'rdf-js'
+import { BlankNode, DatasetCore, NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import clownface, { MultiPointer } from 'clownface'
 import Validator, * as Validate from 'rdf-validate-shacl'
@@ -25,7 +25,7 @@ function isRdfine(shapeLike: any): shapeLike is RdfResource {
 }
 
 function isGraphPointer(shapeLike: any): shapeLike is MultiPointer<NamedNode | BlankNode> {
-  return '_context' in shapeLike && shapeLike.terms.every(({ termType }: Term) => termType === 'BlankNode' || termType === 'NamedNode')
+  return '_context' in shapeLike && (shapeLike.term?.termType === 'BlankNode' || shapeLike.term?.termType === 'NamedNode')
 }
 
 function isDataset(shapeLike: any): shapeLike is DatasetCore {
@@ -48,13 +48,14 @@ chai.Assertion.addMethod('matchShape', function (shapeInit: Initializer<NodeShap
   let targetNode: ResourceIdentifier[] = []
   let resourceDataset: DatasetCore
   let actual: any
-  if (isRdfine(obj)) {
+  if (isDataset(obj)) {
+    resourceDataset = obj
+    targetNode = !isDataset(shapeInit) && shapeInit.targetNode as any
+    actual = $rdf.dataset([...resourceDataset]).toString()
+  } else if (isRdfine(obj)) {
     resourceDataset = obj.pointer.dataset
     targetNode.push(obj.id)
     actual = obj.toJSON()
-  } else if (isDataset(obj)) {
-    resourceDataset = obj
-    actual = $rdf.dataset([...resourceDataset]).toString()
   } else if (isGraphPointer(obj)) {
     resourceDataset = obj.dataset
     targetNode = [...obj.terms]

@@ -1,9 +1,11 @@
-import { meta, shape, sh1 } from '@cube-creator/core/namespace'
+import { cc, meta, shape, sh1 } from '@cube-creator/core/namespace'
 import { supportedLanguages } from '@cube-creator/model/languages'
 import { sparql, turtle } from '@tpluscode/rdf-string'
 import { lindasQuery } from '../lib/query'
-import { dash, hydra, rdf, rdfs, schema, sh, qudt, time } from '@tpluscode/rdf-ns-builders'
+import { dash, hydra, prov, rdf, rdfs, schema, sh, qudt, time, xsd } from '@tpluscode/rdf-ns-builders'
 import namespace from '@rdfjs/namespace'
+import $rdf from 'rdf-ext'
+import { placeholderEntity } from '../../lib/domain/dimension-mapping/DimensionMapping'
 
 const sou = namespace('http://qudt.org/vocab/sou/')
 
@@ -213,3 +215,74 @@ ${shape('dimension/metadata')} {
   .
 }
 `
+
+const managedDimensionCollection = $rdf.namedNode('managed-dimensions/term-sets')
+
+export const ManagedDimensionMappingShape = turtle`
+${shape('dimension/managed-mapping')} {
+  ${shape('dimension/managed-mapping')}
+    a ${sh.NodeShape}, ${hydra.Resource} ;
+    ${rdfs.label} "Map original values to managed dimension" ;
+    ${sh.property} [
+      ${sh.path} ${rdf.type} ;
+      ${dash.hidden} true ;
+      ${sh.hasValue} ${prov.Dictionary} ;
+    ] , [
+      ${sh.path} ${schema.about} ;
+      ${dash.hidden} true ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+    ] , [
+      ${sh.path} ${cc.managedDimension} ;
+      ${sh.name} "Managed dimension" ;
+      ${sh.description} "**WARNING!** Changing the selected managed dimension will erase all current mappings" ;
+      ${dash.editor} ${dash.InstancesSelectEditor} ;
+      ${hydra.collection} ${managedDimensionCollection} ;
+      ${sh.nodeKind} ${sh.IRI} ;
+      ${sh.maxCount} 1 ;
+      ${sh.order} 10 ;
+    ] , [
+      ${sh.path} ${prov.hadDictionaryMember} ;
+      ${sh.node} _:keyEntityPair ;
+      ${sh.name} "Mappings" ;
+      ${sh.order} 20 ;
+      ${dash.editor} ${dash.DetailsEditor} ;
+      ${sh.class} ${prov.KeyEntityPair} ;
+    ] , [
+      ${sh.path} ${cc.applyMappings} ;
+      ${sh.name} "Apply mappings" ;
+      ${sh.description} "If set to true, Cube will be immediately updated with new mappings. Otherwise, running the transformation will be necessary" ;
+      ${sh.order} 30 ;
+      ${sh.datatype} ${xsd.boolean} ;
+      ${sh.defaultValue} false ;
+      ${sh.maxCount} 1 ;
+    ]
+  .
+
+  _:keyEntityPair
+    a ${sh.NodeShape} ;
+    ${sh.property} [
+      ${sh.path} ${prov.pairKey} ;
+      ${sh.name} "Original value" ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+    ] , [
+      ${sh.path} ${prov.pairEntity} ;
+      ${sh.name} "Managed term" ;
+      ${dash.editor} ${dash.InstancesSelectEditor} ;
+      ${sh.nodeKind} ${sh.IRI} ;
+      ${sh.defaultValue} ${placeholderEntity} ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+      ${hydra.search} [
+        ${hydra.variableRepresentation} ${hydra.ExplicitRepresentation} ;
+        ${hydra.template} "managed-dimensions/terms{?dimension}" ;
+        ${hydra.mapping} [
+          ${hydra.variable} "dimension" ;
+          ${hydra.property} ${cc.managedDimension} ;
+          ${hydra.required} true ;
+        ] ;
+      ]
+    ];
+  .
+}`

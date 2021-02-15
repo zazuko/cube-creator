@@ -14,6 +14,7 @@ prefix sh: <http://www.w3.org/ns/shacl#>
 prefix qudt: <http://qudt.org/schema/qudt/>
 prefix dcat: <http://www.w3.org/ns/dcat#>
 prefix vcard: <http://www.w3.org/2006/vcard/ns#>
+prefix prov: <http://www.w3.org/ns/prov#>
 
 <ubd-example> a void:Dataset .
 
@@ -83,10 +84,36 @@ graph <cube-project/ubd/dimensions-metadata> {
 
   <cube-project/ubd/dimensions-metadata/pollutant>
     schema:about <https://environment.ld.admin.ch/foen/ubd/28/pollutant> ;
+    qudt:scaleType qudt:NominalScale ;
+    cc:dimensionMapping <cube-project/ubd/dimension-mapping/pollutant> ;
   .
 
   <cube-project/ubd/dimensions-metadata/unit-id>
     schema:about <https://environment.ld.admin.ch/foen/ubd/28/unit-id> ;
+  .
+}
+
+<cube-project/ubd/dimension-mapping/pollutant> void:inDataset <ubd-example> .
+graph <cube-project/ubd/dimension-mapping/pollutant> {
+  <cube-project/ubd/dimension-mapping/pollutant>
+    a prov:Dictionary, hydra:Resource ;
+    schema:about <https://environment.ld.admin.ch/foen/ubd/28/pollutant> ;
+    cc:managedDimension <managed-dimension/chemical-substance> ;
+  .
+
+  <cube-project/ubd/dimension-mapping/pollutant>
+    prov:hadDictionaryMember [
+      a prov:KeyEntityPair ;
+      prov:pairKey "so2" ;
+    ] ;
+  .
+
+  <cube-project/ubd/dimension-mapping/pollutant>
+    prov:hadDictionaryMember [
+      a prov:KeyEntityPair ;
+      prov:pairKey "co" ;
+      prov:pairEntity <http://www.wikidata.org/entity/Q2025> ;
+    ] ;
   .
 }
 
@@ -111,7 +138,7 @@ graph <cube-project/ubd/cube-data> {
     <https://environment.ld.admin.ch/foen/ubd/28/aggregation>     <https://environment.ld.admin.ch/foen/ubd/28/aggregation/annualmean> ;
     <https://environment.ld.admin.ch/foen/ubd/28/dimension/value> "6.2"^^xsd:float ;
     <https://environment.ld.admin.ch/foen/ubd/28/dimension/year>  "2003"^^xsd:gYear ;
-    <https://environment.ld.admin.ch/foen/ubd/28/pollutant>       <https://environment.ld.admin.ch/foen/ubd/28/pollutant/so2> ;
+    <https://environment.ld.admin.ch/foen/ubd/28/pollutant>       "so2" ;
     <https://environment.ld.admin.ch/foen/ubd/28/station>         <https://environment.ld.admin.ch/foen/ubd/28/station/blBAS> ;
     <https://environment.ld.admin.ch/foen/ubd/28/unit-id>         "µg/m3" ;
   .
@@ -122,18 +149,30 @@ graph <cube-project/ubd/cube-data> {
     <https://environment.ld.admin.ch/foen/ubd/28/aggregation>     <https://environment.ld.admin.ch/foen/ubd/28/aggregation/annualmean> ;
     <https://environment.ld.admin.ch/foen/ubd/28/dimension/value> "6.1"^^xsd:float ;
     <https://environment.ld.admin.ch/foen/ubd/28/dimension/year>  "2002"^^xsd:gYear ;
-    <https://environment.ld.admin.ch/foen/ubd/28/pollutant>       <https://environment.ld.admin.ch/foen/ubd/28/pollutant/so2> ;
+    <https://environment.ld.admin.ch/foen/ubd/28/pollutant>       "so2" ;
     <https://environment.ld.admin.ch/foen/ubd/28/station>         <https://environment.ld.admin.ch/foen/ubd/28/station/blBAS> ;
     <https://environment.ld.admin.ch/foen/ubd/28/unit-id>         "µg/m3" ;
   .
 
-<https://environment.ld.admin.ch/foen/ubd/28/observation/blBAS-1999-annualmean>
+  <https://environment.ld.admin.ch/foen/ubd/28/observation/blBAS-2004-annualmean>
+    a                cube:Observation ;
+    cube:observedBy  <urn:will:replace> ;
+    <https://environment.ld.admin.ch/foen/ubd/28/aggregation>     <https://environment.ld.admin.ch/foen/ubd/28/aggregation/annualmean> ;
+    <https://environment.ld.admin.ch/foen/ubd/28/dimension/value> "6.1"^^xsd:float ;
+    <https://environment.ld.admin.ch/foen/ubd/28/dimension/year>  "2002"^^xsd:gYear ;
+    # does not appear in constraint shape but adding to check query for missing values
+    <https://environment.ld.admin.ch/foen/ubd/28/pollutant>       "Pb" ;
+    <https://environment.ld.admin.ch/foen/ubd/28/station>         <https://environment.ld.admin.ch/foen/ubd/28/station/blBAS> ;
+    <https://environment.ld.admin.ch/foen/ubd/28/unit-id>         "µg/m3" ;
+  .
+
+  <https://environment.ld.admin.ch/foen/ubd/28/observation/blBAS-1999-annualmean>
     a                cube:Observation ;
     cube:observedBy  <urn:will:replace> ;
     <https://environment.ld.admin.ch/foen/ubd/28/aggregation>     <https://environment.ld.admin.ch/foen/ubd/28/aggregation/annualmean> ;
     <https://environment.ld.admin.ch/foen/ubd/28/dimension/value> "5.4"^^xsd:float ;
     <https://environment.ld.admin.ch/foen/ubd/28/dimension/year>  "1999"^^xsd:gYear ;
-    <https://environment.ld.admin.ch/foen/ubd/28/pollutant>       <https://environment.ld.admin.ch/foen/ubd/28/pollutant/so2> ;
+    <https://environment.ld.admin.ch/foen/ubd/28/pollutant>       <http://www.wikidata.org/entity/Q2025> ;
     <https://environment.ld.admin.ch/foen/ubd/28/station>         <https://environment.ld.admin.ch/foen/ubd/28/station/blBAS> ;
     <https://environment.ld.admin.ch/foen/ubd/28/unit-id>         "µg/m3" ;
   .
@@ -165,7 +204,11 @@ graph <cube-project/ubd/cube-data> {
     sh:path      cube:observedBy .
 
   _:pollutant
-    sh:in        ( <https://environment.ld.admin.ch/foen/ubd/28/pollutant/so2> ) ;
+    sh:in        (
+                   "so2" # <http://www.wikidata.org/entity/Q5282>
+                   "As" # does not appear in observations but adding to check query for missing values
+                   <http://www.wikidata.org/entity/Q2025>
+                 ) ;
     sh:maxCount  1 ;
     sh:minCount  1 ;
     sh:nodeKind  sh:IRI ;
@@ -475,6 +518,7 @@ graph <cube-project/ubd/csv-mapping/jobs/test-job> {
   <cube-project/ubd/csv-mapping/jobs/test-job>
     a hydra:Resource, cc:Job, cc:TransformJob ;
     cc:tables <cube-project/ubd/csv-mapping/tables> ;
+    cc:dimensionMetadata <cube-project/ubd/dimensions-metadata> ;
     schema:name "cli-test" ;
     cc:cubeGraph <cube-project/ubd/cube-data> ;
     dcterms:created "2020-10-29T12:01:54"^^xsd:dateTime ;
@@ -488,6 +532,7 @@ graph <cube-project/ubd/csv-mapping/jobs/broken-job> {
   <cube-project/ubd/csv-mapping/jobs/broken-job>
     a hydra:Resource, cc:Job, cc:TransformJob ;
     cc:tables <cube-project/ubd/csv-mapping/no-tables> ;
+    cc:dimensionMetadata <cube-project/ubd/dimensions-metadata> ;
     schema:name "cli-test" ;
   .
 }

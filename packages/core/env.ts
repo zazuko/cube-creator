@@ -43,15 +43,15 @@ type ENV_VARS =
   | 'PIPELINE_TOKEN'
   | 'PIPELINE_ENV'
 
-type KnownVariables = {
+type KnownVariables<T extends string> = {
   /* eslint-disable-next-line no-unused-vars */
-  [P in ENV_VARS]: string
+  [P in T]: string
 }
 
-const env = new Proxy(process.env, handler) as typeof process['env'] & KnownVariables & {
+export const createProxy = <T extends string>() => new Proxy(process.env, handler) as typeof process['env'] & KnownVariables<T> & {
   has(name: ENV_VARS): boolean
   production: boolean
-  maybe: Partial<KnownVariables>
+  maybe: Partial<KnownVariables<T>>
 }
 
-export default env
+export default createProxy<ENV_VARS>()

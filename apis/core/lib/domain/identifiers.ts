@@ -55,3 +55,7 @@ export function user(user: string): NamedNode {
 export function job(jobCollection: GraphPointer<NamedNode>): NamedNode {
   return $rdf.namedNode(`${jobCollection.value}/${nanoid()}`)
 }
+
+export function dimensionMapping(project: Project, dimensionSlug: string): NamedNode {
+  return $rdf.namedNode(`${project.id.value}/dimension-mapping/${url.slugify(dimensionSlug)}`)
+}

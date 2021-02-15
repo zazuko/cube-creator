@@ -16,6 +16,7 @@ jobs:
         run: sh e2e-tests/install-lando.sh
       - name: Start site
         run: sh e2e-tests/start-lando.sh
+      - run: yarn test:queries
       - run: yarn test:cli
         env:
           AUTH_RUNNER_CLIENT_SECRET: ${{ secrets.AUTH_RUNNER_CLIENT_SECRET }}

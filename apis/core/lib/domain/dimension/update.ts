@@ -2,8 +2,12 @@ import clownface, { GraphPointer } from 'clownface'
 import { NamedNode, Quad } from 'rdf-js'
 import TermSet from '@rdfjs/term-set'
 import $rdf from 'rdf-ext'
-import { DimensionMetadataCollection } from '@cube-creator/model'
+import { DimensionMetadataCollection, Project } from '@cube-creator/model'
+import { prov, rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { ResourceStore } from '../../ResourceStore'
+import * as id from '../identifiers'
+import { findProject } from '../queries/cube-project'
+import { canBeMappedToManagedDimension } from './DimensionMetadata'
 
 interface UpdateDimensionCommand {
   metadataCollection: NamedNode
@@ -35,7 +39,22 @@ export async function update({
 }: UpdateDimensionCommand): Promise<GraphPointer> {
   const metadata = await store.getResource<DimensionMetadataCollection>(metadataCollection)
 
-  metadata.updateDimension(dimensionMetadata)
+  const dimension = metadata.updateDimension(dimensionMetadata)
+
+  if (canBeMappedToManagedDimension(dimension) && !dimension.mappings) {
+    const project = await store.getResource<Project>(await findProject(metadata))
+
+    const slug = dimension.id.value.substring(dimension.id.value.lastIndexOf('/') + 1)
+    const dimensionMapping = store.create(id.dimensionMapping(project, slug))
+    dimensionMapping
+      .addOut(rdf.type, prov.Dictionary)
+      .addOut(schema.about, dimension.about)
+
+    dimension.mappings = dimensionMapping.term
+  } else if (!canBeMappedToManagedDimension(dimension) && dimension.mappings) {
+    store.delete(dimension.mappings)
+    dimension.mappings = undefined
+  }
 
   const dataset = $rdf.dataset([...extractSubgraph(metadata.pointer.node(dimensionMetadata.term))])
   return clownface({ dataset }).node(dimensionMetadata.term)

@@ -11,6 +11,7 @@ export interface DimensionMetadata extends RdfResource {
   name: Literal[]
   description: Literal[]
   scaleOfMeasure?: NamedNode
+  mappings?: NamedNode
 }
 
 export interface DimensionMetadataCollection extends RdfResource {
@@ -31,6 +32,9 @@ function DimensionMetadataMixin<Base extends Constructor>(base: Base): Mixin {
 
     @property({ path: qudt.scaleType })
     scaleOfMeasure?: NamedNode
+
+    @property({ path: cc.dimensionMapping })
+    mappings?: NamedNode
   }
 
   return Impl
