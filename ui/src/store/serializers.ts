@@ -236,6 +236,7 @@ export function serializeActions (actions: Actions): Actions {
   return Object.freeze({
     create: actions.create,
     edit: actions.edit,
+    replace: actions.replace,
     delete: actions.delete,
   })
 }

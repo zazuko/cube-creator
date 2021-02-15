@@ -26,6 +26,7 @@ export function getOperation (resource: RdfResource, idOrType: NamedNode): Runti
 export const commonActions = (resource: RdfResource, additionalActions: Record<string, NamedNode> = {}): Actions => ({
   create: findOperation(resource, schema.CreateAction),
   edit: findOperation(resource, schema.UpdateAction),
+  replace: findOperation(resource, schema.ReplaceAction),
   delete: findOperation(resource, schema.DeleteAction),
   ...Object.entries(additionalActions).reduce((actions, [key, term]) => {
     return {
