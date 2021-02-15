@@ -21,6 +21,9 @@ import { IdentifierMapping, LiteralColumnMapping, ReferenceColumnMapping } from 
 import { Link } from '@cube-creator/model/lib/Link'
 import { dcterms, rdfs, schema } from '@tpluscode/rdf-ns-builders'
 import { RdfResource } from '@tpluscode/rdfine/RdfResource'
+import { Collection } from 'alcaeus'
+
+const displayLanguage = ['en', 'de', 'fr', '']
 
 export function serializeProjectsCollection (collection: ProjectsCollection): ProjectsCollection {
   return Object.freeze({
@@ -48,7 +51,7 @@ export function serializeProject (project: Project): Project {
     maintainer: project.maintainer
       ? {
         ...serializeLink(project.maintainer),
-        label: project.maintainer?.pointer.out(rdfs.label, { language: ['en', 'de', 'fr', ''] }),
+        label: project.maintainer?.pointer.out(rdfs.label, { language: displayLanguage }),
       }
       : project.maintainer,
     publishedRevision: project.publishedRevision,
@@ -177,7 +180,7 @@ export function serializeDimensionMetadata (dimension: DimensionMetadata): Dimen
     managedDimension: managedDimension.term
       ? {
         id: managedDimension.term,
-        label: managedDimension.out([rdfs.label, schema.name], { language: ['en', 'de', 'fr', ''] }),
+        label: managedDimension.out([rdfs.label, schema.name], { language: displayLanguage }),
       }
       : undefined,
   })
@@ -223,6 +226,20 @@ export function serializeCube (cube: Cube): Cube {
     creator: cube.creator,
     dateCreated: cube.dateCreated,
   } as Cube
+}
+
+export function serializeManagedDimensionCollection (collection: Collection): Collection {
+  return Object.freeze({
+    ...serializeResource(collection),
+    member: collection.member.map(serializeManagedDimension),
+  }) as Collection
+}
+
+export function serializeManagedDimension (dimension: RdfResource): RdfResource {
+  return Object.freeze({
+    ...serializeResource(dimension),
+    name: dimension.pointer.out(schema.name).terms,
+  })
 }
 
 export function serializeResource (resource: RdfResource): RdfResource {
