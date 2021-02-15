@@ -20,6 +20,10 @@ function load<T extends RdfResourceCore>(uri: string): Promise<HydraResponse<Dat
   let promise = pendingRequests.get(uri)
   if (!promise) {
     promise = Hydra.loadResource<T>(uri)
+      .then(response => {
+        pendingRequests.delete(uri)
+        return response
+      })
     pendingRequests.set(uri, promise)
   }
 
