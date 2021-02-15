@@ -10,6 +10,8 @@ import { Metadata } from './metadata'
 import { createCustomElement } from './custom-element'
 import { dash } from '@tpluscode/rdf-ns-builders'
 import * as decorators from '@/forms/decorators'
+import { decorate } from './templates'
+import * as dictionaryEditor from './templates/dictionaryEditor'
 
 export const focusNode: FocusNodeTemplate = (renderer, { focusNode }) => html`
   <div class="fieldset" part="focus-node">
@@ -44,8 +46,8 @@ object.loadDependencies = () => [
 ]
 
 renderer.setTemplates({
-  focusNode,
-  property,
+  focusNode: decorate(focusNode, dictionaryEditor.focusNode),
+  property: decorate(property, dictionaryEditor.property),
   object,
 })
 components.pushComponents(Editors)
@@ -57,9 +59,9 @@ components.decorate({
 })
 Object.values(decorators).forEach(components.decorate)
 
+editors.addMetadata(Metadata)
 editors.addMatchers(Matchers)
 editors.decorate(instancesSelector.matcher)
-editors.addMetadata(Metadata)
 
 class Form extends ShaperoneForm {
   protected createRenderRoot (): Element | ShadowRoot {

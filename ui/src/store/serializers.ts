@@ -171,6 +171,7 @@ export function serializeDimensionMetadata (dimension: DimensionMetadata): Dimen
     about: dimension.about,
     description: dimension.description,
     scaleOfMeasure: dimension.scaleOfMeasure,
+    mappings: dimension.mappings,
   })
 }
 

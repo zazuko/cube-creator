@@ -1,14 +1,22 @@
-import { html, SingleEditorComponent, Lazy } from '@hydrofoil/shaperone-wc'
+import { html, SingleEditorComponent, Lazy, MultiEditorComponent } from '@hydrofoil/shaperone-wc'
 import {
   EnumSelectEditor, enumSelect as enumSelectCore,
   InstancesSelectEditor, instancesSelect as instancesSelectCore
 } from '@hydrofoil/shaperone-core/components'
 import * as ns from '@cube-creator/core/namespace'
-import { dash, schema, xsd } from '@tpluscode/rdf-ns-builders'
-import $rdf from '@rdfjs/data-model'
-import { GraphPointer } from 'clownface'
+import { dash, prov, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
+import $rdf from '@rdfjs/dataset'
+import clownface, { GraphPointer } from 'clownface'
 import { FocusNode } from '@hydrofoil/shaperone-core'
 import { createCustomElement } from '../custom-element'
+import '@rdfine/dash/extensions/sh/PropertyShape'
+import { PropertyObjectState } from '@hydrofoil/shaperone-core/models/forms'
+import { repeat } from 'lit-html/directives/repeat'
+import { Literal } from 'rdf-js'
+
+async function loadRadioComponent () {
+  return import('./RadioButtons.vue').then(createCustomElement('b-radio'))
+}
 
 export const textField: Lazy<SingleEditorComponent> = {
   editor: dash.TextFieldEditor,
@@ -87,7 +95,7 @@ export const autoComplete: Lazy<InstancesSelectEditor> = {
 export const radioButtons: Lazy<SingleEditorComponent> = {
   editor: ns.editor.RadioButtons,
   async lazyRender () {
-    await import('./RadioButtons.vue').then(createCustomElement('b-radio'))
+    await loadRadioComponent()
 
     return ({ property, value }, { update }) => {
       const items = property.shape.pointer.node(property.shape.in)
@@ -194,6 +202,88 @@ export const identifierTemplateEditor: Lazy<SingleEditorComponent> = {
         .isObservationTable="${isObservationTable}"
         .sourceId="${sourceId}"
       ></identifier-template-editor>`
+    }
+  }
+}
+
+interface DictionaryTable {
+  show?: Literal
+}
+
+export const dictionaryTable: Lazy<MultiEditorComponent<DictionaryTable>> = {
+  editor: ns.editor.DictionaryTableEditor,
+  lazyRender: async function () {
+    await loadRadioComponent()
+
+    const showAllTerm = $rdf.literal('All')
+    const showMappedTerm = $rdf.literal('Mapped')
+    const showUnmappedTerm = $rdf.literal('Unmapped')
+    const options = clownface({ dataset: $rdf.dataset() }).node([
+      showAllTerm,
+      showMappedTerm,
+      showUnmappedTerm,
+    ])
+
+    return function render (params) {
+      const { renderer, property: { objects, shape }, componentState, updateComponentState } = params
+      const defaultValue = shape.node?.pointer
+        .out(sh.property)
+        .has(sh.path, prov.pairEntity)
+        .out(sh.defaultValue)
+        .term
+
+      function renderRow (object: PropertyObjectState) {
+        const focusNode = object.object
+        if (isFocusNode(focusNode)) {
+          return html`<tr style="width: 100%">
+            ${renderer.renderFocusNode({ focusNode, shape: shape.node, })}
+            <td>
+              <button class="button is-white" @click="${() => renderer.actions.removeObject(focusNode)}">
+                <span class="has-text-weight-bold">
+                  -
+                </span>
+              </button>
+            </td>
+          </tr>`
+        }
+
+        return html``
+      }
+
+      const show = componentState.show || showUnmappedTerm
+      const showAll = showAllTerm.equals(show)
+      const showUnmapped = showUnmappedTerm.equals(show)
+      const showMapped = showMappedTerm.equals(show)
+
+      function filterPairs (object: PropertyObjectState) {
+        if (showAll) {
+          return true
+        }
+
+        if (!object.object?.out(prov.pairEntity).term || object.object?.out(prov.pairEntity).term?.equals(defaultValue)) {
+          return showUnmapped
+        }
+
+        return showMapped
+      }
+
+      const displayedObjects = objects.filter(filterPairs)
+
+      return html`
+        <div class="field">
+          <b-radio .options="${options}"
+                  .value="${show}"
+                  .update="${(show: Literal) => updateComponentState({ show })}"></b-radio>
+        </div>
+        <table>
+          <tbody>
+            ${displayedObjects.length
+              ? repeat(objects.filter(filterPairs), o => o.key, renderRow)
+              : html`<tr><td>Nothing to display</td></tr>`
+            }
+          </tbody>
+        </table>
+      <span @click="${renderer.actions.addObject}">Add row</span>`
     }
   }
 }
