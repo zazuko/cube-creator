@@ -4,7 +4,6 @@ import $rdf from 'rdf-ext'
 const prefix = 'MANAGED_DIMENSIONS_'
 
 type ENV_VARS = 'GRAPH'
-| 'SOURCE'
 | 'BASE'
 | 'STORE_QUERY_ENDPOINT'
 | 'STORE_UPDATE_ENDPOINT'
