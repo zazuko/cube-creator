@@ -2,7 +2,7 @@ import $rdf from 'rdf-ext'
 import { TransformJob } from '@cube-creator/model'
 import { Hydra } from 'alcaeus/node'
 import type { Context } from 'barnard59-core/lib/Pipeline'
-import { Quad, Term } from 'rdf-js'
+import { DatasetCore, Quad, Term } from 'rdf-js'
 import map from 'barnard59-base/lib/map'
 import { Dictionary } from '@rdfine/prov'
 import { prov, schema } from '@tpluscode/rdf-ns-builders'
@@ -10,11 +10,24 @@ import { cc } from '@cube-creator/core/namespace'
 import TermMap from '@rdfjs/term-map'
 import { MultiPointer } from 'clownface'
 import * as Models from '@cube-creator/model'
+import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
+import { HydraResponse } from 'alcaeus'
 
 Hydra.resources.factory.addMixin(...Object.values(Models))
 
+const pendingRequests = new Map<string, Promise<any>>()
+function load<T extends RdfResourceCore>(uri: string): Promise<HydraResponse<DatasetCore, T>> {
+  let promise = pendingRequests.get(uri)
+  if (!promise) {
+    promise = Hydra.loadResource<T>(uri)
+    pendingRequests.set(uri, promise)
+  }
+
+  return promise
+}
+
 async function loadMetadata(jobUri: string) {
-  const jobResource = await Hydra.loadResource<TransformJob>(jobUri)
+  const jobResource = await load<TransformJob>(jobUri)
   const job = jobResource.representation?.root
   if (!job) {
     throw new Error(`Did not find representation of job ${jobUri}. Server responded ${jobResource.response?.xhr.status}`)
@@ -33,7 +46,7 @@ async function loadMetadata(jobUri: string) {
 }
 
 async function loadDimensionMapping(mappingUri: string) {
-  const mappingResource = await Hydra.loadResource<Dictionary>(mappingUri)
+  const mappingResource = await load<Dictionary>(mappingUri)
   if (!mappingResource.representation) {
     throw new Error(`Mapping ${mappingUri} not loaded`)
   }
