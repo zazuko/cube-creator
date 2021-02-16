@@ -3,4 +3,4 @@
 "@cube-creator/cli":" patch
 ---
 
-Output the dafault value for empty CSV cells
+Output the default value for empty CSV cells
