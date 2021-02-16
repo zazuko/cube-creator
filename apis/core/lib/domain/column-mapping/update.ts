@@ -11,7 +11,7 @@ import {
   ReferenceColumnMapping,
   Table,
 } from '@cube-creator/model'
-import * as DimensionMetadataQueries from '../queries/dimension-metadata'
+import { getDimensionMetaDataCollection } from '../queries/dimension-metadata'
 import * as TableQueries from '../queries/table'
 import { findMapping } from './lib'
 import { NotFoundError, DomainError } from '../../errors'
@@ -23,20 +23,17 @@ import type { Organization } from '@rdfine/schema'
 interface UpdateColumnMappingCommand {
   resource: GraphPointer
   store: ResourceStore
-  dimensionMetadataQueries?: Pick<typeof DimensionMetadataQueries, 'getDimensionMetaDataCollection'>
   tableQueries?: Pick<typeof TableQueries, 'getTableForColumnMapping'>
 }
 
 export async function updateLiteralColumnMapping({
   resource,
   store,
-  dimensionMetadataQueries = DimensionMetadataQueries,
   tableQueries = TableQueries,
 }: UpdateColumnMappingCommand): Promise<GraphPointer> {
   const { columnMapping, table } = await updateColumnMapping<LiteralColumnMapping>({
     resource,
     store,
-    dimensionMetadataQueries,
     tableQueries,
   })
 
@@ -62,13 +59,11 @@ export async function updateLiteralColumnMapping({
 export async function updateReferenceColumnMapping({
   resource,
   store,
-  dimensionMetadataQueries = DimensionMetadataQueries,
   tableQueries = TableQueries,
 }: UpdateColumnMappingCommand): Promise<GraphPointer> {
   const { columnMapping, table } = await updateColumnMapping<ReferenceColumnMapping>({
     resource,
     store,
-    dimensionMetadataQueries,
     tableQueries,
   })
 
@@ -104,7 +99,6 @@ export async function updateReferenceColumnMapping({
 async function updateColumnMapping<T extends ColumnMapping>({
   resource,
   store,
-  dimensionMetadataQueries: { getDimensionMetaDataCollection } = DimensionMetadataQueries,
   tableQueries: { getTableForColumnMapping } = TableQueries,
 }: UpdateColumnMappingCommand): Promise<{ columnMapping: T; table: Table }> {
   const columnMapping = await store.getResource<T>(resource.term)
