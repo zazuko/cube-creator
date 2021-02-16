@@ -7,6 +7,15 @@ base <https://cube-creator.lndo.site/managed-dimensions/>
 
 <managed-dimensions> a void:Dataset .
 
+<http://example.com/dimension/chemicals> void:inDataset <managed-dimensions> .
+graph <http://example.com/dimension/chemicals> {
+  <http://example.com/dimension/chemicals>
+    a schema:DefinedTermSet, meta:SharedDimension ;
+    schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
+    schema:name "Chemical substances"@en, "Chemikalien"@de, "Substances chimiques"@fr, "Sostanze chimiche"@it ;
+  .
+}
+
 <http://example.com/dimension/countries> void:inDataset <managed-dimensions> .
 graph <http://example.com/dimension/countries> {
   <http://example.com/dimension/countries>

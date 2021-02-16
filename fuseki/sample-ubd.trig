@@ -98,7 +98,7 @@ graph <cube-project/ubd/dimension-mapping/pollutant> {
   <cube-project/ubd/dimension-mapping/pollutant>
     a prov:Dictionary, hydra:Resource ;
     schema:about <https://environment.ld.admin.ch/foen/ubd/28/pollutant> ;
-    cc:managedDimension <managed-dimension/chemical-substance> ;
+    cc:managedDimension <http://example.com/dimension/chemicals> ;
   .
 
   <cube-project/ubd/dimension-mapping/pollutant>
