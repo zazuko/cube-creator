@@ -56,6 +56,10 @@ function mappedLiteralColumn({ cubeIdentifier, organization, columnMapping, colu
     csvwColumn.lang = columnMapping.language
   }
 
+  if (columnMapping.defaultValue) {
+    csvwColumn.default = columnMapping.defaultValue.value
+  }
+
   return csvwColumn
 }
 

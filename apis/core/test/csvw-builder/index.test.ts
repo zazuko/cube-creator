@@ -236,6 +236,27 @@ describe('lib/csvw-builder', () => {
     expect(csvwColumn?.lang).to.eq('de-DE')
   })
 
+  it('maps column with default value', async () => {
+    // given
+    csvSource.columns = [
+      CsvColumn.fromPointer(csvSource.pointer.namedNode('jahr-column'), { name: 'JAHR' }),
+    ]
+    const columnMapping = ColumnMapping.literalFromPointer(clownface({ dataset: $rdf.dataset() }).namedNode('year-mapping'), {
+      sourceColumn: $rdf.namedNode('jahr-column') as any,
+      targetProperty: schema.yearBuilt,
+      defaultValue: '2020',
+    })
+    resources.push(columnMapping.pointer as any)
+    table.columnMappings = [columnMapping] as any
+
+    // when
+    const csvw = await buildCsvw({ table, resources })
+
+    // then
+    const csvwColumn = findColumn(csvw, 'JAHR')
+    expect(csvwColumn?.default).to.eq('2020')
+  })
+
   it('maps column from reference column mapping', async () => {
     // given
     const stationSource = CsvSource.create(graph.namedNode('station-source'), {
