@@ -4,6 +4,7 @@ prefix hydra:  <http://www.w3.org/ns/hydra/core#>
 prefix sh:     <http://www.w3.org/ns/shacl#>
 prefix schema: <http://schema.org/>
 prefix code:   <https://code.described.at/>
+prefix query:  <http://hypermedia.app/query#>
 
 cc:DimensionMetadataCollection
   a
@@ -11,6 +12,13 @@ cc:DimensionMetadataCollection
   hydra:supportedProperty
     [ hydra:property
         schema:hasPart ] ;
+  query:preprocess
+    [
+      a
+        code:EcmaScript ;
+      code:link
+        <file:handlers/dimension#loadSharedDimensions> ;
+    ] ;
 .
 
 schema:hasPart
