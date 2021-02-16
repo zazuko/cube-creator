@@ -1,10 +1,6 @@
 PREFIX cc:     <https://cube-creator.zazuko.com/vocab#>
 PREFIX schema: <http://schema.org/>
-PREFIX void:   <http://rdfs.org/ns/void#>
-PREFIX cube:   <https://cube.link/>
-PREFIX hydra:  <http://www.w3.org/ns/hydra/core#>
-PREFIX qudt:   <http://qudt.org/schema/qudt/>
-PREFIX prov:   <http://www.w3.org/ns/prov#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 ENTRYPOINT "cube-project/ubd/dimensions-metadata"
 
@@ -16,7 +12,9 @@ HEADERS {
 With Class cc:DimensionMetadataCollection {
     Expect Property schema:hasPart {
         Expect Property cc:dimensionMapping {
-            Expect Property cc:managedDimension
+            Expect Property cc:managedDimension {
+                Expect Property rdfs:label
+            }
         }
     }
 }

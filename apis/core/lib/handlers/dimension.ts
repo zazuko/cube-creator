@@ -24,7 +24,9 @@ export const put = protectedResource(
 )
 
 export const loadSharedDimensions: Enrichment = async (req, pointer) => {
-  for (const quad of await getMappedDimensions(pointer)) {
+  const quads = await getMappedDimensions(pointer)
+
+  for (const quad of quads) {
     pointer.dataset.add(quad)
   }
 }
