@@ -1385,7 +1385,7 @@
     rdf-loaders-registry "^0.2.0"
     sparql-http-client "^2.2.2"
 
-"@hydrofoil/shaperone-core@^0.6.6", "@hydrofoil/shaperone-core@0.6.8", "@hydrofoil/shaperone-core@^0.6.8":
+"@hydrofoil/shaperone-core@0.6.8", "@hydrofoil/shaperone-core@^0.6.6", "@hydrofoil/shaperone-core@^0.6.8":
   version "0.6.8"
   resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-core/-/shaperone-core-0.6.8.tgz#b697be545af94a1cae83addfc25820d15d5f3a92"
   integrity sha512-XF2eJh/h2OQhL9R1VYe5jYCYOd7OIE5RBUuI7YTbqsdxTrFYhfVC8uEoF6bM7U5b7i1gOAQE6fcIYhmrFDymWA==
@@ -11359,10 +11359,10 @@ rdf-normalize@^1.0.0:
   resolved "https://registry.yarnpkg.com/rdf-normalize/-/rdf-normalize-1.0.0.tgz#53496baf362cce9d9fca1f2216c6c30007f99cca"
   integrity sha1-U0lrrzYszp2fyh8iFsbDAAf5nMo=
 
-rdf-parser-csvw@^0.14.0:
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/rdf-parser-csvw/-/rdf-parser-csvw-0.14.0.tgz#c7c7f7675cce51626aae2d6d9213ee677364b9a2"
-  integrity sha512-K7Ra68SGxQBOgJGcss6Zi+dZMTBWWvRwtja4+EDk7K6cvNoXeZUGpAlElDBjnzo7mzAKnGf9EqnCubHQ7mPQog==
+rdf-parser-csvw@^0.14.0, rdf-parser-csvw@^0.14.2:
+  version "0.14.2"
+  resolved "https://registry.yarnpkg.com/rdf-parser-csvw/-/rdf-parser-csvw-0.14.2.tgz#27eeb601f37080621ec2345202e4169084525a49"
+  integrity sha512-lQM8mGr7QXR/CUTGyLDWG8/teh/rDf6KQoET0pohNpJPfQZSAfeui+ML9xuugs1gPgLIE04sYRzqzc+0cmTHiA==
   dependencies:
     "@rdfjs/data-model" "^1.1.2"
     commander "^3.0.1"
