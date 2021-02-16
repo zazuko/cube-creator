@@ -1,6 +1,6 @@
 # Cube Curator Managed Dimensions API
 
-This Hydra-driven API provides functionality for creating
+This Hydra-driven API provides functionality for creating and finding dimensions (dictionaries) share between all Cube Creator's cubes.
 
 It is not standalone and deployed together with the [Core API](../core) under a sub path `/managed-dimensions`.
 
@@ -8,7 +8,7 @@ Please refer to the latter for authentication and debugging information.
 
 ## RDF namespaces
 
-| `md` | `https://cube.link/meta/` |
+| `meta` | `https://cube.link/meta/` |
 
 ## Resource organization
 
