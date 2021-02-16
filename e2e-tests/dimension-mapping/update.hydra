@@ -23,7 +23,7 @@ With Operation schema:ReplaceAction {
         <cube-project/ubd/dimension-mapping/pollutant>
             a prov:Dictionary ;
             cc:applyMappings "false"^^xsd:boolean ;
-            cc:managedDimension <managed-dimension/chemical-substance> .
+            cc:managedDimension <http://example.com/dimension/chemicals> .
         ```
     } => {
         Expect Status 400
@@ -42,7 +42,7 @@ With Operation schema:ReplaceAction {
         <cube-project/ubd/dimension-mapping/pollutant>
             schema:about <https://environment.ld.admin.ch/foen/ubd/28/pollutant> ;
             cc:applyMappings "false"^^xsd:boolean ;
-            cc:managedDimension <managed-dimension/chemical-substance> .
+            cc:managedDimension <http://example.com/dimension/chemicals> .
         ```
     } => {
         Expect Status 400
@@ -63,7 +63,7 @@ With Operation schema:ReplaceAction {
             a prov:Dictionary ;
             schema:about <https://environment.ld.admin.ch/foen/ubd/28/pollutants> ;
             cc:applyMappings "false"^^xsd:boolean ;
-            cc:managedDimension <managed-dimension/chemical-substance> .
+            cc:managedDimension <http://example.com/dimension/chemicals> .
         ```
     } => {
         Expect Status 400
@@ -83,7 +83,7 @@ With Operation schema:ReplaceAction {
         <cube-project/ubd/dimension-mapping/pollutant>
             a prov:Dictionary ;
             schema:about <https://environment.ld.admin.ch/foen/ubd/28/pollutant> ;
-            cc:managedDimension <managed-dimension/chemical-substance> ;
+            cc:managedDimension <http://example.com/dimension/chemicals> ;
             cc:applyMappings "false"^^xsd:boolean ;
             prov:hadDictionaryMember [
                 a prov:KeyEntityPair ;
