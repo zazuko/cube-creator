@@ -31,7 +31,6 @@ export async function update({
 
   if (!managedDimension.equals(dimensionMappings.managedDimension)) {
     dimensionMappings.changeManageDimension(managedDimension)
-    return dimensionMappings.pointer
   }
 
   const newEntries = dimensionMappings.replaceEntries(newMappings.hadDictionaryMember)

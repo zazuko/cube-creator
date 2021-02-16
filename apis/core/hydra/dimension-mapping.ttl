@@ -5,6 +5,7 @@ prefix prov: <http://www.w3.org/ns/prov#>
 prefix code: <https://code.described.at/>
 prefix cc: <https://cube-creator.zazuko.com/vocab#>
 prefix query: <http://hypermedia.app/query#>
+prefix sh: <http://www.w3.org/ns/shacl#>
 
 prov:Dictionary
   a hydra:Class ;
@@ -27,3 +28,5 @@ prov:Dictionary
             <file:handlers/dimension-mapping#put> ;
         ] ;
     ] .
+
+<shape/dimension/managed-mapping> a sh:Shape .

@@ -251,10 +251,11 @@ ${shape('dimension/managed-mapping')} {
     ] , [
       ${sh.path} ${cc.applyMappings} ;
       ${sh.name} "Apply mappings" ;
-      ${sh.description} "If set to true, Cube will be immediately updated with new mappings. Otherwise, running the transformation will be necessary" ;
+      ${sh.description} "If checked, the Cube will be immediately updated with new mappings. Otherwise, running the transformation will be necessary" ;
       ${sh.order} 30 ;
       ${sh.datatype} ${xsd.boolean} ;
       ${sh.defaultValue} false ;
+      ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
     ]
   .
@@ -266,6 +267,7 @@ ${shape('dimension/managed-mapping')} {
       ${sh.name} "Original value" ;
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
+      ${sh.order} 10 ;
     ] , [
       ${sh.path} ${prov.pairEntity} ;
       ${sh.name} "Managed term" ;
@@ -275,6 +277,9 @@ ${shape('dimension/managed-mapping')} {
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
       ${hydra.search} [
+        ${sh.path} [
+          ${sh.inversePath} ${prov.hadDictionaryMember} ;
+        ] ;
         ${hydra.variableRepresentation} ${hydra.ExplicitRepresentation} ;
         ${hydra.template} "managed-dimensions/terms{?dimension}" ;
         ${hydra.mapping} [
@@ -282,7 +287,8 @@ ${shape('dimension/managed-mapping')} {
           ${hydra.property} ${cc.managedDimension} ;
           ${hydra.required} true ;
         ] ;
-      ]
+      ] ;
+      ${sh.order} 20 ;
     ];
   .
 }`

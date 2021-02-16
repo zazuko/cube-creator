@@ -5,7 +5,6 @@ import TermSet from '@rdfjs/term-set'
 import { expect } from 'chai'
 import $rdf from 'rdf-ext'
 import { prov } from '@tpluscode/rdf-ns-builders'
-import { cc } from '@cube-creator/core/namespace'
 import { fromPointer } from '@rdfine/prov/lib/Dictionary'
 import { prepareEntries } from '../../lib/handlers/dimension-mapping'
 import { namedNode } from '../support/clownface'
@@ -49,14 +48,6 @@ describe('lib/handlers/dimension-mapping', () => {
           path: prov.hadDictionaryMember,
           minCount: 3,
           maxCount: 3,
-          node: {
-            property: {
-              path: cc.managedDimension,
-              hasValue: managedDimension,
-              minCount: 1,
-              maxCount: 1,
-            },
-          },
         },
       })
     })

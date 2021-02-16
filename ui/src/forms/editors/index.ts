@@ -1,12 +1,16 @@
-import { html, SingleEditorComponent, Lazy } from '@hydrofoil/shaperone-wc'
+import { html, SingleEditorComponent, Lazy, MultiEditorComponent } from '@hydrofoil/shaperone-wc'
 import {
   EnumSelectEditor, enumSelect as enumSelectCore,
   InstancesSelectEditor, instancesSelect as instancesSelectCore
 } from '@hydrofoil/shaperone-core/components'
 import * as ns from '@cube-creator/core/namespace'
 import { dash, schema, xsd } from '@tpluscode/rdf-ns-builders'
-import $rdf from '@rdfjs/data-model'
+import $rdf from '@rdfjs/dataset'
+import { GraphPointer } from 'clownface'
+import { FocusNode } from '@hydrofoil/shaperone-core'
 import { createCustomElement } from '../custom-element'
+import '@rdfine/dash/extensions/sh/PropertyShape'
+import { Literal } from 'rdf-js'
 
 export const textField: Lazy<SingleEditorComponent> = {
   editor: dash.TextFieldEditor,
@@ -145,12 +149,20 @@ export const propertyEditor: Lazy<SingleEditorComponent> = {
   },
 }
 
+function isFocusNode (value?: GraphPointer): value is FocusNode {
+  return value?.term.termType === 'NamedNode' || value?.term.termType === 'BlankNode'
+}
+
 export const nestedForm: SingleEditorComponent = {
   editor: dash.DetailsEditor,
-  render ({ property, value }) {
-    const nestedShape = property.shape?.node?.pointer
+  render ({ property: { shape: { node } }, value, renderer }) {
+    const focusNode = value.object
 
-    return html`<cc-form .resource="${value.object}" .shapes="${nestedShape}" class="box"></cc-form>`
+    if (isFocusNode(focusNode)) {
+      return html`<div class="box">${renderer.renderFocusNode({ focusNode, shape: node })}</div>`
+    }
+
+    return html``
   }
 }
 
@@ -184,6 +196,25 @@ export const identifierTemplateEditor: Lazy<SingleEditorComponent> = {
         .isObservationTable="${isObservationTable}"
         .sourceId="${sourceId}"
       ></identifier-template-editor>`
+    }
+  }
+}
+
+interface DictionaryTable {
+  show?: Literal
+}
+
+export const dictionaryTable: Lazy<MultiEditorComponent<DictionaryTable>> = {
+  editor: ns.editor.DictionaryTableEditor,
+  lazyRender: async function () {
+    await import('./DictionaryTableEditor.vue').then(createCustomElement('dictionary-table-editor'))
+
+    return ({ renderer, property: { objects, shape } }) => {
+      return html`<dictionary-table-editor
+        .shape="${shape}"
+        .objects="${objects}"
+        .renderer="${renderer}"
+      ></dictionary-table-editor>`
     }
   }
 }

@@ -1385,10 +1385,10 @@
     rdf-loaders-registry "^0.2.0"
     sparql-http-client "^2.2.2"
 
-"@hydrofoil/shaperone-core@^0.6.0", "@hydrofoil/shaperone-core@0.6.3", "@hydrofoil/shaperone-core@^0.6.3":
-  version "0.6.3"
-  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-core/-/shaperone-core-0.6.3.tgz#047f189838b785a624b483f1e7123726a730aed7"
-  integrity sha512-L8+VfbV+qNAYXqQsXXXQlH9V2MYqzFvSj5Q8sc6dqAlvKFAaczawJBsHVYJBwZW4hDkqlHbWtA3Z2KHItmGLhA==
+"@hydrofoil/shaperone-core@^0.6.6", "@hydrofoil/shaperone-core@0.6.8", "@hydrofoil/shaperone-core@^0.6.8":
+  version "0.6.8"
+  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-core/-/shaperone-core-0.6.8.tgz#b697be545af94a1cae83addfc25820d15d5f3a92"
+  integrity sha512-XF2eJh/h2OQhL9R1VYe5jYCYOd7OIE5RBUuI7YTbqsdxTrFYhfVC8uEoF6bM7U5b7i1gOAQE6fcIYhmrFDymWA==
   dependencies:
     "@captaincodeman/rdx" "^1.0.0-rc.8"
     "@rdf-esm/data-model" "^0.5.3"
@@ -1405,30 +1405,31 @@
     clownface "^1.2.0"
     immer "^8.0.1"
 
-"@hydrofoil/shaperone-hydra@^0.1.5":
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-hydra/-/shaperone-hydra-0.1.5.tgz#4a6ff24922b653afc91a89eef48c6b2998f8d449"
-  integrity sha512-9uyC/4K+CN9Y/uO+zfTcF3uW6s1fb9AEWucBYHBSHqxXoLcAxaF1WoUOHg/7t50BlMMJqIYH6BiPUlMCZTPW7Q==
+"@hydrofoil/shaperone-hydra@^0.1.7":
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-hydra/-/shaperone-hydra-0.1.7.tgz#c587c01e2cb5d0ffc9c71406fcb20379c4246481"
+  integrity sha512-1Fnx8vNfA5Ye0VZTMxyLyDWTipXWtuNFeeiFMjvSa1lN+iKY+Z4IDPPB/0b+D08Q625JGzKqQiD7I9jw8QStvA==
   dependencies:
-    "@hydrofoil/shaperone-core" "^0.6.0"
+    "@hydrofoil/shaperone-core" "^0.6.6"
     "@rdf-esm/term-map" "^0.5.0"
     "@rdfine/hydra" "^0.6.4"
     "@tpluscode/rdf-ns-builders" "^0.4.0"
     "@tpluscode/rdfine" "^0.5.20"
     alcaeus "^1.1.1"
 
-"@hydrofoil/shaperone-wc@^0.3.5":
-  version "0.3.5"
-  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-wc/-/shaperone-wc-0.3.5.tgz#5f4fb90d1d12f3b03bebca020882b927601024ff"
-  integrity sha512-ATSNE19D3yVgNwef0Iyb3y6sk6n2wHdQT5I1zKayUBiEq0kbn6oX62rTXKZloOUpHMm2geRso3UANLYO+DNXiw==
+"@hydrofoil/shaperone-wc@^0.4.5":
+  version "0.4.5"
+  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-wc/-/shaperone-wc-0.4.5.tgz#e0a4c42eeb90efe8129dd0cd15cb5e8591e574b5"
+  integrity sha512-v+aEbUAHFmaVcDC3WTEf64WV9LQu4pizyaQcanCRv4ZNAcf8nSjJhexzCD31+bQhKgJgWFNGaAnXw/r6/vgiWQ==
   dependencies:
     "@captaincodeman/rdx" "^1.0.0-rc.8"
-    "@hydrofoil/shaperone-core" "0.6.3"
+    "@hydrofoil/shaperone-core" "0.6.8"
     "@rdf-esm/data-model" "^0.5.4"
     "@rdf-esm/term-map" "^0.5.0"
     "@rdfine/shacl" "^0.7.3"
     "@tpluscode/rdf-ns-builders" "^0.4.0"
     "@tpluscode/rdfine" "^0.5.13"
+    concat-merge "^1.0.3"
     lit-element "^2.3.1"
     lit-html "^1.2.1"
 
@@ -4880,6 +4881,11 @@ concat-map@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/concat-map/-/concat-map-0.0.1.tgz#d8a96bd77fd68df7793a73036a3ba0d5405d477b"
   integrity sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=
+
+concat-merge@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/concat-merge/-/concat-merge-1.0.3.tgz#8f8e81e499700513e5866626fe27f446b3080e6e"
+  integrity sha512-VuEIlh5YcPYJohvBsZrQNzVjSG5Z0fcmiaiBfluY/2WAzY20HJF9YgPkGRVMYcljzGEKW+I++TX/2tsO/S+RSw==
 
 concat-stream@1.6.2, concat-stream@^1.5.0, concat-stream@^1.6.0:
   version "1.6.2"

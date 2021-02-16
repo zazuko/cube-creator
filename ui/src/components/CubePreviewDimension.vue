@@ -10,11 +10,25 @@
         :operation="dimension.actions.edit"
         :to="{ name: 'DimensionEdit', params: { dimensionId: dimension.clientPath } }"
       />
+      <div v-if="dimension.mappings">
+        <b-tooltip label="Link to managed dimension">
+          <b-button
+            tag="router-link"
+            :to="{ name: 'DimensionMapping', params: { dimensionId: dimension.clientPath } }"
+            icon-left="link"
+            size="is-small"
+            type="is-text"
+          />
+        </b-tooltip>
+      </div>
     </div>
     <div class="icons">
       <scale-of-measure-icon :scale-of-measure="dimension.scaleOfMeasure" />
       <b-tooltip v-show="description" :label="description">
         <b-icon icon="comment-alt" pack="far" type="is-primary" />
+      </b-tooltip>
+      <b-tooltip label="Linked to <TODO>" v-if="isMappedToManagedDimension">
+        <b-icon icon="link" type="is-primary" />
       </b-tooltip>
     </div>
   </div>
@@ -40,6 +54,11 @@ export default class CubePreviewDimension extends Vue {
     const description = this.dimension.description.find(({ language }) => language === this.selectedLanguage)
 
     return description?.value ?? ''
+  }
+
+  // TODO: Actually check if it's linked
+  get isMappedToManagedDimension (): boolean {
+    return !!this.dimension.mappings
   }
 }
 </script>

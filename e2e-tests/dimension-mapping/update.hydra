@@ -18,9 +18,11 @@ With Operation schema:ReplaceAction {
         base <https://cube-creator.lndo.site/>
         prefix prov: <http://www.w3.org/ns/prov#>
         prefix cc: <https://cube-creator.zazuko.com/vocab#>
+        prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 
         <cube-project/ubd/dimension-mapping/pollutant>
             a prov:Dictionary ;
+            cc:applyMappings "false"^^xsd:boolean ;
             cc:managedDimension <managed-dimension/chemical-substance> .
         ```
     } => {
@@ -35,9 +37,11 @@ With Operation schema:ReplaceAction {
         base <https://cube-creator.lndo.site/>
         prefix schema: <http://schema.org/>
         prefix cc: <https://cube-creator.zazuko.com/vocab#>
+        prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 
         <cube-project/ubd/dimension-mapping/pollutant>
             schema:about <https://environment.ld.admin.ch/foen/ubd/28/pollutant> ;
+            cc:applyMappings "false"^^xsd:boolean ;
             cc:managedDimension <managed-dimension/chemical-substance> .
         ```
     } => {
@@ -53,10 +57,12 @@ With Operation schema:ReplaceAction {
         prefix prov: <http://www.w3.org/ns/prov#>
         prefix schema: <http://schema.org/>
         prefix cc: <https://cube-creator.zazuko.com/vocab#>
+        prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 
         <cube-project/ubd/dimension-mapping/pollutant>
             a prov:Dictionary ;
             schema:about <https://environment.ld.admin.ch/foen/ubd/28/pollutants> ;
+            cc:applyMappings "false"^^xsd:boolean ;
             cc:managedDimension <managed-dimension/chemical-substance> .
         ```
     } => {
@@ -72,11 +78,13 @@ With Operation schema:ReplaceAction {
         prefix prov: <http://www.w3.org/ns/prov#>
         prefix schema: <http://schema.org/>
         prefix cc: <https://cube-creator.zazuko.com/vocab#>
+        prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 
         <cube-project/ubd/dimension-mapping/pollutant>
             a prov:Dictionary ;
             schema:about <https://environment.ld.admin.ch/foen/ubd/28/pollutant> ;
             cc:managedDimension <managed-dimension/chemical-substance> ;
+            cc:applyMappings "false"^^xsd:boolean ;
             prov:hadDictionaryMember [
                 a prov:KeyEntityPair ;
                 prov:pairKey "As" ;

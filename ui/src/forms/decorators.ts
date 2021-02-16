@@ -1,7 +1,8 @@
 import { ComponentDecorator } from '@hydrofoil/shaperone-core/models/components'
 import { Lazy, SingleEditorComponent } from '@hydrofoil/shaperone-wc'
-import { sh } from '@tpluscode/rdf-ns-builders'
+import { dash, sh } from '@tpluscode/rdf-ns-builders'
 import { sh1 } from '@cube-creator/core/namespace'
+import { InstancesSelectEditor } from '@hydrofoil/shaperone-core/components'
 
 export const fieldIf: ComponentDecorator<SingleEditorComponent | Lazy<SingleEditorComponent>> = {
   applicableTo (): boolean {
@@ -26,6 +27,39 @@ export const fieldIf: ComponentDecorator<SingleEditorComponent | Lazy<SingleEdit
           return render({ focusNode, property, value, ...params }, { remove, ...actions })
         }
       }
+    }
+  },
+}
+
+export const clearInstance: ComponentDecorator<InstancesSelectEditor> = {
+  applicableTo (component): boolean {
+    return component.editor.equals(dash.InstancesSelectEditor)
+  },
+  decorate (component) {
+    return {
+      ...component,
+      _decorateRender (render) {
+        return function ({ value, ...params }, { clear, update, ...actions }) {
+          const rendered = render({ value, ...params }, { clear, update, ...actions })
+          const { object } = value
+          const { defaultValue } = params.property.shape
+
+          if (object) {
+            if (object.term.equals(defaultValue)) {
+              return rendered
+            }
+
+            const hasValue = value.componentState.instances?.some(([inst]) => inst.term.equals(object.term))
+            if (!hasValue && defaultValue && !object.term.equals(defaultValue)) {
+              update(defaultValue)
+            } else if (!hasValue) {
+              clear()
+            }
+          }
+
+          return rendered
+        }
+      },
     }
   },
 }
