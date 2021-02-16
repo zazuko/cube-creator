@@ -27,7 +27,7 @@
       <b-tooltip v-show="description" :label="description">
         <b-icon icon="comment-alt" pack="far" type="is-primary" />
       </b-tooltip>
-      <b-tooltip label="Linked to <TODO>" v-if="isMappedToManagedDimension">
+      <b-tooltip v-if="dimension.managedDimension" :label="`Linked to ${dimension.managedDimension.label}`">
         <b-icon icon="link" type="is-primary" />
       </b-tooltip>
     </div>
@@ -54,11 +54,6 @@ export default class CubePreviewDimension extends Vue {
     const description = this.dimension.description.find(({ language }) => language === this.selectedLanguage)
 
     return description?.value ?? ''
-  }
-
-  // TODO: Actually check if it's linked
-  get isMappedToManagedDimension (): boolean {
-    return !!this.dimension.mappings
   }
 }
 </script>
