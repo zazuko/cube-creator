@@ -46,7 +46,7 @@ export function getMappedDimensions(metadata: GraphPointer) {
       }
 
       OPTIONAL {
-        SERVICE <${env.MANAGED_DIMENSIONS_STORE_ENDPOINT}> {
+        SERVICE <${env.MANAGED_DIMENSIONS_STORE_QUERY_ENDPOINT}> {
           graph ?g {
             ?dimension ${rdfs.label}|${schema.name} ?label
           }
