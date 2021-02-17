@@ -10,7 +10,7 @@ import {
   ReferenceColumnMapping,
   Table,
 } from '@cube-creator/model'
-import * as DimensionMetadataQueries from '../queries/dimension-metadata'
+import { getDimensionMetaDataCollection } from '../queries/dimension-metadata'
 import { findMapping } from './lib'
 import { NotFoundError, DomainError } from '../../errors'
 import { rdf } from '@tpluscode/rdf-ns-builders'
@@ -22,14 +22,12 @@ interface CreateColumnMappingCommand {
   tableId: NamedNode
   resource: GraphPointer
   store: ResourceStore
-  dimensionMetadataQueries?: Pick<typeof DimensionMetadataQueries, 'getDimensionMetaDataCollection'>
 }
 
 export async function createColumnMapping({
   tableId,
   resource,
   store,
-  dimensionMetadataQueries: { getDimensionMetaDataCollection } = DimensionMetadataQueries,
 }: CreateColumnMappingCommand): Promise<GraphPointer> {
   const table = await store.getResource<Table>(tableId)
 

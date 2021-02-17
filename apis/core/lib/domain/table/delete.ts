@@ -33,7 +33,6 @@ export async function deleteTable({
       await deleteColumnMapping({
         resource: columnMapping,
         store,
-        dimensionMetadataQueries: { getDimensionMetaDataCollection },
         tableQueries: { getTableForColumnMapping },
         columnMappingQueries: { dimensionIsUsedByOtherMapping },
       })
@@ -47,7 +46,6 @@ export async function deleteTable({
       await deleteColumnMapping({
         resource: columnMapping,
         store,
-        dimensionMetadataQueries: { getDimensionMetaDataCollection },
         tableQueries: { getTableForColumnMapping },
         columnMappingQueries: { dimensionIsUsedByOtherMapping },
       })

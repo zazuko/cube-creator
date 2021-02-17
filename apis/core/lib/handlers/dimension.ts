@@ -1,7 +1,9 @@
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
+import { Enrichment } from '@hydrofoil/labyrinth/lib/middleware/preprocessResource'
 import asyncMiddleware from 'middleware-async'
 import { shaclValidate } from '../middleware/shacl'
 import { update } from '../domain/dimension/update'
+import { getMappedDimensions } from '../domain/queries/dimension-metadata'
 
 export const get = protectedResource(asyncMiddleware((req, res) => {
   return res.quadStream(req.hydra.resource.quadStream())
@@ -20,3 +22,11 @@ export const put = protectedResource(
     return res.dataset(updated.dataset)
   }),
 )
+
+export const loadSharedDimensions: Enrichment = async (req, pointer) => {
+  const quads = await getMappedDimensions(pointer)
+
+  for (const quad of quads) {
+    pointer.dataset.add(quad)
+  }
+}

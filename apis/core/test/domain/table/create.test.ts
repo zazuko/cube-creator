@@ -9,7 +9,7 @@ import { cc } from '@cube-creator/core/namespace'
 import { createTable } from '../../../lib/domain/table/create'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import { NamedNode } from 'rdf-js'
-import type * as DimensionMetadataQueries from '../../../lib/domain/queries/dimension-metadata'
+import * as DimensionMetadataQueries from '../../../lib/domain/queries/dimension-metadata'
 import '../../../lib/domain'
 import * as orgQueries from '../../../lib/domain/organization/query'
 import * as Organization from '@cube-creator/model/Organization'
@@ -18,8 +18,6 @@ import * as Project from '@cube-creator/model/Project'
 
 describe('domain/table/create', () => {
   let store: TestResourceStore
-  let dimensionMetadataQueries: typeof DimensionMetadataQueries
-  let getDimensionMetaDataCollection: sinon.SinonStub
   let tableCollection: GraphPointer<NamedNode, DatasetExt>
   let csvSource: GraphPointer<NamedNode, DatasetExt>
   let dimensionMetadata: GraphPointer<NamedNode, DatasetExt>
@@ -56,8 +54,8 @@ describe('domain/table/create', () => {
       organization,
     ])
 
-    getDimensionMetaDataCollection = sinon.stub().resolves(dimensionMetadata.term.value)
-    dimensionMetadataQueries = { getDimensionMetaDataCollection }
+    sinon.restore()
+    sinon.stub(DimensionMetadataQueries, 'getDimensionMetaDataCollection').resolves(dimensionMetadata.term)
 
     sinon.stub(orgQueries, 'findOrganization').resolves({
       projectId: project.id,
@@ -75,7 +73,7 @@ describe('domain/table/create', () => {
       .addOut(cc.identifierTemplate, '{id}')
 
     // when
-    const table = await createTable({ resource, store, tableCollection, dimensionMetadataQueries })
+    const table = await createTable({ resource, store, tableCollection })
 
     // then
     expect(table.out(schema.name).value).to.eq('the name')
@@ -93,7 +91,7 @@ describe('domain/table/create', () => {
       .addOut(cc.csvSource, $rdf.namedNode('foo'))
 
     // when
-    const table = await createTable({ resource, store, tableCollection, dimensionMetadataQueries })
+    const table = await createTable({ resource, store, tableCollection })
 
     // then
     expect(table).to.matchShape({
@@ -129,7 +127,7 @@ describe('domain/table/create', () => {
       .addOut(cc.csvSource, $rdf.namedNode('foo'))
 
     // when
-    const table = await createTable({ resource, store, tableCollection, dimensionMetadataQueries })
+    const table = await createTable({ resource, store, tableCollection })
 
     // then
     expect(table).to.matchShape({
@@ -154,7 +152,7 @@ describe('domain/table/create', () => {
     csvSource.addOut(csvw.column, $rdf.namedNode('source-column-2'), column => column.addOut(schema.name, 'column 2'))
 
     // when
-    const table = await createTable({ resource, store, tableCollection, dimensionMetadataQueries })
+    const table = await createTable({ resource, store, tableCollection })
     const column = await store.get(table.out(cc.columnMapping).terms[0] as NamedNode)
 
     // then
@@ -188,7 +186,7 @@ describe('domain/table/create', () => {
     csvSource.addOut(csvw.column, $rdf.namedNode('source-column-1'), column => column.addOut(schema.name, 'Column 1'))
 
     // when
-    const table = await createTable({ resource, store, tableCollection, dimensionMetadataQueries })
+    const table = await createTable({ resource, store, tableCollection })
     const column = await store.get(table.out(cc.columnMapping).terms[0] as NamedNode)
 
     // then
@@ -215,7 +213,7 @@ describe('domain/table/create', () => {
     csvSource.addOut(csvw.column, $rdf.namedNode('source-column-3'), column => column.addOut(schema.name, 'column 3').addOut(dtype.order, 1))
 
     // when
-    const table = await createTable({ resource, store, tableCollection, dimensionMetadataQueries })
+    const table = await createTable({ resource, store, tableCollection })
 
     // then
     expect(table.out(cc.identifierTemplate).value).to.eq('{column 1}/{column 2}')
@@ -234,7 +232,7 @@ describe('domain/table/create', () => {
     csvSource.addOut(csvw.column, $rdf.namedNode('source-column-2'), column => column.addOut(schema.name, 'column 2').addOut(dtype.order, 1))
 
     // when
-    await createTable({ resource, store, tableCollection, dimensionMetadataQueries })
+    await createTable({ resource, store, tableCollection })
 
     // then
     expect(dimensionMetadata).to.matchShape({
@@ -259,7 +257,7 @@ describe('domain/table/create', () => {
     csvSource.addOut(csvw.column, $rdf.namedNode('source-column-2'), column => column.addOut(schema.name, 'column 2').addOut(dtype.order, 1))
 
     // when
-    await createTable({ resource, store, tableCollection, dimensionMetadataQueries })
+    await createTable({ resource, store, tableCollection })
 
     // then
     expect(dimensionMetadata).to.matchShape({

@@ -78,7 +78,7 @@ export default class extends Vue {
         resource: this.resource,
       })
 
-      // this.$store.dispatch('project/fetchDimensionMetadataCollection')
+      this.$store.dispatch('project/fetchDimensionMetadataCollection')
 
       this.$buefy.toast.open({
         message: 'Mapping to managed dimension was saved',
