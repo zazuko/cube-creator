@@ -223,7 +223,7 @@ const actions: ActionTree<ProjectState, RootState> = {
     const uploads = files.map((file: File) => {
       const headers = {
         'content-type': 'text/csv',
-        'content-disposition': `file; filename=${file.name}`,
+        'content-disposition': `file; filename="${file.name}"`,
       }
       return api.invokeSaveOperation(operation, file, headers)
     })
