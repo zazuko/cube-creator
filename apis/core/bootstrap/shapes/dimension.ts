@@ -1,5 +1,5 @@
 import { cc, meta, shape, sh1 } from '@cube-creator/core/namespace'
-import { supportedLanguages } from '@cube-creator/model/languages'
+import { supportedLanguages } from '@cube-creator/core/languages'
 import { sparql, turtle } from '@tpluscode/rdf-string'
 import { lindasQuery } from '../lib/query'
 import { dash, hydra, prov, rdf, rdfs, schema, sh, qudt, time, xsd } from '@tpluscode/rdf-ns-builders'

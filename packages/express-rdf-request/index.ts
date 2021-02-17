@@ -1,6 +1,6 @@
 import express from 'express'
 import clownface, { GraphPointer } from 'clownface'
-import { NamedNode } from 'rdf-js'
+import { NamedNode, Quad } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 
@@ -10,20 +10,30 @@ declare module 'express-serve-static-core' {
   }
 }
 
+declare module 'rdf-js' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface Stream extends AsyncIterable<Quad> {}
+}
+
+const emptyNamedNode = $rdf.namedNode('')
+
 export function resource(req: express.Request, res: unknown, next: express.NextFunction) {
   req.resource = async () => {
-    if (!req.dataset) {
-      return clownface({ dataset: $rdf.dataset() }).node(req.hydra.term)
+    const dataset = $rdf.dataset()
+
+    if (!req.quadStream) {
+      return clownface({ dataset }).node(req.hydra.term)
     }
 
-    const dataset = await req.dataset()
+    for await (const quad of req.quadStream()) {
+      const { predicate, graph } = quad
+      const subject = quad.subject.equals(emptyNamedNode) ? req.hydra.term : quad.subject
+      const object = quad.object.equals(emptyNamedNode) ? req.hydra.term : quad.object
 
-    const resource = clownface({ dataset }).node(req.hydra.term)
-    if (resource.out().values.length) {
-      return resource
+      dataset.add($rdf.quad(subject, predicate, object, graph))
     }
 
-    const pointer = clownface({ dataset }).namedNode('')
+    const pointer = clownface({ dataset }).namedNode(req.hydra.term)
 
     if (req.hydra.operation) {
       const expectedTypes = req.hydra.operation

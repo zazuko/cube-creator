@@ -1,5 +1,5 @@
 import { cc, editor, shape } from '@cube-creator/core/namespace'
-import { supportedLanguages } from '@cube-creator/model/languages'
+import { supportedLanguages } from '@cube-creator/core/languages'
 import { dash, hydra, rdfs, sh, csvw, xsd } from '@tpluscode/rdf-ns-builders'
 import { turtle } from '@tpluscode/rdf-string'
 import $rdf from 'rdf-ext'

@@ -1,9 +1,12 @@
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { asyncMiddleware } from 'middleware-async'
+import { protectedResource } from '@hydrofoil/labyrinth/resource'
 import httpError from 'http-errors'
 import clownface from 'clownface'
 import $rdf from 'rdf-ext'
+import { shaclValidate } from '../middleware/shacl'
 import { getManagedDimensions, getManagedTerms } from '../domain/managed-dimensions'
+import { create } from '../domain/managed-dimension'
 
 export const get = asyncMiddleware(async (req, res) => {
   const query = await getManagedDimensions(req.hydra.term)
@@ -30,3 +33,12 @@ export const getTerms = asyncMiddleware(async (req, res, next) => {
 
   return res.dataset(collection)
 })
+
+export const post = protectedResource(shaclValidate, asyncMiddleware(async (req, res) => {
+  const pointer = await create({
+    termSet: await req.resource(),
+  })
+
+  res.setHeader('Location', pointer.value)
+  return res.dataset(pointer.dataset)
+}))
