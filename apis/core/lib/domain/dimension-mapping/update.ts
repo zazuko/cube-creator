@@ -29,7 +29,7 @@ export async function update({
     throw new error.BadRequest('Unexpected value of schema:about')
   }
 
-  if (!managedDimension.equals(dimensionMappings.managedDimension)) {
+  if (!managedDimension || !managedDimension.equals(dimensionMappings.managedDimension)) {
     dimensionMappings.changeManageDimension(managedDimension)
   }
 

@@ -411,7 +411,7 @@ describe('domain/dimension-mapping/update', () => {
   })
 
   describe('changing managed dimension', () => {
-    beforeEach(async () => {
+    it('updates managed dimension', async () => {
       // given
       const mappings = namedNode(resource)
         .addOut(rdf.type, prov.Dictionary)
@@ -433,15 +433,41 @@ describe('domain/dimension-mapping/update', () => {
         mappings,
         store,
       })
-    })
 
-    it('updates managed dimension', () => {
       expect(dimensionMapping).to.matchShape({
         property: {
           path: cc.managedDimension,
           hasValue: ex('managed-dimension/canton'),
           minCount: 1,
           maxCount: 1,
+        },
+      })
+    })
+
+    it('unlinks managed dimension', async () => {
+      // given
+      const mappings = namedNode(resource)
+        .addOut(rdf.type, prov.Dictionary)
+        .addOut(schema.about, dimension)
+        // .addOut(cc.managedDimension, undefined)
+        .addOut(prov.hadDictionaryMember, member => {
+          member.addOut(prov.pairKey, 'co')
+        })
+        .addOut(prov.hadDictionaryMember, member => {
+          member.addOut(prov.pairKey, 'so2')
+        })
+
+      // when
+      await update({
+        resource,
+        mappings,
+        store,
+      })
+
+      expect(dimensionMapping).to.matchShape({
+        property: {
+          path: cc.managedDimension,
+          maxCount: 0,
         },
       })
     })
