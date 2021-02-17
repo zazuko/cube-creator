@@ -1983,7 +1983,7 @@
   resolved "https://registry.yarnpkg.com/@tpluscode/eslint-config/-/eslint-config-0.1.1.tgz#5562e9753d4a4e9bd6ee4785baeaf9e6c7f42bfc"
   integrity sha512-gv7CE+3iQ6YNoEofgzMKWUgOHxY7Kozq06M4ls0PkOScOmvCoHTFD2XvPtqmADmXezQsMcZyM6VsHEilgHoasw==
 
-"@tpluscode/rdf-ns-builders@0.1.0", "@tpluscode/rdf-ns-builders@^0.1.0":
+"@tpluscode/rdf-ns-builders@0.1.0":
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/@tpluscode/rdf-ns-builders/-/rdf-ns-builders-0.1.0.tgz#68f16544eb823000e6a18d2958550364712cb68d"
   integrity sha512-HxcNaUSZZOIBS8pdYiyRodFejLCcrleCMc/b8qdHA8bw830u5JOomSBZKRgylEAaps69G7PQPWtwvAEFSPRcKQ==
@@ -4694,7 +4694,7 @@ clownface@^0.11.0:
     "@rdfjs/data-model" "^1.1.0"
     "@rdfjs/namespace" "^1.0.0"
 
-clownface@^0.12.0, clownface@^0.12.1:
+clownface@^0.12.0:
   version "0.12.4"
   resolved "https://registry.yarnpkg.com/clownface/-/clownface-0.12.4.tgz#32b835453a0b86ab74a78a3bd4622da79d7e8265"
   integrity sha512-Y2SSy8pME3gg79sDoIj1AYUlrQNoq19DfEfiu7S4wv3R6P+wlXXhDmq7I78SOnYglwJudqhh7FgLbMMx//+ryw==
@@ -7734,19 +7734,19 @@ human-signals@^1.1.1:
   resolved "https://registry.yarnpkg.com/human-signals/-/human-signals-1.1.1.tgz#c5b1cd14f50aeae09ab6c59fe63ba3395fe4dfa3"
   integrity sha512-SEQu7vl8KjNL2eoGBLF3+wAjpsNfA9XMlXAYj/3EdaNfAlxKthD1xjEQfGOUhllCGGJVNY34bRr6lPINhNjyZw==
 
-hydra-box@^0.6.1:
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/hydra-box/-/hydra-box-0.6.1.tgz#a43aab80feffbde5a38d8888b6439558ee9e4472"
-  integrity sha512-dazD3Y7N0yMoFUTNwdL9ROCcVH/ioxz0HFcL7bzW5xzxOtsJI9HGSHW5k8u45VxQ7fGD//jFr29mf0G2FUQEmg==
+hydra-box@^0.6.1, hydra-box@^0.6.2:
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/hydra-box/-/hydra-box-0.6.2.tgz#9b34d658c8ade70828bfddf4d5ba1750f9f7c60a"
+  integrity sha512-nk9Ck0eNwGC9iCRcn1eonEqMk9MjgEusnEuh2lKOZ1KPE8UxODoHU9c38Je3zH1v1nyyKyYv6P2GDg47GbNUIw==
   dependencies:
     "@rdfjs/data-model" "^1.1.2"
     "@rdfjs/dataset" "^1.0.1"
     "@rdfjs/express-handler" "^1.2.0"
     "@rdfjs/namespace" "^1.1.0"
     "@rdfjs/term-set" "^1.0.0"
-    "@tpluscode/rdf-ns-builders" "^0.1.0"
+    "@tpluscode/rdf-ns-builders" "^0.4.0"
     absolute-url "^1.2.2"
-    clownface "^0.12.1"
+    clownface "^1"
     debug "^4.1.1"
     express "^4.17.1"
     http-errors "^1.8.0"

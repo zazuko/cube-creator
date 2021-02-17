@@ -3,7 +3,7 @@ import express from 'express'
 import cf from 'clownface'
 import $rdf from 'rdf-ext'
 import rdfHandler from '@rdfjs/express-handler'
-import { ex } from './namespace'
+import { ex } from './lib/namespace'
 
 type RecursivePartial<T> = {
   [P in keyof T]?: Partial<T[P]>

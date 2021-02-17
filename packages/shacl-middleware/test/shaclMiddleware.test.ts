@@ -2,19 +2,15 @@ import { describe, it } from 'mocha'
 import express from 'express'
 import request from 'supertest'
 import $rdf from 'rdf-ext'
-import DatasetExt from 'rdf-ext/lib/Dataset'
-import { NamedNode } from 'rdf-js'
 import { hydra, rdf, rdfs, schema, sh } from '@tpluscode/rdf-ns-builders'
-import { cc } from '@cube-creator/core/namespace'
-import clownface, { GraphPointer } from 'clownface'
+import clownface from 'clownface'
 import { turtle } from '@tpluscode/rdf-string'
-import { shaclMiddleware } from '../../lib/middleware/shacl'
-import { appMock, mockResourceMiddleware } from '../support/middleware'
-import { ex } from '../support/namespace'
-import { TestResourceStore } from '../support/TestResourceStore'
+import { appMock, mockResourceMiddleware } from '@cube-creator/testing/middleware'
+import { ex, cc } from '@cube-creator/testing/lib/namespace'
+import { shaclMiddleware } from '..'
+import { loader } from './support/loader'
 
 describe('middleware/shacl', () => {
-  const testResourceStore = (resources: GraphPointer<NamedNode, DatasetExt>[]) => () => new TestResourceStore(resources)
   const loadResourcesTypes = async () => []
 
   it('calls next middleware when operation does not expect shape', async () => {
@@ -25,7 +21,7 @@ describe('middleware/shacl', () => {
     }))
     app.use(mockResourceMiddleware())
     app.use(shaclMiddleware({
-      createResourceStore: testResourceStore([
+      loadResource: loader([
         clownface({ dataset: $rdf.dataset() }).namedNode(ex.NotShape).addOut(rdf.type, hydra.Class),
       ]),
       loadResourcesTypes,
@@ -52,7 +48,7 @@ describe('middleware/shacl', () => {
 
     app.use(mockResourceMiddleware())
     app.use(shaclMiddleware({
-      createResourceStore: testResourceStore([shape]),
+      loadResource: loader([shape]),
       loadResourcesTypes,
     }))
     app.use((req, res) => res.status(204).end())
@@ -81,7 +77,7 @@ describe('middleware/shacl', () => {
 
     app.use(mockResourceMiddleware())
     app.use(shaclMiddleware({
-      createResourceStore: testResourceStore([shape]),
+      loadResource: loader([shape]),
       loadResourcesTypes,
     }))
     app.use((req, res) => res.status(204).end())
@@ -110,7 +106,7 @@ describe('middleware/shacl', () => {
 
     app.use(mockResourceMiddleware())
     app.use(shaclMiddleware({
-      createResourceStore: testResourceStore([shape]),
+      loadResource: loader([shape]),
       loadResourcesTypes,
     }))
     app.use((req, res) => res.status(204).end())
@@ -139,7 +135,7 @@ describe('middleware/shacl', () => {
 
     app.use(mockResourceMiddleware())
     app.use(shaclMiddleware({
-      createResourceStore: testResourceStore([shape]),
+      loadResource: loader([shape]),
       loadResourcesTypes,
       getTargetNode() {
         return ex.resource
@@ -170,7 +166,7 @@ describe('middleware/shacl', () => {
 
     app.use(mockResourceMiddleware())
     app.use(shaclMiddleware({
-      createResourceStore: testResourceStore([shape]),
+      loadResource: loader([shape]),
       loadResourcesTypes,
     }))
     app.use((req, res) => res.status(204).end())
@@ -197,7 +193,7 @@ describe('middleware/shacl', () => {
 
     app.use(mockResourceMiddleware())
     app.use(shaclMiddleware({
-      createResourceStore: testResourceStore([shape]),
+      loadResource: loader([shape]),
       loadResourcesTypes,
     }))
     app.use((req, res) => res.status(204).end())
@@ -223,7 +219,7 @@ describe('middleware/shacl', () => {
 
     app.use(mockResourceMiddleware())
     app.use(shaclMiddleware({
-      createResourceStore: testResourceStore([shape]),
+      loadResource: loader([shape]),
       loadResourcesTypes,
     }))
     app.use((req, res) => res.status(204).end())

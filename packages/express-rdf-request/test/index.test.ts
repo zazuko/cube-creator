@@ -5,10 +5,10 @@ import express from 'express'
 import $rdf from 'rdf-ext'
 import clownface from 'clownface'
 import { turtle } from '@tpluscode/rdf-string'
-import { cc } from '@cube-creator/core/namespace'
 import { rdfs } from '@tpluscode/rdf-ns-builders'
-import { resource } from '../../lib/middleware/resource'
-import { appMock } from '../support/middleware'
+import { appMock } from '@cube-creator/testing/middleware'
+import { cc } from '@cube-creator/testing/lib/namespace'
+import { resource } from '..'
 
 describe('middleware/resource', () => {
   it('returns pointer to empty named node if the request term does not appear in body', async function () {

@@ -6,7 +6,7 @@ import { StreamClient } from 'sparql-http-client/StreamClient'
 import StreamQuery from 'sparql-http-client/StreamQuery'
 import StreamStore from 'sparql-http-client/StreamStore'
 import ResourceStore from '../lib/ResourceStore'
-import { ex } from './support/namespace'
+import { ex } from '@cube-creator/testing/lib/namespace'
 import { hydra, rdf, rdfs, schema } from '@tpluscode/rdf-ns-builders'
 import { manages } from '../lib/resources/hydraManages'
 

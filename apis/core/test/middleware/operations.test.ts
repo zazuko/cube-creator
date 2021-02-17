@@ -7,8 +7,8 @@ import TermSet from '@rdfjs/term-set'
 import { Resource } from 'hydra-box'
 import { turtle } from '@tpluscode/rdf-string'
 import { expectsDisambiguate, preferHydraCollection } from '../../lib/middleware/operations'
-import { appMock, mockResourceMiddleware } from '../support/middleware'
-import { ex } from '../support/namespace'
+import { appMock, mockResourceMiddleware } from '@cube-creator/testing/middleware'
+import { ex } from '@cube-creator/testing/lib/namespace'
 import { hydra, rdf, sh } from '@tpluscode/rdf-ns-builders'
 
 describe('lib/middleware/operations', () => {

@@ -13,7 +13,7 @@ import { update } from '../../../lib/domain/dimension-mapping/update'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import { namedNode } from '../../support/clownface'
 import * as queries from '../../../lib/domain/queries/dimension-mappings'
-import { ex } from '../../support/namespace'
+import { ex } from '@cube-creator/testing/lib/namespace'
 import '../../../lib/domain'
 import { placeholderEntity } from '../../../lib/domain/dimension-mapping/DimensionMapping'
 
