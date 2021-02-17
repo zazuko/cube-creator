@@ -23,6 +23,8 @@
     "sparql-http-client": "^2.2.2"
   },
   "devDependencies": {
+    "@types/hydra-box": "^0.6.0",
+    "@types/rdfjs__express-handler": "^1.1.2",
     "@types/rdf-js": "^4"
   }
 }
