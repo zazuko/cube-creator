@@ -6,10 +6,10 @@ import { cc } from '@cube-creator/core/namespace'
 import '../../../lib/domain'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import { createPublishJob, createTransformJob } from '../../../lib/domain/job/create'
-import { DomainError } from '../../../lib/errors'
+import { DomainError } from '@cube-creator/api-errors'
 import * as sinon from 'sinon'
 import * as Organization from '@cube-creator/model/Organization'
-import { namedNode } from '../../support/clownface'
+import { namedNode } from '@cube-creator/testing/clownface'
 import * as Project from '@cube-creator/model/Project'
 
 describe('domain/job/create', () => {

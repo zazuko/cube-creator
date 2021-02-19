@@ -12,7 +12,7 @@ import { TestResourceStore } from '../../support/TestResourceStore'
 import clownface, { GraphPointer } from 'clownface'
 import type { FileStorage } from '../../../lib/storage/s3'
 import { replaceFile } from '../../../lib/domain/csv-source/replace'
-import { DomainError } from '../../../lib/errors'
+import { DomainError } from '@cube-creator/api-errors'
 
 describe('domain/csv-sources/replace', () => {
   let fileStorage: FileStorage

@@ -12,7 +12,7 @@ import {
 } from '@cube-creator/model'
 import * as DimensionMetadataQueries from '../queries/dimension-metadata'
 import { findMapping } from './lib'
-import { NotFoundError, DomainError } from '../../errors'
+import { NotFoundError, DomainError } from '@cube-creator/api-errors'
 import { rdf } from '@tpluscode/rdf-ns-builders'
 import TermSet from '@rdfjs/term-set'
 import type { Organization } from '@rdfine/schema'

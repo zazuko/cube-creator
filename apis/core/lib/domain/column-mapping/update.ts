@@ -14,7 +14,7 @@ import {
 import * as DimensionMetadataQueries from '../queries/dimension-metadata'
 import * as TableQueries from '../queries/table'
 import { findMapping } from './lib'
-import { NotFoundError, DomainError } from '../../errors'
+import { NotFoundError, DomainError } from '@cube-creator/api-errors'
 import * as id from '../identifiers'
 import { createIdentifierMapping } from '@cube-creator/model/ColumnMapping'
 import { findOrganization } from '../organization/query'

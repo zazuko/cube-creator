@@ -2029,10 +2029,10 @@
     clownface "^1"
     once "^1.4.0"
 
-"@tpluscode/sparql-builder@^0.3.10", "@tpluscode/sparql-builder@^0.3.9":
-  version "0.3.10"
-  resolved "https://registry.yarnpkg.com/@tpluscode/sparql-builder/-/sparql-builder-0.3.10.tgz#8eb3f7adda8f0504258da061be722f033d36cfb1"
-  integrity sha512-rz4tXU9dfkP9KLQ8pyCNSXOwkvFIzDF/cWHqnq28idpZc1QLCZu8RlY0NDDWteJht0ryNbG7cNtCk0R6zBkiOw==
+"@tpluscode/sparql-builder@^0.3.10", "@tpluscode/sparql-builder@^0.3.9", "@tpluscode/sparql-builder@^0.3.11":
+  version "0.3.11"
+  resolved "https://registry.yarnpkg.com/@tpluscode/sparql-builder/-/sparql-builder-0.3.11.tgz#e22f4e7333448b318f9da0f1ada023d0d1d5cca1"
+  integrity sha512-43km+sU4sKAAf2sboSLUQkW/r3DUo/G9/BadrxfhMJhbHNjAx9ANWErciHKCwgEfRoHIDpC/ec8foFuyxBdPow==
   dependencies:
     "@rdfjs/data-model" "^1.1.2"
     "@rdfjs/term-set" "^1.0.1"
@@ -7673,7 +7673,7 @@ http-parser-js@>=0.5.1:
   resolved "https://registry.yarnpkg.com/http-parser-js/-/http-parser-js-0.5.3.tgz#01d2709c79d41698bb01d4decc5e9da4e4a033d9"
   integrity sha512-t7hjvef/5HEK7RWTdUzVUhl8zkEu+LlaE0IYzdMuvbSDipxBRpOn4Uhw8ZyECEa808iVT8XCjzo6xmYt4CiLZg==
 
-http-problem-details-mapper@^0.1.4, http-problem-details-mapper@^0.1.6, http-problem-details-mapper@^0.1.7:
+http-problem-details-mapper@^0.1.4, http-problem-details-mapper@^0.1.7:
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/http-problem-details-mapper/-/http-problem-details-mapper-0.1.7.tgz#e119e28abfa0832c0249c48b1ce2f80a334fd318"
   integrity sha512-M0rXE8hQxwLduUy+eqmZi2exbrTDxNHUrpaEbyMhYgn1arCnrqxOlIB7ovBkTyvT+e3WZw12RqbwtQDyfKjD+g==

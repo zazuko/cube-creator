@@ -9,7 +9,7 @@ import { cc } from '@cube-creator/core/namespace'
 import * as Hydra from '@rdfine/hydra'
 import { rdf } from '@tpluscode/rdf-ns-builders'
 import { childResource } from '@cube-creator/model/lib/resourceIdentifiers'
-import { DomainError } from '../../errors'
+import { DomainError } from '@cube-creator/api-errors'
 
 interface ApiProject {
   nextRevision: number

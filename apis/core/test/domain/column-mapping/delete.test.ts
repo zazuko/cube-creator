@@ -17,7 +17,7 @@ import { ColumnMapping } from '@cube-creator/model'
 import * as orgQueries from '../../../lib/domain/organization/query'
 import * as Organization from '@cube-creator/model/Organization'
 import * as Project from '@cube-creator/model/Project'
-import { namedNode } from '../../support/clownface'
+import { namedNode } from '@cube-creator/testing/clownface'
 
 describe('domain/column-mapping/delete', () => {
   let store: TestResourceStore

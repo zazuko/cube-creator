@@ -5,7 +5,7 @@ import * as Job from '@cube-creator/model/Job'
 import { CsvMapping, Project, Dataset } from '@cube-creator/model'
 import { ResourceStore } from '../../ResourceStore'
 import * as id from '../identifiers'
-import { DomainError } from '../../errors'
+import { DomainError } from '@cube-creator/api-errors'
 
 interface StartTransformationCommand {
   resource: NamedNode

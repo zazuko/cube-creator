@@ -16,7 +16,7 @@ import env from '@cube-creator/core/env'
 import { bootstrap } from './bootstrap'
 import { resourceStore } from './lib/middleware/resource'
 import { expectsDisambiguate, preferHydraCollection } from './lib/middleware/operations'
-import { errorMappers } from './lib/errors'
+import { errorMappers } from '@cube-creator/api-errors'
 import './lib/domain'
 
 const apiPath = path.resolve(__dirname, 'hydra')

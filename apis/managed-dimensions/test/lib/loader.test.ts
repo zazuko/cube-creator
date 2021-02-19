@@ -54,19 +54,26 @@ describe('managed-dimensions/lib/loader @SPARQL', () => {
       expect(resources).to.be.empty
     })
 
-    it('attaches described resource quads to resource, sourced only from the configured graph', async () => {
+    describe('.dataset', () => {
+      it('returns only from the configured graph', async () => {
       // when
-      const [resource] = await loader.forClassOperation(ex.foo, req)
+        const [resource] = await loader.forClassOperation(ex.foo, req)
 
-      // then
-      const dataset = await resource.dataset()
-      expect(dataset).to.matchShape({
-        targetNode: [ex.foo],
-        property: {
-          path: schema.name,
-          maxCount: 1,
-          hasValue: 'Yes',
-        },
+        // then
+        const dataset = await resource.dataset()
+        expect(dataset).to.matchShape({
+          targetNode: [ex.foo],
+          property: {
+            path: schema.name,
+            maxCount: 1,
+            hasValue: 'Yes',
+          },
+        })
+      })
+
+      it('loads only subgraph described by a shape', async () => {
+        // when
+        const [resource] = await loader.forClassOperation(ex.foo, req)
       })
     })
   })

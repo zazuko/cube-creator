@@ -13,7 +13,7 @@ import { Project } from '@cube-creator/model/Project'
 import { fromPointer } from '@cube-creator/model/Organization'
 import * as sinon from 'sinon'
 import * as orgQueries from '../../../lib/domain/organization/query'
-import { namedNode } from '../../support/clownface'
+import { namedNode } from '@cube-creator/testing/clownface'
 
 describe('domain/cube-projects/create', () => {
   let store: TestResourceStore

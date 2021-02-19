@@ -13,7 +13,7 @@ import type * as DimensionMetadataQueries from '../../../lib/domain/queries/dime
 import '../../../lib/domain'
 import * as orgQueries from '../../../lib/domain/organization/query'
 import * as Organization from '@cube-creator/model/Organization'
-import { namedNode } from '../../support/clownface'
+import { namedNode } from '@cube-creator/testing/clownface'
 import * as Project from '@cube-creator/model/Project'
 
 describe('domain/table/create', () => {

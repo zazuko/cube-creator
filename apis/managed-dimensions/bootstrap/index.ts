@@ -1,28 +1,30 @@
-import * as core from '@cube-creator/core/bootstrap'
-import { turtle, TurtleTemplateResult } from '@tpluscode/rdf-string'
-import env, { graph } from '../lib/env'
+import namespace from '@rdfjs/namespace'
+import clownface, { GraphPointer } from 'clownface'
+import $rdf from 'rdf-ext'
+import env from '../lib/env'
 import { log } from '../lib/log'
-import termSetCollections from './termSetCollections'
-import entrypoint from './entrypoint'
+import { terms, termSets } from './termSetCollections'
+import { entrypoint } from './entrypoint'
+import { store } from '../lib/store'
+import { NamedNode } from 'rdf-js'
+
+export interface BootstrappedResourceFactory {
+  (term: string): GraphPointer<NamedNode>
+}
+
+const ns = namespace(env.MANAGED_DIMENSIONS_BASE)
+const pointerFactory = (term: string) => clownface({ dataset: $rdf.dataset(), term: ns(term) })
 
 const resources = [
-  termSetCollections,
-  entrypoint,
+  terms(pointerFactory),
+  termSets(pointerFactory),
+  entrypoint(pointerFactory, ns),
 ]
-
-function wrapInNamedGraph(data: TurtleTemplateResult) {
-  return turtle`GRAPH ${graph} { ${data} }`
-}
 
 export default async function (): Promise<void> {
   log('Bootstrapping API resources')
 
-  await core.bootstrap({
-    storeUrl: env.MANAGED_DIMENSIONS_STORE_GRAPH_ENDPOINT,
-    base: env.MANAGED_DIMENSIONS_BASE,
-    user: env.maybe.MANAGED_DIMENSIONS_STORE_USERNAME,
-    password: env.maybe.MANAGED_DIMENSIONS_STORE_PASSWORD,
-    resources: resources.map(wrapInNamedGraph),
-    postRequest: true,
-  })
+  const database = store()
+
+  await Promise.all(resources.map(ptr => database.save(ptr)))
 }

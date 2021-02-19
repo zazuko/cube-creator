@@ -7,7 +7,7 @@ import $rdf from 'rdf-ext'
 import namespace from '@rdfjs/namespace'
 import TermSet from '@rdfjs/term-set'
 import { prov } from '@tpluscode/rdf-ns-builders'
-import { namedNode } from '../../support/clownface'
+import { namedNode } from '@cube-creator/testing/clownface'
 import '../../../lib/domain'
 
 const wtd = namespace('http://www.wikidata.org/entity/')

@@ -8,7 +8,7 @@ import { parse } from '../csv'
 import { CsvSource } from '@cube-creator/model'
 import { nanoid } from 'nanoid'
 import { createOrUpdateColumns } from './update'
-import { DomainError } from '../../errors'
+import { DomainError } from '@cube-creator/api-errors'
 
 interface ReplaceCSVCommand {
   file: Readable | Buffer

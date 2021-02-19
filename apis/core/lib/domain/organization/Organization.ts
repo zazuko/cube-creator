@@ -2,7 +2,7 @@ import { NamedNode, Term } from 'rdf-js'
 import { Constructor } from '@tpluscode/rdfine'
 import { Organization } from '@rdfine/schema'
 import { schema } from '@tpluscode/rdf-ns-builders'
-import { DomainError } from '../../errors'
+import { DomainError } from '@cube-creator/api-errors'
 
 interface ApiOrganization {
   updateNamespace(newNamespace: NamedNode | undefined): NamedNode

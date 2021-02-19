@@ -7,7 +7,7 @@ import { IriTemplate } from '@rdfine/hydra'
 import * as sinon from 'sinon'
 import Cube from 'rdf-cube-view-query/lib/Cube'
 import Source from 'rdf-cube-view-query/lib/Source'
-import { DomainError } from '../../../lib/errors'
+import { DomainError } from '@cube-creator/api-errors'
 import { getObservations } from '../../../lib/domain/observations'
 import * as lib from '../../../lib/domain/observations/lib'
 

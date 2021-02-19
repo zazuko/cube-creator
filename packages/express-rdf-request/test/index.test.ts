@@ -11,11 +11,12 @@ import { cc } from '@cube-creator/testing/lib/namespace'
 import { resource } from '..'
 
 describe('middleware/resource', () => {
-  it('returns pointer to empty named node if the request term does not appear in body', async function () {
+  it('replaces empty term in body with req.hydra.term', async function () {
     // given
     const app = express()
     const dataset = $rdf.dataset()
     app.use(appMock(hydra => {
+      hydra.term = $rdf.namedNode('http://example.com/foo/bar')
       hydra.resource = {
         term: $rdf.namedNode('http://example.com/foo/bar'),
         types: new Set(),
