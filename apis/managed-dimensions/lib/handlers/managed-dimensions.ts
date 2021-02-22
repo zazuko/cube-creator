@@ -7,6 +7,7 @@ import $rdf from 'rdf-ext'
 import { shaclValidate } from '../middleware/shacl'
 import { getManagedDimensions, getManagedTerms } from '../domain/managed-dimensions'
 import { create } from '../domain/managed-dimension'
+import { store } from '../store'
 
 export const get = asyncMiddleware(async (req, res) => {
   const query = await getManagedDimensions(req.hydra.term)
@@ -36,7 +37,8 @@ export const getTerms = asyncMiddleware(async (req, res, next) => {
 
 export const post = protectedResource(shaclValidate, asyncMiddleware(async (req, res) => {
   const pointer = await create({
-    termSet: await req.resource(),
+    resource: await req.resource(),
+    store: store(),
   })
 
   res.setHeader('Location', pointer.value)

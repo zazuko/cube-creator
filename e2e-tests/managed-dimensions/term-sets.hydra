@@ -1,5 +1,6 @@
 PREFIX md: <https://cube-creator.zazuko.com/managed-dimensions/vocab#>
 PREFIX hydra: <http://www.w3.org/ns/hydra/core#>
+PREFIX schema: <http://schema.org/>
 
 ENTRYPOINT "managed-dimensions/"
 
@@ -12,5 +13,35 @@ With Class hydra:Resource {
     Expect Link md:managedDimensions {
         Expect Type md:ManagedDimensions
         Expect Property hydra:member
+
+        Expect Operation schema:CreateAction {
+            Invoke {
+                Content-Type "text/turtle"
+
+                ```
+                prefix schema: <http://schema.org/>
+                prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+
+                <> schema:name "Categories"@en ;
+                   schema:validFrom "2020-02-20T00:00:00"^^xsd:dateTime .
+                ```
+            } => {
+                Expect Status 200
+
+                Expect Type md:ManagedDimension
+            }
+
+            Invoke {
+                Content-Type "text/turtle"
+
+                ```
+                prefix schema: <http://schema.org/>
+
+                <> schema:validFrom "2020-02-20T00:00:00"^^xsd:dateTime .
+                ```
+            } => {
+                Expect Status 400
+            }
+        }
     }
 }

@@ -1,12 +1,13 @@
 import namespace from '@rdfjs/namespace'
 import clownface, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
+import { NamedNode } from 'rdf-js'
 import env from '../lib/env'
 import { log } from '../lib/log'
 import { terms, termSets } from './termSetCollections'
 import { entrypoint } from './entrypoint'
 import { store } from '../lib/store'
-import { NamedNode } from 'rdf-js'
+import shapes from './shapes'
 
 export interface BootstrappedResourceFactory {
   (term: string): GraphPointer<NamedNode>
@@ -19,6 +20,7 @@ const resources = [
   terms(pointerFactory),
   termSets(pointerFactory),
   entrypoint(pointerFactory, ns),
+  ...shapes,
 ]
 
 export default async function (): Promise<void> {

@@ -6,6 +6,7 @@ BASE <urn:hydra-box:api>
 @prefix hydra-box: <http://hydra-box.org/schema/> .
 @prefix md: <https://cube-creator.zazuko.com/managed-dimensions/vocab#> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix meta: <https://cube.link/meta/> .
 
 <api>
   a hydra:ApiDocumentation ;
@@ -36,7 +37,7 @@ md:ManagedDimensions
           code:link <file:handlers/managed-dimensions#get> ;
         ] ;
     ], [
-         a hydra:Operation ;
+         a hydra:Operation, schema:CreateAction ;
          hydra:method "POST" ;
          hydra:expects <shape/managed-dimension> ;
          code:implementedBy
@@ -48,6 +49,20 @@ md:ManagedDimensions
 .
 
 <shape/managed-dimension> a sh:NodeShape .
+
+sh:NodeShape
+  a hydra:Class ;
+  hydra:supportedOperation
+    [
+      a hydra:SupportedOperation ;
+      hydra:method "GET" ;
+      code:implementedBy
+        [
+          a code:EcmaScript ;
+          code:link <file:handlers/shape#get> ;
+        ] ;
+    ] ;
+.
 
 md:ManagedDimensionTerms
   a hydra:Class ;

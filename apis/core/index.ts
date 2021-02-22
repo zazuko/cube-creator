@@ -53,9 +53,10 @@ async function main() {
     }
   })
   app.use(await authentication())
+  app.use(resource)
+
   app.use('/managed-dimensions', await managedDimensions())
 
-  app.use(resource)
   app.use(resourceStore)
   app.use(await hydraBox({
     apiPath,

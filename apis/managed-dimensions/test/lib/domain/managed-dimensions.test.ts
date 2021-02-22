@@ -5,7 +5,7 @@ import { mdClients, insertTestDimensions } from '@cube-creator/testing/lib'
 import { getManagedDimensions, getManagedTerms } from '../../../lib/domain/managed-dimensions'
 import { hydra, schema } from '@tpluscode/rdf-ns-builders'
 
-describe('lib/domain/managed-dimensions @SPARQL', () => {
+describe('@cube-creator/managed-dimensions-api/lib/domain/managed-dimensions @SPARQL', () => {
   before(async () => {
     await insertTestDimensions()
   })

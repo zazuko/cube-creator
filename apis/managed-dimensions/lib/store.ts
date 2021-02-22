@@ -33,7 +33,7 @@ function resourceQueryPatterns(id: NamedNode) {
 function deleteQuery(id: NamedNode, graph: NamedNode) {
   return WITH(graph, DELETE`
       ${id} ?rootProp ?rootObject .
-      ${id} ${sh.node} ?shape .
+      ${id} ${sh.node} ?rootShape .
 
       ?child ?childProp ?childObject .
       ?s ?p ?o .

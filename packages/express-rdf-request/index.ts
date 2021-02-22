@@ -21,11 +21,11 @@ export function resource(req: express.Request, res: unknown, next: express.NextF
   req.resource = async () => {
     const dataset = $rdf.dataset()
 
-    if (!req.quadStream) {
+    if (!req.dataset) {
       return clownface({ dataset }).node(req.hydra.term)
     }
 
-    for await (const quad of req.quadStream()) {
+    for (const quad of await req.dataset()) {
       const { predicate, graph } = quad
       const subject = quad.subject.equals(emptyNamedNode) ? req.hydra.term : quad.subject
       const object = quad.object.equals(emptyNamedNode) ? req.hydra.term : quad.object
