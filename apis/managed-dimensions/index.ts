@@ -13,6 +13,8 @@ const apiPath = path.resolve(__dirname, 'hydra')
 const codePath = path.resolve(__dirname, 'lib')
 const baseUri = env.MANAGED_DIMENSIONS_BASE
 
+export const parsingClient = new ParsingClient(sparql)
+
 export async function managedDimensions(): Promise<Router> {
   await bootstrap()
 
@@ -22,7 +24,7 @@ export async function managedDimensions(): Promise<Router> {
     baseUri,
     loader: new Loader({
       graph: $rdf.namedNode(env.MANAGED_DIMENSIONS_GRAPH),
-      sparql: new ParsingClient(sparql),
+      sparql: parsingClient,
       stream: new StreamClient(sparql),
     }),
     sparql,

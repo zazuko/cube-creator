@@ -1,6 +1,7 @@
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
 import { Enrichment } from '@hydrofoil/labyrinth/lib/middleware/preprocessResource'
 import asyncMiddleware from 'middleware-async'
+import { parsingClient } from '@cube-creator/managed-dimensions-api'
 import { shaclValidate } from '../middleware/shacl'
 import { update } from '../domain/dimension/update'
 import { getMappedDimensions } from '../domain/queries/dimension-metadata'
@@ -24,7 +25,7 @@ export const put = protectedResource(
 )
 
 export const loadSharedDimensions: Enrichment = async (req, pointer) => {
-  const quads = await getMappedDimensions(pointer)
+  const quads = await getMappedDimensions(pointer, parsingClient)
 
   for (const quad of quads) {
     pointer.dataset.add(quad)
