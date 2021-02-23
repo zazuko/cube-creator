@@ -38,12 +38,12 @@ async function loadMetadata(jobUri: string) {
   }
 
   if (!job.dimensionMetadata.load) {
-    throw new Error(`Dimension Metadata ${job.dimensionMetadata} can not be loaded`)
+    throw new Error(`Dimension Metadata ${job.dimensionMetadata.id.value} can not be loaded`)
   }
 
   const dimensionMetadataResource = await job.dimensionMetadata?.load()
   if (!dimensionMetadataResource.representation) {
-    throw new Error(`Dimension Metadata ${job.dimensionMetadata} not loaded`)
+    throw new Error(`Dimension Metadata ${job.dimensionMetadata.id.value} failed to load (${dimensionMetadataResource.response?.xhr.status})`)
   }
 
   return dimensionMetadataResource.representation.root
