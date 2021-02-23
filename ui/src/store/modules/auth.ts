@@ -14,14 +14,15 @@ const cookieStorage = new CookieStorage({
   sameSite: 'Strict',
 })
 
-const oidcSettings: VuexOidcClientSettings = {
+const oidcSettings = {
   redirectUri: new URL('oidc-callback', base).toString(),
   postLogoutRedirectUri: new URL('logout', base).toString(),
   responseType: 'code',
   automaticSilentRenew: true,
   stateStore: new WebStorageStateStore({ store: cookieStorage }),
+  monitorSession: false,
   ...oidc,
-}
+} as VuexOidcClientSettings
 
 export function auth (): Module<VuexOidcState, RootState> {
   return vuexOidcCreateStoreModule(oidcSettings, {
