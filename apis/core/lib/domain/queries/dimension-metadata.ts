@@ -4,7 +4,7 @@ import { cc } from '@cube-creator/core/namespace'
 import { Term } from 'rdf-js'
 import { rdfs, schema } from '@tpluscode/rdf-ns-builders'
 import { GraphPointer } from 'clownface'
-import env from '@cube-creator/managed-dimensions-api/lib/env'
+import { ParsingClient } from 'sparql-http-client/ParsingClient'
 
 export async function getDimensionMetaDataCollection(csvMapping: Term, client = parsingClient) {
   const results = await SELECT
@@ -30,10 +30,9 @@ export async function getDimensionMetaDataCollection(csvMapping: Term, client = 
   return results[0].dimensionMetadata
 }
 
-export function getMappedDimensions(metadata: GraphPointer) {
-  return CONSTRUCT`
+export async function getMappedDimensions(metadata: GraphPointer, dimensionsEndpoint: ParsingClient) {
+  const dimensionQuads = await CONSTRUCT`
       ?mapping ${cc.managedDimension} ?dimension .
-      ?dimension ${rdfs.label} ?label .
     `
     .WHERE`
       GRAPH ${metadata.term} {
@@ -44,14 +43,21 @@ export function getMappedDimensions(metadata: GraphPointer) {
       GRAPH ?mapping {
         ?mapping ${cc.managedDimension} ?dimension .
       }
-
-      OPTIONAL {
-        SERVICE <${env.MANAGED_DIMENSIONS_STORE_QUERY_ENDPOINT}> {
-          graph ?g {
-            ?dimension ${rdfs.label}|${schema.name} ?label
-          }
-        }
-      }
     `
     .execute(parsingClient.query)
+
+  const dimensions = dimensionQuads.map(({ object }) => object)
+  const labelQuads = await CONSTRUCT`
+      ?dimension ${rdfs.label} ?label .
+    `
+    .WHERE`
+      VALUES ?dimension { ${dimensions} }
+
+      graph ?g {
+        ?dimension ${rdfs.label}|${schema.name} ?label
+      }
+    `
+    .execute(dimensionsEndpoint.query)
+
+  return [...dimensionQuads, ...labelQuads]
 }
