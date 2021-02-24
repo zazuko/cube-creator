@@ -5,7 +5,7 @@ import { ShapeBundle, ValidationResultBundle } from '@rdfine/shacl/bundles'
 import RdfResourceImpl, { Initializer, RdfResource, ResourceIdentifier } from '@tpluscode/rdfine/RdfResource'
 import { BlankNode, DatasetCore, NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
-import clownface, { MultiPointer } from 'clownface'
+import clownface, { GraphPointer, MultiPointer } from 'clownface'
 import Validator, * as Validate from 'rdf-validate-shacl'
 import { rdf, sh } from '@tpluscode/rdf-ns-builders'
 
@@ -13,7 +13,7 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Chai {
     interface Assertion {
-      matchShape(shapeInit: Initializer<NodeShape> | DatasetCore): void
+      matchShape(shapeInit: Initializer<NodeShape> | DatasetCore | GraphPointer<ResourceIdentifier>): void
     }
   }
 }
@@ -43,14 +43,14 @@ function toJSON(result: Validate.ValidationResult) {
   }
 }
 
-chai.Assertion.addMethod('matchShape', function (shapeInit: Initializer<NodeShape> | DatasetCore) {
+chai.Assertion.addMethod('matchShape', function (shapeInit: Initializer<NodeShape> | DatasetCore | GraphPointer<ResourceIdentifier>) {
   const obj = this._obj
   let targetNode: ResourceIdentifier[] = []
   let resourceDataset: DatasetCore
   let actual: any
   if (isDataset(obj)) {
     resourceDataset = obj
-    targetNode = !isDataset(shapeInit) && shapeInit.targetNode as any
+    targetNode = !isDataset(shapeInit) && !isGraphPointer(shapeInit) && shapeInit.targetNode as any
     actual = $rdf.dataset([...resourceDataset]).toString()
   } else if (isRdfine(obj)) {
     resourceDataset = obj.pointer.dataset
@@ -73,6 +73,8 @@ chai.Assertion.addMethod('matchShape', function (shapeInit: Initializer<NodeShap
     const [shapePointer] = clownface({ dataset: shapeInit })
       .has(rdf.type, [sh.Shape, sh.NodeShape]).toArray()
     shape = fromPointer(shapePointer, { targetNode })
+  } else if (isGraphPointer(shapeInit)) {
+    shape = fromPointer(shapeInit)
   } else {
     shape = fromPointer(
       clownface({ dataset: $rdf.dataset() }).blankNode(),

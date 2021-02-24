@@ -2016,10 +2016,10 @@
     "@tpluscode/rdf-ns-builders" "^0.4"
     "@zazuko/rdf-vocabularies" "^2020.11.2"
 
-"@tpluscode/rdfine@^0.5.10", "@tpluscode/rdfine@^0.5.13", "@tpluscode/rdfine@^0.5.15", "@tpluscode/rdfine@^0.5.17", "@tpluscode/rdfine@^0.5.18", "@tpluscode/rdfine@^0.5.19", "@tpluscode/rdfine@^0.5.20", "@tpluscode/rdfine@^0.5.22", "@tpluscode/rdfine@^0.5.23":
-  version "0.5.23"
-  resolved "https://registry.yarnpkg.com/@tpluscode/rdfine/-/rdfine-0.5.23.tgz#0f18198f1be6cf01f01732ccb133a80e424b9d7a"
-  integrity sha512-L9nM6zLT184DCeCX1+XrPhC1HJfIKLXHUZv0RB8pvbiKFNZAny3AErfnTMSMw/dxPd2VtabFtVACTXf/82CrEA==
+"@tpluscode/rdfine@^0.5.10", "@tpluscode/rdfine@^0.5.13", "@tpluscode/rdfine@^0.5.15", "@tpluscode/rdfine@^0.5.17", "@tpluscode/rdfine@^0.5.18", "@tpluscode/rdfine@^0.5.19", "@tpluscode/rdfine@^0.5.20", "@tpluscode/rdfine@^0.5.23", "@tpluscode/rdfine@^0.5.24":
+  version "0.5.24"
+  resolved "https://registry.yarnpkg.com/@tpluscode/rdfine/-/rdfine-0.5.24.tgz#53ccc659ad3f8028c82b02a514450191fc8bec0f"
+  integrity sha512-u0ol9xQEi/zJORm/d2CbZIgJKVDY0b7NDFhAB2GmQ1BprWjGx+4YDgGVZlvlN8jSfpjtiXBdmnrz7boZrWyP9g==
   dependencies:
     "@rdf-esm/data-model" "^0.5.3"
     "@rdf-esm/namespace" "^0.5.2"
@@ -2550,7 +2550,7 @@
   resolved "https://registry.yarnpkg.com/@types/source-list-map/-/source-list-map-0.1.2.tgz#0078836063ffaf17412349bba364087e0ac02ec9"
   integrity sha512-K5K+yml8LTo9bWJI/rECfIPrGgxdpeNbj+d53lwN4QjW1MCwlkhUms+gtdzigTeUyBr09+u8BwOIY3MXvHdcsA==
 
-"@types/sparql-http-client@^2":
+"@types/sparql-http-client@^2", "@types/sparql-http-client@^2.2.5":
   version "2.2.5"
   resolved "https://registry.yarnpkg.com/@types/sparql-http-client/-/sparql-http-client-2.2.5.tgz#fd42a8ba3d85198d063b73acbb1feddae4bcda4d"
   integrity sha512-bk9fctozEqrdenjfdCcYlPsiFKcZ9aKI8joDwwzUQBpHGl4uEP+Rpxi6j0+S3pp+KfhxxRTTnyHbULfQ4BFNxQ==

@@ -10,7 +10,7 @@
     "@rdfine/shacl": "^0.7.4",
     "@tpluscode/rdf-ns-builders": "^0.4.0",
     "@tpluscode/rdf-string": "^0.2.21",
-    "@tpluscode/rdfine": "^0.5.22",
+    "@tpluscode/rdfine": "^0.5.24",
     "@tpluscode/sparql-builder": "^0.3.11",
     "@rdfjs/namespace": "^1.1.0",
     "@rdfjs/term-map": "^1.0.0",

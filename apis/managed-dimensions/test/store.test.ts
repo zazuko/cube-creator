@@ -2,14 +2,15 @@ import { describe, it, before, beforeEach } from 'mocha'
 import { namedNode } from '@cube-creator/testing/clownface'
 import { mdClients } from '@cube-creator/testing/lib'
 import { foaf, schema, sh } from '@tpluscode/rdf-ns-builders'
-import { ASK } from '@tpluscode/sparql-builder'
+import { ASK, INSERT } from '@tpluscode/sparql-builder'
 import { expect } from 'chai'
 import Store, { ManagedDimensionsStore } from '../lib/store'
 import $rdf from 'rdf-ext'
+import { ex } from '@cube-creator/testing/lib/namespace'
 
 const { parsingClient } = mdClients
 
-describe('@cube-creator/managed-dimensions-api/lib/store', () => {
+describe('@cube-creator/managed-dimensions-api/lib/store @SPARQL', () => {
   const graph = $rdf.namedNode('http://test.graph/store')
   let store: ManagedDimensionsStore
 
@@ -90,6 +91,37 @@ describe('@cube-creator/managed-dimensions-api/lib/store', () => {
           `.FROM(graph)
         expect(await testQuery.execute(parsingClient.query)).to.be.false
       })
+    })
+  })
+
+  describe('delete', () => {
+    it('deletes triples complete with shape but leaves superfluous data', async () => {
+      // given
+      await INSERT.DATA`
+        graph ${graph} {
+          ${ex.toDelete}
+            ${schema.name} "Yes" ;
+            ${ex.hidden} "foo" ;
+            ${sh.node} [
+              ${sh.property} [
+                ${sh.path} ${schema.name} ;
+              ] ;
+            ] ;
+          .
+        }`.execute(parsingClient.query)
+
+      // when
+      await store.delete(ex.toDelete)
+
+      // then
+      expect(await ASK`
+        ${ex.toDelete} ?p ?o .
+
+        MINUS {
+          ${ex.toDelete} ${ex.hidden} ?o .
+        }
+      `.FROM(graph).execute(parsingClient.query)).to.be.false
+      expect(await ASK`${ex.toDelete} ${ex.hidden} ?stillThere`.FROM(graph).execute(parsingClient.query)).to.be.true
     })
   })
 })
