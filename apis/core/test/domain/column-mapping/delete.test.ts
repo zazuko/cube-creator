@@ -6,7 +6,7 @@ import $rdf from 'rdf-ext'
 import { csvw, hydra, rdf, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import { TestResourceStore } from '../../support/TestResourceStore'
-import type * as DimensionMetadataQueries from '../../../lib/domain/queries/dimension-metadata'
+import * as DimensionMetadataQueries from '../../../lib/domain/queries/dimension-metadata'
 import type * as TableQueries from '../../../lib/domain/queries/table'
 import type * as ColumnMappingQueries from '../../../lib/domain/queries/column-mapping'
 import '../../../lib/domain'
@@ -21,8 +21,6 @@ import { namedNode } from '@cube-creator/testing/clownface'
 
 describe('domain/column-mapping/delete', () => {
   let store: TestResourceStore
-  let dimensionMetadataQueries: typeof DimensionMetadataQueries
-  let getDimensionMetaDataCollection: sinon.SinonStub
   const getLinkedTablesForSource = sinon.stub()
   const getTablesForMapping = sinon.stub()
   let tableQueries: typeof TableQueries
@@ -124,8 +122,9 @@ describe('domain/column-mapping/delete', () => {
       organization,
     ])
 
-    getDimensionMetaDataCollection = sinon.stub().resolves(dimensionMetadataCollection.term.value)
-    dimensionMetadataQueries = { getDimensionMetaDataCollection }
+    sinon.restore()
+    sinon.stub(DimensionMetadataQueries, 'getDimensionMetaDataCollection').resolves(dimensionMetadataCollection.term)
+
     getTableForColumnMapping = sinon.stub().resolves(observationTable.term.value)
     tableQueries = {
       getLinkedTablesForSource,
@@ -153,7 +152,7 @@ describe('domain/column-mapping/delete', () => {
     const columnMappingsCount = observationTable.out(cc.columnMapping).terms.length
     const dimensionMetadataCount = dimensionMetadataCollection.node($rdf.namedNode('myDimension')).out().values.length
 
-    await deleteColumnMapping({ resource: resourceId, store, dimensionMetadataQueries, tableQueries, columnMappingQueries })
+    await deleteColumnMapping({ resource: resourceId, store, tableQueries, columnMappingQueries })
     await store.save()
 
     const columnMapping = await store.getResource<ColumnMapping>(resourceId, { allowMissing: true })
@@ -173,7 +172,7 @@ describe('domain/column-mapping/delete', () => {
     const columnMappingsCount = observationTable.out(cc.columnMapping).terms.length
     const dimensionMetadataCount = dimensionMetadataCollection.node($rdf.namedNode('myDimension')).out().values.length
 
-    await deleteColumnMapping({ resource: resourceId, store, dimensionMetadataQueries, tableQueries, columnMappingQueries })
+    await deleteColumnMapping({ resource: resourceId, store, tableQueries, columnMappingQueries })
     await store.save()
 
     const columnMapping = await store.getResource<ColumnMapping>(resourceId, { allowMissing: true })
@@ -186,7 +185,7 @@ describe('domain/column-mapping/delete', () => {
 
   it('throw if column mapping does not exist', async () => {
     const resource = $rdf.namedNode('columnMapping-foo')
-    const promise = deleteColumnMapping({ resource, store, dimensionMetadataQueries, tableQueries, columnMappingQueries })
+    const promise = deleteColumnMapping({ resource, store, tableQueries, columnMappingQueries })
 
     await expect(promise).to.have.rejected
   })

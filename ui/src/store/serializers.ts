@@ -19,7 +19,7 @@ import {
 } from '@cube-creator/model'
 import { IdentifierMapping, LiteralColumnMapping, ReferenceColumnMapping } from '@cube-creator/model/ColumnMapping'
 import { Link } from '@cube-creator/model/lib/Link'
-import { dcterms, rdfs } from '@tpluscode/rdf-ns-builders'
+import { dcterms, rdfs, schema } from '@tpluscode/rdf-ns-builders'
 import { RdfResource } from '@tpluscode/rdfine/RdfResource'
 
 export function serializeProjectsCollection (collection: ProjectsCollection): ProjectsCollection {
@@ -165,6 +165,8 @@ export function serializeDimensionMetadataCollection (collection: DimensionMetad
 }
 
 export function serializeDimensionMetadata (dimension: DimensionMetadata): DimensionMetadata {
+  const managedDimension = dimension.pointer.out(cc.dimensionMapping).out(cc.managedDimension)
+
   return Object.freeze({
     ...serializeResource(dimension),
     name: dimension.name,
@@ -172,6 +174,12 @@ export function serializeDimensionMetadata (dimension: DimensionMetadata): Dimen
     description: dimension.description,
     scaleOfMeasure: dimension.scaleOfMeasure,
     mappings: dimension.mappings,
+    managedDimension: managedDimension.term
+      ? {
+        id: managedDimension.term,
+        label: managedDimension.out([rdfs.label, schema.name], { language: ['en', 'de', 'fr', ''] }),
+      }
+      : undefined,
   })
 }
 

@@ -9,7 +9,7 @@ import * as Organization from '@cube-creator/model/Organization'
 import * as Project from '@cube-creator/model/Project'
 import { createColumnMapping } from '../../../lib/domain/column-mapping/create'
 import { TestResourceStore } from '../../support/TestResourceStore'
-import type * as DimensionMetadataQueries from '../../../lib/domain/queries/dimension-metadata'
+import * as DimensionMetadataQueries from '../../../lib/domain/queries/dimension-metadata'
 import * as orgQueries from '../../../lib/domain/organization/query'
 import '../../../lib/domain'
 import { DomainError } from '@cube-creator/api-errors'
@@ -19,8 +19,6 @@ import { namedNode } from '@cube-creator/testing/clownface'
 
 describe('domain/column-mapping/create', () => {
   let store: TestResourceStore
-  let dimensionMetadataQueries: typeof DimensionMetadataQueries
-  let getDimensionMetaDataCollection: sinon.SinonStub
   let table: GraphPointer<NamedNode, DatasetExt>
   let observationTable: GraphPointer<NamedNode, DatasetExt>
   let dimensionMetadata: GraphPointer<NamedNode, DatasetExt>
@@ -71,8 +69,9 @@ describe('domain/column-mapping/create', () => {
       project,
     ])
 
-    getDimensionMetaDataCollection = sinon.stub().resolves(dimensionMetadata.term.value)
-    dimensionMetadataQueries = { getDimensionMetaDataCollection }
+    sinon.restore()
+    sinon.stub(DimensionMetadataQueries, 'getDimensionMetaDataCollection').resolves(dimensionMetadata.term)
+
     sinon.stub(orgQueries, 'findOrganization').resolves({
       projectId: project.id,
       organizationId: organization.id,
@@ -87,7 +86,7 @@ describe('domain/column-mapping/create', () => {
       .addOut(cc.targetProperty, 'test')
 
     // when
-    const columnMapping = await createColumnMapping({ resource, store, tableId: table.term, dimensionMetadataQueries })
+    const columnMapping = await createColumnMapping({ resource, store, tableId: table.term })
 
     // then
     expect(columnMapping.term.value).to.match(/\/my-column-(.+)$/)
@@ -104,7 +103,7 @@ describe('domain/column-mapping/create', () => {
       .addOut(cc.defaultValue, $rdf.literal('test'))
 
     // when
-    const columnMapping = await createColumnMapping({ resource, store, tableId: table.term, dimensionMetadataQueries })
+    const columnMapping = await createColumnMapping({ resource, store, tableId: table.term })
 
     // then
     expect(columnMapping).to.matchShape({
@@ -144,7 +143,7 @@ describe('domain/column-mapping/create', () => {
       .addOut(cc.targetProperty, $rdf.namedNode('test'))
 
     // when
-    const columnMapping = await createColumnMapping({ resource, store, tableId: table.term, dimensionMetadataQueries })
+    const columnMapping = await createColumnMapping({ resource, store, tableId: table.term })
 
     // then
     expect(table).to.matchShape({
@@ -164,7 +163,7 @@ describe('domain/column-mapping/create', () => {
       .addOut(cc.targetProperty, $rdf.namedNode('test'))
 
     // when
-    await createColumnMapping({ resource, store, tableId: table.term, dimensionMetadataQueries })
+    await createColumnMapping({ resource, store, tableId: table.term })
 
     // then
     expect(dimensionMetadata).to.matchShape({
@@ -183,7 +182,7 @@ describe('domain/column-mapping/create', () => {
       .addOut(cc.targetProperty, $rdf.namedNode('test'))
 
     // when
-    await createColumnMapping({ resource, store, tableId: observationTable.term, dimensionMetadataQueries })
+    await createColumnMapping({ resource, store, tableId: observationTable.term })
 
     // then
     expect(dimensionMetadata).to.matchShape({
@@ -220,7 +219,7 @@ describe('domain/column-mapping/create', () => {
       .addOut(cc.targetProperty, $rdf.namedNode('existingDimension'))
 
     // when
-    await createColumnMapping({ resource, store, tableId: observationTable.term, dimensionMetadataQueries })
+    await createColumnMapping({ resource, store, tableId: observationTable.term })
 
     // then
     expect(dimensionMetadata).to.matchShape({
@@ -240,7 +239,7 @@ describe('domain/column-mapping/create', () => {
       .addOut(cc.targetProperty, $rdf.literal('testLiteral'))
 
     // when
-    await createColumnMapping({ resource, store, tableId: observationTable.term, dimensionMetadataQueries })
+    await createColumnMapping({ resource, store, tableId: observationTable.term })
 
     // then
     expect(dimensionMetadata).to.matchShape({
@@ -268,10 +267,10 @@ describe('domain/column-mapping/create', () => {
       .node($rdf.namedNode(''))
       .addOut(cc.sourceColumn, $rdf.namedNode('my-column'))
       .addOut(cc.targetProperty, $rdf.namedNode('test'))
-    await createColumnMapping({ resource, store, tableId: table.term, dimensionMetadataQueries })
+    await createColumnMapping({ resource, store, tableId: table.term })
 
     // when
-    const createdAgain = await createColumnMapping({ resource, store, tableId: table.term, dimensionMetadataQueries })
+    const createdAgain = await createColumnMapping({ resource, store, tableId: table.term })
 
     // then
     expect(createdAgain).to.be.ok
@@ -283,10 +282,10 @@ describe('domain/column-mapping/create', () => {
       .node($rdf.namedNode(''))
       .addOut(cc.sourceColumn, $rdf.namedNode('my-column'))
       .addOut(cc.targetProperty, $rdf.namedNode('test'))
-    await createColumnMapping({ resource, store, tableId: observationTable.term, dimensionMetadataQueries })
+    await createColumnMapping({ resource, store, tableId: observationTable.term })
 
     // then
-    expect(createColumnMapping({ resource, store, tableId: observationTable.term, dimensionMetadataQueries })).to.rejectedWith(Error)
+    expect(createColumnMapping({ resource, store, tableId: observationTable.term })).to.rejectedWith(Error)
   })
 
   describe('when some column mappings exist on observation table', () => {

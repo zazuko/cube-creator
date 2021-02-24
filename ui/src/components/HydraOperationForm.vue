@@ -4,7 +4,7 @@
 
     <loading-block v-if="!shape" />
 
-    <hydra-operation-error :error="error" class="mt-4" />
+    <hydra-operation-error :error="error" :shape="shape" class="mt-4" />
 
     <form-submit-cancel
       :submit-label="_submitLabel"

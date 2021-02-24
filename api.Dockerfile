@@ -42,7 +42,12 @@ ADD ./packages/shacl-middleware/package.json ./packages/shacl-middleware/
 RUN yarn install --production --frozen-lockfile
 COPY --from=builder /app/dist/apis ./apis/
 COPY --from=builder /app/dist/packages/ ./packages/
+
 ADD apis/core/hydra/*.ttl ./apis/core/hydra/
+ADD apis/managed-dimensions/hydra/*.ttl ./apis/managed-dimensions/hydra/
+
+# for every new hydra api "foo" add
+#ADD apis/foo/hydra/*.ttl ./apis/foo/hydra/
 
 RUN apk add --no-cache tini
 ENTRYPOINT ["tini", "--", "node"]

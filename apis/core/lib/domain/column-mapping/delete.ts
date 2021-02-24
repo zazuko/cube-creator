@@ -4,7 +4,7 @@ import { cc } from '@cube-creator/core/namespace'
 import type { Organization } from '@rdfine/schema'
 import { ColumnMapping, DimensionMetadataCollection, Project, Table } from '@cube-creator/model'
 import { ResourceStore } from '../../ResourceStore'
-import * as DimensionMetadataQueries from '../queries/dimension-metadata'
+import { getDimensionMetaDataCollection } from '../queries/dimension-metadata'
 import * as TableQueries from '../queries/table'
 import * as ColumnMappingQueries from '../queries/column-mapping'
 import { findOrganization } from '../organization/query'
@@ -12,7 +12,6 @@ import { findOrganization } from '../organization/query'
 interface DeleteColumnMappingCommand {
   resource: NamedNode
   store: ResourceStore
-  dimensionMetadataQueries?: Pick<typeof DimensionMetadataQueries, 'getDimensionMetaDataCollection'>
   tableQueries?: Pick<typeof TableQueries, 'getTableForColumnMapping'>
   columnMappingQueries?: Pick<typeof ColumnMappingQueries, 'dimensionIsUsedByOtherMapping'>
 }
@@ -20,7 +19,6 @@ interface DeleteColumnMappingCommand {
 export async function deleteColumnMapping({
   resource,
   store,
-  dimensionMetadataQueries: { getDimensionMetaDataCollection } = DimensionMetadataQueries,
   tableQueries: { getTableForColumnMapping } = TableQueries,
   columnMappingQueries: { dimensionIsUsedByOtherMapping } = ColumnMappingQueries,
 }: DeleteColumnMappingCommand): Promise<void> {

@@ -26,9 +26,10 @@ describe('@cube-creator/managed-dimensions-api/lib/domain/managed-dimensions @SP
           hasValue: [
             $rdf.namedNode('http://example.com/dimension/colors'),
             $rdf.namedNode('http://example.com/dimension/countries'),
+            $rdf.namedNode('http://example.com/dimension/chemicals'),
           ],
-          maxCount: 2,
-          minCount: 2,
+          maxCount: 3,
+          minCount: 3,
         },
       })
     })
