@@ -15,6 +15,7 @@ export default (): Initializer<NodeShape> => ({
     languageIn: supportedLanguages,
     order: 10,
   }, {
+    name: 'Valid from',
     path: schema.validFrom,
     maxCount: 1,
     datatype: xsd.dateTime,
