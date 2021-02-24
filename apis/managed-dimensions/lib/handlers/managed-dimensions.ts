@@ -42,5 +42,6 @@ export const post = protectedResource(shaclValidate, asyncMiddleware(async (req,
   })
 
   res.setHeader('Location', pointer.value)
+  res.status(201)
   return res.dataset(pointer.dataset)
 }))

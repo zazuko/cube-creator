@@ -1,6 +1,9 @@
 PREFIX md: <https://cube-creator.zazuko.com/managed-dimensions/vocab#>
 PREFIX hydra: <http://www.w3.org/ns/hydra/core#>
 PREFIX schema: <http://schema.org/>
+PREFIX qudt: <http://qudt.org/schema/qudt/>
+PREFIX meta: <https://cube.link/meta/>
+PREFIX sh: <http://www.w3.org/ns/shacl#>
 
 ENTRYPOINT "managed-dimensions/"
 
@@ -21,14 +24,28 @@ With Class hydra:Resource {
                 ```
                 prefix schema: <http://schema.org/>
                 prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+                prefix qudt: <http://qudt.org/schema/qudt/>
+                prefix meta: <https://cube.link/meta/>
+                prefix sh: <http://www.w3.org/ns/shacl#>
 
                 <> schema:name "Categories"@en ;
-                   schema:validFrom "2020-02-20T00:00:00"^^xsd:dateTime .
+                   schema:validFrom "2020-02-20T00:00:00"^^xsd:dateTime ;
+                   sh:property [
+                     schema:name "Categories"@en ;
+                     qudt:scaleType qudt:NominalScale ;
+                     meta:dataKind [ a schema:GeoShape ] ;
+                   ] ;
+               .
                 ```
             } => {
-                Expect Status 200
+                Expect Status 201
 
                 Expect Type md:ManagedDimension
+                Expect Property sh:property {
+                    Expect Property schema:name
+                    Expect Property qudt:scaleType
+                    Expect Property meta:dataKind
+                }
             }
 
             Invoke {

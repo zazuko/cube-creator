@@ -39,6 +39,7 @@ md:ManagedDimensions
     ], [
          a hydra:Operation, schema:CreateAction ;
          hydra:method "POST" ;
+         hydra:title "Create shared dimension" ;
          hydra:expects <shape/managed-dimension> ;
          code:implementedBy
            [
