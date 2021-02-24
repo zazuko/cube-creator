@@ -35,6 +35,7 @@ export default (): Initializer<NodeShape> => ({
         languageIn: supportedLanguages,
         order: 10,
       }, {
+        name: 'Scale type',
         path: qudt.scaleType,
         in: [qudt.NominalScale, qudt.OrdinalScale],
         maxCount: 1,
