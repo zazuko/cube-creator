@@ -8,6 +8,7 @@ import { meta, sh1 } from '@cube-creator/core/namespace'
 export default (): Initializer<NodeShape> => ({
   closed: true,
   property: [{
+    name: 'Name',
     path: schema.name,
     uniqueLang: true,
     minCount: 1,
