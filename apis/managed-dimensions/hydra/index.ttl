@@ -49,7 +49,7 @@ md:ManagedDimensions
        ]
 .
 
-<shape/managed-dimension> a sh:NodeShape .
+<shape/managed-dimension> a sh:NodeShape, sh:Shape .
 
 sh:NodeShape
   a hydra:Class ;
