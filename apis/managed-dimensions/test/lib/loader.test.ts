@@ -4,14 +4,23 @@ import type { ResourceLoader } from 'hydra-box'
 import { INSERT } from '@tpluscode/sparql-builder'
 import { mdClients } from '@cube-creator/testing/lib'
 import namespace from '@rdfjs/namespace'
-import { hydra, schema } from '@tpluscode/rdf-ns-builders'
+import { hydra, schema, sh } from '@tpluscode/rdf-ns-builders'
 import Loader from '../../lib/loader'
 
 const ex = namespace('http://example.com/')
 const graph = ex('managed-dimensions')
 const testResources = INSERT.DATA`
 graph ${graph} {
-  ${ex.foo} a ${hydra.Resource} ; ${schema.name} "Yes" .
+  ${ex.foo}
+    a ${hydra.Resource} ;
+    ${schema.name} "Yes" ;
+    ${ex.hidden} "foo" ;
+    ${sh.node} [
+      ${sh.property} [
+        ${sh.path} ${schema.name} ;
+      ] ;
+    ] ;
+  .
 }
 
 graph ${ex('different-graph')} {
@@ -74,6 +83,18 @@ describe('managed-dimensions/lib/loader @SPARQL', () => {
       it('loads only subgraph described by a shape', async () => {
         // when
         const [resource] = await loader.forClassOperation(ex.foo, req)
+
+        // then
+        expect(await resource.dataset()).to.matchShape({
+          targetNode: [ex.foo],
+          property: [{
+            path: sh.node,
+            maxCount: 0,
+          }, {
+            path: ex.hidden,
+            maxCount: 0,
+          }],
+        })
       })
     })
   })
