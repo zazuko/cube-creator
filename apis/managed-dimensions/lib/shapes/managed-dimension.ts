@@ -29,6 +29,7 @@ export default (): Initializer<NodeShape> => ({
     order: 30,
     node: {
       property: [{
+        name: 'Name',
         path: schema.name,
         uniqueLang: true,
         maxCount: 4,
