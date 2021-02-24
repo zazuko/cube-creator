@@ -51,7 +51,7 @@ describe('@cube-creator/managed-dimensions-api/lib/domain/managed-dimension', ()
       expect(termSet).to.matchShape({
         property: [{
           path: rdf.type,
-          hasValue: [hydra.Resource, schema.DefinedTermSet, meta.SharedDimension, md.ManagedDimension],
+          hasValue: [hydra.Resource, schema.DefinedTermSet, meta.SharedDimension],
           minCount: 4,
           maxCount: 4,
         }],

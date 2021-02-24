@@ -1,3 +1,4 @@
+prefix hydra: <http://www.w3.org/ns/hydra/core#>
 prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 prefix md: <https://cube-creator.zazuko.com/managed-dimensions/vocab#>
 prefix void: <http://rdfs.org/ns/void#>
@@ -63,5 +64,38 @@ graph <http://example.com/dimension/colors> {
     schema:identifier "blue", "#00F", "#0000FF" ;
     schema:name "Blue"@en, "Blau"@de, "Bleu"@fr, "Blu"@it ;
     schema:inDefinedTermSet <http://example.com/dimension/colors> ;
+  .
+}
+
+<https://lindas.admin.ch/cube/dimension> void:inDataset <managed-dimensions> .
+graph <https://lindas.admin.ch/cube/dimension> {
+  <technologies>
+    a schema:DefinedTermSet, meta:SharedDimension, hydra:Resource ;
+    schema:name "Technologies"@en ;
+    schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
+  .
+
+  <technologies/rdf>
+    a schema:DefinedTerm ;
+    schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
+    schema:identifier "rdf" ;
+    schema:name "RDF"@en ;
+    schema:inDefinedTermSet <technologies> ;
+  .
+
+  <technologies/shacl>
+    a schema:DefinedTerm ;
+    schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
+    schema:identifier "shacl", "sh" ;
+    schema:name "SHACL"@en ;
+    schema:inDefinedTermSet <technologies> ;
+  .
+
+  <technologies/sparql>
+    a schema:DefinedTerm ;
+    schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
+    schema:identifier "sparql" ;
+    schema:name "SPARQL"@en ;
+    schema:inDefinedTermSet <technologies> ;
   .
 }

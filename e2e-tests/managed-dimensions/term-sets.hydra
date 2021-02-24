@@ -40,7 +40,7 @@ With Class hydra:Resource {
             } => {
                 Expect Status 201
 
-                Expect Type md:ManagedDimension
+                Expect Type meta:SharedDimension
                 Expect Property sh:property {
                     Expect Property schema:name
                     Expect Property qudt:scaleType

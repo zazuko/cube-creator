@@ -9,6 +9,7 @@ import RdfResource from '@tpluscode/rdfine'
 import { NodeShapeBundle, PropertyShapeBundle } from '@rdfine/shacl/bundles'
 import { fromPointer } from '@rdfine/shacl/lib/NodeShape'
 import { shape } from '../namespace'
+import * as dimensionTerm from './managed-dimension-term'
 
 RdfResource.factory.addMixin(...NodeShapeBundle)
 RdfResource.factory.addMixin(...PropertyShapeBundle)
@@ -31,4 +32,5 @@ function entry(id: NamedNode, init: () => Initializer<NodeShape>): [NamedNode, S
 
 export default new TermMap<NamedNode, ShapeFactory>([
   entry(shape['shape/managed-dimension'], managedDimension),
+  entry(shape['shape/managed-dimension-term-create'], dimensionTerm.create),
 ])

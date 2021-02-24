@@ -91,3 +91,19 @@ md:ManagedDimensionTerms
             ]
         ] ;
     ] .
+
+meta:SharedDimension
+  a hydra:Class ;
+  hydra:supportedOperation
+    [
+      a hydra:SupportedOperation ;
+      hydra:method "POST" ;
+      hydra:title "Add term" ;
+      hydra:expects <shape/managed-dimension-term-create> ;
+      code:implementedBy
+        [
+          a code:EcmaScript ;
+          code:link <file:handlers/managed-dimension#post> ;
+        ] ;
+    ]
+.
