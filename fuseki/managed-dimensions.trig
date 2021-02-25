@@ -69,7 +69,6 @@ graph <http://example.com/dimension/colors> {
   .
 }
 
-<https://lindas.admin.ch/cube/dimension> void:inDataset <managed-dimensions> .
 graph <https://lindas.admin.ch/cube/dimension> {
   <term-set/technologies>
     a schema:DefinedTermSet, meta:SharedDimension, hydra:Resource ;
