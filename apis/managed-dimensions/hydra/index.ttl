@@ -96,7 +96,7 @@ meta:SharedDimension
   a hydra:Class ;
   hydra:supportedOperation
     [
-      a hydra:SupportedOperation ;
+      a hydra:SupportedOperation, schema:CreateAction ;
       hydra:method "POST" ;
       hydra:title "Add term" ;
       hydra:expects <shape/managed-dimension-term-create> ;

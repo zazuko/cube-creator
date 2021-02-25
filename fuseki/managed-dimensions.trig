@@ -1,3 +1,5 @@
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix sh: <http://www.w3.org/ns/shacl#>
 prefix hydra: <http://www.w3.org/ns/hydra/core#>
 prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 prefix md: <https://cube-creator.zazuko.com/managed-dimensions/vocab#>
@@ -69,33 +71,63 @@ graph <http://example.com/dimension/colors> {
 
 <https://lindas.admin.ch/cube/dimension> void:inDataset <managed-dimensions> .
 graph <https://lindas.admin.ch/cube/dimension> {
-  <technologies>
+  <term-set/technologies>
     a schema:DefinedTermSet, meta:SharedDimension, hydra:Resource ;
     schema:name "Technologies"@en ;
     schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
+    sh:node [
+              sh:property
+                [ sh:path schema:name ],
+                [ sh:path rdf:type ],
+                [ sh:path schema:validFrom ]
+            ] ;
   .
 
-  <technologies/rdf>
+  <term-set/technologies/rdf>
     a schema:DefinedTerm ;
     schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
     schema:identifier "rdf" ;
     schema:name "RDF"@en ;
-    schema:inDefinedTermSet <technologies> ;
+    schema:inDefinedTermSet <term-set/technologies> ;
+    sh:node [
+              sh:property
+                [ sh:path schema:name ],
+                [ sh:path rdf:type ],
+                [ sh:path schema:validFrom ],
+                [ sh:path schema:identifier ],
+                [ sh:path schema:inDefinedTermSet ]
+            ] ;
   .
 
-  <technologies/shacl>
+  <term-set/technologies/shacl>
     a schema:DefinedTerm ;
     schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
     schema:identifier "shacl", "sh" ;
     schema:name "SHACL"@en ;
-    schema:inDefinedTermSet <technologies> ;
+    schema:inDefinedTermSet <term-set/technologies> ;
+    sh:node [
+              sh:property
+                [ sh:path schema:name ],
+                [ sh:path rdf:type ],
+                [ sh:path schema:validFrom ],
+                [ sh:path schema:identifier ],
+                [ sh:path schema:inDefinedTermSet ]
+            ] ;
   .
 
-  <technologies/sparql>
+  <term-set/technologies/sparql>
     a schema:DefinedTerm ;
     schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
     schema:identifier "sparql" ;
     schema:name "SPARQL"@en ;
-    schema:inDefinedTermSet <technologies> ;
+    schema:inDefinedTermSet <term-set/technologies> ;
+    sh:node [
+              sh:property
+                [ sh:path schema:name ],
+                [ sh:path rdf:type ],
+                [ sh:path schema:validFrom ],
+                [ sh:path schema:identifier ],
+                [ sh:path schema:inDefinedTermSet ]
+            ] ;
   .
 }

@@ -1,0 +1,44 @@
+PREFIX md: <https://cube-creator.zazuko.com/managed-dimensions/vocab#>
+PREFIX hydra: <http://www.w3.org/ns/hydra/core#>
+PREFIX schema: <http://schema.org/>
+PREFIX qudt: <http://qudt.org/schema/qudt/>
+PREFIX meta: <https://cube.link/meta/>
+PREFIX sh: <http://www.w3.org/ns/shacl#>
+
+ENTRYPOINT "managed-dimensions/term-set/technologies"
+
+HEADERS {
+  x-user "john-doe"
+  x-permission "pipelines:write"
+}
+
+With Class meta:SharedDimension {
+    Expect Operation schema:CreateAction {
+        Invoke {
+            Content-Type "text/turtle"
+
+            ```
+            prefix schema: <http://schema.org/>
+            prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+            prefix qudt: <http://qudt.org/schema/qudt/>
+            prefix meta: <https://cube.link/meta/>
+            prefix sh: <http://www.w3.org/ns/shacl#>
+
+            <> schema:name "node.js"@en ;
+              sh:property [
+                schema:name "node.js"@en ;
+                qudt:scaleType qudt:NominalScale ;
+              ] ;
+            .
+            ```
+        } => {
+            Expect Status 201
+            Expect Header Location
+
+            Expect Type schema:DefinedTerm
+            Expect Property schema:name
+            Expect Property schema:inDefinedTermSet
+            Expect Property schema:validFrom
+        }
+    }
+}
