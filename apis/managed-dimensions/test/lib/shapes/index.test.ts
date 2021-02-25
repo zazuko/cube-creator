@@ -31,4 +31,29 @@ describe('@cube-creator/managed-dimensions-api/lib/shapes', () => {
       expect(resource).to.matchShape(shape)
     })
   })
+
+  describe('managed-dimension-term-create', () => {
+    before(() => {
+      shape = shapes.get(ns.shape['shape/managed-dimension-term-create'])!()
+    })
+
+    it('is valid when a term has only names', () => {
+      // given
+      const resource = blankNode()
+        .addOut(schema.name, [$rdf.literal('Foo', 'en'), $rdf.literal('bar', 'de')])
+
+      // then
+      expect(resource).to.matchShape(shape)
+    })
+
+    it('is valid when a term has many identifiers', () => {
+      // given
+      const resource = blankNode()
+        .addOut(schema.name, $rdf.literal('Foo', 'en'))
+        .addOut(schema.identifier, ['a', 'b', 'c'])
+
+      // then
+      expect(resource).to.matchShape(shape)
+    })
+  })
 })
