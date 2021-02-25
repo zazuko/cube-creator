@@ -35,5 +35,6 @@
                       fuseki:dataset [
                                        rdf:type tdb:DatasetTDB ;
                                        tdb:location "DB2" ;
+                                       tdb:unionDefaultGraph true ;
                                      ] ;
 .

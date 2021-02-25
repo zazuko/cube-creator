@@ -43,6 +43,10 @@ function toJSON(result: Validate.ValidationResult) {
   }
 }
 
+function hasTarget(shape: NodeShape): boolean {
+  return shape.targetNode.length > 0 || shape.targetClass.length > 0
+}
+
 chai.Assertion.addMethod('matchShape', function (shapeInit: Initializer<NodeShape> | DatasetCore | GraphPointer<ResourceIdentifier>) {
   const obj = this._obj
   let targetNode: ResourceIdentifier[] = []
@@ -64,21 +68,21 @@ chai.Assertion.addMethod('matchShape', function (shapeInit: Initializer<NodeShap
     throw new Error(`Cannot match given object to a SHACL Shape. Expecting a rdfine object, graph pointer or RDF/JS dataset. Got ${obj?.constructor.name}`)
   }
 
-  if (!targetNode.length) {
-    throw new Error('No nodes found to validate in data graph')
-  }
-
   let shape: NodeShape
   if (isDataset(shapeInit)) {
     const [shapePointer] = clownface({ dataset: shapeInit })
       .has(rdf.type, [sh.Shape, sh.NodeShape]).toArray()
     shape = fromPointer(shapePointer, { targetNode })
   } else if (isGraphPointer(shapeInit)) {
-    shape = fromPointer(shapeInit)
+    shape = fromPointer(shapeInit, { targetNode })
   } else {
     shape = fromPointer(
       clownface({ dataset: $rdf.dataset() }).blankNode(),
       { ...shapeInit, targetNode })
+  }
+
+  if (!hasTarget(shape)) {
+    throw new Error('No targets defined to validate in data graph')
   }
 
   const validator = new Validator(shape.pointer.dataset)
