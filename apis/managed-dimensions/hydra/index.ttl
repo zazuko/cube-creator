@@ -107,3 +107,19 @@ meta:SharedDimension
         ] ;
     ]
 .
+
+schema:DefinedTerm
+  a hydra:Class ;
+  hydra:supportedOperation
+    [
+      a hydra:SupportedOperation, schema:ReplaceAction ;
+      hydra:method "PUT" ;
+      hydra:title "Update term" ;
+      hydra:expects <shape/managed-dimension-term-update> ;
+      code:implementedBy
+        [
+          a code:EcmaScript ;
+          code:link <file:handlers/managed-dimension-term#put> ;
+        ] ;
+    ] ;
+.

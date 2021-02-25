@@ -33,4 +33,5 @@ function entry(id: NamedNode, init: () => Initializer<NodeShape>): [NamedNode, S
 export default new TermMap<NamedNode, ShapeFactory>([
   entry(shape['shape/managed-dimension'], managedDimension),
   entry(shape['shape/managed-dimension-term-create'], dimensionTerm.create),
+  entry(shape['shape/managed-dimension-term-update'], dimensionTerm.update),
 ])

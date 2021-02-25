@@ -76,7 +76,7 @@ describe('@cube-creator/managed-dimensions-api/lib/domain/managed-dimension', ()
       })
 
       // then
-      expect(term.out(schema.validFrom)).to.deep.eq(termSet.out(schema.validFrom).term)
+      expect(term.out(schema.validFrom).term).to.deep.eq(termSet.out(schema.validFrom).term)
     })
 
     it('derives URI from the term set and slugifies the name', async () => {
