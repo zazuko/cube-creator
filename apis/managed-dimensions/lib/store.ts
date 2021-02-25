@@ -90,7 +90,13 @@ export default class Store implements ManagedDimensionsStore {
     }
 
     shape.addOut(sh.targetNode, resource.term)
+    const visitedPredicates = new TermSet()
     for (const quad of resource.dataset.match(resource.term)) {
+      if (visitedPredicates.has(quad.predicate)) {
+        continue
+      }
+
+      visitedPredicates.add(quad.predicate)
       shape.addOut(sh.property, property => {
         property.addOut(sh.path, quad.predicate)
 
