@@ -63,7 +63,7 @@ ${shapeId} {
       ${sh.languageIn} ( ${supportedLanguages} ) ;
       ${sh.uniqueLang} true ;
       ${sh.order} 10 ;
-      ${sh.description} "A publishable title describing the cube. Please add entries for all [languages](https://gitlab.ldbar.ch/bafu/cube-creator-documentation/-/wikis/(2)-Meta-Data-and-Manual-Validation-in-Cube-Preview#languages)." ;
+      ${sh.description} "A publishable title describing the cube. Please add entries for all [languages](https://github.com/zazuko/cube-creator/wiki/2.-Cube-Designer#languages)." ;
     ] ;
     ${sh.property} [
       ${sh.name} "Title (dcat)" ;
@@ -197,14 +197,14 @@ ${shapeId} {
       ${hydra.collection} ${lindasQuery(themesQuery)} ;
     ] ;
     ${sh.property} [
-      ${sh.name} "Tags" ;
+      ${sh.name} "Opendata.swiss Tags" ;
       ${sh.path} ${dcat.keyword} ;
       ${sh.minLength} 1 ;
       ${sh.order} 110 ;
       ${sh.description} "Tags are additional keywords to classify datasets along ad-hoc categories.";
     ] ;
     ${sh.property} [
-      ${sh.name} "Landing page" ;
+      ${sh.name} "Opendata.swiss Landing page" ;
       ${sh.path} ${dcat.landingPage} ;
       ${sh.maxCount} 1 ;
       ${sh.minLength} 1 ;
