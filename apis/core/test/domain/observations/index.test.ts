@@ -7,7 +7,6 @@ import { IriTemplate } from '@rdfine/hydra'
 import * as sinon from 'sinon'
 import Cube from 'rdf-cube-view-query/lib/Cube'
 import Source from 'rdf-cube-view-query/lib/Source'
-import { DomainError } from '@cube-creator/api-errors'
 import { getObservations } from '../../../lib/domain/observations'
 import * as lib from '../../../lib/domain/observations/lib'
 
@@ -53,20 +52,6 @@ describe('lib/domain/observations', () => {
         source,
       }),
     ]
-  })
-
-  it('throws if cube is not found in source', async () => {
-    // when
-    const promise = getObservations({
-      cubeId: 'no-such-cube',
-      sourceGraph: 'cube-data',
-      templateParams,
-      template,
-      loadResourceLabels,
-    })
-
-    // then
-    await expect(promise).to.be.rejectedWith(DomainError)
   })
 
   it('passes default page size if missing from params', async () => {
