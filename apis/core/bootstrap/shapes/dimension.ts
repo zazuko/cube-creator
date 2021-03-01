@@ -97,6 +97,16 @@ ${shape('dimension/metadata')} {
       ${sh.minLength} 1 ;
       ${sh.order} 10 ;
     ] , [
+      ${sh.name} "Description" ;
+      ${sh.path} ${schema.description} ;
+      ${sh.datatype} ${rdf.langString} ;
+      ${sh.languageIn} ( ${supportedLanguages} ) ;
+      ${sh.uniqueLang} true ;
+      ${sh.defaultValue} ""@en ;
+      ${sh.minLength} 1 ;
+      ${dash.singleLine} false ;
+      ${sh.order} 15 ;
+    ] , [
       ${sh.name} "Scale of measure" ;
       ${sh.path} ${qudt.scaleType} ;
       ${sh.in} (
@@ -116,16 +126,6 @@ ${shape('dimension/metadata')} {
       ${sh.class} ${qudt.Unit} ;
       ${hydra.collection} ${lindasQuery(unitsQuery)} ;
       ${dash.editor} ${dash.AutoCompleteEditor} ;
-    ] , [
-      ${sh.name} "Description" ;
-      ${sh.path} ${schema.description} ;
-      ${sh.datatype} ${rdf.langString} ;
-      ${sh.languageIn} ( ${supportedLanguages} ) ;
-      ${sh.uniqueLang} true ;
-      ${sh.defaultValue} ""@en ;
-      ${sh.minLength} 1 ;
-      ${dash.singleLine} false ;
-      ${sh.order} 30 ;
     ] , [
       ${sh.name} "Data kind" ;
       ${sh.path} ${meta.dataKind} ;
