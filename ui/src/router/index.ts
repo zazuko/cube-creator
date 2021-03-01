@@ -31,6 +31,7 @@ import NotAuthorized from '@/views/NotAuthorized.vue'
 import ManagedDimensions from '@/views/ManagedDimensions.vue'
 import ManagedDimension from '@/views/ManagedDimension.vue'
 import ManagedDimensionCreate from '@/views/ManagedDimensionCreate.vue'
+import ManagedTermCreate from '@/views/ManagedTermCreate.vue'
 
 Vue.use(VueRouter)
 
@@ -160,6 +161,13 @@ const routes: Array<RouteConfig> = [
         path: '/managed-dimensions/:id',
         name: 'ManagedDimension',
         component: ManagedDimension,
+        children: [
+          {
+            path: 'terms/new',
+            name: 'ManagedTermCreate',
+            component: ManagedTermCreate,
+          }
+        ],
       },
     ],
   },
