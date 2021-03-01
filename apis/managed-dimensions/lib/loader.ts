@@ -1,4 +1,4 @@
-import { DESCRIBE, SELECT } from '@tpluscode/sparql-builder'
+import { SELECT } from '@tpluscode/sparql-builder'
 import type HydraBox from 'hydra-box'
 import { NamedNode } from 'rdf-js'
 import { rdf } from '@tpluscode/rdf-ns-builders'
@@ -8,6 +8,7 @@ import { ParsingClient } from 'sparql-http-client/ParsingClient'
 import { StreamClient } from 'sparql-http-client/StreamClient'
 import once from 'once'
 import { PassThrough } from 'stream'
+import { getQuery } from './store'
 
 interface LoaderOptions {
   graph: NamedNode
@@ -36,7 +37,7 @@ export default class Loader implements HydraBox.ResourceLoader {
       return $rdf.quad(term, rdf.type, type)
     }))
 
-    const fullDataset = () => DESCRIBE`${term}`.FROM(this.options.graph).execute(this.options.stream.query)
+    const fullDataset = () => getQuery(term, this.options.graph).execute(this.options.stream.query)
 
     return [{
       term,

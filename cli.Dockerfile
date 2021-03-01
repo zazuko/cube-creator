@@ -17,6 +17,8 @@ RUN yarn install --frozen-lockfile
 COPY . .
 RUN rm -rf ./ui
 RUN rm -rf ./apis
+RUN rm -rf ./packages/express-rdf-request
+RUN rm -rf ./packages/shacl-middleware
 
 RUN yarn tsc --outDir dist --module CommonJS
 

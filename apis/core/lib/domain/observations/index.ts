@@ -1,7 +1,7 @@
 import { Collection, IriTemplate } from '@rdfine/hydra'
 import { AnyPointer, GraphPointer } from 'clownface'
 import { createSource, createView, createHydraCollection, populateFilters } from './lib'
-import { DomainError } from '../../errors'
+import { DomainError } from '@cube-creator/api-errors'
 import { rdf } from '@tpluscode/rdf-ns-builders'
 import * as ns from '@cube-creator/core/namespace'
 import { loadResourceLabels as _loadResourceLabels } from '../queries/observations'

@@ -19,7 +19,7 @@ import { schema, xsd } from '@tpluscode/rdf-ns-builders'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import * as sinon from 'sinon'
 import * as orgQueries from '../../lib/domain/organization/query'
-import { namedNode } from '../support/clownface'
+import { namedNode } from '@cube-creator/testing/clownface'
 
 describe('lib/csvw-builder', () => {
   let graph: AnyPointer<AnyContext, DatasetExt>

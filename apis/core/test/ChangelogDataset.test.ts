@@ -3,7 +3,7 @@ import { expect } from 'chai'
 import { describe, it } from 'mocha'
 import * as sinon from 'sinon'
 import $rdf from 'rdf-ext'
-import { ex } from './support/namespace'
+import { ex } from '@cube-creator/testing/lib/namespace'
 import { ChangelogDataset } from '../lib/ChangelogDataset'
 
 describe('ChangelogDataset', () => {

@@ -5,7 +5,7 @@ import { ShapeBundle, ValidationResultBundle } from '@rdfine/shacl/bundles'
 import RdfResourceImpl, { Initializer, RdfResource, ResourceIdentifier } from '@tpluscode/rdfine/RdfResource'
 import { BlankNode, DatasetCore, NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
-import clownface, { MultiPointer } from 'clownface'
+import clownface, { GraphPointer, MultiPointer } from 'clownface'
 import Validator, * as Validate from 'rdf-validate-shacl'
 import { rdf, sh } from '@tpluscode/rdf-ns-builders'
 
@@ -13,7 +13,7 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Chai {
     interface Assertion {
-      matchShape(shapeInit: Initializer<NodeShape> | DatasetCore): void
+      matchShape(shapeInit: Initializer<NodeShape> | DatasetCore | GraphPointer<ResourceIdentifier>): void
     }
   }
 }
@@ -43,14 +43,18 @@ function toJSON(result: Validate.ValidationResult) {
   }
 }
 
-chai.Assertion.addMethod('matchShape', function (shapeInit: Initializer<NodeShape> | DatasetCore) {
+function hasTarget(shape: NodeShape): boolean {
+  return shape.targetNode.length > 0 || shape.targetClass.length > 0
+}
+
+chai.Assertion.addMethod('matchShape', function (shapeInit: Initializer<NodeShape> | DatasetCore | GraphPointer<ResourceIdentifier>) {
   const obj = this._obj
   let targetNode: ResourceIdentifier[] = []
   let resourceDataset: DatasetCore
   let actual: any
   if (isDataset(obj)) {
     resourceDataset = obj
-    targetNode = !isDataset(shapeInit) && shapeInit.targetNode as any
+    targetNode = !isDataset(shapeInit) && !isGraphPointer(shapeInit) && shapeInit.targetNode as any
     actual = $rdf.dataset([...resourceDataset]).toString()
   } else if (isRdfine(obj)) {
     resourceDataset = obj.pointer.dataset
@@ -64,19 +68,21 @@ chai.Assertion.addMethod('matchShape', function (shapeInit: Initializer<NodeShap
     throw new Error(`Cannot match given object to a SHACL Shape. Expecting a rdfine object, graph pointer or RDF/JS dataset. Got ${obj?.constructor.name}`)
   }
 
-  if (!targetNode.length) {
-    throw new Error('No nodes found to validate in data graph')
-  }
-
   let shape: NodeShape
   if (isDataset(shapeInit)) {
     const [shapePointer] = clownface({ dataset: shapeInit })
       .has(rdf.type, [sh.Shape, sh.NodeShape]).toArray()
     shape = fromPointer(shapePointer, { targetNode })
+  } else if (isGraphPointer(shapeInit)) {
+    shape = fromPointer(shapeInit, { targetNode })
   } else {
     shape = fromPointer(
       clownface({ dataset: $rdf.dataset() }).blankNode(),
       { ...shapeInit, targetNode })
+  }
+
+  if (!hasTarget(shape)) {
+    throw new Error('No targets defined to validate in data graph')
   }
 
   const validator = new Validator(shape.pointer.dataset)

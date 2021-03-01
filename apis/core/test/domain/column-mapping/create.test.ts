@@ -12,10 +12,10 @@ import { TestResourceStore } from '../../support/TestResourceStore'
 import * as DimensionMetadataQueries from '../../../lib/domain/queries/dimension-metadata'
 import * as orgQueries from '../../../lib/domain/organization/query'
 import '../../../lib/domain'
-import { DomainError } from '../../../lib/errors'
+import { DomainError } from '@cube-creator/api-errors'
 import { NamedNode } from 'rdf-js'
 import DatasetExt from 'rdf-ext/lib/Dataset'
-import { namedNode } from '../../support/clownface'
+import { namedNode } from '@cube-creator/testing/clownface'
 
 describe('domain/column-mapping/create', () => {
   let store: TestResourceStore

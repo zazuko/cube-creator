@@ -1,7 +1,7 @@
 import * as Table from '@cube-creator/model/Table'
 import { NamedNode } from 'rdf-js'
 import { ResourceStore } from '../../ResourceStore'
-import { NotFoundError } from '../../errors'
+import { NotFoundError } from '@cube-creator/api-errors'
 import { buildCsvw } from '../../csvw-builder'
 import '../../domain'
 

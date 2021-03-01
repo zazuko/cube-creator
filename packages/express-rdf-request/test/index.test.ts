@@ -5,17 +5,18 @@ import express from 'express'
 import $rdf from 'rdf-ext'
 import clownface from 'clownface'
 import { turtle } from '@tpluscode/rdf-string'
-import { cc } from '@cube-creator/core/namespace'
 import { rdfs } from '@tpluscode/rdf-ns-builders'
-import { resource } from '../../lib/middleware/resource'
-import { appMock } from '../support/middleware'
+import { appMock } from '@cube-creator/testing/middleware'
+import { cc } from '@cube-creator/testing/lib/namespace'
+import { resource } from '..'
 
 describe('middleware/resource', () => {
-  it('returns pointer to empty named node if the request term does not appear in body', async function () {
+  it('replaces empty term in body with req.hydra.term', async function () {
     // given
     const app = express()
     const dataset = $rdf.dataset()
     app.use(appMock(hydra => {
+      hydra.term = $rdf.namedNode('http://example.com/foo/bar')
       hydra.resource = {
         term: $rdf.namedNode('http://example.com/foo/bar'),
         types: new Set(),

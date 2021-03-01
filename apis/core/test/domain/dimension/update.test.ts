@@ -9,9 +9,9 @@ import { prov, rdf, schema, sh, qudt, time } from '@tpluscode/rdf-ns-builders'
 import { cc, meta } from '@cube-creator/core/namespace'
 import { update } from '../../../lib/domain/dimension/update'
 import { TestResourceStore } from '../../support/TestResourceStore'
-import { ex } from '../../support/namespace'
+import { ex } from '@cube-creator/testing/lib/namespace'
 import '../../../lib/domain'
-import { namedNode } from '../../support/clownface'
+import { namedNode } from '@cube-creator/testing/clownface'
 import * as projectQuery from '../../../lib/domain/queries/cube-project'
 
 describe('domain/dimension/update', function () {

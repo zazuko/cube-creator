@@ -6,7 +6,7 @@ import { DimensionMetadataShape } from '../../bootstrap/shapes/dimension'
 import { DatasetCore } from 'rdf-js'
 import { expect } from 'chai'
 import { rdf, schema, time } from '@tpluscode/rdf-ns-builders'
-import { namedNode } from '../support/clownface'
+import { namedNode } from '@cube-creator/testing/clownface'
 import { GraphPointer } from 'clownface'
 import { meta } from '@cube-creator/core/namespace'
 

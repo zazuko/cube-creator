@@ -7,7 +7,7 @@ import * as Dataset from '@cube-creator/model/Dataset'
 import * as DimensionMetadata from '@cube-creator/model/DimensionMetadata'
 import { ResourceStore } from '../../ResourceStore'
 import * as id from '../identifiers'
-import { DomainError } from '../../errors'
+import { DomainError } from '@cube-creator/api-errors'
 
 interface CreateProjectCommand {
   projectsCollection: GraphPointer<NamedNode>

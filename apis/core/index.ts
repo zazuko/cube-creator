@@ -8,14 +8,15 @@ import * as Tracing from '@sentry/tracing'
 import { hydraBox } from '@hydrofoil/labyrinth'
 import { problemJson } from '@hydrofoil/labyrinth/errors'
 import { managedDimensions } from '@cube-creator/managed-dimensions-api'
+import { resource } from 'express-rdf-request'
 import cors from 'cors'
 import { error, log } from './lib/log'
 import authentication from './lib/auth'
 import env from '@cube-creator/core/env'
 import { bootstrap } from './bootstrap'
-import { resource } from './lib/middleware/resource'
+import { resourceStore } from './lib/middleware/resource'
 import { expectsDisambiguate, preferHydraCollection } from './lib/middleware/operations'
-import { errorMappers } from './lib/errors'
+import { errorMappers } from '@cube-creator/api-errors'
 import './lib/domain'
 
 const apiPath = path.resolve(__dirname, 'hydra')
@@ -52,9 +53,11 @@ async function main() {
     }
   })
   app.use(await authentication())
+  app.use(resource)
+
   app.use('/managed-dimensions', await managedDimensions())
 
-  app.use(resource)
+  app.use(resourceStore)
   app.use(await hydraBox({
     apiPath,
     codePath,

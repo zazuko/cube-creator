@@ -9,14 +9,14 @@ import { TestResourceStore } from '../../support/TestResourceStore'
 import * as DimensionMetadataQueries from '../../../lib/domain/queries/dimension-metadata'
 import type * as TableQueries from '../../../lib/domain/queries/table'
 import '../../../lib/domain'
-import { DomainError, NotFoundError } from '../../../lib/errors'
+import { DomainError, NotFoundError } from '@cube-creator/api-errors'
 import { NamedNode } from 'rdf-js'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import { updateLiteralColumnMapping } from '../../../lib/domain/column-mapping/update'
 import * as orgQueries from '../../../lib/domain/organization/query'
 import * as Organization from '@cube-creator/model/Organization'
 import * as Project from '@cube-creator/model/Project'
-import { namedNode } from '../../support/clownface'
+import { namedNode } from '@cube-creator/testing/clownface'
 
 describe('domain/column-mapping/update', () => {
   let store: TestResourceStore

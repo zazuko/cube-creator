@@ -13,6 +13,7 @@ import CSVSourceMixin from './mixins/CSVSource'
 import TableMixin from './mixins/Table'
 import JobCollectionMixin from './mixins/JobCollection'
 import * as Models from '@cube-creator/model'
+import { md } from '@cube-creator/core/namespace'
 
 const rootURL = window.APP_CONFIG.apiCoreBase
 const segmentSeparator = '!!' // used to replace slash in URI to prevent escaping

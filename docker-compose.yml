@@ -1,7 +1,7 @@
 version: "3"
 services:
   e2e-tests:
-    image: hydrofoil/hypertest:0.6.6
+    image: hydrofoil/hypertest:0.6.7
     network_mode: "host"
     environment:
       NODE_EXTRA_CA_CERTS: "/lndo.site.crt"

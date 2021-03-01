@@ -1,5 +1,5 @@
 import { shape, freq } from '@cube-creator/core/namespace'
-import { supportedLanguages } from '@cube-creator/model/languages'
+import { supportedLanguages } from '@cube-creator/core/languages'
 import { hydra, rdfs, sh, dcat, dcterms, xsd, rdf, vcard, schema, _void, dash } from '@tpluscode/rdf-ns-builders'
 import { sparql, turtle } from '@tpluscode/rdf-string'
 import $rdf from 'rdf-ext'
