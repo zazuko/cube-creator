@@ -23,6 +23,8 @@ export default (): Initializer<NodeShape> => ({
     defaultValue: $rdf.literal(new Date().toISOString(), xsd.dateTime),
     order: 20,
   }, {
+    name: 'Default metadata',
+    description: "Metadata copied to cube's metadata when this dimension is selected",
     path: sh.property,
     minCount: 1,
     maxCount: 1,
