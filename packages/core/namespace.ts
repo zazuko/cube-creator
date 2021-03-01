@@ -11,7 +11,6 @@ type CubeCreatorClass =
   'CSVSource' |
   'CSVSourceCollection' |
   'UploadCSVAction' |
-  'ReplaceCSVAction' |
   'Table' |
   'TableCollection' |
   'ObservationTable' |
@@ -64,6 +63,7 @@ type CubeCreatorProperty =
   'revision' |
   'dimensionMapping' |
   'managedDimension' |
+  'managedDimensions' |
   'applyMappings'
 
 type OtherTerms =
