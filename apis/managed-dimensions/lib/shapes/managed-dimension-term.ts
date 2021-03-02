@@ -2,6 +2,7 @@ import { Initializer } from '@tpluscode/rdfine/RdfResource'
 import { NodeShape, PropertyShape } from '@rdfine/shacl'
 import { rdf, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import { supportedLanguages } from '@cube-creator/core/languages'
+import { md } from '@cube-creator/core/namespace'
 
 const commonProperties: Initializer<PropertyShape>[] = [{
   name: 'Name',
@@ -35,7 +36,7 @@ export const update = (): Initializer<NodeShape> => ({
     ...commonProperties,
     {
       path: rdf.type,
-      hasValue: [schema.DefinedTerm],
+      hasValue: [schema.DefinedTerm, md.ManagedDimensionTerm],
       hidden: true,
     },
     {
