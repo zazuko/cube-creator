@@ -1,6 +1,6 @@
 import { Person } from '@rdfine/schema'
 import { Actions } from '@/api/mixins/ApiResource'
-import { cc } from '@cube-creator/core/namespace'
+import { cc, md } from '@cube-creator/core/namespace'
 import {
   ColumnMapping,
   CsvColumn,
@@ -22,6 +22,7 @@ import { Link } from '@cube-creator/model/lib/Link'
 import { dcterms, rdfs, schema } from '@tpluscode/rdf-ns-builders'
 import { RdfResource } from '@tpluscode/rdfine/RdfResource'
 import { Collection } from 'alcaeus'
+import { ManagedDimension, ManagedTerm } from './types'
 
 const displayLanguage = ['en', 'de', 'fr', '']
 
@@ -232,13 +233,22 @@ export function serializeManagedDimensionCollection (collection: Collection): Co
   return Object.freeze({
     ...serializeResource(collection),
     member: collection.member.map(serializeManagedDimension),
-  }) as Collection
+  }) as unknown as Collection
 }
 
-export function serializeManagedDimension (dimension: RdfResource): RdfResource {
+export function serializeManagedDimension (dimension: RdfResource): ManagedDimension {
   return Object.freeze({
     ...serializeResource(dimension),
     name: dimension.pointer.out(schema.name).terms,
+    terms: dimension.pointer.out(md.terms).term,
+  })
+}
+
+export function serializeManagedTerm (term: RdfResource): ManagedTerm {
+  return Object.freeze({
+    ...serializeResource(term),
+    name: term.pointer.out(schema.name).terms,
+    identifiers: term.pointer.out(schema.identifier).values,
   })
 }
 

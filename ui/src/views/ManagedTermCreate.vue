@@ -60,10 +60,12 @@ export default class extends Vue {
     this.isSubmitting = true
 
     try {
-      await this.$store.dispatch('api/invokeSaveOperation', {
+      const term = await this.$store.dispatch('api/invokeSaveOperation', {
         operation: this.operation,
         resource: this.resource,
       })
+
+      this.$store.commit('managedDimension/storeNewTerm', term)
 
       this.$buefy.toast.open({
         message: 'Managed dimension term successfully created',
