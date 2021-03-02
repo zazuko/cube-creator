@@ -71,7 +71,7 @@ graph <http://example.com/dimension/colors> {
 
 graph <https://lindas.admin.ch/cube/dimension> {
   <term-set/technologies>
-    a schema:DefinedTermSet, meta:SharedDimension, hydra:Resource ;
+    a schema:DefinedTermSet, meta:SharedDimension, hydra:Resource, md:ManagedDimension ;
     schema:name "Technologies"@en ;
     schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
     sh:node [
@@ -83,7 +83,7 @@ graph <https://lindas.admin.ch/cube/dimension> {
   .
 
   <term-set/technologies/rdf>
-    a schema:DefinedTerm, hydra:Resource ;
+    a schema:DefinedTerm, hydra:Resource, md:ManagedDimensionTerm ;
     schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
     schema:identifier "rdf" ;
     schema:name "RDF"@en ;
@@ -99,7 +99,7 @@ graph <https://lindas.admin.ch/cube/dimension> {
   .
 
   <term-set/technologies/shacl>
-    a schema:DefinedTerm, hydra:Resource ;
+    a schema:DefinedTerm, hydra:Resource, md:ManagedDimensionTerm ;
     schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
     schema:identifier "shacl", "sh" ;
     schema:name "SHACL"@en ;
@@ -115,7 +115,7 @@ graph <https://lindas.admin.ch/cube/dimension> {
   .
 
   <term-set/technologies/sparql>
-    a schema:DefinedTerm, hydra:Resource ;
+    a schema:DefinedTerm, hydra:Resource, md:ManagedDimensionTerm ;
     schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
     schema:identifier "sparql" ;
     schema:name "SPARQL"@en ;

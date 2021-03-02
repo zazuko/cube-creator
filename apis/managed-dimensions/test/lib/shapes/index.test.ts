@@ -1,6 +1,7 @@
 import { describe, it, before, beforeEach } from 'mocha'
 import { blankNode, namedNode } from '@cube-creator/testing/clownface'
 import { qudt, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
+import { md } from '@cube-creator/core/namespace'
 import $rdf from 'rdf-ext'
 import { expect } from 'chai'
 import { NamedNode } from 'rdf-js'
@@ -57,7 +58,7 @@ describe('@cube-creator/managed-dimensions-api/lib/shapes', () => {
     })
   })
 
-  describe('managed-dimension-term-create', () => {
+  describe('managed-dimension-term-update', () => {
     before(() => {
       shape = shapes.get(ns.shape['shape/managed-dimension-term-update'])!()
     })
@@ -67,7 +68,7 @@ describe('@cube-creator/managed-dimensions-api/lib/shapes', () => {
     beforeEach(() => {
       term = blankNode()
         .addOut(schema.name, $rdf.literal('Foo', 'en'))
-        .addOut(rdf.type, schema.DefinedTerm)
+        .addOut(rdf.type, [schema.DefinedTerm, md.ManagedDimensionTerm])
         .addOut(schema.inDefinedTermSet, namedNode('term-set'))
     })
 
@@ -86,6 +87,14 @@ describe('@cube-creator/managed-dimensions-api/lib/shapes', () => {
     it('is not valid when a term does not have a term set', () => {
       // given
       term.deleteOut(schema.inDefinedTermSet)
+
+      // then
+      expect(term).not.to.matchShape(shape)
+    })
+
+    it('is not valid when a term does not have types', () => {
+      // given
+      term.deleteOut(rdf.type)
 
       // then
       expect(term).not.to.matchShape(shape)

@@ -116,7 +116,7 @@ md:ManagedDimensionTerms
         ] ;
     ] .
 
-meta:SharedDimension
+md:ManagedDimension
   a hydra:Class ;
   query:preprocess
     [
@@ -139,7 +139,7 @@ meta:SharedDimension
     ]
 .
 
-schema:DefinedTerm
+md:ManagedDimensionTerm
   a hydra:Class ;
   hydra:supportedOperation
     [
