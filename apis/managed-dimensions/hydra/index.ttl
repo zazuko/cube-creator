@@ -123,3 +123,6 @@ schema:DefinedTerm
         ] ;
     ] ;
 .
+
+<shape/managed-dimension-term-create> a sh:Shape .
+<shape/managed-dimension-term-update> a sh:Shape .
