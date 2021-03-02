@@ -79,7 +79,8 @@ type ManagedDimensionsTerms =
   'ManagedDimension' |
   'ManagedDimensions' |
   'ManagedDimensionTerms' |
-  'managedDimensions'
+  'managedDimensions' |
+  'terms'
 
 type MetaTerms =
   'SharedDimension' |
