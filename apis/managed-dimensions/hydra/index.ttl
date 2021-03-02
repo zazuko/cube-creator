@@ -50,6 +50,28 @@ md:ManagedDimensions
        ]
 .
 
+_:DELETE a hydra:Operation, schema:DeleteAction ;
+         hydra:method "DELETE" ;
+         code:implementedBy
+           [
+             a code:EcmaScript ;
+             code:link <file:handlers/resource#DELETE>
+           ] .
+
+schema:DefinedTermSet
+  a hydra:Class ;
+  query:cascadeDelete
+    [
+      sh:inversePath schema:inDefinedTermSet ;
+    ] ;
+  hydra:supportedOperation _:DELETE ;
+.
+
+schema:DefinedTerm
+  a hydra:Class ;
+  hydra:supportedOperation _:DELETE ;
+.
+
 <shape/managed-dimension> a sh:NodeShape, sh:Shape .
 
 sh:NodeShape

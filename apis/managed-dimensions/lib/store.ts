@@ -114,6 +114,6 @@ export default class Store implements ManagedDimensionsStore {
   }
 }
 
-export function store(): ManagedDimensionsStore {
-  return new Store(parsingClient, $rdf.namedNode(env.MANAGED_DIMENSIONS_GRAPH))
+export function store(client = parsingClient): ManagedDimensionsStore {
+  return new Store(client, $rdf.namedNode(env.MANAGED_DIMENSIONS_GRAPH))
 }
