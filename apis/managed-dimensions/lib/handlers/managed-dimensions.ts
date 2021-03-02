@@ -2,6 +2,7 @@ import { hydra, rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { asyncMiddleware } from 'middleware-async'
 import type { Request } from 'express'
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
+import { Enrichment } from '@hydrofoil/labyrinth/lib/middleware/preprocessResource'
 import httpError from 'http-errors'
 import clownface from 'clownface'
 import $rdf from 'rdf-ext'
@@ -12,6 +13,7 @@ import { getManagedDimensions, getManagedTerms } from '../domain/managed-dimensi
 import { create } from '../domain/managed-dimension'
 import { store } from '../store'
 import { parsingClient } from '../sparql'
+import env from '../env'
 
 interface CollectionHandler {
   memberType: NamedNode
@@ -73,3 +75,8 @@ export const post = protectedResource(shaclValidate, asyncMiddleware(async (req,
   res.status(201)
   return res.dataset(pointer.dataset)
 }))
+
+export const injectTermsLink: Enrichment = async (req, pointer) => {
+  const terms = $rdf.namedNode(`${env.MANAGED_DIMENSIONS_BASE}terms?dimension=${encodeURIComponent(pointer.value)}`)
+  pointer.addOut(md.terms, terms)
+}
