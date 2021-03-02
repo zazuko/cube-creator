@@ -1,8 +1,15 @@
 import asyncMiddleware from 'middleware-async'
+import { NO_CONTENT } from 'http-status'
+import clownface from 'clownface'
 import { store } from '../store'
+import { cascadeDelete } from '../domain/resource'
 
-export const get = asyncMiddleware(async (req, res) => {
-  const resource = await store().load(req.hydra.resource.term)
+export const DELETE = asyncMiddleware(async (req, res) => {
+  await cascadeDelete({
+    store: store(),
+    term: req.hydra.resource.term,
+    api: clownface(req.hydra.api),
+  })
 
-  return res.dataset(resource.dataset)
+  res.status(NO_CONTENT)
 })
