@@ -7,6 +7,7 @@ BASE <urn:hydra-box:api>
 @prefix md: <https://cube-creator.zazuko.com/managed-dimensions/vocab#> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix meta: <https://cube.link/meta/> .
+@prefix query: <http://hypermedia.app/query#> .
 
 <api>
   a hydra:ApiDocumentation ;
@@ -94,6 +95,13 @@ md:ManagedDimensionTerms
 
 meta:SharedDimension
   a hydra:Class ;
+  query:preprocess
+    [
+      a
+        code:EcmaScript ;
+      code:link
+        <file:handlers/managed-dimensions#injectTermsLink> ;
+    ] ;
   hydra:supportedOperation
     [
       a hydra:SupportedOperation, schema:CreateAction ;

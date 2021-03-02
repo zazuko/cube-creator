@@ -1,11 +1,11 @@
 import { Collection, IriTemplate } from '@rdfine/hydra'
 import { AnyPointer, GraphPointer } from 'clownface'
 import { createSource, createView, createHydraCollection, populateFilters } from './lib'
-import { DomainError } from '@cube-creator/api-errors'
 import { rdf } from '@tpluscode/rdf-ns-builders'
 import * as ns from '@cube-creator/core/namespace'
 import { loadResourceLabels as _loadResourceLabels } from '../queries/observations'
 import { Quad, Term } from 'rdf-js'
+import { warning } from '../../log'
 
 const DEFAULT_PAGE_SIZE = 20
 const DEFAULT_PAGE_INDEX = 1
@@ -36,7 +36,14 @@ export async function getObservations({
   const cubes = await source.cubes()
   const cube = cubes.find(({ ptr }) => ptr.value === cubeId)
   if (!cube) {
-    throw new DomainError(`Cube not found: '${cubeId}'`)
+    warning(`Cube not found: '${cubeId}'`)
+    return createHydraCollection({
+      observations: [],
+      templateParams,
+      template,
+      totalItems: 0,
+      pageSize,
+    })
   }
 
   const offset = pageSize * (pageIndex - 1)

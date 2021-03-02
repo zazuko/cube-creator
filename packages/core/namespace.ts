@@ -78,7 +78,8 @@ type CubeCreatorTerms = CubeCreatorClass | CubeCreatorProperty | OtherTerms | Me
 type ManagedDimensionsTerms =
   'ManagedDimensions' |
   'ManagedDimensionTerms' |
-  'managedDimensions'
+  'managedDimensions' |
+  'terms'
 
 type MetaTerms =
   'SharedDimension' |
