@@ -1,19 +1,17 @@
 import { ActionTree, MutationTree, GetterTree } from 'vuex'
 import { api } from '@/api'
-import { RootState } from '../types'
-import { serializeManagedDimension } from '../serializers'
-
-/* eslint-disable-next-line */
-interface ManagedDimension {
-
-}
+import { ManagedDimension, ManagedTerm, RootState } from '../types'
+import { serializeManagedDimension, serializeManagedTerm } from '../serializers'
+import { Collection } from 'alcaeus'
 
 export interface ManagedDimensionsState {
-  dimension: null | ManagedDimension,
+  dimension: null | ManagedDimension
+  terms: null | ManagedTerm[]
 }
 
 const initialState = {
   dimension: null,
+  terms: null,
 }
 
 const getters: GetterTree<ManagedDimensionsState, RootState> = {
@@ -22,18 +20,38 @@ const getters: GetterTree<ManagedDimensionsState, RootState> = {
 const actions: ActionTree<ManagedDimensionsState, RootState> = {
   async fetchDimension (context, id) {
     context.commit('storeDimension', null)
+    context.commit('storeTerms', null)
 
-    const dimension = await api.fetchResource(id)
+    const dimensionResource = await api.fetchResource(id)
+    const dimension = serializeManagedDimension(dimensionResource)
 
     context.commit('storeDimension', dimension)
 
+    if (dimension.terms) {
+      context.dispatch('fetchDimensionTerms', dimension)
+    }
+
     return dimension
+  },
+
+  async fetchDimensionTerms (context, dimension) {
+    const termsCollection = await api.fetchResource<Collection>(dimension.terms.value)
+    const terms = termsCollection.member.map(serializeManagedTerm)
+    context.commit('storeTerms', terms)
   },
 }
 
 const mutations: MutationTree<ManagedDimensionsState> = {
   storeDimension (state, dimension) {
-    state.dimension = dimension ? serializeManagedDimension(dimension) : null
+    state.dimension = dimension
+  },
+
+  storeTerms (state, terms) {
+    state.terms = terms
+  },
+
+  storeNewTerm (state, term) {
+    state.terms?.push(serializeManagedTerm(term))
   },
 }
 
