@@ -12,6 +12,10 @@ jobs:
           node-version: 14
       - run: yarn install --ci
       - run: yarn test
+      - name: setup-docker
+        uses: docker-practice/actions-setup-docker@1.0.4
+        with:
+          docker_version: 20.10.3
       - name: Install lando
         run: sh e2e-tests/install-lando.sh
       - name: Start site
@@ -41,12 +45,17 @@ jobs:
 
   e2e-tests:
     runs-on: [ubuntu-latest]
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1.4.4
         with:
           node-version: 13
       - run: yarn install --ci
+      - name: setup-docker
+        uses: docker-practice/actions-setup-docker@1.0.4
+        with:
+          docker_version: 20.10.3
       - name: Install lando
         run: sh e2e-tests/install-lando.sh
       - name: Set e2e environment variables
