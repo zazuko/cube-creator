@@ -1,12 +1,11 @@
 import { hydra, rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { asyncMiddleware } from 'middleware-async'
-import type { Request } from 'express'
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
 import { Enrichment } from '@hydrofoil/labyrinth/lib/middleware/preprocessResource'
 import httpError from 'http-errors'
 import clownface from 'clownface'
 import $rdf from 'rdf-ext'
-import { NamedNode, Quad } from 'rdf-js'
+import { NamedNode, Quad, Term } from 'rdf-js'
 import { md } from '@cube-creator/core/namespace'
 import { shaclValidate } from '../middleware/shacl'
 import { getManagedDimensions, getManagedTerms } from '../domain/managed-dimensions'
@@ -19,16 +18,16 @@ interface CollectionHandler {
   memberType: NamedNode
   collectionType: NamedNode
   memberQuads: Quad[]
-  req: Request
+  collection: NamedNode
 }
 
-function getCollection({ req, memberQuads, memberType, collectionType }: CollectionHandler) {
+function getCollection({ collection, memberQuads, memberType, collectionType }: CollectionHandler) {
   const dataset = $rdf.dataset(memberQuads)
 
   const graph = clownface({ dataset })
   const members = graph.has(rdf.type, memberType)
 
-  return graph.node(req.hydra.term)
+  return graph.node(collection)
     .addOut(rdf.type, [hydra.Collection, collectionType])
     .addOut(hydra.member, members)
     .addOut(hydra.totalItems, members.terms.length)
@@ -39,11 +38,15 @@ export const get = asyncMiddleware(async (req, res) => {
     memberQuads: await getManagedDimensions().execute(parsingClient.query),
     collectionType: md.ManagedDimensions,
     memberType: schema.DefinedTermSet,
-    req,
+    collection: req.hydra.resource.term,
   })
 
   return res.dataset(collection.dataset)
 })
+
+function termsCollectionId(dimension: Term) {
+  return $rdf.namedNode(`${env.MANAGED_DIMENSIONS_BASE}terms?dimension=${encodeURIComponent(dimension.value)}`)
+}
 
 export const getTerms = asyncMiddleware(async (req, res, next) => {
   const termSet = clownface({ dataset: await req.dataset() })
@@ -59,7 +62,7 @@ export const getTerms = asyncMiddleware(async (req, res, next) => {
     memberQuads: await getManagedTerms(term).execute(parsingClient.query),
     memberType: schema.DefinedTerm,
     collectionType: md.ManagedDimensionTerms,
-    req,
+    collection: termsCollectionId(term),
   })
 
   return res.dataset(collection.dataset)
@@ -77,6 +80,5 @@ export const post = protectedResource(shaclValidate, asyncMiddleware(async (req,
 }))
 
 export const injectTermsLink: Enrichment = async (req, pointer) => {
-  const terms = $rdf.namedNode(`${env.MANAGED_DIMENSIONS_BASE}terms?dimension=${encodeURIComponent(pointer.value)}`)
-  pointer.addOut(md.terms, terms)
+  pointer.addOut(md.terms, termsCollectionId(pointer.term))
 }
