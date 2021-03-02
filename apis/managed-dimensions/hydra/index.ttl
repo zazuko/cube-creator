@@ -94,6 +94,7 @@ md:ManagedDimensionTerms
     ] .
 
 meta:SharedDimension
+  a hydra:Class ;
   query:preprocess
     [
       a
@@ -101,4 +102,35 @@ meta:SharedDimension
       code:link
         <file:handlers/managed-dimensions#injectTermsLink> ;
     ] ;
+  hydra:supportedOperation
+    [
+      a hydra:SupportedOperation, schema:CreateAction ;
+      hydra:method "POST" ;
+      hydra:title "Add term" ;
+      hydra:expects <shape/managed-dimension-term-create> ;
+      code:implementedBy
+        [
+          a code:EcmaScript ;
+          code:link <file:handlers/managed-dimension#post> ;
+        ] ;
+    ]
 .
+
+schema:DefinedTerm
+  a hydra:Class ;
+  hydra:supportedOperation
+    [
+      a hydra:SupportedOperation, schema:ReplaceAction ;
+      hydra:method "PUT" ;
+      hydra:title "Update term" ;
+      hydra:expects <shape/managed-dimension-term-update> ;
+      code:implementedBy
+        [
+          a code:EcmaScript ;
+          code:link <file:handlers/managed-dimension-term#put> ;
+        ] ;
+    ] ;
+.
+
+<shape/managed-dimension-term-create> a sh:Shape .
+<shape/managed-dimension-term-update> a sh:Shape .

@@ -1,7 +1,7 @@
 import { CONSTRUCT, DELETE, INSERT, WITH } from '@tpluscode/sparql-builder'
 import { sparql } from '@tpluscode/rdf-string'
 import clownface, { GraphPointer } from 'clownface'
-import { NamedNode } from 'rdf-js'
+import { NamedNode, Term } from 'rdf-js'
 import ParsingClient from 'sparql-http-client/ParsingClient'
 import { sh } from '@tpluscode/rdf-ns-builders'
 import TermSet from '@rdfjs/term-set'
@@ -10,7 +10,7 @@ import { parsingClient } from './sparql'
 import env from './env'
 
 export interface ManagedDimensionsStore {
-  load(id: NamedNode): Promise<GraphPointer<NamedNode>>
+  load(id: Term | undefined): Promise<GraphPointer<NamedNode>>
   save(resource: GraphPointer<NamedNode>): Promise<void>
   delete(id: NamedNode): Promise<void>
 }
@@ -90,7 +90,13 @@ export default class Store implements ManagedDimensionsStore {
     }
 
     shape.addOut(sh.targetNode, resource.term)
+    const visitedPredicates = new TermSet()
     for (const quad of resource.dataset.match(resource.term)) {
+      if (visitedPredicates.has(quad.predicate)) {
+        continue
+      }
+
+      visitedPredicates.add(quad.predicate)
       shape.addOut(sh.property, property => {
         property.addOut(sh.path, quad.predicate)
 

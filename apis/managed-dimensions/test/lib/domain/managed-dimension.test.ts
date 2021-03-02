@@ -1,11 +1,12 @@
 import { describe, it, beforeEach } from 'mocha'
 import { expect } from 'chai'
 import { namedNode } from '@cube-creator/testing/clownface'
-import { hydra, rdf, schema } from '@tpluscode/rdf-ns-builders'
-import { md, meta } from '@cube-creator/core/namespace'
-import { create } from '../../../lib/domain/managed-dimension'
+import { hydra, rdf, schema, xsd } from '@tpluscode/rdf-ns-builders'
+import { meta } from '@cube-creator/core/namespace'
+import { create, createTerm } from '../../../lib/domain/managed-dimension'
 import { ManagedDimensionsStore } from '../../../lib/store'
 import { testStore } from '../../support/store'
+import $rdf from 'rdf-ext'
 
 describe('@cube-creator/managed-dimensions-api/lib/domain/managed-dimension', () => {
   describe('create', () => {
@@ -51,11 +52,49 @@ describe('@cube-creator/managed-dimensions-api/lib/domain/managed-dimension', ()
       expect(termSet).to.matchShape({
         property: [{
           path: rdf.type,
-          hasValue: [hydra.Resource, schema.DefinedTermSet, meta.SharedDimension, md.ManagedDimension],
-          minCount: 4,
-          maxCount: 4,
+          hasValue: [hydra.Resource, schema.DefinedTermSet, meta.SharedDimension],
+          minCount: 3,
+          maxCount: 3,
         }],
       })
+    })
+  })
+
+  describe('createTerm', () => {
+    it("copies term set's validFrom data", async () => {
+      // given
+      const termSet = namedNode('term-set')
+        .addOut(schema.validFrom, $rdf.literal('2000-10-02', xsd.date))
+      const resource = namedNode('')
+        .addOut(schema.name, 'Term')
+
+      // when
+      const term = await createTerm({
+        store: testStore(),
+        termSet,
+        resource,
+      })
+
+      // then
+      expect(term.out(schema.validFrom).term).to.deep.eq(termSet.out(schema.validFrom).term)
+    })
+
+    it('derives URI from the term set and slugifies the name', async () => {
+      // given
+      const termSet = namedNode('term-set')
+        .addOut(schema.validFrom, $rdf.literal('2000-10-02', xsd.date))
+      const resource = namedNode('')
+        .addOut(schema.name, 'Term')
+
+      // when
+      const term = await createTerm({
+        store: testStore(),
+        termSet,
+        resource,
+      })
+
+      // then
+      expect(term.value).to.match(/term-set\/term-.+$/)
     })
   })
 })

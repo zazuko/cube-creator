@@ -2,7 +2,7 @@ import { describe, it, before, beforeEach } from 'mocha'
 import { namedNode } from '@cube-creator/testing/clownface'
 import { mdClients } from '@cube-creator/testing/lib'
 import { foaf, schema, sh } from '@tpluscode/rdf-ns-builders'
-import { ASK, INSERT } from '@tpluscode/sparql-builder'
+import { ASK, INSERT, SELECT } from '@tpluscode/sparql-builder'
 import { expect } from 'chai'
 import Store, { ManagedDimensionsStore } from '../lib/store'
 import $rdf from 'rdf-ext'
@@ -90,6 +90,27 @@ describe('@cube-creator/managed-dimensions-api/lib/store @SPARQL', () => {
             ?shape ${sh.property} [ ${sh.path} ${schema.knows} ; ${sh.node} ?childShape ] .
           `.FROM(graph)
         expect(await testQuery.execute(parsingClient.query)).to.be.false
+      })
+
+      it('produces only on Property Shape for property with multiple objects', async () => {
+        // given
+        const resource = namedNode('http://test.resource/john')
+          .addOut(schema.identifier, ['Foo', 'Bar', 'Baz'])
+
+        // when
+        await store.save(resource)
+
+        // then
+        const [{ count }] = await SELECT`(count ( ?ps ) as ?count)`.WHERE`
+          ${resource.term} ${sh.node} [
+            ${sh.property} ?ps
+          ].
+
+          ?ps ${sh.path} ${schema.identifier} .
+        `
+          .FROM(graph)
+          .execute(parsingClient.query)
+        expect(count.value).to.eq('1')
       })
     })
   })
