@@ -1,5 +1,5 @@
 ---
-"@cube-creator/managed-dimensions-api": minor
+"@cube-creator/managed-dimensions-api": patch
 ---
 
 Deleting shared dimensions and terms
