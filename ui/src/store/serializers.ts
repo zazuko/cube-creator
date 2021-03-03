@@ -22,7 +22,7 @@ import { Link } from '@cube-creator/model/lib/Link'
 import { dcterms, rdfs, schema } from '@tpluscode/rdf-ns-builders'
 import { RdfResource } from '@tpluscode/rdfine/RdfResource'
 import { Collection } from 'alcaeus'
-import { ManagedDimension, ManagedTerm } from './types'
+import { SharedDimension, SharedDimensionTerm } from './types'
 
 const displayLanguage = ['en', 'de', 'fr', '']
 
@@ -169,7 +169,7 @@ export function serializeDimensionMetadataCollection (collection: DimensionMetad
 }
 
 export function serializeDimensionMetadata (dimension: DimensionMetadata): DimensionMetadata {
-  const managedDimension = dimension.pointer.out(cc.dimensionMapping).out(cc.managedDimension)
+  const sharedDimension = dimension.pointer.out(cc.dimensionMapping).out(cc.managedDimension)
 
   return Object.freeze({
     ...serializeResource(dimension),
@@ -178,10 +178,10 @@ export function serializeDimensionMetadata (dimension: DimensionMetadata): Dimen
     description: dimension.description,
     scaleOfMeasure: dimension.scaleOfMeasure,
     mappings: dimension.mappings,
-    managedDimension: managedDimension.term
+    sharedDimension: sharedDimension.term
       ? {
-        id: managedDimension.term,
-        label: managedDimension.out([rdfs.label, schema.name], { language: displayLanguage }),
+        id: sharedDimension.term,
+        label: sharedDimension.out([rdfs.label, schema.name], { language: displayLanguage }),
       }
       : undefined,
   })
@@ -229,14 +229,14 @@ export function serializeCube (cube: Cube): Cube {
   } as Cube
 }
 
-export function serializeManagedDimensionCollection (collection: Collection): Collection {
+export function serializeSharedDimensionCollection (collection: Collection): Collection {
   return Object.freeze({
     ...serializeResource(collection),
-    member: collection.member.map(serializeManagedDimension),
+    member: collection.member.map(serializeSharedDimension),
   }) as unknown as Collection
 }
 
-export function serializeManagedDimension (dimension: RdfResource): ManagedDimension {
+export function serializeSharedDimension (dimension: RdfResource): SharedDimension {
   return Object.freeze({
     ...serializeResource(dimension),
     name: dimension.pointer.out(schema.name).terms,
@@ -244,7 +244,7 @@ export function serializeManagedDimension (dimension: RdfResource): ManagedDimen
   })
 }
 
-export function serializeManagedTerm (term: RdfResource): ManagedTerm {
+export function serializeSharedDimensionTerm (term: RdfResource): SharedDimensionTerm {
   return Object.freeze({
     ...serializeResource(term),
     name: term.pointer.out(schema.name).terms,

@@ -6,7 +6,7 @@
           <term-with-language :values="dimension.name" :selected-language="language" />
         </h2>
         <div>
-          <hydra-operation-button :operation="dimension.actions.edit" :to="{ name: 'ManagedDimensionEdit' }" />
+          <hydra-operation-button :operation="dimension.actions.edit" :to="{ name: 'SharedDimensionEdit' }" />
           <hydra-operation-button :operation="dimension.actions.delete" @click="deleteDimension(dimension)" />
         </div>
       </div>
@@ -23,7 +23,7 @@
               <hydra-operation-button
                 v-if="dimension.actions.create"
                 :operation="dimension.actions.create"
-                :to="{ name: 'ManagedTermCreate' }"
+                :to="{ name: 'SharedDimensionTermCreate' }"
                 type="is-default"
               >
                 {{ dimension.actions.create.title }}
@@ -44,14 +44,14 @@
               </p>
             </td>
             <td class="has-text-right">
-              <hydra-operation-button :operation="term.actions.edit" :to="{ name: 'ManagedTermEdit' }" />
+              <hydra-operation-button :operation="term.actions.edit" :to="{ name: 'SharedDimensionTermEdit' }" />
               <hydra-operation-button :operation="term.actions.delete" @click="deleteTerm(term)" />
             </td>
           </tr>
           <tr v-if="terms.length === 0">
             <td colspan="3">
               No term in this dimension yet. Do you want to
-              <router-link :to="{ name: 'ManagedTermCreate' }">
+              <router-link :to="{ name: 'SharedDimensionTermCreate' }">
                 create one
               </router-link>?
             </td>
@@ -74,28 +74,28 @@ import LoadingBlock from '@/components/LoadingBlock.vue'
 import PageContent from '@/components/PageContent.vue'
 import TermDisplay from '@/components/TermDisplay.vue'
 import TermWithLanguage from '@/components/TermWithLanguage.vue'
-import { ManagedDimension, ManagedTerm } from '@/store/types'
+import { SharedDimension, SharedDimensionTerm } from '@/store/types'
 
 const appNS = namespace('app')
-const managedDimensionNS = namespace('managedDimension')
+const sharedDimensionNS = namespace('sharedDimension')
 
 @Component({
   components: { HydraOperationButton, LoadingBlock, PageContent, TermDisplay, TermWithLanguage },
 })
 export default class extends Vue {
   @appNS.State('language') language!: string
-  @managedDimensionNS.State('dimension') dimension!: ManagedDimension | null
-  @managedDimensionNS.State('terms') terms!: ManagedTerm[] | null
+  @sharedDimensionNS.State('dimension') dimension!: SharedDimension | null
+  @sharedDimensionNS.State('terms') terms!: SharedDimensionTerm[] | null
 
   mounted (): void {
     const id = this.$route.params.id
-    this.$store.dispatch('managedDimension/fetchDimension', id)
+    this.$store.dispatch('sharedDimension/fetchDimension', id)
   }
 
-  deleteDimension (dimension: ManagedDimension): void {
+  deleteDimension (dimension: SharedDimension): void {
     this.$buefy.dialog.confirm({
       title: dimension.actions.delete?.title,
-      message: 'Are you sure you want to delete this managed dimension?',
+      message: 'Are you sure you want to delete this shared dimension?',
       confirmText: 'Delete',
       type: 'is-danger',
       hasIcon: true,
@@ -104,12 +104,12 @@ export default class extends Vue {
           operation: dimension.actions.delete,
           successMessage: `Dimension ${dimension.name} deleted successfully`,
         })
-        this.$router.push({ name: 'ManagedDimensions' })
+        this.$router.push({ name: 'SharedDimensions' })
       },
     })
   }
 
-  deleteTerm (term: ManagedTerm): void {
+  deleteTerm (term: SharedDimensionTerm): void {
     this.$buefy.dialog.confirm({
       title: term.actions.delete?.title,
       message: 'Are you sure you want to delete this term?',
@@ -120,7 +120,7 @@ export default class extends Vue {
         this.$store.dispatch('api/invokeDeleteOperation', {
           operation: term.actions.delete,
           successMessage: 'Term deleted successfully',
-          callbackAction: 'managedDimension/removeTerm',
+          callbackAction: 'sharedDimension/removeTerm',
           callbackParams: term,
         })
       },

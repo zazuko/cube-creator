@@ -2,12 +2,12 @@
   <page-content class="container-narrow">
     <div class="mb-4 is-flex is-align-items-center is-justify-content-space-between">
       <h2 class="title is-size-4 mb-0">
-        Managed Dimensions
+        Shared Dimensions
       </h2>
       <div v-if="collection">
         <hydra-operation-button
           :operation="collection.actions.create"
-          :to="{ name: 'ManagedDimensionCreate' }"
+          :to="{ name: 'SharedDimensionCreate' }"
           type="is-default"
           size=""
         >
@@ -20,7 +20,7 @@
         <router-link
           v-for="dimension in dimensions"
           :key="dimension.id.value"
-          :to="{ name: 'ManagedDimension', params: { id: dimension.clientPath } }"
+          :to="{ name: 'SharedDimension', params: { id: dimension.clientPath } }"
           class="panel-block"
         >
           <div class="is-flex-grow-1 is-flex is-justify-content-space-between">
@@ -41,7 +41,7 @@
         </router-link>
       </div>
       <p v-else class="has-text-grey">
-        No managed dimension yet
+        No shared dimension yet
       </p>
     </div>
     <loading-block v-else />
@@ -58,22 +58,22 @@ import PageContent from '@/components/PageContent.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import HydraOperationButton from '@/components/HydraOperationButton.vue'
 import TermWithLanguage from '@/components/TermWithLanguage.vue'
-import { ManagedDimension } from '@/store/types'
+import { SharedDimension } from '@/store/types'
 
 const appNS = namespace('app')
-const managedDimensionsNS = namespace('managedDimensions')
+const sharedDimensionsNS = namespace('sharedDimensions')
 
 @Component({
   components: { PageContent, LoadingBlock, HydraOperationButton, TermWithLanguage },
 })
 export default class CubeProjectsView extends Vue {
   @appNS.State('language') language!: string
-  @managedDimensionsNS.State('collection') collection!: Collection | null
-  @managedDimensionsNS.Getter('dimensions') dimensions!: ManagedDimension[]
+  @sharedDimensionsNS.State('collection') collection!: Collection | null
+  @sharedDimensionsNS.Getter('dimensions') dimensions!: SharedDimension[]
 
   async mounted (): Promise<void> {
-    await this.$store.dispatch('managedDimensions/fetchEntrypoint')
-    await this.$store.dispatch('managedDimensions/fetchCollection')
+    await this.$store.dispatch('sharedDimensions/fetchEntrypoint')
+    await this.$store.dispatch('sharedDimensions/fetchCollection')
   }
 }
 </script>

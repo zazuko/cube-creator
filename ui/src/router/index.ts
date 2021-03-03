@@ -28,10 +28,10 @@ import Publication from '@/views/Publication.vue'
 import PageNotFound from '@/views/PageNotFound.vue'
 import Logout from '@/views/Logout.vue'
 import NotAuthorized from '@/views/NotAuthorized.vue'
-import ManagedDimensions from '@/views/ManagedDimensions.vue'
-import ManagedDimension from '@/views/ManagedDimension.vue'
-import ManagedDimensionCreate from '@/views/ManagedDimensionCreate.vue'
-import ManagedTermCreate from '@/views/ManagedTermCreate.vue'
+import SharedDimensions from '@/views/SharedDimensions.vue'
+import SharedDimension from '@/views/SharedDimension.vue'
+import SharedDimensionCreate from '@/views/SharedDimensionCreate.vue'
+import SharedDimensionTermCreate from '@/views/SharedDimensionTermCreate.vue'
 
 Vue.use(VueRouter)
 
@@ -146,26 +146,26 @@ const routes: Array<RouteConfig> = [
         ],
       },
       {
-        path: '/managed-dimensions',
-        name: 'ManagedDimensions',
-        component: ManagedDimensions,
+        path: '/shared-dimensions',
+        name: 'SharedDimensions',
+        component: SharedDimensions,
         children: [
           {
             path: 'new',
-            name: 'ManagedDimensionCreate',
-            component: ManagedDimensionCreate,
+            name: 'SharedDimensionCreate',
+            component: SharedDimensionCreate,
           },
         ],
       },
       {
-        path: '/managed-dimensions/:id',
-        name: 'ManagedDimension',
-        component: ManagedDimension,
+        path: '/shared-dimensions/:id',
+        name: 'SharedDimension',
+        component: SharedDimension,
         children: [
           {
             path: 'terms/new',
-            name: 'ManagedTermCreate',
-            component: ManagedTermCreate,
+            name: 'SharedDimensionTermCreate',
+            component: SharedDimensionTermCreate,
           }
         ],
       },
