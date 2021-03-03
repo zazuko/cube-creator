@@ -24,7 +24,7 @@ export interface Resource {
 }
 
 export interface SharedDimension extends Resource {
-  name: Term[]
+  name?: string
   terms?: Term
 }
 

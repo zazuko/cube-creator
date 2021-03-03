@@ -239,7 +239,7 @@ export function serializeSharedDimensionCollection (collection: Collection): Col
 export function serializeSharedDimension (dimension: RdfResource): SharedDimension {
   return Object.freeze({
     ...serializeResource(dimension),
-    name: dimension.pointer.out(schema.name).terms,
+    name: dimension.pointer.out(schema.name, { language: displayLanguage }).value,
     terms: dimension.pointer.out(md.terms).term,
   })
 }
