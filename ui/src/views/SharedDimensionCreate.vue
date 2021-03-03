@@ -7,7 +7,7 @@
       :shape="shape"
       :error="error"
       :is-submitting="isSubmitting"
-      submit-label="Create term"
+      :submit-label="operation.title"
       @submit="onSubmit"
       @cancel="onCancel"
     />
@@ -17,7 +17,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
-import { RuntimeOperation } from 'alcaeus'
+import { Collection, RuntimeOperation } from 'alcaeus'
 import clownface, { GraphPointer } from 'clownface'
 import type { Shape } from '@rdfine/shacl'
 import { dataset } from '@rdf-esm/dataset'
@@ -25,15 +25,14 @@ import SidePane from '@/components/SidePane.vue'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
-import { ManagedDimension } from '@/store/types'
 
-const managedDimensionNS = namespace('managedDimension')
+const sharedDimensionsNS = namespace('sharedDimensions')
 
 @Component({
   components: { SidePane, HydraOperationForm },
 })
 export default class extends Vue {
-  @managedDimensionNS.State('dimension') dimension!: ManagedDimension
+  @sharedDimensionsNS.State('collection') collection!: Collection
 
   resource: GraphPointer | null = Object.freeze(clownface({ dataset: dataset() }).namedNode(''));
   error: ErrorDetails | null = null;
@@ -42,7 +41,7 @@ export default class extends Vue {
   shapes: GraphPointer | null = null;
 
   get operation (): RuntimeOperation | null {
-    return this.dimension.actions.create
+    return this.collection.actions.create
   }
 
   get title (): string {
@@ -60,19 +59,17 @@ export default class extends Vue {
     this.isSubmitting = true
 
     try {
-      const term = await this.$store.dispatch('api/invokeSaveOperation', {
+      const dimension = await this.$store.dispatch('api/invokeSaveOperation', {
         operation: this.operation,
         resource: this.resource,
       })
 
-      this.$store.commit('managedDimension/storeNewTerm', term)
-
       this.$buefy.toast.open({
-        message: 'Managed dimension term successfully created',
+        message: `Shared dimension ${dimension.name} successfully created`,
         type: 'is-success',
       })
 
-      this.$router.push({ name: 'ManagedDimension', params: { id: this.dimension.clientPath } })
+      this.$router.push({ name: 'SharedDimension', params: { id: dimension.clientPath } })
     } catch (e) {
       this.error = e.details ?? { detail: e.toString() }
 
@@ -85,7 +82,7 @@ export default class extends Vue {
   }
 
   onCancel (): void {
-    this.$router.push({ name: 'ManagedDimension', params: { id: this.dimension.clientPath } })
+    this.$router.push({ name: 'SharedDimensions' })
   }
 }
 </script>

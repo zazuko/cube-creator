@@ -5,8 +5,8 @@ import { APIState } from './modules/api'
 import { ProjectsState } from '@/store/modules/projects'
 import { ProjectState } from '@/store/modules/project'
 import { Actions } from '@/api/mixins/ApiResource'
-import { ManagedDimensionsState } from './modules/managedDimensions'
-import { ManagedDimensionState } from './modules/managedDimension'
+import { SharedDimensionsState } from './modules/sharedDimensions'
+import { SharedDimensionState } from './modules/sharedDimension'
 
 export interface RootState {
   app: AppState
@@ -14,8 +14,8 @@ export interface RootState {
   api: APIState
   projects: ProjectsState
   project: ProjectState
-  managedDimensions: ManagedDimensionsState
-  managedDimension: ManagedDimensionState
+  sharedDimensions: SharedDimensionsState
+  sharedDimension: SharedDimensionState
 }
 
 export interface Resource {
@@ -23,12 +23,12 @@ export interface Resource {
   actions: Actions
 }
 
-export interface ManagedDimension extends Resource {
+export interface SharedDimension extends Resource {
   name: Term[]
   terms?: Term
 }
 
-export interface ManagedTerm extends Resource {
+export interface SharedDimensionTerm extends Resource {
   name: Term[]
   identifiers: string[]
 }

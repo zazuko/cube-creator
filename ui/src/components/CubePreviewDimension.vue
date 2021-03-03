@@ -11,7 +11,7 @@
         :to="{ name: 'DimensionEdit', params: { dimensionId: dimension.clientPath } }"
       />
       <div v-if="dimension.mappings">
-        <b-tooltip label="Link to managed dimension">
+        <b-tooltip label="Link to shared dimension">
           <b-button
             tag="router-link"
             :to="{ name: 'DimensionMapping', params: { dimensionId: dimension.clientPath } }"
@@ -27,7 +27,7 @@
       <b-tooltip v-show="description" :label="description">
         <b-icon icon="comment-alt" pack="far" type="is-primary" />
       </b-tooltip>
-      <b-tooltip v-if="dimension.managedDimension" :label="`Linked to ${dimension.managedDimension.label}`">
+      <b-tooltip v-if="dimension.sharedDimension" :label="`Linked to ${dimension.sharedDimension.label}`">
         <b-icon icon="link" type="is-primary" />
       </b-tooltip>
     </div>

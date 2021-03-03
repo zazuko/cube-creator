@@ -1,12 +1,12 @@
 import { ActionTree, MutationTree, GetterTree } from 'vuex'
 import { api } from '@/api'
-import { ManagedDimension, ManagedTerm, RootState } from '../types'
-import { serializeManagedDimension, serializeManagedTerm } from '../serializers'
+import { SharedDimension, SharedDimensionTerm, RootState } from '../types'
+import { serializeSharedDimensionTerm } from '../serializers'
 import { Collection } from 'alcaeus'
 
-export interface ManagedDimensionState {
-  dimension: null | ManagedDimension
-  terms: null | ManagedTerm[]
+export interface SharedDimensionState {
+  dimension: null | SharedDimension
+  terms: null | SharedDimensionTerm[]
 }
 
 const initialState = {
@@ -14,20 +14,20 @@ const initialState = {
   terms: null,
 }
 
-const getters: GetterTree<ManagedDimensionState, RootState> = {
+const getters: GetterTree<SharedDimensionState, RootState> = {
 }
 
-const actions: ActionTree<ManagedDimensionState, RootState> = {
+const actions: ActionTree<SharedDimensionState, RootState> = {
   async fetchDimension (context, id) {
     context.commit('storeDimension', null)
     context.commit('storeTerms', null)
 
-    if (!context.rootState.managedDimensions.collection) {
-      await context.dispatch('managedDimensions/fetchEntrypoint', {}, { root: true })
-      await context.dispatch('managedDimensions/fetchCollection', {}, { root: true })
+    if (!context.rootState.sharedDimensions.collection) {
+      await context.dispatch('sharedDimensions/fetchEntrypoint', {}, { root: true })
+      await context.dispatch('sharedDimensions/fetchCollection', {}, { root: true })
     }
 
-    const dimensions = context.rootGetters['managedDimensions/dimensions']
+    const dimensions = context.rootGetters['sharedDimensions/dimensions']
     const dimension = dimensions.find(({ clientPath }: { clientPath: string}) => clientPath === id)
 
     if (!dimension) throw new Error(`Dimension not found ${id}`)
@@ -43,7 +43,7 @@ const actions: ActionTree<ManagedDimensionState, RootState> = {
 
   async fetchDimensionTerms (context, dimension) {
     const termsCollection = await api.fetchResource<Collection>(dimension.terms.value)
-    const terms = termsCollection.member.map(serializeManagedTerm)
+    const terms = termsCollection.member.map(serializeSharedDimensionTerm)
     context.commit('storeTerms', terms)
   },
 
@@ -52,7 +52,7 @@ const actions: ActionTree<ManagedDimensionState, RootState> = {
   },
 }
 
-const mutations: MutationTree<ManagedDimensionState> = {
+const mutations: MutationTree<SharedDimensionState> = {
   storeDimension (state, dimension) {
     state.dimension = dimension
   },
@@ -62,7 +62,7 @@ const mutations: MutationTree<ManagedDimensionState> = {
   },
 
   storeNewTerm (state, term) {
-    state.terms?.push(serializeManagedTerm(term))
+    state.terms?.push(serializeSharedDimensionTerm(term))
   },
 
   removeTerm (state, term) {
