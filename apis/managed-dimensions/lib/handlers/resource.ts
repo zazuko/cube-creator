@@ -11,5 +11,5 @@ export const DELETE = asyncMiddleware(async (req, res) => {
     api: clownface(req.hydra.api),
   })
 
-  res.status(NO_CONTENT)
+  res.sendStatus(NO_CONTENT)
 })
