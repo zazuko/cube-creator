@@ -7,7 +7,7 @@
       :shape="shape"
       :error="error"
       :is-submitting="isSubmitting"
-      submit-label="Create term"
+      submit-label="Save term"
       @submit="onSubmit"
       @cancel="onCancel"
     />
@@ -25,7 +25,7 @@ import SidePane from '@/components/SidePane.vue'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
-import { SharedDimension } from '@/store/types'
+import { SharedDimension, SharedDimensionTerm } from '@/store/types'
 
 const sharedDimensionNS = namespace('sharedDimension')
 
@@ -34,6 +34,7 @@ const sharedDimensionNS = namespace('sharedDimension')
 })
 export default class extends Vue {
   @sharedDimensionNS.State('dimension') dimension!: SharedDimension
+  @sharedDimensionNS.Getter('findTerm') findTerm!: (id: string) => SharedDimensionTerm
 
   resource: GraphPointer | null = Object.freeze(clownface({ dataset: dataset() }).namedNode(''));
   error: ErrorDetails | null = null;
@@ -41,8 +42,13 @@ export default class extends Vue {
   shape: Shape | null = null;
   shapes: GraphPointer | null = null;
 
+  get term (): SharedDimensionTerm {
+    const termId = this.$route.params.termId
+    return this.findTerm(termId)
+  }
+
   get operation (): RuntimeOperation | null {
-    return this.dimension.actions.create
+    return this.term.actions.replace
   }
 
   get title (): string {
@@ -50,6 +56,8 @@ export default class extends Vue {
   }
 
   async mounted (): Promise<void> {
+    this.resource = Object.freeze(this.term.pointer)
+
     if (this.operation) {
       this.shape = await api.fetchOperationShape(this.operation)
     }
@@ -68,7 +76,7 @@ export default class extends Vue {
       this.$store.commit('sharedDimension/storeTerm', term)
 
       this.$buefy.toast.open({
-        message: 'Shared dimension term successfully created',
+        message: 'Shared dimension term successfully saved',
         type: 'is-success',
       })
 

@@ -15,6 +15,10 @@ const initialState = {
 }
 
 const getters: GetterTree<SharedDimensionState, RootState> = {
+  findTerm (state) {
+    return (id: string) =>
+      state.terms?.find(({ clientPath }: { clientPath: string}) => clientPath === id)
+  },
 }
 
 const actions: ActionTree<SharedDimensionState, RootState> = {
@@ -61,8 +65,17 @@ const mutations: MutationTree<SharedDimensionState> = {
     state.terms = terms
   },
 
-  storeNewTerm (state, term) {
-    state.terms?.push(serializeSharedDimensionTerm(term))
+  storeTerm (state, term) {
+    if (!state.terms) throw new Error('Terms not loaded')
+
+    const serializedTerm = serializeSharedDimensionTerm(term)
+    const index = state.terms.findIndex(({ clientPath }) => serializedTerm.clientPath === clientPath)
+
+    if (index >= 0) {
+      state.terms[index] = serializedTerm
+    } else {
+      state.terms?.push(serializedTerm)
+    }
   },
 
   removeTerm (state, term) {
