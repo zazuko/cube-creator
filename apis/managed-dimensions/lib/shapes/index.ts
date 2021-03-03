@@ -7,12 +7,14 @@ import type { Initializer } from '@tpluscode/rdfine/RdfResource'
 import type { NodeShape } from '@rdfine/shacl'
 import RdfResource from '@tpluscode/rdfine'
 import { NodeShapeBundle, PropertyShapeBundle } from '@rdfine/shacl/bundles'
+import { ResourceBundle } from '@rdfine/rdfs/bundles'
 import { fromPointer } from '@rdfine/shacl/lib/NodeShape'
 import { shape } from '../namespace'
 import * as dimensionTerm from './managed-dimension-term'
 
 RdfResource.factory.addMixin(...NodeShapeBundle)
 RdfResource.factory.addMixin(...PropertyShapeBundle)
+RdfResource.factory.addMixin(...ResourceBundle)
 
 interface ShapeFactory {
   (): GraphPointer<NamedNode>
