@@ -53,10 +53,12 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
+import { Collection } from 'alcaeus'
 import PageContent from '@/components/PageContent.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import HydraOperationButton from '@/components/HydraOperationButton.vue'
 import TermWithLanguage from '@/components/TermWithLanguage.vue'
+import { ManagedDimension } from '@/store/types'
 
 const appNS = namespace('app')
 const managedDimensionsNS = namespace('managedDimensions')
@@ -66,15 +68,12 @@ const managedDimensionsNS = namespace('managedDimensions')
 })
 export default class CubeProjectsView extends Vue {
   @appNS.State('language') language!: string
-  @managedDimensionsNS.State('collection') collection!: any | null
+  @managedDimensionsNS.State('collection') collection!: Collection | null
+  @managedDimensionsNS.Getter('dimensions') dimensions!: ManagedDimension[]
 
   async mounted (): Promise<void> {
     await this.$store.dispatch('managedDimensions/fetchEntrypoint')
     await this.$store.dispatch('managedDimensions/fetchCollection')
-  }
-
-  get dimensions (): any[] {
-    return this.collection?.member ?? []
   }
 }
 </script>
