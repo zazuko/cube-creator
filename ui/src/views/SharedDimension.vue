@@ -50,10 +50,13 @@
           </tr>
           <tr v-if="terms.length === 0">
             <td colspan="3">
-              No term in this dimension yet. Do you want to
-              <router-link :to="{ name: 'SharedDimensionTermCreate' }">
-                create one
-              </router-link>?
+              Nothing in this dimension yet.
+              <span v-if="dimension.actions.create">
+                Do you want to
+                <router-link :to="{ name: 'SharedDimensionTermCreate' }">
+                  add a term
+                </router-link>?
+              </span>
             </td>
           </tr>
         </tbody>
