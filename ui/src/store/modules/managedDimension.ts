@@ -39,6 +39,10 @@ const actions: ActionTree<ManagedDimensionsState, RootState> = {
     const terms = termsCollection.member.map(serializeManagedTerm)
     context.commit('storeTerms', terms)
   },
+
+  removeTerm (context, term) {
+    context.commit('removeTerm', term)
+  },
 }
 
 const mutations: MutationTree<ManagedDimensionsState> = {
@@ -52,6 +56,10 @@ const mutations: MutationTree<ManagedDimensionsState> = {
 
   storeNewTerm (state, term) {
     state.terms?.push(serializeManagedTerm(term))
+  },
+
+  removeTerm (state, term) {
+    state.terms = state.terms?.filter(({ clientPath }) => term.clientPath !== clientPath) ?? null
   },
 }
 

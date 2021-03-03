@@ -4,6 +4,7 @@ import { AppState } from './modules/app'
 import { APIState } from './modules/api'
 import { ProjectsState } from '@/store/modules/projects'
 import { ProjectState } from '@/store/modules/project'
+import { Actions } from '@/api/mixins/ApiResource'
 
 export interface RootState {
   app: AppState
@@ -13,12 +14,17 @@ export interface RootState {
   project: ProjectState
 }
 
-export interface ManagedDimension {
+export interface Resource {
+  clientPath: string
+  actions: Actions
+}
+
+export interface ManagedDimension extends Resource {
   name: Term[]
   terms?: Term
 }
 
-export interface ManagedTerm {
+export interface ManagedTerm extends Resource {
   name: Term[]
   identifiers: string[]
 }
