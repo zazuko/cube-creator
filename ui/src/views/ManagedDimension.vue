@@ -1,16 +1,14 @@
 <template>
   <page-content class="container-narrow">
     <div v-if="dimension">
-      <div class="mb-4">
+      <div class="mb-4 is-flex is-align-items-center gap-2">
         <h2 class="title is-size-4 mb-0">
           <term-with-language :values="dimension.name" :selected-language="language" />
         </h2>
-        <hydra-operation-button
-          :operation="dimension.actions.edit"
-          :to="{ name: 'ManagedDimensionEdit' }"
-          type="is-default"
-          size=""
-        />
+        <div>
+          <hydra-operation-button :operation="dimension.actions.edit" :to="{ name: 'ManagedDimensionEdit' }" />
+          <hydra-operation-button :operation="dimension.actions.delete" @click="deleteDimension(dimension)" />
+        </div>
       </div>
       <table class="table is-narrow is-bordered is-striped is-fullwidth" v-if="terms">
         <thead>
@@ -27,7 +25,6 @@
                 :operation="dimension.actions.create"
                 :to="{ name: 'ManagedTermCreate' }"
                 type="is-default"
-                size=""
               >
                 {{ dimension.actions.create.title }}
               </hydra-operation-button>
@@ -46,18 +43,9 @@
                 {{ identifier }}
               </p>
             </td>
-            <td>
-              <hydra-operation-button
-                :operation="term.actions.edit"
-                :to="{ name: 'ManagedTermEdit' }"
-                type="is-default"
-                size=""
-              />
-              <hydra-operation-button
-                :operation="term.actions.delete"
-                type="is-default"
-                size=""
-              />
+            <td class="has-text-right">
+              <hydra-operation-button :operation="term.actions.edit" :to="{ name: 'ManagedTermEdit' }" />
+              <hydra-operation-button :operation="term.actions.delete" @click="deleteTerm(term)" />
             </td>
           </tr>
           <tr v-if="terms.length === 0">
@@ -102,6 +90,41 @@ export default class extends Vue {
   mounted (): void {
     const id = this.$route.params.id
     this.$store.dispatch('managedDimension/fetchDimension', id)
+  }
+
+  deleteDimension (dimension: ManagedDimension): void {
+    this.$buefy.dialog.confirm({
+      title: dimension.actions.delete?.title,
+      message: 'Are you sure you want to delete this managed dimension?',
+      confirmText: 'Delete',
+      type: 'is-danger',
+      hasIcon: true,
+      onConfirm: async () => {
+        await this.$store.dispatch('api/invokeDeleteOperation', {
+          operation: dimension.actions.delete,
+          successMessage: `Dimension ${dimension.name} deleted successfully`,
+        })
+        this.$router.push({ name: 'ManagedDimensions' })
+      },
+    })
+  }
+
+  deleteTerm (term: ManagedTerm): void {
+    this.$buefy.dialog.confirm({
+      title: term.actions.delete?.title,
+      message: 'Are you sure you want to delete this term?',
+      confirmText: 'Delete',
+      type: 'is-danger',
+      hasIcon: true,
+      onConfirm: () => {
+        this.$store.dispatch('api/invokeDeleteOperation', {
+          operation: term.actions.delete,
+          successMessage: 'Term deleted successfully',
+          callbackAction: 'managedDimension/removeTerm',
+          callbackParams: term,
+        })
+      },
+    })
   }
 }
 </script>

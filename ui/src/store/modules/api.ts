@@ -30,7 +30,7 @@ const actions: ActionTree<APIState, RootState> = {
     return api.invokeSaveOperation(operation, data)
   },
 
-  async invokeDeleteOperation (context, { operation, successMessage, callbackAction }): Promise<void> {
+  async invokeDeleteOperation (context, { operation, successMessage, callbackAction, callbackParams = {} }): Promise<void> {
     context.commit('app/setLoading', true, { root: true })
 
     try {
@@ -41,13 +41,17 @@ const actions: ActionTree<APIState, RootState> = {
         type: 'is-success',
       })
 
-      context.dispatch(callbackAction, {}, { root: true })
+      if (callbackAction) {
+        context.dispatch(callbackAction, callbackParams, { root: true })
+      }
     } catch (e) {
       context.commit('app/pushMessage', {
         title: 'An error occurred',
         message: `${e}`,
         type: 'is-danger',
       }, { root: true })
+
+      throw e
     } finally {
       context.commit('app/setLoading', false, { root: true })
     }
