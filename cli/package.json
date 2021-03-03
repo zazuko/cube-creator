@@ -10,8 +10,8 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@cube-creator/core": "*",
-    "@cube-creator/model": "*",
+    "@cube-creator/core": "^0.2.0",
+    "@cube-creator/model": "^0.1.16",
     "@rdfine/csvw": "^0.6.3",
     "@rdfine/prov": "^0.1.1",
     "@rdfine/schema": "^0.6.3",
@@ -54,8 +54,7 @@
     "through2-reduce": "1.1.1"
   },
   "devDependencies": {
-    "@cube-creator/core": "*",
-    "@cube-creator/testing": "*",
+    "@cube-creator/testing": "^0.1.15",
     "@tpluscode/rdf-ns-builders": "^0.4",
     "@tpluscode/rdf-string": "^0.2.21",
     "@tpluscode/sparql-builder": "^0.3.10",

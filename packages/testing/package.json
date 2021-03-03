@@ -3,7 +3,7 @@
   "version": "0.1.15",
   "private": true,
   "dependencies": {
-    "@cube-creator/core": "*",
+    "@cube-creator/core": "^0.2.0",
     "@rdfjs/formats-common": "^2.1.0",
     "@rdfjs/namespace": "^1.1.0",
     "@rdfjs/express-handler": "^1.2.1",
