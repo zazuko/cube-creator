@@ -1,4 +1,4 @@
-import { dash, qudt, rdf, schema, sh, time, xsd } from '@tpluscode/rdf-ns-builders'
+import { dash, qudt, rdf, rdfs, schema, sh, time, xsd } from '@tpluscode/rdf-ns-builders'
 import { supportedLanguages } from '@cube-creator/core/languages'
 import type { Initializer } from '@tpluscode/rdfine/RdfResource'
 import type { NodeShape } from '@rdfine/shacl'
@@ -42,7 +42,18 @@ export default (): Initializer<NodeShape> => ({
       }, {
         name: 'Scale type',
         path: qudt.scaleType,
-        in: [qudt.NominalScale, qudt.OrdinalScale],
+        in: [
+          {
+            id: qudt.NominalScale,
+            types: [rdfs.Resource],
+            label: $rdf.literal('Nominal', 'en'),
+          },
+          {
+            id: qudt.OrdinalScale,
+            types: [rdfs.Resource],
+            label: $rdf.literal('Ordinal', 'en'),
+          },
+        ],
         maxCount: 1,
         defaultValue: qudt.NominalScale,
         order: 20,
@@ -59,11 +70,23 @@ export default (): Initializer<NodeShape> => ({
             minCount: 1,
             maxCount: 1,
             nodeKind: sh.IRI,
-            editor: dash.EnumSelectEditor,
+            [dash.editor.value]: dash.EnumSelectEditor,
             in: [
-              schema.GeoCoordinates,
-              schema.GeoShape,
-              time.GeneralDateTimeDescription,
+              {
+                id: schema.GeoCoordinates,
+                types: [rdfs.Resource],
+                label: $rdf.literal('Geographic coordinates', 'en'),
+              },
+              {
+                id: schema.GeoShape,
+                types: [rdfs.Resource],
+                label: $rdf.literal('Geographic shape', 'en'),
+              },
+              {
+                id: time.GeneralDateTimeDescription,
+                types: [rdfs.Resource],
+                label: $rdf.literal('Time description', 'en'),
+              },
             ],
             order: 10,
 
@@ -77,13 +100,41 @@ export default (): Initializer<NodeShape> => ({
               [sh.hasValue.value]: time.GeneralDateTimeDescription,
             },
             in: [
-              time.unitYear,
-              time.unitMonth,
-              time.unitWeek,
-              time.unitDay,
-              time.unitHour,
-              time.unitMinute,
-              time.unitSecond,
+              {
+                id: time.unitYear,
+                types: [rdfs.Resource],
+                label: $rdf.literal('Year', 'en'),
+              },
+              {
+                id: time.unitMonth,
+                types: [rdfs.Resource],
+                label: $rdf.literal('Month', 'en'),
+              },
+              {
+                id: time.unitWeek,
+                types: [rdfs.Resource],
+                label: $rdf.literal('Week', 'en'),
+              },
+              {
+                id: time.unitDay,
+                types: [rdfs.Resource],
+                label: $rdf.literal('Day', 'en'),
+              },
+              {
+                id: time.unitHour,
+                types: [rdfs.Resource],
+                label: $rdf.literal('Hour', 'en'),
+              },
+              {
+                id: time.unitMinute,
+                types: [rdfs.Resource],
+                label: $rdf.literal('Minute', 'en'),
+              },
+              {
+                id: time.unitSecond,
+                types: [rdfs.Resource],
+                label: $rdf.literal('Second', 'en'),
+              },
             ],
           }],
         },
