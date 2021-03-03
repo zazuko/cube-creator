@@ -6,14 +6,26 @@
       </b-navbar-item>
     </template>
     <template slot="start">
-      <b-navbar-item tag="router-link" :to="{ name: 'CubeProjects' }">
-        Cube Projects
-      </b-navbar-item>
+      <router-link
+        :to="{ name: 'CubeProjects' }"
+        v-slot="{ href, isActive }"
+        custom
+      >
+        <b-navbar-item tag="a" :href="href" :class="{ active: isActive }">
+          Cube Projects
+        </b-navbar-item>
+      </router-link>
     </template>
     <template slot="start">
-      <b-navbar-item tag="router-link" :to="{ name: 'SharedDimensions' }">
-        Shared Dimensions
-      </b-navbar-item>
+      <router-link
+        :to="{ name: 'SharedDimensions' }"
+        v-slot="{ href, isActive }"
+        custom
+      >
+        <b-navbar-item tag="a" :href="href" :class="{ active: isActive }">
+          Shared Dimensions
+        </b-navbar-item>
+      </router-link>
     </template>
     <template slot="end">
       <b-navbar-item
@@ -40,3 +52,10 @@ export default Vue.extend({
   components: { SignOutButton },
 })
 </script>
+
+<style scoped>
+.navbar-item.active {
+  font-weight: bold;
+  color: #aaa;
+}
+</style>
