@@ -4,7 +4,7 @@ import { ManagedDimension, ManagedTerm, RootState } from '../types'
 import { serializeManagedDimension, serializeManagedTerm } from '../serializers'
 import { Collection } from 'alcaeus'
 
-export interface ManagedDimensionsState {
+export interface ManagedDimensionState {
   dimension: null | ManagedDimension
   terms: null | ManagedTerm[]
 }
@@ -14,16 +14,23 @@ const initialState = {
   terms: null,
 }
 
-const getters: GetterTree<ManagedDimensionsState, RootState> = {
+const getters: GetterTree<ManagedDimensionState, RootState> = {
 }
 
-const actions: ActionTree<ManagedDimensionsState, RootState> = {
+const actions: ActionTree<ManagedDimensionState, RootState> = {
   async fetchDimension (context, id) {
     context.commit('storeDimension', null)
     context.commit('storeTerms', null)
 
-    const dimensionResource = await api.fetchResource(id)
-    const dimension = serializeManagedDimension(dimensionResource)
+    if (!context.rootState.managedDimensions.collection) {
+      await context.dispatch('managedDimensions/fetchEntrypoint', {}, { root: true })
+      await context.dispatch('managedDimensions/fetchCollection', {}, { root: true })
+    }
+
+    const dimensions = context.rootGetters['managedDimensions/dimensions']
+    const dimension = dimensions.find(({ clientPath }: { clientPath: string}) => clientPath === id)
+
+    if (!dimension) throw new Error(`Dimension not found ${id}`)
 
     context.commit('storeDimension', dimension)
 
@@ -45,7 +52,7 @@ const actions: ActionTree<ManagedDimensionsState, RootState> = {
   },
 }
 
-const mutations: MutationTree<ManagedDimensionsState> = {
+const mutations: MutationTree<ManagedDimensionState> = {
   storeDimension (state, dimension) {
     state.dimension = dimension
   },

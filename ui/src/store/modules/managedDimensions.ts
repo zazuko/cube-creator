@@ -3,16 +3,11 @@ import { api } from '@/api'
 import { RootState } from '../types'
 import { md } from '@cube-creator/core/namespace'
 import { serializeManagedDimensionCollection } from '../serializers'
-import { RdfResource } from 'alcaeus'
-
-/* eslint-disable-next-line */
-interface ManagedDimensionCollection {
-
-}
+import { Collection, RdfResource } from 'alcaeus'
 
 export interface ManagedDimensionsState {
   entrypoint: null | RdfResource
-  collection: null | ManagedDimensionCollection,
+  collection: null | Collection,
 }
 
 const initialState = {
@@ -21,6 +16,9 @@ const initialState = {
 }
 
 const getters: GetterTree<ManagedDimensionsState, RootState> = {
+  dimensions (state) {
+    return state.collection?.member ?? []
+  },
 }
 
 const actions: ActionTree<ManagedDimensionsState, RootState> = {
