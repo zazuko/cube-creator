@@ -3,7 +3,7 @@
     <div v-if="dimension">
       <div class="mb-4 is-flex is-align-items-center gap-2">
         <h2 class="title is-size-4 mb-0">
-          <term-with-language :values="dimension.name" :selected-language="language" />
+          {{ dimension.name }}
         </h2>
         <div>
           <hydra-operation-button :operation="dimension.actions.edit" :to="{ name: 'SharedDimensionEdit' }" />

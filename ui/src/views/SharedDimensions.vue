@@ -26,7 +26,7 @@
           <div class="is-flex-grow-1 is-flex is-justify-content-space-between">
             <div>
               <p class="has-text-weight-bold">
-                <term-with-language :values="dimension.name" :selected-language="language" />
+                {{ dimension.name }}
               </p>
             </div>
             <div v-if="dimension.maintainer" class="is-flex is-flex-direction-column is-align-items-flex-end">
