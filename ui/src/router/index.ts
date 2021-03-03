@@ -32,6 +32,7 @@ import SharedDimensions from '@/views/SharedDimensions.vue'
 import SharedDimension from '@/views/SharedDimension.vue'
 import SharedDimensionCreate from '@/views/SharedDimensionCreate.vue'
 import SharedDimensionTermCreate from '@/views/SharedDimensionTermCreate.vue'
+import SharedDimensionTermEdit from '@/views/SharedDimensionTermEdit.vue'
 
 Vue.use(VueRouter)
 
@@ -166,6 +167,11 @@ const routes: Array<RouteConfig> = [
             path: 'terms/new',
             name: 'SharedDimensionTermCreate',
             component: SharedDimensionTermCreate,
+          },
+          {
+            path: 'terms/:termId/edit',
+            name: 'SharedDimensionTermEdit',
+            component: SharedDimensionTermEdit,
           }
         ],
       },

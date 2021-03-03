@@ -44,7 +44,10 @@
               </p>
             </td>
             <td class="has-text-right">
-              <hydra-operation-button :operation="term.actions.edit" :to="{ name: 'SharedDimensionTermEdit' }" />
+              <hydra-operation-button
+                :operation="term.actions.replace"
+                :to="{ name: 'SharedDimensionTermEdit', params: { termId: term.clientPath } }"
+              />
               <hydra-operation-button :operation="term.actions.delete" @click="deleteTerm(term)" />
             </td>
           </tr>
