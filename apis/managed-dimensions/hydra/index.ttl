@@ -52,6 +52,7 @@ md:ManagedDimensions
 
 _:DELETE a hydra:Operation, schema:DeleteAction ;
          hydra:method "DELETE" ;
+         hydra:title "Delete" ;
          code:implementedBy
            [
              a code:EcmaScript ;
