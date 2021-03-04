@@ -3,7 +3,7 @@ import { NamedNode, Quad } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import UrlSlugify from 'url-slugify'
 import { hydra, rdf, schema } from '@tpluscode/rdf-ns-builders'
-import { meta } from '@cube-creator/core/namespace'
+import { md, meta } from '@cube-creator/core/namespace'
 import { DomainError } from '@cube-creator/api-errors'
 import env from '../env'
 import { ManagedDimensionsStore } from '../store'
@@ -35,7 +35,7 @@ export async function create({ resource, store }: CreateSharedDimension): Promis
   const dataset = $rdf.dataset([...resource.dataset].map(replace(resource.term, termSetId)))
   const termSet = clownface({ dataset })
     .namedNode(termSetId)
-    .addOut(rdf.type, [hydra.Resource, schema.DefinedTermSet, meta.SharedDimension])
+    .addOut(rdf.type, [hydra.Resource, schema.DefinedTermSet, meta.SharedDimension, md.ManagedDimension])
 
   await store.save(termSet)
   return termSet
@@ -58,7 +58,7 @@ export async function createTerm({ termSet, resource, store }: CreateTerm): Prom
   const term = clownface({ dataset })
     .namedNode(termId)
     .addOut(schema.inDefinedTermSet, termSet)
-    .addOut(rdf.type, [schema.DefinedTerm, hydra.Resource])
+    .addOut(rdf.type, [schema.DefinedTerm, hydra.Resource, md.ManagedDimensionTerm])
 
   if (!term.has(schema.validFrom).term) {
     term.addOut(schema.validFrom, termSet.out(schema.validFrom))

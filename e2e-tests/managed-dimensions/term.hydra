@@ -23,9 +23,10 @@ With Class schema:DefinedTerm {
             prefix qudt: <http://qudt.org/schema/qudt/>
             prefix meta: <https://cube.link/meta/>
             prefix sh: <http://www.w3.org/ns/shacl#>
+            PREFIX md: <https://cube-creator.zazuko.com/managed-dimensions/vocab#>
 
             <>
-              a schema:DefinedTerm ;
+              a schema:DefinedTerm, md:ManagedDimensionTerm ;
               schema:identifier "rdf" ;
               schema:name "Resource Description Framework"@en, "Resource Description Framework"@de ;
               schema:inDefinedTermSet <https://cube-creator.lndo.site/managed-dimensions/term-set/technologies> ;

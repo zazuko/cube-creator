@@ -24,12 +24,7 @@ With Class meta:SharedDimension {
             prefix meta: <https://cube.link/meta/>
             prefix sh: <http://www.w3.org/ns/shacl#>
 
-            <> schema:name "node.js"@en ;
-              sh:property [
-                schema:name "node.js"@en ;
-                qudt:scaleType qudt:NominalScale ;
-              ] ;
-            .
+            <> schema:name "node.js"@en .
             ```
         } => {
             Expect Status 201

@@ -76,7 +76,9 @@ type MetaDataProperty =
 type CubeCreatorTerms = CubeCreatorClass | CubeCreatorProperty | OtherTerms | MetaDataProperty
 
 type ManagedDimensionsTerms =
+  'ManagedDimension' |
   'ManagedDimensions' |
+  'ManagedDimensionTerm' |
   'ManagedDimensionTerms' |
   'managedDimensions' |
   'terms'
