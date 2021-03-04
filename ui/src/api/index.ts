@@ -63,7 +63,7 @@ Hydra.cacheStrategy.shouldLoad = (previous) => {
 
 export const api = {
   async fetchResource <T extends RdfResourceCore = RdfResource> (url: string): Promise<T> {
-    const response = await Hydra.loadResource<T>(url.replaceAll(segmentSeparator, '/'))
+    const response = await Hydra.loadResource<T>(url.split(segmentSeparator).join('/'))
 
     if (response.response?.xhr.status !== 200) {
       throw await APIError.fromResponse(response)
