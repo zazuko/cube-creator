@@ -14,7 +14,7 @@ const datatypeParsers = (datatype) => {
     case ns.xsd.integer.value:
     case ns.xsd.int.value:
     case ns.xsd.gYear.value:
-      return term => parseInt(term.value)
+      return term => parseInt(term.value, 10)
   }
 }
 
