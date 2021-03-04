@@ -36,8 +36,8 @@ export async function replaceValueWithDefinedTerms({ dimensionMapping, terms }: 
     return
   }
 
-  const pairs = [...terms.entries()].reduce((values, [originalValue, managedTerm]) => {
-    return sparql`${values}\n    ( ${originalValue} ${managedTerm} )`
+  const pairs = [...terms.entries()].reduce((values, [originalValue, sharedTerm]) => {
+    return sparql`${values}\n    ( ${originalValue} ${sharedTerm} )`
   }, sparql``)
 
   await DELETE`
@@ -47,13 +47,13 @@ export async function replaceValueWithDefinedTerms({ dimensionMapping, terms }: 
     }
   `.INSERT`
     graph ?cubeGraph {
-      ?listNode ${rdf.first} ?managedTerm .
-      ?observation ?dimension ?managedTerm .
+      ?listNode ${rdf.first} ?sharedTerm .
+      ?observation ?dimension ?sharedTerm .
     }
   `.WHERE`
    ${patternsToFindCubeGraph(dimensionMapping)}
   `.WHERE`
-    VALUES ( ?originalValue ?managedTerm ) {
+    VALUES ( ?originalValue ?sharedTerm ) {
       ${pairs}
     }
 

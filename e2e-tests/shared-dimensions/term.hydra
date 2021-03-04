@@ -1,11 +1,11 @@
-PREFIX md: <https://cube-creator.zazuko.com/managed-dimensions/vocab#>
+PREFIX md: <https://cube-creator.zazuko.com/shared-dimensions/vocab#>
 PREFIX hydra: <http://www.w3.org/ns/hydra/core#>
 PREFIX schema: <http://schema.org/>
 PREFIX qudt: <http://qudt.org/schema/qudt/>
 PREFIX meta: <https://cube.link/meta/>
 PREFIX sh: <http://www.w3.org/ns/shacl#>
 
-ENTRYPOINT "managed-dimensions/term-set/technologies/rdf"
+ENTRYPOINT "shared-dimensions/term-set/technologies/rdf"
 
 HEADERS {
   x-user "john-doe"
@@ -23,13 +23,13 @@ With Class schema:DefinedTerm {
             prefix qudt: <http://qudt.org/schema/qudt/>
             prefix meta: <https://cube.link/meta/>
             prefix sh: <http://www.w3.org/ns/shacl#>
-            PREFIX md: <https://cube-creator.zazuko.com/managed-dimensions/vocab#>
+            PREFIX md: <https://cube-creator.zazuko.com/shared-dimensions/vocab#>
 
             <>
-              a schema:DefinedTerm, md:ManagedDimensionTerm ;
+              a schema:DefinedTerm, md:SharedDimensionTerm ;
               schema:identifier "rdf" ;
               schema:name "Resource Description Framework"@en, "Resource Description Framework"@de ;
-              schema:inDefinedTermSet <https://cube-creator.lndo.site/managed-dimensions/term-set/technologies> ;
+              schema:inDefinedTermSet <https://cube-creator.lndo.site/shared-dimensions/term-set/technologies> ;
             .
             ```
         } => {

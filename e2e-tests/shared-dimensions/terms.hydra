@@ -1,17 +1,17 @@
-PREFIX md: <https://cube-creator.zazuko.com/managed-dimensions/vocab#>
+PREFIX md: <https://cube-creator.zazuko.com/shared-dimensions/vocab#>
 PREFIX hydra: <http://www.w3.org/ns/hydra/core#>
 PREFIX schema: <http://schema.org/>
 PREFIX qudt: <http://qudt.org/schema/qudt/>
 PREFIX meta: <https://cube.link/meta/>
 PREFIX sh: <http://www.w3.org/ns/shacl#>
 
-ENTRYPOINT "managed-dimensions/terms?dimension=http%3A%2F%2Fexample.com%2Fdimension%2Fcolors"
+ENTRYPOINT "shared-dimensions/terms?dimension=http%3A%2F%2Fexample.com%2Fdimension%2Fcolors"
 
 HEADERS {
   x-user "john-doe"
   x-permission "pipelines:write"
 }
 
-With Class md:ManagedDimensionTerms {
+With Class md:SharedDimensionTerms {
     Expect Property hydra:member
 }

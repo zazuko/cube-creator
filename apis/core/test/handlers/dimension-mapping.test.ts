@@ -28,10 +28,10 @@ describe('lib/handlers/dimension-mapping', () => {
     it('add link to dimension to every entry', async () => {
       // given
       unmappedTerms.add($rdf.literal('Pb'))
-      const managedDimension = ex.dimension
+      const sharedDimension = ex.dimension
       const mappings = namedNode('mappings')
       fromPointer(mappings, {
-        managedDimension: managedDimension,
+        sharedDimension,
         hadDictionaryMember: [{
           pairKey: 'so2',
         }, {

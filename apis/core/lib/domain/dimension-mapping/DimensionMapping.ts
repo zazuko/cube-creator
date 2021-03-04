@@ -8,9 +8,9 @@ import $rdf from 'rdf-ext'
 
 interface DictionaryEx {
   about: NamedNode
-  managedDimension: NamedNode
+  sharedDimension: NamedNode
   replaceEntries(entries: KeyEntityPair[]): Map<Term, Term>
-  changeManageDimension(managedDimension: NamedNode): void
+  changeSharedDimension(sharedDimension: NamedNode): void
   addMissingEntries(unmappedValues: Set<Literal>): void
 }
 
@@ -27,11 +27,11 @@ export function ProvDictionaryMixinEx<Base extends Constructor<Dictionary>>(Reso
     @property({ path: schema.about })
     about!: NamedNode
 
-    @property({ path: cc.managedDimension })
-    managedDimension!: NamedNode
+    @property({ path: cc.sharedDimension })
+    sharedDimension!: NamedNode
 
-    changeManageDimension(managedDimension: NamedNode) {
-      this.managedDimension = managedDimension
+    changeSharedDimension(sharedDimension: NamedNode) {
+      this.sharedDimension = sharedDimension
     }
 
     replaceEntries(entries: KeyEntityPair[]): Map<Term, Term> {

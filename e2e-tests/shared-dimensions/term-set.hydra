@@ -1,11 +1,11 @@
-PREFIX md: <https://cube-creator.zazuko.com/managed-dimensions/vocab#>
+PREFIX md: <https://cube-creator.zazuko.com/shared-dimensions/vocab#>
 PREFIX hydra: <http://www.w3.org/ns/hydra/core#>
 PREFIX schema: <http://schema.org/>
 PREFIX qudt: <http://qudt.org/schema/qudt/>
 PREFIX meta: <https://cube.link/meta/>
 PREFIX sh: <http://www.w3.org/ns/shacl#>
 
-ENTRYPOINT "managed-dimensions/term-set/technologies"
+ENTRYPOINT "shared-dimensions/term-set/technologies"
 
 HEADERS {
   x-user "john-doe"

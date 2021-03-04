@@ -17,7 +17,7 @@ async function main() {
     await insertTestProject()
   }
   if (inputs.includes('dimensions')) {
-    log('Inserting sample managed dimensions')
+    log('Inserting sample shared dimensions')
     return insertTestDimensions()
   }
 }

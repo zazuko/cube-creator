@@ -6,7 +6,7 @@
 
 - d96a3da: Transformation: pipeline would fail on fetching shared dimensions
 - 6af426f: Output the default value for empty CSV cells
-- fb600a6: Managed dimensions: Core API to save mappings with dimension metadata
+- fb600a6: Shared dimensions: Core API to save mappings with dimension metadata
 - 8c82ec5: Do not show error when there is no cube (yet)
 - Updated dependencies [bc22b24]
 - Updated dependencies [fb600a6]
@@ -14,7 +14,7 @@
 - Updated dependencies [3a25d90]
   - express-rdf-request@0.1.0
   - hydra-box-middleware-shacl@1.0.0
-  - @cube-creator/managed-dimensions-api@0.1.0
+  - @cube-creator/shared-dimensions-api@0.1.0
 
 ## 0.2.1
 

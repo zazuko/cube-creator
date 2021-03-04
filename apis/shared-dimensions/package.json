@@ -1,0 +1,39 @@
+{
+  "name": "@cube-creator/shared-dimensions-api",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@cube-creator/core": "^0.2.0",
+    "@hydrofoil/labyrinth": "^0.4.1",
+    "@rdfine/schema": "^0.6.3",
+    "@cube-creator/api-errors": "0.0.0",
+    "@rdfine/rdfs": "^0.6.4",
+    "@rdfine/shacl": "^0.7.4",
+    "@tpluscode/rdf-ns-builders": "^0.4.0",
+    "@tpluscode/rdf-string": "^0.2.21",
+    "@tpluscode/rdfine": "^0.5.25",
+    "@tpluscode/sparql-builder": "^0.3.11",
+    "@rdfjs/formats-common": "^2.1.0",
+    "@rdfjs/namespace": "^1.1.0",
+    "@rdfjs/term-map": "^1.0.0",
+    "@rdfjs/term-set": "^1.0.1",
+    "clownface": "^1.2.0",
+    "debug": "^4.3.1",
+    "http-errors": "^1.8.0",
+    "http-status": "^1.5.0",
+    "hydra-box-middleware-shacl": "1.0.0",
+    "middleware-async": "^1.2.7",
+    "once": "^1.4.0",
+    "rdf-ext": "^1.3.0",
+    "url-slugify": "^1.0.6",
+    "sparql-http-client": "^2.2.2"
+  },
+  "devDependencies": {
+    "@cube-creator/testing": "^0.1.15",
+    "@types/sinon": "^9.0.10",
+    "mocha": "^8.1.3",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "sinon": "^9.0.3"
+  }
+}

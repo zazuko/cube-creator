@@ -32,7 +32,7 @@ export async function getDimensionMetaDataCollection(csvMapping: Term, client = 
 
 export async function getMappedDimensions(metadata: GraphPointer, dimensionsEndpoint: ParsingClient) {
   const dimensionQuads = await CONSTRUCT`
-      ?mapping ${cc.managedDimension} ?dimension .
+      ?mapping ${cc.sharedDimension} ?dimension .
     `
     .WHERE`
       GRAPH ${metadata.term} {
@@ -41,7 +41,7 @@ export async function getMappedDimensions(metadata: GraphPointer, dimensionsEndp
       }
 
       GRAPH ?mapping {
-        ?mapping ${cc.managedDimension} ?dimension .
+        ?mapping ${cc.sharedDimension} ?dimension .
       }
     `
     .execute(parsingClient.query)

@@ -37,7 +37,7 @@ describe('domain/dimension-mapping/update', () => {
     dimensionMapping = namedNode(resource)
       .addOut(rdf.type, prov.Dictionary)
       .addOut(schema.about, dimension)
-      .addOut(cc.managedDimension, ex('http://example.com/dimension/chemicals'))
+      .addOut(cc.sharedDimension, ex('http://example.com/dimension/chemicals'))
       .addOut(prov.hadDictionaryMember, member => {
         member
           .addOut(prov.pairKey, 'co')
@@ -60,7 +60,7 @@ describe('domain/dimension-mapping/update', () => {
     // given
     const mappings = namedNode(resource)
       .addOut(rdf.type, prov.Dictionary)
-      .addOut(cc.managedDimension, ex('http://example.com/dimension/chemicals'))
+      .addOut(cc.sharedDimension, ex('http://example.com/dimension/chemicals'))
 
     // when
     const promise = update({
@@ -80,7 +80,7 @@ describe('domain/dimension-mapping/update', () => {
         .addOut(rdf.type, prov.Dictionary)
         .addOut(schema.about, dimension)
         .addOut(cc.applyMappings, $rdf.literal('true', xsd.boolean))
-        .addOut(cc.managedDimension, ex('http://example.com/dimension/chemicals'))
+        .addOut(cc.sharedDimension, ex('http://example.com/dimension/chemicals'))
         .addOut(prov.hadDictionaryMember, member => {
           member
             .addOut(prov.pairKey, 'co')
@@ -203,7 +203,7 @@ describe('domain/dimension-mapping/update', () => {
         .addOut(rdf.type, prov.Dictionary)
         .addOut(schema.about, dimension)
         .addOut(cc.applyMappings, $rdf.literal('true', xsd.boolean))
-        .addOut(cc.managedDimension, ex('http://example.com/dimension/chemicals'))
+        .addOut(cc.sharedDimension, ex('http://example.com/dimension/chemicals'))
         .addOut(prov.hadDictionaryMember, member => {
           member
             .addOut(prov.pairKey, 'co')
@@ -279,7 +279,7 @@ describe('domain/dimension-mapping/update', () => {
       const mappings = namedNode(resource)
         .addOut(rdf.type, prov.Dictionary)
         .addOut(schema.about, dimension)
-        .addOut(cc.managedDimension, ex('http://example.com/dimension/chemicals'))
+        .addOut(cc.sharedDimension, ex('http://example.com/dimension/chemicals'))
         .addOut(prov.hadDictionaryMember, member => {
           member
             .addOut(prov.pairKey, 'co')
@@ -342,7 +342,7 @@ describe('domain/dimension-mapping/update', () => {
       const mappings = namedNode(resource)
         .addOut(rdf.type, prov.Dictionary)
         .addOut(schema.about, dimension)
-        .addOut(cc.managedDimension, ex('http://example.com/dimension/chemicals'))
+        .addOut(cc.sharedDimension, ex('http://example.com/dimension/chemicals'))
         .addOut(prov.hadDictionaryMember, member => {
           member
             .addOut(prov.pairKey, 'co')
@@ -373,7 +373,7 @@ describe('domain/dimension-mapping/update', () => {
       const mappings = namedNode(resource)
         .addOut(rdf.type, prov.Dictionary)
         .addOut(schema.about, dimension)
-        .addOut(cc.managedDimension, ex('http://example.com/dimension/chemicals'))
+        .addOut(cc.sharedDimension, ex('http://example.com/dimension/chemicals'))
         .addOut(prov.hadDictionaryMember, member => {
           member
             .addOut(prov.pairKey, 'co')
@@ -410,13 +410,13 @@ describe('domain/dimension-mapping/update', () => {
     })
   })
 
-  describe('changing managed dimension', () => {
-    it('updates managed dimension', async () => {
+  describe('changing shared dimension', () => {
+    it('updates shared dimension', async () => {
       // given
       const mappings = namedNode(resource)
         .addOut(rdf.type, prov.Dictionary)
         .addOut(schema.about, dimension)
-        .addOut(cc.managedDimension, ex('managed-dimension/canton'))
+        .addOut(cc.sharedDimension, ex('shared-dimension/canton'))
         .addOut(prov.hadDictionaryMember, member => {
           member
             .addOut(prov.pairKey, 'co')
@@ -436,20 +436,20 @@ describe('domain/dimension-mapping/update', () => {
 
       expect(dimensionMapping).to.matchShape({
         property: {
-          path: cc.managedDimension,
-          hasValue: ex('managed-dimension/canton'),
+          path: cc.sharedDimension,
+          hasValue: ex('shared-dimension/canton'),
           minCount: 1,
           maxCount: 1,
         },
       })
     })
 
-    it('unlinks managed dimension', async () => {
+    it('unlinks shared dimension', async () => {
       // given
       const mappings = namedNode(resource)
         .addOut(rdf.type, prov.Dictionary)
         .addOut(schema.about, dimension)
-        // .addOut(cc.managedDimension, undefined)
+        // .addOut(cc.sharedDimension, undefined)
         .addOut(prov.hadDictionaryMember, member => {
           member.addOut(prov.pairKey, 'co')
         })
@@ -466,7 +466,7 @@ describe('domain/dimension-mapping/update', () => {
 
       expect(dimensionMapping).to.matchShape({
         property: {
-          path: cc.managedDimension,
+          path: cc.sharedDimension,
           maxCount: 0,
         },
       })
