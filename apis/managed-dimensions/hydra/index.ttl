@@ -4,7 +4,7 @@ BASE <urn:hydra-box:api>
 @prefix hydra: <http://www.w3.org/ns/hydra/core#> .
 @prefix code: <https://code.described.at/> .
 @prefix hydra-box: <http://hydra-box.org/schema/> .
-@prefix md: <https://cube-creator.zazuko.com/managed-dimensions/vocab#> .
+@prefix md: <https://cube-creator.zazuko.com/shared-dimensions/vocab#> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix meta: <https://cube.link/meta/> .
 @prefix query: <http://hypermedia.app/query#> .
@@ -35,7 +35,7 @@ md:ManagedDimensions
       code:implementedBy
         [
           a code:EcmaScript ;
-          code:link <file:handlers/managed-dimensions#get> ;
+          code:link <file:handlers/shared-dimensions#get> ;
         ] ;
     ], [
          a hydra:Operation, schema:CreateAction ;
@@ -99,7 +99,7 @@ md:ManagedDimensionTerms
       code:implementedBy
         [
           a code:EcmaScript ;
-          code:link <file:handlers/managed-dimensions#getTerms> ;
+          code:link <file:handlers/shared-dimensions#getTerms> ;
         ] ;
       hydra-box:variables
         [

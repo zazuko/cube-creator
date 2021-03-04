@@ -1,8 +1,8 @@
-# Cube Curator Managed Dimensions API
+# Cube Curator Shared Dimensions API
 
 This Hydra-driven API provides functionality for creating and finding dimensions (dictionaries) share between all Cube Creator's cubes.
 
-It is not standalone and deployed together with the [Core API](../core) under a sub path `/managed-dimensions`.
+It is not standalone and deployed together with the [Core API](../core) under a sub path `/shared-dimensions`.
 
 Please refer to the latter for authentication and debugging information.
 
@@ -42,7 +42,7 @@ These environment variables are required for the API to function correctly:
 | Variable | Description |
 | -- | -- |
 | `MANAGED_DIMENSIONS_GRAPH` | Named Graph in the database which contains user-created **Shared Dimensions** |
-| `MANAGED_DIMENSIONS_BASE` | Base URI for API resources. Must be `API_CORE_BASE` + `/managed-dimensions` |
+| `MANAGED_DIMENSIONS_BASE` | Base URI for API resources. Must be `API_CORE_BASE` + `/shared-dimensions` |
 
 And of course, these variables need to be provided to configure database connection:
 

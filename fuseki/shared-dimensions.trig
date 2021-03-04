@@ -2,13 +2,13 @@ prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix sh: <http://www.w3.org/ns/shacl#>
 prefix hydra: <http://www.w3.org/ns/hydra/core#>
 prefix xsd: <http://www.w3.org/2001/XMLSchema#>
-prefix md: <https://cube-creator.zazuko.com/managed-dimensions/vocab#>
+prefix md: <https://cube-creator.zazuko.com/shared-dimensions/vocab#>
 prefix void: <http://rdfs.org/ns/void#>
 prefix schema: <http://schema.org/>
 prefix meta: <https://cube.link/meta/>
-base <https://cube-creator.lndo.site/managed-dimensions/>
+base <https://cube-creator.lndo.site/shared-dimensions/>
 
-<managed-dimensions> a void:Dataset .
+<shared-dimensions> a void:Dataset .
 
 <http://example.com/dimension/chemicals> void:inDataset <managed-dimensions> .
 graph <http://example.com/dimension/chemicals> {
@@ -19,7 +19,7 @@ graph <http://example.com/dimension/chemicals> {
   .
 }
 
-<http://example.com/dimension/countries> void:inDataset <managed-dimensions> .
+<http://example.com/dimension/countries> void:inDataset <shared-dimensions> .
 graph <http://example.com/dimension/countries> {
   <http://example.com/dimension/countries>
     a schema:DefinedTermSet, meta:SharedDimension ;
@@ -36,7 +36,7 @@ graph <http://example.com/dimension/countries> {
   .
 }
 
-<http://example.com/dimension/colors> void:inDataset <managed-dimensions> .
+<http://example.com/dimension/colors> void:inDataset <shared-dimensions> .
 graph <http://example.com/dimension/colors> {
   <http://example.com/dimension/colors>
     a schema:DefinedTermSet, meta:SharedDimension ;
