@@ -1,17 +1,22 @@
 const clownface = require('clownface')
 const rdf = require('rdf-ext')
-const TermMap = require('@rdfjs/term-map')
 const TermSet = require('@rdfjs/term-set')
 const ns = require('@tpluscode/rdf-ns-builders')
 
-const datatypeParsers = new TermMap([
-  [ns.xsd.date, term => new Date(term.value)],
-  [ns.xsd.double, term => parseFloat(term.value)],
-  [ns.xsd.float, term => parseFloat(term.value)],
-  [ns.xsd.integer, term => parseInt(term.value)],
-  [ns.xsd.decimal, term => parseFloat(term.value)],
-  [ns.xsd.gYear, term => parseInt(term.value)],
-])
+const datatypeParsers = (datatype) => {
+  switch (datatype.value) {
+    case ns.xsd.date.value:
+      return term => new Date(term.value)
+    case ns.xsd.double.value:
+    case ns.xsd.float.value:
+    case ns.xsd.decimal.value:
+      return term => parseFloat(term.value)
+    case ns.xsd.integer.value:
+    case ns.xsd.int.value:
+    case ns.xsd.gYear.value:
+      return term => parseInt(term.value)
+  }
+}
 
 class Dimension {
   constructor({ predicate, object }) {
@@ -19,8 +24,8 @@ class Dimension {
     this.termType = object.termType
     this.datatype = object.datatype
 
-    if (this.datatype && datatypeParsers.has(this.datatype)) {
-      const datatypeParser = datatypeParsers.get(this.datatype)
+    if (this.datatype && datatypeParsers(this.datatype)) {
+      const datatypeParser = datatypeParsers(this.datatype)
 
       const value = datatypeParser(object)
 
@@ -38,8 +43,8 @@ class Dimension {
       this.datatype = null
     }
 
-    if (this.datatype && datatypeParsers.has(this.datatype)) {
-      const datatypeParser = datatypeParsers.get(this.datatype)
+    if (this.datatype && datatypeParsers(this.datatype)) {
+      const datatypeParser = datatypeParsers(this.datatype)
 
       const value = datatypeParser(object)
 
