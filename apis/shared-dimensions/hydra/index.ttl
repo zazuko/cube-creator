@@ -59,20 +59,6 @@ _:DELETE a hydra:Operation, schema:DeleteAction ;
              code:link <file:handlers/resource#DELETE>
            ] .
 
-schema:DefinedTermSet
-  a hydra:Class ;
-  query:cascadeDelete
-    [
-      sh:inversePath schema:inDefinedTermSet ;
-    ] ;
-  hydra:supportedOperation _:DELETE ;
-.
-
-schema:DefinedTerm
-  a hydra:Class ;
-  hydra:supportedOperation _:DELETE ;
-.
-
 <shape/shared-dimension> a sh:NodeShape, sh:Shape .
 
 sh:NodeShape
@@ -125,6 +111,11 @@ md:SharedDimension
       code:link
         <file:handlers/shared-dimensions#injectTermsLink> ;
     ] ;
+  query:cascadeDelete
+    [
+      sh:inversePath schema:inDefinedTermSet ;
+    ] ;
+  hydra:supportedOperation _:DELETE ;
   hydra:supportedOperation
     [
       a hydra:SupportedOperation, schema:CreateAction ;
@@ -141,6 +132,7 @@ md:SharedDimension
 
 md:SharedDimensionTerm
   a hydra:Class ;
+  hydra:supportedOperation _:DELETE ;
   hydra:supportedOperation
     [
       a hydra:SupportedOperation, schema:ReplaceAction ;
