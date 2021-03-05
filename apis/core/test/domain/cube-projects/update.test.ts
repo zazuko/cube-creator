@@ -1,7 +1,9 @@
-import { describe, it, beforeEach } from 'mocha'
+import { describe, it, beforeEach, afterEach } from 'mocha'
 import { expect } from 'chai'
 import clownface, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
+import { DomainError } from '@cube-creator/api-errors'
+import * as sinon from 'sinon'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import { NamedNode } from 'rdf-js'
 import { ResourceIdentifier } from '@tpluscode/rdfine'
@@ -13,12 +15,14 @@ import '../../../lib/domain'
 import { Dataset, Project } from '@cube-creator/model'
 import { fromPointer } from '@cube-creator/model/Organization'
 import { updateProject } from '../../../lib/domain/cube-projects/update'
+import * as projectQueries from '../../../lib/domain/cube-projects/queries'
 
 describe('domain/cube-projects/update', () => {
   let store: TestResourceStore
   const user = $rdf.namedNode('userId')
   const userName = 'User Name'
   const projectsCollection = clownface({ dataset: $rdf.dataset() }).namedNode('projects')
+  let projectExists: sinon.SinonStub
 
   const bafu = fromPointer(clownface({ dataset: $rdf.dataset() }).namedNode('bafu'), {
     namespace: $rdf.namedNode('http://bafu.namespace/'),
@@ -48,8 +52,11 @@ describe('domain/cube-projects/update', () => {
 
     const resource = projectPointer()
 
+    projectExists = sinon.stub(projectQueries, 'exists').resolves(false)
     project = (await createProject({ resource, store, projectsCollection, user, userName })).pointer as any
   })
+
+  afterEach(sinon.restore)
 
   describe('CSV project', () => {
     beforeEach(async () => {
@@ -239,6 +246,38 @@ describe('domain/cube-projects/update', () => {
       // then
       const metadataAfter = $rdf.dataset([...(await store.get(dataset?.dimensionMetadata.id)).dataset]).toCanonical()
       expect(metadataAfter).to.eq($rdf.dataset([...metadataBefore.dataset]).toCanonical())
+    })
+
+    it('throws when another project uses same cube identifier', async () => {
+      // given
+      projectExists.resolves(true)
+      const resource = projectPointer(project.term)
+      resource
+        .deleteOut(dcterms.identifier)
+        .addOut(dcterms.identifier, 'new/cube')
+
+      // when
+      const promise = createProject({ resource, store, projectsCollection, user, userName })
+
+      // then
+      await expect(promise).eventually.rejectedWith(DomainError)
+      expect(projectExists).to.have.been.calledWith('new/cube', sinon.match(bafu.id))
+    })
+
+    it('throws when another project uses same cube identifier is changed organization', async () => {
+      // given
+      projectExists.resolves(true)
+      const resource = projectPointer(project.term)
+      resource
+        .deleteOut(schema.maintainer)
+        .addOut(schema.maintainer, bar.id)
+
+      // when
+      const promise = createProject({ resource, store, projectsCollection, user, userName })
+
+      // then
+      await expect(promise).eventually.rejectedWith(DomainError)
+      expect(projectExists).to.have.been.calledWith('cube', sinon.match(bar.id))
     })
   })
 })

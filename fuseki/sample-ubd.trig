@@ -25,7 +25,7 @@ graph <cube-project/ubd> {
     cc:dataset  <cube-project/ubd/dataset> ;
     cc:cubeGraph  <cube-project/ubd/cube-data> ;
     schema:maintainer <organization/bafu> ;
-    dcterms:identifier "ubd/28/" ;
+    dcterms:identifier "ubd/28" ;
     cc:latestPublishedRevision 1 ;
     cc:csvMapping <cube-project/ubd/csv-mapping> ;
     dcterms:creator <user> ;

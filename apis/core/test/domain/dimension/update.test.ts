@@ -12,7 +12,7 @@ import { TestResourceStore } from '../../support/TestResourceStore'
 import { ex } from '@cube-creator/testing/lib/namespace'
 import '../../../lib/domain'
 import { namedNode } from '@cube-creator/testing/clownface'
-import * as projectQuery from '../../../lib/domain/queries/cube-project'
+import * as projectQuery from '../../../lib/domain/cube-projects/queries'
 
 describe('domain/dimension/update', function () {
   let store: TestResourceStore

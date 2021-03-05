@@ -1,8 +1,10 @@
 import { GraphPointer } from 'clownface'
+import { DomainError } from '@cube-creator/api-errors'
 import { ResourceStore } from '../../ResourceStore'
 import { dcterms, rdfs, schema } from '@tpluscode/rdf-ns-builders'
 import { Project } from '@cube-creator/model'
 import type { Organization } from '@rdfine/schema'
+import { exists } from './queries'
 
 interface UpdateProjectCommand {
   resource: GraphPointer
@@ -20,6 +22,10 @@ export async function updateProject({
   const maintainer = project.updateMaintainer(resource.out(schema.maintainer).term)
 
   if (identifier.before !== identifier.after || !maintainer.after.equals(maintainer.before)) {
+    if (await exists(identifier.after, maintainer.after)) {
+      throw new DomainError('Another project is already using same identifier')
+    }
+
     let previousOrganization: Organization
     const organization = await store.getResource(project.maintainer)
     if (maintainer.before.equals(maintainer.after)) {
