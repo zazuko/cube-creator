@@ -1,5 +1,22 @@
 # @cube-creator/core-api
 
+## 0.3.0
+
+### Minor Changes
+
+- 7253116: Change the term Managed Dimension to Shared Dimension everywhere
+
+### Patch Changes
+
+- ec2ddbb: Project: prevent projects with same cube identifier (#549)
+- bc2efae: Project: Disallow trailing slash in cube identifier
+- Updated dependencies [444decc]
+- Updated dependencies [7253116]
+  - @cube-creator/shared-dimensions-api@0.2.0
+  - @cube-creator/core@0.3.0
+  - @cube-creator/api-errors@0.0.1
+  - @cube-creator/model@0.1.17
+
 ## 0.2.2
 
 ### Patch Changes

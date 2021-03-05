@@ -1,12 +1,12 @@
 {
   "name": "@cube-creator/shared-dimensions-api",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "dependencies": {
-    "@cube-creator/core": "^0.2.0",
+    "@cube-creator/core": "^0.3.0",
     "@hydrofoil/labyrinth": "^0.4.1",
     "@rdfine/schema": "^0.6.3",
-    "@cube-creator/api-errors": "0.0.0",
+    "@cube-creator/api-errors": "0.0.1",
     "@rdfine/rdfs": "^0.6.4",
     "@rdfine/shacl": "^0.7.4",
     "@tpluscode/rdf-ns-builders": "^0.4.0",
@@ -29,7 +29,7 @@
     "sparql-http-client": "^2.2.2"
   },
   "devDependencies": {
-    "@cube-creator/testing": "^0.1.15",
+    "@cube-creator/testing": "^0.1.16",
     "@types/sinon": "^9.0.10",
     "mocha": "^8.1.3",
     "chai": "^4.2.0",

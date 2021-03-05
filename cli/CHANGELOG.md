@@ -1,5 +1,15 @@
 # @cube-creator/cli
 
+## 0.1.18
+
+### Patch Changes
+
+- 2a63dd9: Generate min/max shape constraints for xsd:int dimensions (#570)
+- 7253116: Change the term Managed Dimension to Shared Dimension everywhere
+- Updated dependencies [7253116]
+  - @cube-creator/core@0.3.0
+  - @cube-creator/model@0.1.17
+
 ## 0.1.17
 
 ### Patch Changes

@@ -1,15 +1,15 @@
 {
   "name": "@cube-creator/core-api",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "private": true,
   "scripts": {
     "build": "tsc"
   },
   "dependencies": {
-    "@cube-creator/core": "^0.2.0",
-    "@cube-creator/api-errors": "0.0.0",
-    "@cube-creator/model": "^0.1.16",
-    "@cube-creator/shared-dimensions-api": "^0.1.0",
+    "@cube-creator/core": "^0.3.0",
+    "@cube-creator/api-errors": "0.0.1",
+    "@cube-creator/model": "^0.1.17",
+    "@cube-creator/shared-dimensions-api": "^0.2.0",
     "@hydrofoil/labyrinth": "^0.4.1",
     "@rdfine/csvw": "^0.6.3",
     "@rdfine/hydra": "^0.6.4",
@@ -68,7 +68,7 @@
     "@babel/preset-env": "^7.11.5",
     "@babel/preset-typescript": "^7.10.4",
     "@babel/register": "^7.11.5",
-    "@cube-creator/testing": "^0.1.15",
+    "@cube-creator/testing": "^0.1.16",
     "@types/absolute-url": "^1.2.0",
     "@types/chai": "^4.2.13",
     "@types/chai-as-promised": "^7.1.3",
