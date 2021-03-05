@@ -3,7 +3,7 @@ import { dash, dcterms, hydra, rdfs, schema, sh } from '@tpluscode/rdf-ns-builde
 import { turtle } from '@tpluscode/rdf-string'
 import $rdf from 'rdf-ext'
 
-const cubeIdPattern = $rdf.literal('^[a-zA-Z0-9/\\-._,]+$')
+const cubeIdPattern = $rdf.literal('^[a-zA-Z0-9/\\-._,]+[^/]$')
 
 export const CubeProjectShape = turtle`
 ${shape('cube-project/create')} {
