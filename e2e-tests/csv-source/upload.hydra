@@ -25,8 +25,8 @@ With Class api:EntryPoint {
                 PREFIX dcterms: <http://purl.org/dc/terms/>
 
                 <> cc:projectSourceKind <https://cube-creator.lndo.site/shape/cube-project/create#CSV> ;
-                   rdfs:label "Test Project" ;
-                   dcterms:identifier "test-cube" ;
+                   rdfs:label "Upload Test Project" ;
+                   dcterms:identifier "upload-test-cube" ;
                    schema:maintainer <https://cube-creator.lndo.site/organization/bafu> .
                 ```
             } => {

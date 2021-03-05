@@ -19,7 +19,7 @@ describe('CSV mapping flow', () => {
 
     cy.contains('.form-property', 'Cube identifier')
       .find('input')
-      .type('ubd/28')
+      .type('ubd/29')
 
     cy.contains('.form-property', 'Organization')
       .find('select')
