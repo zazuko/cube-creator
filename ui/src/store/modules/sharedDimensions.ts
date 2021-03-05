@@ -24,7 +24,7 @@ const getters: GetterTree<SharedDimensionsState, RootState> = {
 const actions: ActionTree<SharedDimensionsState, RootState> = {
   async fetchEntrypoint (context) {
     const rootEntrypoint = context.rootState.api.entrypoint
-    const entrypointURI = rootEntrypoint?.get(cc.managedDimensions)?.id
+    const entrypointURI = rootEntrypoint?.get(cc.sharedDimensions)?.id
 
     if (!entrypointURI) throw new Error('Shared dimensions entrypoint URI not found')
 
@@ -36,7 +36,7 @@ const actions: ActionTree<SharedDimensionsState, RootState> = {
 
   async fetchCollection (context) {
     const entrypoint = context.state.entrypoint
-    const collectionURI = entrypoint?.get(md.managedDimensions)?.id
+    const collectionURI = entrypoint?.get(md.sharedDimensions)?.id
 
     if (!collectionURI) throw new Error('Missing shared dimensions collection in entrypoint')
 

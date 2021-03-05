@@ -19,7 +19,7 @@ prov:Dictionary
       a hydra:Operation, schema:ReplaceAction ;
       hydra:title "Update mappings" ;
       hydra:method "PUT" ;
-      hydra:expects <shape/dimension/managed-mapping> ;
+      hydra:expects <shape/dimension/shared-mapping> ;
       code:implementedBy
         [
           a
@@ -29,4 +29,4 @@ prov:Dictionary
         ] ;
     ] .
 
-<shape/dimension/managed-mapping> a sh:Shape .
+<shape/dimension/shared-mapping> a sh:Shape .

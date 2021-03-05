@@ -7,7 +7,7 @@ import * as Sentry from '@sentry/node'
 import * as Tracing from '@sentry/tracing'
 import { hydraBox } from '@hydrofoil/labyrinth'
 import { problemJson } from '@hydrofoil/labyrinth/errors'
-import { managedDimensions } from '@cube-creator/managed-dimensions-api'
+import { sharedDimensions } from '@cube-creator/shared-dimensions-api'
 import { resource } from 'express-rdf-request'
 import cors from 'cors'
 import { error, log } from './lib/log'
@@ -55,7 +55,7 @@ async function main() {
   app.use(await authentication())
   app.use(resource)
 
-  app.use('/managed-dimensions', await managedDimensions())
+  app.use('/shared-dimensions', await sharedDimensions())
 
   app.use(resourceStore)
   app.use(await hydraBox({

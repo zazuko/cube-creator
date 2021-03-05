@@ -169,7 +169,7 @@ export function serializeDimensionMetadataCollection (collection: DimensionMetad
 }
 
 export function serializeDimensionMetadata (dimension: DimensionMetadata): DimensionMetadata {
-  const sharedDimension = dimension.pointer.out(cc.dimensionMapping).out(cc.managedDimension)
+  const sharedDimension = dimension.pointer.out(cc.dimensionMapping).out(cc.sharedDimension)
 
   return Object.freeze({
     ...serializeResource(dimension),

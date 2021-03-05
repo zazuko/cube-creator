@@ -9,7 +9,7 @@
 [] rdf:type fuseki:Server ;
    fuseki:services (
                      <#cube-creator>
-                     <#managed-dimensions>
+                     <#shared-dimensions>
                    ) .
 
 <#cube-creator> rdf:type fuseki:Service ;
@@ -24,17 +24,17 @@
 .
 
 
-<#managed-dimensions> rdf:type fuseki:Service ;
-                      rdfs:label "Managed dimensions database" ;
-                      fuseki:name "managed-dimensions" ;       # http://host:port/read
-                      fuseki:serviceQuery "sparql" ;   # SPARQL query service
-                      fuseki:serviceQuery "query" ;    # SPARQL query service (alt name)
-                      fuseki:serviceUpdate "update" ;   # SPARQL update service
-                      fuseki:serviceUpload "upload" ;   # Non-SPARQL upload service
-                      fuseki:serviceReadWriteGraphStore "data" ;     # SPARQL Graph store protocol (read and write)
-                      fuseki:dataset [
-                                       rdf:type tdb:DatasetTDB ;
-                                       tdb:location "DB2" ;
-                                       tdb:unionDefaultGraph true ;
+<#shared-dimensions> rdf:type fuseki:Service ;
+                     rdfs:label "Shared dimensions database" ;
+                     fuseki:name "shared-dimensions" ;       # http://host:port/read
+                     fuseki:serviceQuery "sparql" ;   # SPARQL query service
+                     fuseki:serviceQuery "query" ;    # SPARQL query service (alt name)
+                     fuseki:serviceUpdate "update" ;   # SPARQL update service
+                     fuseki:serviceUpload "upload" ;   # Non-SPARQL upload service
+                     fuseki:serviceReadWriteGraphStore "data" ;     # SPARQL Graph store protocol (read and write)
+                     fuseki:dataset [
+                                      rdf:type tdb:DatasetTDB ;
+                                      tdb:location "DB2" ;
+                                      tdb:unionDefaultGraph true ;
                                      ] ;
 .

@@ -6,7 +6,7 @@
 
 - c0ce41d: Do not load any API resource twice
 - 6af426f: Output the default value for empty CSV cells
-- fb600a6: Managed dimensions: apply mappings during transformation
+- fb600a6: Shared dimensions: apply mappings during transformation
 - 39fc196: Improve error message when dimension meta fails to load
 
 ## 0.1.16

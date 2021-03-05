@@ -1,7 +1,7 @@
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
 import { Enrichment } from '@hydrofoil/labyrinth/lib/middleware/preprocessResource'
 import asyncMiddleware from 'middleware-async'
-import { parsingClient } from '@cube-creator/managed-dimensions-api/lib/sparql'
+import { parsingClient } from '@cube-creator/shared-dimensions-api/lib/sparql'
 import { shaclValidate } from '../middleware/shacl'
 import { update } from '../domain/dimension/update'
 import { getMappedDimensions } from '../domain/queries/dimension-metadata'

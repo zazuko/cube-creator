@@ -8,7 +8,7 @@ import { _void } from '@tpluscode/rdf-ns-builders'
 import { sparql } from '@tpluscode/rdf-string'
 import ParsingClient from 'sparql-http-client/ParsingClient'
 
-const endpoints = (db: 'cube-creator' | 'managed-dimensions') => ({
+const endpoints = (db: 'cube-creator' | 'shared-dimensions') => ({
   updateUrl: `http://db.cube-creator.lndo.site/${db}/update`,
   endpointUrl: `http://db.cube-creator.lndo.site/${db}/query`,
   storeUrl: `http://db.cube-creator.lndo.site/${db}/data`,
@@ -20,8 +20,8 @@ export const ccClients = {
 }
 
 export const mdClients = {
-  parsingClient: new ParsingClient(endpoints('managed-dimensions')),
-  streamClient: new StreamClient(endpoints('managed-dimensions')),
+  parsingClient: new ParsingClient(endpoints('shared-dimensions')),
+  streamClient: new StreamClient(endpoints('shared-dimensions')),
 }
 
 async function removeTestGraphs(client: ParsingClient, dataset: DatasetCore) {
@@ -47,5 +47,5 @@ export const insertTestProject = () => {
 }
 
 export const insertTestDimensions = () => {
-  return insertTestData('fuseki/managed-dimensions.trig', mdClients)
+  return insertTestData('fuseki/shared-dimensions.trig', mdClients)
 }

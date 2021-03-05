@@ -5,7 +5,7 @@ WORKDIR /app
 ADD package.json yarn.lock ./
 ADD ./apis/core/package.json ./apis/core/
 ADD ./apis/errors/package.json ./apis/errors/
-ADD ./apis/managed-dimensions/package.json ./apis/managed-dimensions/
+ADD ./apis/shared-dimensions/package.json ./apis/shared-dimensions/
 ADD ./packages/core/package.json ./packages/core/
 ADD ./packages/model/package.json ./packages/model/
 ADD ./packages/testing/package.json ./packages/testing/
@@ -31,7 +31,7 @@ WORKDIR /app
 ADD package.json yarn.lock ./
 ADD ./apis/core/package.json ./apis/core/
 ADD ./apis/errors/package.json ./apis/errors/
-ADD ./apis/managed-dimensions/package.json ./apis/managed-dimensions/
+ADD ./apis/shared-dimensions/package.json ./apis/shared-dimensions/
 ADD ./packages/core/package.json ./packages/core/
 ADD ./packages/model/package.json ./packages/model/
 ADD ./packages/testing/package.json ./packages/testing/
@@ -46,7 +46,7 @@ COPY --from=builder /app/dist/apis ./apis/
 COPY --from=builder /app/dist/packages/ ./packages/
 
 ADD apis/core/hydra/*.ttl ./apis/core/hydra/
-ADD apis/managed-dimensions/hydra/*.ttl ./apis/managed-dimensions/hydra/
+ADD apis/shared-dimensions/hydra/*.ttl ./apis/shared-dimensions/hydra/
 
 # for every new hydra api "foo" add
 #ADD apis/foo/hydra/*.ttl ./apis/foo/hydra/

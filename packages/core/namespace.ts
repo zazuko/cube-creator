@@ -24,7 +24,7 @@ type CubeCreatorClass =
   'TransformAction' |
   'PublishAction' |
   'DimensionMetadataCollection' |
-  'ManagedDimensionsCollection' |
+  'SharedDimensionsCollection' |
   'Observations' |
   'TransformJob' |
   'PublishJob' |
@@ -62,8 +62,8 @@ type CubeCreatorProperty =
   'latestPublishedRevision' |
   'revision' |
   'dimensionMapping' |
-  'managedDimension' |
-  'managedDimensions' |
+  'sharedDimension' |
+  'sharedDimensions' |
   'applyMappings'
 
 type OtherTerms =
@@ -75,12 +75,12 @@ type MetaDataProperty =
 
 type CubeCreatorTerms = CubeCreatorClass | CubeCreatorProperty | OtherTerms | MetaDataProperty
 
-type ManagedDimensionsTerms =
-  'ManagedDimension' |
-  'ManagedDimensions' |
-  'ManagedDimensionTerm' |
-  'ManagedDimensionTerms' |
-  'managedDimensions' |
+type SharedDimensionsTerms =
+  'SharedDimension' |
+  'SharedDimensions' |
+  'SharedDimensionTerm' |
+  'SharedDimensionTerms' |
+  'sharedDimensions' |
   'terms'
 
 type MetaTerms =
@@ -98,7 +98,7 @@ export const meta = namespace<MetaTerms>(prefixes.meta)
 export const view = namespace(prefixes.view)
 export const hydraBox = namespace('http://hydra-box.org/schema/')
 export const cc = namespace<CubeCreatorTerms>('https://cube-creator.zazuko.com/vocab#')
-export const md = namespace<ManagedDimensionsTerms>('https://cube-creator.zazuko.com/managed-dimensions/vocab#')
+export const md = namespace<SharedDimensionsTerms>('https://cube-creator.zazuko.com/shared-dimensions/vocab#')
 export const editor = namespace(cc.dash.value)
 export const freq = namespace(prefixes.freq)
 export const sh1 = namespace('https://forms.hypermedia.app/shaperone#')

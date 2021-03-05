@@ -1,0 +1,42 @@
+PREFIX md: <https://cube-creator.zazuko.com/shared-dimensions/vocab#>
+PREFIX hydra: <http://www.w3.org/ns/hydra/core#>
+PREFIX schema: <http://schema.org/>
+PREFIX qudt: <http://qudt.org/schema/qudt/>
+PREFIX meta: <https://cube.link/meta/>
+PREFIX sh: <http://www.w3.org/ns/shacl#>
+
+ENTRYPOINT "shared-dimensions/term-set/technologies/rdf"
+
+HEADERS {
+  x-user "john-doe"
+  x-permission "pipelines:write"
+}
+
+With Class schema:DefinedTerm {
+    Expect Operation schema:ReplaceAction {
+        Invoke {
+            Content-Type "text/turtle"
+
+            ```
+            prefix schema: <http://schema.org/>
+            prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+            prefix qudt: <http://qudt.org/schema/qudt/>
+            prefix meta: <https://cube.link/meta/>
+            prefix sh: <http://www.w3.org/ns/shacl#>
+            PREFIX md: <https://cube-creator.zazuko.com/shared-dimensions/vocab#>
+
+            <>
+              a schema:DefinedTerm, md:SharedDimensionTerm ;
+              schema:identifier "rdf" ;
+              schema:name "Resource Description Framework"@en, "Resource Description Framework"@de ;
+              schema:inDefinedTermSet <https://cube-creator.lndo.site/shared-dimensions/term-set/technologies> ;
+            .
+            ```
+        } => {
+            Expect Status 200
+
+            Expect Type schema:DefinedTerm
+            Expect Property schema:name "Resource Description Framework"
+        }
+    }
+}

@@ -216,13 +216,13 @@ ${shape('dimension/metadata')} {
 }
 `
 
-const managedDimensionCollection = $rdf.namedNode('managed-dimensions/term-sets')
+const sharedDimensionCollection = $rdf.namedNode('shared-dimensions/term-sets')
 
-export const ManagedDimensionMappingShape = turtle`
-${shape('dimension/managed-mapping')} {
-  ${shape('dimension/managed-mapping')}
+export const SharedDimensionMappingShape = turtle`
+${shape('dimension/shared-mapping')} {
+  ${shape('dimension/shared-mapping')}
     a ${sh.NodeShape}, ${hydra.Resource} ;
-    ${rdfs.label} "Map original values to managed dimension" ;
+    ${rdfs.label} "Map original values to shared dimension" ;
     ${sh.property} [
       ${sh.path} ${rdf.type} ;
       ${dash.hidden} true ;
@@ -233,11 +233,11 @@ ${shape('dimension/managed-mapping')} {
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
     ] , [
-      ${sh.path} ${cc.managedDimension} ;
-      ${sh.name} "Managed dimension" ;
-      ${sh.description} "**WARNING!** Changing the selected managed dimension will erase all current mappings" ;
+      ${sh.path} ${cc.sharedDimension} ;
+      ${sh.name} "Shared dimension" ;
+      ${sh.description} "**WARNING!** Changing the selected shared dimension will erase all current mappings" ;
       ${dash.editor} ${dash.InstancesSelectEditor} ;
-      ${hydra.collection} ${managedDimensionCollection} ;
+      ${hydra.collection} ${sharedDimensionCollection} ;
       ${sh.nodeKind} ${sh.IRI} ;
       ${sh.maxCount} 1 ;
       ${sh.order} 10 ;
@@ -270,7 +270,7 @@ ${shape('dimension/managed-mapping')} {
       ${sh.order} 10 ;
     ] , [
       ${sh.path} ${prov.pairEntity} ;
-      ${sh.name} "Managed term" ;
+      ${sh.name} "Shared Dimension term" ;
       ${dash.editor} ${dash.InstancesSelectEditor} ;
       ${sh.nodeKind} ${sh.IRI} ;
       ${sh.defaultValue} ${placeholderEntity} ;
@@ -281,10 +281,10 @@ ${shape('dimension/managed-mapping')} {
           ${sh.inversePath} ${prov.hadDictionaryMember} ;
         ] ;
         ${hydra.variableRepresentation} ${hydra.ExplicitRepresentation} ;
-        ${hydra.template} "managed-dimensions/terms{?dimension}" ;
+        ${hydra.template} "shared-dimensions/terms{?dimension}" ;
         ${hydra.mapping} [
           ${hydra.variable} "dimension" ;
-          ${hydra.property} ${cc.managedDimension} ;
+          ${hydra.property} ${cc.sharedDimension} ;
           ${hydra.required} true ;
         ] ;
       ] ;

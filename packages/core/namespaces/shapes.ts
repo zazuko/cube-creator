@@ -18,7 +18,7 @@ type ShapeTerms =
   'column-mapping/literal' |
   'column-mapping/reference' |
   'dimension/metadata' |
-  'dimension/managed-mapping'
+  'dimension/shared-mapping'
 
 type ShapesNamespace = (term: ShapeTerms) => NamedNode
 
