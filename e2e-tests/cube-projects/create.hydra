@@ -50,6 +50,25 @@ With Class api:EntryPoint {
                   }
                 }
             }
+
+            // New cube, same identifier
+            Invoke {
+                Content-Type "text/turtle"
+
+                ```
+                prefix cc: <https://cube-creator.zazuko.com/vocab#>
+                prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                PREFIX schema: <http://schema.org/>
+                prefix dcterms: <http://purl.org/dc/terms/>
+
+                <> cc:projectSourceKind <https://cube-creator.lndo.site/shape/cube-project/create#CSV> ;
+                   rdfs:label "Test Project" ;
+                   dcterms:identifier "test-cube" ;
+                   schema:maintainer <https://cube-creator.lndo.site/organization/bafu> .
+                ```
+            } => {
+                Expect Status 400
+            }
         }
     }
 }

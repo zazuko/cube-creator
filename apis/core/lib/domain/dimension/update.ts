@@ -6,7 +6,7 @@ import { DimensionMetadataCollection, Project } from '@cube-creator/model'
 import { prov, rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { ResourceStore } from '../../ResourceStore'
 import * as id from '../identifiers'
-import { findProject } from '../queries/cube-project'
+import { findProject } from '../cube-projects/queries'
 import { canBeMappedToSharedDimension } from './DimensionMetadata'
 
 interface UpdateDimensionCommand {

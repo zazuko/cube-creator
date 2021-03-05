@@ -1,4 +1,4 @@
-import { describe, it, beforeEach } from 'mocha'
+import { describe, it, beforeEach, afterEach } from 'mocha'
 import { expect } from 'chai'
 import clownface from 'clownface'
 import $rdf from 'rdf-ext'
@@ -13,13 +13,16 @@ import { Project } from '@cube-creator/model/Project'
 import { fromPointer } from '@cube-creator/model/Organization'
 import * as sinon from 'sinon'
 import * as orgQueries from '../../../lib/domain/organization/query'
+import * as projectQueries from '../../../lib/domain/cube-projects/queries'
 import { namedNode } from '@cube-creator/testing/clownface'
+import { DomainError } from '@cube-creator/api-errors'
 
 describe('domain/cube-projects/create', () => {
   let store: TestResourceStore
   const user = $rdf.namedNode('userId')
   const userName = 'User Name'
   const projectsCollection = namedNode('projects')
+  let projectExists: sinon.SinonStub
 
   const organization = fromPointer(namedNode('org'), {
     publishGraph: $rdf.namedNode('http://example.com/published-cube'),
@@ -32,10 +35,14 @@ describe('domain/cube-projects/create', () => {
       organization,
     ])
 
-    sinon.restore()
     sinon.stub(orgQueries, 'findOrganization').resolves({
       organizationId: organization.id,
     })
+    projectExists = sinon.stub(projectQueries, 'exists').resolves(false)
+  })
+
+  afterEach(() => {
+    sinon.restore()
   })
 
   it('creates identifier by slugifying rdfs:label', async () => {
@@ -203,6 +210,23 @@ describe('domain/cube-projects/create', () => {
         },
       }],
     })
+  })
+
+  it('throws when another project uses same cube identifier', async () => {
+    // given
+    projectExists.resolves(true)
+    const resource = clownface({ dataset: $rdf.dataset() })
+      .namedNode('')
+      .addOut(rdfs.label, 'Foo bar project')
+      .addOut(dcterms.identifier, 'ubd/28')
+      .addOut(schema.maintainer, organization.id)
+
+    // when
+    const promise = createProject({ resource, store, projectsCollection, user, userName })
+
+    // then
+    await expect(promise).eventually.rejectedWith(DomainError)
+    expect(projectExists).to.have.been.calledWith('ubd/28', sinon.match(organization.id))
   })
 
   describe('CSV project', () => {

@@ -8,6 +8,7 @@ import * as DimensionMetadata from '@cube-creator/model/DimensionMetadata'
 import { ResourceStore } from '../../ResourceStore'
 import * as id from '../identifiers'
 import { DomainError } from '@cube-creator/api-errors'
+import { exists } from './queries'
 
 interface CreateProjectCommand {
   projectsCollection: GraphPointer<NamedNode>
@@ -35,6 +36,10 @@ export async function createProject({
   const cubeIdentifier = resource.out(dcterms.identifier).value
   if (!cubeIdentifier) {
     throw new Error('Missing cube identifier name')
+  }
+
+  if (await exists(cubeIdentifier, maintainer)) {
+    throw new DomainError('Another project is already using same identifier')
   }
 
   const project = Project.create(await store.createMember(projectsCollection.term, id.cubeProject(label)), {
