@@ -157,7 +157,7 @@ describe('lib/commands/publish', function () {
       expect(cubePointer.namedNode(targetCube())).to.matchShape({
         property: [{
           path: dcterms.identifier,
-          hasValue: $rdf.literal('ubd/28/'),
+          hasValue: $rdf.literal('ubd/28'),
           minCount: 1,
           maxCount: 1,
         }],
