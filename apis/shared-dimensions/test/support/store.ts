@@ -17,5 +17,5 @@ export function testStore(): SharedDimensionsStore {
     },
   }
 
-  return sinon.spy(store as any) as any
+  return sinon.spy(store)
 }
