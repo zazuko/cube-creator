@@ -10,9 +10,9 @@
         {{ filter }}
       </b-radio-button>
     </b-field>
-    <table>
+    <table class="terms-table">
       <tbody>
-        <tr v-for="o in displayedObjects" :key="o.key">
+        <tr v-for="o in displayedObjects" :key="o.key" class="term-row">
           <render-wc-template :template-result="renderer.renderFocusNode({ focusNode: o.object, shape: shape.node })" />
           <td>
             <b-tooltip label="Remove value">
@@ -84,3 +84,16 @@ export default class extends Vue {
   }
 }
 </script>
+
+<style scoped>
+.terms-table {
+  min-width: 100%;
+}
+</style>
+
+<style>
+.term-row input,
+.term-row select {
+  min-width: 6rem;
+}
+</style>
