@@ -43,12 +43,21 @@
                 {{ identifier }}
               </p>
             </td>
-            <td class="has-text-right">
-              <hydra-operation-button
-                :operation="term.actions.replace"
-                :to="{ name: 'SharedDimensionTermEdit', params: { termId: term.clientPath } }"
-              />
-              <hydra-operation-button :operation="term.actions.delete" @click="deleteTerm(term)" />
+            <td>
+              <div class="is-flex is-justify-content-space-between">
+                <div>
+                  <b-tag v-if="term.validThrough <= new Date()" type="is-warning is-light">
+                    deprecated
+                  </b-tag>
+                </div>
+                <div>
+                  <hydra-operation-button
+                    :operation="term.actions.replace"
+                    :to="{ name: 'SharedDimensionTermEdit', params: { termId: term.clientPath } }"
+                  />
+                  <hydra-operation-button :operation="term.actions.delete" @click="deleteTerm(term)" />
+                </div>
+              </div>
             </td>
           </tr>
           <tr v-if="terms.length === 0">
