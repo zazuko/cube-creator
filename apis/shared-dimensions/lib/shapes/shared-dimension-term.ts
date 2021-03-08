@@ -23,6 +23,13 @@ const commonProperties: Initializer<PropertyShape>[] = [{
   datatype: xsd.dateTime,
   maxCount: 1,
   order: 30,
+}, {
+  name: 'Valid through',
+  description: 'Use this to deprecate a term',
+  path: schema.validThrough,
+  datatype: xsd.dateTime,
+  maxCount: 1,
+  order: 40,
 }]
 
 export const create = (): Initializer<NodeShape> => ({
