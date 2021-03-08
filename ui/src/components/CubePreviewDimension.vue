@@ -24,6 +24,7 @@
     </div>
     <div class="icons">
       <scale-of-measure-icon :scale-of-measure="dimension.scaleOfMeasure" />
+      <data-kind-icon :data-kind="dimension.dataKind" />
       <b-tooltip v-show="description" :label="description">
         <b-icon icon="comment-alt" pack="far" type="is-primary" />
       </b-tooltip>
@@ -38,12 +39,13 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { DimensionMetadata } from '@cube-creator/model'
 import HydraOperationButton from './HydraOperationButton.vue'
+import DataKindIcon from './DataKindIcon.vue'
 import ScaleOfMeasureIcon from './ScaleOfMeasureIcon.vue'
 import TermDisplay from './TermDisplay.vue'
 import TermWithLanguage from './TermWithLanguage.vue'
 
 @Component({
-  components: { HydraOperationButton, ScaleOfMeasureIcon, TermDisplay, TermWithLanguage },
+  components: { DataKindIcon, HydraOperationButton, ScaleOfMeasureIcon, TermDisplay, TermWithLanguage },
 })
 export default class CubePreviewDimension extends Vue {
   @Prop({ required: true }) dimension!: DimensionMetadata

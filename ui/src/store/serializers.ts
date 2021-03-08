@@ -19,7 +19,7 @@ import {
 } from '@cube-creator/model'
 import { IdentifierMapping, LiteralColumnMapping, ReferenceColumnMapping } from '@cube-creator/model/ColumnMapping'
 import { Link } from '@cube-creator/model/lib/Link'
-import { dcterms, rdfs, schema } from '@tpluscode/rdf-ns-builders'
+import { dcterms, rdf, rdfs, schema } from '@tpluscode/rdf-ns-builders'
 import { RdfResource } from '@tpluscode/rdfine/RdfResource'
 import { Collection } from 'alcaeus'
 import { SharedDimension, SharedDimensionTerm } from './types'
@@ -171,12 +171,17 @@ export function serializeDimensionMetadataCollection (collection: DimensionMetad
 export function serializeDimensionMetadata (dimension: DimensionMetadata): DimensionMetadata {
   const sharedDimension = dimension.pointer.out(cc.dimensionMapping).out(cc.sharedDimension)
 
+  const dataKind = dimension.dataKind
+    ? dimension.pointer.node(dimension.dataKind).out(rdf.type).term
+    : undefined
+
   return Object.freeze({
     ...serializeResource(dimension),
     name: dimension.name,
     about: dimension.about,
     description: dimension.description,
     scaleOfMeasure: dimension.scaleOfMeasure,
+    dataKind,
     mappings: dimension.mappings,
     sharedDimension: sharedDimension.term
       ? {

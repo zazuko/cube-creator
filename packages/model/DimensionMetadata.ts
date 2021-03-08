@@ -1,9 +1,9 @@
 import * as Rdfs from '@rdfine/rdfs'
 import { Constructor, namespace, property, RdfResource } from '@tpluscode/rdfine'
 import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
-import { Literal, NamedNode } from 'rdf-js'
+import { Literal, NamedNode, Term } from 'rdf-js'
 import { qudt, schema } from '@tpluscode/rdf-ns-builders'
-import { cc } from '@cube-creator/core/namespace'
+import { cc, meta } from '@cube-creator/core/namespace'
 import { initializer } from './lib/initializer'
 
 export interface DimensionMetadata extends RdfResource {
@@ -11,6 +11,7 @@ export interface DimensionMetadata extends RdfResource {
   name: Literal[]
   description: Literal[]
   scaleOfMeasure?: NamedNode
+  dataKind?: Term
   mappings?: NamedNode
 }
 
@@ -32,6 +33,9 @@ function DimensionMetadataMixin<Base extends Constructor>(base: Base): Mixin {
 
     @property({ path: qudt.scaleType })
     scaleOfMeasure?: NamedNode
+
+    @property({ path: meta.dataKind })
+    dataKind?: NamedNode
 
     @property({ path: cc.dimensionMapping })
     mappings?: NamedNode
