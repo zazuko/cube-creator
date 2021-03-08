@@ -6,26 +6,12 @@
       </b-navbar-item>
     </template>
     <template slot="start">
-      <router-link
-        :to="{ name: 'CubeProjects' }"
-        v-slot="{ href, isActive }"
-        custom
-      >
-        <b-navbar-item tag="a" :href="href" :class="{ active: isActive }">
-          Cube Projects
-        </b-navbar-item>
-      </router-link>
-    </template>
-    <template slot="start">
-      <router-link
-        :to="{ name: 'SharedDimensions' }"
-        v-slot="{ href, isActive }"
-        custom
-      >
-        <b-navbar-item tag="a" :href="href" :class="{ active: isActive }">
-          Shared Dimensions
-        </b-navbar-item>
-      </router-link>
+      <b-navbar-item tag="router-link" :to="{ name: 'CubeProjects' }">
+        Cube Projects
+      </b-navbar-item>
+      <b-navbar-item tag="router-link" :to="{ name: 'SharedDimensions' }">
+        Shared Dimensions
+      </b-navbar-item>
     </template>
     <template slot="end">
       <b-navbar-item
@@ -54,8 +40,12 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-.navbar-item.active {
+.navbar-item.router-link-active {
   font-weight: bold;
   color: #aaa;
+}
+
+.navbar-brand .navbar-item.router-link-active {
+  font-weight: normal;
 }
 </style>
