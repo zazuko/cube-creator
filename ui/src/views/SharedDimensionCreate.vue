@@ -64,6 +64,8 @@ export default class extends Vue {
         resource: this.resource,
       })
 
+      await this.$store.dispatch('sharedDimensions/fetchCollection')
+
       this.$buefy.toast.open({
         message: `Shared dimension ${dimension.name} successfully created`,
         type: 'is-success',
