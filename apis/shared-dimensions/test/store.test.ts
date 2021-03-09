@@ -45,7 +45,7 @@ describe('@cube-creator/shared-dimensions-api/lib/store @SPARQL', () => {
 
         // then
         expect(await ASK`
-          ${resource.term} ${sh.node} ?shape .
+          ?shape ${sh.targetNode} ${resource.term} .
 
           ?shape ${sh.property} [ ${sh.path} ${schema.name} ].
           ?shape ${sh.property} [
@@ -68,7 +68,7 @@ describe('@cube-creator/shared-dimensions-api/lib/store @SPARQL', () => {
 
         // then
         expect(await ASK`
-          ${resource.term} ${sh.node} ?shape .
+          ?shape ${sh.targetNode} ${resource.term} .
 
           ?shape ${sh.property} [ ${sh.path} ${schema.knows} ] .
 
@@ -85,14 +85,14 @@ describe('@cube-creator/shared-dimensions-api/lib/store @SPARQL', () => {
 
         // then
         const testQuery = ASK`
-            ${resource.term} ${sh.node} ?shape .
+            ?shape ${sh.targetNode} ${resource.term} .
 
             ?shape ${sh.property} [ ${sh.path} ${schema.knows} ; ${sh.node} ?childShape ] .
           `.FROM(graph)
         expect(await testQuery.execute(parsingClient.query)).to.be.false
       })
 
-      it('produces only on Property Shape for property with multiple objects', async () => {
+      it('produces only one Property Shape for property with multiple objects', async () => {
         // given
         const resource = namedNode('http://test.resource/john')
           .addOut(schema.identifier, ['Foo', 'Bar', 'Baz'])
@@ -102,7 +102,8 @@ describe('@cube-creator/shared-dimensions-api/lib/store @SPARQL', () => {
 
         // then
         const [{ count }] = await SELECT`(count ( ?ps ) as ?count)`.WHERE`
-          ${resource.term} ${sh.node} [
+          [
+            ${sh.targetNode} ${resource.term} ;
             ${sh.property} ?ps
           ].
 
@@ -123,12 +124,14 @@ describe('@cube-creator/shared-dimensions-api/lib/store @SPARQL', () => {
           ${ex.toDelete}
             ${schema.name} "Yes" ;
             ${ex.hidden} "foo" ;
-            ${sh.node} [
-              ${sh.property} [
-                ${sh.path} ${schema.name} ;
-              ] ;
-            ] ;
           .
+
+          [
+            ${sh.targetNode} ${ex.toDelete} ;
+            ${sh.property} [
+              ${sh.path} ${schema.name} ;
+            ] ;
+          ] .
         }`.execute(parsingClient.query)
 
       // when
@@ -143,6 +146,43 @@ describe('@cube-creator/shared-dimensions-api/lib/store @SPARQL', () => {
         }
       `.FROM(graph).execute(parsingClient.query)).to.be.false
       expect(await ASK`${ex.toDelete} ${ex.hidden} ?stillThere`.FROM(graph).execute(parsingClient.query)).to.be.true
+    })
+
+    it('does not delete triples describe by other, non root shapes', async () => {
+      // given
+      await INSERT.DATA`
+        graph ${graph} {
+          ${ex.toDelete}
+            ${schema.name} "Yes" ;
+            ${ex.external} "foo" ;
+          .
+
+          [
+            ${sh.targetNode} ${ex.toDelete} ;
+            ${sh.property} [
+              ${sh.path} ${schema.name} ;
+            ] ;
+          ] .
+
+          [
+            ${sh.targetNode} ${ex.Foo} ;
+            ${sh.property} [
+              ${sh.path} ${ex.foo} ;
+              ${sh.node} [
+                ${sh.targetNode} ${ex.toDelete} ;
+                ${sh.property} [
+                  ${sh.path} ${ex.external} ;
+                ] ;
+              ] ;
+            ] ;
+          ] .
+        }`.execute(parsingClient.query)
+
+      // when
+      await store.delete(ex.toDelete)
+
+      // then
+      expect(await ASK`${ex.toDelete} ${ex.external} ?stillThere`.FROM(graph).execute(parsingClient.query)).to.be.true
     })
   })
 })

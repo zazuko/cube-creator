@@ -15,12 +15,13 @@ graph ${graph} {
     a ${hydra.Resource} ;
     ${schema.name} "Yes" ;
     ${ex.hidden} "foo" ;
-    ${sh.node} [
-      ${sh.property} [
+  .
+  [
+    ${sh.targetNode} ${ex.foo} ;
+    ${sh.property} [
         ${sh.path} ${schema.name} ;
       ] ;
-    ] ;
-  .
+  ]
 }
 
 graph ${ex('different-graph')} {
@@ -88,9 +89,6 @@ describe('shared-dimensions/lib/loader @SPARQL', () => {
         expect(await resource.dataset()).to.matchShape({
           targetNode: [ex.foo],
           property: [{
-            path: sh.node,
-            maxCount: 0,
-          }, {
             path: ex.hidden,
             maxCount: 0,
           }],
