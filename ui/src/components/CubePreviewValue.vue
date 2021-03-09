@@ -33,6 +33,19 @@ const numericalDatatypes: TermSet = new TermSet([
   xsd.float,
 ])
 
+const temporalDatatypes: TermSet = new TermSet([
+  xsd.date,
+  xsd.dateTime,
+  xsd.time,
+  xsd.dateTimeStamp,
+  xsd.dayTimeDuration,
+  xsd.gDay,
+  xsd.gMonth,
+  xsd.gMonthDay,
+  xsd.gYear,
+  xsd.gYearMonth,
+])
+
 @Component({
   components: { TermDisplay, TermWithLanguage },
 })
@@ -60,8 +73,12 @@ export default class extends Vue {
   get termClasses (): string {
     const value = this.value
 
-    if (isLiteral(value) && numericalDatatypes.has(value.datatype)) {
-      return 'is-family-monospace'
+    if (isLiteral(value)) {
+      if (numericalDatatypes.has(value.datatype)) {
+        return 'is-family-monospace'
+      } else if (temporalDatatypes.has(value.datatype)) {
+        return 'border-bottom-1 border-yellow'
+      }
     }
 
     return ''
