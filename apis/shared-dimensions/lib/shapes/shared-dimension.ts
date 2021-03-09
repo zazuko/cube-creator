@@ -1,4 +1,4 @@
-import { dash, qudt, rdf, rdfs, schema, sh, time, xsd } from '@tpluscode/rdf-ns-builders'
+import { dash, dcterms, qudt, rdf, rdfs, schema, sh, time, xsd } from '@tpluscode/rdf-ns-builders'
 import { supportedLanguages } from '@cube-creator/core/languages'
 import type { Initializer } from '@tpluscode/rdfine/RdfResource'
 import type { NodeShape } from '@rdfine/shacl'
@@ -8,6 +8,14 @@ import { meta, sh1 } from '@cube-creator/core/namespace'
 export default (): Initializer<NodeShape> => ({
   closed: true,
   property: [{
+    name: 'Identifier',
+    description: 'A lowercase, alphanumeric value which identifies a shared dimension',
+    path: dcterms.identifier,
+    order: 0,
+    pattern: '^[a-z0-9-]+$',
+    minCount: 1,
+    maxCount: 1,
+  }, {
     name: 'Name',
     path: schema.name,
     uniqueLang: true,

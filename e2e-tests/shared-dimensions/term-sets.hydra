@@ -29,8 +29,10 @@ With Class hydra:Resource {
                 prefix qudt: <http://qudt.org/schema/qudt/>
                 prefix meta: <https://cube.link/meta/>
                 prefix sh: <http://www.w3.org/ns/shacl#>
+                prefix dcterms: <http://purl.org/dc/terms/>
 
                 <> schema:name "Categories"@en ;
+                   dcterms:identifier "categories" ;
                    schema:validFrom "2020-02-20T00:00:00"^^xsd:dateTime ;
                    sh:property [
                      schema:name "Categories"@en ;

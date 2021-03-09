@@ -25,7 +25,6 @@
     "middleware-async": "^1.2.7",
     "once": "^1.4.0",
     "rdf-ext": "^1.3.0",
-    "url-slugify": "^1.0.6",
     "sparql-http-client": "^2.2.2"
   },
   "devDependencies": {

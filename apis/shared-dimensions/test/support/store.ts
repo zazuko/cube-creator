@@ -1,4 +1,5 @@
 import TermMap from '@rdfjs/term-map'
+import { rdf } from '@tpluscode/rdf-ns-builders'
 import sinon from 'sinon'
 import { SharedDimensionsStore } from '../../lib/store'
 
@@ -14,6 +15,11 @@ export function testStore(): SharedDimensionsStore {
     },
     async delete(term) {
       resources.delete(term)
+    },
+    async exists(term, type) {
+      const resource = await this.load(term)
+
+      return resource?.has(rdf.type, type).terms.length > 0
     },
   }
 
