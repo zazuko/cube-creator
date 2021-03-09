@@ -22,3 +22,11 @@
 .gap-6 > *:not(:last-child) {
     @extend .mr-6;
 }
+
+.border-bottom-1 {
+    border-bottom: 1px solid gray;
+}
+
+.border-yellow {
+    border-color: $yellow;
+}
