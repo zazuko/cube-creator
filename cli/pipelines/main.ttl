@@ -4,7 +4,7 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 
 <#Main> a :Pipeline ;
-  :steps [ :stepList ( <#loadMetadata> <#doTransform> <#streamOutputStep> ) ] .
+  :steps [ :stepList ( <#loadMetadata> <#doTransform> <#validate> <#streamOutputStep> ) ] .
 
 <#StreamOutput>
   a :Pipeline, :WritableObjectMode .
@@ -55,6 +55,20 @@
                             p.variables.set('csvw', csvwResource)
                             p.variables.set('isObservationTable', isObservationTable)
                            }"""^^code:EcmaScript ) .
+
+<#validate>
+  a :Step ;
+  code:implementedBy [
+    code:link <node:barnard59-base#map> ;
+    a code:EcmaScript ;
+  ] ;
+  code:arguments (
+    [
+      code:link <file:../lib/validation#validate> ;
+      a code:EcmaScript ;
+    ]
+  ) ;
+.
 
 # ------------------------------
 #
