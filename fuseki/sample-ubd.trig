@@ -452,7 +452,6 @@ graph <cube-project/ubd/csv-mapping/table-observation/column-mapping-4> {
   <cube-project/ubd/csv-mapping/table-observation/column-mapping-4> a cc:ColumnMapping, cc:LiteralColumnMapping, hydra:Resource ;
     cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/aggregation> ;
     cc:targetProperty "aggregation" ;
-    cc:datatype xsd:float ;
   .
 }
 
