@@ -7,7 +7,7 @@
       <term-display :term="value.id" :base="cubeUri" />
     </term-with-language>
   </router-link>
-  <span v-else-if="isTerm">
+  <span v-else-if="isTerm" :class="termClasses">
     <term-display :term="value" :base="cubeUri" :show-language="showLanguage" />
   </span>
   <span v-else class="has-background-danger-light">
@@ -17,13 +17,21 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { Term } from 'rdf-js'
+import { Literal, Term } from 'rdf-js'
 import type RdfResource from '@tpluscode/rdfine/RdfResource'
-import { schema } from '@tpluscode/rdf-ns-builders'
+import { schema, xsd } from '@tpluscode/rdf-ns-builders'
+import TermSet from '@rdfjs/term-set'
 import TermDisplay from './TermDisplay.vue'
 import TermWithLanguage from './TermWithLanguage.vue'
 
 type Value = RdfResource | Term | undefined
+
+const numericalDatatypes: TermSet = new TermSet([
+  xsd.int,
+  xsd.integer,
+  xsd.decimal,
+  xsd.float,
+])
 
 @Component({
   components: { TermDisplay, TermWithLanguage },
@@ -48,6 +56,16 @@ export default class extends Vue {
   get isTerm (): boolean {
     return isTerm(this.value)
   }
+
+  get termClasses (): string {
+    const value = this.value
+
+    if (isLiteral(value) && numericalDatatypes.has(value.datatype)) {
+      return 'is-family-monospace'
+    }
+
+    return ''
+  }
 }
 
 function isResource (value: Value): value is RdfResource {
@@ -56,5 +74,9 @@ function isResource (value: Value): value is RdfResource {
 
 function isTerm (value: Value): value is Term {
   return !!value && 'termType' in value
+}
+
+function isLiteral (value: Value): value is Literal {
+  return isTerm(value) && value.termType === 'Literal'
 }
 </script>
