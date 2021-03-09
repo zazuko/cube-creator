@@ -17,7 +17,11 @@ export interface SharedDimensionsStore {
 
 function resourceQueryPatterns(id: NamedNode) {
   return sparql`
-    ${id} ${sh.node} ?rootShape .
+    ?rootShape ${sh.targetNode} ${id} .
+    MINUS {
+      # Exclude shapes which are children of property shapes
+      ?propertyShape ${sh.node} ?rootShape .
+    }
 
     ?rootShape ${sh.property}/${sh.path} ?rootProp .
     ${id} ?rootProp ?rootObject .
@@ -67,7 +71,7 @@ export default class Store implements SharedDimensionsStore {
 
   save(resource: GraphPointer<NamedNode>): Promise<void> {
     const shape = this.extractShape(resource)
-    shape.addIn(sh.node, resource)
+    shape.addOut(sh.targetNode, resource)
 
     const insert = INSERT.DATA`GRAPH ${this.graph} {
       ${resource.dataset}
