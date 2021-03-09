@@ -34,7 +34,7 @@
           </th>
         </tr>
       </thead>
-      <tbody class="is-family-monospace">
+      <tbody>
         <tr v-if="observations.isLoading">
           <td :colspan="tableWidth" class="p-0">
             <loading-block class="has-background-light is-size-2" :style="`height: calc(38px * ${this.pageSize});`" />
