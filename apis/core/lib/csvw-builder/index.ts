@@ -20,6 +20,7 @@ import { ResourceStore } from '../ResourceStore'
 import { warning } from '../log'
 import { Term } from 'rdf-js'
 import { findOrganization } from '../domain/organization/query'
+import { DefaultCsvwLiteral } from '@cube-creator/core/mapping'
 
 RdfResource.factory.addMixin(
   ...Object.values(Csvw),
@@ -134,7 +135,11 @@ async function * buildColumns({ cubeIdentifier, table, source, resources, organi
         continue
       }
 
-      yield mappedLiteralColumn({ cubeIdentifier, organization, columnMapping, column, source, resources })
+      const outColumn = mappedLiteralColumn({ cubeIdentifier, organization, columnMapping, column, source, resources })
+      if (!outColumn.default && table.isObservationTable) {
+        outColumn.default = DefaultCsvwLiteral
+      }
+      yield outColumn
     } else if (isReferenceColumnMapping(columnMapping)) {
       yield mappedReferenceColumn({ cubeIdentifier, organization, columnMapping, source, resources })
     }

@@ -2,7 +2,8 @@ import env from '@cube-creator/core/env'
 import { before, describe, it } from 'mocha'
 import { expect } from 'chai'
 import $rdf from 'rdf-ext'
-import { ASK, CONSTRUCT, SELECT } from '@tpluscode/sparql-builder'
+import clownface from 'clownface'
+import { ASK, CONSTRUCT, DESCRIBE, SELECT } from '@tpluscode/sparql-builder'
 import debug from 'debug'
 import { Hydra } from 'alcaeus/node'
 import { csvw, rdf, rdfs, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
@@ -10,7 +11,6 @@ import transform from '../../../lib/commands/transform'
 import { setupEnv } from '../../support/env'
 import { ccClients, insertTestProject } from '@cube-creator/testing/lib'
 import { cc, cube } from '@cube-creator/core/namespace'
-import clownface from 'clownface'
 
 describe('lib/commands/transform', function () {
   this.timeout(360 * 1000)
@@ -24,6 +24,8 @@ describe('lib/commands/transform', function () {
 
   describe('successful job', () => {
     const job = `${env.API_CORE_BASE}cube-project/ubd/csv-mapping/jobs/test-job`
+    const expectedGraph = $rdf.namedNode(`${env.API_CORE_BASE}cube-project/ubd/cube-data`)
+    const cubeBase = 'https://environment.ld.admin.ch/foen/ubd/28/'
 
     before(async () => {
       // given
@@ -39,7 +41,6 @@ describe('lib/commands/transform', function () {
     })
 
     it('produces triples', async () => {
-      const expectedGraph = $rdf.namedNode(`${env.API_CORE_BASE}cube-project/ubd/cube-data`)
       const dataset = await $rdf.dataset().import(await CONSTRUCT`?s ?p ?o`
         .FROM(expectedGraph)
         .WHERE`?s ?p ?o`
@@ -139,6 +140,70 @@ describe('lib/commands/transform', function () {
           nodeKind: sh.IRI,
         }],
       })
+    })
+
+    it('outputs ""^^cube:Undefined for missing literal dimension values', async () => {
+      const observationValue = await SELECT`?value`
+        .FROM(expectedGraph)
+        .WHERE`
+          <https://environment.ld.admin.ch/foen/ubd/28/observation/so2-blBAS-2000-annualmean> ${rdfs.comment} ?value
+        `.execute(ccClients.parsingClient.query)
+
+      expect(observationValue[0]?.value).to.deep.eq($rdf.literal('', cube.Undefined))
+    })
+
+    it('outputs cube:Undefined for missing value mapped to a shared dimension', async () => {
+      const result = await SELECT`?value`
+        .FROM(expectedGraph)
+        .WHERE`
+          <https://environment.ld.admin.ch/foen/ubd/28/observation/so2-blBAS-1984-annualmean> <https://environment.ld.admin.ch/foen/ubd/28/unit> ?value
+        `.execute(ccClients.parsingClient.query)
+
+      expect(result[0]?.value).to.deep.eq(cube.Undefined)
+    })
+
+    it('includes ""^^cube:Undefined in property shape sh:in of literal columns', async () => {
+      const dataset = await $rdf.dataset().import(await DESCRIBE`?property`
+        .FROM(expectedGraph)
+        .WHERE`
+          <shape/> ${sh.property} ?property .
+          ?property ${sh.path} ${rdfs.comment} .
+        `
+        .execute(ccClients.streamClient.query, { base: cubeBase }))
+
+      const ins = [...clownface({ dataset }).has(sh.in).out(sh.in).list()!].map(ptr => ptr.term)
+
+      expect(ins).to.deep.contain.members([$rdf.literal('', cube.Undefined)])
+    })
+
+    it('includes cube:Undefined in property shape sh:in of mapped columns', async () => {
+      const dataset = await $rdf.dataset().import(await DESCRIBE`?property`
+        .FROM(expectedGraph)
+        .WHERE`
+          <shape/> ${sh.property} ?property .
+          ?property ${sh.path} <unit> .
+        `
+        .execute(ccClients.streamClient.query, { base: cubeBase }))
+
+      const ins = [...clownface({ dataset }).has(sh.in).out(sh.in).list()!].map(ptr => ptr.term)
+
+      expect(ins).to.deep.contain.members([cube.Undefined])
+    })
+
+    it('emits an sh:or alternative to include cube:Undefined datatype', async () => {
+      const dataset = await $rdf.dataset().import(await DESCRIBE`?property`
+        .FROM(expectedGraph)
+        .WHERE`
+          <shape/> ${sh.property} ?property .
+          ?property ${sh.path} ${rdfs.comment} .
+        `
+        .execute(ccClients.streamClient.query, { base: cubeBase }))
+
+      const ors = [...clownface({ dataset }).has(sh.or).out(sh.or).list()!]
+        .flatMap(ptr => ptr.out(sh.datatype).terms)
+
+      expect(ors).to.have.length(2)
+      expect(ors).to.deep.contain.members([xsd.string, cube.Undefined])
     })
   })
 

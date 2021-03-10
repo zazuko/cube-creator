@@ -4,7 +4,7 @@ const TermSet = require('@rdfjs/term-set')
 const ns = require('@tpluscode/rdf-ns-builders')
 
 const datatypeParsers = (datatype) => {
-  switch (datatype.value) {
+  switch (datatype?.value) {
     case ns.xsd.date.value:
       return term => new Date(term.value)
     case ns.xsd.double.value:
@@ -22,9 +22,13 @@ class Dimension {
   constructor({ predicate, object }) {
     this.predicate = predicate
     this.termType = object.termType
-    this.datatype = object.datatype
+    this.datatypes = new TermSet()
 
-    if (this.datatype && datatypeParsers(this.datatype)) {
+    if (object.datatype) {
+      this.datatypes.add(object.datatype)
+    }
+
+    if (datatypeParsers(this.datatype)) {
       const datatypeParser = datatypeParsers(this.datatype)
 
       const value = datatypeParser(object)
@@ -39,12 +43,12 @@ class Dimension {
   }
 
   update({ object }) {
-    if (this.dataset && !this.datatype.equals(object.datatype)) {
-      this.datatype = null
+    if (object.datatype) {
+      this.datatypes.add(object.datatype)
     }
 
-    if (this.datatype && datatypeParsers(this.datatype)) {
-      const datatypeParser = datatypeParsers(this.datatype)
+    if (datatypeParsers(object.datatype)) {
+      const datatypeParser = datatypeParsers(object.datatype)
 
       const value = datatypeParser(object)
 
@@ -69,15 +73,19 @@ class Dimension {
 
     const ptr = clownface({ dataset }).blankNode()
 
+    const nodeKind = this.termType === 'NamedNode' ? ns.sh.IRI : ns.sh.Literal
     ptr
       .addIn(ns.sh.property, shape)
       .addOut(ns.sh.path, this.predicate)
-      .addOut(ns.sh.nodeKind, this.termType === 'NamedNode' ? ns.sh.IRI : ns.sh.Literal)
+      .addOut(ns.sh.nodeKind, nodeKind)
       .addOut(ns.sh.minCount, 1)
       .addOut(ns.sh.maxCount, 1)
 
-    if (this.datatype) {
-      ptr.addOut(ns.sh.datatype, this.datatype)
+    const datatypes = [...this.datatypes]
+    if (this.datatypes.size > 1) {
+      ptr.addList(ns.sh.or, datatypes.map(dt => ptr.blankNode().addOut(ns.sh.datatype, dt)))
+    } else if (this.datatypes.size === 1 && nodeKind.equals(ns.sh.Literal)) {
+      ptr.addOut(ns.sh.datatype, datatypes[0])
     }
 
     if (this.in) {
