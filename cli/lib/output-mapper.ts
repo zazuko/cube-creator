@@ -16,6 +16,8 @@ import { DefaultCsvwLiteral } from '@cube-creator/core/mapping'
 
 Hydra.resources.factory.addMixin(...Object.values(Models))
 
+const undef = $rdf.literal('', cube.Undefined)
+
 const pendingRequests = new Map<string, Promise<any>>()
 function load<T extends RdfResourceCore>(uri: string): Promise<HydraResponse<DatasetCore, T>> {
   let promise = pendingRequests.get(uri)
@@ -77,8 +79,6 @@ export async function mapDimensions(this: Pick<Context, 'variables'>) {
     return mappingTerm
   }
 
-  const undef = $rdf.literal('', cube.Undefined)
-
   return map(async (quad: Quad) => {
     const { subject, predicate, object, graph } = quad
     const mappingTerm = getDimensionMapping(predicate)
@@ -105,7 +105,7 @@ export function substituteUndefined(quad: Quad): Quad {
     return $rdf.quad(
       quad.subject,
       quad.predicate,
-      $rdf.literal('', cube.Undefined),
+      undef,
       quad.graph,
     )
   }
