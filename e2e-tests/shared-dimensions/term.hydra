@@ -5,7 +5,7 @@ PREFIX qudt: <http://qudt.org/schema/qudt/>
 PREFIX meta: <https://cube.link/meta/>
 PREFIX sh: <http://www.w3.org/ns/shacl#>
 
-ENTRYPOINT "shared-dimensions/technologies/rdf"
+ENTRYPOINT "dimension/technologies/rdf"
 
 HEADERS {
   x-user "john-doe"
@@ -29,7 +29,7 @@ With Class schema:DefinedTerm {
               a schema:DefinedTerm, md:SharedDimensionTerm ;
               schema:identifier "rdf" ;
               schema:name "Resource Description Framework"@en, "Resource Description Framework"@de ;
-              schema:inDefinedTermSet <https://cube-creator.lndo.site/shared-dimensions/technologies> ;
+              schema:inDefinedTermSet <https://cube-creator.lndo.site/dimension/technologies> ;
             .
             ```
         } => {

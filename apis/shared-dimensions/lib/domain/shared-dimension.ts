@@ -14,6 +14,9 @@ interface CreateSharedDimension {
 }
 
 function newId(base: string, name: string) {
+  if (base.endsWith('/')) {
+    return $rdf.namedNode(`${base}${name}`)
+  }
   return $rdf.namedNode(`${base}/${name}`)
 }
 
@@ -31,7 +34,7 @@ export async function create({ resource, store }: CreateSharedDimension): Promis
     throw new DomainError('Missing dimension identifier')
   }
 
-  const termSetId = newId(`${env.MANAGED_DIMENSIONS_BASE}`, identifier)
+  const termSetId = newId(new URL('/dimension', env.MANAGED_DIMENSIONS_BASE).toString(), identifier)
   if (await store.exists(termSetId, schema.DefinedTermSet)) {
     throw new httpError.Conflict(`Shared Dimension ${identifier} already exists`)
   }

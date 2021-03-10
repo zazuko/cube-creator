@@ -6,7 +6,7 @@ prefix md: <https://cube-creator.zazuko.com/shared-dimensions/vocab#>
 prefix void: <http://rdfs.org/ns/void#>
 prefix schema: <http://schema.org/>
 prefix meta: <https://cube.link/meta/>
-base <https://cube-creator.lndo.site/shared-dimensions/>
+base <https://cube-creator.lndo.site/dimension/>
 
 <shared-dimensions> a void:Dataset .
 
