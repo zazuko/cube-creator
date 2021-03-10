@@ -55,13 +55,13 @@ export default class JobForm extends Vue {
     this.isSubmitting = true
 
     try {
-      await this.$store.dispatch('api/invokeSaveOperation', {
+      const job = await this.$store.dispatch('api/invokeSaveOperation', {
         operation: this.operation,
         resource: this.resource,
       })
 
       this.$buefy.toast.open({
-        message: 'Transformation was started',
+        message: `${job.name} was started`,
         type: 'is-success',
       })
 
