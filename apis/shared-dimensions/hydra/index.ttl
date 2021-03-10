@@ -50,15 +50,6 @@ md:SharedDimensions
        ]
 .
 
-_:DELETE a hydra:Operation, schema:DeleteAction ;
-         hydra:method "DELETE" ;
-         hydra:title "Delete" ;
-         code:implementedBy
-           [
-             a code:EcmaScript ;
-             code:link <file:handlers/resource#DELETE>
-           ] .
-
 <shape/shared-dimension> a sh:NodeShape, sh:Shape .
 
 sh:NodeShape
@@ -115,7 +106,6 @@ md:SharedDimension
     [
       sh:inversePath schema:inDefinedTermSet ;
     ] ;
-  hydra:supportedOperation _:DELETE ;
   hydra:supportedOperation
     [
       a hydra:SupportedOperation, schema:CreateAction ;
@@ -132,7 +122,6 @@ md:SharedDimension
 
 md:SharedDimensionTerm
   a hydra:Class ;
-  hydra:supportedOperation _:DELETE ;
   hydra:supportedOperation
     [
       a hydra:SupportedOperation, schema:ReplaceAction ;

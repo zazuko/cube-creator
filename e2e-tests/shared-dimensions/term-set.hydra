@@ -24,7 +24,8 @@ With Class meta:SharedDimension {
             prefix meta: <https://cube.link/meta/>
             prefix sh: <http://www.w3.org/ns/shacl#>
 
-            <> schema:name "node.js"@en .
+            <> schema:name "node.js"@en ;
+               schema:validThrough "2022-01-01T00:00:00Z"^^xsd:dateTime .
             ```
         } => {
             Expect Status 201
@@ -34,6 +35,7 @@ With Class meta:SharedDimension {
             Expect Property schema:name
             Expect Property schema:inDefinedTermSet
             Expect Property schema:validFrom
+            Expect Property schema:validThrough
         }
     }
 }

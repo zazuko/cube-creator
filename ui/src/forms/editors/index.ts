@@ -140,6 +140,15 @@ export const datePickerEditor: Lazy<SingleEditorComponent> = {
   },
 }
 
+export const dateTimePickerEditor: Lazy<SingleEditorComponent> = {
+  editor: dash.DateTimePickerEditor,
+  async lazyRender () {
+    await import('./DateTimePickerEditor.vue').then(createCustomElement('cc-date-time-picker'))
+
+    return ({ value }, { update }) => html`<cc-date-time-picker .value="${value.object?.value}" .update="${update}"></cc-date-time-picker>`
+  },
+}
+
 export const propertyEditor: Lazy<SingleEditorComponent> = {
   editor: ns.editor.PropertyEditor,
   async lazyRender () {

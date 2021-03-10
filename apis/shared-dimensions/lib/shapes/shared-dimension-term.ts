@@ -1,6 +1,6 @@
 import { Initializer } from '@tpluscode/rdfine/RdfResource'
 import { NodeShape, PropertyShape } from '@rdfine/shacl'
-import { rdf, schema, xsd } from '@tpluscode/rdf-ns-builders'
+import { dash, rdf, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import { supportedLanguages } from '@cube-creator/core/languages'
 import { md } from '@cube-creator/core/namespace'
 
@@ -23,6 +23,13 @@ const commonProperties: Initializer<PropertyShape>[] = [{
   datatype: xsd.dateTime,
   maxCount: 1,
   order: 30,
+}, {
+  name: 'Valid through',
+  description: 'Use this to deprecate a term',
+  path: schema.validThrough,
+  datatype: xsd.dateTime,
+  maxCount: 1,
+  order: 40,
 }]
 
 export const create = (): Initializer<NodeShape> => ({
@@ -37,12 +44,13 @@ export const update = (): Initializer<NodeShape> => ({
     {
       path: rdf.type,
       hasValue: [schema.DefinedTerm, md.SharedDimensionTerm],
-      hidden: true,
+      [dash.hidden.value]: true,
     },
     {
       path: schema.inDefinedTermSet,
       minCount: 1,
       maxCount: 1,
+      [dash.hidden.value]: true,
     },
   ],
 })

@@ -250,10 +250,13 @@ export function serializeSharedDimension (dimension: RdfResource): SharedDimensi
 }
 
 export function serializeSharedDimensionTerm (term: RdfResource): SharedDimensionTerm {
+  const validThrough = term.pointer.out(schema.validThrough).value
+
   return Object.freeze({
     ...serializeResource(term),
     name: term.pointer.out(schema.name).terms,
     identifiers: term.pointer.out(schema.identifier).values,
+    validThrough: validThrough ? new Date(validThrough) : undefined,
   })
 }
 
