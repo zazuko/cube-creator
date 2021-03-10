@@ -27,8 +27,6 @@ import { Prop, Component, Vue } from 'vue-property-decorator'
 import { PropertyObjectState, PropertyState } from '@hydrofoil/shaperone-core/models/forms'
 import { TemplateResult } from 'lit-element'
 // Makes the hidden property visible to typescript
-// TODO: this will not be necessary in next version of shaperone
-import '@rdfine/dash/extensions/sh/PropertyShape'
 import VueMarkdown from 'vue-markdown/src/VueMarkdown'
 import RenderWcTemplate from './RenderWcTemplate.vue'
 
