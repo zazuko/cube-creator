@@ -40,7 +40,6 @@ const aboutQuery = sparql`construct {
       ?p ?o .
 }`
 
-
 const licenseQuery = sparql`construct {
   ?c a ${hydra.Collection} .
   ?c ${hydra.member} ?license .
@@ -48,7 +47,7 @@ const licenseQuery = sparql`construct {
 } WHERE {
   BIND ( iri('http://app.cube-creator.lndo.site/themes') as ?c )
 
-    ?license a ${schema.DefinedTerm}, <http://purl.org/dc/terms/LicenseDocument> ;
+    ?license a ${schema.DefinedTerm}, ${dcterms.LicenseDocument} ;
       ${schema.alternateName} ?name ;
       ${schema.inDefinedTermSet} ?termSet ;
       ?p ?o .
@@ -123,6 +122,7 @@ ${shapeId} {
       ${sh.path} ${dcterms.license} ;
       ${sh.minCount} 0 ;
       ${sh.nodeKind} ${sh.IRI} ;
+      ${sh.class} ${dcterms.LicenseDocument} ;
       ${hydra.collection} ${lindasQuery(licenseQuery)} ;
       ${sh.order} 25 ;
       ${sh.description} "This is the published terms of use / license for this dataset.";
@@ -197,6 +197,7 @@ ${shapeId} {
       ${sh.name} "About" ;
       ${sh.path} ${schema.about} ;
       ${sh.minCount} 0 ;
+      ${sh.class} ${schema.DefinedTerm} ;
       ${sh.nodeKind} ${sh.IRI} ;
       ${hydra.collection} ${lindasQuery(aboutQuery)} ;
       ${sh.order} 75 ;
