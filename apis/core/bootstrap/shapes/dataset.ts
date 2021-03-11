@@ -9,9 +9,7 @@ const shapeId = shape('dataset/edit-metadata')
 const temporalFromTo = $rdf.namedNode(shapeId.value + '#temporalFromTo')
 const vcardOrganization = $rdf.namedNode(shapeId.value + '#vcardOrganization')
 
-const themesQuery = sparql`prefix cat: <https://register.ld.admin.ch/opendataswiss/category/>
-
-construct {
+const themesQuery = sparql`construct {
   ?c a ${hydra.Collection} .
   ?c ${hydra.member} ?theme .
   ?theme ${rdfs.label} ?name ; ?p ?o .
@@ -26,9 +24,37 @@ construct {
   }
 }`
 
-const orgQuery = sparql`prefix cat: <https://register.ld.admin.ch/opendataswiss/org/>
+const aboutQuery = sparql`construct {
+  ?c a ${hydra.Collection} .
+  ?c ${hydra.member} ?about .
+  ?about ${rdfs.label} ?name ; ?p ?o .
+} WHERE {
+  BIND ( iri('http://app.cube-creator.lndo.site/themes') as ?c )
 
-construct {
+    ?termSet a ${schema.DefinedTermSet};
+      ${schema.isPartOf} <https://ld.admin.ch/application/cube-creator>.
+
+    ?about a ${schema.DefinedTerm} ;
+      ${schema.alternateName} ?name ;
+      ${schema.inDefinedTermSet} ?termSet ;
+      ?p ?o .
+}`
+
+
+const licenseQuery = sparql`construct {
+  ?c a ${hydra.Collection} .
+  ?c ${hydra.member} ?license .
+  ?license ${rdfs.label} ?name ; ?p ?o .
+} WHERE {
+  BIND ( iri('http://app.cube-creator.lndo.site/themes') as ?c )
+
+    ?license a ${schema.DefinedTerm}, <http://purl.org/dc/terms/LicenseDocument> ;
+      ${schema.alternateName} ?name ;
+      ${schema.inDefinedTermSet} ?termSet ;
+      ?p ?o .
+}`
+
+const orgQuery = sparql`construct {
   ?c a ${hydra.Collection} .
   ?c ${hydra.member} ?org .
   ?org ${rdfs.label} ?name ; ?p ?o .
@@ -91,6 +117,15 @@ ${shapeId} {
       ${sh.datatype} ${rdf.langString} ;
       ${dash.hidden} true ;
       ${sh.equals} ${schema.description} ;
+    ] ;
+    ${sh.property} [
+      ${sh.name} "License" ;
+      ${sh.path} ${dcterms.license} ;
+      ${sh.minCount} 0 ;
+      ${sh.nodeKind} ${sh.IRI} ;
+      ${hydra.collection} ${lindasQuery(licenseQuery)} ;
+      ${sh.order} 25 ;
+      ${sh.description} "This is the published terms of use / license for this dataset.";
     ] ;
     ${sh.property} [
       ${sh.name} "Status" ;
@@ -157,6 +192,15 @@ ${shapeId} {
       ${sh.class} ${dcterms.PeriodOfTime} ;
       ${sh.order} 70 ;
       ${sh.description} "The period of time this dataset is covering.";
+    ] ;
+    ${sh.property} [
+      ${sh.name} "About" ;
+      ${sh.path} ${schema.about} ;
+      ${sh.minCount} 0 ;
+      ${sh.nodeKind} ${sh.IRI} ;
+      ${hydra.collection} ${lindasQuery(aboutQuery)} ;
+      ${sh.order} 75 ;
+      ${sh.description} "Category what about the dataset is.";
     ] ;
     ${sh.property} [
       ${sh.name} "Opendata.swiss Publisher" ;
