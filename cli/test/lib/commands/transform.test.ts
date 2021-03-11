@@ -3,7 +3,8 @@ import { before, describe, it } from 'mocha'
 import { expect } from 'chai'
 import $rdf from 'rdf-ext'
 import clownface from 'clownface'
-import { ASK, CONSTRUCT, DESCRIBE, SELECT } from '@tpluscode/sparql-builder'
+import { ASK, DESCRIBE, SELECT } from '@tpluscode/sparql-builder'
+import namespace from '@rdfjs/namespace'
 import debug from 'debug'
 import { Hydra } from 'alcaeus/node'
 import { csvw, rdf, rdfs, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
@@ -26,6 +27,7 @@ describe('lib/commands/transform', function () {
     const job = `${env.API_CORE_BASE}cube-project/ubd/csv-mapping/jobs/test-job`
     const expectedGraph = $rdf.namedNode(`${env.API_CORE_BASE}cube-project/ubd/cube-data`)
     const cubeBase = 'https://environment.ld.admin.ch/foen/ubd/28/'
+    const cubeNs = namespace(cubeBase)
 
     before(async () => {
       // given
@@ -40,15 +42,19 @@ describe('lib/commands/transform', function () {
       })
     })
 
-    it('produces triples', async () => {
-      const dataset = await $rdf.dataset().import(await CONSTRUCT`?s ?p ?o`
-        .FROM(expectedGraph)
-        .WHERE`?s ?p ?o`
-        .execute(ccClients.streamClient.query))
+    it('produces constraint shape', async () => {
+      const shape = await ASK`?shape a ${sh.NodeShape}`.FROM(expectedGraph).execute(ccClients.streamClient.query)
 
-      const cubePointer = clownface({ dataset })
-      expect(cubePointer.has(rdf.type, sh.NodeShape).terms.length).to.eq(1)
-      expect(cubePointer.namedNode('https://environment.ld.admin.ch/foen/ubd/28/observation/so2-blBAS-2000-annualmean')).to.matchShape({
+      expect(shape).to.be.true
+    })
+
+    it('produces observations', async () => {
+      const query = DESCRIBE`${cubeNs('observation/so2-blBAS-2000-annualmean')}`.FROM(expectedGraph)
+      const dataset = await $rdf.dataset().import(await query.execute(ccClients.streamClient.query))
+
+      const observation = clownface({ dataset }).node(cubeNs('observation/so2-blBAS-2000-annualmean'))
+
+      expect(observation).to.matchShape({
         property: [{
           path: rdf.type,
           hasValue: cube.Observation,
@@ -73,7 +79,15 @@ describe('lib/commands/transform', function () {
           maxCount: 1,
         }],
       })
-      expect(cubePointer.namedNode('https://environment.ld.admin.ch/foen/ubd/28/station/blBAS')).to.matchShape({
+    })
+
+    it('produces non-observation resources', async () => {
+      const query = DESCRIBE`${cubeNs('station/blBAS')}`.FROM(expectedGraph)
+      const dataset = await $rdf.dataset().import(await query.execute(ccClients.streamClient.query))
+
+      const station = clownface({ dataset }).node(cubeNs('station/blBAS'))
+
+      expect(station).to.matchShape({
         property: [{
           path: schema.identifier,
           hasValue: 'blBAS',
