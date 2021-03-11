@@ -25,6 +25,7 @@
   "devDependencies": {
     "@types/hydra-box": "^0.6.0",
     "@types/rdf-js": "^4",
+    "@types/rdf-validate-shacl": "^0.2.0",
     "@types/rdfjs__express-handler": "^1.1.2"
   }
 }

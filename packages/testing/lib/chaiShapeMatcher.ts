@@ -6,7 +6,8 @@ import RdfResourceImpl, { Initializer, RdfResource, ResourceIdentifier } from '@
 import { BlankNode, DatasetCore, NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import clownface, { GraphPointer, MultiPointer } from 'clownface'
-import Validator, * as Validate from 'rdf-validate-shacl'
+import Validator from 'rdf-validate-shacl'
+import type * as Validate from 'rdf-validate-shacl/src/validation-report'
 import { rdf, sh } from '@tpluscode/rdf-ns-builders'
 
 declare global {
