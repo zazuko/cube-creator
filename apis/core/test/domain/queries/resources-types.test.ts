@@ -8,12 +8,8 @@ import { expect } from 'chai'
 
 describe('domain/queries/resources-types', () => {
   let sparql: ParsingClient.ParsingClient
-  let fetch: sinon.SinonStub
 
   beforeEach(() => {
-    fetch = sinon.stub().resolves({
-      dataset: Promise.resolve([]),
-    })
     sparql = {
       query: {
         construct: sinon.stub().resolves([]),
@@ -33,15 +29,13 @@ describe('domain/queries/resources-types', () => {
     // when
     await loadResourcesTypes(ids, {
       sparql,
-      fetch,
     })
 
     // then
-    expect(fetch).not.to.have.been.called
     expect(sparql.query.construct).to.have.been.calledWith(sinon.match(new RegExp(`${env.API_CORE_BASE}/(foo|bar|baz)`, 'g')))
   })
 
-  it('fetches external resources directly', async () => {
+  it('fetches external resources from external sparql service', async () => {
     // given
     const ids = [
       $rdf.namedNode('http://example.com/foo'),
@@ -52,29 +46,9 @@ describe('domain/queries/resources-types', () => {
     // when
     await loadResourcesTypes(ids, {
       sparql,
-      fetch,
     })
 
     // then
-    expect(sparql.query.construct).not.to.have.been.called
-    expect(fetch).to.have.been.calledThrice
-    expect(fetch).to.have.been.calledWith(sinon.match(sinon.match(new RegExp('http://example.com/(foo|bar|baz)'))))
-  })
-
-  it('returns empty if fetch fails', async () => {
-    // given
-    const ids = [
-      $rdf.namedNode('http://example.com/foo'),
-    ]
-    fetch.rejects()
-
-    // when
-    const quads = await loadResourcesTypes(ids, {
-      sparql,
-      fetch,
-    })
-
-    // then
-    expect(quads).to.have.length(0)
+    expect(sparql.query.construct).to.have.been.calledWith(sinon.match(/service <.+>/i))
   })
 })

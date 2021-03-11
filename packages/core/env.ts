@@ -28,6 +28,7 @@ type ENV_VARS =
   'AUTH_ISSUER'
   | 'AUTH_AUDIENCE'
   | 'AUTH_CONFIG_FILE'
+  | 'AUTH_ACCESS_REQUEST'
   | 'STORE_QUERY_ENDPOINT'
   | 'STORE_UPDATE_ENDPOINT'
   | 'STORE_GRAPH_ENDPOINT'
@@ -42,13 +43,14 @@ type ENV_VARS =
   | 'PIPELINE_URI'
   | 'PIPELINE_TOKEN'
   | 'PIPELINE_ENV'
+  | 'PUBLIC_QUERY_ENDPOINT'
 
 type KnownVariables<T extends string> = {
   /* eslint-disable-next-line no-unused-vars */
   [P in T]: string
 }
 
-export const createProxy = <T extends string>() => new Proxy(process.env, handler) as typeof process['env'] & KnownVariables<T> & {
+export const createProxy = <T extends string>() => new Proxy(process.env, handler) as KnownVariables<T> & {
   has(name: ENV_VARS): boolean
   production: boolean
   maybe: Partial<KnownVariables<T>>
