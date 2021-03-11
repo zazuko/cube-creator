@@ -41,7 +41,7 @@ describe('lib/job', function () {
       }
 
       // then
-      expect(results).to.have.length(2)
+      expect(results).to.have.length(3)
       expect(results[0].id.value).to.match(new RegExp('/cube-project/ubd/csv-mapping/table-\\w+/csvw$'))
       expect(results[0].dialect?.quoteChar).to.equal('"')
       expect(results[0].dialect?.delimiter).to.equal(',')
