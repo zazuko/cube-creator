@@ -14,7 +14,7 @@ import type { Variables } from 'barnard59-core/lib/Pipeline'
 Hydra.baseUri = env.API_CORE_BASE
 
 describe('lib/job', function () {
-  this.timeout(20000)
+  this.timeout(360 * 1000)
 
   let variables: Variables
 
