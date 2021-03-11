@@ -1,6 +1,6 @@
 import { describe, it, before, beforeEach } from 'mocha'
 import { blankNode, namedNode } from '@cube-creator/testing/clownface'
-import { qudt, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
+import { dcterms, qudt, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { md } from '@cube-creator/core/namespace'
 import $rdf from 'rdf-ext'
 import { expect } from 'chai'
@@ -20,6 +20,7 @@ describe('@cube-creator/shared-dimensions-api/lib/shapes', () => {
     it('is valid when resource has all required props', () => {
       // given
       const resource = blankNode()
+        .addOut(dcterms.identifier, $rdf.literal('test'))
         .addOut(schema.name, $rdf.literal('Test', 'en'))
         .addOut(sh.property, prop => {
           prop
@@ -41,6 +42,7 @@ describe('@cube-creator/shared-dimensions-api/lib/shapes', () => {
     it('is valid when a term has only names', () => {
       // given
       const resource = blankNode()
+        .addOut(dcterms.identifier, $rdf.literal('test'))
         .addOut(schema.name, [$rdf.literal('Foo', 'en'), $rdf.literal('bar', 'de')])
 
       // then
@@ -50,6 +52,7 @@ describe('@cube-creator/shared-dimensions-api/lib/shapes', () => {
     it('is valid when a term has many identifiers', () => {
       // given
       const resource = blankNode()
+        .addOut(dcterms.identifier, $rdf.literal('test'))
         .addOut(schema.name, $rdf.literal('Foo', 'en'))
         .addOut(schema.identifier, ['a', 'b', 'c'])
 

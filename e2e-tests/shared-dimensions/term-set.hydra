@@ -5,7 +5,7 @@ PREFIX qudt: <http://qudt.org/schema/qudt/>
 PREFIX meta: <https://cube.link/meta/>
 PREFIX sh: <http://www.w3.org/ns/shacl#>
 
-ENTRYPOINT "shared-dimensions/term-set/technologies"
+ENTRYPOINT "dimension/technologies"
 
 HEADERS {
   x-user "john-doe"
@@ -23,8 +23,10 @@ With Class meta:SharedDimension {
             prefix qudt: <http://qudt.org/schema/qudt/>
             prefix meta: <https://cube.link/meta/>
             prefix sh: <http://www.w3.org/ns/shacl#>
+            prefix dcterms: <http://purl.org/dc/terms/>
 
             <> schema:name "node.js"@en ;
+               dcterms:identifier "node-js" ;
                schema:validThrough "2022-01-01T00:00:00Z"^^xsd:dateTime .
             ```
         } => {

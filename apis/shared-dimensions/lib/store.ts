@@ -1,9 +1,9 @@
-import { CONSTRUCT, DELETE, INSERT, WITH } from '@tpluscode/sparql-builder'
+import { ASK, CONSTRUCT, DELETE, INSERT, WITH } from '@tpluscode/sparql-builder'
 import { sparql } from '@tpluscode/rdf-string'
 import clownface, { GraphPointer } from 'clownface'
 import { NamedNode, Term } from 'rdf-js'
 import ParsingClient from 'sparql-http-client/ParsingClient'
-import { sh } from '@tpluscode/rdf-ns-builders'
+import { rdf, sh } from '@tpluscode/rdf-ns-builders'
 import TermSet from '@rdfjs/term-set'
 import $rdf from 'rdf-ext'
 import { parsingClient } from './sparql'
@@ -13,6 +13,7 @@ export interface SharedDimensionsStore {
   load(id: Term | undefined): Promise<GraphPointer<NamedNode>>
   save(resource: GraphPointer<NamedNode>): Promise<void>
   delete(id: NamedNode): Promise<void>
+  exists(id: NamedNode, type: NamedNode): Promise<boolean>
 }
 
 function resourceQueryPatterns(id: NamedNode) {
@@ -80,6 +81,10 @@ export default class Store implements SharedDimensionsStore {
     const query = sparql`${deleteQuery(resource.term, this.graph)};\n${insert}`
 
     return this.client.query.update(query.toString())
+  }
+
+  exists(id: NamedNode, type: NamedNode) {
+    return ASK`${id} ${sh.node} ?shape ; ${rdf.type} ${type}`.FROM(this.graph).execute(this.client.query)
   }
 
   extractShape(resource: GraphPointer, dataset = $rdf.dataset(), visited = new TermSet()): GraphPointer {

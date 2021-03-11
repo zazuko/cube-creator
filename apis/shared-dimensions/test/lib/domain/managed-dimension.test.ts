@@ -1,12 +1,13 @@
 import { describe, it, beforeEach } from 'mocha'
 import { expect } from 'chai'
 import { namedNode } from '@cube-creator/testing/clownface'
-import { hydra, rdf, schema, xsd } from '@tpluscode/rdf-ns-builders'
+import { dcterms, hydra, rdf, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import { md, meta } from '@cube-creator/core/namespace'
 import { create, createTerm } from '../../../lib/domain/shared-dimension'
 import { SharedDimensionsStore } from '../../../lib/store'
 import { testStore } from '../../support/store'
 import $rdf from 'rdf-ext'
+import httpError from 'http-errors'
 
 describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () => {
   describe('create', () => {
@@ -16,22 +17,22 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () =
       store = testStore()
     })
 
-    it('generates a unique id derived from dimension name', async () => {
+    it('creates id using provided identifier', async () => {
       // given
       const resource = namedNode('')
-        .addOut(schema.name, 'canton')
+        .addOut(dcterms.identifier, 'canton')
 
       // when
       const termSet = await create({ resource, store })
 
       // then
-      expect(termSet.value).to.match(/\/canton-.+$/)
+      expect(termSet.value).to.eq('https://cube-creator.lndo.site/dimension/canton')
     })
 
     it('saves to the store', async () => {
       // given
       const resource = namedNode('')
-        .addOut(schema.name, 'canton')
+        .addOut(dcterms.identifier, 'canton')
 
       // when
       await create({ resource, store })
@@ -43,7 +44,7 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () =
     it('adds required RDF types', async () => {
       // given
       const resource = namedNode('')
-        .addOut(schema.name, 'canton')
+        .addOut(dcterms.identifier, 'canton')
 
       // when
       const termSet = await create({ resource, store })
@@ -58,15 +59,28 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () =
         }],
       })
     })
+
+    it('throws if identifier is already used', async () => {
+      // given
+      await store.save(namedNode('https://cube-creator.lndo.site/shared-dimensions/term-set/canton'))
+      const resource = namedNode('')
+        .addOut(dcterms.identifier, 'canton')
+
+      // when
+      const promise = create({ resource, store })
+
+      // then
+      expect(promise).eventually.rejectedWith(httpError.Conflict)
+    })
   })
 
   describe('createTerm', () => {
     it("copies term set's validFrom data", async () => {
       // given
-      const termSet = namedNode('term-set')
+      const termSet = namedNode('http://example.com/term-set')
         .addOut(schema.validFrom, $rdf.literal('2000-10-02', xsd.date))
       const resource = namedNode('')
-        .addOut(schema.name, 'Term')
+        .addOut(dcterms.identifier, 'Term')
 
       // when
       const term = await createTerm({
@@ -79,12 +93,12 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () =
       expect(term.out(schema.validFrom).term).to.deep.eq(termSet.out(schema.validFrom).term)
     })
 
-    it('derives URI from the term set and slugifies the name', async () => {
+    it('creates URI from the term set and identifier', async () => {
       // given
-      const termSet = namedNode('term-set')
+      const termSet = namedNode('http://example.com/term-set')
         .addOut(schema.validFrom, $rdf.literal('2000-10-02', xsd.date))
       const resource = namedNode('')
-        .addOut(schema.name, 'Term')
+        .addOut(dcterms.identifier, 'term')
 
       // when
       const term = await createTerm({
@@ -94,15 +108,35 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () =
       })
 
       // then
-      expect(term.value).to.match(/term-set\/term-.+$/)
+      expect(term.value).to.eq('http://example.com/term-set/term')
     })
 
-    it('derives URI from the term set and slugifies the name', async () => {
+    it('throws if identifier is already used', async () => {
       // given
+      const store = testStore()
+      await store.save(namedNode('https://cube-creator.lndo.site/shared-dimensions/term-set/canton/bern'))
       const termSet = namedNode('term-set')
         .addOut(schema.validFrom, $rdf.literal('2000-10-02', xsd.date))
       const resource = namedNode('')
-        .addOut(schema.name, 'Term')
+        .addOut(dcterms.identifier, 'bern')
+
+      // when
+      const promise = createTerm({
+        store,
+        termSet,
+        resource,
+      })
+
+      // then
+      expect(promise).eventually.rejectedWith(httpError.Conflict)
+    })
+
+    it('ensures rdf type', async () => {
+      // given
+      const termSet = namedNode('http://example.com/term-set')
+        .addOut(schema.validFrom, $rdf.literal('2000-10-02', xsd.date))
+      const resource = namedNode('')
+        .addOut(dcterms.identifier, 'Term')
 
       // when
       const term = await createTerm({

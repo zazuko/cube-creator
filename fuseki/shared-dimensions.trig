@@ -6,7 +6,7 @@ prefix md: <https://cube-creator.zazuko.com/shared-dimensions/vocab#>
 prefix void: <http://rdfs.org/ns/void#>
 prefix schema: <http://schema.org/>
 prefix meta: <https://cube.link/meta/>
-base <https://cube-creator.lndo.site/shared-dimensions/>
+base <https://cube-creator.lndo.site/dimension/>
 
 <shared-dimensions> a void:Dataset .
 
@@ -70,30 +70,30 @@ graph <http://example.com/dimension/colors> {
 }
 
 graph <https://lindas.admin.ch/cube/dimension> {
-  <term-set/technologies>
+  <technologies>
     a schema:DefinedTermSet, meta:SharedDimension, hydra:Resource, md:SharedDimension ;
     schema:name "Technologies"@en ;
     schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
   .
 
   [
-    sh:targetNode <term-set/technologies> ;
+    sh:targetNode <technologies> ;
     sh:property
       [ sh:path schema:name ],
       [ sh:path rdf:type ],
       [ sh:path schema:validFrom ] ;
   ] .
 
-  <term-set/technologies/rdf>
+  <technologies/rdf>
     a schema:DefinedTerm, hydra:Resource, md:SharedDimensionTerm ;
     schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
     schema:identifier "rdf" ;
     schema:name "RDF"@en ;
-    schema:inDefinedTermSet <term-set/technologies> ;
+    schema:inDefinedTermSet <technologies> ;
   .
 
   [
-    sh:targetNode <term-set/technologies/rdf> ;
+    sh:targetNode <technologies/rdf> ;
     sh:property
       [ sh:path schema:name ],
       [ sh:path rdf:type ],
@@ -102,16 +102,16 @@ graph <https://lindas.admin.ch/cube/dimension> {
       [ sh:path schema:inDefinedTermSet ] ;
   ] .
 
-  <term-set/technologies/shacl>
+  <technologies/shacl>
     a schema:DefinedTerm, hydra:Resource, md:SharedDimensionTerm ;
     schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
     schema:identifier "shacl", "sh" ;
     schema:name "SHACL"@en ;
-    schema:inDefinedTermSet <term-set/technologies> ;
+    schema:inDefinedTermSet <technologies> ;
   .
 
   [
-    sh:targetNode <term-set/technologies/shacl> ;
+    sh:targetNode <technologies/shacl> ;
     sh:property
       [ sh:path schema:name ],
       [ sh:path rdf:type ],
@@ -120,16 +120,16 @@ graph <https://lindas.admin.ch/cube/dimension> {
       [ sh:path schema:inDefinedTermSet ] ;
   ] .
 
-  <term-set/technologies/sparql>
+  <technologies/sparql>
     a schema:DefinedTerm, hydra:Resource, md:SharedDimensionTerm ;
     schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
     schema:identifier "sparql" ;
     schema:name "SPARQL"@en ;
-    schema:inDefinedTermSet <term-set/technologies> ;
+    schema:inDefinedTermSet <technologies> ;
   .
 
   [
-    sh:targetNode <term-set/technologies/sparql> ;
+    sh:targetNode <technologies/sparql> ;
     sh:property
       [ sh:path schema:name ],
       [ sh:path rdf:type ],

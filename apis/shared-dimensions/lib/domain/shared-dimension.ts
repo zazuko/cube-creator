@@ -1,12 +1,12 @@
 import clownface, { GraphPointer } from 'clownface'
 import { NamedNode, Quad } from 'rdf-js'
 import $rdf from 'rdf-ext'
-import UrlSlugify from 'url-slugify'
-import { hydra, rdf, schema } from '@tpluscode/rdf-ns-builders'
+import { dcterms, hydra, rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { md, meta } from '@cube-creator/core/namespace'
 import { DomainError } from '@cube-creator/api-errors'
 import env from '../env'
 import { SharedDimensionsStore } from '../store'
+import httpError from 'http-errors'
 
 interface CreateSharedDimension {
   resource: GraphPointer<NamedNode>
@@ -14,7 +14,10 @@ interface CreateSharedDimension {
 }
 
 function newId(base: string, name: string) {
-  return $rdf.namedNode(`${base}/${new UrlSlugify().slugify(name)}`)
+  if (base.endsWith('/')) {
+    return $rdf.namedNode(`${base}${name}`)
+  }
+  return $rdf.namedNode(`${base}/${name}`)
 }
 
 function replace(from: NamedNode, to: NamedNode) {
@@ -26,12 +29,16 @@ function replace(from: NamedNode, to: NamedNode) {
 }
 
 export async function create({ resource, store }: CreateSharedDimension): Promise<GraphPointer> {
-  const name = resource.out(schema.name, { language: ['en', '*'] }).value
-  if (!name) {
-    throw new DomainError('Missing dimension name')
+  const identifier = resource.out(dcterms.identifier).value
+  if (!identifier) {
+    throw new DomainError('Missing dimension identifier')
   }
 
-  const termSetId = newId(`${env.MANAGED_DIMENSIONS_BASE}term-set`, name)
+  const termSetId = newId(new URL('/dimension', env.MANAGED_DIMENSIONS_BASE).toString(), identifier)
+  if (await store.exists(termSetId, schema.DefinedTermSet)) {
+    throw new httpError.Conflict(`Shared Dimension ${identifier} already exists`)
+  }
+
   const dataset = $rdf.dataset([...resource.dataset].map(replace(resource.term, termSetId)))
   const termSet = clownface({ dataset })
     .namedNode(termSetId)
@@ -48,15 +55,20 @@ interface CreateTerm {
 }
 
 export async function createTerm({ termSet, resource, store }: CreateTerm): Promise<GraphPointer> {
-  const name = resource.out(schema.name, { language: ['en', '*'] }).value
-  if (!name) {
-    throw new DomainError('Missing term name')
+  const identifier = resource.out(dcterms.identifier).value
+  if (!identifier) {
+    throw new DomainError('Missing term id')
   }
 
-  const termId = newId(termSet.value, name)
+  const termId = newId(termSet.value, identifier)
+  if (await store.exists(termId, schema.DefinedTerm)) {
+    throw new httpError.Conflict(`Term ${identifier} already exists`)
+  }
+
   const dataset = $rdf.dataset([...resource.dataset].map(replace(resource.term, termId)))
   const term = clownface({ dataset })
     .namedNode(termId)
+    .deleteOut(dcterms.identifier)
     .addOut(schema.inDefinedTermSet, termSet)
     .addOut(rdf.type, [schema.DefinedTerm, hydra.Resource, md.SharedDimensionTerm])
 
