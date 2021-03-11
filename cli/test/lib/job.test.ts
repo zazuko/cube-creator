@@ -14,7 +14,7 @@ import type { Variables } from 'barnard59-core/lib/Pipeline'
 Hydra.baseUri = env.API_CORE_BASE
 
 describe('lib/job', function () {
-  this.timeout(20000)
+  this.timeout(360 * 1000)
 
   let variables: Variables
 
@@ -41,7 +41,7 @@ describe('lib/job', function () {
       }
 
       // then
-      expect(results).to.have.length(2)
+      expect(results).to.have.length(3)
       expect(results[0].id.value).to.match(new RegExp('/cube-project/ubd/csv-mapping/table-\\w+/csvw$'))
       expect(results[0].dialect?.quoteChar).to.equal('"')
       expect(results[0].dialect?.delimiter).to.equal(',')

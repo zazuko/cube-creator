@@ -6,14 +6,17 @@ import { DatasetCore, Quad, Term } from 'rdf-js'
 import map from 'barnard59-base/lib/map'
 import { Dictionary } from '@rdfine/prov'
 import { prov, schema } from '@tpluscode/rdf-ns-builders'
-import { cc } from '@cube-creator/core/namespace'
+import { cc, cube } from '@cube-creator/core/namespace'
 import TermMap from '@rdfjs/term-map'
 import { MultiPointer } from 'clownface'
 import * as Models from '@cube-creator/model'
 import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import { HydraResponse } from 'alcaeus'
+import { DefaultCsvwLiteral } from '@cube-creator/core/mapping'
 
 Hydra.resources.factory.addMixin(...Object.values(Models))
+
+const undef = $rdf.literal('', cube.Undefined)
 
 const pendingRequests = new Map<string, Promise<any>>()
 function load<T extends RdfResourceCore>(uri: string): Promise<HydraResponse<DatasetCore, T>> {
@@ -80,6 +83,10 @@ export async function mapDimensions(this: Pick<Context, 'variables'>) {
     const { subject, predicate, object, graph } = quad
     const mappingTerm = getDimensionMapping(predicate)
     if (mappingTerm?.value) {
+      if (object.equals(undef)) {
+        return $rdf.quad(subject, predicate, cube.Undefined, graph)
+      }
+
       const dict = await loadDimensionMapping(mappingTerm.value)
       const mappedValue = dict?.out(prov.hadDictionaryMember)
         .has(prov.pairKey, object)
@@ -91,4 +98,17 @@ export async function mapDimensions(this: Pick<Context, 'variables'>) {
 
     return quad
   })
+}
+
+export function substituteUndefined(quad: Quad): Quad {
+  if (quad.object.value === DefaultCsvwLiteral) {
+    return $rdf.quad(
+      quad.subject,
+      quad.predicate,
+      undef,
+      quad.graph,
+    )
+  }
+
+  return quad
 }

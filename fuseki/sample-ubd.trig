@@ -65,7 +65,7 @@ graph <cube-project/ubd/dimensions-metadata> {
     schema:hasPart <cube-project/ubd/dimensions-metadata/station> ;
     schema:hasPart <cube-project/ubd/dimensions-metadata/aggregation> ;
     schema:hasPart <cube-project/ubd/dimensions-metadata/pollutant> ;
-    schema:hasPart <cube-project/ubd/dimensions-metadata/unit-id> ;
+    schema:hasPart <cube-project/ubd/dimensions-metadata/unit> ;
   .
 
   <cube-project/ubd/dimensions-metadata/dimension-year>
@@ -88,8 +88,10 @@ graph <cube-project/ubd/dimensions-metadata> {
     cc:dimensionMapping <cube-project/ubd/dimension-mapping/pollutant> ;
   .
 
-  <cube-project/ubd/dimensions-metadata/unit-id>
-    schema:about <https://environment.ld.admin.ch/foen/ubd/28/unit-id> ;
+  <cube-project/ubd/dimensions-metadata/unit>
+    schema:about <https://environment.ld.admin.ch/foen/ubd/28/unit> ;
+    qudt:scaleType qudt:NominalScale ;
+    cc:dimensionMapping <cube-project/ubd/dimension-mapping/unit> ;
   .
 }
 
@@ -117,6 +119,23 @@ graph <cube-project/ubd/dimension-mapping/pollutant> {
   .
 }
 
+<cube-project/ubd/dimension-mapping/unit> void:inDataset <ubd-example> .
+graph <cube-project/ubd/dimension-mapping/unit> {
+  <cube-project/ubd/dimension-mapping/unit>
+    a prov:Dictionary, hydra:Resource ;
+    schema:about <https://environment.ld.admin.ch/foen/ubd/28/unit> ;
+    cc:sharedDimension <http://example.com/dimension/units> ;
+  .
+
+  <cube-project/ubd/dimension-mapping/unit>
+    prov:hadDictionaryMember [
+      a prov:KeyEntityPair ;
+      prov:pairKey "µg/m3" ;
+      prov:pairEntity <http://qudt.org/vocab/unit/MicroGM-PER-M3> ;
+    ] ;
+  .
+}
+
 <cube-project/ubd/cube-data> void:inDataset <ubd-example> .
 graph <cube-project/ubd/cube-data> {
   <https://environment.ld.admin.ch/foen/ubd/28/>
@@ -129,6 +148,7 @@ graph <cube-project/ubd/cube-data> {
     a                 cube:ObservationSet ;
     cube:observation  <https://environment.ld.admin.ch/foen/ubd/28/observation/blBAS-1999-annualmean> ,
                       <https://environment.ld.admin.ch/foen/ubd/28/observation/blBAS-2002-annualmean> ,
+                      <https://environment.ld.admin.ch/foen/ubd/28/observation/blBAS-2004-annualmean> ,
                       <https://environment.ld.admin.ch/foen/ubd/28/observation/blBAS-2003-annualmean> ;
   .
 
@@ -140,7 +160,7 @@ graph <cube-project/ubd/cube-data> {
     <https://environment.ld.admin.ch/foen/ubd/28/dimension/year>  "2003"^^xsd:gYear ;
     <https://environment.ld.admin.ch/foen/ubd/28/pollutant>       "so2" ;
     <https://environment.ld.admin.ch/foen/ubd/28/station>         <https://environment.ld.admin.ch/foen/ubd/28/station/blBAS> ;
-    <https://environment.ld.admin.ch/foen/ubd/28/unit-id>         "µg/m3" ;
+    <https://environment.ld.admin.ch/foen/ubd/28/unit>            <http://qudt.org/vocab/unit/MicroGM-PER-M3> ;
   .
 
   <https://environment.ld.admin.ch/foen/ubd/28/observation/blBAS-2002-annualmean>
@@ -151,7 +171,7 @@ graph <cube-project/ubd/cube-data> {
     <https://environment.ld.admin.ch/foen/ubd/28/dimension/year>  "2002"^^xsd:gYear ;
     <https://environment.ld.admin.ch/foen/ubd/28/pollutant>       "so2" ;
     <https://environment.ld.admin.ch/foen/ubd/28/station>         <https://environment.ld.admin.ch/foen/ubd/28/station/blBAS> ;
-    <https://environment.ld.admin.ch/foen/ubd/28/unit-id>         "µg/m3" ;
+    <https://environment.ld.admin.ch/foen/ubd/28/unit>            <http://qudt.org/vocab/unit/MicroGM-PER-M3> ;
   .
 
   <https://environment.ld.admin.ch/foen/ubd/28/observation/blBAS-2004-annualmean>
@@ -163,7 +183,7 @@ graph <cube-project/ubd/cube-data> {
     # does not appear in constraint shape but adding to check query for missing values
     <https://environment.ld.admin.ch/foen/ubd/28/pollutant>       "Pb" ;
     <https://environment.ld.admin.ch/foen/ubd/28/station>         <https://environment.ld.admin.ch/foen/ubd/28/station/blBAS> ;
-    <https://environment.ld.admin.ch/foen/ubd/28/unit-id>         "µg/m3" ;
+    <https://environment.ld.admin.ch/foen/ubd/28/unit>           <http://qudt.org/vocab/unit/MicroGM-PER-M3> ;
   .
 
   <https://environment.ld.admin.ch/foen/ubd/28/observation/blBAS-1999-annualmean>
@@ -174,7 +194,7 @@ graph <cube-project/ubd/cube-data> {
     <https://environment.ld.admin.ch/foen/ubd/28/dimension/year>  "1999"^^xsd:gYear ;
     <https://environment.ld.admin.ch/foen/ubd/28/pollutant>       <http://www.wikidata.org/entity/Q2025> ;
     <https://environment.ld.admin.ch/foen/ubd/28/station>         <https://environment.ld.admin.ch/foen/ubd/28/station/blBAS> ;
-    <https://environment.ld.admin.ch/foen/ubd/28/unit-id>         "µg/m3" ;
+    <https://environment.ld.admin.ch/foen/ubd/28/unit>            <http://qudt.org/vocab/unit/MicroGM-PER-M3> ;
   .
 
   <https://environment.ld.admin.ch/foen/ubd/28/shape/>
@@ -230,12 +250,11 @@ graph <cube-project/ubd/cube-data> {
     sh:path      rdf:type .
 
   _:unit-id
-    sh:datatype  xsd:string ;
-    sh:in        ( "µg/m3" ) ;
+    sh:in        ( <http://qudt.org/vocab/unit/MicroGM-PER-M3> ) ;
     sh:maxCount  1 ;
     sh:minCount  1 ;
-    sh:nodeKind  sh:Literal ;
-    sh:path      <https://environment.ld.admin.ch/foen/ubd/28/unit-id> .
+    sh:nodeKind  sh:IRI ;
+    sh:path      <https://environment.ld.admin.ch/foen/ubd/28/unit> .
 
   _:station
     sh:in        ( <https://environment.ld.admin.ch/foen/ubd/28/station/blBAS> ) ;
@@ -285,6 +304,9 @@ graph <cube-project/ubd/csv-source/ubd> {
     csvw:column <cube-project/ubd/csv-source/ubd/column/station> ;
     csvw:column <cube-project/ubd/csv-source/ubd/column/value> ;
     csvw:column <cube-project/ubd/csv-source/ubd/column/aggregation> ;
+    csvw:column <cube-project/ubd/csv-source/ubd/column/remark> ;
+    csvw:column <cube-project/ubd/csv-source/ubd/column/unit> ;
+    csvw:column <cube-project/ubd/csv-source/ubd/column/pollutant> ;
   .
 
   <cube-project/ubd/csv-source/ubd/dialect>
@@ -296,7 +318,7 @@ graph <cube-project/ubd/csv-source/ubd> {
   <cube-project/ubd/csv-source/ubd/column/year>
     a csvw:Column ;
     schema:name "year" ;
-    dtype:order 0 ;
+    dtype:order 4 ;
     cc:csvColumnSample "2010" ;
     cc:csvColumnSample "2020" ;
     cc:csvColumnSample "2021" ;
@@ -305,16 +327,16 @@ graph <cube-project/ubd/csv-source/ubd> {
   <cube-project/ubd/csv-source/ubd/column/station>
     a csvw:Column ;
     schema:name "station_id" ;
-    dtype:order 1 ;
-    cc:csvColumnSample "1" ;
-    cc:csvColumnSample "2" ;
-    cc:csvColumnSample "3" ;
+    dtype:order 0 ;
+    cc:csvColumnSample "blBAS" ;
+    cc:csvColumnSample "neCHA" ;
+    cc:csvColumnSample "soHAE" ;
   .
 
   <cube-project/ubd/csv-source/ubd/column/value>
     a csvw:Column ;
     schema:name "value" ;
-    dtype:order 2 ;
+    dtype:order 5 ;
     cc:csvColumnSample "3.4" ;
     cc:csvColumnSample "2.1" ;
     cc:csvColumnSample "2.9" ;
@@ -323,10 +345,43 @@ graph <cube-project/ubd/csv-source/ubd> {
   <cube-project/ubd/csv-source/ubd/column/aggregation>
     a csvw:Column ;
     schema:name "aggregation_id" ;
+    dtype:order 2 ;
+    cc:csvColumnSample "annualmean" ;
+  .
+
+  <cube-project/ubd/csv-source/ubd/column/pollutant>
+    a csvw:Column ;
+    schema:name "pollutant_id" ;
+    dtype:order 1 ;
+    cc:csvColumnSample "so2" ;
+  .
+
+  <cube-project/ubd/csv-source/ubd/column/limitvalue>
+    a csvw:Column ;
+    schema:name "limitvalue" ;
     dtype:order 3 ;
-    cc:csvColumnSample "13.4" ;
-    cc:csvColumnSample "14.4" ;
-    cc:csvColumnSample "18.0" ;
+    cc:csvColumnSample "30" ;
+  .
+
+  <cube-project/ubd/csv-source/ubd/column/unit>
+    a csvw:Column ;
+    schema:name "unit_id" ;
+    dtype:order 6 ;
+    cc:csvColumnSample "µg/m3" ;
+  .
+
+  <cube-project/ubd/csv-source/ubd/column/remark>
+    a csvw:Column ;
+    schema:name "value_remark" ;
+    dtype:order 7 ;
+    cc:csvColumnSample "incomplete series" ;
+  .
+
+  <cube-project/ubd/csv-source/ubd/column/canton>
+    a csvw:Column ;
+    schema:name "canton" ;
+    dtype:order 8 ;
+    cc:csvColumnSample "ZH" ;
   .
 }
 
@@ -410,6 +465,10 @@ graph <cube-project/ubd/csv-mapping/table-observation> {
     cc:columnMapping <cube-project/ubd/csv-mapping/table-observation/column-mapping-2> ;
     cc:columnMapping <cube-project/ubd/csv-mapping/table-observation/column-mapping-3> ;
     cc:columnMapping <cube-project/ubd/csv-mapping/table-observation/column-mapping-4> ;
+    cc:columnMapping <cube-project/ubd/csv-mapping/table-observation/column-mapping-5> ;
+    cc:columnMapping <cube-project/ubd/csv-mapping/table-observation/column-mapping-6> ;
+    cc:columnMapping <cube-project/ubd/csv-mapping/table-observation/column-mapping-7> ;
+    cc:columnMapping <cube-project/ubd/csv-mapping/table-observation/column-mapping-8> ;
   .
 }
 
@@ -452,6 +511,68 @@ graph <cube-project/ubd/csv-mapping/table-observation/column-mapping-4> {
   <cube-project/ubd/csv-mapping/table-observation/column-mapping-4> a cc:ColumnMapping, cc:LiteralColumnMapping, hydra:Resource ;
     cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/aggregation> ;
     cc:targetProperty "aggregation" ;
+  .
+}
+
+<cube-project/ubd/csv-mapping/table-observation/column-mapping-5> void:inDataset <ubd-example> .
+graph <cube-project/ubd/csv-mapping/table-observation/column-mapping-5> {
+  <cube-project/ubd/csv-mapping/table-observation/column-mapping-5> a cc:ColumnMapping, cc:LiteralColumnMapping, hydra:Resource ;
+    cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/remark> ;
+    cc:targetProperty rdfs:comment ;
+  .
+}
+
+<cube-project/ubd/csv-mapping/table-observation/column-mapping-6> void:inDataset <ubd-example> .
+graph <cube-project/ubd/csv-mapping/table-observation/column-mapping-6> {
+  <cube-project/ubd/csv-mapping/table-observation/column-mapping-6> a cc:ColumnMapping, cc:LiteralColumnMapping, hydra:Resource ;
+    cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/unit> ;
+    cc:targetProperty "unit" ;
+  .
+}
+
+<cube-project/ubd/csv-mapping/table-observation/column-mapping-7> void:inDataset <ubd-example> .
+graph <cube-project/ubd/csv-mapping/table-observation/column-mapping-7> {
+  <cube-project/ubd/csv-mapping/table-observation/column-mapping-7>
+    a cc:ColumnMapping, cc:ReferenceColumnMapping, hydra:Resource ;
+    cc:targetProperty "canton" ;
+    cc:referencedTable <cube-project/ubd/csv-mapping/table-canton> ;
+    cc:identifierMapping
+      [
+        cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/canton> ;
+        cc:referencedColumn <cube-project/ubd/csv-source/stations/column/canton> ;
+      ] ;
+  .
+}
+
+<cube-project/ubd/csv-mapping/table-observation/column-mapping-8> void:inDataset <ubd-example> .
+graph <cube-project/ubd/csv-mapping/table-observation/column-mapping-8> {
+  <cube-project/ubd/csv-mapping/table-observation/column-mapping-8>
+    a cc:ColumnMapping, cc:LiteralColumnMapping, hydra:Resource ;
+    cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/pollutant> ;
+    cc:targetProperty "pollutant" ;
+  .
+}
+
+<cube-project/ubd/csv-mapping/table-canton> void:inDataset <ubd-example> .
+graph <cube-project/ubd/csv-mapping/table-canton> {
+  <cube-project/ubd/csv-mapping/table-canton> a cc:Table, hydra:Resource ;
+    cc:csvMapping <cube-project/ubd/csv-mapping> ;
+    cc:csvSource <cube-project/ubd/csv-source/ubd> ;
+    cc:csvw <cube-project/ubd/csv-mapping/table-canton/csvw> ;
+    schema:name "Canton" ;
+    schema:color "#BBBBBB" ;
+    cc:identifierTemplate "canton/{canton}" ;
+    cc:columnMapping <cube-project/ubd/csv-mapping/table-canton/column-mapping-1> ;
+  .
+}
+
+<cube-project/ubd/csv-mapping/table-canton/column-mapping-1> void:inDataset <ubd-example> .
+graph <cube-project/ubd/csv-mapping/table-canton/column-mapping-1> {
+  <cube-project/ubd/csv-mapping/table-canton/column-mapping-1>
+    a cc:ColumnMapping, cc:LiteralColumnMapping, hydra:Resource ;
+    cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/canton> ;
+    cc:targetProperty schema:identifier ;
+    cc:datatype xsd:string ;
   .
 }
 

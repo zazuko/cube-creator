@@ -203,8 +203,8 @@ describe('lib/commands/publish', function () {
           minCount: 1,
           maxCount: 1,
         }, {
-          path: ns.baseCube('unit-id'),
-          hasValue: $rdf.literal('µg/m3'),
+          path: ns.baseCube('unit'),
+          hasValue: $rdf.namedNode('http://qudt.org/vocab/unit/MicroGM-PER-M3'),
           minCount: 1,
           maxCount: 1,
         }],

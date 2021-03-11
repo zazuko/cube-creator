@@ -81,6 +81,7 @@
   :steps [ :stepList (
                        <#loadCsvStep>
                        <#parse>
+                       <#substituteUndefined>
                        <#filterObservationTable>
                        <#mapDimensions>
                        <#toDataset>
@@ -112,6 +113,13 @@
   code:implementedBy [ code:link <node:barnard59-formats#csvw.parse> ;
                        a         code:EcmaScript ] ;
   code:arguments     ( <#parseMetadata> ) .
+
+<#substituteUndefined>
+  a                  :Step ;
+  code:implementedBy [ code:link <node:barnard59-base#map> ;
+                       a         code:EcmaScript ] ;
+  code:arguments     ( [ code:link <file:../lib/output-mapper#substituteUndefined> ;
+                         a         code:EcmaScript ] ) .
 
 <#parseMetadata>
   a      :Pipeline, :ReadableObjectMode ;

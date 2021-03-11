@@ -20,6 +20,7 @@ import DatasetExt from 'rdf-ext/lib/Dataset'
 import * as sinon from 'sinon'
 import * as orgQueries from '../../lib/domain/organization/query'
 import { namedNode } from '@cube-creator/testing/clownface'
+import { DefaultCsvwLiteral } from '@cube-creator/core/mapping'
 
 describe('lib/csvw-builder', () => {
   let graph: AnyPointer<AnyContext, DatasetExt>
@@ -255,6 +256,27 @@ describe('lib/csvw-builder', () => {
     // then
     const csvwColumn = findColumn(csvw, 'JAHR')
     expect(csvwColumn?.default).to.eq('2020')
+  })
+
+  it('sets substitution default value for observation table literal columns without explicit default', async () => {
+    // given
+    csvSource.columns = [
+      CsvColumn.fromPointer(csvSource.pointer.namedNode('jahr-column'), { name: 'JAHR' }),
+    ]
+    const columnMapping = ColumnMapping.literalFromPointer(clownface({ dataset: $rdf.dataset() }).namedNode('year-mapping'), {
+      sourceColumn: $rdf.namedNode('jahr-column') as any,
+      targetProperty: schema.yearBuilt,
+    })
+    resources.push(columnMapping.pointer as any)
+    table.columnMappings = [columnMapping] as any
+    table.types.add(cc.ObservationTable)
+
+    // when
+    const csvw = await buildCsvw({ table, resources })
+
+    // then
+    const csvwColumn = findColumn(csvw, 'JAHR')
+    expect(csvwColumn?.default).to.eq(DefaultCsvwLiteral)
   })
 
   it('maps column from reference column mapping', async () => {
