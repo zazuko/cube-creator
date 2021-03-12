@@ -50,14 +50,14 @@ export default class JobForm extends Vue {
     this.shape = await api.fetchOperationShape(this.operation)
   }
 
-  async onSubmit (): Promise<void> {
+  async onSubmit (resource: GraphPointer): Promise<void> {
     this.error = null
     this.isSubmitting = true
 
     try {
       const job = await this.$store.dispatch('api/invokeSaveOperation', {
         operation: this.operation,
-        resource: this.resource,
+        resource,
       })
 
       this.$buefy.toast.open({

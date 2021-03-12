@@ -49,14 +49,14 @@ export default class extends Vue {
     }
   }
 
-  async onSubmit (): Promise<void> {
+  async onSubmit (resource: GraphPointer): Promise<void> {
     this.error = null
     this.isSubmitting = true
 
     try {
       const project = await this.$store.dispatch('api/invokeSaveOperation', {
         operation: this.operation,
-        resource: this.resource,
+        resource,
       })
 
       this.$buefy.toast.open({

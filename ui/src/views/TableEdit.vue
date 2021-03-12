@@ -66,14 +66,14 @@ export default class TableCreateView extends Vue {
     return this.operation?.title ?? 'Error: Missing operation'
   }
 
-  async onSubmit (): Promise<void> {
+  async onSubmit (resource: GraphPointer): Promise<void> {
     this.error = null
     this.isSubmitting = true
 
     try {
       const table = await this.$store.dispatch('api/invokeSaveOperation', {
         operation: this.operation,
-        resource: this.resource,
+        resource,
       })
 
       this.$store.commit('project/storeTable', table)

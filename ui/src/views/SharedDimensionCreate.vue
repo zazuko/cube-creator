@@ -54,14 +54,14 @@ export default class extends Vue {
     }
   }
 
-  async onSubmit (): Promise<void> {
+  async onSubmit (resource: GraphPointer): Promise<void> {
     this.error = null
     this.isSubmitting = true
 
     try {
       const dimension = await this.$store.dispatch('api/invokeSaveOperation', {
         operation: this.operation,
-        resource: this.resource,
+        resource,
       })
 
       await this.$store.dispatch('sharedDimensions/fetchCollection')
