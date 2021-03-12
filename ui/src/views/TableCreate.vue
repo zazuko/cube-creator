@@ -124,14 +124,14 @@ export default class TableCreateView extends Vue {
       .filter((column): column is CsvColumn => column !== null)
   }
 
-  async onSubmit (): Promise<void> {
+  async onSubmit (resource: GraphPointer): Promise<void> {
     this.error = null
     this.isSubmitting = true
 
     try {
       const table = await this.$store.dispatch('api/invokeSaveOperation', {
         operation: this.operation,
-        resource: this.resource,
+        resource,
       })
 
       this.$store.commit('project/storeTable', table)

@@ -55,14 +55,14 @@ export default class CubeMetadataEdit extends Vue {
     return this.operation?.title ?? 'Error: Missing operation'
   }
 
-  async onSubmit (): Promise<void> {
+  async onSubmit (resource: GraphPointer): Promise<void> {
     this.error = null
     this.isSubmitting = true
 
     try {
       await this.$store.dispatch('api/invokeSaveOperation', {
         operation: this.operation,
-        resource: this.resource,
+        resource,
       })
 
       this.$store.dispatch('project/fetchCubeMetadata')

@@ -70,8 +70,8 @@ export default class extends Vue {
     }
   }
 
-  onSubmit (): void {
-    this.$emit('submit', this.resource)
+  onSubmit (resource: GraphPointer): void {
+    this.$emit('submit', resource)
   }
 }
 </script>

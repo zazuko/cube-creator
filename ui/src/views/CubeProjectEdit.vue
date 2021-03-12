@@ -64,7 +64,7 @@ export default class CubeProjectEditView extends Vue {
     this.resource = Object.freeze(this.project.pointer)
   }
 
-  async updateProject (): Promise<void> {
+  async updateProject (resource: GraphPointer): Promise<void> {
     const operation = this.project.actions.edit
 
     this.error = null
@@ -73,7 +73,7 @@ export default class CubeProjectEditView extends Vue {
     try {
       const project = await this.$store.dispatch('api/invokeSaveOperation', {
         operation: operation,
-        resource: this.resource,
+        resource,
       })
 
       this.$store.commit('project/storeProject', project)

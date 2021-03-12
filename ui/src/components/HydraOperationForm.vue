@@ -1,6 +1,6 @@
 <template>
-  <form @submit.prevent="$emit('submit')">
-    <cc-form :resource.prop="resource" :shapes.prop="shapePointer" no-editor-switches />
+  <form @submit.prevent="$emit('submit', clone)">
+    <cc-form :resource.prop="clone" :shapes.prop="shapePointer" no-editor-switches />
 
     <loading-block v-if="!shape" />
 
@@ -17,9 +17,10 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import { RuntimeOperation } from 'alcaeus'
-import { GraphPointer } from 'clownface'
+import $rdf from 'rdf-ext'
+import clownface, { GraphPointer } from 'clownface'
 import type { Shape } from '@rdfine/shacl'
 import FormSubmitCancel from './FormSubmitCancel.vue'
 import HydraOperationError from './HydraOperationError.vue'
@@ -37,6 +38,39 @@ export default class HydraOperationButton extends Vue {
   @Prop({ default: false }) isSubmitting!: boolean
   @Prop() showCancel?: boolean
   @Prop() submitLabel?: string
+
+  __clone: GraphPointer | null = null
+
+  @Watch('resource')
+  private resourceChanged (newResource: GraphPointer, oldResource: GraphPointer) {
+    if (newResource !== oldResource) {
+      this.__clone = null
+    }
+  }
+
+  get clone () {
+    const { __clone, resource } = this
+
+    if (__clone) {
+      return __clone
+    }
+
+    if (!resource) {
+      return resource
+    }
+
+    const { graph } = resource._context[0]
+
+    const clone = $rdf.dataset([
+      ...resource.dataset.match(null, null, null, graph)
+    ])
+
+    return clownface({
+      dataset: clone,
+      term: resource.term,
+      graph,
+    })
+  }
 
   get shapePointer (): GraphPointer | null {
     return this.shape?.pointer ?? null
