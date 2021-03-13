@@ -2361,6 +2361,13 @@
   dependencies:
     "@types/rdf-js" "*"
 
+"@types/rdf-validate-datatype@^0.1":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@types/rdf-validate-datatype/-/rdf-validate-datatype-0.1.0.tgz#2ff6ea1c5d288c4cdd4ee9995f5afb61a1d43c23"
+  integrity sha512-OJUE0Bi3gHeKjsDpkVOakUaF2aHUbib+O7/1bVDWiFmrliebxBKeK8nZYGFtGmcBhgU7IhJ9hCDNZw9Z2AxOtw==
+  dependencies:
+    "@types/rdf-js" "*"
+
 "@types/rdf-validate-shacl@^0.2.0":
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@types/rdf-validate-shacl/-/rdf-validate-shacl-0.2.0.tgz#7b699d713d9895f7cc949a68d586789310ed37cc"
