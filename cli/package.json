@@ -73,6 +73,7 @@
     "@types/once": "^1.4.0",
     "@types/rdf-ext": "^1.3.5",
     "@types/rdf-js": "^4",
+    "@types/rdf-validate-datatype": "^0.1",
     "@types/rdfjs__formats-common": "^2.0.0",
     "@types/rdfjs__namespace": "^1.1.1",
     "@types/rdfjs__sink-map": "^1.0.0",
