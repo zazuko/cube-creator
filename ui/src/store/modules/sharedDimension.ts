@@ -49,6 +49,7 @@ const actions: ActionTree<SharedDimensionState, RootState> = {
     const termsCollection = await api.fetchResource<Collection>(dimension.terms.value)
     const terms = termsCollection.member.map(serializeSharedDimensionTerm)
     context.commit('storeTerms', terms)
+    return terms
   },
 
   removeTerm (context, term) {

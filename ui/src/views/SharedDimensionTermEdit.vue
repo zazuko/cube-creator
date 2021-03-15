@@ -15,12 +15,11 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Watch } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
 import { RuntimeOperation } from 'alcaeus'
-import clownface, { GraphPointer } from 'clownface'
+import { GraphPointer } from 'clownface'
 import type { Shape } from '@rdfine/shacl'
-import { dataset } from '@rdf-esm/dataset'
 import SidePane from '@/components/SidePane.vue'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import { api } from '@/api'
@@ -36,27 +35,36 @@ export default class extends Vue {
   @sharedDimensionNS.State('dimension') dimension!: SharedDimension
   @sharedDimensionNS.Getter('findTerm') findTerm!: (id: string) => SharedDimensionTerm
 
-  resource: GraphPointer | null = Object.freeze(clownface({ dataset: dataset() }).namedNode(''));
-  error: ErrorDetails | null = null;
-  isSubmitting = false;
-  shape: Shape | null = null;
-  shapes: GraphPointer | null = null;
+  resource: GraphPointer | null = null
+  error: ErrorDetails | null = null
+  isSubmitting = false
+  shape: Shape | null = null
+  shapes: GraphPointer | null = null
 
-  get term (): SharedDimensionTerm {
+  get term (): SharedDimensionTerm | null {
     const termId = this.$route.params.termId
     return this.findTerm(termId)
   }
 
   get operation (): RuntimeOperation | null {
-    return this.term.actions.replace
+    return this.term?.actions.replace ?? null
   }
 
   get title (): string {
     return this.operation?.title ?? ''
   }
 
-  async mounted (): Promise<void> {
-    this.resource = Object.freeze(this.term.pointer)
+  mounted (): void {
+    if (this.term) {
+      this.prepareResource()
+    }
+  }
+
+  @Watch('term')
+  async prepareResource (): Promise<void> {
+    if (this.term) {
+      this.resource = Object.freeze(this.term.pointer)
+    }
 
     if (this.operation) {
       this.shape = await api.fetchOperationShape(this.operation)
