@@ -1,5 +1,12 @@
 # @cube-creator/cli
 
+## 0.1.19
+
+### Patch Changes
+
+- 060fdf2: Transform missing csv values into cube:Undefined terms (#481)
+- 4598093: Validate datatype of produced quads (#561)
+
 ## 0.1.18
 
 ### Patch Changes

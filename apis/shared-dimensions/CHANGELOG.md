@@ -1,5 +1,18 @@
 # @cube-creator/shared-dimensions-api
 
+## 0.3.0
+
+### Minor Changes
+
+- 68ab7e8: Change the resoure naming scheme
+
+### Patch Changes
+
+- 6c379b6: Add schema:validThrough to Shared Dimension
+- 47e9609: Create shared dimension URIs from user-provided identifier
+- 6c379b6: Allow modifying Shared Dimensions
+- 5a27616: Various fixes for Shared Dimensions
+
 ## 0.2.0
 
 ### Minor Changes
