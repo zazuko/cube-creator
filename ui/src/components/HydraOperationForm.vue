@@ -48,7 +48,7 @@ export default class HydraOperationButton extends Vue {
     }
   }
 
-  get clone () {
+  get clone (): GraphPointer | null {
     const { __clone, resource } = this
 
     if (__clone) {
