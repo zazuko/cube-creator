@@ -8,7 +8,7 @@
     "@rdfine/schema": "^0.6.3",
     "@cube-creator/api-errors": "0.0.1",
     "@rdfine/rdfs": "^0.6.4",
-    "@rdfine/shacl": "^0.7.4",
+    "@rdfine/shacl": "^0.7.5",
     "@tpluscode/rdf-ns-builders": "^0.4.0",
     "@tpluscode/rdf-string": "^0.2.21",
     "@tpluscode/rdfine": "^0.5.25",
