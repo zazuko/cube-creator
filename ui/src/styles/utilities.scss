@@ -1,4 +1,8 @@
 
+.h-full {
+    height: 100%;
+}
+
 .gap-1 > *:not(:last-child) {
     @extend .mr-1;
 }

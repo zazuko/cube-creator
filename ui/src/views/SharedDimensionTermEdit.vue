@@ -1,16 +1,36 @@
 <template>
-  <side-pane :is-open="true" :title="title" @close="onCancel">
-    <hydra-operation-form
-      v-if="operation"
-      :operation="operation"
-      :resource="resource"
-      :shape="shape"
-      :error="error"
-      :is-submitting="isSubmitting"
-      submit-label="Save term"
-      @submit="onSubmit"
-      @cancel="onCancel"
-    />
+  <side-pane :is-open="true" :title="title" @close="onCancel" :style="{ 'min-width': isRawMode ? '50%' : '' }">
+    <div v-if="isRawMode" class="h-full is-flex is-flex-direction-column is-justify-content-space-between">
+      <hydra-raw-rdf-form
+        v-if="operation"
+        :operation="operation"
+        :resource="resource"
+        :shape="shape"
+        :error="error"
+        :is-submitting="isSubmitting"
+        @submit="onSubmit"
+        @cancel="onCancel"
+      />
+      <b-button @click="isRawMode = false">
+        Back to form (basic)
+      </b-button>
+    </div>
+    <div v-else class="h-full is-flex is-flex-direction-column is-justify-content-space-between">
+      <hydra-operation-form
+        v-if="operation"
+        :operation="operation"
+        :resource="resource"
+        :shape="shape"
+        :error="error"
+        :is-submitting="isSubmitting"
+        submit-label="Save term"
+        @submit="onSubmit"
+        @cancel="onCancel"
+      />
+      <b-button icon-right="exclamation-triangle" @click="isRawMode = true">
+        Edit raw RDF (advanced)
+      </b-button>
+    </div>
   </side-pane>
 </template>
 
@@ -22,53 +42,50 @@ import { GraphPointer } from 'clownface'
 import type { Shape } from '@rdfine/shacl'
 import SidePane from '@/components/SidePane.vue'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
+import HydraRawRdfForm from '@/components/HydraRawRdfForm.vue'
 import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
-import { SharedDimension, SharedDimensionTerm } from '@/store/types'
+import { SharedDimension } from '@/store/types'
 
 const sharedDimensionNS = namespace('sharedDimension')
 
 @Component({
-  components: { SidePane, HydraOperationForm },
+  components: { SidePane, HydraOperationForm, HydraRawRdfForm },
 })
 export default class extends Vue {
   @sharedDimensionNS.State('dimension') dimension!: SharedDimension
-  @sharedDimensionNS.Getter('findTerm') findTerm!: (id: string) => SharedDimensionTerm
 
+  operation: RuntimeOperation | null = null
   resource: GraphPointer | null = null
   error: ErrorDetails | null = null
   isSubmitting = false
   shape: Shape | null = null
   shapes: GraphPointer | null = null
-
-  get term (): SharedDimensionTerm | null {
-    const termId = this.$route.params.termId
-    return this.findTerm(termId)
-  }
-
-  get operation (): RuntimeOperation | null {
-    return this.term?.actions.replace ?? null
-  }
-
-  get title (): string {
-    return this.operation?.title ?? ''
-  }
+  isRawMode = false
 
   mounted (): void {
-    if (this.term) {
-      this.prepareResource()
-    }
+    this.prepareForm()
   }
 
-  @Watch('term')
-  async prepareResource (): Promise<void> {
-    if (this.term) {
-      this.resource = Object.freeze(this.term.pointer)
-    }
+  @Watch('$route')
+  async prepareForm (): Promise<void> {
+    this.resource = null
+    this.operation = null
+    this.shape = null
+
+    const termId = this.$route.params.termId
+    const term = await api.fetchResource(termId)
+
+    this.resource = Object.freeze(term.pointer)
+    this.operation = term.actions.replace ?? null
 
     if (this.operation) {
       this.shape = await api.fetchOperationShape(this.operation)
     }
+  }
+
+  get title (): string {
+    return this.operation?.title ?? ''
   }
 
   async onSubmit (resource: GraphPointer): Promise<void> {
