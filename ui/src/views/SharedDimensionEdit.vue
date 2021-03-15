@@ -7,7 +7,7 @@
       :shape="shape"
       :error="error"
       :is-submitting="isSubmitting"
-      submit-label="Save term"
+      submit-label="Save dimension"
       @submit="onSubmit"
       @cancel="onCancel"
     />

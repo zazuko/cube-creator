@@ -165,6 +165,11 @@ const routes: Array<RouteConfig> = [
         component: SharedDimension,
         children: [
           {
+            path: 'edit',
+            name: 'SharedDimensionEdit',
+            component: SharedDimensionEdit,
+          },
+          {
             path: 'terms/new',
             name: 'SharedDimensionTermCreate',
             component: SharedDimensionTermCreate,
@@ -175,11 +180,6 @@ const routes: Array<RouteConfig> = [
             component: SharedDimensionTermEdit,
           }
         ],
-      },
-      {
-        path: '/shared-dimensions/:id/edit',
-        name: 'SharedDimensionEdit',
-        component: SharedDimensionEdit,
       },
     ],
   },
