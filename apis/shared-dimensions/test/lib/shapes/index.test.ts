@@ -1,7 +1,7 @@
 import { describe, it, before, beforeEach } from 'mocha'
 import { blankNode, namedNode } from '@cube-creator/testing/clownface'
-import { dcterms, qudt, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
-import { md } from '@cube-creator/core/namespace'
+import { dcterms, hydra, qudt, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
+import { md, meta } from '@cube-creator/core/namespace'
 import $rdf from 'rdf-ext'
 import { expect } from 'chai'
 import { NamedNode } from 'rdf-js'
@@ -12,14 +12,37 @@ import * as ns from '../../../lib/namespace'
 describe('@cube-creator/shared-dimensions-api/lib/shapes', () => {
   let shape: GraphPointer<NamedNode>
 
-  describe('shared-dimensions', () => {
+  describe('shared-dimensions-create', () => {
     before(() => {
-      shape = shapes.get(ns.shape['shape/shared-dimension'])!()
+      shape = shapes.get(ns.shape['shape/shared-dimension-create'])!()
     })
 
     it('is valid when resource has all required props', () => {
       // given
       const resource = blankNode()
+        .addOut(dcterms.identifier, $rdf.literal('test'))
+        .addOut(schema.name, $rdf.literal('Test', 'en'))
+        .addOut(sh.property, prop => {
+          prop
+            .addOut(qudt.scaleType, qudt.NominalScale)
+            .addOut(rdf.type, schema.GeoShape)
+            .addOut(schema.name, $rdf.literal('Test', 'en'))
+        })
+
+      // then
+      expect(resource).to.matchShape(shape)
+    })
+  })
+
+  describe('shared-dimensions-update', () => {
+    before(() => {
+      shape = shapes.get(ns.shape['shape/shared-dimension-update'])!()
+    })
+
+    it('allows dcterms:identifier', () => {
+      // given
+      const resource = blankNode()
+        .addOut(rdf.type, [hydra.Resource, schema.DefinedTermSet, md.SharedDimension, meta.SharedDimension])
         .addOut(dcterms.identifier, $rdf.literal('test'))
         .addOut(schema.name, $rdf.literal('Test', 'en'))
         .addOut(sh.property, prop => {
