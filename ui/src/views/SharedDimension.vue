@@ -6,7 +6,7 @@
           {{ dimension.name }}
         </h2>
         <div>
-          <hydra-operation-button :operation="dimension.actions.edit" :to="{ name: 'SharedDimensionEdit' }" />
+          <hydra-operation-button :operation="dimension.actions.replace" :to="{ name: 'SharedDimensionEdit' }" />
           <hydra-operation-button :operation="dimension.actions.delete" @click="deleteDimension(dimension)" />
         </div>
       </div>

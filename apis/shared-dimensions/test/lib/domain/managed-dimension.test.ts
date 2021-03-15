@@ -1,9 +1,9 @@
 import { describe, it, beforeEach } from 'mocha'
 import { expect } from 'chai'
-import { namedNode } from '@cube-creator/testing/clownface'
-import { dcterms, hydra, rdf, schema, xsd } from '@tpluscode/rdf-ns-builders'
+import { blankNode, namedNode } from '@cube-creator/testing/clownface'
+import { dcterms, hydra, rdf, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import { md, meta } from '@cube-creator/core/namespace'
-import { create, createTerm } from '../../../lib/domain/shared-dimension'
+import { create, createTerm, update } from '../../../lib/domain/shared-dimension'
 import { SharedDimensionsStore } from '../../../lib/store'
 import { testStore } from '../../support/store'
 import $rdf from 'rdf-ext'
@@ -147,6 +147,31 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () =
 
       // then
       expect(term.out(rdf.type).terms).to.deep.contain(md.SharedDimensionTerm)
+    })
+  })
+
+  describe('update', () => {
+    it('removes all triples which are subgraph of sh:ignoreProperty', async () => {
+      // given
+      const shape = blankNode()
+        .addList(sh.ignoredProperties, [schema.memberOf, dcterms.identifier])
+      const resource = namedNode('')
+        .addOut(dcterms.identifier, 'foo')
+        .addOut(schema.name, 'Term set')
+        .addOut(schema.memberOf, org => {
+          org.addOut(rdf.type, schema.Organization)
+        })
+
+      // when
+      const saved = await update({
+        store: testStore(),
+        shape,
+        resource,
+      })
+
+      // expect
+      expect(saved.dataset).to.have.property('size', 1)
+      expect(saved.out(schema.name).value).to.eq('Term set')
     })
   })
 })

@@ -1,7 +1,7 @@
-import clownface, { GraphPointer } from 'clownface'
-import { NamedNode, Quad } from 'rdf-js'
+import clownface, { GraphPointer, MultiPointer } from 'clownface'
+import { NamedNode, Quad, Term } from 'rdf-js'
 import $rdf from 'rdf-ext'
-import { dcterms, hydra, rdf, schema } from '@tpluscode/rdf-ns-builders'
+import { dcterms, hydra, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { md, meta } from '@cube-creator/core/namespace'
 import { DomainError } from '@cube-creator/api-errors'
 import env from '../env'
@@ -78,4 +78,32 @@ export async function createTerm({ termSet, resource, store }: CreateTerm): Prom
 
   await store.save(term)
   return term
+}
+
+interface UpdateSharedDimension {
+  resource: GraphPointer<NamedNode>
+  store: SharedDimensionsStore
+  shape: MultiPointer
+}
+
+function removeSubgraph(pointer: GraphPointer, predicate?: Term) {
+  const children = pointer.out(predicate).toArray()
+  pointer.deleteOut(predicate)
+
+  for (const child of children) {
+    removeSubgraph(child)
+  }
+}
+
+export async function update({ resource, store, shape }: UpdateSharedDimension): Promise<GraphPointer> {
+  const ignoredProperties = shape
+    .out(sh.ignoredProperties)
+    .list() || []
+
+  for (const ignoredProperty of ignoredProperties) {
+    removeSubgraph(resource, ignoredProperty.term)
+  }
+
+  await store.save(resource)
+  return resource
 }

@@ -163,7 +163,10 @@ export const update = (): Initializer<NodeShape> => ({
   closed: true,
   [sh.ignoredProperties.value]: {
     [rdf.first.value]: dcterms.identifier,
-    [rdf.rest.value]: rdf.nil,
+    [rdf.rest.value]: {
+      [rdf.first.value]: md.terms,
+      [rdf.rest.value]: rdf.nil,
+    },
   },
   property: [
     ...properties,
