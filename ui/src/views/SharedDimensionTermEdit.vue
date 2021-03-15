@@ -2,6 +2,7 @@
   <side-pane :is-open="true" :title="title" @close="onCancel" :style="{ 'min-width': isRawMode ? '50%' : '' }">
     <div v-if="isRawMode" class="h-full is-flex is-flex-direction-column is-justify-content-space-between">
       <hydra-raw-rdf-form
+        ref="rdfEditor"
         v-if="operation"
         :operation="operation"
         :resource="resource"
@@ -11,12 +12,13 @@
         @submit="onSubmit"
         @cancel="onCancel"
       />
-      <b-button @click="isRawMode = false">
+      <b-button @click="toggleMode">
         Back to form (basic)
       </b-button>
     </div>
     <div v-else class="h-full is-flex is-flex-direction-column is-justify-content-space-between">
       <hydra-operation-form
+        ref="form"
         v-if="operation"
         :operation="operation"
         :resource="resource"
@@ -27,7 +29,7 @@
         @submit="onSubmit"
         @cancel="onCancel"
       />
-      <b-button icon-right="exclamation-triangle" @click="isRawMode = true">
+      <b-button icon-right="exclamation-triangle" @click="toggleMode">
         Edit raw RDF (advanced)
       </b-button>
     </div>
@@ -38,7 +40,8 @@
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
 import { RuntimeOperation } from 'alcaeus'
-import { GraphPointer } from 'clownface'
+import $rdf from 'rdf-ext'
+import clownface, { GraphPointer } from 'clownface'
 import type { Shape } from '@rdfine/shacl'
 import SidePane from '@/components/SidePane.vue'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
@@ -65,6 +68,21 @@ export default class extends Vue {
 
   mounted (): void {
     this.prepareForm()
+  }
+
+  toggleMode () {
+    if (this.isRawMode) {
+      const rdfEditor: HydraRawRdfForm = this.$refs.rdfEditor as any
+      this.resource = Object.freeze(clownface({
+        dataset: $rdf.dataset(rdfEditor.editorQuads || []),
+        term: this.resource!.term,
+      }))
+    } else {
+      const form: HydraOperationForm = this.$refs.form as any
+      this.resource = Object.freeze(form.clone)
+    }
+
+    this.isRawMode = !this.isRawMode
   }
 
   @Watch('$route')
