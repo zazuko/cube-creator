@@ -40,4 +40,32 @@ With Class meta:SharedDimension {
             Expect Property schema:validThrough
         }
     }
+
+    Expect Operation schema:ReplaceAction {
+        Invoke {
+            Content-Type "text/turtle"
+
+            ```
+            prefix schema: <http://schema.org/>
+            prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+            prefix qudt: <http://qudt.org/schema/qudt/>
+            prefix meta: <https://cube.link/meta/>
+            prefix sh: <http://www.w3.org/ns/shacl#>
+            prefix dcterms: <http://purl.org/dc/terms/>
+            prefix hydra: <http://www.w3.org/ns/hydra/core#>
+            prefix md: <https://cube-creator.zazuko.com/shared-dimensions/vocab#>
+
+            <>
+                a schema:DefinedTermSet, meta:SharedDimension, hydra:Resource, md:SharedDimension ;
+                schema:name "Technologies"@en, "Les technologies"@fr ;
+                schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
+                schema:validThrough "2022-01-20T23:59:59Z"^^xsd:dateTime ;
+                sh:property [ ] ;
+            .
+            ```
+        } => {
+            Expect Status 200
+            Expect Property schema:validThrough
+        }
+    }
 }

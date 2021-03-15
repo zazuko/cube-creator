@@ -16,3 +16,10 @@ export const post = protectedResource(shaclValidate, asyncMiddleware(async (req,
   res.status(201)
   return res.dataset(term.dataset)
 }))
+
+export const put = protectedResource(shaclValidate, asyncMiddleware(async (req, res) => {
+  const resource = await req.resource()
+  await store().save(resource)
+
+  return res.dataset(resource.dataset)
+}))
