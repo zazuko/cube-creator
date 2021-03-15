@@ -1,5 +1,18 @@
 # @cube-creator/ui
 
+## 0.1.19
+
+### Patch Changes
+
+- f75e65a: Forms would come back with "canceled" values (#336)
+- ac8a3ab: Adjust width of side-pane when editing dimension mapping to Shared Dimension
+- 6bd4164: Improve display of cube preview values based on datatype
+- fcdfb55: Ability to add arbitrary data to shared dimension terms
+- 5a27616: Various fixes for Shared Dimensions
+- b1f1ff0: Fix error when refreshing Shared Dimension Term edition page
+- 6ae8ee5: Shared Dimensions: modifying a dimension
+- 572b878: Fix toast wording when starting publication job (#579)
+
 ## 0.1.18
 
 ### Patch Changes

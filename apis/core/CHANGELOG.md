@@ -1,5 +1,19 @@
 # @cube-creator/core-api
 
+## 0.3.1
+
+### Patch Changes
+
+- 1a35826: Cube Metadata: License and Category (#514)
+- 060fdf2: Transform missing csv values into cube:Undefined terms (#481)
+- 1a31678: Fixes a problem when saving property with uni custom defined in Lindas
+- Updated dependencies [6c379b6]
+- Updated dependencies [47e9609]
+- Updated dependencies [68ab7e8]
+- Updated dependencies [6c379b6]
+- Updated dependencies [5a27616]
+  - @cube-creator/shared-dimensions-api@0.3.0
+
 ## 0.3.0
 
 ### Minor Changes
