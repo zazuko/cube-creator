@@ -122,7 +122,7 @@ md:SharedDimension
     [
       a hydra:SupportedOperation, schema:ReplaceAction ;
       hydra:method "PUT" ;
-      hydra:title "Update dimension" ;
+      hydra:title "Edit dimension" ;
       hydra:expects <shape/shared-dimension-update> ;
       code:implementedBy
         [
@@ -138,7 +138,7 @@ md:SharedDimensionTerm
     [
       a hydra:SupportedOperation, schema:ReplaceAction ;
       hydra:method "PUT" ;
-      hydra:title "Update term" ;
+      hydra:title "Edit term" ;
       hydra:expects <shape/shared-dimension-term-update> ;
       code:implementedBy
         [
