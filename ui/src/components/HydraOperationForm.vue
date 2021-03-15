@@ -30,7 +30,7 @@ import LoadingBlock from './LoadingBlock.vue'
 @Component({
   components: { FormSubmitCancel, HydraOperationError, LoadingBlock },
 })
-export default class HydraOperationButton extends Vue {
+export default class HydraOperationForm extends Vue {
   @Prop({ required: true }) operation!: RuntimeOperation
   @Prop({ required: true }) resource!: GraphPointer
   @Prop({ required: true }) shape!: Shape | null
@@ -81,10 +81,3 @@ export default class HydraOperationButton extends Vue {
   }
 }
 </script>
-
-<style scoped>
-.error-message ul {
-  list-style: disc;
-  padding-left: 1rem;
-}
-</style>
