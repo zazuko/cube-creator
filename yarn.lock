@@ -1658,7 +1658,7 @@
     "@tpluscode/rdf-ns-builders" "^0.4"
     "@tpluscode/rdfine" "^0.5.17"
 
-"@rdfjs-elements/formats-pretty@*":
+"@rdfjs-elements/formats-pretty@^0.1.0":
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/@rdfjs-elements/formats-pretty/-/formats-pretty-0.1.0.tgz#323ad2db94cbf7c49aa9a38bdd79ce2795ca8771"
   integrity sha512-s8uO+6kauo0qD2Wvhnhqo2Gji6gbp3tEMLXXzSAtuB9cPqk00INcxlDb9BuJP72Y6XaNre3CyfW+D7gAXVimyA==
@@ -1670,14 +1670,14 @@
     "@rdf-esm/sink-map" "^0.5.4"
     "@rdfjs/serializer-jsonld-ext" "^2.0.0"
 
-"@rdfjs-elements/rdf-editor@^0.3.4":
-  version "0.3.4"
-  resolved "https://registry.yarnpkg.com/@rdfjs-elements/rdf-editor/-/rdf-editor-0.3.4.tgz#df81b48b1a17cc1d5a3669d56a835f53458a28a7"
-  integrity sha512-5B0mj4I+kms9eb+beQP49Ho9LMSD9Bfa7SxaY6j6YhmIuBjto4PB8ITz7x13+H3faD6cSu43ow+F9VK5OkzEGQ==
+"@rdfjs-elements/rdf-editor@^0.3.6":
+  version "0.3.6"
+  resolved "https://registry.yarnpkg.com/@rdfjs-elements/rdf-editor/-/rdf-editor-0.3.6.tgz#b1df72d170bf67048f689bc98b8a33b5562aef2f"
+  integrity sha512-GZ+pTqeCuc7+KYX+qv9AluX9FRuEUH3kpRIWI5pc6EhW9jqkIMGUUrh8OnAgcN6gdH14bWor1NHe85YF+TxLxw==
   dependencies:
-    "@rdf-esm/data-model" "^0.5.3"
-    "@rdfjs-elements/formats-pretty" "*"
-    "@tpluscode/rdf-ns-builders" "^0.3.7"
+    "@rdf-esm/data-model" "^0.5.4"
+    "@rdfjs-elements/formats-pretty" "^0.1.0"
+    "@tpluscode/rdf-ns-builders" "^0.4"
     "@vanillawc/wc-codemirror" "^1.8.10"
     codemirror "^5.56.0"
     lit-element "^2.2.1"
@@ -1983,7 +1983,7 @@
   resolved "https://registry.yarnpkg.com/@tpluscode/eslint-config/-/eslint-config-0.1.1.tgz#5562e9753d4a4e9bd6ee4785baeaf9e6c7f42bfc"
   integrity sha512-gv7CE+3iQ6YNoEofgzMKWUgOHxY7Kozq06M4ls0PkOScOmvCoHTFD2XvPtqmADmXezQsMcZyM6VsHEilgHoasw==
 
-"@tpluscode/rdf-ns-builders@^0.3.6", "@tpluscode/rdf-ns-builders@^0.3.7":
+"@tpluscode/rdf-ns-builders@^0.3.6":
   version "0.3.7"
   resolved "https://registry.yarnpkg.com/@tpluscode/rdf-ns-builders/-/rdf-ns-builders-0.3.7.tgz#78067888fb622c97cc54222082634437fc291e52"
   integrity sha512-WyLjL2RNtHgipOwHbyA042KUYeVfF5X1Wz+SL+3QQODXCmqsDOAwVatthkJRD7uAs26SiyBmlejFSYV9PD0AVw==

@@ -24,7 +24,7 @@
     "@rdf-esm/dataset": "^0.5.1",
     "@rdfine/schema": "^0.6.3",
     "@rdfine/shacl": "^0.7.4",
-    "@rdfjs-elements/rdf-editor": "^0.3.4",
+    "@rdfjs-elements/rdf-editor": "^0.3.6",
     "@rdfjs/term-set": "^1.0.1",
     "@sentry/tracing": "^5.29.0",
     "@sentry/vue": "^5.29.0",
