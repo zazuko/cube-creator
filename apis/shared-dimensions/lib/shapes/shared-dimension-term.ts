@@ -48,7 +48,6 @@ export const create = (): Initializer<NodeShape> => ({
 })
 
 export const update = (): Initializer<NodeShape> => ({
-  closed: false,
   property: [
     ...commonProperties,
     {
