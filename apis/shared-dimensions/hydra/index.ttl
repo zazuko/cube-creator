@@ -41,7 +41,7 @@ md:SharedDimensions
          a hydra:Operation, schema:CreateAction ;
          hydra:method "POST" ;
          hydra:title "Create shared dimension" ;
-         hydra:expects <shape/shared-dimension> ;
+         hydra:expects <shape/shared-dimension-create> ;
          code:implementedBy
            [
              a code:EcmaScript ;
@@ -50,7 +50,8 @@ md:SharedDimensions
        ]
 .
 
-<shape/shared-dimension> a sh:NodeShape, sh:Shape .
+<shape/shared-dimension-create> a sh:NodeShape, sh:Shape .
+<shape/shared-dimension-update> a sh:NodeShape, sh:Shape .
 
 sh:NodeShape
   a hydra:Class ;
@@ -117,7 +118,18 @@ md:SharedDimension
           a code:EcmaScript ;
           code:link <file:handlers/shared-dimension#post> ;
         ] ;
-    ]
+    ],
+    [
+      a hydra:SupportedOperation, schema:ReplaceAction ;
+      hydra:method "PUT" ;
+      hydra:title "Edit dimension" ;
+      hydra:expects <shape/shared-dimension-update> ;
+      code:implementedBy
+        [
+          a code:EcmaScript ;
+          code:link <file:handlers/shared-dimension#put> ;
+        ] ;
+    ] ;
 .
 
 md:SharedDimensionTerm
@@ -126,7 +138,7 @@ md:SharedDimensionTerm
     [
       a hydra:SupportedOperation, schema:ReplaceAction ;
       hydra:method "PUT" ;
-      hydra:title "Update term" ;
+      hydra:title "Edit term" ;
       hydra:expects <shape/shared-dimension-term-update> ;
       code:implementedBy
         [

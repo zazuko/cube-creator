@@ -2,7 +2,7 @@ import { NamedNode } from 'rdf-js'
 import TermMap from '@rdfjs/term-map'
 import clownface, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
-import sharedDimension from './shared-dimension'
+import * as sharedDimension from './shared-dimension'
 import type { Initializer } from '@tpluscode/rdfine/RdfResource'
 import type { NodeShape } from '@rdfine/shacl'
 import RdfResource from '@tpluscode/rdfine'
@@ -33,7 +33,8 @@ function entry(id: NamedNode, init: () => Initializer<NodeShape>): [NamedNode, S
 }
 
 export default new TermMap<NamedNode, ShapeFactory>([
-  entry(shape['shape/shared-dimension'], sharedDimension),
+  entry(shape['shape/shared-dimension-create'], sharedDimension.create),
+  entry(shape['shape/shared-dimension-update'], sharedDimension.update),
   entry(shape['shape/shared-dimension-term-create'], dimensionTerm.create),
   entry(shape['shape/shared-dimension-term-update'], dimensionTerm.update),
 ])

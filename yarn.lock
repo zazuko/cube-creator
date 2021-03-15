@@ -1646,10 +1646,10 @@
     "@tpluscode/rdf-ns-builders" "^0.4"
     "@tpluscode/rdfine" "^0.5.17"
 
-"@rdfine/shacl@^0.7.3", "@rdfine/shacl@^0.7.4":
-  version "0.7.4"
-  resolved "https://registry.yarnpkg.com/@rdfine/shacl/-/shacl-0.7.4.tgz#fc86511a82d1fc4a95288ee3e256dd30162c1146"
-  integrity sha512-Ln8Lzq2Eon9zA13cXF3AqhqIdYDAvCxWhaLQuY1qPgwRcLWKSY8C1URVaKebzBVRKyYtrvggmM+chZTQ5Prj6Q==
+"@rdfine/shacl@^0.7.3", "@rdfine/shacl@^0.7.4", "@rdfine/shacl@^0.7.5":
+  version "0.7.5"
+  resolved "https://registry.yarnpkg.com/@rdfine/shacl/-/shacl-0.7.5.tgz#81a8b3ccd4a9b389f4b3a1b718225968363c2502"
+  integrity sha512-i5jJa75tdhyomgHfvqR38hNkbLaHXbd4ArRDhmKBgOUZvbElZoc9oULpwDo/XMbw9U14h7uOQyR2w4ewM1l7Wg==
   dependencies:
     "@rdf-esm/data-model" "^0.5.3"
     "@rdfine/owl" "^0.4.3"
