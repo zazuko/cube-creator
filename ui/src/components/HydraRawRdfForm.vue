@@ -91,12 +91,24 @@ export default class HydraRawRdfForm extends Vue {
   }
 
   onSubmit (): void {
-    // Wait to ensure rdf-editor has finished parsing
-    setTimeout(() => {
-      if (this.clone) {
-        this.$emit('submit', this.clone)
+    const editor = this.$refs.editor as any
+
+    if (editor.isParsing) {
+      const parsingComplete = () => {
+        this.doSubmit()
+        editor.removeEventListener('quads-changed', parsingComplete)
       }
-    }, 100)
+
+      editor.addEventListener('quads-changed', parsingComplete)
+    } else {
+      this.doSubmit()
+    }
+  }
+
+  doSubmit (): void {
+    if (this.clone) {
+      this.$emit('submit', this.clone)
+    }
   }
 }
 </script>
