@@ -9,6 +9,7 @@
           <hydra-operation-button :operation="dimension.actions.replace" :to="{ name: 'SharedDimensionEdit' }" />
           <hydra-operation-button :operation="dimension.actions.delete" @click="deleteDimension(dimension)" />
         </div>
+        <shared-dimension-tags :dimension="dimension" />
       </div>
       <table class="table is-narrow is-bordered is-striped is-fullwidth" v-if="terms">
         <thead>
@@ -87,6 +88,7 @@ import { namespace } from 'vuex-class'
 import HydraOperationButton from '@/components/HydraOperationButton.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import PageContent from '@/components/PageContent.vue'
+import SharedDimensionTags from '@/components/SharedDimensionTags.vue'
 import TermDisplay from '@/components/TermDisplay.vue'
 import TermWithLanguage from '@/components/TermWithLanguage.vue'
 import { SharedDimension, SharedDimensionTerm } from '@/store/types'
@@ -95,7 +97,14 @@ const appNS = namespace('app')
 const sharedDimensionNS = namespace('sharedDimension')
 
 @Component({
-  components: { HydraOperationButton, LoadingBlock, PageContent, TermDisplay, TermWithLanguage },
+  components: {
+    HydraOperationButton,
+    LoadingBlock,
+    PageContent,
+    SharedDimensionTags,
+    TermDisplay,
+    TermWithLanguage,
+  },
 })
 export default class extends Vue {
   @appNS.State('language') language!: string

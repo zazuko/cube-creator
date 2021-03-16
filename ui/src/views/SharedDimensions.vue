@@ -24,19 +24,12 @@
           class="panel-block"
         >
           <div class="is-flex-grow-1 is-flex is-justify-content-space-between">
-            <div>
+            <div class="is-flex is-justify-content-space-between">
               <p class="has-text-weight-bold">
                 {{ dimension.name }}
               </p>
             </div>
-            <div v-if="dimension.maintainer" class="is-flex is-flex-direction-column is-align-items-flex-end">
-              <p class="tag">
-                {{ dimension.maintainer.label }}
-              </p>
-              <p class="is-size-7 pr-2" v-if="dimension.creator && dimension.creator.name">
-                {{ dimension.creator.name }}
-              </p>
-            </div>
+            <shared-dimension-tags :dimension="dimension" />
           </div>
         </router-link>
       </div>
@@ -57,6 +50,7 @@ import { Collection } from 'alcaeus'
 import PageContent from '@/components/PageContent.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import HydraOperationButton from '@/components/HydraOperationButton.vue'
+import SharedDimensionTags from '@/components/SharedDimensionTags.vue'
 import TermWithLanguage from '@/components/TermWithLanguage.vue'
 import { SharedDimension } from '@/store/types'
 
@@ -64,7 +58,7 @@ const appNS = namespace('app')
 const sharedDimensionsNS = namespace('sharedDimensions')
 
 @Component({
-  components: { PageContent, LoadingBlock, HydraOperationButton, TermWithLanguage },
+  components: { PageContent, LoadingBlock, HydraOperationButton, SharedDimensionTags, TermWithLanguage },
 })
 export default class CubeProjectsView extends Vue {
   @appNS.State('language') language!: string
