@@ -45,6 +45,10 @@ Published Cubes are sent to the Publication store, in a specified named graph.
 
 Contains data about Shared dimensions.
 
+### 4.4 CSV files storage
+
+CSV files are stored in an S3-compatible storage.
+
 ## 5. Authentication service
 
 ...
