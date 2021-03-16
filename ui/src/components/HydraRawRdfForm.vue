@@ -5,6 +5,7 @@
       v-if="shape"
       format="text/turtle"
       :quads.prop="initQuads"
+      :prefixes="editorPrefixes"
       @quads-changed="onParseSuccess"
       @parsing-failed="onParseError"
     />
@@ -52,6 +53,7 @@ export default class HydraRawRdfForm extends Vue {
 
   parseError: string | null = null
   editorQuads: Quad[] | null = null
+  editorPrefixes = ['hydra', 'rdf', 'rdfs', 'schema', 'xsd']
 
   get graph (): NamedNode | BlankNode | Variable | DefaultGraph | undefined {
     return this.resource._context[0].graph
