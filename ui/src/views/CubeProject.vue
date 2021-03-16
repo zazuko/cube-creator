@@ -69,9 +69,7 @@ export default class CubeProjectView extends Vue {
     await this.$store.dispatch('project/fetchProject', id)
 
     // Poll jobs
-    this.poller = window.setInterval(() => {
-      // this.$store.dispatch('project/fetchJobCollection')
-    }, 3000)
+    this.poller = window.setInterval(this.pollJobs, 3000)
 
     if (this.$router.currentRoute.name === 'CubeProject') {
       if (this.hasCSVMapping) {
@@ -83,6 +81,19 @@ export default class CubeProjectView extends Vue {
   }
 
   beforeDestroy (): void {
+    this.stopPolling()
+  }
+
+  async pollJobs (): Promise<any> {
+    try {
+      await this.$store.dispatch('project/fetchJobCollection')
+    } catch (e) {
+      this.stopPolling()
+      throw e
+    }
+  }
+
+  stopPolling (): void {
     if (this.poller) {
       clearInterval(this.poller)
     }
