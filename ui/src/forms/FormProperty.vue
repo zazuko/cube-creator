@@ -16,7 +16,7 @@
     </div>
     <div v-if="!property.selectedEditor && property.canAdd">
       <b-tooltip label="Add value">
-        <b-button icon-left="plus" @click.prevent="actions.addObject" type="is-white" />
+        <b-button icon-left="plus" @click.prevent="actions.addObject" type="is-text" />
       </b-tooltip>
     </div>
   </label>
