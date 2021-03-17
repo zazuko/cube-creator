@@ -1,6 +1,6 @@
 <template>
-  <side-pane :is-open="true" :title="title" @close="onCancel">
-    <hydra-operation-form
+  <side-pane :title="title" @close="onCancel">
+    <hydra-operation-form-with-raw
       v-if="operation"
       :operation="operation"
       :resource="resource"
@@ -10,6 +10,7 @@
       submit-label="Save dimension"
       @submit="onSubmit"
       @cancel="onCancel"
+      @sync-resource="onSyncResource"
     />
   </side-pane>
 </template>
@@ -21,35 +22,45 @@ import { RuntimeOperation } from 'alcaeus'
 import { GraphPointer } from 'clownface'
 import type { Shape } from '@rdfine/shacl'
 import SidePane from '@/components/SidePane.vue'
-import HydraOperationForm from '@/components/HydraOperationForm.vue'
+import HydraOperationFormWithRaw from '@/components/HydraOperationFormWithRaw.vue'
 import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
-import { SharedDimension, SharedDimensionTerm } from '@/store/types'
+import { SharedDimension } from '@/store/types'
 
 const sharedDimensionNS = namespace('sharedDimension')
 
 @Component({
-  components: { SidePane, HydraOperationForm },
+  components: { SidePane, HydraOperationFormWithRaw },
 })
 export default class extends Vue {
   @sharedDimensionNS.State('dimension') dimension!: SharedDimension
 
   resource: GraphPointer | null = null
+  operation: RuntimeOperation | null = null
   error: ErrorDetails | null = null
   isSubmitting = false
   shape: Shape | null = null
   shapes: GraphPointer | null = null
 
-  async mounted (): Promise<void> {
+  mounted (): void {
+    this.prepareForm()
+  }
+
+  @Watch('$route')
+  async prepareForm (): Promise<void> {
+    this.resource = null
+    this.operation = null
+    this.shape = null
+
+    const dimensionId = this.$route.params.id
+    const dimension = await api.fetchResource(dimensionId)
+
+    this.resource = Object.freeze(dimension.pointer)
+    this.operation = dimension.actions.replace ?? null
+
     if (this.operation) {
       this.shape = await api.fetchOperationShape(this.operation)
     }
-
-    this.resource = this.dimension.pointer
-  }
-
-  get operation (): RuntimeOperation | null {
-    return this.dimension.actions.replace
   }
 
   get title (): string {
@@ -87,6 +98,10 @@ export default class extends Vue {
 
   onCancel (): void {
     this.$router.push({ name: 'SharedDimension', params: { id: this.dimension.clientPath } })
+  }
+
+  onSyncResource (resource: GraphPointer): void {
+    this.resource = resource
   }
 }
 </script>
