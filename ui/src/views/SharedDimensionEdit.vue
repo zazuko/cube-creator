@@ -10,7 +10,6 @@
       submit-label="Save dimension"
       @submit="onSubmit"
       @cancel="onCancel"
-      @sync-resource="onSyncResource"
     />
   </side-pane>
 </template>
@@ -98,10 +97,6 @@ export default class extends Vue {
 
   onCancel (): void {
     this.$router.push({ name: 'SharedDimension', params: { id: this.dimension.clientPath } })
-  }
-
-  onSyncResource (resource: GraphPointer): void {
-    this.resource = resource
   }
 }
 </script>

@@ -3,7 +3,7 @@
     <hydra-raw-rdf-form
       ref="rdfEditor"
       :operation="operation"
-      :resource="resource"
+      :resource="internalResource"
       :shape="shape"
       :error="error"
       :is-submitting="isSubmitting"
@@ -22,7 +22,7 @@
     <hydra-operation-form
       ref="form"
       :operation="operation"
-      :resource="resource"
+      :resource="internalResource"
       :shape="shape"
       :error="error"
       :is-submitting="isSubmitting"
@@ -62,22 +62,27 @@ export default class extends Vue {
   @Prop() submitLabel?: string
 
   isRawMode = false
+  internalResource: GraphPointer | null = this.resource
 
-  toggleMode (): void {
+  async toggleMode (): Promise<void> {
+    await this.syncResource()
+    this.isRawMode = !this.isRawMode
+  }
+
+  async syncResource (): Promise<void> {
+    if (!this.internalResource) return
+
     if (this.isRawMode) {
       const rdfEditor: HydraRawRdfForm = this.$refs.rdfEditor as any
-      const resource = Object.freeze(clownface({
+      await rdfEditor.waitParsing()
+      this.internalResource = Object.freeze(clownface({
         dataset: $rdf.dataset(rdfEditor.editorQuads || []),
-        term: this.resource.term,
+        term: this.internalResource.term,
       }))
-      this.$emit('sync-resource', resource)
     } else {
       const form: HydraOperationForm = this.$refs.form as any
-      const resource = Object.freeze(form.clone)
-      this.$emit('sync-resource', resource)
+      this.internalResource = Object.freeze(form.clone)
     }
-
-    this.isRawMode = !this.isRawMode
   }
 }
 </script>

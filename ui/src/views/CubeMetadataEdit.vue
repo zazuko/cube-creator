@@ -1,7 +1,7 @@
 <template>
   <side-pane :title="title" @close="onCancel">
     <hydra-operation-form-with-raw
-      v-if="operation"
+      v-if="resource && operation"
       :operation="operation"
       :resource="resource"
       :shape="shape"
@@ -10,7 +10,6 @@
       submit-label="Update cube metadata"
       @submit="onSubmit"
       @cancel="onCancel"
-      @sync-resource="syncResource"
     />
   </side-pane>
 </template>
@@ -87,10 +86,6 @@ export default class CubeMetadataEdit extends Vue {
 
   onCancel (): void {
     this.$router.push({ name: 'CubeDesigner' })
-  }
-
-  syncResource (resource: GraphPointer): void {
-    this.resource = resource
   }
 }
 </script>
