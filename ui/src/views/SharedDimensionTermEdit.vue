@@ -1,5 +1,5 @@
 <template>
-  <side-pane :is-open="true" :title="title" @close="onCancel" :style="{ 'min-width': isRawMode ? '50%' : '' }">
+  <side-pane :title="title" @close="onCancel">
     <div v-if="isRawMode" class="h-full is-flex is-flex-direction-column is-justify-content-space-between">
       <hydra-raw-rdf-form
         ref="rdfEditor"

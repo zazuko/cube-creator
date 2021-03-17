@@ -1,5 +1,5 @@
 <template>
-  <side-pane :is-open="true" :title="operation.title" @close="onCancel">
+  <side-pane :title="operation.title" @close="onCancel">
     <b-field label="Column mapping type">
       <b-radio-button v-model="columnMappingType" native-value="literal">
         Literal value

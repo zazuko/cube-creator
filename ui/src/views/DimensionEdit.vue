@@ -1,5 +1,5 @@
 <template>
-  <side-pane :is-open="true" :title="title" @close="onCancel">
+  <side-pane :title="title" @close="onCancel">
     <b-field label="Dimension property">
       <term-display v-if="dimension.about" :term="dimension.about" :base="cubeUri" />
     </b-field>
