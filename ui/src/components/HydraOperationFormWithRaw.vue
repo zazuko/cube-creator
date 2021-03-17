@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isRawMode" class="h-full is-flex is-flex-direction-column is-justify-content-space-between">
+  <div v-if="isRawMode" class="form-container">
     <hydra-raw-rdf-form
       ref="rdfEditor"
       :operation="operation"
@@ -12,11 +12,13 @@
       @submit="$emit('submit', $event)"
       @cancel="$emit('cancel', $event)"
     />
-    <b-button @click="toggleMode">
-      Back to form (basic)
-    </b-button>
+    <div class="mt-4 has-text-right">
+      <b-button @click="toggleMode" icon-left="chevron-left">
+        Back to form (basic)
+      </b-button>
+    </div>
   </div>
-  <div v-else class="h-full is-flex is-flex-direction-column is-justify-content-space-between">
+  <div v-else class="form-container">
     <hydra-operation-form
       ref="form"
       :operation="operation"
@@ -29,9 +31,11 @@
       @submit="$emit('submit', $event)"
       @cancel="$emit('cancel', $event)"
     />
-    <b-button icon-right="exclamation-triangle" @click="toggleMode">
-      Edit raw RDF (advanced)
-    </b-button>
+    <div class="mt-4 has-text-right">
+      <b-button icon-right="exclamation-triangle" @click="toggleMode" type="is-text">
+        Edit raw RDF (advanced)
+      </b-button>
+    </div>
   </div>
 </template>
 
@@ -77,3 +81,13 @@ export default class extends Vue {
   }
 }
 </script>
+
+<style>
+.form-container {
+  min-height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+</style>
