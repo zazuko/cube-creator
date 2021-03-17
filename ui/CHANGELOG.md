@@ -1,5 +1,11 @@
 # @cube-creator/ui
 
+## 0.1.21
+
+### Patch Changes
+
+- 00e5fc5: Fix form submitting when selecting an option with "enter" in autocomplete field (#339)
+
 ## 0.1.20
 
 ### Patch Changes
