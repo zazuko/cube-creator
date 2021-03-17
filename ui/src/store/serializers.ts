@@ -242,10 +242,13 @@ export function serializeSharedDimensionCollection (collection: Collection): Col
 }
 
 export function serializeSharedDimension (dimension: RdfResource): SharedDimension {
+  const validThrough = dimension.pointer.out(schema.validThrough).value
+
   return Object.freeze({
     ...serializeResource(dimension),
     name: dimension.pointer.out(schema.name, { language: displayLanguage }).value,
     terms: dimension.pointer.out(md.terms).term,
+    validThrough: validThrough ? new Date(validThrough) : undefined,
   })
 }
 
