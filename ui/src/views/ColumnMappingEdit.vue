@@ -1,5 +1,5 @@
 <template>
-  <side-pane :is-open="true" :title="operation.title" @close="onCancel">
+  <side-pane :title="operation.title" @close="onCancel">
     <literal-column-mapping-form
       v-if="isLiteral"
       :operation="operation"

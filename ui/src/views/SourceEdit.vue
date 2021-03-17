@@ -1,5 +1,5 @@
 <template>
-  <side-pane :is-open="true" :title="operation.title" @close="onCancel">
+  <side-pane :title="operation.title" @close="onCancel">
     <hydra-operation-form
       v-if="operation"
       :operation="operation"

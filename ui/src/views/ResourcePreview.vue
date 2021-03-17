@@ -1,5 +1,5 @@
 <template>
-  <side-pane :is-open="true" title="Resource preview" @close="onCancel" style="width: 50%;">
+  <side-pane title="Resource preview" @close="onCancel">
     <h3 class="is-title is-size-6 mb-4">
       <term-display :term="resourceId" :base="cubeUri" class="tag is-rounded has-text-weight-bold" />
     </h3>

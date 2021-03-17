@@ -1,5 +1,5 @@
 <template>
-  <side-pane :is-open="true" title="Upload CSV file" @close="onCancel">
+  <side-pane title="Upload CSV file" @close="onCancel">
     <form @submit.prevent="onSubmit">
       <b-message v-if="error" type="is-danger">
         {{ error }}

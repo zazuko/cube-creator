@@ -1,5 +1,5 @@
 <template>
-  <side-pane is-open title="Preview table mapping (CSVW)" @close="onCancel" class="side-pane-csvw">
+  <side-pane title="Preview table mapping (CSVW)" @close="onCancel">
     <b-message v-show="csvw.error" type="is-danger">
       {{ csvw.error }}
     </b-message>
@@ -89,11 +89,6 @@ export default class TableCreateView extends Vue {
 </script>
 
 <style scoped>
-.side-pane-csvw {
-  min-width: 30%;
-  width: auto;
-}
-
 rdf-editor::part(CodeMirror-vscrollbar) {
   display: none;
 }
