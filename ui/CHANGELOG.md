@@ -1,5 +1,13 @@
 # @cube-creator/ui
 
+## 0.1.20
+
+### Patch Changes
+
+- f99a508: Show "read-only" and "deprecated" tags on Shared Dimensions
+- f440bb8: Stop polling project jobs if an error occurs
+- 44b8c3a: Add more prefixes when editing shared dimension term as raw RDF
+
 ## 0.1.19
 
 ### Patch Changes
