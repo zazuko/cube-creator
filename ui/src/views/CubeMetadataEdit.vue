@@ -1,7 +1,7 @@
 <template>
   <side-pane :title="title" @close="onCancel">
-    <hydra-operation-form
-      v-if="operation"
+    <hydra-operation-form-with-raw
+      v-if="resource && operation"
       :operation="operation"
       :resource="resource"
       :shape="shape"
@@ -22,14 +22,14 @@ import { GraphPointer } from 'clownface'
 import { namespace } from 'vuex-class'
 import { Dataset } from '@cube-creator/model'
 import SidePane from '@/components/SidePane.vue'
-import HydraOperationForm from '@/components/HydraOperationForm.vue'
+import HydraOperationFormWithRaw from '@/components/HydraOperationFormWithRaw.vue'
 import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 
 const projectNS = namespace('project')
 
 @Component({
-  components: { SidePane, HydraOperationForm },
+  components: { SidePane, HydraOperationFormWithRaw },
 })
 export default class CubeMetadataEdit extends Vue {
   @projectNS.State('cubeMetadata') cubeMetadata!: Dataset;
@@ -44,7 +44,7 @@ export default class CubeMetadataEdit extends Vue {
       this.shape = await api.fetchOperationShape(this.operation)
     }
 
-    this.resource = this.cubeMetadata.pointer
+    this.resource = Object.freeze(this.cubeMetadata.pointer)
   }
 
   get operation (): RuntimeOperation | null {

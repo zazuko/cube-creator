@@ -160,7 +160,6 @@ export const create = (): Initializer<NodeShape> => ({
 })
 
 export const update = (): Initializer<NodeShape> => ({
-  closed: true,
   ignoredProperties: [
     dcterms.identifier,
     md.terms,

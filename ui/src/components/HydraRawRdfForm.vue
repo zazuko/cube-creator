@@ -39,6 +39,10 @@ import LoadingBlock from './LoadingBlock.vue'
 import { BlankNode, DefaultGraph, NamedNode, Quad, Variable } from 'rdf-js'
 import { Shape } from '@rdfine/shacl'
 
+interface ParseError {
+  detail: { error: string }
+}
+
 @Component({
   components: { FormSubmitCancel, HydraOperationError, LoadingBlock },
 })
@@ -87,30 +91,42 @@ export default class HydraRawRdfForm extends Vue {
       .map(({ subject, predicate, object }) => $rdf.quad(subject, predicate, object, this.graph))
   }
 
-  onParseError ({ detail: { error } }: { detail: { error: string } }): void {
+  onParseError ({ detail: { error } }: ParseError): void {
     this.parseError = error
     this.editorQuads = null
   }
 
-  onSubmit (): void {
-    const editor = this.$refs.editor as any
+  async onSubmit (): Promise<void> {
+    await this.waitParsing()
 
-    if (editor.isParsing) {
-      const parsingComplete = () => {
-        this.doSubmit()
-        editor.removeEventListener('quads-changed', parsingComplete)
-      }
-
-      editor.addEventListener('quads-changed', parsingComplete)
-    } else {
-      this.doSubmit()
-    }
-  }
-
-  doSubmit (): void {
     if (this.clone) {
       this.$emit('submit', this.clone)
     }
+  }
+
+  async waitParsing (): Promise<void> {
+    const editor = this.$refs.editor as any
+
+    return new Promise((resolve, reject) => {
+      const parsingComplete = () => {
+        editor.removeEventListener('quads-changed', parsingComplete)
+        editor.removeEventListener('parsing-failed', parsingFailed)
+        resolve()
+      }
+
+      const parsingFailed = (e: ParseError) => {
+        editor.removeEventListener('quads-changed', parsingComplete)
+        editor.removeEventListener('parsing-failed', parsingFailed)
+        reject(e)
+      }
+
+      if (editor.isParsing) {
+        editor.addEventListener('quads-changed', parsingComplete)
+        editor.addEventListener('parsing-failed', parsingFailed)
+      } else {
+        resolve()
+      }
+    })
   }
 }
 </script>
