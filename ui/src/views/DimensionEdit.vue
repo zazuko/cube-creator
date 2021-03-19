@@ -3,8 +3,8 @@
     <b-field label="Dimension property">
       <term-display v-if="dimension.about" :term="dimension.about" :base="cubeUri" />
     </b-field>
-    <hydra-operation-form
-      v-if="operation"
+    <hydra-operation-form-with-raw
+      v-if="resource && operation"
       :operation="operation"
       :resource="resource"
       :shape="shape"
@@ -21,11 +21,11 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { RuntimeOperation } from 'alcaeus'
 import { Shape } from '@rdfine/shacl'
-import { GraphPointer } from 'clownface'
+import clownface, { GraphPointer } from 'clownface'
 import { namespace } from 'vuex-class'
 import { Dataset, DimensionMetadata } from '@cube-creator/model'
 import SidePane from '@/components/SidePane.vue'
-import HydraOperationForm from '@/components/HydraOperationForm.vue'
+import HydraOperationFormWithRaw from '@/components/HydraOperationFormWithRaw.vue'
 import TermDisplay from '@/components/TermDisplay.vue'
 import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
@@ -33,7 +33,7 @@ import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 const projectNS = namespace('project')
 
 @Component({
-  components: { SidePane, HydraOperationForm, TermDisplay },
+  components: { SidePane, HydraOperationFormWithRaw, TermDisplay },
 })
 export default class extends Vue {
   @projectNS.State('cubeMetadata') cubeMetadata!: Dataset | null
@@ -49,7 +49,8 @@ export default class extends Vue {
       this.shape = await api.fetchOperationShape(this.operation)
     }
 
-    this.resource = this.dimension.pointer
+    const dataset = this.dimension.pointer.dataset.match(this.dimension.id, null, null, this.cubeMetadata?.id)
+    this.resource = clownface({ dataset }).node(this.dimension.id)
   }
 
   get cubeUri (): string | undefined {
