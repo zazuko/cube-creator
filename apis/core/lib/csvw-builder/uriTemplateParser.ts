@@ -52,7 +52,7 @@ class ParsedTemplateWrapper implements ParsedTemplate {
 }
 
 export function parse(template: string): ParsedTemplate {
-  const escaped = template.replace(/{([\w ]+)}/g, (_, name) => `{${encodeURIComponent(name)}}`)
+  const escaped = template.replace(/{([^}]+)}/g, (_, name) => `{${encodeURIComponent(name)}}`)
 
   const parsed = _parse(escaped)
   parsed.expressions.forEach(expression => {
