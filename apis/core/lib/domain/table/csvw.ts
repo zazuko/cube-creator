@@ -1,4 +1,5 @@
 import * as Table from '@cube-creator/model/Table'
+import * as Csvw from '@rdfine/csvw'
 import { NamedNode } from 'rdf-js'
 import { ResourceStore } from '../../ResourceStore'
 import { NotFoundError } from '@cube-creator/api-errors'
@@ -13,7 +14,7 @@ interface Command {
 export async function createCsvw({
   tableResource,
   resources,
-}: Command) {
+}: Command): Promise<Csvw.Table> {
   const tablePointer = await resources.get(tableResource)
   if (!tablePointer) {
     throw new NotFoundError(tableResource)
@@ -23,48 +24,3 @@ export async function createCsvw({
 
   return buildCsvw({ table, resources })
 }
-/*
-  return new Csvw.TableMixin.Class(cf({ dataset: $rdf.dataset(), term: table.csvw.id }), {
-    tableSchema: {
-      column: [{
-        title: 'unit_id',
-        datatype: xsd.string,
-        propertyUrl: `${namespace}unit-id`,
-      }, {
-        virtual: true,
-        propertyUrl: cc.cube.value,
-        valueUrl: namespace,
-      }, {
-        title: 'pollutant_id',
-        valueUrl: `${namespace}pollutant/{pollutant_id}`,
-        propertyUrl: `${namespace}pollutant`,
-      }, {
-        title: 'aggregation_id',
-        valueUrl: `${namespace}aggregation/{aggregation_id}`,
-        propertyUrl: `${namespace}aggregation`,
-      }, {
-        title: 'station_id',
-        valueUrl: `${namespace}station/{station_id}`,
-        propertyUrl: `${namespace}station`,
-      }, {
-        title: 'value',
-        datatype: xsd.float,
-        propertyUrl: `${namespace}dimension/value`,
-      }, {
-        title: 'year',
-        datatype: xsd.gYear,
-        propertyUrl: `${namespace}dimension/year`,
-      }, {
-        suppressOutput: true,
-        title: 'pollutant_id',
-      }, {
-        suppressOutput: true,
-        title: 'limitvalue',
-      }, {
-        suppressOutput: true,
-        title: 'value_remark',
-      }],
-    },
-  })
-}
-*/
