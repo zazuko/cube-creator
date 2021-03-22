@@ -5529,9 +5529,9 @@ create-require@^1.1.0:
   integrity sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==
 
 cross-fetch@^3.0.4:
-  version "3.0.6"
-  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.0.6.tgz#3a4040bc8941e653e0e9cf17f29ebcd177d3365c"
-  integrity sha512-KBPUbqgFjzWlVcURG+Svp9TlhA5uliYtiNx/0r8nv0pdypeQCRJ9IaSIc3q/x3q8t3F75cHuwxVql1HFGHCNJQ==
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.1.2.tgz#ee0c2f18844c4fde36150c2a4ddc068d20c1bc41"
+  integrity sha512-+JhD65rDNqLbGmB3Gzs3HrEKC0aQnD+XA3SY6RjgkF88jV2q5cTc5+CwxlS3sdmLk98gpPt5CF9XRnPdlxZe6w==
   dependencies:
     node-fetch "2.6.1"
 
@@ -12543,9 +12543,9 @@ send@0.17.1:
     statuses "~1.5.0"
 
 separate-stream@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/separate-stream/-/separate-stream-1.0.0.tgz#fe3b957b1603c0a1f1bca722f2cec5082772e18d"
-  integrity sha512-w5fRxTkgsj9RnrrupHwHzSmdVfb3PRh/Btpiu0x+acPvdqXzMMTr4HzNvei0uQb+ENwJMjpCxw/C9VHP4v1DIA==
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/separate-stream/-/separate-stream-1.0.1.tgz#21e85d7c52433df1bb0b39205807be5565ac1dcb"
+  integrity sha512-UKFCzmddW2akOq40YdGehllv5gu6AD3y6nGSVuZuwI1kify2CiW7Zwsxx4ioaNLxx4LZaZMkcjdICHtSxpEpaA==
   dependencies:
     readable-stream "^3.6.0"
 
@@ -12853,9 +12853,9 @@ source-map@^0.7.3:
   integrity sha512-CkCj6giN3S+n9qrYiBTX5gystlENnRW5jZeNLHpe6aue+SrHcG5VYwujhW9s4dY31mEGsxBDrHR6oI69fTXsaQ==
 
 sparql-http-client@^2.2.2:
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/sparql-http-client/-/sparql-http-client-2.2.2.tgz#60a68666d0101b5b2bc509fcf40222c97941e844"
-  integrity sha512-TR7eeflhk3qAf69/iVa8pWp66diz85z0C8bimWZ1bGtKaK798iDw4UqC1832yGjJMqoedPxHThWeLqgi3hzDIA==
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/sparql-http-client/-/sparql-http-client-2.2.3.tgz#223a71fcb12174ea3dbec646e99c1b9c44aeffcc"
+  integrity sha512-soPeyVtURhHmk327af1sG1g563imS+dmq/pgth930xywjkQn1hspLCd1uJpV/CJyyIT/7uUvHJjeKxarsBXoAQ==
   dependencies:
     "@rdfjs/data-model" "^1.1.2"
     "@rdfjs/parser-n3" "^1.1.3"
