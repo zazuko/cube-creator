@@ -3,7 +3,7 @@
   "version": "0.1.17",
   "private": true,
   "dependencies": {
-    "@cube-creator/core": "^0.3.0",
+    "@cube-creator/core": "0.3.0",
     "@rdf-esm/data-model": "^0.5.3",
     "@rdfine/csvw": "^0.6.3",
     "@rdfine/hydra": "^0.6.4",

@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@cube-creator/api-errors": "0.0.1",
-    "@cube-creator/core": "^0.3.0",
+    "@cube-creator/core": "0.3.0",
     "@hydrofoil/labyrinth": "^0.4.1",
     "@rdfine/rdfs": "^0.6.4",
     "@rdfine/schema": "^0.6.3",

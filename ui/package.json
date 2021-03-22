@@ -11,8 +11,8 @@
     "serve-local": "nodenv --env ../.local.env --exec 'vue-cli-service serve'"
   },
   "dependencies": {
-    "@cube-creator/core": "^0.3.0",
-    "@cube-creator/model": "^0.1.17",
+    "@cube-creator/core": "0.3.0",
+    "@cube-creator/model": "0.1.17",
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
     "@fortawesome/free-regular-svg-icons": "^5.15.1",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
