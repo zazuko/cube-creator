@@ -3709,10 +3709,10 @@ ajv@^7.0.2:
     require-from-string "^2.0.2"
     uri-js "^4.2.2"
 
-alcaeus@^1.0.1, alcaeus@^1.1.0, alcaeus@^1.1.1:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/alcaeus/-/alcaeus-1.1.2.tgz#b0922d03be0d010a25c2d1461e15fa3697f7d5a6"
-  integrity sha512-Bjhls13JktL7W9a8/RHOVFsbvHAebU4gS+3k8XYmxTfc9vhzmm2vKOotdoCvdxG+SvEpFNydup30msw1E1QOZA==
+alcaeus@^1.0.1, alcaeus@^1.1.1, alcaeus@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/alcaeus/-/alcaeus-1.1.3.tgz#78c110b559910bd8afe8faf6acc7e72030edd570"
+  integrity sha512-hBb/1uYrrBDx/LKCQZVXO534Osa2gKIXaZ10C3rVm1xH7WhFkIvttdBWety2ciKMgKLf4yT4vYpmoGL4sBWhVg==
   dependencies:
     "@rdf-esm/data-model" "^0.5.3"
     "@rdf-esm/formats-common" "^0.5.3"
