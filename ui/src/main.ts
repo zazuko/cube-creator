@@ -36,6 +36,7 @@ Sentry.init({
   tracesSampleRate: 1,
   integrations: [
     new Integrations.BrowserTracing({
+      tracingOrigins: [window.APP_CONFIG.apiCoreBase, /^\//],
       routingInstrumentation: Sentry.vueRouterInstrumentation(router)
     })
   ],
