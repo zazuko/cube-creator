@@ -49,8 +49,9 @@ export default class extends Vue {
       this.shape = await api.fetchOperationShape(this.operation)
     }
 
-    const dataset = this.dimension.pointer.dataset.match(this.dimension.id, null, null, this.cubeMetadata?.id)
-    this.resource = clownface({ dataset }).node(this.dimension.id)
+    const graph = this.cubeMetadata?.id
+    const dataset = this.dimension.pointer.dataset.match(this.dimension.id, null, null, graph)
+    this.resource = clownface({ dataset, graph }).node(this.dimension.id)
   }
 
   get cubeUri (): string | undefined {
