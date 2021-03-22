@@ -106,10 +106,12 @@ export default function Mixin<Base extends Constructor<Omit<DimensionMetadataCol
     }
 
     find(params: FindDimensionMetadata | Term): DimensionMetadata.DimensionMetadata | undefined {
-      const identifier = 'termType' in params ? params : params.organization.createIdentifier({
-        cubeIdentifier: params.cubeIdentifier,
-        termName: params.targetProperty,
-      })
+      const identifier = 'termType' in params
+        ? params
+        : params.organization.createIdentifier({
+          cubeIdentifier: params.cubeIdentifier,
+          termName: params.targetProperty,
+        })
       return this.hasPart.find(part => identifier.equals(part.about))
     }
 

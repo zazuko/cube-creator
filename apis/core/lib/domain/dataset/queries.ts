@@ -3,9 +3,10 @@ import { cc } from '@cube-creator/core/namespace'
 import { SELECT } from '@tpluscode/sparql-builder'
 import { Term } from 'rdf-js'
 import { ParsingClient } from 'sparql-http-client/ParsingClient'
+import { ResultRow } from 'sparql-http-client/ResultParser'
 import { parsingClient } from '../../query-client'
 
-export function getCubesAndGraphs(dataset: Term, client: ParsingClient = parsingClient): Promise<Array<Record<'cube' | 'graph', Term>>> {
+export function getCubesAndGraphs(dataset: Term, client: ParsingClient = parsingClient): Promise<ResultRow[]> {
   return SELECT`?cube ?graph`
     .WHERE`
       graph ?project {
