@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isRawMode" class="form-container">
+  <div v-if="isRawMode">
     <hydra-raw-rdf-form
       ref="rdfEditor"
       :operation="operation"
@@ -18,7 +18,7 @@
       </b-button>
     </div>
   </div>
-  <div v-else class="form-container">
+  <div v-else>
     <hydra-operation-form
       ref="form"
       :operation="operation"
@@ -86,13 +86,3 @@ export default class extends Vue {
   }
 }
 </script>
-
-<style>
-.form-container {
-  min-height: 100%;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-</style>
