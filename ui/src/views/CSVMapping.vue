@@ -123,7 +123,7 @@ export default class CSVMappingView extends Vue {
       const offsetX = this.$el.getBoundingClientRect().x
       const offsetY = this.$el.getBoundingClientRect().y
 
-      this.columnMappings.map((columnMapping) => {
+      this.columnMappings.forEach((columnMapping) => {
         const targetId = columnMapping.id.value
         const arrowEl = this.$el.querySelector(`[data-arrow-id="${targetId}"]`)
         const sourceEl = this.$el.querySelector(`[data-arrow-target="${targetId}"]`)

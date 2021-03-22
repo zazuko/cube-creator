@@ -51,9 +51,9 @@ export function serializeProject (project: Project): Project {
     cubeIdentifier: project.cubeIdentifier,
     maintainer: project.maintainer
       ? {
-        ...serializeLink(project.maintainer),
-        label: project.maintainer?.pointer.out(rdfs.label, { language: displayLanguage }),
-      }
+          ...serializeLink(project.maintainer),
+          label: project.maintainer?.pointer.out(rdfs.label, { language: displayLanguage }),
+        }
       : project.maintainer,
     publishedRevision: project.publishedRevision,
   })
@@ -185,9 +185,9 @@ export function serializeDimensionMetadata (dimension: DimensionMetadata): Dimen
     mappings: dimension.mappings,
     sharedDimension: sharedDimension.term
       ? {
-        id: sharedDimension.term,
-        label: sharedDimension.out([rdfs.label, schema.name], { language: displayLanguage }),
-      }
+          id: sharedDimension.term,
+          label: sharedDimension.out([rdfs.label, schema.name], { language: displayLanguage }),
+        }
       : undefined,
   })
 }
