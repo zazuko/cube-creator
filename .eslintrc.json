@@ -7,7 +7,8 @@
   "overrides": [{
     "files": ["*.test.ts"],
     "rules": {
-      "no-unused-expressions": "off"
+      "no-unused-expressions": "off",
+      "prefer-regex-literals": "off"
     }
   }, {
     "files": ["cli/lib/toCubeShape/*.js"],
