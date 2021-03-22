@@ -3597,7 +3597,7 @@
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
-"@zazuko/rdf-vocabularies@*":
+"@zazuko/rdf-vocabularies@*", "@zazuko/rdf-vocabularies@^2021.3.17":
   version "2021.3.17"
   resolved "https://registry.yarnpkg.com/@zazuko/rdf-vocabularies/-/rdf-vocabularies-2021.3.17.tgz#c97ca397bdb9c61698bdf1ee658f896cbb86f7da"
   integrity sha512-js6c5W296c8cMP3nWPTauPH6NOM+yPZ1a+KqfHMwOz9C8kdEnOF0sApEwwvxNMqT0jrXshd9Qr4yqTGYGzTqfw==
@@ -3609,7 +3609,7 @@
     readable-stream "^3.6.0"
     string-to-stream "^3.0.1"
 
-"@zazuko/rdf-vocabularies@^2020.11.2", "@zazuko/rdf-vocabularies@^2020.12.16":
+"@zazuko/rdf-vocabularies@^2020.11.2":
   version "2020.12.16"
   resolved "https://registry.yarnpkg.com/@zazuko/rdf-vocabularies/-/rdf-vocabularies-2020.12.16.tgz#aa98fcb536a55b01c8b37f4512440b769d039737"
   integrity sha512-XBWDIY9ZcoOb7Ft+sFFec1qH7X16y4zcjoSXV4Tels+8yy2ExwCuwoCwnefsOtUULwxAeyTqgILMybFv5X8ADA==

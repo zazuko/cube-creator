@@ -30,7 +30,7 @@
     "@sentry/vue": "^6.2.0",
     "@tpluscode/rdf-ns-builders": "^0.4",
     "@tpluscode/rdfine": "^0.5.19",
-    "@zazuko/rdf-vocabularies": "^2020.12.16",
+    "@zazuko/rdf-vocabularies": "^2021.3.17",
     "alcaeus": "^1.1.0",
     "buefy": "^0.9.2",
     "bulma-quickview": "^2.0.0",

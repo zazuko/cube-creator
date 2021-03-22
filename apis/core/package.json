@@ -30,7 +30,7 @@
     "@types/content-disposition": "^0.5.3",
     "@types/rdfjs__term-set": "^1.0.2",
     "@types/set-link": "^1.0.1",
-    "@zazuko/rdf-vocabularies": "^2020.12.16",
+    "@zazuko/rdf-vocabularies": "^2021.3.17",
     "aws-sdk": "^2.758.0",
     "clownface": "^1.0.0",
     "commander": "^6.1.0",
