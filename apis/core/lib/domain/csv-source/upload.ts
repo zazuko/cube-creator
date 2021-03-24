@@ -41,7 +41,7 @@ export async function uploadFile({
   const upload = await fileStorage.saveFile(key, file)
 
   const csvSource = csvMapping.addSource(store, { fileName })
-  csvSource.setUploadedFile(key, $rdf.namedNode(upload.Location))
+  csvSource.setUploadedFile(key, $rdf.namedNode(encodeURI(upload.Location)))
 
   try {
     const fileStream = await fileStorage.loadFile(key) as Readable
