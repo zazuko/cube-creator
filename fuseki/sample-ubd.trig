@@ -204,7 +204,6 @@ graph <cube-project/ubd/cube-data> {
     sh:property  _:rdfType ;
     sh:property  _:dimension-year ;
     sh:property  _:station ;
-    sh:property  _:limitvalue ;
     sh:property  _:aggregation ;
     sh:property  _:pollutant ;
     sh:property  _:unit-id ;
