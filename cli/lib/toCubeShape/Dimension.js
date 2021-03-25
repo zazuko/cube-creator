@@ -16,6 +16,8 @@ const datatypeParsers = (datatype) => {
       return term => parseFloat(term.value)
     case ns.xsd.integer.value:
     case ns.xsd.int.value:
+    case ns.xsd.gDay.value:
+    case ns.xsd.gMonth.value:
     case ns.xsd.gYear.value:
       return term => parseInt(term.value, 10)
   }
