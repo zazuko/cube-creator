@@ -1,5 +1,11 @@
 # @cube-creator/cli
 
+## 1.0.1
+
+### Patch Changes
+
+- 4f4b519: Revert incorrect import
+
 ## 1.0.0
 
 ### Major Changes
