@@ -1,5 +1,20 @@
 # @cube-creator/core-api
 
+## 1.0.0
+
+### Major Changes
+
+- 535de57: First major release
+
+### Patch Changes
+
+- 9fbf2a0: App fails when uploading CSV files with spaces in name (#629)
+- feaea43: Fix escaping issue for CSV columns with non-ascii characters (#621)
+- 141151a: Fix stackoverflow (#632)
+- Updated dependencies [535de57]
+- Updated dependencies [3154255]
+  - @cube-creator/shared-dimensions-api@1.0.0
+
 ## 0.3.1
 
 ### Patch Changes
