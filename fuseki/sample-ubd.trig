@@ -303,6 +303,7 @@ graph <cube-project/ubd/csv-source/ubd> {
     csvw:column <cube-project/ubd/csv-source/ubd/column/year> ;
     csvw:column <cube-project/ubd/csv-source/ubd/column/station> ;
     csvw:column <cube-project/ubd/csv-source/ubd/column/value> ;
+    csvw:column <cube-project/ubd/csv-source/ubd/column/limitvalue> ;
     csvw:column <cube-project/ubd/csv-source/ubd/column/aggregation> ;
     csvw:column <cube-project/ubd/csv-source/ubd/column/remark> ;
     csvw:column <cube-project/ubd/csv-source/ubd/column/unit> ;
@@ -469,6 +470,7 @@ graph <cube-project/ubd/csv-mapping/table-observation> {
     cc:columnMapping <cube-project/ubd/csv-mapping/table-observation/column-mapping-6> ;
     cc:columnMapping <cube-project/ubd/csv-mapping/table-observation/column-mapping-7> ;
     cc:columnMapping <cube-project/ubd/csv-mapping/table-observation/column-mapping-8> ;
+    cc:columnMapping <cube-project/ubd/csv-mapping/table-observation/column-mapping-limitvalue> ;
   .
 }
 
@@ -503,6 +505,15 @@ graph <cube-project/ubd/csv-mapping/table-observation/column-mapping-3> {
     cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/value> ;
     cc:targetProperty "dimension/value" ;
     cc:datatype xsd:float ;
+  .
+}
+
+<cube-project/ubd/csv-mapping/table-observation/column-mapping-limitvalue> void:inDataset <ubd-example> .
+graph <cube-project/ubd/csv-mapping/table-observation/column-mapping-limitvalue> {
+  <cube-project/ubd/csv-mapping/table-observation/column-mapping-limitvalue> a cc:ColumnMapping, cc:LiteralColumnMapping, hydra:Resource ;
+    cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/limitvalue> ;
+    cc:targetProperty "dimension/limitvalue" ;
+    cc:datatype xsd:int ;
   .
 }
 

@@ -1,3 +1,5 @@
+import { cube } from '@cube-creator/core/namespace'
+
 const clownface = require('clownface')
 const rdf = require('rdf-ext')
 const TermSet = require('@rdfjs/term-set')
@@ -6,6 +8,7 @@ const ns = require('@tpluscode/rdf-ns-builders')
 const datatypeParsers = (datatype) => {
   switch (datatype?.value) {
     case ns.xsd.date.value:
+    case ns.xsd.dateTime.value:
       return term => new Date(term.value)
     case ns.xsd.double.value:
     case ns.xsd.float.value:
@@ -13,6 +16,8 @@ const datatypeParsers = (datatype) => {
       return term => parseFloat(term.value)
     case ns.xsd.integer.value:
     case ns.xsd.int.value:
+    case ns.xsd.gDay.value:
+    case ns.xsd.gMonth.value:
     case ns.xsd.gYear.value:
       return term => parseInt(term.value, 10)
   }
@@ -28,8 +33,8 @@ class Dimension {
       this.datatypes.add(object.datatype)
     }
 
-    if (datatypeParsers(this.datatype)) {
-      const datatypeParser = datatypeParsers(this.datatype)
+    if (datatypeParsers(object.datatype)) {
+      const datatypeParser = datatypeParsers(object.datatype)
 
       const value = datatypeParser(object)
 
@@ -37,7 +42,7 @@ class Dimension {
       this.minValue = value
       this.max = object
       this.maxValue = value
-    } else {
+    } else if (!object.datatype || !cube.Undefined.equals(object.datatype)) {
       this.in = new TermSet()
     }
   }
@@ -52,12 +57,12 @@ class Dimension {
 
       const value = datatypeParser(object)
 
-      if (value < this.minValue) {
+      if (!this.minValue || value < this.minValue) {
         this.min = object
         this.minValue = value
       }
 
-      if (value > this.maxValue) {
+      if (!this.maxValue || value > this.maxValue) {
         this.max = object
         this.maxValue = value
       }
