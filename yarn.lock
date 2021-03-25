@@ -1898,13 +1898,6 @@
   resolved "https://registry.yarnpkg.com/@tpluscode/eslint-config/-/eslint-config-0.1.1.tgz#5562e9753d4a4e9bd6ee4785baeaf9e6c7f42bfc"
   integrity sha512-gv7CE+3iQ6YNoEofgzMKWUgOHxY7Kozq06M4ls0PkOScOmvCoHTFD2XvPtqmADmXezQsMcZyM6VsHEilgHoasw==
 
-"@tpluscode/rdf-ns-builders@^0.3.6":
-  version "0.3.7"
-  resolved "https://registry.yarnpkg.com/@tpluscode/rdf-ns-builders/-/rdf-ns-builders-0.3.7.tgz#78067888fb622c97cc54222082634437fc291e52"
-  integrity sha512-WyLjL2RNtHgipOwHbyA042KUYeVfF5X1Wz+SL+3QQODXCmqsDOAwVatthkJRD7uAs26SiyBmlejFSYV9PD0AVw==
-  dependencies:
-    "@rdf-esm/namespace" "^0.5.1"
-
 "@tpluscode/rdf-ns-builders@^0.4", "@tpluscode/rdf-ns-builders@^0.4.0":
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/@tpluscode/rdf-ns-builders/-/rdf-ns-builders-0.4.1.tgz#da61b1a87f147aebe021a9d0423e9a592530f45f"
@@ -1912,10 +1905,10 @@
   dependencies:
     "@rdf-esm/namespace" "^0.5.1"
 
-"@tpluscode/rdf-string@^0.2.16", "@tpluscode/rdf-string@^0.2.18", "@tpluscode/rdf-string@^0.2.21":
-  version "0.2.22"
-  resolved "https://registry.yarnpkg.com/@tpluscode/rdf-string/-/rdf-string-0.2.22.tgz#6e5005aaf0014ba422276fa1d4fb3e1ac2fbc5a1"
-  integrity sha512-HZ9d/ejNFcliYjNEoExGcx8WIUdfJ7SnxCuaE6ZAJ5j1cNqsP0zRKuOieVl3iERBX5Vg+LaeGKfjcFozZ9Ki3g==
+"@tpluscode/rdf-string@^0.2.16", "@tpluscode/rdf-string@^0.2.18", "@tpluscode/rdf-string@^0.2.21", "@tpluscode/rdf-string@^0.2.23":
+  version "0.2.23"
+  resolved "https://registry.yarnpkg.com/@tpluscode/rdf-string/-/rdf-string-0.2.23.tgz#4ce15c40a0ffd80b39a8a367f0f3c6a14aa3c8e9"
+  integrity sha512-hA8r6YrtB4oK4JBYu/u835ghTQROIBO+8K6cdpdKFkOGJB0gDwgNmVjDANVbff7CrihXEm/u3iaolarGpe9sKA==
   dependencies:
     "@rdf-esm/data-model" "^0.5.3"
     "@rdf-esm/term-map" "^0.5.0"
@@ -1935,14 +1928,14 @@
     clownface "^1"
     once "^1.4.0"
 
-"@tpluscode/sparql-builder@^0.3.10", "@tpluscode/sparql-builder@^0.3.11", "@tpluscode/sparql-builder@^0.3.9":
-  version "0.3.11"
-  resolved "https://registry.yarnpkg.com/@tpluscode/sparql-builder/-/sparql-builder-0.3.11.tgz#e22f4e7333448b318f9da0f1ada023d0d1d5cca1"
-  integrity sha512-43km+sU4sKAAf2sboSLUQkW/r3DUo/G9/BadrxfhMJhbHNjAx9ANWErciHKCwgEfRoHIDpC/ec8foFuyxBdPow==
+"@tpluscode/sparql-builder@^0.3.10", "@tpluscode/sparql-builder@^0.3.11", "@tpluscode/sparql-builder@^0.3.12", "@tpluscode/sparql-builder@^0.3.9":
+  version "0.3.12"
+  resolved "https://registry.yarnpkg.com/@tpluscode/sparql-builder/-/sparql-builder-0.3.12.tgz#0d017911969a15e956f180eddaf6bea74efb86da"
+  integrity sha512-sPXADwCs+pdN10IPw6EeMNGFZnanP0Ab6gmlo8HEAooCOZs6ZlVpl1S358/7U4zbdLjfnWeyUTdRlR5Ok2Y+IQ==
   dependencies:
-    "@rdfjs/data-model" "^1.1.2"
-    "@rdfjs/term-set" "^1.0.1"
-    "@tpluscode/rdf-ns-builders" "^0.3.6"
+    "@rdf-esm/data-model" "^0.5.4"
+    "@rdf-esm/term-set" "^0.5.0"
+    "@tpluscode/rdf-ns-builders" "^0.4"
     "@tpluscode/rdf-string" "^0.2.16"
     debug "^4.1.1"
 
