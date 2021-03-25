@@ -1,5 +1,17 @@
 # @cube-creator/cli
 
+## 1.0.0
+
+### Major Changes
+
+- 535de57: First major release
+
+### Patch Changes
+
+- 4ce6e97: Cube: do not generate sh:in for ""^^cube:Undefined literals
+- 7024c73: fix(api): `xsd:gDay` and `xsd:gMonth` should produce dimension metadata with min/max range
+- 4ce6e97: Cube: output contraint range for xsd:dateTime
+
 ## 0.1.19
 
 ### Patch Changes

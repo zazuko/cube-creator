@@ -1,5 +1,15 @@
 # @cube-creator/shared-dimensions-api
 
+## 1.0.0
+
+### Major Changes
+
+- 535de57: First major release
+
+### Patch Changes
+
+- 3154255: Ability to edit Shared Dimension and Cube Metadata as raw RDF
+
 ## 0.3.0
 
 ### Minor Changes

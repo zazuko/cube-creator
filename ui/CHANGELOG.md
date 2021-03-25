@@ -1,5 +1,18 @@
 # @cube-creator/ui
 
+## 1.0.0
+
+### Major Changes
+
+- 535de57: First major release
+
+### Patch Changes
+
+- 445c31e: Enable Sentry distributed transactions between the UI and the API to help debugging
+- 4472b53: Make side panes resizable
+- 18e86d0: Add advanced editor to dimension metadata
+- 3154255: Ability to edit Shared Dimension and Cube Metadata as raw RDF
+
 ## 0.1.21
 
 ### Patch Changes
