@@ -1,5 +1,4 @@
-import { cube } from '@cube-creator/core/namespace'
-
+const { cube } = require('@cube-creator/core/namespace')
 const clownface = require('clownface')
 const rdf = require('rdf-ext')
 const TermSet = require('@rdfjs/term-set')
