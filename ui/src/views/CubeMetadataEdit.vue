@@ -25,6 +25,8 @@ import SidePane from '@/components/SidePane.vue'
 import HydraOperationFormWithRaw from '@/components/HydraOperationFormWithRaw.vue'
 import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
+import { cc, cube } from '@cube-creator/core/namespace'
+import { conciseBoundedDescription } from '@/graph'
 
 const projectNS = namespace('project')
 
@@ -44,7 +46,15 @@ export default class CubeMetadataEdit extends Vue {
       this.shape = await api.fetchOperationShape(this.operation)
     }
 
-    this.resource = Object.freeze(this.cubeMetadata.pointer)
+    // Since the /dataset resource is loaded with a bunch on inlined data,
+    // the form will only be populated with the concise description of cube metadata,
+    // excluding dimension metadata, cube Shape and observations link resource
+    const exclude = [
+      cube.observationConstraint,
+      cc.observations,
+      cc.dimensionMetadata
+    ]
+    this.resource = Object.freeze(conciseBoundedDescription(this.cubeMetadata.pointer, exclude))
   }
 
   get operation (): RuntimeOperation | null {
