@@ -33,8 +33,8 @@ export async function update({
     .addOut(rdf.type, _void.Dataset)
     .addOut(rdf.type, dcat.Dataset)
 
-  hasPart.forEach(child => datasetResource.addOut(schema.hasPart, child))
-  dimensionMetadata.forEach(child => datasetResource.addOut(cc.dimensionMetadata, child))
+  datasetResource.deleteOut(schema.hasPart).addOut(schema.hasPart, hasPart.terms)
+  datasetResource.deleteOut(cc.dimensionMetadata).addOut(cc.dimensionMetadata, dimensionMetadata.terms)
 
   return datasetResource
 }

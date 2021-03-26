@@ -6,6 +6,7 @@ import { NamedNode } from 'rdf-js'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import { dcat, dcterms, hydra, rdf, schema, sh, _void, xsd } from '@tpluscode/rdf-ns-builders'
 import { cc, cube } from '@cube-creator/core/namespace'
+import { ex } from '@cube-creator/testing/lib/namespace'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import { update } from '../../../lib/domain/dataset/update'
 
@@ -141,5 +142,20 @@ describe('domain/dataset/update', () => {
         cc.dimensionMetadata,
       ],
     })
+  })
+
+  it('ignores schema:hasPart and cc:dimensionMetadata from the request', async () => {
+    // given
+    const updatedResource = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('dataset') })
+      .addOut(dcterms.title, 'title')
+      .addOut(schema.hasPart, ex.Foo)
+      .addOut(cc.dimensionMetadata, ex.Bar)
+
+    // when
+    const result = await update({ dataset, resource: updatedResource, store })
+
+    // then
+    expect(result.out(schema.hasPart).terms).to.not.deep.contain.members([ex.Foo])
+    expect(result.out(cc.dimensionMetadata).terms).to.not.deep.contain.members([ex.Bar])
   })
 })
