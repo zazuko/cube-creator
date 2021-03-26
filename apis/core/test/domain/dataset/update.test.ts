@@ -117,4 +117,29 @@ describe('domain/dataset/update', () => {
     const cubeTriples = result.dataset.match(dataset.namedNode('cube').term)
     expect(cubeTriples.size).to.eq(1, 'Got: \n' + cubeTriples.toString())
   })
+
+  it('does not keep quads which do not exist in request payload', async () => {
+    // given
+    dataset.namedNode('foo').addOut(rdf.type, schema.Person)
+    const updatedResource = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('dataset') })
+      .addOut(dcterms.title, 'title')
+
+    // when
+    const result = await update({ dataset, resource: updatedResource, store })
+
+    // then
+    expect(result.namedNode('foo').out().terms).to.have.length(0)
+    expect(result).to.matchShape({
+      closed: true,
+      property: {
+        path: dcterms.title,
+        hasValue: 'title',
+      },
+      ignoredProperties: [
+        rdf.type,
+        schema.hasPart,
+        cc.dimensionMetadata,
+      ],
+    })
+  })
 })
