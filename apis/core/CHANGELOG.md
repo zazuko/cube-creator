@@ -1,5 +1,11 @@
 # @cube-creator/core-api
 
+## 1.0.1
+
+### Patch Changes
+
+- 09f0160: Ensure that superfluous quads are remove when cube meta is saved
+
 ## 1.0.0
 
 ### Major Changes
