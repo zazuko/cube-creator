@@ -27,6 +27,6 @@ export default async function upload({ method, pipeline, endpoint, username, pas
   })
 
   if (!response.ok) {
-    return Promise.reject(response)
+    throw new Error(`${response.status} ${response.statusText}\n\n${await response.text()}`)
   }
 }
