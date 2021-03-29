@@ -7,9 +7,7 @@ declare module 'barnard59-core/lib/Pipeline' {
     'graph-store-endpoint': string
     'graph-store-user': string
     'graph-store-password': string
-    'publish-graph-store-endpoint': string
-    'publish-graph-store-user': string
-    'publish-graph-store-password': string
+    targetFile: string
     'target-graph': string
     revision: number
     namespace: string
