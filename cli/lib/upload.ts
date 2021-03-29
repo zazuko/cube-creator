@@ -22,7 +22,7 @@ export default async function upload({ method, pipeline, endpoint, username, pas
     method,
     headers: {
       'content-type': 'application/n-triples',
-      Authorization: `Basic ${Buffer.from(username + ':' + password)}`,
+      Authorization: `Basic ${Buffer.from(username + ':' + password).toString('base64')}`,
     },
   })
 
