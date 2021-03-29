@@ -91,6 +91,7 @@ export default function (pipelineId: NamedNode, log: Debugger) {
           .logger(log)
           .waitAndRetry(3)
           .executeForPromise(() => upload({
+            method: 'put',
             pipeline: run.pipeline,
             endpoint,
             password,

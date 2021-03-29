@@ -8,9 +8,10 @@ interface Upload {
   username: string | undefined
   password: string | undefined
   graph: string
+  method: 'post' | 'put'
 }
 
-export default async function upload({ pipeline, endpoint, username, password, graph }: Upload): Promise<void> {
+export default async function upload({ method, pipeline, endpoint, username, password, graph }: Upload): Promise<void> {
   const body = fs.createReadStream(pipeline.context.variables.get('targetFile'))
 
   const url = new URL(endpoint)
@@ -18,7 +19,7 @@ export default async function upload({ pipeline, endpoint, username, password, g
 
   const response = await fetch(url.toString(), {
     body,
-    method: 'put',
+    method,
     headers: {
       'content-type': 'application/n-triples',
       Authorization: `Basic ${Buffer.from(username + ':' + password)}`,
