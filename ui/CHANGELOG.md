@@ -1,5 +1,11 @@
 # @cube-creator/ui
 
+## 1.0.1
+
+### Patch Changes
+
+- 114ff79: Only load necessary data in the cube metadata form
+
 ## 1.0.0
 
 ### Major Changes
