@@ -25,6 +25,9 @@ export async function replaceFile({
 }: ReplaceCSVCommand): Promise<GraphPointer> {
   const csvSource = await store.getResource<CsvSource>(resource)
 
+  // Remove any previous error
+  csvSource.error = undefined
+
   const key = csvSource.associatedMedia.identifierLiteral
   if (!key) {
     throw new DomainError(`S3 key is missing for ${resource}`)

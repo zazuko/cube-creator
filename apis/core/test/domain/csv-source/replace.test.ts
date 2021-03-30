@@ -40,6 +40,7 @@ describe('domain/csv-sources/replace', () => {
         .namedNode('source')
         .addOut(rdf.type, cc.CSVSource)
         .addOut(schema.name, 'Name')
+        .addOut(schema.error, 'Previous upload had an error')
         .addOut(csvw.dialect, dialect => {
           dialect.addOut(csvw.quoteChar, '"')
           dialect.addOut(csvw.delimiter, ',')
@@ -112,6 +113,15 @@ describe('domain/csv-sources/replace', () => {
                 maxCount: 1,
               }],
           },
+        }],
+      })
+    })
+
+    it('removes the previous parse error', () => {
+      expect(csvSource).to.matchShape({
+        property: [{
+          path: schema.error,
+          maxCount: 0,
         }],
       })
     })
