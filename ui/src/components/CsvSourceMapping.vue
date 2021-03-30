@@ -51,11 +51,15 @@
             <p>To fix the issue, you can:</p>
             <ul>
               <li v-if="source.actions.edit">
-                <router-link :to="{ name: 'SourceEdit', params: { sourceId: source.clientPath }}">
+                <router-link :to="{ name: 'SourceEdit', params: { sourceId: source.clientPath } }">
                   Adjust the CSV settings
                 </router-link>
               </li>
-              <li>or</li>
+              <li v-if="source.actions.replace">
+                <router-link :to="{ name: 'SourceReplaceCSV', params: { sourceId: source.clientPath } }">
+                  Replace this file with a valid one
+                </router-link>
+              </li>
               <li v-if="source.actions.delete">
                 <a @click="deleteSource(source)">Delete this file</a>, fix it and upload it again
               </li>
