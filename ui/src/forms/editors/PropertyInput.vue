@@ -1,16 +1,9 @@
 <template>
   <b-field :message="fullURI">
-    <!--
-    `@keydown.native.enter.prevent` is here to prevent submitting the form
-    when selecting an option with "enter" (https://github.com/buefy/buefy/issues/3216)
-    As a bad side-effect, it also prevents submitting the form with "enter"
-    on this text field.
-    -->
     <b-autocomplete
       :value="textValue"
       @input="onUpdate"
       :data="suggestions"
-      @keydown.native.enter.prevent="noop"
     />
   </b-field>
 </template>
@@ -84,10 +77,6 @@ export default class extends Vue {
       : $rdf.literal(newValue)
 
     this.update(newTerm)
-  }
-
-  noop (): void {
-    // Do nothing
   }
 }
 </script>
