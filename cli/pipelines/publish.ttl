@@ -4,7 +4,7 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 
 <#Main> a :Pipeline ;
-  :steps [ :stepList ( <#loadGraphStep> <#injectCubeRevision> <#injectMetadata> <#filter> <#uniqueBnodes> <#streamOutputStep> ) ] .
+  :steps [ :stepList ( <#loadGraphStep> <#injectCubeRevision> <#injectMetadata> <#filter> <#uniqueBnodes> <#ToDefaultGraph> <#streamOutputStep> ) ] .
 
 <#loadGraphStep>
   a                  :Step ;
@@ -64,23 +64,8 @@ _:get
                        a         code:EcmaScript ] ;
   code:arguments     ( <#StreamOutput> ) .
 
-<#StreamOutput>
-  a      :Pipeline ;
-  :steps [ :stepList ( _:setGraph _:upload ) ] ;.
-
-_:setGraph
+<#ToDefaultGraph>
   a                  :Step ;
   code:implementedBy [ a         code:EcmaScript ;
-                       code:link <node:barnard59-base#setGraph> ] ;
-  code:arguments     ( "target-graph"^^:VariableName ) .
-
-_:upload
-  a                  :Step ;
-  code:implementedBy [ a         code:EcmaScript ;
-                       code:link <node:barnard59-graph-store#post> ] ;
-  code:arguments     [ code:name  "endpoint" ;
-                       code:value "publish-graph-store-endpoint"^^:VariableName ] ;
-  code:arguments     [ code:name  "user" ;
-                       code:value "publish-graph-store-user"^^:VariableName ] ;
-  code:arguments     [ code:name  "password" ;
-                       code:value "publish-graph-store-password"^^:VariableName ] .
+                       code:link <node:barnard59-base#map> ] ;
+  code:arguments     ( "({ subject, predicate, object }) => require('rdf-ext').quad(subject, predicate, object)"^^code:EcmaScript ) .
