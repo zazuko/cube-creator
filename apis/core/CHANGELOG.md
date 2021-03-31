@@ -1,5 +1,11 @@
 # @cube-creator/core-api
 
+## 1.0.2
+
+### Patch Changes
+
+- c3a08dd: Remove any previous CSV parsing error on source when replacing it with a new file (#639)
+
 ## 1.0.1
 
 ### Patch Changes
