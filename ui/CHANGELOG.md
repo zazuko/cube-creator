@@ -1,5 +1,11 @@
 # @cube-creator/ui
 
+## 1.0.2
+
+### Patch Changes
+
+- ec7cbc4: Fix dimension metadata not reflected in Cube Designer when saved (#646)
+
 ## 1.0.1
 
 ### Patch Changes

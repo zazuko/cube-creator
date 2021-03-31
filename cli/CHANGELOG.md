@@ -1,5 +1,11 @@
 # @cube-creator/cli
 
+## 1.1.0
+
+### Minor Changes
+
+- c6e10d8: Use temporary file before uploading to store
+
 ## 1.0.1
 
 ### Patch Changes
