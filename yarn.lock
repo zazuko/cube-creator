@@ -3640,10 +3640,9 @@ barnard59-formats@^0.1.1:
     rdf-parser-csvw "^0.14.0"
     rdfxml-streaming-parser "^1.2.0"
 
-barnard59-graph-store@^0.1.0:
+barnard59-graph-store@zazuko/barnard59-graph-store#fix-performance:
   version "0.1.0"
-  resolved "https://registry.yarnpkg.com/barnard59-graph-store/-/barnard59-graph-store-0.1.0.tgz#f1c568d848d5d74ff94ba2863c181cc2a018978b"
-  integrity sha512-e5gszJX5Nu9ot2XFW3UygihsOqkq9uuBqpWUtZHCtXnzvU4Lcpd7QGFOGGDebI7egGMSll3J5xWWRYJzIq2Vmw==
+  resolved "https://codeload.github.com/zazuko/barnard59-graph-store/tar.gz/cfa1396714ae6ab0c73667d5409d641af984298a"
   dependencies:
     duplex-to "^1.0.0"
     lodash "^4.17.15"
