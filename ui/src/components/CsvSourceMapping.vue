@@ -73,7 +73,7 @@
           @mouseenter="highlightArrows(column)"
           @mouseleave="unhighlightArrows(column)"
         >
-          <b-checkbox :value="selectedColumnsMap[column.clientPath]" @input="selectedColumnsMap[column.clientPath] = $event">
+          <b-checkbox :value="selectedColumnsMap[column.clientPath]" @input="selectedColumnsMap[column.clientPath] = $event" class="source-column-name">
             {{ column.name }}
             <span class="has-text-grey" v-if="column.samples.length > 0">
               &nbsp;({{ column.samples.slice(0, 3).join(", ") }})
@@ -233,5 +233,9 @@ export default class CsvSourceMapping extends Vue {
 
 .source-column-mapping:not(:last-child) {
   margin-right: 0.15rem;
+}
+
+.source-column-name {
+  word-break: break-word;
 }
 </style>
