@@ -1,5 +1,11 @@
 # @cube-creator/ui
 
+## 1.0.3
+
+### Patch Changes
+
+- 9a437f1: Fix broken layout when CSV contains really long column name
+
 ## 1.0.2
 
 ### Patch Changes
