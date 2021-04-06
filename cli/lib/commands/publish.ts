@@ -11,12 +11,8 @@ import type { Variables } from 'barnard59-core/lib/Pipeline'
 import { updateJobStatus } from '../job'
 import { Hydra } from 'alcaeus/node'
 import { Project, PublishJob } from '@cube-creator/model'
-import assert from 'assert'
-import polly from 'polly-js'
-import temp from 'tempy'
 import '../variables'
 import '../hydra-cache'
-import upload from '../upload'
 
 interface RunOptions {
   debug: boolean
@@ -41,7 +37,7 @@ export default function (pipelineId: NamedNode, log: Debugger) {
   const basePath = path.resolve(__dirname, '../../')
 
   return async function ({ variable = new Map(), ...command }: RunOptions) {
-    const { job: jobUri, debug = false, enableBufferMonitor = false, graphStore, executionUrl } = command
+    const { job: jobUri, debug = false, enableBufferMonitor = false, graphStore, publishStore, executionUrl } = command
 
     log.enabled = debug
     const authConfig = {
@@ -51,7 +47,6 @@ export default function (pipelineId: NamedNode, log: Debugger) {
     const pipelinePath = (filename: string) => path.join(basePath, `./pipelines/${filename}.ttl`)
     const dataset = $rdf.dataset()
       .merge(await fileToDataset('text/turtle', pipelinePath('publish')))
-      .merge(await fileToDataset('text/turtle', pipelinePath('to-filesystem')))
 
     setupAuthentication(authConfig, log)
 
@@ -64,10 +59,9 @@ export default function (pipelineId: NamedNode, log: Debugger) {
     variable.set('graph-store-endpoint', graphStore?.endpoint || process.env.GRAPH_STORE_ENDPOINT)
     variable.set('graph-store-user', graphStore?.user || process.env.GRAPH_STORE_USER)
     variable.set('graph-store-password', graphStore?.password || process.env.GRAPH_STORE_PASSWORD)
-
-    const targetFile = temp.file({ extension: '.nq' })
-    log('Will write output to temp file %s', targetFile)
-    variable.set('targetFile', targetFile)
+    variable.set('publish-graph-store-endpoint', publishStore?.endpoint || process.env.PUBLISH_GRAPH_STORE_ENDPOINT)
+    variable.set('publish-graph-store-user', publishStore?.user || process.env.PUBLISH_GRAPH_STORE_USER)
+    variable.set('publish-graph-store-password', publishStore?.password || process.env.PUBLISH_GRAPH_STORE_PASSWORD)
 
     const timestamp = new Date()
     variable.set('timestamp', $rdf.literal(timestamp.toISOString(), xsd.dateTime))
@@ -99,32 +93,6 @@ export default function (pipelineId: NamedNode, log: Debugger) {
     }
 
     return run.promise
-      .then(() => {
-        log.enabled = debug
-      })
-      .then(async () => {
-        const endpoint = graphStore?.endpoint || process.env.PUBLISH_GRAPH_STORE_ENDPOINT!
-        const username = graphStore?.user || process.env.PUBLISH_GRAPH_STORE_USER
-        const password = graphStore?.password || process.env.PUBLISH_GRAPH_STORE_PASSWORD
-        const graph = run.pipeline.context.variables.get('target-graph')
-        assert(graph)
-
-        log(`Uploading result to graph ${graph}`)
-
-        await polly()
-          .logger(log)
-          .waitAndRetry(3)
-          .executeForPromise(() => upload({
-            method: 'post',
-            pipeline: run.pipeline,
-            endpoint,
-            password,
-            username,
-            graph,
-          }))
-
-        log('Upload complete')
-      })
       .then(() =>
         updateJobStatus({
           log: run.pipeline.context.log,
