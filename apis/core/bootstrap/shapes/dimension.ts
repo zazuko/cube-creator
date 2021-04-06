@@ -22,10 +22,10 @@ WHERE
       WHERE
         { GRAPH <https://lindas.admin.ch/ontologies>
             { ?unit  a ${qudt.Unit} ;
-                     ${rdfs.label} ?label ;
-                     ${qudt.ucumCode} ?ucumCode.
-              OPTIONAL
-                { ?unit  ${qudt.symbol}  ?symbol }
+                     ${rdfs.label} ?label .
+
+              OPTIONAL { ?unit  ${qudt.symbol}  ?symbol }
+              OPTIONAL { ?unit  ${qudt.ucumCOde}  ?ucumCode }
 
               BIND(concat(?label, " (", coalesce(str(?symbol), str(?ucumCode), "?"), ")") AS ?name)
               BIND(strlen(str(?ucumCode)) AS ?ucumCount)
@@ -34,7 +34,6 @@ WHERE
               FILTER NOT EXISTS {?unit ${qudt.unitOfSystem} ${sou.SOU_IMPERIAL} . }
               FILTER NOT EXISTS {?unit ${qudt.unitOfSystem} ${sou.SOU_USCS} . }
               FILTER NOT EXISTS {?unit ${qudt.unitOfSystem} ${sou.SOU_PLANCK} . }
-              FILTER NOT EXISTS {?unit a ${qudt.CurrencyUnit} . }
             }
         }
       ORDER BY ASC(?ucumCount) ASC(?name)
