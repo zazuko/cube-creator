@@ -25,9 +25,10 @@ WHERE
                      ${rdfs.label} ?label .
 
               OPTIONAL { ?unit  ${qudt.symbol}  ?symbol }
-              OPTIONAL { ?unit  ${qudt.ucumCOde}  ?ucumCode }
+              OPTIONAL { ?unit  ${qudt.ucumCode}  ?ucumCode }
+              OPTIONAL { ?unit  ${qudt.expression}  ?expression }
 
-              BIND(concat(?label, " (", coalesce(str(?symbol), str(?ucumCode), "?"), ")") AS ?name)
+              BIND(concat(?label, " (", coalesce(str(?symbol), str(?ucumCode), str(?expression), "?"), ")") AS ?name)
               BIND(strlen(str(?ucumCode)) AS ?ucumCount)
 
               FILTER ( lang(?label) = "en" )
