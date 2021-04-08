@@ -1,5 +1,11 @@
 # @cube-creator/core-api
 
+## 1.0.3
+
+### Patch Changes
+
+- 6928ea3: Add currencies in the list of units
+
 ## 1.0.2
 
 ### Patch Changes
