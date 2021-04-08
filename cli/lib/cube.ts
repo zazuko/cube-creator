@@ -6,6 +6,7 @@ import type { Context } from 'barnard59-core/lib/Pipeline'
 import { obj } from 'through2'
 import TermMap from '@rdfjs/term-map'
 import { rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
+import { Dataset } from '@cube-creator/model'
 import { loadDataset } from './metadata'
 
 export const getObservationSetId = ({ dataset }: { dataset: DatasetCore }) => {
@@ -22,12 +23,15 @@ export function getCubeId({ ptr }: { ptr: GraphPointer }) {
   return ptr.out(cc.cube).term || ''
 }
 
-export async function injectRevision(this: Pick<Context, 'variables' | 'log'>, jobUri: string) {
+export async function injectRevision(this: Pick<Context, 'variables' | 'log'>, jobUri?: string) {
   let cubeNamespace = this.variables.get('namespace')
   const revision = this.variables.get('revision')
   const previousCubes = new TermMap<Term, QuadSubject>()
   this.variables.set('previousCubes', previousCubes)
-  const { dataset } = await loadDataset(jobUri)
+  let dataset: Dataset | undefined
+  if (jobUri) {
+    ({ dataset } = await loadDataset(jobUri))
+  }
 
   this.log.info(`Cube revision ${revision}`)
 
@@ -43,8 +47,12 @@ export async function injectRevision(this: Pick<Context, 'variables' | 'log'>, j
     return term
   }
 
-  function isDimension(predicate: Term) {
-    return dataset.pointer.any().has(schema.about, predicate).terms.length
+  function shouldAddSameAs(predicate: Term) {
+    if (!dataset) {
+      return false
+    }
+
+    return dataset.pointer.any().has(schema.about, predicate).terms.length > 0
   }
 
   return obj(function ({ subject, predicate, object, graph }: Quad, _, callback) {
@@ -62,7 +70,7 @@ export async function injectRevision(this: Pick<Context, 'variables' | 'log'>, j
 
       this.push($rdf.quad(rebasedSub, predicate, rebasedObject, graph))
 
-      if (rebasedObject.termType === 'NamedNode' && !rebasedObject.equals(object) && isDimension(predicate)) {
+      if (rebasedObject.termType === 'NamedNode' && !rebasedObject.equals(object) && shouldAddSameAs(predicate)) {
         // see https://github.com/zazuko/cube-creator/issues/658
         this.push($rdf.quad(rebasedObject, schema.sameAs, object, graph))
       }
