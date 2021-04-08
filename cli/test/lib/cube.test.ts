@@ -78,7 +78,7 @@ describe('lib/cube', () => {
         ]).toStream()
 
         // when
-        const transform = injectRevision.call(context)
+        const transform = await injectRevision.call(context)
         const transformed = await $rdf.dataset().import(quads.pipe(transform))
 
         // then
@@ -100,7 +100,7 @@ describe('lib/cube', () => {
       ]).toStream()
 
       // when
-      const transform = injectRevision.call(context)
+      const transform = await injectRevision.call(context)
       await $rdf.dataset().import(quads.pipe(transform))
 
       // then
@@ -122,7 +122,7 @@ describe('lib/cube', () => {
       ]).toStream()
 
       // when
-      const transform = injectRevision.call(context)
+      const transform = await injectRevision.call(context)
       await $rdf.dataset().import(quads.pipe(transform))
 
       // then
