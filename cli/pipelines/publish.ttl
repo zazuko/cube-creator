@@ -33,7 +33,8 @@ _:get
 <#injectCubeRevision>
   a :Step ;
   code:implementedBy [ code:link <file:../lib/cube#injectRevision> ;
-                       a         code:EcmaScript ] .
+                       a         code:EcmaScript ] ;
+  code:arguments     ( "jobUri"^^:VariableName ) .
 
 <#injectMetadata>
   a                  :Step ;

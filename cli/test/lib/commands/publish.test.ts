@@ -296,5 +296,29 @@ describe('lib/commands/publish', function () {
         },
       })
     })
+
+    it('adds schema:sameAs to concepts linked to observation dimensions', async () => {
+      const sameAsAdded = await ASK`
+        ${targetCube('station/blBAS')} ${schema.sameAs} ${ns.baseCube('station/blBAS')}
+      `.FROM($rdf.namedNode('https://lindas.admin.ch/foen/cube')).execute(ccClients.streamClient.query)
+
+      expect(sameAsAdded).to.be.true
+    })
+
+    it('does not add schema:sameAs to concepts outside cube namespace', async () => {
+      const sameAsAdded = await ASK`
+        <http://www.wikidata.org/entity/Q2025> ${schema.sameAs} ?any
+      `.FROM($rdf.namedNode('https://lindas.admin.ch/foen/cube')).execute(ccClients.streamClient.query)
+
+      expect(sameAsAdded).to.be.false
+    })
+
+    it('does not add schema:sameAs to objects of non-dimension properties`', async () => {
+      const sameAsAdded = await ASK`
+        ${targetCube('maintainer/blBAS')} ${schema.sameAs} ?any
+      `.FROM($rdf.namedNode('https://lindas.admin.ch/foen/cube')).execute(ccClients.streamClient.query)
+
+      expect(sameAsAdded).to.be.false
+    })
   })
 })
