@@ -11,7 +11,7 @@ import type { Context } from 'barnard59-core/lib/Pipeline'
 
 Hydra.resources.factory.addMixin(...Object.values(Models))
 
-async function loadDataset(jobUri: string) {
+export async function loadDataset(jobUri: string) {
   const jobResource = await Hydra.loadResource<PublishJob>(jobUri)
   const job = jobResource.representation?.root
   if (!job) {

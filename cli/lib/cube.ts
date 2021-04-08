@@ -3,9 +3,10 @@ import { DatasetCore, Quad, Term, Quad_Subject as QuadSubject } from 'rdf-js'
 import { cc, cube } from '@cube-creator/core/namespace'
 import { GraphPointer } from 'clownface'
 import type { Context } from 'barnard59-core/lib/Pipeline'
-import map from 'barnard59-base/lib/map'
+import { obj } from 'through2'
 import TermMap from '@rdfjs/term-map'
-import { rdf, sh } from '@tpluscode/rdf-ns-builders'
+import { rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
+import { loadDataset } from './metadata'
 
 export const getObservationSetId = ({ dataset }: { dataset: DatasetCore }) => {
   const cubeId = [...dataset.match(null, cc.cube)][0].object.value
@@ -21,11 +22,12 @@ export function getCubeId({ ptr }: { ptr: GraphPointer }) {
   return ptr.out(cc.cube).term || ''
 }
 
-export function injectRevision(this: Pick<Context, 'variables' | 'log'>) {
+export async function injectRevision(this: Pick<Context, 'variables' | 'log'>, jobUri: string) {
   let cubeNamespace = this.variables.get('namespace')
   const revision = this.variables.get('revision')
   const previousCubes = new TermMap<Term, QuadSubject>()
   this.variables.set('previousCubes', previousCubes)
+  const { dataset } = await loadDataset(jobUri)
 
   this.log.info(`Cube revision ${revision}`)
 
@@ -41,7 +43,11 @@ export function injectRevision(this: Pick<Context, 'variables' | 'log'>) {
     return term
   }
 
-  return map(({ subject, predicate, object, graph }: Quad) => {
+  function isDimension(predicate: Term) {
+    return dataset.pointer.any().has(schema.about, predicate).terms.length
+  }
+
+  return obj(function ({ subject, predicate, object, graph }: Quad, _, callback) {
     const rebasedSub = rebase(subject)
 
     if (revision > 1 && predicate.equals(rdf.type) && object.equals(cube.Cube)) {
@@ -50,13 +56,18 @@ export function injectRevision(this: Pick<Context, 'variables' | 'log'>) {
 
     // do not inject revision into dimension URI used in Constraint Shape
     if (predicate.equals(sh.path)) {
-      return $rdf.quad(rebasedSub, predicate, object, graph)
+      this.push($rdf.quad(rebasedSub, predicate, object, graph))
+    } else {
+      const rebasedObject = rebase(object)
+
+      this.push($rdf.quad(rebasedSub, predicate, rebasedObject, graph))
+
+      if (rebasedObject.termType === 'NamedNode' && !rebasedObject.equals(object) && isDimension(predicate)) {
+        // see https://github.com/zazuko/cube-creator/issues/658
+        this.push($rdf.quad(rebasedObject, schema.sameAs, object, graph))
+      }
     }
 
-    return $rdf.quad(
-      rebasedSub,
-      predicate,
-      rebase(object),
-      graph)
+    callback()
   })
 }

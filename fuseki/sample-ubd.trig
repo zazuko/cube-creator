@@ -15,6 +15,7 @@ prefix qudt: <http://qudt.org/schema/qudt/>
 prefix dcat: <http://www.w3.org/ns/dcat#>
 prefix vcard: <http://www.w3.org/2006/vcard/ns#>
 prefix prov: <http://www.w3.org/ns/prov#>
+prefix vaem: <http://www.linkedmodel.org/schema/vaem#>
 
 <ubd-example> a void:Dataset .
 
@@ -195,6 +196,11 @@ graph <cube-project/ubd/cube-data> {
     <https://environment.ld.admin.ch/foen/ubd/28/pollutant>       <http://www.wikidata.org/entity/Q2025> ;
     <https://environment.ld.admin.ch/foen/ubd/28/station>         <https://environment.ld.admin.ch/foen/ubd/28/station/blBAS> ;
     <https://environment.ld.admin.ch/foen/ubd/28/unit>            <http://qudt.org/vocab/unit/MicroGM-PER-M3> ;
+  .
+
+  <https://environment.ld.admin.ch/foen/ubd/28/station/blBAS>
+    schema:identifier "blBAS" ;
+    vaem:owner <https://environment.ld.admin.ch/foen/ubd/28/maintainer/blBAS> ;
   .
 
   <https://environment.ld.admin.ch/foen/ubd/28/shape/>
