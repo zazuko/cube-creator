@@ -3,7 +3,7 @@ import { Constructor, namespace, property, RdfResource } from '@tpluscode/rdfine
 import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import { Literal, NamedNode, Term } from 'rdf-js'
 import { qudt, schema } from '@tpluscode/rdf-ns-builders'
-import { cc, meta } from '@cube-creator/core/namespace'
+import { cc, cube, meta } from '@cube-creator/core/namespace'
 import { initializer } from './lib/initializer'
 
 export interface DimensionMetadata extends RdfResource {
@@ -13,6 +13,8 @@ export interface DimensionMetadata extends RdfResource {
   scaleOfMeasure?: NamedNode
   dataKind?: Term
   mappings?: NamedNode
+  isKeyDimension: boolean
+  isMeasureDimension: boolean
 }
 
 export interface DimensionMetadataCollection extends RdfResource {
@@ -39,6 +41,14 @@ function DimensionMetadataMixin<Base extends Constructor>(base: Base): Mixin {
 
     @property({ path: cc.dimensionMapping })
     mappings?: NamedNode
+
+    get isMeasureDimension(): boolean {
+      return this.types.has(cube.MeasureDimension)
+    }
+
+    get isKeyDimension(): boolean {
+      return this.types.has(cube.KeyDimension)
+    }
   }
 
   return Impl

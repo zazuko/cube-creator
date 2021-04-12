@@ -33,6 +33,16 @@
             No dimensions defined
           </th>
         </tr>
+        <tr v-if="warningMessage">
+          <td :colspan="tableWidth" class="p-0">
+            <div class="message is-warning">
+              <p class="message-body px-2 py-1 is-flex">
+                <b-icon icon="exclamation-triangle" class="mr-1" />
+                <span>{{ warningMessage }}</span>
+              </p>
+            </div>
+          </td>
+        </tr>
       </thead>
       <tbody>
         <tr v-if="observations.isLoading">
@@ -158,6 +168,14 @@ export default class extends Vue {
     }
 
     return ''
+  }
+
+  get warningMessage (): string | null {
+    if (this.dimensions.length > 0 && !this.dimensions.some(({ isMeasureDimension }) => isMeasureDimension)) {
+      return 'No Measure dimension defined'
+    }
+
+    return null
   }
 
   @Watch('pageSize')
