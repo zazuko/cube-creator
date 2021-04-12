@@ -21,4 +21,6 @@ _:upload
   code:arguments     [ code:name  "user" ;
                        code:value "graph-store-user"^^:VariableName ] ;
   code:arguments     [ code:name  "password" ;
-                       code:value "graph-store-password"^^:VariableName ] .
+                       code:value "graph-store-password"^^:VariableName ] ;
+  code:arguments     [ code:name  "maxQuadsPerRequest" ;
+                       code:value "Infinity"^^code:EcmaScript ] .
