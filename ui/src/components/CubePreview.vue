@@ -26,7 +26,14 @@
           </th>
         </tr>
         <tr class="has-background-light">
-          <th v-for="dimension in dimensions" :key="dimension.id.value">
+          <th
+            v-for="dimension in dimensions"
+            :key="dimension.id.value"
+            :class="{
+              'has-background-primary-light': dimension.isMeasureDimension,
+              'has-text-weight-normal': !(dimension.isMeasureDimension || dimension.isKeyDimension),
+            }"
+          >
             <cube-preview-dimension :dimension="dimension" :selected-language="selectedLanguage" :cube-uri="cube.id.value" />
           </th>
           <th v-if="dimensions.length === 0" class="has-text-grey has-text-centered">
