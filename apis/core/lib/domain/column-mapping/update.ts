@@ -52,6 +52,8 @@ export async function updateLiteralColumnMapping({
   columnMapping.datatype = resource.out(cc.datatype).term as NamedNode
   columnMapping.language = resource.out(cc.language).value
   columnMapping.defaultValue = resource.out(cc.defaultValue).term
+  columnMapping.keyDimension = resource.out(cc.keyDimension).value === 'true'
+  columnMapping.measureDimension = resource.out(cc.measureDimension).value === 'true'
 
   return columnMapping.pointer
 }

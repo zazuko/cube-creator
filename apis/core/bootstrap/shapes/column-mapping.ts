@@ -8,6 +8,61 @@ const literalShapeId = shape('column-mapping/literal')
 const referenceShapeId = shape('column-mapping/reference')
 const identifierMappingId = $rdf.namedNode(referenceShapeId.value + '#identifierMapping')
 
+const keyOrMeasureDimension = turtle`
+  ${sh.property} [
+    ${sh.name} "Is key dimension?" ;
+    ${sh.path} ${cc.keyDimension} ;
+    ${sh.datatype} ${xsd.boolean} ;
+    ${sh.defaultValue} false ;
+    ${sh.maxCount} 1 ;
+    ${sh.order} 70 ;
+  ] ;
+  ${sh.property} [
+    ${sh.name} "Is measure dimension?" ;
+    ${sh.description} "A dimension cannot be both key and measure!" ;
+    ${sh.path} ${cc.measureDimension} ;
+    ${sh.datatype} ${xsd.boolean} ;
+    ${sh.defaultValue} false ;
+    ${sh.maxCount} 1 ;
+    ${sh.order} 80 ;
+  ] ;
+  ${sh.xone} (
+    [
+      ${sh.property} [
+        ${sh.path} ${cc.keyDimension} ;
+        ${sh.hasValue} false ;
+        ${dash.hidden} true ;
+      ] , [
+        ${sh.path} ${cc.measureDimension} ;
+        ${sh.hasValue} false ;
+        ${dash.hidden} true ;
+      ]
+    ]
+    [
+      ${sh.property} [
+        ${sh.path} ${cc.keyDimension} ;
+        ${sh.hasValue} true ;
+        ${dash.hidden} true ;
+      ] , [
+        ${sh.path} ${cc.measureDimension} ;
+        ${sh.hasValue} false ;
+        ${dash.hidden} true ;
+      ]
+    ]
+    [
+      ${sh.property} [
+        ${sh.path} ${cc.keyDimension} ;
+        ${sh.hasValue} false ;
+        ${dash.hidden} true ;
+      ] , [
+        ${sh.path} ${cc.measureDimension} ;
+        ${sh.hasValue} true ;
+        ${dash.hidden} true ;
+      ]
+    ]
+  )
+`
+
 export const ColumnMappingShape = turtle`
 ${literalShapeId} {
   ${literalShapeId} a ${sh.NodeShape}, ${hydra.Resource} ;
@@ -82,6 +137,7 @@ ${literalShapeId} {
       ${sh.maxCount} 1 ;
       ${sh.order} 60 ;
     ] ;
+    ${keyOrMeasureDimension}
   .
 
   ${xsd.boolean} ${rdfs.label} "boolean" .
@@ -140,6 +196,7 @@ ${referenceShapeId} {
       ${dash.editor} ${dash.DetailsEditor} ;
       ${sh.order} 30 ;
     ] ;
+    ${keyOrMeasureDimension}
   .
 
   ${identifierMappingId} a ${sh.NodeShape} ;
