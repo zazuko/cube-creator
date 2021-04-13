@@ -87,13 +87,19 @@ export async function injectMetadata(this: Context, jobUri: string) {
 
     // Dimension Metadata
     if (quad.predicate.equals(sh.path)) {
+      const propertyShape = quad.subject;
+
       [...datasetTriples.match(null, schema.about, quad.object)].forEach(dim => {
         [...datasetTriples.match(dim.subject)]
           .filter(c => !c.predicate.equals(schema.about))
-          .forEach(item2 => {
-            this.push($rdf.triple(quad.subject, item2.predicate, item2.object))
-            visited.add(quad.subject)
-            copyChildren(item2.object)
+          .forEach(meta => {
+            this.push($rdf.triple(propertyShape, meta.predicate, meta.object))
+            visited.add(propertyShape)
+            copyChildren(meta.object)
+
+            if (meta.predicate.equals(cc.dimensionMapping)) {
+              this.push($rdf.triple(propertyShape, rdf.type, cube.SharedDimension))
+            }
           })
       })
     }

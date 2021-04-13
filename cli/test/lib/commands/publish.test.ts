@@ -284,5 +284,17 @@ describe('lib/commands/publish', function () {
       expect(anyObservationPredicateHasRevision).to.be.false
       expect(anyShapePropertyHasRevision).to.be.false
     })
+
+    it('adds cube:SharedDimension to cube metadata', async () => {
+      const props = cubePointer.namedNode(targetCube('shape/')).out(sh.property)
+      const pollutantPropShape = props.has(sh.path, ns.baseCube('pollutant'))
+
+      expect(pollutantPropShape).to.matchShape({
+        property: {
+          path: rdf.type,
+          hasValue: cube.SharedDimension,
+        },
+      })
+    })
   })
 })
