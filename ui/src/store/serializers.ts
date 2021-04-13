@@ -189,6 +189,8 @@ export function serializeDimensionMetadata (dimension: DimensionMetadata): Dimen
           label: sharedDimension.out([rdfs.label, schema.name], { language: displayLanguage }),
         }
       : undefined,
+    isKeyDimension: dimension.isKeyDimension,
+    isMeasureDimension: dimension.isMeasureDimension,
   })
 }
 

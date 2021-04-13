@@ -26,12 +26,29 @@
           </th>
         </tr>
         <tr class="has-background-light">
-          <th v-for="dimension in dimensions" :key="dimension.id.value">
+          <th
+            v-for="dimension in dimensions"
+            :key="dimension.id.value"
+            :class="{
+              'has-background-primary-light': dimension.isMeasureDimension,
+              'has-text-weight-normal': !(dimension.isMeasureDimension || dimension.isKeyDimension),
+            }"
+          >
             <cube-preview-dimension :dimension="dimension" :selected-language="selectedLanguage" :cube-uri="cube.id.value" />
           </th>
           <th v-if="dimensions.length === 0" class="has-text-grey has-text-centered">
             No dimensions defined
           </th>
+        </tr>
+        <tr v-if="warningMessage">
+          <td :colspan="tableWidth" class="p-0">
+            <div class="message is-warning">
+              <p class="message-body px-2 py-1 is-flex">
+                <b-icon icon="exclamation-triangle" class="mr-1" />
+                <span>{{ warningMessage }}</span>
+              </p>
+            </div>
+          </td>
         </tr>
       </thead>
       <tbody>
@@ -158,6 +175,14 @@ export default class extends Vue {
     }
 
     return ''
+  }
+
+  get warningMessage (): string | null {
+    if (this.dimensions.length > 0 && !this.dimensions.some(({ isMeasureDimension }) => isMeasureDimension)) {
+      return 'No Measure dimension defined'
+    }
+
+    return null
   }
 
   @Watch('pageSize')

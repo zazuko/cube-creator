@@ -1,4 +1,4 @@
-import { cc, meta, shape, sh1 } from '@cube-creator/core/namespace'
+import { cc, meta, shape, sh1, cube } from '@cube-creator/core/namespace'
 import { supportedLanguages } from '@cube-creator/core/languages'
 import { sparql, turtle } from '@tpluscode/rdf-string'
 import { lindasQuery } from '../lib/query'
@@ -107,6 +107,15 @@ ${shape('dimension/metadata')} {
       ${dash.singleLine} false ;
       ${sh.order} 15 ;
     ] , [
+      ${sh.name} "Dimension type" ;
+      ${sh.path} ${rdf.type} ;
+      ${sh.in} (
+        ${cube.MeasureDimension}
+        ${cube.KeyDimension}
+      ) ;
+      ${sh.maxCount} 1 ;
+      ${sh.order} 15 ;
+    ], [
       ${sh.name} "Scale of measure" ;
       ${sh.path} ${qudt.scaleType} ;
       ${sh.in} (
@@ -177,6 +186,9 @@ ${shape('dimension/metadata')} {
     ] ,
     ${validateDataKindShape}
   .
+
+  ${cube.MeasureDimension} ${rdfs.label} "Measure dimension"@en .
+  ${cube.KeyDimension} ${rdfs.label} "Key dimension"@en .
 
   ${qudt.NominalScale} ${rdfs.label} "Nominal"@en .
   ${qudt.OrdinalScale} ${rdfs.label} "Ordinal"@en .
