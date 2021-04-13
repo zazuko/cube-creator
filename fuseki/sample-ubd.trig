@@ -544,6 +544,7 @@ graph <cube-project/ubd/csv-mapping/table-observation/column-mapping-6> {
   <cube-project/ubd/csv-mapping/table-observation/column-mapping-6> a cc:ColumnMapping, cc:LiteralColumnMapping, hydra:Resource ;
     cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/unit> ;
     cc:targetProperty "unit" ;
+    cc:dimensionType cube:KeyDimension ;
   .
 }
 

@@ -1,4 +1,4 @@
-import { cc, editor, shape } from '@cube-creator/core/namespace'
+import { cc, cube, editor, shape } from '@cube-creator/core/namespace'
 import { supportedLanguages } from '@cube-creator/core/languages'
 import { dash, hydra, rdfs, sh, csvw, xsd } from '@tpluscode/rdf-ns-builders'
 import { turtle } from '@tpluscode/rdf-string'
@@ -10,58 +10,20 @@ const identifierMappingId = $rdf.namedNode(referenceShapeId.value + '#identifier
 
 const keyOrMeasureDimension = turtle`
   ${sh.property} [
-    ${sh.name} "Is key dimension?" ;
-    ${sh.path} ${cc.keyDimension} ;
-    ${sh.datatype} ${xsd.boolean} ;
-    ${sh.defaultValue} false ;
+    ${sh.name} "Dimension type" ;
+    ${sh.path} ${cc.dimensionType} ;
+    ${sh.in} (
+      ${cube.MeasureDimension}
+      ${cube.KeyDimension}
+    ) ;
     ${sh.maxCount} 1 ;
     ${sh.order} 70 ;
   ] ;
-  ${sh.property} [
-    ${sh.name} "Is measure dimension?" ;
-    ${sh.description} "A dimension cannot be both key and measure!" ;
-    ${sh.path} ${cc.measureDimension} ;
-    ${sh.datatype} ${xsd.boolean} ;
-    ${sh.defaultValue} false ;
-    ${sh.maxCount} 1 ;
-    ${sh.order} 80 ;
-  ] ;
-  ${sh.xone} (
-    [
-      ${sh.property} [
-        ${sh.path} ${cc.keyDimension} ;
-        ${sh.hasValue} false ;
-        ${dash.hidden} true ;
-      ] , [
-        ${sh.path} ${cc.measureDimension} ;
-        ${sh.hasValue} false ;
-        ${dash.hidden} true ;
-      ]
-    ]
-    [
-      ${sh.property} [
-        ${sh.path} ${cc.keyDimension} ;
-        ${sh.hasValue} true ;
-        ${dash.hidden} true ;
-      ] , [
-        ${sh.path} ${cc.measureDimension} ;
-        ${sh.hasValue} false ;
-        ${dash.hidden} true ;
-      ]
-    ]
-    [
-      ${sh.property} [
-        ${sh.path} ${cc.keyDimension} ;
-        ${sh.hasValue} false ;
-        ${dash.hidden} true ;
-      ] , [
-        ${sh.path} ${cc.measureDimension} ;
-        ${sh.hasValue} true ;
-        ${dash.hidden} true ;
-      ]
-    ]
-  )
 `
+
+const dimensionTypes = turtle`
+  ${cube.MeasureDimension} ${rdfs.label} "Measure dimension"@en .
+  ${cube.KeyDimension} ${rdfs.label} "Key dimension"@en .`
 
 export const ColumnMappingShape = turtle`
 ${literalShapeId} {
@@ -156,6 +118,8 @@ ${literalShapeId} {
   ${xsd.time} ${rdfs.label} "time" .
   ${xsd.gYear} ${rdfs.label} "year" .
 #  ${xsd.gYearMonth} ${rdfs.label} "year+month" .
+
+  ${dimensionTypes}
 }
 
 ${referenceShapeId} {
@@ -223,5 +187,7 @@ ${referenceShapeId} {
       ${sh.order} 20 ;
     ] ;
   .
+
+  ${dimensionTypes}
 }
 `
