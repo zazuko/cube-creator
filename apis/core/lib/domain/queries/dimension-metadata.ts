@@ -2,9 +2,12 @@ import { CONSTRUCT, SELECT } from '@tpluscode/sparql-builder'
 import { parsingClient } from '../../query-client'
 import { cc } from '@cube-creator/core/namespace'
 import { Term } from 'rdf-js'
-import { rdfs, schema } from '@tpluscode/rdf-ns-builders'
+import { dcterms, rdfs, schema } from '@tpluscode/rdf-ns-builders'
 import { GraphPointer } from 'clownface'
 import { ParsingClient } from 'sparql-http-client/ParsingClient'
+import TermMap from '@rdfjs/term-map'
+import type { Organization } from '@rdfine/schema'
+import { ResourceStore } from '../../ResourceStore'
 
 export async function getDimensionMetaDataCollection(csvMapping: Term, client = parsingClient) {
   const results = await SELECT
@@ -60,4 +63,52 @@ export async function getMappedDimensions(metadata: GraphPointer, dimensionsEndp
     .execute(dimensionsEndpoint.query)
 
   return [...dimensionQuads, ...labelQuads]
+}
+
+type DimensionType = Map<Term, Term>
+
+export async function getDimensionTypes(metadata: GraphPointer, store: ResourceStore, client: ParsingClient): Promise<DimensionType> {
+  const [first, ...rest] = await SELECT`?dimension ?dimensionType ?cubeIdentifier ?organization`
+    .WHERE`
+      graph ?project {
+        ?project ${cc.dataset} ?dataset .
+        ?project ${cc.csvMapping} ?csvMapping .
+        ?project ${dcterms.identifier} ?cubeIdentifier .
+        ?project ${schema.maintainer} ?organization .
+      }
+
+      graph ?dataset {
+        ?dataset ${cc.dimensionMetadata} ${metadata.term} ;
+      }
+
+      graph ?observationTable {
+        ?observationTable a ${cc.ObservationTable} ;
+                          ${cc.columnMapping} ?column .
+      }
+
+      graph ?column {
+        ?column ${cc.targetProperty} ?dimension .
+        OPTIONAL { ?column ${cc.dimensionType} ?dimensionType . }
+      }
+    `
+    .execute(client.query)
+
+  if (!first) {
+    return new TermMap()
+  }
+
+  const organization = await store.getResource<Organization>(first.organization)
+
+  return [first, ...rest].reduce((map, row) => {
+    if (row.dimension.termType === 'NamedNode' || row.dimension.termType === 'Literal') {
+      const dimension = organization.createIdentifier({
+        cubeIdentifier: row.cubeIdentifier.value,
+        termName: row.dimension,
+      })
+
+      return map.set(dimension, row.dimensionType)
+    }
+
+    return map
+  }, new TermMap<Term, Term>())
 }

@@ -65,8 +65,7 @@ type CubeCreatorProperty =
   'sharedDimension' |
   'sharedDimensions' |
   'applyMappings' |
-  'keyDimension' |
-  'measureDimension'
+  'dimensionType'
 
 type OtherTerms =
   'dash'

@@ -2,9 +2,16 @@ import { protectedResource } from '@hydrofoil/labyrinth/resource'
 import { Enrichment } from '@hydrofoil/labyrinth/lib/middleware/preprocessResource'
 import asyncMiddleware from 'middleware-async'
 import { parsingClient } from '@cube-creator/shared-dimensions-api/lib/sparql'
+import { cube } from '@cube-creator/core/namespace'
+import { rdf, schema } from '@tpluscode/rdf-ns-builders'
+import { ParsingClient } from 'sparql-http-client/ParsingClient'
 import { shaclValidate } from '../middleware/shacl'
 import { update } from '../domain/dimension/update'
-import { getMappedDimensions } from '../domain/queries/dimension-metadata'
+import { getDimensionTypes, getMappedDimensions } from '../domain/queries/dimension-metadata'
+import * as client from '../query-client'
+import { Request } from 'express'
+import { GraphPointer } from 'clownface'
+import { NamedNode } from 'rdf-js'
 
 export const get = protectedResource(asyncMiddleware((req, res) => {
   return res.quadStream(req.hydra.resource.quadStream())
@@ -30,4 +37,25 @@ export const loadSharedDimensions: Enrichment = async (req, pointer) => {
   for (const quad of quads) {
     pointer.dataset.add(quad)
   }
+}
+
+interface PreselectDimensionType {
+  (req: Request, pointer: GraphPointer<NamedNode>, sparql?: ParsingClient): Promise<void>
+}
+
+export const preselectDimensionType: PreselectDimensionType = async (req, pointer, sparql: ParsingClient = client.parsingClient) => {
+  const dimensionTypes = await getDimensionTypes(pointer, req.resourceStore(), sparql)
+
+  pointer.out(schema.hasPart)
+    .forEach((dimension: GraphPointer) => {
+      const predicate = dimension.out(schema.about).term
+      if (!predicate) return
+
+      const hasDimensionType = dimension.has(rdf.type, [cube.KeyDimension, cube.MeasureDimension]).terms.length > 0
+      const dimensionType = dimensionTypes.get(predicate)
+
+      if (!hasDimensionType && dimensionType) {
+        dimension.addOut(rdf.type, dimensionType)
+      }
+    })
 }

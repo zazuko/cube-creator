@@ -18,7 +18,13 @@ cc:DimensionMetadataCollection
         code:EcmaScript ;
       code:link
         <file:handlers/dimension#loadSharedDimensions> ;
-    ] ;
+    ] ,
+    [
+      a
+        code:EcmaScript ;
+      code:link
+        <file:handlers/dimension#preselectDimensionType> ;
+    ];
 .
 
 schema:hasPart

@@ -18,8 +18,7 @@ export interface LiteralColumnMapping extends ColumnMapping {
   datatype?: NamedNode
   language?: string
   defaultValue?: Term
-  keyDimension?: boolean
-  measureDimension?: boolean
+  dimensionType?: Term
 }
 
 export interface IdentifierMapping extends RdfResource {
@@ -38,11 +37,8 @@ export function ColumnMappingMixin<Base extends Constructor>(Resource: Base): Mi
     @property()
     targetProperty!: Term
 
-    @property.literal({ type: Boolean })
-    keyDimension?: boolean
-
-    @property.literal({ type: Boolean })
-    measureDimension?: boolean
+    @property()
+    dimensionType?: Term
   }
 
   return Impl
