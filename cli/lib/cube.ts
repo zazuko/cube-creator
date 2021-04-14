@@ -47,7 +47,7 @@ export async function injectRevision(this: Pick<Context, 'variables' | 'log'>, j
     return term
   }
 
-  function shouldAddSameAs(predicate: Term) {
+  function isObservationDimension(predicate: Term) {
     if (!dataset) {
       return false
     }
@@ -70,7 +70,7 @@ export async function injectRevision(this: Pick<Context, 'variables' | 'log'>, j
 
       this.push($rdf.quad(rebasedSub, predicate, rebasedObject, graph))
 
-      if (rebasedObject.termType === 'NamedNode' && !rebasedObject.equals(object) && shouldAddSameAs(predicate)) {
+      if (rebasedObject.termType === 'NamedNode' && !rebasedObject.equals(object) && isObservationDimension(predicate)) {
         // see https://github.com/zazuko/cube-creator/issues/658
         this.push($rdf.quad(rebasedObject, schema.sameAs, object, graph))
       }
