@@ -11,6 +11,7 @@ import type { GraphPointer } from 'clownface'
 
 export interface ColumnMapping extends RdfResource {
   targetProperty: Term
+  dimensionType?: Term
 }
 
 export interface LiteralColumnMapping extends ColumnMapping {
@@ -18,7 +19,6 @@ export interface LiteralColumnMapping extends ColumnMapping {
   datatype?: NamedNode
   language?: string
   defaultValue?: Term
-  dimensionType?: Term
 }
 
 export interface IdentifierMapping extends RdfResource {
@@ -63,6 +63,9 @@ export function LiteralColumnMappingMixin<Base extends Constructor>(Resource: Ba
 
     @property()
     defaultValue?: Term
+
+    @property()
+    dimensionType?: Term
   }
 
   return Impl
@@ -94,6 +97,9 @@ export function ReferenceColumnMappingMixin<Base extends Constructor>(Resource: 
 
     @property.resource({ path: cc.identifierMapping, values: 'array', as: [IdentifierMappingMixin] })
     identifierMapping!: IdentifierMapping[]
+
+    @property()
+    dimensionType?: Term
   }
 
   return Impl

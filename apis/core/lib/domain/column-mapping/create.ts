@@ -87,6 +87,7 @@ async function createLiteralColumnMapping({ targetProperty, table, source, resou
     datatype: resource.out(cc.datatype).term as NamedNode,
     language: resource.out(cc.language).value,
     defaultValue: resource.out(cc.defaultValue).term,
+    dimensionType: resource.out(cc.dimensionType).term,
   })
 }
 
@@ -123,5 +124,6 @@ async function createReferenceColumnMapping({ targetProperty, table, source, res
     targetProperty,
     referencedTable,
     identifierMappings,
+    dimensionType: resource.out(cc.dimensionType).term,
   })
 }
