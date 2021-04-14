@@ -54,7 +54,7 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
 import { RuntimeOperation } from 'alcaeus'
-import clownface, { MultiPointer } from 'clownface'
+import clownface, { AnyPointer } from 'clownface'
 import { rdf, sh } from '@tpluscode/rdf-ns-builders'
 import $rdf from '@rdf-esm/dataset'
 import { Term } from 'rdf-js'
@@ -131,12 +131,12 @@ export default class extends Vue {
     this.shape = await api.fetchOperationShape(this.operation)
   }
 
-  get dimensionTypes (): MultiPointer {
-    const emptyPointer = clownface({ dataset: $rdf.dataset(), term: [] })
+  get dimensionTypes (): AnyPointer {
+    const emptyPointer = clownface({ dataset: $rdf.dataset() })
 
     if (!this.shape) return emptyPointer
 
-    const nodes = this.shape.pointer.out(sh.property).has(sh.path, [cc.dimensionType]).out(sh.in).list()
+    const nodes: any = this.shape.pointer.out(sh.property).has(sh.path, [cc.dimensionType]).out(sh.in).list()
 
     if (!nodes) return emptyPointer
 
