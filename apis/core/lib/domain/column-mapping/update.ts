@@ -52,7 +52,6 @@ export async function updateLiteralColumnMapping({
   columnMapping.datatype = resource.out(cc.datatype).term as NamedNode
   columnMapping.language = resource.out(cc.language).value
   columnMapping.defaultValue = resource.out(cc.defaultValue).term
-  columnMapping.dimensionType = resource.out(cc.dimensionType).term
 
   return columnMapping.pointer
 }
@@ -103,6 +102,8 @@ async function updateColumnMapping<T extends ColumnMapping>({
   tableQueries: { getTableForColumnMapping } = TableQueries,
 }: UpdateColumnMappingCommand): Promise<{ columnMapping: T; table: Table }> {
   const columnMapping = await store.getResource<T>(resource.term)
+
+  columnMapping.dimensionType = resource.out(cc.dimensionType).term
 
   const tableId = await getTableForColumnMapping(columnMapping.id as NamedNode)
   const table = await store.getResource<Table>(tableId)
