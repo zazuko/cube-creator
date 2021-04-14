@@ -141,6 +141,7 @@ export function serializeLiteralColumnMapping (columnMapping: LiteralColumnMappi
     sourceColumn: Object.freeze(columnMapping.sourceColumn),
     datatype: columnMapping.datatype,
     language: columnMapping.language,
+    dimensionType: columnMapping.dimensionType,
   })
 }
 
@@ -150,6 +151,7 @@ export function serializeReferenceColumnMapping (columnMapping: ReferenceColumnM
     targetProperty: columnMapping.targetProperty,
     referencedTable: serializeLink<Table>(columnMapping.referencedTable),
     identifierMapping: columnMapping.identifierMapping.map(serializeIdentifierMapping),
+    dimensionType: columnMapping.dimensionType,
   })
 }
 

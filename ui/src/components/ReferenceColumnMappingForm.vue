@@ -36,6 +36,10 @@
       <loading-block v-else />
     </b-field>
 
+    <b-field label="Dimension type">
+      <radio-buttons :options="dimensionTypes" :value="data.dimensionType" :update="(value) => data.dimensionType = value" />
+    </b-field>
+
     <hydra-operation-error :error="error" class="mt-4" />
 
     <form-submit-cancel
@@ -50,8 +54,8 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
 import { RuntimeOperation } from 'alcaeus'
-import clownface from 'clownface'
-import { rdf } from '@tpluscode/rdf-ns-builders'
+import clownface, { MultiPointer } from 'clownface'
+import { rdf, sh } from '@tpluscode/rdf-ns-builders'
 import $rdf from '@rdf-esm/dataset'
 import { Term } from 'rdf-js'
 import slugify from 'slugify'
@@ -61,8 +65,11 @@ import FormSubmitCancel from '@/components/FormSubmitCancel.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import HydraOperationError from '@/components/HydraOperationError.vue'
 import PropertyInput from '@/forms/editors/PropertyInput.vue'
+import RadioButtons from '@/forms/editors/RadioButtons.vue'
 import { ErrorDetails } from '@/api/errors'
 import { Link } from '@cube-creator/model/lib/Link'
+import { api } from '@/api'
+import { Shape } from '@rdfine/shacl'
 
 const projectNS = namespace('project')
 
@@ -73,10 +80,11 @@ interface FormData {
     sourceColumnId: string | null
     referencedColumn: Link<CsvColumn>
   }[]
+  dimensionType?: Term | null
 }
 
 @Component({
-  components: { FormSubmitCancel, HydraOperationError, LoadingBlock, PropertyInput },
+  components: { FormSubmitCancel, HydraOperationError, LoadingBlock, PropertyInput, RadioButtons },
 })
 export default class extends Vue {
   @Prop({ required: true }) table!: Table
@@ -87,6 +95,8 @@ export default class extends Vue {
   @Prop({ default: false }) isSubmitting!: boolean
   @Prop() submitLabel?: string
 
+  shape: Shape | null = null
+
   @projectNS.Getter('findTable') findTable!: (id: string) => Table
   @projectNS.Getter('getTable') getTable!: (id: Term) => Table
   @projectNS.Getter('getSource') getSource!: (id: Term) => CsvSource
@@ -96,9 +106,10 @@ export default class extends Vue {
     targetProperty: null,
     referencedTable: null,
     identifierMapping: null,
+    dimensionType: null,
   }
 
-  mounted (): void {
+  async mounted (): Promise<void> {
     if (this.columnMapping) {
       const referencedTable = this.getTable(this.columnMapping.referencedTable.id)
 
@@ -109,12 +120,27 @@ export default class extends Vue {
           sourceColumnId: identifierMapping.sourceColumn.id.value,
           referencedColumn: identifierMapping.referencedColumn,
         })),
+        dimensionType: this.columnMapping.dimensionType,
       }
     }
 
     // Setup watchers only after form data is populated
     this.$watch('data.referencedTable', this.populatePredicate)
     this.$watch('data.referencedTable', this.populateColumnMapping)
+
+    this.shape = await api.fetchOperationShape(this.operation)
+  }
+
+  get dimensionTypes (): MultiPointer {
+    const emptyPointer = clownface({ dataset: $rdf.dataset(), term: [] })
+
+    if (!this.shape) return emptyPointer
+
+    const nodes = this.shape.pointer.out(sh.property).has(sh.path, [cc.dimensionType]).out(sh.in).list()
+
+    if (!nodes) return emptyPointer
+
+    return this.shape.pointer.node(nodes)
   }
 
   getColumn (tableId: Term, columnId: Term): CsvColumn {
@@ -186,6 +212,10 @@ export default class extends Vue {
           }
         })
       })
+    }
+
+    if (data.dimensionType) {
+      resource.addOut(cc.dimensionType, data.dimensionType)
     }
 
     this.$emit('submit', resource)

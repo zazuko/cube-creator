@@ -17,6 +17,7 @@ interface CreateLiteralColumnMapping {
   datatype?: NamedNode
   language?: string
   defaultValue?: Term
+  dimensionType?: Term
 }
 
 interface CreateReferenceColumnMapping {
@@ -27,6 +28,7 @@ interface CreateReferenceColumnMapping {
     sourceColumn: CsvColumn
     referencedColumn: CsvColumn
   }[]
+  dimensionType?: Term
 }
 
 interface CreateColumnMappingFromColumn {
@@ -52,13 +54,14 @@ export default function mixin<Base extends Constructor<Table>>(Resource: Base): 
     @property.resource({ values: 'array', path: cc.columnMapping })
     columnMappings!: Array<Link<ColumnMapping.ColumnMapping>>
 
-    addLiteralColumnMapping({ store, sourceColumn, targetProperty, datatype, language, defaultValue }: CreateLiteralColumnMapping): ColumnMapping.LiteralColumnMapping {
+    addLiteralColumnMapping({ store, sourceColumn, targetProperty, datatype, language, defaultValue, dimensionType }: CreateLiteralColumnMapping): ColumnMapping.LiteralColumnMapping {
       const columnMapping = ColumnMapping.createLiteral(store.create(id.columnMapping(this, sourceColumn.name)), {
         sourceColumn,
         targetProperty,
         datatype,
         language,
         defaultValue,
+        dimensionType,
       })
 
       this.pointer.addOut(cc.columnMapping, columnMapping.id)
@@ -66,10 +69,11 @@ export default function mixin<Base extends Constructor<Table>>(Resource: Base): 
       return columnMapping
     }
 
-    addReferenceColumnMapping({ store, targetProperty, referencedTable, identifierMappings }: CreateReferenceColumnMapping): ColumnMapping.ReferenceColumnMapping {
+    addReferenceColumnMapping({ store, targetProperty, referencedTable, identifierMappings, dimensionType }: CreateReferenceColumnMapping): ColumnMapping.ReferenceColumnMapping {
       const columnMapping = ColumnMapping.createReference(store.create(id.columnMapping(this, targetProperty.value)), {
         targetProperty,
         referencedTable,
+        dimensionType,
       })
 
       columnMapping.identifierMapping = identifierMappings.map((properties) =>
