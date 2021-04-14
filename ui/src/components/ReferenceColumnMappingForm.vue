@@ -37,7 +37,12 @@
     </b-field>
 
     <b-field label="Dimension type">
-      <radio-buttons :options="dimensionTypes" :value="data.dimensionType" :update="(value) => data.dimensionType = value" />
+      <radio-buttons
+        class="has-addons"
+        :options="dimensionTypes"
+        :value="data.dimensionType"
+        :update="(value) => data.dimensionType = value"
+      />
     </b-field>
 
     <hydra-operation-error :error="error" class="mt-4" />
