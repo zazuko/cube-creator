@@ -44,34 +44,36 @@
     <div
       v-for="columnMapping in table.columnMappings"
       :key="columnMapping.id.value"
-      class="panel-block"
+      class="panel-block is-justify-content-space-between"
       :data-column-mapping-id="columnMapping.id.value"
       @mouseenter="$emit('highlight-arrows', [columnMapping.id.value])"
       @mouseleave="$emit('unhighlight-arrows', [columnMapping.id.value])"
     >
-      <div class="level-left">
-        <div class="level-item">
-          <b-tag v-if="columnMapping.referencedTable" rounded :style="{ 'background-color': getTableColor(columnMapping.referencedTable.id) }">
-            <property-display :term="columnMapping.targetProperty" />
-          </b-tag>
-          <span v-else>
-            <property-display :term="columnMapping.targetProperty" />
-            <span v-if="columnMapping.datatype" class="has-text-grey"> (<property-display :term="columnMapping.datatype" />)</span>
-            <span v-if="columnMapping.language" class="has-text-grey"> (language: {{ columnMapping.language.value }})</span>
-          </span>
-        </div>
+      <div class="is-flex gap-2">
+        <b-tag v-if="columnMapping.referencedTable" rounded :style="{ 'background-color': getTableColor(columnMapping.referencedTable.id) }">
+          <property-display :term="columnMapping.targetProperty" />
+        </b-tag>
+        <span v-else>
+          <property-display :term="columnMapping.targetProperty" />
+          <span v-if="columnMapping.datatype" class="has-text-grey"> (<property-display :term="columnMapping.datatype" />)</span>
+          <span v-if="columnMapping.language" class="has-text-grey"> (language: {{ columnMapping.language.value }})</span>
+        </span>
+        <b-tooltip v-if="columnMapping.isKeyDimension" label="Key dimension">
+          <b-icon icon="key" type="is-grey" />
+        </b-tooltip>
+        <b-tooltip v-if="columnMapping.isMeasureDimension" label="Measure dimension">
+          <b-icon icon="chart-bar" type="is-primary" />
+        </b-tooltip>
       </div>
-      <div class="level-right">
-        <div class="level-item">
-          <hydra-operation-button
-            :operation="columnMapping.actions.edit"
-            :to="{ name: 'ColumnMappingEdit', params: { columnMappingId: columnMapping.clientPath } }"
-          />
-          <hydra-operation-button
-            :operation="columnMapping.actions.delete"
-            @click="deleteColumnMapping(columnMapping)"
-          />
-        </div>
+      <div class="is-flex">
+        <hydra-operation-button
+          :operation="columnMapping.actions.edit"
+          :to="{ name: 'ColumnMappingEdit', params: { columnMappingId: columnMapping.clientPath } }"
+        />
+        <hydra-operation-button
+          :operation="columnMapping.actions.delete"
+          @click="deleteColumnMapping(columnMapping)"
+        />
       </div>
     </div>
     <div class="panel-block">

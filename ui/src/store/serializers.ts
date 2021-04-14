@@ -1,6 +1,6 @@
 import { Person } from '@rdfine/schema'
 import { Actions } from '@/api/mixins/ApiResource'
-import { cc, md } from '@cube-creator/core/namespace'
+import { cc, cube, md } from '@cube-creator/core/namespace'
 import {
   ColumnMapping,
   CsvColumn,
@@ -142,6 +142,8 @@ export function serializeLiteralColumnMapping (columnMapping: LiteralColumnMappi
     datatype: columnMapping.datatype,
     language: columnMapping.language,
     dimensionType: columnMapping.dimensionType,
+    isMeasureDimension: cube.MeasureDimension.equals(columnMapping.dimensionType),
+    isKeyDimension: cube.KeyDimension.equals(columnMapping.dimensionType),
   })
 }
 
@@ -152,6 +154,8 @@ export function serializeReferenceColumnMapping (columnMapping: ReferenceColumnM
     referencedTable: serializeLink<Table>(columnMapping.referencedTable),
     identifierMapping: columnMapping.identifierMapping.map(serializeIdentifierMapping),
     dimensionType: columnMapping.dimensionType,
+    isMeasureDimension: cube.MeasureDimension.equals(columnMapping.dimensionType),
+    isKeyDimension: cube.KeyDimension.equals(columnMapping.dimensionType),
   })
 }
 
