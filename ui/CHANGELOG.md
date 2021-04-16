@@ -1,5 +1,15 @@
 # @cube-creator/ui
 
+## 1.0.4
+
+### Patch Changes
+
+- 30c4e1d: Add dimension type (Key/Measure)
+- Updated dependencies [646a9c2]
+- Updated dependencies [30c4e1d]
+  - @cube-creator/core@0.3.1
+  - @cube-creator/model@0.1.18
+
 ## 1.0.3
 
 ### Patch Changes

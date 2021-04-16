@@ -1,5 +1,18 @@
 # @cube-creator/core-api
 
+## 1.0.4
+
+### Patch Changes
+
+- 646a9c2: Add flags to mapping to indicate key/measure dimensions
+- 30c4e1d: Add dimension type (Key/Measure)
+- Updated dependencies [646a9c2]
+- Updated dependencies [30c4e1d]
+  - @cube-creator/core@0.3.1
+  - @cube-creator/model@0.1.18
+  - @cube-creator/api-errors@0.0.2
+  - @cube-creator/shared-dimensions-api@1.0.1
+
 ## 1.0.3
 
 ### Patch Changes

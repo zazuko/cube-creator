@@ -1,6 +1,6 @@
 {
   "name": "@cube-creator/cli",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Runs a pipeline to create an RDF data cube",
   "main": "index.js",
   "scripts": {
@@ -10,8 +10,8 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@cube-creator/core": "0.3.0",
-    "@cube-creator/model": "0.1.17",
+    "@cube-creator/core": "0.3.1",
+    "@cube-creator/model": "0.1.18",
     "@rdfine/csvw": "^0.6.3",
     "@rdfine/prov": "^0.1.1",
     "@rdfine/schema": "^0.6.3",
@@ -55,7 +55,7 @@
     "through2-reduce": "1.1.1"
   },
   "devDependencies": {
-    "@cube-creator/testing": "^0.1.16",
+    "@cube-creator/testing": "^0.1.17",
     "@tpluscode/rdf-ns-builders": "^0.4",
     "@tpluscode/rdf-string": "^0.2.21",
     "@tpluscode/sparql-builder": "^0.3.10",

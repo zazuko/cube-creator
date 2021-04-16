@@ -1,5 +1,19 @@
 # @cube-creator/cli
 
+## 1.2.0
+
+### Minor Changes
+
+- ad69ec8: Add schema:sameAs to versioned "concept objects" (#658)
+
+### Patch Changes
+
+- 6216a06: Add type cube:SharedDimension to mapped dimensions
+- Updated dependencies [646a9c2]
+- Updated dependencies [30c4e1d]
+  - @cube-creator/core@0.3.1
+  - @cube-creator/model@0.1.18
+
 ## 1.1.0
 
 ### Minor Changes
