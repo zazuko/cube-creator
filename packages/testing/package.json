@@ -1,9 +1,9 @@
 {
   "name": "@cube-creator/testing",
-  "version": "0.1.16",
+  "version": "0.1.17",
   "private": true,
   "dependencies": {
-    "@cube-creator/core": "0.3.0",
+    "@cube-creator/core": "0.3.1",
     "@rdfine/shacl": "^0.7.4",
     "@rdfjs/express-handler": "^1.2.1",
     "@rdfjs/formats-common": "^2.1.0",
