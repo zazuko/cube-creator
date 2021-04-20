@@ -285,16 +285,18 @@ describe('lib/commands/publish', function () {
       expect(anyShapePropertyHasRevision).to.be.false
     })
 
-    it('adds cube:SharedDimension to cube metadata', async () => {
+    it("adds cube:SharedDimension to mapped dimension's metadata", async () => {
       const props = cubePointer.namedNode(targetCube('shape/')).out(sh.property)
       const pollutantPropShape = props.has(sh.path, ns.baseCube('pollutant'))
 
-      expect(pollutantPropShape).to.matchShape({
-        property: {
-          path: rdf.type,
-          hasValue: cube.SharedDimension,
-        },
-      })
+      expect(pollutantPropShape.has(rdf.type, cube.SharedDimension).terms).to.have.length(1)
+    })
+
+    it('does not add cube:SharedDimension to unmapped nominal dimension', async () => {
+      const props = cubePointer.namedNode(targetCube('shape/')).out(sh.property)
+      const stationPropShape = props.has(sh.path, ns.baseCube('station'))
+
+      expect(stationPropShape.has(rdf.type, cube.SharedDimension).terms).to.have.length(0)
     })
 
     it('adds schema:sameAs to concepts linked to observation dimensions', async () => {

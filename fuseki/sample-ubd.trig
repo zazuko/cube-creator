@@ -77,6 +77,8 @@ graph <cube-project/ubd/dimensions-metadata> {
 
   <cube-project/ubd/dimensions-metadata/station>
     schema:about <https://environment.ld.admin.ch/foen/ubd/28/station> ;
+    qudt:scaleType qudt:NominalScale ;
+    cc:dimensionMapping <cube-project/ubd/dimension-mapping/station> ;
   .
 
   <cube-project/ubd/dimensions-metadata/aggregation>
@@ -117,6 +119,14 @@ graph <cube-project/ubd/dimension-mapping/pollutant> {
       prov:pairKey "co" ;
       prov:pairEntity <http://www.wikidata.org/entity/Q2025> ;
     ] ;
+  .
+}
+
+<cube-project/ubd/dimension-mapping/station> void:inDataset <ubd-example> .
+graph <cube-project/ubd/dimension-mapping/station> {
+  <cube-project/ubd/dimension-mapping/station>
+    a prov:Dictionary, hydra:Resource ;
+    schema:about <https://environment.ld.admin.ch/foen/ubd/28/station> ;
   .
 }
 

@@ -52,7 +52,7 @@ async function loadMetadata(jobUri: string) {
   return dimensionMetadataResource.representation.root
 }
 
-async function loadDimensionMapping(mappingUri: string) {
+export async function loadDimensionMapping(mappingUri: string) {
   const mappingResource = await load<Dictionary>(mappingUri)
   if (!mappingResource.representation) {
     throw new Error(`Mapping ${mappingUri} not loaded`)
