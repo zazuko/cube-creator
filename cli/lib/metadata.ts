@@ -8,6 +8,7 @@ import { Hydra } from 'alcaeus/node'
 import * as Models from '@cube-creator/model'
 import TermSet from '@rdfjs/term-set'
 import type { Context } from 'barnard59-core/lib/Pipeline'
+import { loadDimensionMapping } from './output-mapper'
 
 Hydra.resources.factory.addMixin(...Object.values(Models))
 
@@ -46,7 +47,7 @@ export async function injectMetadata(this: Context, jobUri: string) {
   const previousCubes = this.variables.get('previousCubes')
   const timestamp = this.variables.get('timestamp')
 
-  return obj(function (quad: Quad, _, callback) {
+  return obj(async function (quad: Quad, _, callback) {
     const visited = new TermSet()
     const copyChildren = (subject: QuadObject) => {
       if (subject && subject.termType !== 'Literal' && !visited.has(subject)) {
@@ -87,21 +88,24 @@ export async function injectMetadata(this: Context, jobUri: string) {
 
     // Dimension Metadata
     if (quad.predicate.equals(sh.path)) {
-      const propertyShape = quad.subject;
+      const propertyShape = quad.subject
 
-      [...datasetTriples.match(null, schema.about, quad.object)].forEach(dim => {
-        [...datasetTriples.match(dim.subject)]
-          .filter(c => !c.predicate.equals(schema.about))
-          .forEach(meta => {
-            this.push($rdf.triple(propertyShape, meta.predicate, meta.object))
-            visited.add(propertyShape)
-            copyChildren(meta.object)
+      for (const dim of [...datasetTriples.match(null, schema.about, quad.object)]) {
+        for (const meta of [...datasetTriples.match(dim.subject)]
+          .filter(c => !c.predicate.equals(schema.about))) {
+          this.push($rdf.triple(propertyShape, meta.predicate, meta.object))
+          visited.add(propertyShape)
+          copyChildren(meta.object)
 
-            if (meta.predicate.equals(cc.dimensionMapping)) {
+          if (meta.predicate.equals(cc.dimensionMapping)) {
+            const mapping = await loadDimensionMapping(meta.object.value)
+
+            if (mapping?.has(cc.sharedDimension).term) {
               this.push($rdf.triple(propertyShape, rdf.type, cube.SharedDimension))
             }
-          })
-      })
+          }
+        }
+      }
     }
 
     if (quad.predicate.equals(cube.observedBy)) {
