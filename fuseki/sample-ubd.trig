@@ -704,6 +704,5 @@ graph <cube-project/ubd/csv-mapping/jobs/finished-publish-job> {
     cc:revision 3 ;
     schema:creativeWorkStatus <https://ld.admin.ch/definedTerm/CreativeWorkStatus/Draft> ;
     schema:workExample <https://ld.admin.ch/application/visualize> ;
-    cc:cube <https://environment.ld.admin.ch/foen/ubd/28/3> ;
   .
 }
