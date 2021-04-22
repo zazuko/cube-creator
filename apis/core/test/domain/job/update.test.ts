@@ -20,6 +20,8 @@ describe('domain/job/update', () => {
 
   beforeEach(() => {
     maintainer = namedNode('org')
+      .addOut(rdf.type, schema.Organization)
+      .addOut(cc.namespace, 'http://example.com/')
     job = clownface({ dataset: $rdf.dataset() })
       .namedNode('job')
       .addOut(rdf.type, cc.Job)
@@ -28,7 +30,7 @@ describe('domain/job/update', () => {
       .addOut(rdf.type, cc.CubeProject)
       .addOut(cc.latestPublishedRevision, 2)
       .addOut(cc.dataset, $rdf.namedNode('dataset'))
-      .addOut(schema.maintainter, maintainer)
+      .addOut(schema.maintainer, maintainer)
     dataset = clownface({ dataset: $rdf.dataset() })
       .namedNode('dataset')
       .addOut(rdf.type, _void.Dataset)
@@ -143,35 +145,38 @@ describe('domain/job/update', () => {
     })
   })
 
-  it('sets lindas web query link', async () => {
-    // given
-    const resource = clownface({ dataset: $rdf.dataset() })
-      .namedNode('job')
-      .addOut(schema.actionStatus, schema.CompletedActionStatus)
-
-    // when
-    await update({
-      resource,
-      store,
+  describe('publish job', () => {
+    beforeEach(() => {
+      job
+        .addOut(rdf.type, cc.PublishJob)
+        .addOut(cc.project, project)
+        .addOut(cc.publishGraph, job.namedNode('http://example.com/publish-graph'))
     })
 
-    // then
-    const link = new URL(job.out(schema.query).value!)
-    const params = new URLSearchParams(link.hash)
-    expect(link.hostname).to.eq('lindas.admin.ch')
-    expect(params.get('endpoint')).to.be.ok
-    expect(params.get('query')).to.be.ok
-  })
+    it('sets lindas web query link', async () => {
+      // given
+      const resource = clownface({ dataset: $rdf.dataset() })
+        .namedNode('job')
+        .addOut(schema.actionStatus, schema.CompletedActionStatus)
 
-  describe('publish job', () => {
+      // when
+      await update({
+        resource,
+        store,
+      })
+
+      // then
+      const link = new URL(job.out(schema.query).value!)
+      const params = new URLSearchParams(link.hash)
+      expect(link.hostname).to.eq('lindas.admin.ch')
+      expect(params.get('endpoint')).to.be.ok
+    })
+
     it("increments project's cc:publishedRevision when succeeded", async () => {
       // given
       const resource = clownface({ dataset: $rdf.dataset() })
         .namedNode('job')
         .addOut(schema.actionStatus, schema.CompletedActionStatus)
-      job
-        .addOut(rdf.type, cc.PublishJob)
-        .addOut(cc.project, project)
 
       // when
       await update({
@@ -197,8 +202,6 @@ describe('domain/job/update', () => {
         .addOut(schema.actionStatus, schema.CompletedActionStatus)
         .addOut(dcterms.modified, $rdf.literal('2020-12-12T11:30:30', xsd.dateTime))
       job
-        .addOut(rdf.type, cc.PublishJob)
-        .addOut(cc.project, project)
         .addOut(cc.revision, 1)
 
       // when
@@ -225,8 +228,6 @@ describe('domain/job/update', () => {
         .addOut(schema.actionStatus, schema.CompletedActionStatus)
         .addOut(dcterms.modified, $rdf.literal('2020-12-12T11:30:30', xsd.dateTime))
       job
-        .addOut(rdf.type, cc.PublishJob)
-        .addOut(cc.project, project)
         .addOut(cc.revision, 20)
       dataset.addOut(schema.datePublished, $rdf.literal('2020-10-12', xsd.date))
 
