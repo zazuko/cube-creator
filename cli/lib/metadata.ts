@@ -89,10 +89,13 @@ export async function injectMetadata(this: Context, jobUri: string) {
     // Dimension Metadata
     if (quad.predicate.equals(sh.path)) {
       const propertyShape = quad.subject
+      const dimensions = [...datasetTriples.match(null, schema.about, quad.object)]
 
-      for (const dim of [...datasetTriples.match(null, schema.about, quad.object)]) {
-        for (const meta of [...datasetTriples.match(dim.subject)]
-          .filter(c => !c.predicate.equals(schema.about))) {
+      for (const dim of dimensions) {
+        const metadata = [...datasetTriples.match(dim.subject)]
+          .filter(c => !c.predicate.equals(schema.about))
+
+        for (const meta of metadata) {
           this.push($rdf.triple(propertyShape, meta.predicate, meta.object))
           visited.add(propertyShape)
           copyChildren(meta.object)
