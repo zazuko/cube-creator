@@ -63,6 +63,7 @@ export default class ResourcePreview extends Vue {
 
     const url = new URL(cubeGraph.value)
     url.searchParams.append('resource', this.resourceId.value)
+    url.searchParams.append('sharedTerm', this.$route.params.sharedTerm)
     const responseResource = await api.fetchResource(url.href)
 
     const resource = responseResource.pointer.namedNode(this.resourceId)

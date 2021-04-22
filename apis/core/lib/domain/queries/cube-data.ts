@@ -1,9 +1,19 @@
 import { NamedNode, Quad } from 'rdf-js'
 import { DESCRIBE } from '@tpluscode/sparql-builder'
-import { parsingClient } from '../../query-client'
+import { ParsingClient } from 'sparql-http-client/ParsingClient'
 
-export async function describeResource(graph: NamedNode, resourceId: NamedNode, client = parsingClient): Promise<Quad[]> {
-  return DESCRIBE`${resourceId}`
-    .FROM(graph)
-    .execute(client.query)
+interface DescribeResource {
+  resourceId: NamedNode
+  client: ParsingClient
+  graph?: NamedNode
+}
+
+export async function describeResource({ resourceId, client, graph }: DescribeResource): Promise<Quad[]> {
+  const describe = DESCRIBE`${resourceId}`
+
+  if (graph) {
+    return describe.FROM(graph).execute(client.query)
+  }
+
+  return describe.execute(client.query)
 }
