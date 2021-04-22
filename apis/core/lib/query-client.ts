@@ -13,3 +13,7 @@ const clientConfig = {
 export const streamClient = new StreamClient(clientConfig)
 
 export const parsingClient = new ParsingClient(clientConfig)
+
+export const publicClient = new ParsingClient({
+  endpointUrl: env.PUBLIC_QUERY_ENDPOINT,
+})

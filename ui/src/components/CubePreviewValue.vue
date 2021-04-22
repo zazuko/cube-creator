@@ -2,7 +2,7 @@
   <span v-if="!value" class="has-text-grey">
     {{ missingValue }}
   </span>
-  <router-link v-else-if="isResource" :to="{ name: 'ResourcePreview', params: { resourceId: value.id.value } }" class="tag is-rounded is-small">
+  <router-link v-else-if="isResource" :to="{ name: 'ResourcePreview', params: { resourceId: value.id.value, sharedTerm: isSharedTerm } }" class="tag is-rounded is-small">
     <term-with-language :values="label" :selected-language="selectedLanguage">
       <term-display :term="value.id" :base="cubeUri" />
     </term-with-language>
@@ -50,6 +50,7 @@ const temporalDatatypes: TermSet = new TermSet([
   components: { TermDisplay, TermWithLanguage },
 })
 export default class extends Vue {
+  @Prop({ required: true }) isSharedTerm!: boolean
   @Prop({ required: true }) value: Value
   @Prop({ default: '' }) missingValue?: string
   @Prop({ required: true }) selectedLanguage!: string
