@@ -6,6 +6,7 @@ import $rdf from 'rdf-ext'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import { dcterms, rdf, rdfs, schema, xsd, _void } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
+import { namedNode } from '@cube-creator/testing/clownface'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import { update } from '../../../lib/domain/job/update'
 import '../../../lib/domain'
@@ -14,9 +15,11 @@ describe('domain/job/update', () => {
   let job: GraphPointer<NamedNode, DatasetExt>
   let project: GraphPointer<NamedNode, DatasetExt>
   let dataset: GraphPointer<NamedNode, DatasetExt>
+  let maintainer: GraphPointer<NamedNode, DatasetExt>
   let store: TestResourceStore
 
   beforeEach(() => {
+    maintainer = namedNode('org')
     job = clownface({ dataset: $rdf.dataset() })
       .namedNode('job')
       .addOut(rdf.type, cc.Job)
@@ -25,6 +28,7 @@ describe('domain/job/update', () => {
       .addOut(rdf.type, cc.CubeProject)
       .addOut(cc.latestPublishedRevision, 2)
       .addOut(cc.dataset, $rdf.namedNode('dataset'))
+      .addOut(schema.maintainter, maintainer)
     dataset = clownface({ dataset: $rdf.dataset() })
       .namedNode('dataset')
       .addOut(rdf.type, _void.Dataset)
@@ -33,6 +37,7 @@ describe('domain/job/update', () => {
       job,
       project,
       dataset,
+      maintainer,
     ])
   })
 
@@ -136,6 +141,26 @@ describe('domain/job/update', () => {
         minCount: 1,
       },
     })
+  })
+
+  it('sets lindas web query link', async () => {
+    // given
+    const resource = clownface({ dataset: $rdf.dataset() })
+      .namedNode('job')
+      .addOut(schema.actionStatus, schema.CompletedActionStatus)
+
+    // when
+    await update({
+      resource,
+      store,
+    })
+
+    // then
+    const link = new URL(job.out(schema.query).value!)
+    const params = new URLSearchParams(link.hash)
+    expect(link.hostname).to.eq('lindas.admin.ch')
+    expect(params.get('endpoint')).to.be.ok
+    expect(params.get('query')).to.be.ok
   })
 
   describe('publish job', () => {

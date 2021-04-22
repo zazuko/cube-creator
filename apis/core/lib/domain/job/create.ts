@@ -6,6 +6,7 @@ import { CsvMapping, Project, Dataset } from '@cube-creator/model'
 import { ResourceStore } from '../../ResourceStore'
 import * as id from '../identifiers'
 import { DomainError } from '@cube-creator/api-errors'
+import { schema } from '@tpluscode/rdf-ns-builders'
 
 interface StartTransformationCommand {
   resource: NamedNode
@@ -55,12 +56,16 @@ export async function createPublishJob({
     throw new DomainError('Cannot publish cube. Project does not have publish graph')
   }
 
+  const metadata = await store.getResource(project.dataset)
+
   const jobPointer = await store.createMember(jobCollection.term, id.job(jobCollection))
   Job.createPublish(jobPointer, {
     project: projectPointer,
     name: 'Publish job',
     revision: project.nextRevision,
     publishGraph: organization.publishGraph,
+    status: metadata?.pointer.out(schema.creativeWorkStatus).term,
+    publishedTo: metadata?.pointer.out(schema.workExample).term,
   })
 
   return jobPointer

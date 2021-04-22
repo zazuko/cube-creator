@@ -7,7 +7,7 @@ import { Action, ActionMixin } from '@rdfine/schema'
 import { cc } from '@cube-creator/core/namespace'
 import { TableCollection } from './Table'
 import { Link } from './lib/Link'
-import { NamedNode } from 'rdf-js'
+import { NamedNode, Term } from 'rdf-js'
 import { schema, dcterms, rdfs } from '@tpluscode/rdf-ns-builders'
 import { initializer } from './lib/initializer'
 import { DimensionMetadataCollection } from './DimensionMetadata'
@@ -29,6 +29,9 @@ export interface PublishJob extends Job {
   project: NamedNode
   revision: number
   publishGraph: NamedNode
+  publishedTo?: Term
+  status?: Term
+  query?: string
 }
 
 export function isPublishJob(job: Job): job is PublishJob {
@@ -94,6 +97,15 @@ export function PublishJobMixin<Base extends Constructor<RdfResource>>(base: Bas
 
     @property({ path: cc.publishGraph })
     publishGraph!: NamedNode
+
+    @property({ path: schema.workExample })
+    publishedTo?: NamedNode
+
+    @property({ path: schema.creativeWorkStatus })
+    status?: NamedNode
+
+    @property.literal({ path: schema.query })
+    query?: string
   }
 
   return Impl

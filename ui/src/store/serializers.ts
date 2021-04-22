@@ -210,18 +210,8 @@ export function serializeJobCollection (collection: JobCollection): JobCollectio
       createTransform: collection.actions.createTransform,
       createPublish: collection.actions.createPublish,
     },
-    member: members.map(serializeJob),
+    member: members.map(Object.freeze),
   }) as unknown as JobCollection
-}
-
-export function serializeJob (job: Job): Job {
-  return Object.freeze({
-    ...serializeResource(job),
-    name: job.name,
-    created: job.created,
-    actionStatus: job.actionStatus,
-    link: job.link ? serializeLink(job.link) : null,
-  }) as Job
 }
 
 export function serializeCubeMetadata (cubeMetadata: Dataset): Dataset {
