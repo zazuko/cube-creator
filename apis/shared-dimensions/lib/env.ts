@@ -4,12 +4,13 @@ import $rdf from 'rdf-ext'
 const prefix = 'MANAGED_DIMENSIONS_'
 
 type ENV_VARS = 'GRAPH'
-| 'BASE'
+| 'API_BASE'
 | 'STORE_QUERY_ENDPOINT'
 | 'STORE_UPDATE_ENDPOINT'
 | 'STORE_GRAPH_ENDPOINT'
 | 'STORE_USERNAME'
 | 'STORE_PASSWORD'
+| 'TERM_BASE'
 
 type PREFIXED_ENV_VARS<U> = U extends ENV_VARS ? `${typeof prefix}${U}` : never
 

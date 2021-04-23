@@ -45,7 +45,7 @@ export const get = asyncMiddleware(async (req, res) => {
 })
 
 function termsCollectionId(dimension: Term) {
-  return $rdf.namedNode(`${env.MANAGED_DIMENSIONS_BASE}terms?dimension=${encodeURIComponent(dimension.value)}`)
+  return $rdf.namedNode(`${env.MANAGED_DIMENSIONS_API_BASE}terms?dimension=${encodeURIComponent(dimension.value)}`)
 }
 
 export const getTerms = asyncMiddleware(async (req, res, next) => {

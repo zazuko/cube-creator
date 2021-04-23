@@ -9,7 +9,7 @@ import { sparql, parsingClient, streamClient } from './lib/sparql'
 
 const apiPath = path.resolve(__dirname, 'hydra')
 const codePath = path.resolve(__dirname, 'lib')
-const baseUri = env.MANAGED_DIMENSIONS_BASE
+const baseUri = env.MANAGED_DIMENSIONS_API_BASE
 
 export async function sharedDimensions(): Promise<Router> {
   await bootstrap()

@@ -8,7 +8,7 @@ export const entrypoint = turtle`
   <> a ${hydra.Resource}, ${cc.EntryPoint} ;
     ${hydra.title} "Cube Creator" ;
     ${cc.projects} <cube-projects> ;
-    ${cc.sharedDimensions} <${env.MANAGED_DIMENSIONS_BASE}> ;
+    ${cc.sharedDimensions} <${env.MANAGED_DIMENSIONS_API_BASE}> ;
 }
 
 <observations> {
