@@ -41,8 +41,9 @@ These environment variables are required for the API to function correctly:
 
 | Variable | Description |
 | -- | -- |
+| `MANAGED_DIMENSIONS_TERM_BASE` | Base URI for term sets and terms |
 | `MANAGED_DIMENSIONS_GRAPH` | Named Graph in the database which contains user-created **Shared Dimensions** |
-| `MANAGED_DIMENSIONS_BASE` | Base URI for API resources. Must be `API_CORE_BASE` + `/shared-dimensions` |
+| `MANAGED_DIMENSIONS_API_BASE` | Base URI for API resources. Must be `API_CORE_BASE` + `/shared-dimensions` |
 
 And of course, these variables need to be provided to configure database connection:
 

@@ -34,7 +34,7 @@ export async function create({ resource, store }: CreateSharedDimension): Promis
     throw new DomainError('Missing dimension identifier')
   }
 
-  const termSetId = newId(new URL('/dimension', env.MANAGED_DIMENSIONS_BASE).toString(), identifier)
+  const termSetId = newId(env.MANAGED_DIMENSIONS_TERM_BASE, identifier)
   if (await store.exists(termSetId, schema.DefinedTermSet)) {
     throw new httpError.Conflict(`Shared Dimension ${identifier} already exists`)
   }
