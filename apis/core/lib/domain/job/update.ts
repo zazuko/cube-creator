@@ -22,7 +22,7 @@ function lindasWebQueryLink(cube: NamedNode, version: number, cubeGraph: NamedNo
       ?cube ${schema.version} ${version} .
     `.build()
 
-  const queryLink = new URL('https://lindas.admin.ch/sparql')
+  const queryLink = new URL(env.TRIFID_UI)
   queryLink.hash = new URLSearchParams([
     ['query', describe],
     ['endpoint', env.PUBLIC_QUERY_ENDPOINT],
@@ -53,7 +53,9 @@ export async function update({ resource, store }: JobUpdateParams): Promise<Grap
       const cubeId = organization.createIdentifier({
         cubeIdentifier: project.cubeIdentifier,
       })
-      job.query = lindasWebQueryLink(cubeId, job.revision, job.publishGraph)
+      if (env.has('TRIFID_UI')) {
+        job.query = lindasWebQueryLink(cubeId, job.revision, job.publishGraph)
+      }
     }
   }
 

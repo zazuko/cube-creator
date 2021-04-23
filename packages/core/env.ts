@@ -44,6 +44,7 @@ type ENV_VARS =
   | 'PIPELINE_TOKEN'
   | 'PIPELINE_ENV'
   | 'PUBLIC_QUERY_ENDPOINT'
+  | 'TRIFID_UI'
 
 type KnownVariables<T extends string> = {
   /* eslint-disable-next-line no-unused-vars */
