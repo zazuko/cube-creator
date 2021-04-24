@@ -12,8 +12,8 @@ interface UpdateTerm {
 export async function updateTerm({ term, store } : UpdateTerm): Promise<GraphPointer<NamedNode>> {
   const current = await store.load(term.term)
 
-  const termSetId = term.out(schema.inDefinedTermSet).term
-  if (current.has(schema.inDefinedTermSet, termSetId).terms.length === 0) {
+  const termSetId = current.out(schema.inDefinedTermSet).term
+  if (term.has(schema.inDefinedTermSet, termSetId).terms.length === 0) {
     throw new DomainError('Cannot change the term set')
   }
 

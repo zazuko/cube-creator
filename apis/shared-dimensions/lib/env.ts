@@ -10,7 +10,7 @@ type ENV_VARS = 'GRAPH'
 | 'STORE_GRAPH_ENDPOINT'
 | 'STORE_USERNAME'
 | 'STORE_PASSWORD'
-| 'TERM_BASE'
+| 'BASE'
 
 type PREFIXED_ENV_VARS<U> = U extends ENV_VARS ? `${typeof prefix}${U}` : never
 

@@ -13,6 +13,7 @@ import { create } from '../domain/shared-dimension'
 import { store } from '../store'
 import { parsingClient } from '../sparql'
 import env from '../env'
+import { rewrite } from '../rewrite'
 
 interface CollectionHandler {
   memberType: NamedNode
@@ -45,7 +46,7 @@ export const get = asyncMiddleware(async (req, res) => {
 })
 
 function termsCollectionId(dimension: Term) {
-  return $rdf.namedNode(`${env.MANAGED_DIMENSIONS_API_BASE}terms?dimension=${encodeURIComponent(dimension.value)}`)
+  return $rdf.namedNode(`${env.MANAGED_DIMENSIONS_BASE}dimension/_terms?dimension=${encodeURIComponent(dimension.value)}`)
 }
 
 export const getTerms = asyncMiddleware(async (req, res, next) => {
@@ -65,12 +66,13 @@ export const getTerms = asyncMiddleware(async (req, res, next) => {
     collection: termsCollectionId(term),
   })
 
+  res.setLink(req.absoluteUrl(), 'canonical')
   return res.dataset(collection.dataset)
 })
 
 export const post = protectedResource(shaclValidate, asyncMiddleware(async (req, res) => {
   const pointer = await create({
-    resource: await req.resource(),
+    resource: rewrite(await req.resource()),
     store: store(),
   })
 
