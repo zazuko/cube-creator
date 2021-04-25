@@ -1,5 +1,12 @@
 # @cube-creator/cli
 
+## 1.2.1
+
+### Patch Changes
+
+- ba14b68: Prevent CSV links from timing-out in transformation pipeline
+- b23127b: Some dimensions were wrongly marked as cube:SharedDimension
+
 ## 1.2.0
 
 ### Minor Changes
