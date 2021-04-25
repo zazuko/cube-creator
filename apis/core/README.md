@@ -7,6 +7,12 @@ The API is secured with a JWT middleware. To configure set these environment var
 - `AUTH_ISSUER`
 - `AUTH_AUDIENCE`
 
+## Configuration variables
+
+| ENV variable | |
+| -- | -- |
+| `TRIFID_UI` | `/sparql` endpoint of a [Trifid](https://zazuko.com/products/trifid/) instance which will be linked from published cubes |
+
 ### Dev environment
 
 In the local environment it is possible to authorize requests with HTTP headers serving as a testing backdoor

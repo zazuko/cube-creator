@@ -1,11 +1,12 @@
 <template>
   <div class="panel-block job">
     <job-icon :job="job" />
-    <div class="ml-3 is-flex-grow-1">
+    <div class="ml-3">
       <span>{{ job.name }}</span><br>
       <span class="has-text-grey">{{ job.created | format-date }}</span>
     </div>
-    <a v-if="job.link" :href="job.link.id.value" target="_blank" class="has-text-grey is-flex">
+    <slot />
+    <a :disabled="!link" :href="link" target="_blank" class="has-text-grey is-flex">
       Logs <b-icon icon="chevron-right" />
     </a>
   </div>
@@ -21,5 +22,23 @@ import JobIcon from './JobIcon.vue'
 })
 export default class extends Vue {
   @Prop() job!: Job
+
+  get link () {
+    return this.job.link?.id.value
+  }
 }
 </script>
+
+<style scoped>
+  .panel-block {
+    display: flex;
+  }
+
+  .panel-block > div {
+    flex: 1;
+  }
+
+  a[disabled] {
+    cursor: not-allowed;
+  }
+</style>

@@ -3,12 +3,32 @@ import { GraphPointer } from 'clownface'
 import { Job, JobMixin, Project, Dataset } from '@cube-creator/model'
 import { isPublishJob } from '@cube-creator/model/Job'
 import RdfResource from '@tpluscode/rdfine'
+import env from '@cube-creator/core/env'
+import { DESCRIBE } from '@tpluscode/sparql-builder'
+import type { Organization } from '@rdfine/schema'
 import { ResourceStore } from '../../ResourceStore'
 import { schema } from '@tpluscode/rdf-ns-builders'
 
 interface JobUpdateParams {
   resource: GraphPointer<NamedNode>
   store: ResourceStore
+}
+
+function lindasWebQueryLink(cube: NamedNode, version: number, cubeGraph: NamedNode) {
+  const describe = DESCRIBE`?cube`
+    .FROM(cubeGraph)
+    .WHERE`
+      ${cube} ${schema.hasPart} ?cube .
+      ?cube ${schema.version} ${version} .
+    `.build()
+
+  const queryLink = new URL(env.TRIFID_UI)
+  queryLink.hash = new URLSearchParams([
+    ['query', describe],
+    ['endpoint', env.PUBLIC_QUERY_ENDPOINT],
+  ]).toString()
+
+  return queryLink.toString()
 }
 
 export async function update({ resource, store }: JobUpdateParams): Promise<GraphPointer> {
@@ -27,6 +47,14 @@ export async function update({ resource, store }: JobUpdateParams): Promise<Grap
       const dataset = await store.getResource<Dataset>(project.dataset.id)
       if (job.revision === 1) {
         dataset.setPublishedDate(job.modified)
+      }
+
+      const organization = await store.getResource<Organization>(project.maintainer)
+      const cubeId = organization.createIdentifier({
+        cubeIdentifier: project.cubeIdentifier,
+      })
+      if (env.has('TRIFID_UI')) {
+        job.query = lindasWebQueryLink(cubeId, job.revision, job.publishGraph)
       }
     }
   }

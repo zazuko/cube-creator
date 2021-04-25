@@ -11,6 +11,7 @@ import * as sinon from 'sinon'
 import * as Organization from '@cube-creator/model/Organization'
 import { namedNode } from '@cube-creator/testing/clownface'
 import * as Project from '@cube-creator/model/Project'
+import { ex } from '@cube-creator/testing/lib/namespace'
 
 describe('domain/job/create', () => {
   let store: TestResourceStore
@@ -36,6 +37,8 @@ describe('domain/job/create', () => {
   const dimensionCollection = namedNode('myDimensionCollection')
   const dataset = namedNode('myDataset')
     .addOut(cc.dimensionMetadata, dimensionCollection)
+    .addOut(schema.creativeWorkStatus, ex.Draft)
+    .addOut(schema.workExample, ex.Visualise)
 
   beforeEach(() => {
     sinon.restore()
@@ -80,6 +83,8 @@ describe('domain/job/create', () => {
       expect(job.out(rdf.type).values).to.contain(cc.Job.value)
       expect(job.out(rdf.type).values).to.contain(cc.PublishJob.value)
       expect(job.out(cc.publishGraph).term).to.deep.eq($rdf.namedNode('publishGraph'))
+      expect(job.out(schema.creativeWorkStatus).term).to.deep.eq(ex.Draft)
+      expect(job.out(schema.workExample).term).to.deep.eq(ex.Visualise)
     })
 
     it('sets next revision to job resource', async () => {
