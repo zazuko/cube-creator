@@ -5,7 +5,7 @@ PREFIX qudt: <http://qudt.org/schema/qudt/>
 PREFIX meta: <https://cube.link/meta/>
 PREFIX sh: <http://www.w3.org/ns/shacl#>
 
-ENTRYPOINT "shared-dimensions/terms?dimension=http%3A%2F%2Fexample.com%2Fdimension%2Fcolors"
+ENTRYPOINT "dimension/_terms?dimension=http%3A%2F%2Fexample.com%2Fdimension%2Fcolors"
 
 HEADERS {
   x-user "john-doe"

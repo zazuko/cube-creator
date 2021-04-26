@@ -55,7 +55,7 @@ With Class meta:SharedDimension {
             prefix hydra: <http://www.w3.org/ns/hydra/core#>
             prefix md: <https://cube-creator.zazuko.com/shared-dimensions/vocab#>
 
-            <>
+            <https://cube-creator.lndo.site/dimension/technologies>
                 a schema:DefinedTermSet, meta:SharedDimension, hydra:Resource, md:SharedDimension ;
                 schema:name "Technologies"@en, "Les technologies"@fr ;
                 schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;

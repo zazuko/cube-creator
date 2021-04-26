@@ -55,7 +55,7 @@ async function main() {
   app.use(await authentication())
   app.use(resource)
 
-  app.use(['/shared-dimensions', '/dimension'], await sharedDimensions())
+  app.use('/dimension', await sharedDimensions())
 
   app.use(resourceStore)
   app.use(await hydraBox({

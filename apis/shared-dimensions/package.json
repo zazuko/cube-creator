@@ -17,8 +17,10 @@
     "@tpluscode/rdf-string": "^0.2.21",
     "@tpluscode/rdfine": "^0.5.25",
     "@tpluscode/sparql-builder": "^0.3.11",
+    "camouflage-rewrite": "^1.2.0",
     "clownface": "^1.2.0",
     "debug": "^4.3.1",
+    "express": "^4.17.1",
     "http-errors": "^1.8.0",
     "http-status": "^1.5.0",
     "hydra-box-middleware-shacl": "1.0.0",
@@ -30,6 +32,7 @@
   "devDependencies": {
     "@cube-creator/testing": "^0.1.17",
     "@types/sinon": "^9.0.11",
+    "@types/camouflage-rewrite": "^1.2.0",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "mocha": "^8.1.3",

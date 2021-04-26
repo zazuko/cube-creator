@@ -1959,6 +1959,13 @@
     "@types/connect" "*"
     "@types/node" "*"
 
+"@types/camouflage-rewrite@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@types/camouflage-rewrite/-/camouflage-rewrite-1.2.0.tgz#0413506d606865655425f75b1712fbb72302b0f0"
+  integrity sha512-sqcBk0FCFdyQsP3l2YwLLxlKgF4GNphi90EL6w8Fu5g7dyLZj8x/t44ERe05VJvRWm5bMqUAsMF4Vm8rqQNflg==
+  dependencies:
+    "@types/express" "*"
+
 "@types/chai-as-promised@^7.1.3":
   version "7.1.3"
   resolved "https://registry.yarnpkg.com/@types/chai-as-promised/-/chai-as-promised-7.1.3.tgz#779166b90fda611963a3adbfd00b339d03b747bd"
@@ -3087,7 +3094,7 @@ abbrev@1:
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"
   integrity sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q==
 
-absolute-url@^1.2.2:
+absolute-url@^1.2.1, absolute-url@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/absolute-url/-/absolute-url-1.2.2.tgz#b92859eaf75a46fd84fc3dab5ce243516a4e24fc"
   integrity sha1-uShZ6vdaRv2E/D2rXOJDUWpOJPw=
@@ -4180,6 +4187,15 @@ camelcase@^6.0.0:
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-6.2.0.tgz#924af881c9d525ac9d87f40d964e5cea982a1809"
   integrity sha512-c7wVvbw3f37nuobQNtgsgG9POC9qMbNuMQmTCqZv23b6MIz0fcYpBiOlv9gEN/hdLdnZTDQhg6e9Dq5M1vKvfg==
+
+camouflage-rewrite@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/camouflage-rewrite/-/camouflage-rewrite-1.2.0.tgz#011603994978b88cdd51147fd4b7ad068169016c"
+  integrity sha512-3ll6Z03tn/LHisp1cWryw/+uIWaMFHL3xJkTsgVLL4SBXJ0kW2H0+BYhPM72zI/M4RWqphRLoz96EREdjX/uYQ==
+  dependencies:
+    absolute-url "^1.2.1"
+    hijackresponse "^2.0.0"
+    string-replace-stream "0.0.2"
 
 caniuse-api@^3.0.0:
   version "3.0.0"
@@ -7326,6 +7342,11 @@ highlight.js@^9.12.0:
   version "9.18.5"
   resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-9.18.5.tgz#d18a359867f378c138d6819edfc2a8acd5f29825"
   integrity sha512-a5bFyofd/BHCX52/8i8uJkjr9DYwXIPnM/plwI6W7ezItLGqzt7X2G2nXuYSfsIJdkwwj/g9DG1LkcGJI/dDoA==
+
+hijackresponse@^2.0.0:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/hijackresponse/-/hijackresponse-2.0.1.tgz#45f5e0c9b87d73bad858f66021bec377c736b8b3"
+  integrity sha1-RfXgybh9c7rYWPZgIb7Dd8c2uLM=
 
 hmac-drbg@^1.0.1:
   version "1.0.1"
@@ -12345,6 +12366,13 @@ strict-uri-encode@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/strict-uri-encode/-/strict-uri-encode-1.1.0.tgz#279b225df1d582b1f54e65addd4352e18faa0713"
   integrity sha1-J5siXfHVgrH1TmWt3UNS4Y+qBxM=
+
+string-replace-stream@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/string-replace-stream/-/string-replace-stream-0.0.2.tgz#eb75d4ec565d8dd4ca871797c92cc7643358a5bb"
+  integrity sha1-63XU7FZdjdTKhxeXySzHZDNYpbs=
+  dependencies:
+    through2 "^2.0.0"
 
 string-to-stream@^3.0.1:
   version "3.0.1"

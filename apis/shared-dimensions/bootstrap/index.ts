@@ -13,7 +13,7 @@ export interface BootstrappedResourceFactory {
   (term: string): GraphPointer<NamedNode>
 }
 
-const ns = namespace(env.MANAGED_DIMENSIONS_API_BASE)
+const ns = namespace(`${env.MANAGED_DIMENSIONS_BASE}dimension/`)
 const pointerFactory = (term: string) => clownface({ dataset: $rdf.dataset(), term: ns(term) })
 
 const resources = [

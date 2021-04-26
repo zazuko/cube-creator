@@ -2,7 +2,10 @@
 
 This Hydra-driven API provides functionality for creating and finding dimensions (dictionaries) share between all Cube Creator's cubes.
 
-It is not standalone and deployed together with the [Core API](../core) under a sub path `/shared-dimensions`.
+It is not standalone and deployed together with the [Core API](../core) under a sub path `/dimension`.
+
+All resources have their base URL rewritten in the database. This way canonical identifiers are used, but the front end access the API on dereferencable API endpoints.
+Check the configuration section below.
 
 Please refer to the latter for authentication and debugging information.
 
@@ -41,9 +44,9 @@ These environment variables are required for the API to function correctly:
 
 | Variable | Description |
 | -- | -- |
-| `MANAGED_DIMENSIONS_TERM_BASE` | Base URI for term sets and terms |
+| `MANAGED_DIMENSIONS_BASE` | Base URI for term sets and terms |
 | `MANAGED_DIMENSIONS_GRAPH` | Named Graph in the database which contains user-created **Shared Dimensions** |
-| `MANAGED_DIMENSIONS_API_BASE` | Base URI for API resources. Must be `API_CORE_BASE` + `/shared-dimensions` |
+| `MANAGED_DIMENSIONS_API_BASE` | Base URI for API resources. Must be equal `API_CORE_BASE` |
 
 And of course, these variables need to be provided to configure database connection:
 

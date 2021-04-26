@@ -25,7 +25,7 @@ With Class schema:DefinedTerm {
             prefix sh: <http://www.w3.org/ns/shacl#>
             PREFIX md: <https://cube-creator.zazuko.com/shared-dimensions/vocab#>
 
-            <>
+            <https://cube-creator.lndo.site/dimension/technologies/rdf>
               a schema:DefinedTerm, md:SharedDimensionTerm ;
               schema:identifier "rdf" ;
               schema:name "Resource Description Framework"@en, "Resource Description Framework"@de ;

@@ -10,7 +10,7 @@ import { ProblemDocument } from 'http-problem-details'
 interface ShaclMiddlewareOptions {
   loadResource(id: NamedNode): Promise<GraphPointer<NamedNode> | null>
   loadResourcesTypes(ids: Term[]): Promise<Quad[]>
-  getTargetNode?(req: Request, res: Response): NamedNode
+  getTargetNode?(req: Request, res: Response): NamedNode | undefined
 }
 
 export const shaclMiddleware = ({ getTargetNode, loadResource, loadResourcesTypes }: ShaclMiddlewareOptions) => asyncMiddleware(async (req, res, next) => {
@@ -21,10 +21,7 @@ export const shaclMiddleware = ({ getTargetNode, loadResource, loadResourcesType
     resource = await req.resource()
   }
 
-  let targetNode = resource.term
-  if (getTargetNode) {
-    targetNode = getTargetNode(req, res)
-  }
+  const targetNode = getTargetNode?.(req, res) || resource.term
 
   const shapes = $rdf.dataset()
   await Promise.all(req.hydra.operation.out(hydra.expects).map(async (expects) => {

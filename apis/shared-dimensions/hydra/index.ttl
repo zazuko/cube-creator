@@ -11,7 +11,7 @@ BASE <urn:hydra-box:api>
 
 <api>
   a hydra:ApiDocumentation ;
-  hydra:entrypoint <> ;
+  hydra:entrypoint <dimension/> ;
 .
 
 hydra:Resource
@@ -41,7 +41,7 @@ md:SharedDimensions
          a hydra:Operation, schema:CreateAction ;
          hydra:method "POST" ;
          hydra:title "Create shared dimension" ;
-         hydra:expects <shape/shared-dimension-create> ;
+         hydra:expects <dimension/_shape/shared-dimension-create> ;
          code:implementedBy
            [
              a code:EcmaScript ;
@@ -50,8 +50,8 @@ md:SharedDimensions
        ]
 .
 
-<shape/shared-dimension-create> a sh:NodeShape, sh:Shape .
-<shape/shared-dimension-update> a sh:NodeShape, sh:Shape .
+<dimension/_shape/shared-dimension-create> a sh:NodeShape, sh:Shape .
+<dimension/_shape/shared-dimension-update> a sh:NodeShape, sh:Shape .
 
 sh:NodeShape
   a hydra:Class ;
@@ -82,7 +82,7 @@ md:SharedDimensionTerms
       hydra-box:variables
         [
           a hydra:IriTemplate ;
-          hydra:template "/terms{?dimension}" ;
+          hydra:template "/_terms{?dimension}" ;
           hydra:variableRepresentation hydra:ExplicitRepresentation ;
           hydra:mapping
             [
@@ -112,7 +112,7 @@ md:SharedDimension
       a hydra:SupportedOperation, schema:CreateAction ;
       hydra:method "POST" ;
       hydra:title "Add term" ;
-      hydra:expects <shape/shared-dimension-term-create> ;
+      hydra:expects <dimension/_shape/shared-dimension-term-create> ;
       code:implementedBy
         [
           a code:EcmaScript ;
@@ -123,7 +123,7 @@ md:SharedDimension
       a hydra:SupportedOperation, schema:ReplaceAction ;
       hydra:method "PUT" ;
       hydra:title "Edit dimension" ;
-      hydra:expects <shape/shared-dimension-update> ;
+      hydra:expects <dimension/_shape/shared-dimension-update> ;
       code:implementedBy
         [
           a code:EcmaScript ;
@@ -139,7 +139,7 @@ md:SharedDimensionTerm
       a hydra:SupportedOperation, schema:ReplaceAction ;
       hydra:method "PUT" ;
       hydra:title "Edit term" ;
-      hydra:expects <shape/shared-dimension-term-update> ;
+      hydra:expects <dimension/_shape/shared-dimension-term-update> ;
       code:implementedBy
         [
           a code:EcmaScript ;
@@ -148,5 +148,5 @@ md:SharedDimensionTerm
     ] ;
 .
 
-<shape/shared-dimension-term-create> a sh:Shape .
-<shape/shared-dimension-term-update> a sh:Shape .
+<dimension/_shape/shared-dimension-term-create> a sh:Shape .
+<dimension/_shape/shared-dimension-term-update> a sh:Shape .
