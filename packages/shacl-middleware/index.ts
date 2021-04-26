@@ -23,8 +23,6 @@ export const shaclMiddleware = ({ getTargetNode, loadResource, loadResourcesType
 
   const targetNode = getTargetNode?.(req, res) || resource.term
 
-  console.log(targetNode.value)
-
   const shapes = $rdf.dataset()
   await Promise.all(req.hydra.operation.out(hydra.expects).map(async (expects) => {
     if (expects.term.termType !== 'NamedNode') return
