@@ -228,7 +228,7 @@ ${shape('dimension/metadata')} {
 }
 `
 
-const sharedDimensionCollection = $rdf.namedNode('shared-dimensions/term-sets')
+const sharedDimensionCollection = $rdf.namedNode('dimension/_term-sets')
 
 export const SharedDimensionMappingShape = turtle`
 ${shape('dimension/shared-mapping')} {
@@ -293,7 +293,7 @@ ${shape('dimension/shared-mapping')} {
           ${sh.inversePath} ${prov.hadDictionaryMember} ;
         ] ;
         ${hydra.variableRepresentation} ${hydra.ExplicitRepresentation} ;
-        ${hydra.template} "shared-dimensions/terms{?dimension}" ;
+        ${hydra.template} "dimension/_terms{?dimension}" ;
         ${hydra.mapping} [
           ${hydra.variable} "dimension" ;
           ${hydra.property} ${cc.sharedDimension} ;
