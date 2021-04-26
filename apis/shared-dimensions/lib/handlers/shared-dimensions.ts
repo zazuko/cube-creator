@@ -13,7 +13,7 @@ import { create } from '../domain/shared-dimension'
 import { store } from '../store'
 import { parsingClient } from '../sparql'
 import env from '../env'
-import { rewrite } from '../rewrite'
+import { rewrite, rewriteTerm } from '../rewrite'
 
 interface CollectionHandler {
   memberType: NamedNode
@@ -60,7 +60,7 @@ export const getTerms = asyncMiddleware(async (req, res, next) => {
   }
 
   const collection = await getCollection({
-    memberQuads: await getSharedTerms(term).execute(parsingClient.query),
+    memberQuads: await getSharedTerms(rewriteTerm(term)).execute(parsingClient.query),
     memberType: schema.DefinedTerm,
     collectionType: md.SharedDimensionTerms,
     collection: termsCollectionId(term),
