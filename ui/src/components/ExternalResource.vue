@@ -1,5 +1,5 @@
 <template>
-  <p :title="resourceId.value">
+  <p :title="title">
     {{ name }}
   </p>
 </template>
@@ -15,11 +15,11 @@ export default class ExternalResource extends Vue {
   @Prop({ required: true }) resourceId?: Term | undefined
 
   name = ''
-  title = ''
 
-  async mounted () {
+  async mounted (): Promise<void> {
     if (this.resourceId?.termType === 'NamedNode') {
       const { representation } = await Hydra.loadResource(this.resourceId.value)
+
       if (representation?.root) {
         [this.name] = representation.root.pointer.out(schema.name, { language: ['en', '*'] }).values
       } else {
@@ -28,8 +28,10 @@ export default class ExternalResource extends Vue {
     } else {
       this.name = this.resourceId?.value || ''
     }
+  }
 
-    this.title = this.resourceId?.value || ''
+  get title (): string {
+    return this.resourceId?.value || ''
   }
 }
 </script>
