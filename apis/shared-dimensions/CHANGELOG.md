@@ -1,5 +1,14 @@
 # @cube-creator/shared-dimensions-api
 
+## 2.0.0
+
+### Major Changes
+
+- eda0757: Extends configuration to store shared dimensions using a different base URL
+
+  - The API is served and consumer by the app on URL configured by `MANAGED_DIMENSIONS_API_BASE`
+  - All resources are saved using a different base URL `MANAGED_DIMENSIONS_BASE`
+
 ## 1.1.0
 
 ### Minor Changes

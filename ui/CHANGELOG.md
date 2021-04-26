@@ -1,5 +1,11 @@
 # @cube-creator/ui
 
+## 1.1.1
+
+### Patch Changes
+
+- 6eb797b: Improve display of publication jobs
+
 ## 1.1.0
 
 ### Minor Changes
