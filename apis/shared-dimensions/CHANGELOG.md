@@ -1,5 +1,11 @@
 # @cube-creator/shared-dimensions-api
 
+## 1.1.0
+
+### Minor Changes
+
+- fef89f5: Split configuration to generate defined terms in any arbitrary namespace
+
 ## 1.0.1
 
 ### Patch Changes

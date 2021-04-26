@@ -1,5 +1,19 @@
 # @cube-creator/ui
 
+## 1.1.0
+
+### Minor Changes
+
+- 868093e: Show more details about publish jobs:
+  - cube version
+  - cube status
+  - "publish to" application
+  - link to query the cube in Lindas
+
+### Patch Changes
+
+- c6d95ee: Load details of shared terms on preview panel (#685)
+
 ## 1.0.4
 
 ### Patch Changes
