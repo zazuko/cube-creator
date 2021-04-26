@@ -1,14 +1,20 @@
 <template>
-  <div class="panel-block job">
+  <div class="panel-block gap-3">
     <job-icon :job="job" />
-    <div class="ml-3">
-      <span>{{ job.name }}</span><br>
-      <span class="has-text-grey">{{ job.created | format-date }}</span>
+    <div class="is-flex-grow-1 is-flex is-align-items-center gap-3">
+      <div>
+        <span>{{ job.name }}</span><br>
+        <span class="has-text-grey">{{ job.created | format-date }}</span>
+      </div>
+      <slot />
     </div>
-    <slot />
-    <a :disabled="!link" :href="link" target="_blank" class="has-text-grey is-flex">
-      Logs <b-icon icon="chevron-right" />
-    </a>
+    <div class="is-flex gap-1">
+      <slot name="actions" />
+      <a :disabled="!link" :href="link" target="_blank" class="button is-small">
+        <span>Logs</span>
+        <b-icon icon="chevron-right" />
+      </a>
+    </div>
   </div>
 </template>
 
@@ -23,21 +29,13 @@ import JobIcon from './JobIcon.vue'
 export default class extends Vue {
   @Prop() job!: Job
 
-  get link () {
+  get link (): string | undefined {
     return this.job.link?.id.value
   }
 }
 </script>
 
 <style scoped>
-  .panel-block {
-    display: flex;
-  }
-
-  .panel-block > div {
-    flex: 1;
-  }
-
   a[disabled] {
     cursor: not-allowed;
   }
