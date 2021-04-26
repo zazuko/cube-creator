@@ -26,7 +26,7 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () =
       const termSet = await create({ resource, store })
 
       // then
-      expect(termSet.value).to.eq('https://ld.admin.ch/dimension/canton')
+      expect(termSet.value).to.eq('https://ld.admin.ch/cube/dimension/canton')
     })
 
     it('saves to the store', async () => {

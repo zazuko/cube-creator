@@ -3,7 +3,7 @@ import $rdf from 'rdf-ext'
 import clownface, { GraphPointer } from 'clownface'
 import env from './env'
 
-function rewriteTerm<T extends Term>(term: T): T {
+export function rewriteTerm<T extends Term>(term: T): T {
   if (term.termType === 'NamedNode') {
     return $rdf.namedNode(term.value.replace(env.MANAGED_DIMENSIONS_API_BASE, env.MANAGED_DIMENSIONS_BASE)) as any
   }
