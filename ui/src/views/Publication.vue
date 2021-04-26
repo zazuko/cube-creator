@@ -16,33 +16,24 @@
       </div>
       <div v-if="jobs.length > 0" class="panel container-narrow">
         <job-item v-for="job in jobs" :key="job.clientPath" :job="job">
-          <div>
-            <p class="heading">
-              Version
-            </p>
-            <p>
-              {{ job.revision }}
-            </p>
-          </div>
-          <div>
-            <p class="heading">
-              Status
-            </p>
-            <ExternalResource :resource-id="job.status" />
-          </div>
-          <div>
-            <p class="heading">
-              Published To
-            </p>
-            <p>
+          <div class="is-flex-grow-1 is-flex gap-1">
+            <b-tag v-if="job.revision">
+              Version {{ job.revision }}
+            </b-tag>
+            <b-tag v-if="job.status">
+              <ExternalResource :resource-id="job.status" />
+            </b-tag>
+            <b-tag v-if="job.publishedTo">
               <ExternalResource :resource-id="job.publishedTo" />
-            </p>
+            </b-tag>
           </div>
-          <div>
-            <a v-if="job.query" :href="job.query" target="_blank" class="has-text-grey">
-              Open in LINDAS
+
+          <template #actions>
+            <a v-if="job.query" :href="job.query" target="_blank" rel="noopener" class="button is-small">
+              <span>Open in LINDAS</span>
+              <b-icon icon="chevron-right" />
             </a>
-          </div>
+          </template>
         </job-item>
       </div>
       <p v-else class="has-text-grey">
