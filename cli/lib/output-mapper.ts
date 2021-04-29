@@ -19,10 +19,10 @@ Hydra.resources.factory.addMixin(...Object.values(Models))
 const undef = $rdf.literal('', cube.Undefined)
 
 const pendingRequests = new Map<string, Promise<any>>()
-function load<T extends RdfResourceCore>(uri: string): Promise<HydraResponse<DatasetCore, T>> {
+function load<T extends RdfResourceCore>(uri: string, headers?: HeadersInit): Promise<HydraResponse<DatasetCore, T>> {
   let promise = pendingRequests.get(uri)
   if (!promise) {
-    promise = Hydra.loadResource<T>(uri)
+    promise = Hydra.loadResource<T>(uri, headers)
       .then(response => {
         pendingRequests.delete(uri)
         return response
@@ -53,7 +53,9 @@ async function loadMetadata(jobUri: string) {
 }
 
 export async function loadDimensionMapping(mappingUri: string) {
-  const mappingResource = await load<Dictionary>(mappingUri)
+  const mappingResource = await load<Dictionary>(mappingUri, {
+    Prefer: 'return=canonical',
+  })
   if (!mappingResource.representation) {
     throw new Error(`Mapping ${mappingUri} not loaded`)
   }
