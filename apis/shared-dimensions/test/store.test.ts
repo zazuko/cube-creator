@@ -184,5 +184,34 @@ describe('@cube-creator/shared-dimensions-api/lib/store @SPARQL', () => {
       // then
       expect(await ASK`${ex.toDelete} ${ex.external} ?stillThere`.FROM(graph).execute(parsingClient.query)).to.be.true
     })
+
+    it('deeply deletes the shape describing deleted resource', async () => {
+      // given
+      await INSERT.DATA`
+        graph ${graph} {
+          ${ex.toDelete}
+            ${schema.knows} _:friend .
+          _:friend ${schema.age} 20 .
+
+          ${ex.rootShape}
+            ${sh.targetNode} ${ex.toDelete} ;
+            ${sh.property} [
+              ${sh.path} ${schema.knows} ;
+              ${sh.node} [
+                ${sh.targetNode} _:friend ;
+                ${sh.property} [
+                  ${sh.path} ${schema.age}
+                ] ;
+              ] ;
+            ] ;
+          .
+        }`.execute(parsingClient.query)
+
+      // when
+      await store.delete(ex.toDelete)
+
+      // then
+      await expect(SELECT`*`.FROM(graph).WHERE`?s ?p ?o`.execute(parsingClient.query)).to.eventually.have.length(0)
+    })
   })
 })
