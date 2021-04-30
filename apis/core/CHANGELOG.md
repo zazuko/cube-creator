@@ -1,5 +1,11 @@
 # @cube-creator/core-api
 
+## 1.1.2
+
+### Patch Changes
+
+- dba0e25: Output canonical dimension URIs from cube transformation
+
 ## 1.1.1
 
 ### Patch Changes
