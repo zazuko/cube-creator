@@ -1,5 +1,12 @@
 # @cube-creator/core-api
 
+## 1.1.3
+
+### Patch Changes
+
+- Updated dependencies [10929b6]
+  - @cube-creator/shared-dimensions-api@2.0.1
+
 ## 1.1.2
 
 ### Patch Changes

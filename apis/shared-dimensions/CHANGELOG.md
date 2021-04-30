@@ -1,5 +1,11 @@
 # @cube-creator/shared-dimensions-api
 
+## 2.0.1
+
+### Patch Changes
+
+- 10929b6: Saving shared dimension would leave multiple "default metadata"
+
 ## 2.0.0
 
 ### Major Changes
