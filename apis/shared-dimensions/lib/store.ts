@@ -45,6 +45,11 @@ function deleteQuery(id: NamedNode, graph: NamedNode) {
     `
     .WHERE`
       ${resourceQueryPatterns(id)}
+
+      OPTIONAL {
+        ?rootShape (!${sh.targetNode})* ?s .
+        ?s ?p ?o
+      }
     `)
 }
 

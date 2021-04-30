@@ -82,5 +82,5 @@ export const post = protectedResource(shaclValidate, asyncMiddleware(async (req,
 }))
 
 export const injectTermsLink: Enrichment = async (req, pointer) => {
-  pointer.addOut(md.terms, termsCollectionId(pointer.term))
+  pointer.deleteOut(md.terms).addOut(md.terms, termsCollectionId(pointer.term))
 }
