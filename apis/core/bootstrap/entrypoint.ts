@@ -1,6 +1,7 @@
 import { turtle } from '@tpluscode/rdf-string'
-import { hydra } from '@tpluscode/rdf-ns-builders'
+import { dcat, hydra } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
+import env from '@cube-creator/core/env'
 
 export const entrypoint = turtle`
 <> {
@@ -8,6 +9,7 @@ export const entrypoint = turtle`
     ${hydra.title} "Cube Creator" ;
     ${cc.projects} <cube-projects> ;
     ${cc.sharedDimensions} <dimension/> ;
+    ${dcat.endpointURL} <${env.PUBLIC_QUERY_ENDPOINT}> ;
 }
 
 <observations> {

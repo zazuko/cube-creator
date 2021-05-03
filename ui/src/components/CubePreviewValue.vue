@@ -50,7 +50,7 @@ const temporalDatatypes: TermSet = new TermSet([
   components: { TermDisplay, TermWithLanguage },
 })
 export default class extends Vue {
-  @Prop({ required: true }) isSharedTerm!: boolean
+  @Prop({ default: false }) isSharedTerm!: boolean
   @Prop({ required: true }) value: Value
   @Prop({ default: '' }) missingValue?: string
   @Prop({ required: true }) selectedLanguage!: string
