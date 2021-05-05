@@ -1,5 +1,7 @@
 <template>
-  <term-display :term="pointer || resource.pointer || node" :base="base" @no-label="loadResource" />
+  <term-with-language :values="labels" :selected-language="selectedLanguage">
+    <term-display :term="node" :base="base" />
+  </term-with-language>
 </template>
 
 <script lang="ts">
@@ -11,26 +13,33 @@ import { namespace } from 'vuex-class'
 import { DESCRIBE } from '@tpluscode/sparql-builder'
 import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import { GraphPointer } from 'clownface'
-import { NamedNode, Term } from 'rdf-js'
+import { Literal, NamedNode, Term } from 'rdf-js'
+import { schema } from '@tpluscode/rdf-ns-builders'
+import TermWithLanguage from '@/components/TermWithLanguage.vue'
 
 const projectNS = namespace('project')
 const apiNS = namespace('api')
 
 @Component({
-  components: { TermDisplay }
+  components: { TermWithLanguage, TermDisplay }
 })
 export default class extends Vue {
   @projectNS.State('project') project!: Project | null
   @apiNS.Getter('publicQueryEndpoint') publicQueryEndpoint!: string | null
 
   @Prop({ required: true }) resource!: RdfResourceCore | NamedNode
+  @Prop({ default: 'en' }) selectedLanguage!: string
   @Prop() base?: string
 
-  pointer: GraphPointer | null = null
+  labels: Literal [] = []
 
   mounted (): void {
     if ('id' in this.resource) {
-      this.pointer = this.resource.pointer
+      this.labels = this.getLabels(this.resource.pointer)
+    }
+
+    if (!this.labels.length) {
+      this.loadResource()
     }
   }
 
@@ -38,14 +47,20 @@ export default class extends Vue {
     return 'id' in this.resource ? this.resource.pointer.term : this.resource
   }
 
+  getLabels (pointer: GraphPointer | null): Literal[] {
+    if (pointer) {
+      return pointer.out(schema.name, { language: [this.selectedLanguage, '*'] }).terms
+    }
+
+    return []
+  }
+
   loadResource (): void {
     this.loadCubeResource()
       .then(this.sparqlLookup)
       .then(this.dereference)
       .then(resource => {
-        if (resource) {
-          this.pointer = resource
-        }
+        this.labels = this.getLabels(resource)
       })
   }
 
@@ -92,10 +107,9 @@ export default class extends Vue {
   }
 
   async __fetch (url: string): Promise<GraphPointer | null> {
-    console.log(url)
     const resource = await api.fetchResource(url.toString())
     const pointer = resource.pointer.node(this.node)
-    if (pointer.out().terms.length === 0) {
+    if (this.getLabels(pointer).length === 0) {
       return null
     }
 

@@ -3,9 +3,7 @@
     {{ missingValue }}
   </span>
   <router-link v-else-if="isResource" :to="{ name: 'ResourcePreview', params: { resourceId: value.id.value, sharedTerm: isSharedTerm } }" class="tag is-rounded is-small">
-    <term-with-language :values="label" :selected-language="selectedLanguage">
-      <external-term :resource="value" :base="cubeUri" />
-    </term-with-language>
+    <external-term :resource="value" :base="cubeUri" :selected-language="selectedLanguage" />
   </router-link>
   <span v-else-if="isTerm" :class="termClasses">
     <term-display :term="value" :base="cubeUri" :show-language="showLanguage" />
