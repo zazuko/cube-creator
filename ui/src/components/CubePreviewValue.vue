@@ -4,7 +4,7 @@
   </span>
   <router-link v-else-if="isResource" :to="{ name: 'ResourcePreview', params: { resourceId: value.id.value, sharedTerm: isSharedTerm } }" class="tag is-rounded is-small">
     <term-with-language :values="label" :selected-language="selectedLanguage">
-      <term-display :term="value" :base="cubeUri" />
+      <external-term :resource="value" :base="cubeUri" />
     </term-with-language>
   </router-link>
   <span v-else-if="isTerm" :class="termClasses">
@@ -23,6 +23,7 @@ import { schema, xsd } from '@tpluscode/rdf-ns-builders'
 import TermSet from '@rdfjs/term-set'
 import TermDisplay from './TermDisplay.vue'
 import TermWithLanguage from './TermWithLanguage.vue'
+import ExternalTerm from './ExternalTerm.vue'
 
 type Value = RdfResource | Term | undefined
 
@@ -47,7 +48,7 @@ const temporalDatatypes: TermSet = new TermSet([
 ])
 
 @Component({
-  components: { TermDisplay, TermWithLanguage },
+  components: { ExternalTerm, TermDisplay, TermWithLanguage },
 })
 export default class extends Vue {
   @Prop({ default: false }) isSharedTerm!: boolean

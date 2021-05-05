@@ -21,10 +21,10 @@
               Version {{ job.revision }}
             </b-tag>
             <b-tag v-if="job.status">
-              <TermDisplay :term="job.status" />
+              <ExternalTerm :resource="job.status" />
             </b-tag>
             <b-tag v-if="job.publishedTo">
-              <TermDisplay :term="job.publishedTo" />
+              <ExternalTerm :resource="job.publishedTo" />
             </b-tag>
           </div>
 
@@ -50,13 +50,13 @@ import { namespace } from 'vuex-class'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import JobForm from '@/components/JobForm.vue'
 import JobItem from '@/components/JobItem.vue'
-import TermDisplay from '@/components/TermDisplay.vue'
+import ExternalTerm from '@/components/ExternalTerm.vue'
 import { JobCollection, PublishJob } from '@cube-creator/model'
 
 const projectNS = namespace('project')
 
 @Component({
-  components: { LoadingBlock, JobForm, JobItem, TermDisplay },
+  components: { ExternalTerm, LoadingBlock, JobForm, JobItem },
 })
 export default class PublicationView extends Vue {
   @projectNS.State('jobCollection') jobCollection!: JobCollection | null;

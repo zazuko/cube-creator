@@ -8,43 +8,29 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { Term } from 'rdf-js'
 import { shrink } from '@/rdf-properties'
-import { api } from '@/api'
 import { rdfs, schema } from '@tpluscode/rdf-ns-builders'
-import { Project } from '@cube-creator/model'
-import { namespace } from 'vuex-class'
-import { DESCRIBE } from '@tpluscode/sparql-builder'
-import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import { GraphPointer } from 'clownface'
-
-const projectNS = namespace('project')
-const apiNS = namespace('api')
 
 @Component
 export default class extends Vue {
-  @projectNS.State('project') project!: Project | null
-  @apiNS.Getter('publicQueryEndpoint') publicQueryEndpoint!: string | null
-  @Prop({ required: true }) term!: Term | RdfResourceCore
+  @Prop({ required: true }) term!: Term | GraphPointer
   @Prop({ default: false }) showLanguage!: boolean
   @Prop() base?: string
 
-  displayShort = ''
+  get displayShort () {
+    return this.__schemaName || this.__commonTermPrefixes || this.__rawLabel
+  }
 
-  async mounted (): Promise<void> {
-    this.displayShort = this.existingLabel(this.term) || this.commonTerm() || ''
-
-    if (!this.displayShort) {
-      this.displayShort = await this.loadCubeResourceName()
-        .then(this.sparqlLookup)
-        .then(this.dereference)
-        .then(this.rawLabel)
-        .catch(this.rawLabel) ||
-        ''
+  mounted (): void {
+    const label = this.__schemaName || this.__commonTermPrefixes
+    if (!label) {
+      this.$emit('no-label')
     }
   }
 
   get node (): Term {
-    if ('id' in this.term) {
-      return this.term.id
+    if ('_context' in this.term) {
+      return this.term.term
     }
     return this.term
   }
@@ -60,65 +46,16 @@ export default class extends Vue {
     }
   }
 
-  commonTerm (): string | null {
+  get __commonTermPrefixes (): string | null {
     const shrunk = shrink(this.node.value)
 
     return shrunk !== this.node.value ? shrunk : null
   }
 
-  async loadCubeResourceName (): Promise<string | null> {
-    if (this.node.termType !== 'NamedNode') {
-      return null
-    }
-
-    const cubeGraph = this.project?.cubeGraph
-    if (!cubeGraph) throw new Error('Project does not have a cubeGraph')
-
-    const dataUrl = new URL(cubeGraph.value)
-    dataUrl.searchParams.append('resource', this.node.value)
-
-    return this.loadLabel(dataUrl.toString())
-  }
-
-  async dereference (found: string | null): Promise<string | null> {
-    if (found) {
-      return found
-    }
-
-    if (this.node.termType !== 'NamedNode' || this.node.value.startsWith('http:')) {
-      return null
-    }
-
-    return this.loadLabel(this.node.value)
-  }
-
-  async sparqlLookup (found: string | null): Promise<string | null> {
-    if (found) {
-      return found
-    }
-
-    if (this.node.termType !== 'NamedNode' || !this.publicQueryEndpoint) {
-      return null
-    }
-
-    const sparqlUrl = new URL(this.publicQueryEndpoint)
-    const describe = DESCRIBE`${this.term}`.build()
-    sparqlUrl.searchParams.append('query', describe)
-
-    return this.loadLabel(sparqlUrl.toString())
-  }
-
-  async loadLabel (url: string): Promise<string | null> {
-    const response = await api.fetchResource(url.toString())
-    return this.existingLabel(response.pointer.node(this.node))
-  }
-
-  existingLabel (resource: Term | RdfResourceCore | GraphPointer): string | null {
-    const pointer = 'id' in resource
-      ? resource.pointer
-      : '_context' in resource
-        ? resource
-        : null
+  get __schemaName (): string | null {
+    const pointer = '_context' in this.term
+      ? this.term
+      : null
 
     if (pointer) {
       return pointer.out([schema.name, rdfs.label], { language: ['en', '*'] }).values[0]
@@ -127,11 +64,7 @@ export default class extends Vue {
     return null
   }
 
-  rawLabel (found: string | null): string {
-    if (typeof found === 'string') {
-      return found
-    }
-
+  get __rawLabel (): string {
     if (this.node.termType === 'NamedNode') {
       return shrink(this.node.value, this.base)
     }
