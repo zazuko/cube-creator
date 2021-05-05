@@ -13,6 +13,8 @@ import { rdfs, schema } from '@tpluscode/rdf-ns-builders'
 import { Project } from '@cube-creator/model'
 import { namespace } from 'vuex-class'
 import { DESCRIBE } from '@tpluscode/sparql-builder'
+import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
+import { GraphPointer } from 'clownface'
 
 const projectNS = namespace('project')
 const apiNS = namespace('api')
@@ -21,45 +23,51 @@ const apiNS = namespace('api')
 export default class extends Vue {
   @projectNS.State('project') project!: Project | null
   @apiNS.Getter('publicQueryEndpoint') publicQueryEndpoint!: string | null
-  @Prop({ required: true }) term!: Term
+  @Prop({ required: true }) term!: Term | RdfResourceCore
   @Prop({ default: false }) showLanguage!: boolean
   @Prop() base?: string
 
   displayShort = ''
 
   async mounted (): Promise<void> {
-    this.displayShort = await this.commonTerm()
-      .then(this.loadCubeResourceName)
-      .then(this.dereference)
-      .then(this.sparqlLookup)
-      .then(this.rawLabel)
-      .catch(this.rawLabel) ||
-      ''
+    this.displayShort = this.existingLabel(this.term) || this.commonTerm() || ''
+
+    if (!this.displayShort) {
+      this.displayShort = await this.loadCubeResourceName()
+        .then(this.sparqlLookup)
+        .then(this.dereference)
+        .then(this.rawLabel)
+        .catch(this.rawLabel) ||
+        ''
+    }
+  }
+
+  get node (): Term {
+    if ('id' in this.term) {
+      return this.term.id
+    }
+    return this.term
   }
 
   get displayFull (): string {
-    if (this.term.termType === 'Literal') {
-      const datatype = this.term.datatype ? `^^${shrink(this.term.datatype.value)}` : ''
-      const language = this.term.language ? `@${this.term.language}` : ''
+    if (this.node.termType === 'Literal') {
+      const datatype = this.node.datatype ? `^^${shrink(this.node.datatype.value)}` : ''
+      const language = this.node.language ? `@${this.node.language}` : ''
 
-      return `"${this.term.value}${language}"${datatype}`
+      return `"${this.node.value}${language}"${datatype}`
     } else {
-      return this.term.value
+      return this.node.value
     }
   }
 
-  async commonTerm (): Promise<string | null> {
-    const shrunk = shrink(this.term.value)
+  commonTerm (): string | null {
+    const shrunk = shrink(this.node.value)
 
-    return shrunk !== this.term.value ? shrunk : null
+    return shrunk !== this.node.value ? shrunk : null
   }
 
-  async loadCubeResourceName (found: string | null): Promise<string | null> {
-    if (found) {
-      return found
-    }
-
-    if (this.term.termType !== 'NamedNode') {
+  async loadCubeResourceName (): Promise<string | null> {
+    if (this.node.termType !== 'NamedNode') {
       return null
     }
 
@@ -67,7 +75,7 @@ export default class extends Vue {
     if (!cubeGraph) throw new Error('Project does not have a cubeGraph')
 
     const dataUrl = new URL(cubeGraph.value)
-    dataUrl.searchParams.append('resource', this.term.value)
+    dataUrl.searchParams.append('resource', this.node.value)
 
     return this.loadLabel(dataUrl.toString())
   }
@@ -77,11 +85,11 @@ export default class extends Vue {
       return found
     }
 
-    if (this.term.termType !== 'NamedNode' || this.term.value.startsWith('http:')) {
+    if (this.node.termType !== 'NamedNode' || this.node.value.startsWith('http:')) {
       return null
     }
 
-    return this.loadLabel(this.term.value)
+    return this.loadLabel(this.node.value)
   }
 
   async sparqlLookup (found: string | null): Promise<string | null> {
@@ -89,7 +97,7 @@ export default class extends Vue {
       return found
     }
 
-    if (this.term.termType !== 'NamedNode' || !this.publicQueryEndpoint) {
+    if (this.node.termType !== 'NamedNode' || !this.publicQueryEndpoint) {
       return null
     }
 
@@ -102,9 +110,21 @@ export default class extends Vue {
 
   async loadLabel (url: string): Promise<string | null> {
     const response = await api.fetchResource(url.toString())
-    const resource = response.pointer.node(this.term)
+    return this.existingLabel(response.pointer.node(this.node))
+  }
 
-    return resource.out([schema.name, rdfs.label], { language: ['en', '*'] }).values[0]
+  existingLabel (resource: Term | RdfResourceCore | GraphPointer): string | null {
+    const pointer = 'id' in resource
+      ? resource.pointer
+      : '_context' in resource
+        ? resource
+        : null
+
+    if (pointer) {
+      return pointer.out([schema.name, rdfs.label], { language: ['en', '*'] }).values[0]
+    }
+
+    return null
   }
 
   rawLabel (found: string | null): string {
@@ -112,11 +132,11 @@ export default class extends Vue {
       return found
     }
 
-    if (this.term.termType === 'NamedNode') {
-      return shrink(this.term.value, this.base)
+    if (this.node.termType === 'NamedNode') {
+      return shrink(this.node.value, this.base)
     }
 
-    return this.term.value
+    return this.node.value
   }
 }
 </script>
