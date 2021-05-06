@@ -15,12 +15,8 @@ export default class extends Vue {
   @Prop({ default: false }) showLanguage!: boolean
   @Prop() base?: string
 
-  get displayShort (): string {
-    if (this.term.termType === 'NamedNode') {
-      return shrink(this.term.value, this.base)
-    } else {
-      return this.term.value
-    }
+  get displayShort () {
+    return this.__commonTermPrefixes || this.__rawLabel
   }
 
   get displayFull (): string {
@@ -32,6 +28,20 @@ export default class extends Vue {
     } else {
       return this.term.value
     }
+  }
+
+  get __commonTermPrefixes (): string | null {
+    const shrunk = shrink(this.term.value)
+
+    return shrunk !== this.term.value ? shrunk : null
+  }
+
+  get __rawLabel (): string {
+    if (this.term.termType === 'NamedNode') {
+      return shrink(this.term.value, this.base)
+    }
+
+    return this.term.value
   }
 }
 </script>

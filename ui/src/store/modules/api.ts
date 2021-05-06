@@ -5,6 +5,7 @@ import { RootState } from '../types'
 import { GraphPointer } from 'clownface'
 import RdfResourceImpl, { ResourceIdentifier } from '@tpluscode/rdfine'
 import { ToastProgrammatic as Toast } from 'buefy'
+import { dcat } from '@tpluscode/rdf-ns-builders'
 
 export interface APIState {
   entrypoint: null | RdfResource
@@ -15,6 +16,9 @@ const initialState = {
 }
 
 const getters: GetterTree<APIState, RootState> = {
+  publicQueryEndpoint (state) {
+    return state.entrypoint?.pointer.out(dcat.endpointURL).value || null
+  }
 }
 
 const actions: ActionTree<APIState, RootState> = {

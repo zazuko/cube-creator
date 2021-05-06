@@ -3,9 +3,7 @@
     {{ missingValue }}
   </span>
   <router-link v-else-if="isResource" :to="{ name: 'ResourcePreview', params: { resourceId: value.id.value, sharedTerm: isSharedTerm } }" class="tag is-rounded is-small">
-    <term-with-language :values="label" :selected-language="selectedLanguage">
-      <term-display :term="value.id" :base="cubeUri" />
-    </term-with-language>
+    <external-term :resource="value" :base="cubeUri" :selected-language="selectedLanguage" />
   </router-link>
   <span v-else-if="isTerm" :class="termClasses">
     <term-display :term="value" :base="cubeUri" :show-language="showLanguage" />
@@ -23,6 +21,7 @@ import { schema, xsd } from '@tpluscode/rdf-ns-builders'
 import TermSet from '@rdfjs/term-set'
 import TermDisplay from './TermDisplay.vue'
 import TermWithLanguage from './TermWithLanguage.vue'
+import ExternalTerm from './ExternalTerm.vue'
 
 type Value = RdfResource | Term | undefined
 
@@ -47,10 +46,10 @@ const temporalDatatypes: TermSet = new TermSet([
 ])
 
 @Component({
-  components: { TermDisplay, TermWithLanguage },
+  components: { ExternalTerm, TermDisplay, TermWithLanguage },
 })
 export default class extends Vue {
-  @Prop({ required: true }) isSharedTerm!: boolean
+  @Prop({ default: false }) isSharedTerm!: boolean
   @Prop({ required: true }) value: Value
   @Prop({ default: '' }) missingValue?: string
   @Prop({ required: true }) selectedLanguage!: string

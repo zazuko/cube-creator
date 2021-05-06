@@ -1,5 +1,5 @@
 import { Hydra } from 'alcaeus/web'
-import { RdfResource, RuntimeOperation } from 'alcaeus'
+import { HydraResponse, RdfResource, RuntimeOperation } from 'alcaeus'
 import { ResponseWrapper } from 'alcaeus/ResponseWrapper'
 import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import { hydra, sh } from '@tpluscode/rdf-ns-builders'
@@ -61,9 +61,18 @@ Hydra.cacheStrategy.shouldLoad = (previous) => {
   return !previous.representation.root?.types.has(hydra.ApiDocumentation)
 }
 
+const pendingRequests = new Map<string, Promise<HydraResponse<any, any>>>()
+
 export const api = {
   async fetchResource <T extends RdfResourceCore = RdfResource> (url: string): Promise<T> {
-    const response = await Hydra.loadResource<T>(url.split(segmentSeparator).join('/'))
+    let request = pendingRequests.get(url)
+    if (!request) {
+      request = Hydra.loadResource<T>(url.split(segmentSeparator).join('/'))
+      pendingRequests.set(url, request)
+    }
+
+    const response = await request
+    pendingRequests.delete(url)
 
     if (response.response?.xhr.status !== 200) {
       throw await APIError.fromResponse(response)
