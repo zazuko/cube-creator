@@ -27,7 +27,7 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
-import { namedNode } from '@rdfjs/data-model'
+import $rdf from '@rdfjs/data-model'
 import { Term } from 'rdf-js'
 import TermSet from '@rdf-esm/term-set'
 import { GraphPointer } from 'clownface'
@@ -53,7 +53,7 @@ export default class ResourcePreview extends Vue {
     return this.cubeMetadata?.hasPart[0]?.id.value
   }
 
-  resourceId = namedNode(this.$route.params.resourceId)
+  resourceId = $rdf.namedNode(this.$route.params.resourceId)
   resource: GraphPointer | null = null
   properties: [Term, (Term | RdfResource)[]][] = []
 
@@ -67,7 +67,7 @@ export default class ResourcePreview extends Vue {
     const responseResource = await api.fetchResource(url.href)
 
     const resource = responseResource.pointer.namedNode(this.resourceId)
-    const resourceQuads = [...responseResource.pointer.dataset.match(this.resourceId, null, null, namedNode(url.href))]
+    const resourceQuads = [...responseResource.pointer.dataset.match(this.resourceId, null, null, $rdf.namedNode(url.href))]
     const resourcePredicates = new TermSet(resourceQuads.map(({ predicate }) => predicate))
 
     this.resource = resource
