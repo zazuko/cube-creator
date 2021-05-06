@@ -1,5 +1,11 @@
 # @cube-creator/ui
 
+## 1.2.0
+
+### Minor Changes
+
+- ead96fe: Display more information about cube resources (fixes #689)
+
 ## 1.1.1
 
 ### Patch Changes
