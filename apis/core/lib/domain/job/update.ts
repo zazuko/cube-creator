@@ -8,7 +8,7 @@ import { DESCRIBE } from '@tpluscode/sparql-builder'
 import type { Organization } from '@rdfine/schema'
 import { ResourceStore } from '../../ResourceStore'
 import { schema } from '@tpluscode/rdf-ns-builders'
-import { isCsvProject } from '../cube-projects/Project'
+import { isCsvProject } from '@cube-creator/model/Project'
 
 interface JobUpdateParams {
   resource: GraphPointer<NamedNode>

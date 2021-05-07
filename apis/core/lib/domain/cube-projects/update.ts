@@ -7,7 +7,7 @@ import { dcterms, rdfs, schema } from '@tpluscode/rdf-ns-builders'
 import { CsvProject, ImportProject, Project } from '@cube-creator/model'
 import type { Organization } from '@rdfine/schema'
 import { exists } from './queries'
-import { isCsvProject } from './Project'
+import { isCsvProject } from '@cube-creator/model/Project'
 
 interface UpdateProjectCommand {
   resource: GraphPointer

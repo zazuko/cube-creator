@@ -13,7 +13,7 @@ import { Hydra } from 'alcaeus/node'
 import { CsvProject, ImportProject, PublishJob } from '@cube-creator/model'
 import '../variables'
 import '../hydra-cache'
-import { isCsvProject } from '../../../apis/core/lib/domain/cube-projects/Project'
+import { isCsvProject } from '@cube-creator/model/Project'
 
 interface RunOptions {
   debug: boolean
