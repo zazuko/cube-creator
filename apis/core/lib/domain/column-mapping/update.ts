@@ -7,7 +7,7 @@ import {
   CsvSource,
   DimensionMetadataCollection,
   LiteralColumnMapping,
-  Project,
+  CsvProject,
   ReferenceColumnMapping,
   Table,
 } from '@cube-creator/model'
@@ -119,7 +119,7 @@ async function updateColumnMapping<T extends ColumnMapping>({
 
       const { organizationId, projectId } = await findOrganization({ table })
       const organization = await store.getResource<Organization>(organizationId)
-      const { cubeIdentifier } = await store.getResource<Project>(projectId)
+      const { cubeIdentifier } = await store.getResource<CsvProject>(projectId)
       const dimensionMetaDataCollectionPointer = await getDimensionMetaDataCollection(table.csvMapping.id)
       const dimensionMetaDataCollection = await store.getResource<DimensionMetadataCollection>(dimensionMetaDataCollectionPointer)
 

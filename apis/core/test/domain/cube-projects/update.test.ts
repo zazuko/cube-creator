@@ -34,32 +34,31 @@ describe('domain/cube-projects/update', () => {
   })
   let project: GraphPointer<NamedNode, DatasetExt>
 
-  function projectPointer(id: ResourceIdentifier = $rdf.namedNode('')) {
-    return clownface({ dataset: $rdf.dataset() })
-      .node(id)
-      .addOut(rdfs.label, 'Created name')
-      .addOut(schema.maintainer, bafu.id)
-      .addOut(dcterms.identifier, 'cube')
-      .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
-  }
-
   beforeEach(async () => {
     store = new TestResourceStore([
       projectsCollection,
       bafu,
       bar,
     ])
-
-    const resource = projectPointer()
-
     projectExists = sinon.stub(projectQueries, 'exists').resolves(false)
-    project = (await createProject({ resource, store, projectsCollection, user, userName })).pointer as any
   })
 
   afterEach(sinon.restore)
 
   describe('CSV project', () => {
+    function projectPointer(id: ResourceIdentifier = $rdf.namedNode('')) {
+      return clownface({ dataset: $rdf.dataset() })
+        .node(id)
+        .addOut(rdfs.label, 'Created name')
+        .addOut(schema.maintainer, bafu.id)
+        .addOut(dcterms.identifier, 'cube')
+        .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
+    }
+
     beforeEach(async () => {
+      const resource = projectPointer()
+      project = (await createProject({ resource, store, projectsCollection, user, userName })).pointer as any
+
       const datasetBefore = await store.get(project.out(cc.dataset).term)
       datasetBefore.out(schema.hasPart)
         .addOut(rdfs.label, 'Cube')
@@ -278,6 +277,131 @@ describe('domain/cube-projects/update', () => {
       // then
       await expect(promise).eventually.rejectedWith(DomainError)
       expect(projectExists).to.have.been.calledWith('cube', sinon.match(bar.id))
+    })
+  })
+
+  describe('Import project', () => {
+    function projectPointer(id: ResourceIdentifier = $rdf.namedNode('')) {
+      return clownface({ dataset: $rdf.dataset() })
+        .node(id)
+        .addOut(rdfs.label, 'Created name')
+        .addOut(schema.maintainer, bafu.id)
+        .addOut(cc['CubeProject/importCube'], $rdf.namedNode('http://external.cube'))
+        .addOut(cc['CubeProject/importFromEndpoint'], $rdf.namedNode('http://external.cube/query'))
+        .addOut(cc.projectSourceKind, shape('cube-project/create#ExistingCube'))
+    }
+
+    beforeEach(async () => {
+      const resource = projectPointer()
+      project = (await createProject({ resource, store, projectsCollection, user, userName })).pointer as any
+
+      const datasetBefore = await store.get(project.out(cc.dataset).term)
+      datasetBefore.out(schema.hasPart)
+        .addOut(rdfs.label, 'Cube')
+
+      const dataset = await store.getResource<Dataset>(project.out(cc.dataset).term)
+      const metadataBefore = await store.get(dataset?.dimensionMetadata.id)
+      metadataBefore.addOut(schema.hasPart, dimension => {
+        dimension
+          .addOut(schema.about, $rdf.namedNode('http://external.cube/dimension/year'))
+          .addOut(rdfs.label, $rdf.literal('Jahr', 'de'))
+      })
+    })
+
+    it('updates importFromGraph', async () => {
+      // given
+      const resource = projectPointer(project.term)
+      resource
+        .deleteOut(cc['CubeProject/importFromGraph'])
+        .addOut(cc['CubeProject/importFromGraph'], $rdf.namedNode('http://example.com/cube-graph'))
+
+      // when
+      const editedProject = await updateProject({
+        resource,
+        store,
+      })
+
+      // then
+      expect(editedProject.pointer.out(cc['CubeProject/importFromGraph']).term)
+        .to.deep.eq($rdf.namedNode('http://example.com/cube-graph'))
+    })
+
+    it('updates importFromEndpoint', async () => {
+      // given
+      const resource = projectPointer(project.term)
+      resource
+        .deleteOut(cc['CubeProject/importFromEndpoint'])
+        .addOut(cc['CubeProject/importFromEndpoint'], $rdf.namedNode('http://example.com/sparql'))
+
+      // when
+      const editedProject = await updateProject({
+        resource,
+        store,
+      })
+
+      // then
+      expect(editedProject.pointer.out(cc['CubeProject/importFromEndpoint']).term)
+        .to.deep.eq($rdf.namedNode('http://example.com/sparql'))
+    })
+
+    describe('when cube identifier changes', function () {
+      let editedProject: Project
+
+      beforeEach(async () => {
+        const resource = projectPointer(project.term)
+        resource
+          .deleteOut(cc['CubeProject/importCube'])
+          .addOut(cc['CubeProject/importCube'], $rdf.namedNode('http://external.cube/new'))
+
+        editedProject = await updateProject({
+          resource,
+          store,
+        })
+      })
+
+      it('updates project resource', async () => {
+        expect(editedProject.pointer.out(cc['CubeProject/importCube']).term)
+          .to.deep.eq($rdf.namedNode('http://external.cube/new'))
+      })
+
+      it('renames cube', async () => {
+        const datasetAfter = await store.get(editedProject.dataset.id)
+        expect(datasetAfter).to.matchShape({
+          property: {
+            path: schema.hasPart,
+            minCount: 1,
+            hasValue: $rdf.namedNode('http://external.cube/new'),
+            node: {
+              property: {
+                path: rdfs.label,
+                hasValue: $rdf.literal('Cube'),
+                minCount: 1,
+                maxCount: 1,
+              },
+            },
+          },
+        })
+      })
+
+      it('rebases metadata properties', async () => {
+        const dataset = await store.getResource<Dataset>(editedProject.pointer.out(cc.dataset).term)
+        const metadataAfter = await store.get(dataset?.dimensionMetadata.id)
+
+        expect(metadataAfter).to.matchShape({
+          property: {
+            path: schema.hasPart,
+            node: {
+              property: [{
+                path: schema.about,
+                hasValue: $rdf.namedNode('http://external.cube/new/dimension/year'),
+              }, {
+                path: rdfs.label,
+                hasValue: $rdf.literal('Jahr', 'de'),
+              }],
+            },
+          },
+        })
+      })
     })
   })
 })

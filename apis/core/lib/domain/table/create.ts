@@ -4,7 +4,7 @@ import { cc } from '@cube-creator/core/namespace'
 import { ResourceStore } from '../../ResourceStore'
 import { NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
-import { CsvColumn, CsvMapping, CsvSource, DimensionMetadataCollection, Project } from '@cube-creator/model'
+import { CsvColumn, CsvMapping, CsvSource, DimensionMetadataCollection, CsvProject } from '@cube-creator/model'
 import * as DimensionMetadataQueries from '../queries/dimension-metadata'
 import type { Organization } from '@rdfine/schema'
 import { findOrganization } from '../organization/query'
@@ -39,7 +39,7 @@ export async function createTable({
   const csvSource = await store.getResource<CsvSource>(csvSourceId)
   const { organizationId, projectId } = await findOrganization({ csvMapping })
   const organization = await store.getResource<Organization>(organizationId)
-  const { cubeIdentifier } = await store.getResource<Project>(projectId)
+  const { cubeIdentifier } = await store.getResource<CsvProject>(projectId)
 
   const columns = [...csvSource.columns]
 

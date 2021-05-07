@@ -1,6 +1,6 @@
 import { NamedNode } from 'rdf-js'
 import { GraphPointer } from 'clownface'
-import { Job, JobMixin, Project, Dataset } from '@cube-creator/model'
+import { Job, JobMixin, ImportProject, Dataset, CsvProject } from '@cube-creator/model'
 import { isPublishJob } from '@cube-creator/model/Job'
 import RdfResource from '@tpluscode/rdfine'
 import env from '@cube-creator/core/env'
@@ -8,6 +8,7 @@ import { DESCRIBE } from '@tpluscode/sparql-builder'
 import type { Organization } from '@rdfine/schema'
 import { ResourceStore } from '../../ResourceStore'
 import { schema } from '@tpluscode/rdf-ns-builders'
+import { isCsvProject } from '../cube-projects/Project'
 
 interface JobUpdateParams {
   resource: GraphPointer<NamedNode>
@@ -41,7 +42,7 @@ export async function update({ resource, store }: JobUpdateParams): Promise<Grap
     job.actionStatus = changes.actionStatus
 
     if (changes.actionStatus.equals(schema.CompletedActionStatus) && isPublishJob(job)) {
-      const project = await store.getResource<Project>(job.project)
+      const project = await store.getResource<CsvProject | ImportProject>(job.project)
       project.incrementPublishedRevision()
 
       const dataset = await store.getResource<Dataset>(project.dataset.id)
@@ -50,10 +51,14 @@ export async function update({ resource, store }: JobUpdateParams): Promise<Grap
       }
 
       const organization = await store.getResource<Organization>(project.maintainer)
-      const cubeId = organization.createIdentifier({
-        cubeIdentifier: project.cubeIdentifier,
-      })
+
       if (env.has('TRIFID_UI')) {
+        const cubeId = isCsvProject(project)
+          ? organization.createIdentifier({
+            cubeIdentifier: project.cubeIdentifier,
+          })
+          : project.importCube
+
         job.query = lindasWebQueryLink(cubeId, job.revision, job.publishGraph)
       }
     }

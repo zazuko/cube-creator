@@ -2,7 +2,7 @@ import { NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import { cc } from '@cube-creator/core/namespace'
 import type { Organization } from '@rdfine/schema'
-import { ColumnMapping, DimensionMetadataCollection, Project, Table } from '@cube-creator/model'
+import { ColumnMapping, DimensionMetadataCollection, CsvProject, Table } from '@cube-creator/model'
 import { ResourceStore } from '../../ResourceStore'
 import { getDimensionMetaDataCollection } from '../queries/dimension-metadata'
 import * as TableQueries from '../queries/table'
@@ -32,7 +32,7 @@ export async function deleteColumnMapping({
   if (table.isObservationTable) {
     const { organizationId, projectId } = await findOrganization({ table })
     const organization = await store.getResource<Organization>(organizationId)
-    const { cubeIdentifier } = await store.getResource<Project>(projectId)
+    const { cubeIdentifier } = await store.getResource<CsvProject>(projectId)
     const dimensionMetaDataCollectionPointer = await getDimensionMetaDataCollection(table.csvMapping.id)
     const dimensionMetaDataCollection = await store.getResource<DimensionMetadataCollection>(dimensionMetaDataCollectionPointer)
 

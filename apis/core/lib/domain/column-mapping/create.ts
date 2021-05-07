@@ -17,6 +17,7 @@ import { rdf } from '@tpluscode/rdf-ns-builders'
 import TermSet from '@rdfjs/term-set'
 import type { Organization } from '@rdfine/schema'
 import { findOrganization } from '../organization/query'
+import { CsvProject } from '@cube-creator/model/Project'
 
 interface CreateColumnMappingCommand {
   tableId: NamedNode
@@ -49,7 +50,7 @@ export async function createColumnMapping({
   if (table.types.has(cc.ObservationTable)) {
     const { organizationId, projectId } = await findOrganization({ table })
     const organization = await store.getResource<Organization>(organizationId)
-    const { cubeIdentifier } = await store.getResource<Project>(projectId)
+    const { cubeIdentifier } = await store.getResource<CsvProject>(projectId)
     const dimensionMetaDataCollectionPointer = await getDimensionMetaDataCollection(table.csvMapping.id)
     const dimensionMetaDataCollection = await store.getResource<DimensionMetadataCollection>(dimensionMetaDataCollectionPointer)
 

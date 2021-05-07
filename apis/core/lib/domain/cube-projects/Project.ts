@@ -1,5 +1,5 @@
-import { Term } from 'rdf-js'
-import { Project, CsvMapping } from '@cube-creator/model'
+import { NamedNode, Term } from 'rdf-js'
+import { CsvProject, Project, CsvMapping, ImportProject } from '@cube-creator/model'
 import { Constructor } from '@tpluscode/rdfine'
 import { create as createMapping } from '@cube-creator/model/CsvMapping'
 import { ResourceStore } from '../../ResourceStore'
@@ -7,46 +7,49 @@ import * as id from '../identifiers'
 import '../csv-mapping/CsvMapping'
 import { cc } from '@cube-creator/core/namespace'
 import * as Hydra from '@rdfine/hydra'
-import { rdf } from '@tpluscode/rdf-ns-builders'
+import { dcterms, rdf } from '@tpluscode/rdf-ns-builders'
 import { childResource } from '@cube-creator/model/lib/resourceIdentifiers'
 import { DomainError } from '@cube-creator/api-errors'
 
 interface ApiProject {
   nextRevision: number
-  initializeCsvMapping(store: ResourceStore): CsvMapping
   initializeJobCollection(store: ResourceStore): void
   incrementPublishedRevision(): void
-  updateCubeIdentifier(id: string | undefined): { before: string; after: string }
   updateMaintainer(organization: Term | undefined): { before: Term; after: Term }
   rename(name: string | undefined): void
 }
 
+interface ApiCsvProject {
+  initializeCsvMapping(store: ResourceStore): CsvMapping
+  updateCubeIdentifier(id: string | undefined): { before: string; after: string }
+}
+
+interface ApiImportProject {
+  updateImportCube(id: Term | undefined): { before: NamedNode; after: NamedNode }
+  updateImportEndpoint(url: Term | undefined): void
+  updateImportGraph(url: Term | undefined): void
+}
+
 declare module '@cube-creator/model' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  /* eslint-disable @typescript-eslint/no-empty-interface */
   interface Project extends ApiProject {
+  }
+
+  interface CsvProject extends ApiCsvProject {
+  }
+
+  interface ImportProject extends ApiImportProject {
   }
 }
 
-export default function Mixin<Base extends Constructor<Omit<Project, keyof ApiProject>>>(Resource: Base) {
+export function isCsvProject(project: CsvProject | ImportProject): project is CsvProject {
+  return project.pointer.out(dcterms.identifier).terms.length > 0
+}
+
+export function ProjectMixin<Base extends Constructor<Omit<Project, keyof ApiProject>>>(Resource: Base) {
   class Project extends Resource implements ApiProject {
     get nextRevision() {
       return this.publishedRevision ? this.publishedRevision + 1 : 1
-    }
-
-    initializeCsvMapping(store: ResourceStore) {
-      if (this.csvMapping) {
-        throw new Error('CSV Mapping already exists')
-      }
-
-      const mapping = createMapping(store.create(id.csvMapping(this)), {
-        project: this,
-      })
-
-      mapping.initializeSourcesCollection(store)
-      mapping.initializeTableCollection(store)
-
-      this.csvMapping = mapping
-      return mapping
     }
 
     initializeJobCollection(store: ResourceStore) {
@@ -72,20 +75,6 @@ export default function Mixin<Base extends Constructor<Omit<Project, keyof ApiPr
 
     incrementPublishedRevision() {
       this.publishedRevision = this.nextRevision
-    }
-
-    updateCubeIdentifier(after: string | undefined) {
-      if (!after) {
-        throw new DomainError('Cube identifier cannot be empty')
-      }
-
-      const before = this.cubeIdentifier
-      if (before === after) {
-        return { before: after, after }
-      }
-
-      this.cubeIdentifier = after
-      return { before, after }
     }
 
     updateMaintainer(org: Term | undefined) {
@@ -118,4 +107,80 @@ export default function Mixin<Base extends Constructor<Omit<Project, keyof ApiPr
   return Project
 }
 
-Mixin.appliesTo = cc.CubeProject
+export function CsvProjectMixin<Base extends Constructor<Omit<CsvProject, keyof ApiCsvProject>>>(Resource: Base) {
+  class Project extends Resource implements ApiCsvProject {
+    initializeCsvMapping(store: ResourceStore) {
+      if (this.csvMapping) {
+        throw new Error('CSV Mapping already exists')
+      }
+
+      const mapping = createMapping(store.create(id.csvMapping(this)), {
+        project: this,
+      })
+
+      mapping.initializeSourcesCollection(store)
+      mapping.initializeTableCollection(store)
+
+      this.csvMapping = mapping
+      return mapping
+    }
+
+    updateCubeIdentifier(after: string | undefined) {
+      if (!after) {
+        throw new DomainError('Cube identifier cannot be empty')
+      }
+
+      const before = this.cubeIdentifier
+      if (before === after) {
+        return { before: after, after }
+      }
+
+      this.cubeIdentifier = after
+      return { before, after }
+    }
+  }
+
+  return Project
+}
+
+export function ImportProjectMixin<Base extends Constructor<Omit<ImportProject, keyof ApiImportProject>>>(Resource: Base) {
+  class Project extends Resource implements ApiImportProject {
+    updateImportCube(after: Term | undefined) {
+      if (after?.termType !== 'NamedNode') {
+        throw new DomainError('Cube identifier cannot be empty')
+      }
+
+      const before = this.importCube
+      if (before.equals(after)) {
+        return { before: after, after }
+      }
+
+      this.importCube = after
+      return { before, after }
+    }
+
+    updateImportEndpoint(url: Term | undefined): void {
+      if (url?.termType !== 'NamedNode') {
+        throw new DomainError('Endpoint must be a named node')
+      }
+
+      this.importFromEndpoint = url
+    }
+
+    updateImportGraph(url: Term | undefined): void {
+      if (url && url.termType !== 'NamedNode') {
+        throw new DomainError('Graph must be a named node')
+      }
+
+      this.importFromGraph = url
+    }
+  }
+
+  return Project
+}
+
+ProjectMixin.appliesTo = cc.CubeProject
+CsvProjectMixin.appliesTo = cc.CubeProject
+ImportProjectMixin.appliesTo = cc.CubeProject
+
+export default [ProjectMixin, CsvProjectMixin, ImportProjectMixin]

@@ -22,9 +22,19 @@ export interface Project extends RdfResource {
   creator: Person
   label: string
   jobCollection: Link<JobCollection>
-  cubeIdentifier: string
   maintainer: Link<Organization>
   publishedRevision: number
+  sourceKind: NamedNode
+}
+
+export interface CsvProject extends Project {
+  cubeIdentifier: string
+}
+
+export interface ImportProject extends Project {
+  importCube: NamedNode
+  importFromGraph: NamedNode | undefined
+  importFromEndpoint: NamedNode
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -34,7 +44,7 @@ export interface ProjectsCollection extends Collection<Project> {
 
 export function ProjectMixin<Base extends Constructor>(base: Base): Mixin {
   @namespace(cc)
-  class Impl extends ResourceMixin(base) implements Partial<Project> {
+  class Impl extends ResourceMixin(base) implements Partial<CsvProject>, Partial<ImportProject> {
     @property.resource({ as: [CsvMappingMixin] })
     csvMapping?: CsvMapping
 
@@ -45,7 +55,7 @@ export function ProjectMixin<Base extends Constructor>(base: Base): Mixin {
     cubeGraph!: NamedNode
 
     @property.literal({ path: dcterms.identifier })
-    cubeIdentifier!: string
+    cubeIdentifier?: string
 
     @property.resource({ path: schema.maintainer })
     maintainer!: Link<Organization>
@@ -58,6 +68,18 @@ export function ProjectMixin<Base extends Constructor>(base: Base): Mixin {
 
     @property.resource({ path: cc.jobCollection })
     jobCollection!: Link<JobCollection>
+
+    @property({ path: cc.projectSourceKind })
+    sourceKind!: NamedNode
+
+    @property({ path: cc['CubeProject/importCube'] })
+    importCube!: NamedNode
+
+    @property({ path: cc['CubeProject/importFromGraph'] })
+    importFromGraph?: NamedNode
+
+    @property({ path: cc['CubeProject/importFromEndpoint'] })
+    importFromEndpoint!: NamedNode
   }
 
   return Impl
@@ -65,9 +87,11 @@ export function ProjectMixin<Base extends Constructor>(base: Base): Mixin {
 
 ProjectMixin.appliesTo = cc.CubeProject
 
-type MandatoryFields = 'creator' | 'label' | 'maintainer' | 'cubeIdentifier'
+type CsvProjectMandatoryFields = 'creator' | 'label' | 'maintainer' | 'cubeIdentifier' | 'sourceKind'
+export const create = initializer<CsvProject, CsvProjectMandatoryFields>(ProjectMixin)
 
-export const create = initializer<Project, MandatoryFields>(ProjectMixin)
+type ImportProjectMandatoryFields = 'creator' | 'label' | 'maintainer' | 'importCube' | 'importFromEndpoint' | 'sourceKind'
+export const createImportProject = initializer<ImportProject, ImportProjectMandatoryFields>(ProjectMixin)
 
 export const fromPointer = <D extends DatasetCore>(pointer: GraphPointer<ResourceIdentifier, D>, initializer: Initializer<Project> = {}): Project & RdfResourceCore<D> => {
   return RdfResourceImpl.factory.createEntity(pointer, [ProjectMixin], {
