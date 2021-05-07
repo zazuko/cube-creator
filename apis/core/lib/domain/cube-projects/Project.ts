@@ -7,7 +7,7 @@ import * as id from '../identifiers'
 import '../csv-mapping/CsvMapping'
 import { cc } from '@cube-creator/core/namespace'
 import * as Hydra from '@rdfine/hydra'
-import { dcterms, rdf } from '@tpluscode/rdf-ns-builders'
+import { rdf } from '@tpluscode/rdf-ns-builders'
 import { childResource } from '@cube-creator/model/lib/resourceIdentifiers'
 import { DomainError } from '@cube-creator/api-errors'
 
@@ -40,10 +40,6 @@ declare module '@cube-creator/model' {
 
   interface ImportProject extends ApiImportProject {
   }
-}
-
-export function isCsvProject(project: CsvProject | ImportProject): project is CsvProject {
-  return project.pointer.out(dcterms.identifier).terms.length > 0
 }
 
 export function ProjectMixin<Base extends Constructor<Omit<Project, keyof ApiProject>>>(Resource: Base) {

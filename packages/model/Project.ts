@@ -38,8 +38,12 @@ export interface ImportProject extends Project {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ProjectsCollection extends Collection<Project> {
+export interface ProjectsCollection extends Collection<CsvProject | ImportProject> {
 
+}
+
+export const isCsvProject = (project: CsvProject | ImportProject): project is CsvProject => {
+  return project.pointer.out(dcterms.identifier).terms.length > 0
 }
 
 export function ProjectMixin<Base extends Constructor>(base: Base): Mixin {

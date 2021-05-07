@@ -9,9 +9,7 @@ import {
   Dataset,
   DimensionMetadata,
   DimensionMetadataCollection,
-  Job,
   JobCollection,
-  Project,
   ProjectsCollection,
   SourcesCollection,
   Table,
@@ -29,34 +27,8 @@ const displayLanguage = ['en', 'de', 'fr', '']
 export function serializeProjectsCollection (collection: ProjectsCollection): ProjectsCollection {
   return Object.freeze({
     ...serializeResource(collection),
-    member: collection.member.map(serializeProject),
+    member: collection.member,
   }) as ProjectsCollection
-}
-
-export function serializeProject (project: Project): Project {
-  return Object.freeze({
-    ...serializeResource(project),
-    csvMapping: Object.freeze(project.csvMapping),
-    dataset: project.dataset
-      ? serializeLink(project.dataset)
-      : project.dataset,
-    cubeGraph: project.cubeGraph,
-    creator: project.creator
-      ? serializePerson(project.creator)
-      : project.creator,
-    label: project.label,
-    jobCollection: project.jobCollection
-      ? serializeLink(project.jobCollection)
-      : project.jobCollection,
-    cubeIdentifier: project.cubeIdentifier,
-    maintainer: project.maintainer
-      ? {
-          ...serializeLink(project.maintainer),
-          label: project.maintainer?.pointer.out(rdfs.label, { language: displayLanguage }),
-        }
-      : project.maintainer,
-    publishedRevision: project.publishedRevision,
-  })
 }
 
 export function serializePerson (person: Person): Person {
