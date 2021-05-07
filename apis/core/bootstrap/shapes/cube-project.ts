@@ -1,4 +1,4 @@
-import { cc, shape } from '@cube-creator/core/namespace'
+import { cc, sh1, shape } from '@cube-creator/core/namespace'
 import { dash, dcterms, hydra, rdf, rdfs, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { turtle } from '@tpluscode/rdf-string'
 import $rdf from 'rdf-ext'
@@ -10,6 +10,8 @@ const generatedProperties = [
   cc.cubeGraph,
   cc.dataset,
   cc.jobCollection,
+  cc.latestPublishedRevision,
+  cc.csvMapping,
 ]
 
 const projectProperties = turtle`
@@ -108,6 +110,7 @@ ${shape('cube-project/create')} {
   ${shape('cube-project/create')} a ${sh.NodeShape}, ${hydra.Resource} ;
     ${sh.targetClass} ${cc.CubeProject} ;
     ${rdfs.label} "Cube Project" ;
+    ${sh1.xoneDiscriminator} ${cc.projectSourceKind} ;
     ${sh.property} [
       ${sh.name} "Start project from" ;
       ${sh.path} ${cc.projectSourceKind} ;
@@ -139,6 +142,7 @@ ${shape('cube-project/update')} {
   ${shape('cube-project/update')} a ${sh.NodeShape}, ${hydra.Resource} ;
     ${sh.targetClass} ${cc.CubeProject} ;
     ${rdfs.label} "Cube Project" ;
+    ${sh1.xoneDiscriminator} ${cc.projectSourceKind} ;
     ${projectProperties} ;
   .
 }
