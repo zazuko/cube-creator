@@ -6,7 +6,6 @@ import {
   CsvSource,
   DimensionMetadataCollection,
   LiteralColumnMapping,
-  Project,
   ReferenceColumnMapping,
   Table,
 } from '@cube-creator/model'
