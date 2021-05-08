@@ -1,5 +1,11 @@
 # @cube-creator/core-api
 
+## 1.1.4
+
+### Patch Changes
+
+- ead96fe: Add public query endpoint to API entrypoint
+
 ## 1.1.3
 
 ### Patch Changes
