@@ -283,7 +283,7 @@ const actions: ActionTree<ProjectState, RootState> = {
 const mutations: MutationTree<ProjectState> = {
   storeProject (state, project: CsvProject | ImportProject) {
     state.project = Object.freeze(project)
-    if (isCsvProject(project)) {
+    if (project && isCsvProject(project)) {
       const { cubeIdentifier } = project
       state.createIdentifier = (termName: Term) => {
         return (project.maintainer as Organization).createIdentifier({
