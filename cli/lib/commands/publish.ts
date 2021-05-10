@@ -142,7 +142,7 @@ async function getJob(jobUri: string): Promise<{
     throw new Error(`Can not determine target graph for job ${jobUri}`)
   }
 
-  const cubeIdentifier = isCsvProject(project) ? project.cubeIdentifier : project.importCube.value
+  const cubeIdentifier = isCsvProject(project) ? project.cubeIdentifier : project.sourceCube.value
 
   return {
     job,

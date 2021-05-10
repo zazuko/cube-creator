@@ -47,12 +47,12 @@ export async function updateProject({
       cubeIdentifier: identifier.before,
     })
   } else {
-    const cubeId = project.updateImportCube(resource.out(cc['CubeProject/importCube']).term)
+    const cubeId = project.updateImportCube(resource.out(cc['CubeProject/sourceCube']).term)
     currentCube = cubeId.after
     previousCube = cubeId.before
 
-    project.updateImportGraph(resource.out(cc['CubeProject/importFromGraph']).term)
-    project.updateImportEndpoint(resource.out(cc['CubeProject/importFromEndpoint']).term)
+    project.updateImportGraph(resource.out(cc['CubeProject/sourceGraph']).term)
+    project.updateImportEndpoint(resource.out(cc['CubeProject/sourceEndpoint']).term)
   }
 
   if (!previousCube.equals(currentCube) || !maintainer.after.equals(maintainer.before)) {

@@ -454,8 +454,8 @@ describe('domain/cube-projects/create', () => {
         .namedNode('')
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(cc.projectSourceKind, shape('cube-project/create#ExistingCube'))
-        .addOut(cc['CubeProject/importCube'], $rdf.namedNode('http://example.cube/'))
-        .addOut(cc['CubeProject/importFromEndpoint'], $rdf.namedNode('http://example.endpoint/'))
+        .addOut(cc['CubeProject/sourceCube'], $rdf.namedNode('http://example.cube/'))
+        .addOut(cc['CubeProject/sourceEndpoint'], $rdf.namedNode('http://example.endpoint/'))
         .addOut(schema.maintainer, organization.id)
 
       // when
@@ -471,7 +471,7 @@ describe('domain/cube-projects/create', () => {
         .namedNode('')
         .addOut(rdfs.label, 'Import project')
         .addOut(schema.maintainer, organization.id)
-        .addOut(cc['CubeProject/importFromEndpoint'], $rdf.namedNode('http://example.endpoint/'))
+        .addOut(cc['CubeProject/sourceEndpoint'], $rdf.namedNode('http://example.endpoint/'))
         .addOut(cc.projectSourceKind, shape('cube-project/create#ExistingCube'))
 
       // when
@@ -487,8 +487,8 @@ describe('domain/cube-projects/create', () => {
         .namedNode('')
         .addOut(rdfs.label, 'Import project')
         .addOut(schema.maintainer, organization.id)
-        .addOut(cc['CubeProject/importCube'], $rdf.literal('http://example.cube/'))
-        .addOut(cc['CubeProject/importFromEndpoint'], $rdf.namedNode('http://example.endpoint/'))
+        .addOut(cc['CubeProject/sourceCube'], $rdf.literal('http://example.cube/'))
+        .addOut(cc['CubeProject/sourceEndpoint'], $rdf.namedNode('http://example.endpoint/'))
         .addOut(cc.projectSourceKind, shape('cube-project/create#ExistingCube'))
 
       // when
@@ -504,7 +504,7 @@ describe('domain/cube-projects/create', () => {
         .namedNode('')
         .addOut(rdfs.label, 'Import project')
         .addOut(schema.maintainer, organization.id)
-        .addOut(cc['CubeProject/importCube'], $rdf.namedNode('http://example.cube/'))
+        .addOut(cc['CubeProject/sourceCube'], $rdf.namedNode('http://example.cube/'))
         .addOut(cc.projectSourceKind, shape('cube-project/create#ExistingCube'))
 
       // when
@@ -520,8 +520,8 @@ describe('domain/cube-projects/create', () => {
         .namedNode('')
         .addOut(rdfs.label, 'Import project')
         .addOut(schema.maintainer, organization.id)
-        .addOut(cc['CubeProject/importCube'], $rdf.namedNode('http://example.cube/'))
-        .addOut(cc['CubeProject/importFromEndpoint'], $rdf.namedNode('http://example.endpoint/'))
+        .addOut(cc['CubeProject/sourceCube'], $rdf.namedNode('http://example.cube/'))
+        .addOut(cc['CubeProject/sourceEndpoint'], $rdf.namedNode('http://example.endpoint/'))
         .addOut(cc.publishGraph, $rdf.namedNode('http://example.com/published-cube'))
         .addOut(cc.projectSourceKind, shape('cube-project/create#ExistingCube'))
 

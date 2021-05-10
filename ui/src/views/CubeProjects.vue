@@ -29,7 +29,7 @@
                 {{ project.label }}
               </p>
               <p class="is-size-7" title="Cube identifier">
-                {{ project.cubeIdentifier || project.importCube.value }}
+                {{ project.cubeIdentifier || (project.sourceCube && project.sourceCube.value) }}
               </p>
             </div>
             <div v-if="project.maintainer" class="is-flex is-flex-direction-column is-align-items-flex-end">

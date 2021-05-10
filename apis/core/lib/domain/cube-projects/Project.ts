@@ -146,12 +146,12 @@ export function ImportProjectMixin<Base extends Constructor<Omit<ImportProject, 
         throw new DomainError('Cube identifier cannot be empty')
       }
 
-      const before = this.importCube
+      const before = this.sourceCube
       if (before.equals(after)) {
         return { before: after, after }
       }
 
-      this.importCube = after
+      this.sourceCube = after
       return { before, after }
     }
 
@@ -160,7 +160,7 @@ export function ImportProjectMixin<Base extends Constructor<Omit<ImportProject, 
         throw new DomainError('Endpoint must be a named node')
       }
 
-      this.importFromEndpoint = url
+      this.sourceEndpoint = url
     }
 
     updateImportGraph(url: Term | undefined): void {
@@ -168,7 +168,7 @@ export function ImportProjectMixin<Base extends Constructor<Omit<ImportProject, 
         throw new DomainError('Graph must be a named node')
       }
 
-      this.importFromGraph = url
+      this.sourceGraph = url
     }
   }
 

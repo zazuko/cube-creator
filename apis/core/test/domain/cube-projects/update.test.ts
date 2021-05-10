@@ -286,8 +286,8 @@ describe('domain/cube-projects/update', () => {
         .node(id)
         .addOut(rdfs.label, 'Created name')
         .addOut(schema.maintainer, bafu.id)
-        .addOut(cc['CubeProject/importCube'], $rdf.namedNode('http://external.cube'))
-        .addOut(cc['CubeProject/importFromEndpoint'], $rdf.namedNode('http://external.cube/query'))
+        .addOut(cc['CubeProject/sourceCube'], $rdf.namedNode('http://external.cube'))
+        .addOut(cc['CubeProject/sourceEndpoint'], $rdf.namedNode('http://external.cube/query'))
         .addOut(cc.projectSourceKind, shape('cube-project/create#ExistingCube'))
     }
 
@@ -308,12 +308,12 @@ describe('domain/cube-projects/update', () => {
       })
     })
 
-    it('updates importFromGraph', async () => {
+    it('updates sourceGraph', async () => {
       // given
       const resource = projectPointer(project.term)
       resource
-        .deleteOut(cc['CubeProject/importFromGraph'])
-        .addOut(cc['CubeProject/importFromGraph'], $rdf.namedNode('http://example.com/cube-graph'))
+        .deleteOut(cc['CubeProject/sourceGraph'])
+        .addOut(cc['CubeProject/sourceGraph'], $rdf.namedNode('http://example.com/cube-graph'))
 
       // when
       const editedProject = await updateProject({
@@ -322,16 +322,16 @@ describe('domain/cube-projects/update', () => {
       })
 
       // then
-      expect(editedProject.pointer.out(cc['CubeProject/importFromGraph']).term)
+      expect(editedProject.pointer.out(cc['CubeProject/sourceGraph']).term)
         .to.deep.eq($rdf.namedNode('http://example.com/cube-graph'))
     })
 
-    it('updates importFromEndpoint', async () => {
+    it('updates sourceEndpoint', async () => {
       // given
       const resource = projectPointer(project.term)
       resource
-        .deleteOut(cc['CubeProject/importFromEndpoint'])
-        .addOut(cc['CubeProject/importFromEndpoint'], $rdf.namedNode('http://example.com/sparql'))
+        .deleteOut(cc['CubeProject/sourceEndpoint'])
+        .addOut(cc['CubeProject/sourceEndpoint'], $rdf.namedNode('http://example.com/sparql'))
 
       // when
       const editedProject = await updateProject({
@@ -340,7 +340,7 @@ describe('domain/cube-projects/update', () => {
       })
 
       // then
-      expect(editedProject.pointer.out(cc['CubeProject/importFromEndpoint']).term)
+      expect(editedProject.pointer.out(cc['CubeProject/sourceEndpoint']).term)
         .to.deep.eq($rdf.namedNode('http://example.com/sparql'))
     })
 
@@ -350,8 +350,8 @@ describe('domain/cube-projects/update', () => {
       beforeEach(async () => {
         const resource = projectPointer(project.term)
         resource
-          .deleteOut(cc['CubeProject/importCube'])
-          .addOut(cc['CubeProject/importCube'], $rdf.namedNode('http://external.cube/new'))
+          .deleteOut(cc['CubeProject/sourceCube'])
+          .addOut(cc['CubeProject/sourceCube'], $rdf.namedNode('http://external.cube/new'))
 
         editedProject = await updateProject({
           resource,
@@ -360,7 +360,7 @@ describe('domain/cube-projects/update', () => {
       })
 
       it('updates project resource', async () => {
-        expect(editedProject.pointer.out(cc['CubeProject/importCube']).term)
+        expect(editedProject.pointer.out(cc['CubeProject/sourceCube']).term)
           .to.deep.eq($rdf.namedNode('http://external.cube/new'))
       })
 

@@ -62,16 +62,16 @@ async function createCsvProjectResource({ user, userName, projectNode, store, la
 }
 
 async function createImportProjectResources({ resource, user, userName, projectNode, store, label, maintainer }: CreateProjectResource) {
-  const importCube = resource.out(cc['CubeProject/importCube']).term
-  if (importCube?.termType !== 'NamedNode') {
+  const sourceCube = resource.out(cc['CubeProject/sourceCube']).term
+  if (sourceCube?.termType !== 'NamedNode') {
     throw new Error('Missing cube identifier')
   }
-  const importFromEndpoint = resource.out(cc['CubeProject/importFromEndpoint']).term
-  if (importFromEndpoint?.termType !== 'NamedNode') {
+  const sourceEndpoint = resource.out(cc['CubeProject/sourceEndpoint']).term
+  if (sourceEndpoint?.termType !== 'NamedNode') {
     throw new Error('Missing source endpoint')
   }
-  const importFromGraph = resource.out(cc['CubeProject/importFromGraph']).term
-  if (importFromGraph && importFromGraph.termType !== 'NamedNode') {
+  const sourceGraph = resource.out(cc['CubeProject/sourceGraph']).term
+  if (sourceGraph && sourceGraph.termType !== 'NamedNode') {
     throw new Error('Source graph must be a named node')
   }
 
@@ -84,16 +84,16 @@ async function createImportProjectResources({ resource, user, userName, projectN
     creator: { id: user, name: userName },
     label,
     maintainer,
-    importCube,
-    importFromEndpoint,
-    importFromGraph,
+    sourceCube,
+    sourceEndpoint,
+    sourceGraph,
     sourceKind,
   })
 
   const dataset = Dataset.create(store.create(project.dataset.id), {
-    [dcterms.identifier.value]: project.importCube,
+    [dcterms.identifier.value]: project.sourceCube,
   })
-  dataset.addCube(project.importCube, user)
+  dataset.addCube(project.sourceCube, user)
 
   return { project, dataset }
 }

@@ -32,9 +32,9 @@ export interface CsvProject extends Project {
 }
 
 export interface ImportProject extends Project {
-  importCube: NamedNode
-  importFromGraph: NamedNode | undefined
-  importFromEndpoint: NamedNode
+  sourceCube: NamedNode
+  sourceGraph: NamedNode | undefined
+  sourceEndpoint: NamedNode
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -76,14 +76,14 @@ export function ProjectMixin<Base extends Constructor>(base: Base): Mixin {
     @property({ path: cc.projectSourceKind })
     sourceKind!: NamedNode
 
-    @property({ path: cc['CubeProject/importCube'] })
-    importCube!: NamedNode
+    @property({ path: cc['CubeProject/sourceCube'] })
+    sourceCube!: NamedNode
 
-    @property({ path: cc['CubeProject/importFromGraph'] })
-    importFromGraph?: NamedNode
+    @property({ path: cc['CubeProject/sourceGraph'] })
+    sourceGraph?: NamedNode
 
-    @property({ path: cc['CubeProject/importFromEndpoint'] })
-    importFromEndpoint!: NamedNode
+    @property({ path: cc['CubeProject/sourceEndpoint'] })
+    sourceEndpoint!: NamedNode
   }
 
   return Impl
@@ -94,7 +94,7 @@ ProjectMixin.appliesTo = cc.CubeProject
 type CsvProjectMandatoryFields = 'creator' | 'label' | 'maintainer' | 'cubeIdentifier' | 'sourceKind'
 export const create = initializer<CsvProject, CsvProjectMandatoryFields>(ProjectMixin)
 
-type ImportProjectMandatoryFields = 'creator' | 'label' | 'maintainer' | 'importCube' | 'importFromEndpoint' | 'sourceKind'
+type ImportProjectMandatoryFields = 'creator' | 'label' | 'maintainer' | 'sourceCube' | 'sourceEndpoint' | 'sourceKind'
 export const createImportProject = initializer<ImportProject, ImportProjectMandatoryFields>(ProjectMixin)
 
 export const fromPointer = <D extends DatasetCore>(pointer: GraphPointer<ResourceIdentifier, D>, initializer: Initializer<Project> = {}): Project & RdfResourceCore<D> => {

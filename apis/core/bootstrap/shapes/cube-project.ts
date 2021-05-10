@@ -76,7 +76,7 @@ const projectProperties = turtle`
       ${sh.property} [
         ${sh.name} "Cube" ;
         ${sh.description} "Cube identifier (URI) to import" ;
-        ${sh.path} ${cc('CubeProject/importCube')} ;
+        ${sh.path} ${cc('CubeProject/sourceCube')} ;
         ${sh.nodeKind} ${sh.IRI} ;
         ${dash.editor} ${dash.URIEditor} ;
         ${sh.minCount} 1 ;
@@ -86,7 +86,7 @@ const projectProperties = turtle`
       ${sh.property} [
         ${sh.name} "SPARQL Endpoint" ;
         ${sh.description} "A public endpoint from which to load the cube" ;
-        ${sh.path} ${cc('CubeProject/importFromEndpoint')} ;
+        ${sh.path} ${cc('CubeProject/sourceEndpoint')} ;
         ${sh.nodeKind} ${sh.IRI} ;
         ${dash.editor} ${dash.URIEditor} ;
         ${sh.minCount} 1 ;
@@ -96,7 +96,7 @@ const projectProperties = turtle`
       ${sh.property} [
         ${sh.name} "Graph name" ;
         ${sh.description} "Graph containing the cube. If missing, the default graph will be queried" ;
-        ${sh.path} ${cc('CubeProject/importFromGraph')} ;
+        ${sh.path} ${cc('CubeProject/sourceGraph')} ;
         ${sh.nodeKind} ${sh.IRI} ;
         ${dash.editor} ${dash.URIEditor} ;
         ${sh.maxCount} 1 ;

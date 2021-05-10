@@ -57,7 +57,7 @@ export async function update({ resource, store }: JobUpdateParams): Promise<Grap
           ? organization.createIdentifier({
             cubeIdentifier: project.cubeIdentifier,
           })
-          : project.importCube
+          : project.sourceCube
 
         job.query = lindasWebQueryLink(cubeId, job.revision, job.publishGraph)
       }
