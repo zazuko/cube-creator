@@ -4,7 +4,7 @@ import { Constructor, namespace, property, RdfResource, ResourceIdentifier } fro
 import type { GraphPointer } from 'clownface'
 import RdfResourceImpl, { Initializer, RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
-import { cc } from '@cube-creator/core/namespace'
+import { cc, shape } from '@cube-creator/core/namespace'
 import { DatasetCore, NamedNode } from 'rdf-js'
 import { dcterms, schema } from '@tpluscode/rdf-ns-builders'
 import { Organization, Person, PersonMixin } from '@rdfine/schema'
@@ -43,7 +43,7 @@ export interface ProjectsCollection extends Collection<CsvProject | ImportProjec
 }
 
 export const isCsvProject = (project: CsvProject | ImportProject): project is CsvProject => {
-  return project.pointer.out(dcterms.identifier).terms.length > 0
+  return shape('cube-project/create#CSV').equals(project.pointer.out(cc.projectSourceKind).term)
 }
 
 export function ProjectMixin<Base extends Constructor>(base: Base): Mixin {
