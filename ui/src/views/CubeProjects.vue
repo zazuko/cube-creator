@@ -34,7 +34,7 @@
             </div>
             <div v-if="project.maintainer" class="is-flex is-flex-direction-column is-align-items-flex-end">
               <p class="tag">
-                {{ project.maintainer.label }}
+                {{ project.maintainer.displayLabel }}
               </p>
               <p class="is-size-7 pr-2" v-if="project.creator && project.creator.name">
                 {{ project.creator.name }}

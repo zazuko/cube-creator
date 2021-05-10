@@ -3,6 +3,8 @@ import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import { commonActions } from '@/api/common'
 import { NamedNode } from 'rdf-js'
 import { RuntimeOperation } from 'alcaeus'
+import { displayLanguage } from '@/store/serializers'
+import { rdfs } from '@tpluscode/rdf-ns-builders'
 
 export interface Actions {
   [key: string]: RuntimeOperation | null
@@ -20,6 +22,7 @@ declare module '@tpluscode/rdfine' {
   export interface RdfResource extends Partial<AdditionalActions> {
     clientPath: string
     actions: Actions
+    displayLabel: string | undefined
   }
 }
 
@@ -32,6 +35,10 @@ export function apiResourceMixin (rootUrl: string, separator: string): Mixin {
 
       get actions (): Actions {
         return commonActions(this, this._additionalActions)
+      }
+
+      get displayLabel () : string | undefined {
+        return this.pointer.out(rdfs.label, { language: displayLanguage }).value
       }
     }
 

@@ -1,4 +1,3 @@
-import { Person } from '@rdfine/schema'
 import { Actions } from '@/api/mixins/ApiResource'
 import { cc, cube, md } from '@cube-creator/core/namespace'
 import {
@@ -22,20 +21,13 @@ import { RdfResource } from '@tpluscode/rdfine/RdfResource'
 import { Collection } from 'alcaeus'
 import { SharedDimension, SharedDimensionTerm } from './types'
 
-const displayLanguage = ['en', 'de', 'fr', '']
+export const displayLanguage = ['en', 'de', 'fr', '']
 
 export function serializeProjectsCollection (collection: ProjectsCollection): ProjectsCollection {
   return Object.freeze({
     ...serializeResource(collection),
     member: collection.member,
   }) as ProjectsCollection
-}
-
-export function serializePerson (person: Person): Person {
-  return Object.freeze({
-    ...serializeResource(person),
-    name: person.name,
-  }) as Person
 }
 
 export function serializeSourcesCollection (collection: SourcesCollection): SourcesCollection {
