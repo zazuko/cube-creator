@@ -52,6 +52,7 @@ describe('domain/cube-projects/create', () => {
       .addOut(rdfs.label, 'Foo bar project')
       .addOut(dcterms.identifier, 'ubd/28')
       .addOut(schema.maintainer, organization.id)
+      .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
 
     // when
     const project = await createProject({ resource, store, projectsCollection, user, userName })
@@ -61,22 +62,6 @@ describe('domain/cube-projects/create', () => {
     expect(project.id.value).to.match(/\/cube-project\/foo-bar-project-(.+)$/)
     expect(project.creator.id).to.deep.eq(user)
     expect(project.creator.name).to.eq(userName)
-  })
-
-  it('does not create a CSV Mapping resource for existing cube source', async () => {
-    // given
-    const resource = await clownface({ dataset: $rdf.dataset() })
-      .namedNode('')
-      .addOut(rdfs.label, 'Foo bar project')
-      .addOut(cc.projectSourceKind, 'Existing Cube')
-      .addOut(dcterms.identifier, 'ubd/28')
-      .addOut(schema.maintainer, organization.id)
-
-    // when
-    const project = await createProject({ resource, store, projectsCollection, user, userName })
-
-    // then
-    expect(project.csvMapping).to.be.undefined
   })
 
   describe('initializes a void:Dataset resource', () => {
@@ -89,6 +74,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(dcterms.identifier, 'ubd/28')
         .addOut(schema.maintainer, organization.id)
+        .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
 
       // when
       project = await createProject({ resource, store, projectsCollection, user, userName })
@@ -147,6 +133,7 @@ describe('domain/cube-projects/create', () => {
       .addOut(rdfs.label, 'Foo bar project')
       .addOut(dcterms.identifier, 'ubd/28')
       .addOut(schema.maintainer, organization.id)
+      .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
 
     // when
     const project = await createProject({ resource, store, projectsCollection, user, userName })
@@ -171,6 +158,7 @@ describe('domain/cube-projects/create', () => {
       .addOut(rdfs.label, 'Foo bar project')
       .addOut(dcterms.identifier, 'ubd/28')
       .addOut(schema.maintainer, organization.id)
+      .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
 
     // when
     const project = await createProject({ resource, store, projectsCollection, user, userName })
@@ -220,6 +208,7 @@ describe('domain/cube-projects/create', () => {
       .addOut(rdfs.label, 'Foo bar project')
       .addOut(dcterms.identifier, 'ubd/28')
       .addOut(schema.maintainer, organization.id)
+      .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
 
     // when
     const promise = createProject({ resource, store, projectsCollection, user, userName })
@@ -227,6 +216,22 @@ describe('domain/cube-projects/create', () => {
     // then
     await expect(promise).eventually.rejectedWith(DomainError)
     expect(projectExists).to.have.been.calledWith('ubd/28', sinon.match(organization.id))
+  })
+
+  it('keeps the project source kind', async () => {
+    // given
+    const resource = clownface({ dataset: $rdf.dataset() })
+      .namedNode('')
+      .addOut(rdfs.label, 'Foo bar project')
+      .addOut(schema.maintainer, organization.id)
+      .addOut(dcterms.identifier, 'ubd/28')
+      .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
+
+    // when
+    const project = await createProject({ resource, store, projectsCollection, user, userName })
+
+    // then
+    expect(project.sourceKind).to.deep.eq(shape('cube-project/create#CSV'))
   })
 
   describe('CSV project', () => {
@@ -254,6 +259,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(schema.maintainer, organization.id)
         .addOut(dcterms.identifier, 'ubd/28')
         .addOut(cc.publishGraph, $rdf.namedNode('http://example.com/published-cube'))
+        .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
 
       // when
       const project = await createProject({ resource, store, projectsCollection, user, userName })
@@ -437,6 +443,106 @@ describe('domain/cube-projects/create', () => {
             },
           }],
         },
+      })
+    })
+  })
+
+  describe('Existing cube', () => {
+    it('does not create a CSV Mapping resource', async () => {
+      // given
+      const resource = await clownface({ dataset: $rdf.dataset() })
+        .namedNode('')
+        .addOut(rdfs.label, 'Foo bar project')
+        .addOut(cc.projectSourceKind, shape('cube-project/create#ExistingCube'))
+        .addOut(cc['CubeProject/sourceCube'], $rdf.namedNode('http://example.cube/'))
+        .addOut(cc['CubeProject/sourceEndpoint'], $rdf.namedNode('http://example.endpoint/'))
+        .addOut(schema.maintainer, organization.id)
+
+      // when
+      const project = await createProject({ resource, store, projectsCollection, user, userName })
+
+      // then
+      expect(project.csvMapping).to.be.undefined
+    })
+
+    it('throws when cube URI is missing', async () => {
+      // given
+      const resource = clownface({ dataset: $rdf.dataset() })
+        .namedNode('')
+        .addOut(rdfs.label, 'Import project')
+        .addOut(schema.maintainer, organization.id)
+        .addOut(cc['CubeProject/sourceEndpoint'], $rdf.namedNode('http://example.endpoint/'))
+        .addOut(cc.projectSourceKind, shape('cube-project/create#ExistingCube'))
+
+      // when
+      const promise = createProject({ resource, store, projectsCollection, user, userName })
+
+      // then
+      await expect(promise).to.be.eventually.rejected
+    })
+
+    it('throws when cube URI is string', async () => {
+      // given
+      const resource = clownface({ dataset: $rdf.dataset() })
+        .namedNode('')
+        .addOut(rdfs.label, 'Import project')
+        .addOut(schema.maintainer, organization.id)
+        .addOut(cc['CubeProject/sourceCube'], $rdf.literal('http://example.cube/'))
+        .addOut(cc['CubeProject/sourceEndpoint'], $rdf.namedNode('http://example.endpoint/'))
+        .addOut(cc.projectSourceKind, shape('cube-project/create#ExistingCube'))
+
+      // when
+      const promise = createProject({ resource, store, projectsCollection, user, userName })
+
+      // then
+      await expect(promise).to.be.eventually.rejected
+    })
+
+    it('throws when source endpoint is missing', async () => {
+      // given
+      const resource = clownface({ dataset: $rdf.dataset() })
+        .namedNode('')
+        .addOut(rdfs.label, 'Import project')
+        .addOut(schema.maintainer, organization.id)
+        .addOut(cc['CubeProject/sourceCube'], $rdf.namedNode('http://example.cube/'))
+        .addOut(cc.projectSourceKind, shape('cube-project/create#ExistingCube'))
+
+      // when
+      const promise = createProject({ resource, store, projectsCollection, user, userName })
+
+      // then
+      await expect(promise).to.be.eventually.rejected
+    })
+
+    it('initializes project links to child resources dataset and cube graph', async () => {
+      // given
+      const resource = clownface({ dataset: $rdf.dataset() })
+        .namedNode('')
+        .addOut(rdfs.label, 'Import project')
+        .addOut(schema.maintainer, organization.id)
+        .addOut(cc['CubeProject/sourceCube'], $rdf.namedNode('http://example.cube/'))
+        .addOut(cc['CubeProject/sourceEndpoint'], $rdf.namedNode('http://example.endpoint/'))
+        .addOut(cc.publishGraph, $rdf.namedNode('http://example.com/published-cube'))
+        .addOut(cc.projectSourceKind, shape('cube-project/create#ExistingCube'))
+
+      // when
+      const project = await createProject({ resource, store, projectsCollection, user, userName })
+
+      // then
+      expect(project).to.matchShape({
+        property: [{
+          path: cc.dataset,
+          nodeKind: sh.IRI,
+          pattern: '/dataset$',
+          minCount: 1,
+          maxCount: 1,
+        }, {
+          path: cc.cubeGraph,
+          nodeKind: sh.IRI,
+          pattern: '/cube-data$',
+          minCount: 1,
+          maxCount: 1,
+        }],
       })
     })
   })

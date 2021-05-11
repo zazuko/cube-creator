@@ -5,7 +5,7 @@ import {
   CsvColumn,
   CsvSource,
   LiteralColumnMapping,
-  Project,
+  CsvProject,
   ReferenceColumnMapping,
   Table,
 } from '@cube-creator/model'
@@ -154,7 +154,7 @@ export async function buildCsvw({ table, resources }: { table: Table; resources:
   const source = await resources.getResource(table.csvSource)
   const { projectId, organizationId } = await findOrganization({ table })
   const organization = await resources.getResource<Organization>(organizationId)
-  const { cubeIdentifier } = await resources.getResource<Project>(projectId)
+  const { cubeIdentifier } = await resources.getResource<CsvProject>(projectId)
 
   let template: string
   const column: Initializer<Csvw.Column>[] = []

@@ -65,7 +65,10 @@ type CubeCreatorProperty =
   'sharedDimension' |
   'sharedDimensions' |
   'applyMappings' |
-  'dimensionType'
+  'dimensionType' |
+  'CubeProject/sourceCube' |
+  'CubeProject/sourceEndpoint' |
+  'CubeProject/sourceGraph'
 
 type OtherTerms =
   'dash'

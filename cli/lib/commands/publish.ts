@@ -10,9 +10,10 @@ import { schema, xsd } from '@tpluscode/rdf-ns-builders'
 import type { Variables } from 'barnard59-core/lib/Pipeline'
 import { updateJobStatus } from '../job'
 import { Hydra } from 'alcaeus/node'
-import { Project, PublishJob } from '@cube-creator/model'
+import { CsvProject, ImportProject, PublishJob } from '@cube-creator/model'
 import '../variables'
 import '../hydra-cache'
+import { isCsvProject } from '@cube-creator/model/Project'
 
 interface RunOptions {
   debug: boolean
@@ -127,7 +128,7 @@ async function getJob(jobUri: string): Promise<{
     throw new Error(`Did not find representation of job ${jobUri}. Server responded ${jobResource.response?.xhr.status}`)
   }
 
-  const projectResource = await Hydra.loadResource<Project>(job.project)
+  const projectResource = await Hydra.loadResource<CsvProject | ImportProject>(job.project)
   const project = projectResource.representation?.root
   if (!project) {
     throw new Error(`Did not find representation of project ${job.project}. Server responded ${projectResource.response?.xhr.status}`)
@@ -141,9 +142,11 @@ async function getJob(jobUri: string): Promise<{
     throw new Error(`Can not determine target graph for job ${jobUri}`)
   }
 
+  const cubeIdentifier = isCsvProject(project) ? project.cubeIdentifier : project.sourceCube.value
+
   return {
     job,
     namespace: datasetResource.representation?.root?.hasPart[0].id.value,
-    cubeIdentifier: project.cubeIdentifier,
+    cubeIdentifier,
   }
 }

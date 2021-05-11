@@ -3,7 +3,6 @@ import { ActionTree, MutationTree, GetterTree } from 'vuex'
 import { api } from '@/api'
 import { RootState } from '../types'
 import {
-  Project,
   CsvMapping,
   JobCollection,
   SourcesCollection,
@@ -13,6 +12,8 @@ import {
   DimensionMetadataCollection,
   CsvSource,
   Job,
+  CsvProject,
+  ImportProject,
 } from '@cube-creator/model'
 import {
   serializeColumnMapping,
@@ -34,7 +35,7 @@ export interface CreateIdentifier {
 
 export interface ProjectState {
   createIdentifier: null | CreateIdentifier
-  project: null | Project
+  project: null | CsvProject | ImportProject
   csvMapping: null | CsvMapping
   sourcesCollection: null | SourcesCollection
   sources: Record<string, CsvSource>
@@ -279,9 +280,10 @@ const actions: ActionTree<ProjectState, RootState> = {
 }
 
 const mutations: MutationTree<ProjectState> = {
-  storeProject (state, project: Project) {
+  storeProject (state, project: CsvProject | ImportProject) {
     state.project = Object.freeze(project)
-    if (project) {
+
+    if (project && 'cubeIdentifier' in project) {
       const { cubeIdentifier } = project
       state.createIdentifier = (termName: Term) => {
         return (project.maintainer as Organization).createIdentifier({
@@ -290,7 +292,9 @@ const mutations: MutationTree<ProjectState> = {
         }).value
       }
     } else {
-      state.createIdentifier = null
+      state.createIdentifier = () => {
+        throw new Error('Project does not have a cube identifier')
+      }
     }
   },
 

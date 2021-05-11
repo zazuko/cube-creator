@@ -1,4 +1,4 @@
-import { ColumnMapping, DimensionMetadataCollection, Project, Table } from '@cube-creator/model'
+import { ColumnMapping, DimensionMetadataCollection, CsvProject, Table } from '@cube-creator/model'
 import type { Organization } from '@rdfine/schema'
 import { schema, xsd } from '@tpluscode/rdf-ns-builders'
 import $rdf from 'rdf-ext'
@@ -44,7 +44,7 @@ export async function updateTable({
 
   const { projectId, organizationId } = await findOrganization({ table })
   const organization = await store.getResource<Organization>(organizationId)
-  const { cubeIdentifier } = await store.getResource<Project>(projectId)
+  const { cubeIdentifier } = await store.getResource<CsvProject>(projectId)
 
   const isObservationTable = trueTerm.equals(resource.out(cc.isObservationTable).term)
   if (table.isObservationTable !== isObservationTable) {

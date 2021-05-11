@@ -1,5 +1,5 @@
 <template>
-  <label v-if="property && !isHidden" class="form-property">
+  <label class="form-property">
     <span class="label">
       {{ property.name }}
     </span>
@@ -42,10 +42,6 @@ export default class extends Vue {
   linkAttrs = {
     target: '_blank',
     rel: 'noopener noreferrer nofollow',
-  }
-
-  get isHidden (): boolean {
-    return this.property.shape.hidden === true
   }
 }
 </script>

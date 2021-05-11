@@ -10,8 +10,8 @@ import { Metadata } from './metadata'
 import { createCustomElement } from './custom-element'
 import { dash } from '@tpluscode/rdf-ns-builders'
 import * as decorators from '@/forms/decorators'
-import { decorate } from './templates'
 import * as dictionaryEditor from './templates/dictionaryEditor'
+import * as dynamicXone from './templates/dynamicXone'
 
 export const focusNode: FocusNodeTemplate = (renderer, { focusNode }) => html`
   <div class="fieldset" part="focus-node">
@@ -46,8 +46,8 @@ object.loadDependencies = () => [
 ]
 
 renderer.setTemplates({
-  focusNode: decorate(focusNode, dictionaryEditor.focusNode),
-  property: decorate(property, dictionaryEditor.property),
+  focusNode: dynamicXone.focusNode(dictionaryEditor.focusNode(focusNode)),
+  property: dictionaryEditor.property(property),
   object,
 })
 components.pushComponents(Editors)
