@@ -15,7 +15,6 @@ import {
   CsvProject,
   ImportProject,
 } from '@cube-creator/model'
-import { isCsvProject } from '@cube-creator/model/Project'
 import {
   serializeColumnMapping,
   serializeCubeMetadata,
@@ -283,7 +282,8 @@ const actions: ActionTree<ProjectState, RootState> = {
 const mutations: MutationTree<ProjectState> = {
   storeProject (state, project: CsvProject | ImportProject) {
     state.project = Object.freeze(project)
-    if (project && isCsvProject(project)) {
+
+    if (project && 'cubeIdentifier' in project) {
       const { cubeIdentifier } = project
       state.createIdentifier = (termName: Term) => {
         return (project.maintainer as Organization).createIdentifier({
@@ -292,7 +292,9 @@ const mutations: MutationTree<ProjectState> = {
         }).value
       }
     } else {
-      state.createIdentifier = null
+      state.createIdentifier = () => {
+        throw new Error('Project does not have a cube identifier')
+      }
     }
   },
 
