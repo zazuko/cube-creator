@@ -1,11 +1,4 @@
-import fs from 'fs'
-import path from 'path'
-import $rdf from 'rdf-ext'
-import { parsers } from '@rdfjs/formats-common'
-import { DatasetCore } from 'rdf-js'
 import StreamClient from 'sparql-http-client/StreamClient'
-import { _void } from '@tpluscode/rdf-ns-builders'
-import { sparql } from '@tpluscode/rdf-string'
 import ParsingClient from 'sparql-http-client/ParsingClient'
 
 const endpoints = (db: 'cube-creator' | 'shared-dimensions') => ({
@@ -22,30 +15,4 @@ export const ccClients = {
 export const mdClients = {
   parsingClient: new ParsingClient(endpoints('shared-dimensions')),
   streamClient: new StreamClient(endpoints('shared-dimensions')),
-}
-
-async function removeTestGraphs(client: ParsingClient, dataset: DatasetCore) {
-  const graphs = [...dataset.match(null, _void.inDataset)].map(({ subject }) => subject)
-
-  const dropGraphs = sparql`${graphs.map(graph => sparql`DROP SILENT GRAPH ${graph};`)}`.toString()
-  return client.query.update(dropGraphs)
-}
-
-const insertTestData = async (pathName: string, { parsingClient, streamClient }: { parsingClient: ParsingClient; streamClient: StreamClient }) => {
-  const file = fs.createReadStream(path.resolve(process.cwd(), pathName))
-  const stream = parsers.import('application/trig', file)
-
-  if (stream) {
-    const ds = await $rdf.dataset().import(stream)
-    await removeTestGraphs(parsingClient, ds)
-    await streamClient.store.post(ds.toStream())
-  }
-}
-
-export const insertTestProject = () => {
-  return insertTestData('fuseki/sample-ubd.trig', ccClients)
-}
-
-export const insertTestDimensions = () => {
-  return insertTestData('fuseki/shared-dimensions.trig', mdClients)
 }

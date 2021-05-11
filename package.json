@@ -7,7 +7,7 @@
     "test:queries": "c8 -o coverage/queries mocha --recursive apis/**/*.test.ts --grep @SPARQL",
     "test:cli": "c8 -o coverage/cli mocha --recursive cli/**/*.test.ts",
     "test:e2e": "docker-compose run --rm e2e-tests --",
-    "seed-data": "dotenv -e .local.env -- bash -c \"ts-node packages/testing/index.ts -i ubd dimensions\""
+    "seed-data": "dotenv -e .local.env -- bash -c \"ts-node packages/testing/index.ts -i ubd dimensions px-cube\""
   },
   "workspaces": [
     "cli",
