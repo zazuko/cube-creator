@@ -22,11 +22,13 @@ type CubeCreatorClass =
   'Job' |
   'JobCollection' |
   'TransformAction' |
+  'ImportAction' |
   'PublishAction' |
   'DimensionMetadataCollection' |
   'SharedDimensionsCollection' |
   'Observations' |
   'TransformJob' |
+  'ImportJob' |
   'PublishJob' |
   'ReplaceCSVAction'
 

@@ -2,7 +2,8 @@ import { cc } from '@cube-creator/core/namespace'
 import { GraphPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'
 import * as Job from '@cube-creator/model/Job'
-import { CsvMapping, Project, Dataset } from '@cube-creator/model'
+import * as ImportJob from '@cube-creator/model/ImportJob'
+import { CsvMapping, Project, Dataset, ImportProject } from '@cube-creator/model'
 import { ResourceStore } from '../../ResourceStore'
 import * as id from '../identifiers'
 import { DomainError } from '@cube-creator/api-errors'
@@ -14,6 +15,11 @@ interface StartTransformationCommand {
 }
 
 interface StartPublicationCommand {
+  resource: NamedNode
+  store: ResourceStore
+}
+
+interface StartImportCommand {
   resource: NamedNode
   store: ResourceStore
 }
@@ -66,6 +72,21 @@ export async function createPublishJob({
     publishGraph: organization.publishGraph,
     status: metadata?.pointer.out(schema.creativeWorkStatus).term,
     publishedTo: metadata?.pointer.out(schema.workExample).term,
+  })
+
+  return jobPointer
+}
+
+export async function createImportJob({ store, resource }: StartImportCommand): Promise<GraphPointer<NamedNode>> {
+  const jobCollection = await store.get(resource)
+  const project = await store.getResource<ImportProject>(jobCollection.out(cc.project).term)
+  const jobPointer = await store.createMember(jobCollection.term, id.job(jobCollection))
+
+  ImportJob.create(jobPointer, {
+    name: 'Import cube',
+    sourceCube: project.sourceCube,
+    sourceGraph: project.sourceGraph,
+    sourceEndpoint: project.sourceEndpoint,
   })
 
   return jobPointer

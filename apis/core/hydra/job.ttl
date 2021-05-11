@@ -39,6 +39,9 @@ cc:TransformJob
 cc:PublishJob
   a hydra:Class .
 
+cc:ImportJob
+  a hydra:Class .
+
 cc:JobCollection
   a
     hydra:Class ;
@@ -62,6 +65,27 @@ cc:JobCollection
             code:EcmaScript ;
           code:link
             <file:handlers/jobs#transform> ;
+        ] ;
+    ],
+    [
+      a
+        hydra:Operation,
+        cc:ImportAction ;
+      hydra:title
+        "Start cube import" ;
+      hydra:description
+        "Imports source cube" ;
+      hydra:method
+        "POST" ;
+      hydra:expects
+        cc:ImportJob ,
+        <shape/job/trigger> ;
+      code:implementedBy
+        [
+          a
+            code:EcmaScript ;
+          code:link
+            <file:handlers/jobs#startImport> ;
         ] ;
     ],
     [
