@@ -5,12 +5,12 @@ import $rdf from 'rdf-ext'
 import clownface from 'clownface'
 import { ASK, DESCRIBE, SELECT } from '@tpluscode/sparql-builder'
 import namespace from '@rdfjs/namespace'
-import debug from 'debug'
 import { Hydra } from 'alcaeus/node'
 import { csvw, rdf, rdfs, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
-import transform from '../../../lib/commands/transform'
+import runner from '../../../lib/commands/transform'
 import { setupEnv } from '../../support/env'
-import { ccClients, insertTestProject } from '@cube-creator/testing/lib'
+import { ccClients } from '@cube-creator/testing/lib'
+import { insertTestProject } from '@cube-creator/testing/lib/seedData'
 import { cc, cube } from '@cube-creator/core/namespace'
 
 describe('lib/commands/transform', function () {
@@ -30,9 +30,6 @@ describe('lib/commands/transform', function () {
     const cubeNs = namespace(cubeBase)
 
     before(async () => {
-      // given
-      const runner = transform($rdf.namedNode('urn:pipeline:cube-creator#Main'), debug('test'))
-
       // when
       await runner({
         to: 'graph-store',
@@ -256,7 +253,6 @@ describe('lib/commands/transform', function () {
   it('updates job when pipeline has errors', async function () {
     // given
     const jobUri = `${env.API_CORE_BASE}cube-project/ubd/csv-mapping/jobs/broken-job`
-    const runner = transform($rdf.namedNode('urn:pipeline:cube-creator#Main'), debug('test'))
 
     // when
     const jobRun = runner({

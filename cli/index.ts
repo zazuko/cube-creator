@@ -1,22 +1,10 @@
 import program from 'commander'
-import debug from 'debug'
 import * as Sentry from '@sentry/node'
 import '@sentry/tracing'
-import namespace from '@rdfjs/namespace'
 import { transform, publish } from './lib/commands'
 import { capture } from './lib/telemetry'
 import './lib/variables'
-
-const log = debug('cube-creator')
-log.enabled = false
-
-const ns = {
-  pipeline: namespace('urn:pipeline:cube-creator'),
-}
-
-const pipelines = {
-  Entrypoint: ns.pipeline('#Main'),
-}
+import { log } from './lib/log'
 
 function parseVariables(str: string, all: Map<string, string>) {
   return str
@@ -49,7 +37,7 @@ async function main() {
     .option('--debug', 'Print diagnostic information to standard output')
     .option('--enable-buffer-monitor', 'enable histogram of buffer usage')
     .option('--auth-param <name=value>', 'Additional variables to pass to the token endpoint', parseVariables, new Map())
-    .action(capture('Transform', ({ job }) => ({ job }), transform(pipelines.Entrypoint, log)))
+    .action(capture('Transform', ({ job }) => ({ job }), transform))
 
   program
     .command('publish')
@@ -60,7 +48,7 @@ async function main() {
     .option('--debug', 'Print diagnostic information to standard output')
     .option('--enable-buffer-monitor', 'enable histogram of buffer usage')
     .option('--auth-param <name=value>', 'Additional variables to pass to the token endpoint', parseVariables, new Map())
-    .action(capture('Publish', ({ job }) => ({ job }), publish(pipelines.Entrypoint, log)))
+    .action(capture('Publish', ({ job }) => ({ job }), publish))
 
   return program.parseAsync(process.argv)
 }
