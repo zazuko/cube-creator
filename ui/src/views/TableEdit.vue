@@ -54,7 +54,7 @@ export default class TableCreateView extends Vue {
   }
 
   get table (): Table | null {
-    const tableId = this.$router.currentRoute.params.tableId
+    const tableId = this.$route.params.tableId
     return this.findTable(tableId)
   }
 

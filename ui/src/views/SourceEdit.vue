@@ -41,7 +41,7 @@ export default class CubeProjectEditView extends Vue {
   shape: Shape | null = null;
 
   get source (): CsvSource {
-    const sourceId = this.$router.currentRoute.params.sourceId
+    const sourceId = this.$route.params.sourceId
     return this.findSource(sourceId)
   }
 

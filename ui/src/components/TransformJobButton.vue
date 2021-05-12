@@ -17,13 +17,14 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
 import { Job, JobCollection } from '@cube-creator/model'
+import { dataset } from '@rdf-esm/dataset'
+import { rdf, sh } from '@tpluscode/rdf-ns-builders'
+import { RdfResource } from 'alcaeus'
+import clownface from 'clownface'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 import JobItem from './JobItem.vue'
 import JobIcon from './JobIcon.vue'
-import { rdf, sh } from '@tpluscode/rdf-ns-builders'
-import clownface from 'clownface'
-import { dataset } from '@rdf-esm/dataset'
 
 @Component({
   components: { JobItem, JobIcon },
@@ -44,7 +45,7 @@ export default class TransformJobButton extends Vue {
     const operation = this.jobCollection.actions.createTransform
     if (!operation) throw new Error('Transform operation not found')
 
-    const resourceType = operation.expects.find((expect: any) => !expect.types.has(sh.Shape))
+    const resourceType = operation.expects.find((expect: RdfResource) => !expect.types.has(sh.Shape))
     if (!resourceType) throw new Error('Operation expected type not found')
 
     const resource = clownface({ dataset: dataset() })

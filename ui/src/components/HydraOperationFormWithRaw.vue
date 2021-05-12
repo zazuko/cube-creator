@@ -73,14 +73,14 @@ export default class extends Vue {
     if (!this.internalResource) return
 
     if (this.isRawMode) {
-      const rdfEditor: HydraRawRdfForm = this.$refs.rdfEditor as any
+      const rdfEditor = this.$refs.rdfEditor as HydraRawRdfForm
       await rdfEditor.waitParsing()
       this.internalResource = Object.freeze(clownface({
         dataset: $rdf.dataset(rdfEditor.editorQuads || []),
         term: this.internalResource.term,
       }))
     } else {
-      const form: HydraOperationForm = this.$refs.form as any
+      const form = this.$refs.form as HydraOperationForm
       this.internalResource = Object.freeze(form.clone)
     }
   }

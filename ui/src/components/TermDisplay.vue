@@ -15,7 +15,7 @@ export default class extends Vue {
   @Prop({ default: false }) showLanguage!: boolean
   @Prop() base?: string
 
-  get displayShort () {
+  get displayShort (): string {
     return this.__commonTermPrefixes || this.__rawLabel
   }
 
