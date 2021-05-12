@@ -173,6 +173,7 @@ export function serializeJobCollection (collection: JobCollection): JobCollectio
       ...serializeActions(collection.actions),
       createTransform: collection.actions.createTransform,
       createPublish: collection.actions.createPublish,
+      createImport: collection.actions.createImport,
     },
     member: members.map(Object.freeze),
   }) as unknown as JobCollection

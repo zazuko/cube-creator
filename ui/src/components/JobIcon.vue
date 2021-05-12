@@ -19,6 +19,8 @@ export default class extends Vue {
       return 'upload'
     } else if (this.job.types.has(cc.TransformJob)) {
       return 'random'
+    } else if (this.job.types.has(cc.ImportJob)) {
+      return 'file-import'
     } else {
       return 'circle'
     }

@@ -1,7 +1,14 @@
 <template>
   <span class="field" :class="{ 'has-addons': transformJobs.length > 0 }">
-    <b-button v-if="jobCollection.actions.createTransform" class="control" icon-left="play" size="is-small" @click="transform" :loading="isTransforming">
-      Transform
+    <b-button
+      v-if="operation"
+      class="control"
+      icon-left="play"
+      size="is-small"
+      @click="startJob"
+      :loading="isStartingJob"
+    >
+      {{ operationLabel }}
     </b-button>
     <b-dropdown v-if="transformJobs.length > 0" position="is-bottom-left" class="control">
       <b-tooltip label="Previous jobs" slot="trigger" position="is-left">
@@ -20,7 +27,7 @@
 import { Job, JobCollection } from '@cube-creator/model'
 import { dataset } from '@rdf-esm/dataset'
 import { rdf, sh } from '@tpluscode/rdf-ns-builders'
-import { RdfResource } from 'alcaeus'
+import { RdfResource, RuntimeOperation } from 'alcaeus'
 import clownface from 'clownface'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import JobItem from './JobItem.vue'
@@ -32,18 +39,32 @@ import JobIcon from './JobIcon.vue'
 export default class TransformJobButton extends Vue {
   @Prop({ required: true }) jobCollection!: JobCollection
   @Prop({ required: true }) transformJobs!: Job[]
+  @Prop({ required: true }) hasCsvMapping!: boolean
 
-  isTransforming = false
+  isStartingJob = false
 
-  async transform (): Promise<void> {
+  get operation (): RuntimeOperation | null {
+    return this.hasCsvMapping
+      ? this.jobCollection.actions.createTransform
+      : this.jobCollection.actions.createImport
+  }
+
+  get operationLabel (): string {
+    return this.hasCsvMapping
+      ? 'Transform'
+      : 'Import'
+  }
+
+  async startJob (): Promise<void> {
+    const operation = this.operation
+
+    if (!operation) return
+
     // Artifically disable the button for a while
     // Not using the latest job status to avoid preventing starting new jobs
     // if a job stays blocked in "running" state
-    this.isTransforming = true
-    setTimeout(() => { this.isTransforming = false }, 3000)
-
-    const operation = this.jobCollection.actions.createTransform
-    if (!operation) throw new Error('Transform operation not found')
+    this.isStartingJob = true
+    setTimeout(() => { this.isStartingJob = false }, 3000)
 
     const resourceType = operation.expects.find((expect: RdfResource) => !expect.types.has(sh.Shape))
     if (!resourceType) throw new Error('Operation expected type not found')
@@ -56,7 +77,7 @@ export default class TransformJobButton extends Vue {
       await this.$store.dispatch('api/invokeSaveOperation', { operation, resource })
 
       this.$buefy.toast.open({
-        message: 'Transformation was started',
+        message: `${this.operationLabel} was started`,
         type: 'is-success',
       })
 
