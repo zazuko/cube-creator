@@ -5,6 +5,7 @@ import { GraphPointer } from 'clownface'
 import { dcterms, rdf } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import { NamedNode } from 'rdf-js'
+import TermMap from '@rdfjs/term-map'
 
 const pipelineURI = env.PIPELINE_URI
 
@@ -32,6 +33,9 @@ export const local = trigger(job => {
   if (job.has(rdf.type, cc.PublishJob).values.length > 0) {
     form.append('PUBLISH_JOB_URI', job.value)
   }
+  if (job.has(rdf.type, cc.ImportJob).values.length > 0) {
+    form.append('IMPORT_JOB_URI', job.value)
+  }
 
   return {
     method: 'POST',
@@ -52,6 +56,9 @@ export const gitlab = trigger(job => {
   if (job.has(rdf.type, cc.PublishJob).values.length > 0) {
     form.append('variables[PUBLISH_JOB]', job.value)
   }
+  if (job.has(rdf.type, cc.ImportJob).values.length > 0) {
+    form.append('variables[IMPORT_JOB]', job.value)
+  }
 
   return {
     method: 'POST',
@@ -59,8 +66,18 @@ export const gitlab = trigger(job => {
   }
 })
 
+const githubJobTypes = new TermMap([
+  [cc.TransformJob, 'transform_job'],
+  [cc.PublishJob, 'transform_job'],
+  [cc.ImportJob, 'import_job'],
+])
+
 export const github = trigger((job, params) => {
-  const jobParam = job.has(rdf.type, cc.TransformJob).values.length > 0 ? 'transform_job' : 'publish_job'
+  const jobParam = [...job.out(rdf.type).terms].reduce<string | undefined>((found, term) => found || githubJobTypes.get(term), undefined)
+  if (!jobParam) {
+    throw new Error('Unsupported job type')
+  }
+
   const body = {
     ref: 'master',
     inputs: {

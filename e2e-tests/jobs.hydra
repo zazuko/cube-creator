@@ -40,5 +40,19 @@ With Class cc:JobCollection {
         }
     }
 
-     
+    Expect Operation cc:ImportAction {
+        Invoke {
+            Content-Type "text/turtle"
+
+            ```
+            PREFIX cc: <https://cube-creator.zazuko.com/vocab#>
+
+            <> a cc:ImportJob .
+            ```
+        } => {
+            Expect Status 201
+            Expect Header Location [job]
+        }
+    }
+
 }

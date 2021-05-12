@@ -45,13 +45,18 @@ async function main() {
   app.post('/', asyncMiddleware(async (req, res) => {
     const transformJob = req.body.TRANSFORM_JOB_URI
     const publishJob = req.body.PUBLISH_JOB_URI
-    if (!transformJob && !publishJob) {
+    const importJob = req.body.IMPORT_JOB_URI
+    if (!transformJob && !publishJob && !importJob) {
       res.status(400)
       return res.send('No job defined')
     }
 
     if (transformJob) {
       doTransform({ to: 'graph-store', job: transformJob, debug: true }).catch((e) => log(e))
+    }
+
+    if (importJob) {
+      log('TODO: Import job pipeline')
     }
 
     if (publishJob) {
