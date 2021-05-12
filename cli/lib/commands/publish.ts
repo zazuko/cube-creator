@@ -18,7 +18,7 @@ export default runner.create<PublishRunOptions>({
   pipelineSources() {
     return ['publish']
   },
-  async setVariables(options, variable) {
+  async prepare(options, variable) {
     const { publishStore, job: jobUri } = options
     const { job, namespace, cubeIdentifier } = await getJob(jobUri)
 

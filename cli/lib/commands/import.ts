@@ -20,7 +20,7 @@ export default create({
   pipelineSources(): string[] {
     return ['import', 'to-graph-store', 'validate']
   },
-  async setVariables(options, variable) {
+  async prepare(options, variable) {
     const { job: jobUri } = options
     const { sourceCube, sourceGraph, sourceEndpoint, cubeGraph: { value: cubeGraph } } = await getJob(jobUri)
 

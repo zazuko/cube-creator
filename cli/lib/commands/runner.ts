@@ -40,12 +40,12 @@ interface Create<TOptions> {
   pipelineSources(options: TOptions): string[]
 
   /**
-   * Set any additional pipeline variables
+   * Set any additional pipeline variables here
    */
-  setVariables?(options: TOptions, variable: Variables): Promise<void> | void
+  prepare?(options: TOptions, variable: Variables): Promise<void> | void
 }
 
-export function create<TOptions extends RunOptions>({ pipelineSources, setVariables }: Create<TOptions>) {
+export function create<TOptions extends RunOptions>({ pipelineSources, prepare }: Create<TOptions>) {
   const basePath = path.resolve(__dirname, '../../')
 
   return async function (command: TOptions) {
@@ -76,7 +76,7 @@ export function create<TOptions extends RunOptions>({ pipelineSources, setVariab
     const timestamp = new Date()
     variable.set('timestamp', $rdf.literal(timestamp.toISOString(), xsd.dateTime))
 
-    await setVariables?.(command, variable)
+    await prepare?.(command, variable)
 
     const run = Runner.create({
       basePath: path.resolve(basePath, 'pipelines'),
