@@ -2,6 +2,7 @@ import { ImportJob } from '@cube-creator/model/ImportJob'
 import * as Models from '@cube-creator/model'
 import { Hydra } from 'alcaeus/node'
 import { create } from './runner'
+import { log } from '../log'
 
 Hydra.resources.factory.addMixin(...Object.values(Models))
 
@@ -21,11 +22,15 @@ export default create({
   },
   async setVariables(options, variable) {
     const { job: jobUri } = options
-    const job = await getJob(jobUri)
+    const { sourceCube, sourceGraph, sourceEndpoint, cubeGraph: { value: cubeGraph } } = await getJob(jobUri)
 
-    variable.set('sourceCube', job.sourceCube)
-    variable.set('sourceEndpoint', job.sourceEndpoint)
-    variable.set('sourceGraph', job.sourceGraph)
-    variable.set('graph', job.cubeGraph.value)
+    log('Importing cube %O', {
+      sourceCube, sourceGraph, sourceEndpoint, cubeGraph,
+    })
+
+    variable.set('sourceCube', sourceCube)
+    variable.set('sourceEndpoint', sourceEndpoint)
+    variable.set('sourceGraph', sourceGraph)
+    variable.set('graph', cubeGraph)
   },
 })
