@@ -4,7 +4,7 @@ import { Hydra } from 'alcaeus/node'
 import env from '@cube-creator/core/env'
 import { rdfs, schema } from '@tpluscode/rdf-ns-builders'
 import $rdf from 'rdf-ext'
-import { JobIterator } from '../../lib/job'
+import { TableIterator } from '../../lib/job'
 import { insertTestProject } from '@cube-creator/testing/lib/seedData'
 import { setupEnv } from '../support/env'
 import { Table } from '@rdfine/csvw'
@@ -29,10 +29,10 @@ describe('lib/job', function () {
     ])
   })
 
-  describe('JobIterator', () => {
+  describe('TableIterator', () => {
     it('streams csv table objects from job', async () => {
       // given
-      const iteratorStream = new JobIterator({ jobUri: `${env.API_CORE_BASE}cube-project/ubd/csv-mapping/jobs/test-job`, log, variables })
+      const iteratorStream = new TableIterator({ jobUri: `${env.API_CORE_BASE}cube-project/ubd/csv-mapping/jobs/test-job`, log, variables })
 
       // when
       const results: Table[] = []
@@ -50,7 +50,7 @@ describe('lib/job', function () {
 
     it('sets cube URI as pipeline variable "graph"', async () => {
       // given
-      const iteratorStream = new JobIterator({ jobUri: `${env.API_CORE_BASE}cube-project/ubd/csv-mapping/jobs/test-job`, log, variables })
+      const iteratorStream = new TableIterator({ jobUri: `${env.API_CORE_BASE}cube-project/ubd/csv-mapping/jobs/test-job`, log, variables })
 
       // when
       await new Promise((resolve, reject) => {
@@ -67,7 +67,7 @@ describe('lib/job', function () {
     it('updates execution URL and sets job status to active', async () => {
       // given
       const jobUri = `${env.API_CORE_BASE}cube-project/ubd/csv-mapping/jobs/test-job`
-      const iteratorStream = new JobIterator({ jobUri, log, variables })
+      const iteratorStream = new TableIterator({ jobUri, log, variables })
 
       // when
       await new Promise((resolve, reject) => {

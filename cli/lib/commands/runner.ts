@@ -92,10 +92,16 @@ export function create<TOptions extends RunOptions>({ pipelineSources, setVariab
       bufferDebug(run.pipeline)
     }
 
+    await updateJobStatus({
+      jobUri,
+      modified: new Date(),
+      executionUrl: variable.get('executionUrl'),
+      status: schema.ActiveActionStatus,
+    })
+
     return run.promise
       .then(() =>
         updateJobStatus({
-          log: run.pipeline.context.log,
           modified: timestamp,
           jobUri: run.pipeline.context.variables.get('jobUri'),
           executionUrl: run.pipeline.context.variables.get('executionUrl'),
@@ -103,7 +109,6 @@ export function create<TOptions extends RunOptions>({ pipelineSources, setVariab
         }))
       .catch(async (error) => {
         await updateJobStatus({
-          log: run.pipeline.context.log,
           modified: timestamp,
           jobUri: run.pipeline.context.variables.get('jobUri'),
           executionUrl: run.pipeline.context.variables.get('executionUrl'),

@@ -9,6 +9,7 @@ import type Logger from 'barnard59-core/lib/logger'
 import type { Context, Variables } from 'barnard59-core/lib/Pipeline'
 import $rdf from 'rdf-ext'
 import { ThingMixin } from '@rdfine/schema'
+import { log } from './log'
 
 Hydra.resources.factory.addMixin(...Object.values(Models))
 Hydra.resources.factory.addMixin(...Object.values(Csvw))
@@ -40,18 +41,17 @@ async function loadTransformJob(jobUri: string, log: Logger, variables: Params['
 interface JobStatusUpdate {
   jobUri: string
   executionUrl: string | undefined
-  log: Logger
   status: Schema.ActionStatusType
   modified: Date
   error?: Error
 }
 
-export async function updateJobStatus({ jobUri, executionUrl, log, status, error, modified }: JobStatusUpdate) {
+export async function updateJobStatus({ jobUri, executionUrl, status, error, modified }: JobStatusUpdate) {
   try {
     const { representation } = await Hydra.loadResource<Job>(jobUri)
     const job = representation?.root
     if (!job) {
-      log.error('Could not load job to update')
+      log('Could not load job to update')
       return
     }
 
@@ -60,7 +60,7 @@ export async function updateJobStatus({ jobUri, executionUrl, log, status, error
     })
 
     if (!operation) {
-      log.warn('Could not find schema:UpdateAction operation on Job')
+      log('Could not find schema:UpdateAction operation on Job')
       return
     }
 
@@ -77,12 +77,12 @@ export async function updateJobStatus({ jobUri, executionUrl, log, status, error
       } as any
     }
 
-    log.info(`Updating job status to ${status.value}`)
+    log(`Updating job status to ${status.value}`)
     await operation.invoke(JSON.stringify(job.toJSON()), {
       'Content-Type': 'application/ld+json',
     })
   } catch (e) {
-    log.warn(`Failed to update job status: ${e.message}`)
+    log(`Failed to update job status: ${e.message}`)
   }
 }
 
@@ -100,7 +100,7 @@ async function loadTables(job: TransformJob, log: Logger): Promise<Table[]> {
   return []
 }
 
-export class JobIterator extends stream.Readable {
+export class TableIterator extends stream.Readable {
   constructor({ jobUri, log, variables }: Params) {
     super({
       objectMode: true,
@@ -111,14 +111,6 @@ export class JobIterator extends stream.Readable {
     Promise.resolve()
       .then(async () => {
         const job = await loadTransformJob(jobUri, log, variables)
-        await updateJobStatus({
-          jobUri,
-          modified: new Date(),
-          executionUrl: variables.get('executionUrl'),
-          log,
-          status: schema.ActiveActionStatus,
-        })
-
         const tables = await loadTables(job, log)
 
         const loadMetadata = tables.reduce((metadata, table) => {
@@ -173,5 +165,5 @@ export class JobIterator extends stream.Readable {
 }
 
 export function loadCsvMappings(this: Context, jobUri: string) {
-  return new JobIterator({ jobUri, log: this.log, variables: this.variables })
+  return new TableIterator({ jobUri, log: this.log, variables: this.variables })
 }
