@@ -92,7 +92,7 @@ export default class TableCreateView extends Vue {
   }
 
   get preselectedSource (): CsvSource | null {
-    const sourceId = this.$router.currentRoute.query.source
+    const sourceId = this.$route.query.source
 
     if (sourceId && !Array.isArray(sourceId)) {
       return this.findSource(sourceId)
@@ -106,7 +106,7 @@ export default class TableCreateView extends Vue {
 
     if (!source) return []
 
-    let columnIds = this.$router.currentRoute.query.columns || []
+    let columnIds = this.$route.query.columns || []
     if (!Array.isArray(columnIds)) {
       columnIds = [columnIds]
     }

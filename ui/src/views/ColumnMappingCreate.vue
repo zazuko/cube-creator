@@ -63,7 +63,7 @@ export default class CubeProjectEditView extends Vue {
   error: ErrorDetails | null = null;
 
   get table (): Table {
-    const tableId = this.$router.currentRoute.params.tableId
+    const tableId = this.$route.params.tableId
     return this.findTable(tableId)
   }
 

@@ -65,13 +65,13 @@ export default class CubeProjectView extends Vue {
   poller: number | null = null
 
   async mounted (): Promise<void> {
-    const id = this.$router.currentRoute.params.id
+    const id = this.$route.params.id
     await this.$store.dispatch('project/fetchProject', id)
 
     // Poll jobs
     this.poller = window.setInterval(this.pollJobs, 3000)
 
-    if (this.$router.currentRoute.name === 'CubeProject') {
+    if (this.$route.name === 'CubeProject') {
       if (this.hasCSVMapping) {
         this.$router.push({ name: 'CSVMapping' })
       } else {

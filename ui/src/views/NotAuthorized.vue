@@ -19,7 +19,7 @@ import PageContent from '@/components/PageContent.vue'
 })
 export default class NotAuthorizedView extends Vue {
   get link (): string | null {
-    return this.$router.currentRoute.params.link
+    return this.$route.params.link
   }
 }
 </script>

@@ -54,7 +54,7 @@ export default class CubeProjectEditView extends Vue {
   error: ErrorDetails | null = null;
 
   get columnMapping (): ColumnMapping | null {
-    const columnMappingId = this.$router.currentRoute.params.columnMappingId
+    const columnMappingId = this.$route.params.columnMappingId
     return this.findColumnMapping(columnMappingId)
   }
 
