@@ -13,7 +13,7 @@ import { ccClients } from '@cube-creator/testing/lib'
 import { insertTestProject } from '@cube-creator/testing/lib/seedData'
 import { cc, cube } from '@cube-creator/core/namespace'
 
-describe('lib/commands/transform', function () {
+describe('@cube-creator/cli/lib/commands/transform', function () {
   this.timeout(360 * 1000)
 
   const executionUrl = 'http://example.com/transformation-test'

@@ -12,6 +12,7 @@ export interface ImportJob extends Job {
   sourceCube: NamedNode
   sourceGraph?: NamedNode
   sourceEndpoint: NamedNode
+  cubeGraph: NamedNode
 }
 
 export function ImportJobMixin<Base extends Constructor<RdfResource>>(base: Base): Mixin {
@@ -25,8 +26,8 @@ export function ImportJobMixin<Base extends Constructor<RdfResource>>(base: Base
     @property({ path: cc['CubeProject/sourceGraph'] })
     sourceGraph?: NamedNode
 
-    @property({ path: cc.project })
-    project!: NamedNode
+    @property({ path: cc.cubeGraph })
+    cubeGraph!: NamedNode
   }
 
   return Impl
@@ -34,7 +35,7 @@ export function ImportJobMixin<Base extends Constructor<RdfResource>>(base: Base
 
 ImportJobMixin.appliesTo = cc.ImportJob
 
-type RequiredProperties = 'name' | 'sourceCube' | 'sourceEndpoint'
+type RequiredProperties = 'name' | 'sourceCube' | 'sourceEndpoint' | 'cubeGraph'
 
 export const create = initializer<ImportJob, RequiredProperties>(ImportJobMixin, {
   types: [cc.Job, cc.ImportJob],

@@ -1,0 +1,39 @@
+@base <urn:pipeline:cube-creator> .
+@prefix : <https://pipeline.described.at/> .
+@prefix code: <https://code.described.at/> .
+
+<#Main> a :Pipeline ;
+        :steps [ :stepList ( <#loadObservations> <#validate> <#streamOutputStep> ) ] .
+
+<#StreamOutput>
+  a :Pipeline, :WritableObjectMode .
+
+<#streamOutputStep>
+  a :Step ;
+  code:implementedBy [
+                       code:link <file:../lib/pipeline#asStep> ;
+                       a code:EcmaScript
+                     ] ;
+  code:arguments ( <#StreamOutput> ) .
+
+<#loadObservations>
+  a :Step ;
+  code:implementedBy
+    [
+      code:link <file:../lib/import#cubeQuery> ;
+      a code:EcmaScript ;
+    ] ;
+  code:arguments
+    [
+      code:name "cube" ;
+      code:value "sourceCube"^^:VariableName
+    ],
+    [
+      code:name "endpoint" ;
+      code:value "sourceEndpoint"^^:VariableName
+    ],
+    [
+      code:name "graph" ;
+      code:value "sourceGraph"^^:VariableName
+    ]
+.

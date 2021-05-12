@@ -87,6 +87,7 @@ export async function createImportJob({ store, resource }: StartImportCommand): 
     sourceCube: project.sourceCube,
     sourceGraph: project.sourceGraph,
     sourceEndpoint: project.sourceEndpoint,
+    cubeGraph: project.cubeGraph,
   })
 
   return jobPointer

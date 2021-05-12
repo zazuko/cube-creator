@@ -13,7 +13,7 @@ import runner from '../../../lib/commands/publish'
 import namespace, { NamespaceBuilder } from '@rdfjs/namespace'
 import { NamedNode, Term } from 'rdf-js'
 
-describe('lib/commands/publish', function () {
+describe('@cube-creator/cli/lib/commands/publish', function () {
   this.timeout(200000)
 
   const ns = {

@@ -1,7 +1,8 @@
 import { describe, it, before } from 'mocha'
 import { expect } from 'chai'
 import $rdf from 'rdf-ext'
-import { mdClients, insertTestDimensions } from '@cube-creator/testing/lib'
+import { mdClients } from '@cube-creator/testing/lib'
+import { insertTestDimensions } from '@cube-creator/testing/lib/seedData'
 import { getSharedDimensions, getSharedTerms } from '../../../lib/domain/shared-dimensions'
 import { rdf, schema } from '@tpluscode/rdf-ns-builders'
 

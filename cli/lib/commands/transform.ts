@@ -8,6 +8,6 @@ interface TransformRunOptions extends runner.RunOptions {
 export default runner.create<TransformRunOptions>({
   pipelineSources(command) {
     const { to } = command
-    return ['main', 'from-api', `to-${to}`]
+    return ['main', 'from-api', `to-${to}`, 'validate']
   },
 })

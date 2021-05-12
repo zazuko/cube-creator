@@ -1,4 +1,5 @@
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+base <https://cube-creator.lndo.site/>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 prefix dcat: <http://www.w3.org/ns/dcat#>
 prefix dcterms: <http://purl.org/dc/terms/>
@@ -27,6 +28,9 @@ graph <cube-project/px> {
     CubeProject:sourceGraph <http://example.org/px-cube> ;
     CubeProject:sourceEndpoint <http://db.cube-creator.lndo.site/px-cube> ;
 }
+
+<cube-project/px/cube-data> void:inDataset <px-example> .
+<cube-project/px/dimensions-metadata> void:inDataset <px-example> .
 
 <cube-project/px/dataset> void:inDataset <px-example> .
 graph <cube-project/px/dataset> {
@@ -59,5 +63,19 @@ graph <cube-project/px/jobs> {
         hydra:property cc:project ;
         hydra:object <cube-project/px> ;
       ]
+  .
+}
+
+<cube-project/px/jobs/import-job> void:inDataset <ubd-example> .
+graph <cube-project/px/jobs/import-job> {
+  <cube-project/px/jobs/import-job>
+    a hydra:Resource, cc:Job, cc:ImportJob ;
+    schema:name "Test import" ;
+    dcterms:created "2020-10-29T12:01:54"^^xsd:dateTime ;
+    schema:actionStatus schema:PotentialActionStatus ;
+    cc:cubeGraph <cube-project/px/cube-data> ;
+    CubeProject:sourceCube <http://example.org/px-cube> ;
+    CubeProject:sourceGraph <http://example.org/px-cube> ;
+    CubeProject:sourceEndpoint <http://db.cube-creator.lndo.site/px-cube> ;
   .
 }
