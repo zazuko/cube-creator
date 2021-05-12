@@ -9,6 +9,7 @@ export default function mixin<Base extends Constructor> (base: Base): Mixin {
       return {
         createTransform: ns.cc.TransformAction,
         createPublish: ns.cc.PublishAction,
+        createImport: ns.cc.ImportAction,
       }
     }
   }

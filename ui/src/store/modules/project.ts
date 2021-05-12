@@ -121,7 +121,7 @@ const getters: GetterTree<ProjectState, RootState> = {
   },
 
   transformJobs (state, getters): Job[] {
-    return getters.jobs.filter((job: Job) => job.types.has(cc.TransformJob))
+    return getters.jobs.filter((job: Job) => job.types.has(cc.TransformJob) || job.types.has(cc.ImportJob))
   },
 
   publishJobs (state, getters): Job[] {

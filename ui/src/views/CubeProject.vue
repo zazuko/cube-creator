@@ -32,7 +32,11 @@
           </li>
         </router-link>
         <li class="tab-right pr-4" v-if="jobCollection">
-          <transform-job-button :job-collection="jobCollection" :transform-jobs="transformJobs" />
+          <transform-job-button
+            :has-csv-mapping="hasCSVMapping"
+            :job-collection="jobCollection"
+            :transform-jobs="transformJobs"
+          />
         </li>
       </ul>
     </div>
