@@ -154,7 +154,7 @@ export default class extends Vue {
   pageSize = 10
   page = 1
   pageSizes = [10, 20, 50, 100]
-  observations: RemoteData<any[]> = Remote.loading()
+  observations: RemoteData<unknown[]> = Remote.loading()
 
   get cube (): Cube | null {
     return this.cubeMetadata.hasPart[0] ?? null

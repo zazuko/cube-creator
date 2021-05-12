@@ -84,7 +84,7 @@ export default class CubeProjectView extends Vue {
     this.stopPolling()
   }
 
-  async pollJobs (): Promise<any> {
+  async pollJobs (): Promise<void> {
     try {
       await this.$store.dispatch('project/fetchJobCollection')
     } catch (e) {
