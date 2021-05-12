@@ -31,8 +31,9 @@ const insertTestData = async (pathName: string, { parsingClient, streamClient }:
   }
 }
 
-export const insertTestProject = () => {
-  return insertTestData('fuseki/sample-ubd.trig', ccClients)
+export const insertTestProject = async () => {
+  await insertTestData('fuseki/sample-ubd.trig', ccClients)
+  await insertTestData('fuseki/sample-px.trig', ccClients)
 }
 
 export const insertTestDimensions = () => {
