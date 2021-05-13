@@ -4,7 +4,7 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 
 <#Main> a :Pipeline ;
-  :steps [ :stepList ( <#loadMetadata> <#doTransform> <#validate> <#setGraph> <#streamOutputStep> ) ] .
+  :steps [ :stepList ( <#loadMetadata> <#doTransform> <#validate> <#streamOutputStep> ) ] .
 
 <#StreamOutput>
   a :Pipeline, :WritableObjectMode .
@@ -76,6 +76,7 @@
                        <#toCubeShape>
                        <#flatten>
                        <#filterCubeLinks>
+                       <#setGraph>
                      ) ] .
 
 <#TransformCsv>
@@ -84,6 +85,7 @@
                        <#loadCsvStep>
                        <#parse>
                        <#filterNonObservationTable>
+                       <#setGraph>
                      ) ] .
 
 <#LoadCsv>
