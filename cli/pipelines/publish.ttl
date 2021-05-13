@@ -4,7 +4,35 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 
 <#Main> a :Pipeline ;
-  :steps [ :stepList ( <#loadGraphStep> <#injectCubeRevision> <#injectMetadata> <#filter> <#uniqueBnodes> <#streamOutputStep> ) ] .
+        :steps
+          [
+            :stepList
+              ( <#concatStreams> <#streamOutputStep> ) ;
+          ] .
+
+<#concatStreams>
+  a :Step ;
+  code:implementedBy
+    [
+      a code:EcmaScript ;
+      code:link <node:barnard59-base#concat.object>
+    ] ;
+  code:arguments
+    (
+      <#PublishedLatestCube>
+      <#ExpirePreviousVersions>
+    )
+.
+
+<#PublishedLatestCube>
+  a :Pipeline, :ReadableObjectMode ;
+  :steps [ :stepList ( <#loadGraphStep> <#injectCubeRevision> <#injectMetadata> <#filter> <#uniqueBnodes> ) ]
+.
+
+<#ExpirePreviousVersions>
+  a :Pipeline, :ReadableObjectMode ;
+  :steps [ :stepList ( <#expirePreviousVersions> ) ] ;
+.
 
 <#loadGraphStep>
   a                  :Step ;
@@ -33,6 +61,12 @@ _:get
 <#injectCubeRevision>
   a :Step ;
   code:implementedBy [ code:link <file:../lib/cube#injectRevision> ;
+                       a         code:EcmaScript ] ;
+  code:arguments     ( "jobUri"^^:VariableName ) .
+
+<#expirePreviousVersions>
+  a :Step ;
+  code:implementedBy [ code:link <file:../lib/cube#expirePreviousVersions> ;
                        a         code:EcmaScript ] ;
   code:arguments     ( "jobUri"^^:VariableName ) .
 

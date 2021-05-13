@@ -58,7 +58,7 @@ describe('lib/commands/publish', function () {
         `
         .execute(ccClients.parsingClient.query)
 
-      targetCube = namespace(ns.baseCube('2/').value)
+      targetCube = namespace(ns.baseCube('3/').value)
 
       const dataset = await $rdf.dataset().import(await CONSTRUCT`?s ?p ?o`
         .FROM(expectedGraph as NamedNode)
@@ -71,7 +71,7 @@ describe('lib/commands/publish', function () {
     it('does not remove previously published triples', () => {
       const prevCube = cubePointer.namedNode(ns.baseCube('1'))
 
-      expect(prevCube.out().terms).to.have.length(1)
+      expect(prevCube.out().terms).to.have.length.greaterThan(0)
       expect(prevCube).to.matchShape({
         property: {
           path: rdf.type,
@@ -129,7 +129,7 @@ describe('lib/commands/publish', function () {
       expect(cubePointer.namedNode(targetCube())).to.matchShape({
         property: [{
           path: schema.version,
-          hasValue: $rdf.literal('2', xsd.integer),
+          hasValue: $rdf.literal('3', xsd.integer),
           minCount: 1,
           maxCount: 1,
         }],
@@ -164,8 +164,8 @@ describe('lib/commands/publish', function () {
       })
     })
 
-    it('"deprecates" previous cube', async function () {
-      expect(cubePointer.namedNode(ns.baseCube('1/'))).to.matchShape({
+    it('"deprecates" previous cubes', async function () {
+      expect(cubePointer.namedNode(ns.baseCube('1'))).to.matchShape({
         property: [{
           path: schema.validThrough,
           datatype: xsd.dateTime,
