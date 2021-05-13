@@ -1,16 +1,65 @@
-import { CONSTRUCT } from '@tpluscode/sparql-builder'
+import { CONSTRUCT, SELECT } from '@tpluscode/sparql-builder'
 import type { Context } from 'barnard59-core/lib/Pipeline'
 import StreamClient from 'sparql-http-client'
+import ParsingClient from 'sparql-http-client/ParsingClient'
 import { NamedNode, Stream } from 'rdf-js'
 import { PassThrough } from 'readable-stream'
 import * as ns from '@cube-creator/core/namespace'
-import { rdf, sh } from '@tpluscode/rdf-ns-builders'
+import { hydra, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { readable } from 'duplex-to'
+import $rdf from 'rdf-ext'
+import clownface from 'clownface'
 
 interface CubeQuery {
   endpoint: NamedNode
   graph: NamedNode | undefined
   cube: NamedNode
+}
+
+interface DimensionMetadataQuery extends CubeQuery {
+  metadataResource: string
+}
+
+/**
+ * Populates cc:DimensionMetadataResource with dimensions found in the imported cube
+ */
+export async function dimensionMetadataQuery(this: Context, { endpoint, cube, graph, metadataResource }: DimensionMetadataQuery) {
+  const client = new ParsingClient({
+    endpointUrl: endpoint.value,
+  })
+
+  const metadataCollection = clownface({ dataset: $rdf.dataset() })
+    .namedNode(metadataResource)
+    .addOut(rdf.type, [ns.cc.DimensionMetadataCollection, hydra.Resource])
+
+  let query = SELECT.DISTINCT`?dimension`
+    .WHERE`
+      ${cube} ${ns.cube.observationConstraint} ?shape .
+      ?shape ${sh.property} ?property .
+      ?property ${sh.path} ?dimension .
+
+      filter(
+        !(?dimension in ( ${rdf.type}, ${ns.cube.observedBy} ))
+      )
+    `
+
+  if (graph) {
+    query = query.FROM(graph)
+  }
+
+  const dimensions = await query.execute(client.query)
+  for (let i = 1; i <= dimensions.length; i++) {
+    const { dimension } = dimensions[i - 1]
+
+    this.log.debug(`Adding dimension ${dimension.value}`)
+
+    const dimensionMetadata = metadataCollection.namedNode(`${metadataCollection.value}/${i}`)
+    metadataCollection.addOut(schema.hasPart, dimensionMetadata, dm => {
+      dm.addOut(schema.about, dimension)
+    })
+  }
+
+  return metadataCollection.dataset.toStream()
 }
 
 /**

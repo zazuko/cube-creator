@@ -1,5 +1,5 @@
 import { NamedNode } from 'rdf-js'
-import { Constructor, property, RdfResource } from '@tpluscode/rdfine'
+import { Constructor, namespace, property, RdfResource } from '@tpluscode/rdfine'
 import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import { ResourceMixin } from '@rdfine/rdfs'
 import { ActionMixin } from '@rdfine/schema'
@@ -13,9 +13,11 @@ export interface ImportJob extends Job {
   sourceGraph?: NamedNode
   sourceEndpoint: NamedNode
   cubeGraph: NamedNode
+  dimensionMetadata: NamedNode
 }
 
 export function ImportJobMixin<Base extends Constructor<RdfResource>>(base: Base): Mixin {
+  @namespace(cc)
   class Impl extends ResourceMixin(ActionMixin(base)) implements Partial<ImportJob> {
     @property({ path: cc['CubeProject/sourceCube'] })
     sourceCube!: NamedNode
@@ -26,8 +28,11 @@ export function ImportJobMixin<Base extends Constructor<RdfResource>>(base: Base
     @property({ path: cc['CubeProject/sourceGraph'] })
     sourceGraph?: NamedNode
 
-    @property({ path: cc.cubeGraph })
+    @property()
     cubeGraph!: NamedNode
+
+    @property()
+    dimensionMetadata!: NamedNode
   }
 
   return Impl

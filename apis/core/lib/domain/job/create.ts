@@ -80,6 +80,7 @@ export async function createPublishJob({
 export async function createImportJob({ store, resource }: StartImportCommand): Promise<GraphPointer<NamedNode>> {
   const jobCollection = await store.get(resource)
   const project = await store.getResource<ImportProject>(jobCollection.out(cc.project).term)
+  const dataset = await store.getResource<Dataset>(project.dataset)
   const jobPointer = await store.createMember(jobCollection.term, id.job(jobCollection))
 
   ImportJob.create(jobPointer, {
@@ -88,6 +89,7 @@ export async function createImportJob({ store, resource }: StartImportCommand): 
     sourceGraph: project.sourceGraph,
     sourceEndpoint: project.sourceEndpoint,
     cubeGraph: project.cubeGraph,
+    dimensionMetadata: dataset.dimensionMetadata.id as any,
   })
 
   return jobPointer

@@ -22,5 +22,6 @@ declare module 'barnard59-core/lib/Pipeline' {
     sourceCube: NamedNode
     sourceEndpoint: NamedNode
     sourceGraph: NamedNode | undefined
+    metadataResource: string
   }
 }

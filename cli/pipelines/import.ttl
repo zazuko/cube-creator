@@ -3,7 +3,33 @@
 @prefix code: <https://code.described.at/> .
 
 <#Main> a :Pipeline ;
-        :steps [ :stepList ( <#loadObservations> <#validate> <#streamOutputStep> ) ] .
+        :steps
+          [
+            :stepList
+              ( <#concatStreams> <#validate> <#streamOutputStep> ) ;
+          ] .
+
+<#concatStreams>
+  a :Step ;
+  code:implementedBy
+    [
+      a code:EcmaScript ;
+      code:link <node:barnard59-base#concat.object>
+    ] ;
+  code:arguments
+    (
+      <#Observations>
+      <#Dimensions>
+    )
+.
+
+<#Observations>
+  a :Pipeline, :ReadableObjectMode ;
+  :steps [ :stepList ( <#loadObservations> <#setGraph> ) ] .
+
+<#Dimensions>
+  a :Pipeline, :ReadableObjectMode ;
+  :steps [ :stepList ( <#loadDimensions> <#setMetadataCollectionGraph> ) ] .
 
 <#StreamOutput>
   a :Pipeline, :WritableObjectMode .
@@ -37,3 +63,35 @@
       code:value "sourceGraph"^^:VariableName
     ]
 .
+
+<#loadDimensions>
+  a :Step ;
+  code:implementedBy
+    [
+      code:link <file:../lib/import#dimensionMetadataQuery> ;
+      a code:EcmaScript ;
+    ] ;
+  code:arguments
+    [
+      code:name "cube" ;
+      code:value "sourceCube"^^:VariableName
+    ],
+    [
+      code:name "endpoint" ;
+      code:value "sourceEndpoint"^^:VariableName
+    ],
+    [
+      code:name "graph" ;
+      code:value "sourceGraph"^^:VariableName
+    ],
+    [
+      code:name "metadataResource" ;
+      code:value "metadataResource"^^:VariableName
+    ]
+.
+
+<#setMetadataCollectionGraph>
+  a                  :Step ;
+  code:implementedBy [ a         code:EcmaScript ;
+                       code:link <node:barnard59-base#setGraph> ] ;
+  code:arguments     ( "metadataResource"^^:VariableName ) .

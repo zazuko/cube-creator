@@ -10,6 +10,7 @@ import * as ns from '@cube-creator/core/namespace'
 import { ccClients } from '@cube-creator/testing/lib'
 import { setupEnv } from '../../support/env'
 import runner from '../../../lib/commands/import'
+import { cc } from '@cube-creator/core/namespace'
 
 describe('@cube-creator/cli/lib/commands/import', function () {
   this.timeout(200000)
@@ -75,6 +76,19 @@ describe('@cube-creator/cli/lib/commands/import', function () {
         .execute(ccClients.parsingClient.query)
 
       expect(hasName).to.be.false
+    })
+
+    it('initializes dimension metadata', async () => {
+      const metadata = resource('cube-project/px/dimensions-metadata')
+      const [dimensions] = await SELECT`( COUNT(?dim) as ?count )`
+        .FROM(resource('cube-project/px/dimensions-metadata'))
+        .WHERE`
+          ${metadata} ${schema.hasPart} ?dimensionMetadata ; a ${cc.DimensionMetadataCollection} .
+          ?dimensionMetadata ${schema.about} ?dim .
+        `
+        .execute(ccClients.parsingClient.query)
+
+      expect(dimensions.count).to.deep.eq($rdf.literal('20', xsd.integer))
     })
   })
 })

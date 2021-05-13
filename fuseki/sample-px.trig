@@ -26,11 +26,15 @@ graph <cube-project/px> {
     cc:projectSourceKind <https://cube-creator.lndo.site/shape/cube-project/create#ExistingCube> ;
     CubeProject:sourceCube <http://example.org/px-cube> ;
     CubeProject:sourceGraph <http://example.org/px-cube> ;
-    CubeProject:sourceEndpoint <http://db.cube-creator.lndo.site/px-cube> ;
+    CubeProject:sourceEndpoint <http://store:3030/px-cube> ;
 }
 
 <cube-project/px/cube-data> void:inDataset <px-example> .
 <cube-project/px/dimensions-metadata> void:inDataset <px-example> .
+graph <cube-project/px/dimensions-metadata> {
+  <cube-project/px/dimensions-metadata>
+    a cc:DimensionMetadataCollection, hydra:Resource ;
+}
 
 <cube-project/px/dataset> void:inDataset <px-example> .
 graph <cube-project/px/dataset> {
@@ -74,6 +78,7 @@ graph <cube-project/px/jobs/import-job> {
     dcterms:created "2020-10-29T12:01:54"^^xsd:dateTime ;
     schema:actionStatus schema:PotentialActionStatus ;
     cc:cubeGraph <cube-project/px/cube-data> ;
+    cc:dimensionMetadata <cube-project/px/dimensions-metadata> ;
     CubeProject:sourceCube <http://example.org/px-cube> ;
     CubeProject:sourceGraph <http://example.org/px-cube> ;
     CubeProject:sourceEndpoint <http://db.cube-creator.lndo.site/px-cube> ;
