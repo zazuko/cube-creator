@@ -85,48 +85,5 @@ describe('lib/cube', () => {
         expect(transformed.toArray()[0].subject).to.deep.eq($rdf.namedNode('http://example.com/cube/' + expected))
       })
     })
-
-    it('adds previous cube id to variables', async () => {
-      // given
-      const context = {
-        log,
-        variables: new Map<any, any>([
-          ['namespace', 'http://example.com/cube/foo/'],
-          ['revision', 5],
-        ]),
-      }
-      const quads = $rdf.dataset([
-        $rdf.quad($rdf.namedNode('http://example.com/cube/foo/'), rdf.type, cube.Cube),
-      ]).toStream()
-
-      // when
-      const transform = await injectRevision.call(context)
-      await $rdf.dataset().import(quads.pipe(transform))
-
-      // then
-      const previousCube = context.variables.get('previousCubes').get($rdf.namedNode('http://example.com/cube/foo/5/'))
-      expect(previousCube).to.deep.eq($rdf.namedNode('http://example.com/cube/foo/4/'))
-    })
-
-    it('does not add previous cube to variables on first publish', async () => {
-      // given
-      const context = {
-        log,
-        variables: new Map<any, any>([
-          ['namespace', 'http://example.com/cube/foo/'],
-          ['revision', 1],
-        ]),
-      }
-      const quads = $rdf.dataset([
-        $rdf.quad($rdf.namedNode('http://example.com/cube/foo/'), rdf.type, cube.Cube),
-      ]).toStream()
-
-      // when
-      const transform = await injectRevision.call(context)
-      await $rdf.dataset().import(quads.pipe(transform))
-
-      // then
-      expect(context.variables.get('previousCubes')).to.have.property('size', 0)
-    })
   })
 })
