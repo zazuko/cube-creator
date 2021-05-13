@@ -1,4 +1,4 @@
-import { Literal, Term, Quad_Subject as QuadSubject } from 'rdf-js'
+import { Literal } from 'rdf-js'
 
 declare module 'barnard59-core/lib/Pipeline' {
   interface VariableNames {
@@ -7,6 +7,7 @@ declare module 'barnard59-core/lib/Pipeline' {
     'graph-store-endpoint': string
     'graph-store-user': string
     'graph-store-password': string
+    'publish-graph-query-endpoint': string
     'publish-graph-store-endpoint': string
     'publish-graph-store-user': string
     'publish-graph-store-password': string
@@ -15,7 +16,6 @@ declare module 'barnard59-core/lib/Pipeline' {
     namespace: string
     cubeIdentifier: string
     timestamp: Literal
-    previousCubes: Map<Term, QuadSubject>
     isObservationTable: boolean
     graph: string
     bnodeUuid: string

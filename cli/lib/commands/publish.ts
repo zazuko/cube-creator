@@ -60,6 +60,7 @@ export default function (pipelineId: NamedNode, log: Debugger) {
     variable.set('graph-store-user', graphStore?.user || process.env.GRAPH_STORE_USER)
     variable.set('graph-store-password', graphStore?.password || process.env.GRAPH_STORE_PASSWORD)
     variable.set('publish-graph-store-endpoint', publishStore?.endpoint || process.env.PUBLISH_GRAPH_STORE_ENDPOINT)
+    variable.set('publish-graph-query-endpoint', publishStore?.endpoint || process.env.PUBLISH_GRAPH_QUERY_ENDPOINT)
     variable.set('publish-graph-store-user', publishStore?.user || process.env.PUBLISH_GRAPH_STORE_USER)
     variable.set('publish-graph-store-password', publishStore?.password || process.env.PUBLISH_GRAPH_STORE_PASSWORD)
 

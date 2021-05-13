@@ -23,6 +23,7 @@
     "@sentry/tracing": "^6.2.0",
     "@tpluscode/rdf-ns-builders": "^0.4",
     "@tpluscode/rdfine": "^0.5.19",
+    "@tpluscode/sparql-builder": "^0.3.12",
     "alcaeus": "^1.0.1",
     "aws-sdk": "^2.559.0",
     "barnard59": "^0.1.2",
@@ -52,7 +53,8 @@
     "readable-stream": "^3.6.0",
     "string-to-stream": "^3.0.1",
     "through2": "^4.0.2",
-    "through2-reduce": "1.1.1"
+    "through2-reduce": "1.1.1",
+    "sparql-http-client": "^2.2"
   },
   "devDependencies": {
     "@cube-creator/testing": "^0.1.17",
