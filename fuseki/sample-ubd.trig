@@ -39,6 +39,9 @@ graph <cube-project/ubd> {
 
 <https://lindas.admin.ch/foen/cube> void:inDataset <ubd-example> .
 graph <https://lindas.admin.ch/foen/cube> {
+  <https://environment.ld.admin.ch/foen/ubd/28/>
+    schema:hasPart <https://environment.ld.admin.ch/foen/ubd/28/1> .
+
   <https://environment.ld.admin.ch/foen/ubd/28/1> a cube:Cube .
 }
 
@@ -697,7 +700,7 @@ graph <cube-project/ubd/csv-mapping/jobs/test-publish-job> {
     rdfs:seeAlso <https://github.com/zazuko/cube-creator/actions/runs/345020889> ;
     schema:actionStatus schema:PotentialActionStatus ;
     cc:publishGraph <https://lindas.admin.ch/foen/cube> ;
-    cc:revision 2 ;
+    cc:revision 3 ;
     schema:creativeWorkStatus <https://ld.admin.ch/definedTerm/CreativeWorkStatus/Draft> ;
     schema:workExample <https://ld.admin.ch/application/visualize> ;
   .
@@ -712,7 +715,7 @@ graph <cube-project/ubd/csv-mapping/jobs/finished-publish-job> {
     rdfs:seeAlso <https://github.com/zazuko/cube-creator/actions/runs/345020889> ;
     schema:actionStatus schema:CompletedActionStatus ;
     cc:publishGraph <https://lindas.admin.ch/foen/cube> ;
-    cc:revision 3 ;
+    cc:revision 1 ;
     schema:creativeWorkStatus <https://ld.admin.ch/definedTerm/CreativeWorkStatus/Draft> ;
     schema:workExample <https://ld.admin.ch/application/visualize> ;
   .

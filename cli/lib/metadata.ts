@@ -44,7 +44,6 @@ export async function injectMetadata(this: Context, jobUri: string) {
   const cubeIdentifier = this.variables.get('cubeIdentifier')
   const { dataset, maintainer } = await loadDataset(jobUri)
   const datasetTriples = dataset.pointer.dataset.match(null, null, null, dataset.id)
-  const previousCubes = this.variables.get('previousCubes')
   const timestamp = this.variables.get('timestamp')
 
   return obj(async function (quad: Quad, _, callback) {
@@ -70,11 +69,6 @@ export async function injectMetadata(this: Context, jobUri: string) {
 
       if (revision === 1) {
         this.push($rdf.quad(quad.subject, schema.datePublished, timestamp))
-      }
-
-      const previousCube = previousCubes.get(quad.subject)
-      if (previousCube) {
-        this.push($rdf.quad(previousCube, schema.validThrough, timestamp))
       }
 
       [...datasetTriples.match(dataset.id)]
