@@ -1,7 +1,7 @@
 import { before, describe, it } from 'mocha'
 import { expect } from 'chai'
 import $rdf from 'rdf-ext'
-import { dcterms, qudt, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
+import { dcterms, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import namespace from '@rdfjs/namespace'
 import env from '@cube-creator/core/env'
 import { insertTestProject, insertPxCube } from '@cube-creator/testing/lib/seedData'
@@ -114,6 +114,20 @@ describe('@cube-creator/cli/lib/commands/import', function () {
 
       expect(hasNewMeta).to.be.true
       expect(hasPreviousData).to.be.true
+    })
+
+    it('copies dimension metadata', async () => {
+      const hasDimensionMeta = await ASK`
+        ?collection a ${cc.DimensionMetadataCollection} ;
+                    ${schema.hasPart} ?meta .
+        ?meta ${schema.about} ${cubeNs('measure/12')} .
+
+        ${cubeNs('measure/12')} ${schema.name} "Bois de grumes en m3"@fr ;
+                                        <https://cube.link/scale/scaleOfMeasure> <https://cube.link/scale/Numerical> .
+      `.FROM(resource('cube-project/px/dimensions-metadata'))
+        .execute(ccClients.parsingClient.query)
+
+      expect(hasDimensionMeta).to.be.true
     })
   })
 })

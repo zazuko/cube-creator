@@ -11,6 +11,7 @@ import $rdf from 'rdf-ext'
 import clownface from 'clownface'
 import { Hydra } from 'alcaeus/node'
 import merge from 'merge2'
+import type { DatasetIndexed } from 'rdf-dataset-indexed/dataset'
 
 interface CubeQuery {
   endpoint: NamedNode
@@ -18,7 +19,7 @@ interface CubeQuery {
   cube: NamedNode
 }
 
-interface DimensionMetadataQuery extends CubeQuery {
+interface DimensionQuery extends CubeQuery {
   metadataResource: string
 }
 
@@ -29,8 +30,11 @@ interface CubeMetadataQuery extends CubeQuery {
 /**
  * Populates cc:DimensionMetadataResource with dimensions found in the imported cube
  */
-export async function dimensionMetadataQuery(this: Context, { endpoint, cube, graph, metadataResource }: DimensionMetadataQuery) {
+export async function dimensionsQuery(this: Context, { endpoint, cube, graph, metadataResource }: DimensionQuery) {
   const client = new ParsingClient({
+    endpointUrl: endpoint.value,
+  })
+  const streamClient = new StreamClient({
     endpointUrl: endpoint.value,
   })
 
@@ -49,8 +53,22 @@ export async function dimensionMetadataQuery(this: Context, { endpoint, cube, gr
       )
     `
 
+  let dimensionMetadata = CONSTRUCT`?dimension ?p ?o`
+    .WHERE`
+      ${cube} a ${ns.cube.Cube} ; ${ns.cube.observationConstraint} ?shape .
+
+      ?shape ${sh.property} ?property .
+      ?property ${sh.path} ?dimension .
+      ?property ?p ?o .
+
+      filter (
+        !strstarts(str(?p), str(${sh()}))
+      )
+    `
+
   if (graph) {
     query = query.FROM(graph)
+    dimensionMetadata = dimensionMetadata.FROM(graph)
   }
 
   const dimensions = await query.execute(client.query)
@@ -65,7 +83,10 @@ export async function dimensionMetadataQuery(this: Context, { endpoint, cube, gr
     })
   }
 
-  return metadataCollection.dataset.toStream()
+  return readable(merge(
+    metadataCollection.dataset.toStream(),
+    await dimensionMetadata.execute(streamClient.query),
+  ))
 }
 
 export async function cubeMetadataQuery(this: Context, { cube, graph, endpoint, datasetResource }: CubeMetadataQuery) {
@@ -92,9 +113,10 @@ export async function cubeMetadataQuery(this: Context, { cube, graph, endpoint, 
     cubeMetaQuery = cubeMetaQuery.FROM(graph)
   }
 
+  const origDataset: DatasetIndexed = cubeResource.pointer.dataset
   return readable(merge(
     await cubeMetaQuery.execute(client.query),
-    cubeResource.pointer.dataset.match(null, null, null, $rdf.namedNode(datasetResource)).toStream(),
+    origDataset.match(null, null, null, $rdf.namedNode(datasetResource)).toStream(),
   ))
 }
 

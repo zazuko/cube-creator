@@ -73,7 +73,7 @@
   a :Step ;
   code:implementedBy
     [
-      code:link <file:../lib/import#dimensionMetadataQuery> ;
+      code:link <file:../lib/import#dimensionsQuery> ;
       a code:EcmaScript ;
     ] ;
   code:arguments
