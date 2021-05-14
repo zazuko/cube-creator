@@ -121,3 +121,9 @@ _:upload
                        code:value "publish-graph-store-password"^^:VariableName ] ;
   code:arguments     [ code:name  "maxQuadsPerRequest" ;
                        code:value "Infinity"^^code:EcmaScript ] .
+
+<#setGraph>
+  a                  :Step ;
+  code:implementedBy [ a         code:EcmaScript ;
+                       code:link <node:barnard59-base#setGraph> ] ;
+  code:arguments     ( "graph"^^:VariableName ) .
