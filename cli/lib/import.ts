@@ -11,7 +11,8 @@ import $rdf from 'rdf-ext'
 import clownface from 'clownface'
 import { Hydra } from 'alcaeus/node'
 import merge from 'merge2'
-import type { DatasetIndexed } from 'rdf-dataset-indexed/dataset'
+import { create } from '@cube-creator/model/Dataset'
+import * as Cube from '@cube-creator/model/Cube'
 
 interface CubeQuery {
   endpoint: NamedNode
@@ -32,9 +33,6 @@ interface CubeMetadataQuery extends CubeQuery {
  */
 export async function dimensionsQuery(this: Context, { endpoint, cube, graph, metadataResource }: DimensionQuery) {
   const client = new ParsingClient({
-    endpointUrl: endpoint.value,
-  })
-  const streamClient = new StreamClient({
     endpointUrl: endpoint.value,
   })
 
@@ -71,6 +69,8 @@ export async function dimensionsQuery(this: Context, { endpoint, cube, graph, me
     dimensionMetadata = dimensionMetadata.FROM(graph)
   }
 
+  const importedDimensionMetadata = $rdf.dataset([...await dimensionMetadata.execute(client.query)])
+
   const dimensions = await query.execute(client.query)
   for (let i = 1; i <= dimensions.length; i++) {
     const { dimension } = dimensions[i - 1]
@@ -80,13 +80,12 @@ export async function dimensionsQuery(this: Context, { endpoint, cube, graph, me
     const dimensionMetadata = metadataCollection.namedNode(`${metadataCollection.value}/${i}`)
     metadataCollection.addOut(schema.hasPart, dimensionMetadata, dm => {
       dm.addOut(schema.about, dimension)
+      importedDimensionMetadata.match(dimension)
+        .forEach(({ predicate, object }) => dm.addOut(predicate, object))
     })
   }
 
-  return readable(merge(
-    metadataCollection.dataset.toStream(),
-    await dimensionMetadata.execute(streamClient.query),
-  ))
+  return metadataCollection.dataset.toStream()
 }
 
 export async function cubeMetadataQuery(this: Context, { cube, graph, endpoint, datasetResource }: CubeMetadataQuery) {
@@ -95,13 +94,13 @@ export async function cubeMetadataQuery(this: Context, { cube, graph, endpoint, 
   })
 
   const { representation, response } = await Hydra.loadResource(datasetResource)
-  const cubeResource = representation?.get(cube.value)
+  const cubeResource = representation?.get<Cube.Cube>(cube.value)
   if (!cubeResource) {
     this.log.error(`Failed to load cube dataset. Response was: '${response?.xhr.statusText}'`)
     return $rdf.dataset().toStream()
   }
 
-  let cubeMetaQuery = CONSTRUCT`${cube} ?p ?o`
+  let cubeMetaQuery = CONSTRUCT`<${datasetResource}> ?p ?o`
     .WHERE`
       ${cube} ?p ?o .
 
@@ -113,10 +112,17 @@ export async function cubeMetadataQuery(this: Context, { cube, graph, endpoint, 
     cubeMetaQuery = cubeMetaQuery.FROM(graph)
   }
 
-  const origDataset: DatasetIndexed = cubeResource.pointer.dataset
+  const pointer = clownface({ dataset: $rdf.dataset() }).namedNode(datasetResource)
+  const dataset = create(pointer, {
+    hasPart: [Cube.create(pointer.namedNode(cube), {
+      creator: cubeResource.creator,
+    })],
+  })
+  dataset.pointer.deleteOut(schema.dateCreated)
+
   return readable(merge(
     await cubeMetaQuery.execute(client.query),
-    origDataset.match(null, null, null, $rdf.namedNode(datasetResource)).toStream(),
+    pointer.dataset.toStream(),
   ))
 }
 

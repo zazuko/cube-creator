@@ -33,6 +33,7 @@ export function loadCubeShapes(dataset: Term, client: StreamClient): Promise<Str
       MINUS { ?s a ${cube.Observation} }
       MINUS { ?s a ${cube.Cube} }
       MINUS { ?s a ${cube.ObservationSet} }
+      MINUS { ?s ${cube.observation} ?c }
     }`
     .execute(client.query)
 }

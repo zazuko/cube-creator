@@ -103,11 +103,12 @@ describe('@cube-creator/cli/lib/commands/import', function () {
         .execute(ccClients.parsingClient.query)
 
       const hasNewMeta = await ASK`
-        ${cube} ${schema.identifier} ?id ;
-                ${schema.name} ?name ;
-                ${schema.comment} ?comment ;
-                ${schema.description} ?desc ;
-                ${schema.temporalCoverage} ?temp ;
+        ${resource('cube-project/px/dataset')}
+          ${schema.identifier} ?id ;
+          ${schema.name} ?name ;
+          ${schema.comment} ?comment ;
+          ${schema.description} ?desc ;
+          ${schema.temporalCoverage} ?temp ;
         .
       `.FROM(resource('cube-project/px/dataset'))
         .execute(ccClients.parsingClient.query)
@@ -116,14 +117,21 @@ describe('@cube-creator/cli/lib/commands/import', function () {
       expect(hasPreviousData).to.be.true
     })
 
+    it('does not copy observation URIs into meta graph', async () => {
+      const hasObservations = ASK`?set ${ns.cube.observation} ?observation`
+        .FROM(resource('cube-project/px/dataset'))
+        .execute(ccClients.parsingClient.query)
+
+      await expect(hasObservations).to.eventually.be.false
+    })
+
     it('copies dimension metadata', async () => {
       const hasDimensionMeta = await ASK`
         ?collection a ${cc.DimensionMetadataCollection} ;
                     ${schema.hasPart} ?meta .
-        ?meta ${schema.about} ${cubeNs('measure/12')} .
-
-        ${cubeNs('measure/12')} ${schema.name} "Bois de grumes en m3"@fr ;
-                                        <https://cube.link/scale/scaleOfMeasure> <https://cube.link/scale/Numerical> .
+        ?meta ${schema.about} ${cubeNs('measure/12')} ;
+              ${schema.name} "Bois de grumes en m3"@fr ;
+              <https://cube.link/scale/scaleOfMeasure> <https://cube.link/scale/Numerical> .
       `.FROM(resource('cube-project/px/dimensions-metadata'))
         .execute(ccClients.parsingClient.query)
 

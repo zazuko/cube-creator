@@ -11,7 +11,8 @@ export function getCubesAndGraphs(dataset: Term, client: ParsingClient = parsing
     .WHERE`
       graph ?project {
           ?project ${cc.dataset} ${dataset} ;
-                   ${cc.cubeGraph} ?graph .
+                   ${cc.cubeGraph} ?graph ;
+                   a ${cc.CubeProject} .
       }
 
       graph ${dataset} {
