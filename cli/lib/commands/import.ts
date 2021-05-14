@@ -22,10 +22,10 @@ export default create({
   },
   async prepare(options, variable) {
     const { job: jobUri } = options
-    const { dimensionMetadata, sourceCube, sourceGraph, sourceEndpoint, cubeGraph: { value: cubeGraph } } = await getJob(jobUri)
+    const { dataset, dimensionMetadata, sourceCube, sourceGraph, sourceEndpoint, cubeGraph: { value: cubeGraph } } = await getJob(jobUri)
 
     log('Importing cube %O', {
-      sourceCube, sourceGraph, sourceEndpoint, cubeGraph, dimensionMetadata,
+      sourceCube, sourceGraph, sourceEndpoint, cubeGraph, dimensionMetadata, dataset,
     })
 
     variable.set('sourceCube', sourceCube)
@@ -33,5 +33,6 @@ export default create({
     variable.set('sourceGraph', sourceGraph)
     variable.set('graph', cubeGraph)
     variable.set('metadataResource', dimensionMetadata.value)
+    variable.set('datasetResource', dataset.value)
   },
 })

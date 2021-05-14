@@ -20,6 +20,7 @@
     (
       <#Observations>
       <#Dimensions>
+      <#CubeMetadata>
     )
 .
 
@@ -30,6 +31,10 @@
 <#Dimensions>
   a :Pipeline, :ReadableObjectMode ;
   :steps [ :stepList ( <#loadDimensions> <#setMetadataCollectionGraph> ) ] .
+
+<#CubeMetadata>
+  a :Pipeline, :ReadableObjectMode ;
+  :steps [ :stepList ( <#loadCubeMetadata> <#setDatasetGraph> ) ] .
 
 <#StreamOutput>
   a :Pipeline, :WritableObjectMode .
@@ -90,8 +95,40 @@
     ]
 .
 
+<#loadCubeMetadata>
+  a :Step ;
+  code:implementedBy
+    [
+      code:link <file:../lib/import#cubeMetadataQuery> ;
+      a code:EcmaScript ;
+    ] ;
+  code:arguments
+    [
+      code:name "cube" ;
+      code:value "sourceCube"^^:VariableName
+    ],
+    [
+      code:name "endpoint" ;
+      code:value "sourceEndpoint"^^:VariableName
+    ],
+    [
+      code:name "graph" ;
+      code:value "sourceGraph"^^:VariableName
+    ],
+    [
+      code:name "datasetResource" ;
+      code:value "datasetResource"^^:VariableName
+    ]
+.
+
 <#setMetadataCollectionGraph>
   a                  :Step ;
   code:implementedBy [ a         code:EcmaScript ;
                        code:link <node:barnard59-base#setGraph> ] ;
   code:arguments     ( "metadataResource"^^:VariableName ) .
+
+<#setDatasetGraph>
+  a                  :Step ;
+  code:implementedBy [ a         code:EcmaScript ;
+                       code:link <node:barnard59-base#setGraph> ] ;
+  code:arguments     ( "datasetResource"^^:VariableName ) .

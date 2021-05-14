@@ -1,7 +1,7 @@
 import { before, describe, it } from 'mocha'
 import { expect } from 'chai'
 import $rdf from 'rdf-ext'
-import { schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
+import { dcterms, qudt, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import namespace from '@rdfjs/namespace'
 import env from '@cube-creator/core/env'
 import { insertTestProject, insertPxCube } from '@cube-creator/testing/lib/seedData'
@@ -78,7 +78,7 @@ describe('@cube-creator/cli/lib/commands/import', function () {
       expect(hasName).to.be.false
     })
 
-    it('initializes dimension metadata', async () => {
+    it('initializes dimension metadata collection', async () => {
       const metadata = resource('cube-project/px/dimensions-metadata')
       const [dimensions] = await SELECT`( COUNT(?dim) as ?count )`
         .FROM(resource('cube-project/px/dimensions-metadata'))
@@ -89,6 +89,31 @@ describe('@cube-creator/cli/lib/commands/import', function () {
         .execute(ccClients.parsingClient.query)
 
       expect(dimensions.count).to.deep.eq($rdf.literal('20', xsd.integer))
+    })
+
+    it('copies cube metadata without deleting existing data', async () => {
+      const hasPreviousData = await ASK`
+        ?dataset a ${schema.Dataset} ;
+                   ${schema.hasPart} ${cube} ;
+                   ${cc.dimensionMetadata} ?metadata .
+
+        ${cube} ${dcterms.creator} ${resource('user')}
+      `
+        .FROM(resource('cube-project/px/dataset'))
+        .execute(ccClients.parsingClient.query)
+
+      const hasNewMeta = await ASK`
+        ${cube} ${schema.identifier} ?id ;
+                ${schema.name} ?name ;
+                ${schema.comment} ?comment ;
+                ${schema.description} ?desc ;
+                ${schema.temporalCoverage} ?temp ;
+        .
+      `.FROM(resource('cube-project/px/dataset'))
+        .execute(ccClients.parsingClient.query)
+
+      expect(hasNewMeta).to.be.true
+      expect(hasPreviousData).to.be.true
     })
   })
 })

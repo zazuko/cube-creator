@@ -90,6 +90,7 @@ export async function createImportJob({ store, resource }: StartImportCommand): 
     sourceEndpoint: project.sourceEndpoint,
     cubeGraph: project.cubeGraph,
     dimensionMetadata: dataset.dimensionMetadata.id as any,
+    dataset: project.dataset.id as any,
   })
 
   return jobPointer

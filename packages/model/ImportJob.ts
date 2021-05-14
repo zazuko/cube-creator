@@ -14,6 +14,7 @@ export interface ImportJob extends Job {
   sourceEndpoint: NamedNode
   cubeGraph: NamedNode
   dimensionMetadata: NamedNode
+  dataset: NamedNode
 }
 
 export function ImportJobMixin<Base extends Constructor<RdfResource>>(base: Base): Mixin {
@@ -33,6 +34,9 @@ export function ImportJobMixin<Base extends Constructor<RdfResource>>(base: Base
 
     @property()
     dimensionMetadata!: NamedNode
+
+    @property()
+    dataset!: NamedNode
   }
 
   return Impl

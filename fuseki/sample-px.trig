@@ -79,6 +79,7 @@ graph <cube-project/px/jobs/import-job> {
     schema:actionStatus schema:PotentialActionStatus ;
     cc:cubeGraph <cube-project/px/cube-data> ;
     cc:dimensionMetadata <cube-project/px/dimensions-metadata> ;
+    cc:dataset <cube-project/px/dataset> ;
     CubeProject:sourceCube <http://example.org/px-cube> ;
     CubeProject:sourceGraph <http://example.org/px-cube> ;
     CubeProject:sourceEndpoint <http://db.cube-creator.lndo.site/px-cube> ;

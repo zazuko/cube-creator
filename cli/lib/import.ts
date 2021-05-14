@@ -9,6 +9,8 @@ import { hydra, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { readable } from 'duplex-to'
 import $rdf from 'rdf-ext'
 import clownface from 'clownface'
+import { Hydra } from 'alcaeus/node'
+import merge from 'merge2'
 
 interface CubeQuery {
   endpoint: NamedNode
@@ -18,6 +20,10 @@ interface CubeQuery {
 
 interface DimensionMetadataQuery extends CubeQuery {
   metadataResource: string
+}
+
+interface CubeMetadataQuery extends CubeQuery {
+  datasetResource: string
 }
 
 /**
@@ -60,6 +66,36 @@ export async function dimensionMetadataQuery(this: Context, { endpoint, cube, gr
   }
 
   return metadataCollection.dataset.toStream()
+}
+
+export async function cubeMetadataQuery(this: Context, { cube, graph, endpoint, datasetResource }: CubeMetadataQuery) {
+  const client = new StreamClient({
+    endpointUrl: endpoint.value,
+  })
+
+  const { representation, response } = await Hydra.loadResource(datasetResource)
+  const cubeResource = representation?.get(cube.value)
+  if (!cubeResource) {
+    this.log.error(`Failed to load cube dataset. Response was: '${response?.xhr.statusText}'`)
+    return $rdf.dataset().toStream()
+  }
+
+  let cubeMetaQuery = CONSTRUCT`${cube} ?p ?o`
+    .WHERE`
+      ${cube} ?p ?o .
+
+      filter(
+        !strstarts(str(?p), str(${ns.cube()}))
+      )
+    `
+  if (graph) {
+    cubeMetaQuery = cubeMetaQuery.FROM(graph)
+  }
+
+  return readable(merge(
+    await cubeMetaQuery.execute(client.query),
+    cubeResource.pointer.dataset.match(null, null, null, $rdf.namedNode(datasetResource)).toStream(),
+  ))
 }
 
 /**
