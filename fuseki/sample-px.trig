@@ -34,6 +34,21 @@ graph <cube-project/px> {
 graph <cube-project/px/dimensions-metadata> {
   <cube-project/px/dimensions-metadata>
     a cc:DimensionMetadataCollection, hydra:Resource ;
+    schema:hasPart <cube-project/px/dataset/dimension-metadata/10> ;
+    schema:hasPart <cube-project/px/dataset/dimension-metadata/remove> ;
+  .
+
+  <cube-project/px/dataset/dimension-metadata/10>
+    schema:about <http://example.org/px-cube/measure/5> ;
+    schema:description "Total area of forests, including commercial forests"@en ;
+    schema:name "Bundeswaelder in ha"@de , "Federation forests in hectares"@en ;
+    <https://cube.link/scale/scaleOfMeasure> <https://cube.link/scale/Foo> ;
+  .
+
+  <cube-project/px/dataset/dimension-metadata/remove>
+    schema:about <http://example.org/px-cube/measure/remove> ;
+    schema:description "This will be removed by import"@en ;
+  .
 }
 
 <cube-project/px/dataset> void:inDataset <px-example> .
@@ -44,6 +59,7 @@ graph <cube-project/px/dataset> {
     cc:dimensionMetadata <cube-project/px/dimensions-metadata> ;
     dcterms:issued "2021-05-11"^^xsd:date ;
     schema:dateCreated "2021-05-11"^^xsd:date ;
+    schema:description "This cube is something imported from PX and this text is here to stay"@en ;
   .
 
   <http://example.org/px-cube>

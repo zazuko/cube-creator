@@ -36,6 +36,12 @@ export async function dimensionsQuery(this: Context, { endpoint, cube, graph, me
     endpointUrl: endpoint.value,
   })
 
+  const { response, representation } = await Hydra.loadResource(metadataResource)
+  if (!representation?.root) {
+    throw new Error(`Failed to load existing dimension metadata. Response was: '${response?.xhr.statusText}'`)
+  }
+  const existingCollection = representation.root.pointer.any()
+
   const metadataCollection = clownface({ dataset: $rdf.dataset() })
     .namedNode(metadataResource)
     .addOut(rdf.type, [ns.cc.DimensionMetadataCollection, hydra.Resource])
@@ -80,8 +86,24 @@ export async function dimensionsQuery(this: Context, { endpoint, cube, graph, me
     const dimensionMetadata = metadataCollection.namedNode(`${metadataCollection.value}/${i}`)
     metadataCollection.addOut(schema.hasPart, dimensionMetadata, dm => {
       dm.addOut(schema.about, dimension)
+      const existingMetadata = existingCollection.has(schema.about, dimension)
+      if (existingMetadata.term) {
+        existingCollection.dataset.match(existingMetadata.term)
+          .forEach(({ predicate, object }) => dm.addOut(predicate, object))
+      }
+
       importedDimensionMetadata.match(dimension)
-        .forEach(({ predicate, object }) => dm.addOut(predicate, object))
+        .forEach(({ predicate, object }) => {
+          const existingValues = existingMetadata.out(predicate).terms
+          if (existingValues.length === 0) {
+            dm.addOut(predicate, object)
+            return
+          }
+
+          if (object.termType === 'Literal' && existingValues.every((term: any) => term.language !== object.language)) {
+            dm.addOut(predicate, object)
+          }
+        })
     })
   }
 
@@ -96,8 +118,7 @@ export async function cubeMetadataQuery(this: Context, { cube, graph, endpoint, 
   const { representation, response } = await Hydra.loadResource(datasetResource)
   const cubeResource = representation?.get<Cube.Cube>(cube.value)
   if (!cubeResource) {
-    this.log.error(`Failed to load cube dataset. Response was: '${response?.xhr.statusText}'`)
-    return $rdf.dataset().toStream()
+    throw new Error(`Failed to load cube dataset. Response was: '${response?.xhr.statusText}'`)
   }
 
   let cubeMetaQuery = CONSTRUCT`<${datasetResource}> ?p ?o`

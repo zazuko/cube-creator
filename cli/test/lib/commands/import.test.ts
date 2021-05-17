@@ -24,31 +24,27 @@ describe('@cube-creator/cli/lib/commands/import', function () {
     setupEnv()
     await insertTestProject()
     await insertPxCube()
+    await runner({
+      debug: true,
+      job: `${env.API_CORE_BASE}cube-project/px/jobs/import-job`,
+    })
   })
 
-  describe('first run', () => {
-    before(async () => {
-      await runner({
-        debug: true,
-        job: `${env.API_CORE_BASE}cube-project/px/jobs/import-job`,
-      })
-    })
-
-    it('copies all observations', async () => {
-      const [result] = await SELECT`( COUNT (DISTINCT ?observation) as ?count )`
-        .FROM(cubeDataGraph)
-        .WHERE`
+  it('copies all observations', async () => {
+    const [result] = await SELECT`( COUNT (DISTINCT ?observation) as ?count )`
+      .FROM(cubeDataGraph)
+      .WHERE`
           ${cube} a ${ns.cube.Cube} ; ${ns.cube.observationSet} ?set .
 
           ?set ${ns.cube.observation} ?observation .
           ?observation ?p ?o .
         `.execute(ccClients.parsingClient.query)
 
-      expect(result.count).to.deep.eq($rdf.literal('14256', xsd.integer))
-    })
+    expect(result.count).to.deep.eq($rdf.literal('14256', xsd.integer))
+  })
 
-    it('copies observation constraint shape', async () => {
-      const hasName = await ASK`
+  it('copies observation constraint shape', async () => {
+    const hasName = await ASK`
         ${cube} a ${ns.cube.Cube} .
         ${cube} ${ns.cube.observationConstraint} ?shape .
 
@@ -56,53 +52,53 @@ describe('@cube-creator/cli/lib/commands/import', function () {
           ${sh.path} ?path ;
         ] .
       `
-        .FROM(cubeDataGraph)
-        .execute(ccClients.parsingClient.query)
+      .FROM(cubeDataGraph)
+      .execute(ccClients.parsingClient.query)
 
-      expect(hasName).to.be.false
-    })
+    expect(hasName).to.be.false
+  })
 
-    it('does not copy cube metadata into data graph', async () => {
-      const hasName = await ASK`${cube} ${schema.name} ?name`
-        .FROM(cubeDataGraph)
-        .execute(ccClients.parsingClient.query)
+  it('does not copy cube metadata into data graph', async () => {
+    const hasName = await ASK`${cube} ${schema.name} ?name`
+      .FROM(cubeDataGraph)
+      .execute(ccClients.parsingClient.query)
 
-      expect(hasName).to.be.false
-    })
+    expect(hasName).to.be.false
+  })
 
-    it('does not copy dimension metadata into data graph', async () => {
-      const hasName = await ASK`${cubeNs('dimension/2/5')} ${schema.name} ?name`
-        .FROM(cubeDataGraph)
-        .execute(ccClients.parsingClient.query)
+  it('does not copy dimension metadata into data graph', async () => {
+    const hasName = await ASK`${cubeNs('dimension/2/5')} ${schema.name} ?name`
+      .FROM(cubeDataGraph)
+      .execute(ccClients.parsingClient.query)
 
-      expect(hasName).to.be.false
-    })
+    expect(hasName).to.be.false
+  })
 
-    it('initializes dimension metadata collection', async () => {
-      const metadata = resource('cube-project/px/dimensions-metadata')
-      const [dimensions] = await SELECT`( COUNT(?dim) as ?count )`
-        .FROM(resource('cube-project/px/dimensions-metadata'))
-        .WHERE`
+  it('initializes dimension metadata collection', async () => {
+    const metadata = resource('cube-project/px/dimensions-metadata')
+    const [dimensions] = await SELECT`( COUNT(?dim) as ?count )`
+      .FROM(resource('cube-project/px/dimensions-metadata'))
+      .WHERE`
           ${metadata} ${schema.hasPart} ?dimensionMetadata ; a ${cc.DimensionMetadataCollection} .
           ?dimensionMetadata ${schema.about} ?dim .
         `
-        .execute(ccClients.parsingClient.query)
+      .execute(ccClients.parsingClient.query)
 
-      expect(dimensions.count).to.deep.eq($rdf.literal('20', xsd.integer))
-    })
+    expect(dimensions.count).to.deep.eq($rdf.literal('20', xsd.integer))
+  })
 
-    it('copies cube metadata without deleting existing data', async () => {
-      const hasPreviousData = await ASK`
+  it('copies cube metadata without deleting existing data', async () => {
+    const hasPreviousData = await ASK`
         ?dataset a ${schema.Dataset} ;
                    ${schema.hasPart} ${cube} ;
                    ${cc.dimensionMetadata} ?metadata .
 
         ${cube} ${dcterms.creator} ${resource('user')}
       `
-        .FROM(resource('cube-project/px/dataset'))
-        .execute(ccClients.parsingClient.query)
+      .FROM(resource('cube-project/px/dataset'))
+      .execute(ccClients.parsingClient.query)
 
-      const hasNewMeta = await ASK`
+    const hasNewMeta = await ASK`
         ${resource('cube-project/px/dataset')}
           ${schema.identifier} ?id ;
           ${schema.name} ?name ;
@@ -111,31 +107,102 @@ describe('@cube-creator/cli/lib/commands/import', function () {
           ${schema.temporalCoverage} ?temp ;
         .
       `.FROM(resource('cube-project/px/dataset'))
-        .execute(ccClients.parsingClient.query)
+      .execute(ccClients.parsingClient.query)
 
-      expect(hasNewMeta).to.be.true
-      expect(hasPreviousData).to.be.true
-    })
+    expect(hasNewMeta).to.be.true
+    expect(hasPreviousData).to.be.true
+  })
 
-    it('does not copy observation URIs into meta graph', async () => {
-      const hasObservations = ASK`?set ${ns.cube.observation} ?observation`
-        .FROM(resource('cube-project/px/dataset'))
-        .execute(ccClients.parsingClient.query)
+  it('does not copy observation URIs into meta graph', async () => {
+    const hasObservations = ASK`?set ${ns.cube.observation} ?observation`
+      .FROM(resource('cube-project/px/dataset'))
+      .execute(ccClients.parsingClient.query)
 
-      await expect(hasObservations).to.eventually.be.false
-    })
+    await expect(hasObservations).to.eventually.be.false
+  })
 
-    it('copies dimension metadata', async () => {
-      const hasDimensionMeta = await ASK`
+  it('copies dimension metadata', async () => {
+    const hasDimensionMeta = await ASK`
         ?collection a ${cc.DimensionMetadataCollection} ;
                     ${schema.hasPart} ?meta .
         ?meta ${schema.about} ${cubeNs('measure/12')} ;
               ${schema.name} "Bois de grumes en m3"@fr ;
               <https://cube.link/scale/scaleOfMeasure> <https://cube.link/scale/Numerical> .
       `.FROM(resource('cube-project/px/dimensions-metadata'))
-        .execute(ccClients.parsingClient.query)
+      .execute(ccClients.parsingClient.query)
 
-      expect(hasDimensionMeta).to.be.true
-    })
+    expect(hasDimensionMeta).to.be.true
+  })
+
+  it('keeps existing metadata properties', async () => {
+    const hasDescription = await ASK`
+          ?meta ${schema.about} ${cubeNs('measure/5')} ;
+                ${schema.description} ?desc .
+        `
+      .FROM(resource('cube-project/px/dimensions-metadata'))
+      .execute(ccClients.parsingClient.query)
+
+    expect(hasDescription).to.be.true
+  })
+
+  it('skips dimension metadata properties which are already set', async () => {
+    const didNotReplace = await ASK`
+          ?meta ${schema.about} ${cubeNs('measure/5')} ;
+                <https://cube.link/scale/scaleOfMeasure> <https://cube.link/scale/Foo>
+        `
+      .FROM(resource('cube-project/px/dimensions-metadata'))
+      .execute(ccClients.parsingClient.query)
+
+    expect(didNotReplace).to.be.true
+  })
+
+  it('skips dimension metadata literal properties which are already set in given language', async () => {
+    const [result, ...rest] = await SELECT`?name`
+      .WHERE`
+          ?meta ${schema.about} ${cubeNs('measure/5')} ;
+                ${schema.name} ?name .
+
+          FILTER (
+            "de" = lang(?name)
+          )
+        `
+      .FROM(resource('cube-project/px/dimensions-metadata'))
+      .execute(ccClients.parsingClient.query)
+
+    expect(result.name.value).to.eq('Bundeswaelder in ha')
+    expect(rest).to.have.length(0)
+  })
+
+  it('removes superfluous dimension metadata', async () => {
+    const hasRemovedPart = await ASK`
+        ?collection a ${ns.cc.DimensionMetadataCollection} ;
+                    ${schema.hasPart} ${resource('cube-project/px/dataset/dimension-metadata/remove')}
+      `
+      .FROM(resource('cube-project/px/dimensions-metadata'))
+      .execute(ccClients.parsingClient.query)
+
+    const hasRemovedDimension = await ASK`
+        ?meta ${schema.about} ${cubeNs('measure/remove')}
+      `
+      .FROM(resource('cube-project/px/dimensions-metadata'))
+      .execute(ccClients.parsingClient.query)
+
+    expect(hasRemovedPart).to.be.false
+    expect(hasRemovedDimension).to.be.false
+  })
+
+  it.skip('keeps existing cube metadata', async () => {
+    const keptExistingDescription = await ASK`
+      ?dataset ${schema.hasPart} ${cube} .
+      ?dataset ${schema.description} ?description .
+
+      filter (
+        lang(?description) = "en"
+      )
+    `
+      .FROM(resource('cube-project/px/dataset'))
+      .execute(ccClients.parsingClient.query)
+
+    expect(keptExistingDescription).to.be.true
   })
 })
