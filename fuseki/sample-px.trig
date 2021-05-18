@@ -1,3 +1,4 @@
+PREFIX vcard: <http://www.w3.org/2006/vcard/ns#>
 PREFIX qudt: <http://qudt.org/schema/qudt/>
 base <https://cube-creator.lndo.site/>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -61,6 +62,8 @@ graph <cube-project/px/dataset> {
     dcterms:issued "2021-05-11"^^xsd:date ;
     schema:dateCreated "2021-05-11"^^xsd:date ;
     schema:description "This cube is something imported from PX and this text is here to stay"@en ;
+    dcat:contactPoint [ vcard:fn 'Test Name' ; vcard:hasEmail 'test@mail.ch' ] ;
+    schema:unitText "Anzahl (ha, m3)"@de , "Count, ha, m3"@en ;
   .
 
   <http://example.org/px-cube>

@@ -2,7 +2,7 @@ import { CONSTRUCT, SELECT } from '@tpluscode/sparql-builder'
 import type { Context } from 'barnard59-core/lib/Pipeline'
 import StreamClient from 'sparql-http-client'
 import ParsingClient from 'sparql-http-client/ParsingClient'
-import { NamedNode, Stream } from 'rdf-js'
+import { NamedNode, Quad, Stream, Term } from 'rdf-js'
 import { PassThrough } from 'readable-stream'
 import * as ns from '@cube-creator/core/namespace'
 import { hydra, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
@@ -13,6 +13,9 @@ import { Hydra } from 'alcaeus/node'
 import merge from 'merge2'
 import { create } from '@cube-creator/model/Dataset'
 import * as Cube from '@cube-creator/model/Cube'
+import DatasetExt from 'rdf-ext/lib/Dataset'
+import { cc } from '@cube-creator/core/namespace'
+import through2 from 'through2'
 
 interface CubeQuery {
   endpoint: NamedNode
@@ -110,18 +113,36 @@ export async function dimensionsQuery(this: Context, { endpoint, cube, graph, me
   return metadataCollection.dataset.toStream()
 }
 
-export async function cubeMetadataQuery(this: Context, { cube, graph, endpoint, datasetResource }: CubeMetadataQuery) {
+const ccValue = cc().value
+
+function * extractExistingMetadata(dataset: DatasetExt, graph: Term, id: Term): Generator<Quad> {
+  const quads = dataset.match(id, null, null, graph)
+    .filter(({ predicate }) => !predicate.value.startsWith(ccValue))
+    .filter(({ predicate }) => !predicate.equals(schema.dateCreated))
+
+  for (const quad of quads) {
+    yield quad
+    if (quad.object.termType === 'BlankNode') {
+      for (const childQuad of extractExistingMetadata(dataset, graph, quad.object)) {
+        yield childQuad
+      }
+    }
+  }
+}
+
+export async function cubeMetadataQuery(this: Context, { cube, graph, endpoint, ...rest }: CubeMetadataQuery) {
   const client = new StreamClient({
     endpointUrl: endpoint.value,
   })
 
+  const datasetResource = $rdf.namedNode(rest.datasetResource)
   const { representation, response } = await Hydra.loadResource(datasetResource)
   const cubeResource = representation?.get<Cube.Cube>(cube.value)
   if (!cubeResource) {
     throw new Error(`Failed to load cube dataset. Response was: '${response?.xhr.statusText}'`)
   }
 
-  let cubeMetaQuery = CONSTRUCT`<${datasetResource}> ?p ?o`
+  let cubeMetaQuery = CONSTRUCT`${datasetResource} ?p ?o`
     .WHERE`
       ${cube} ?p ?o .
 
@@ -134,15 +155,29 @@ export async function cubeMetadataQuery(this: Context, { cube, graph, endpoint, 
   }
 
   const pointer = clownface({ dataset: $rdf.dataset() }).namedNode(datasetResource)
-  const dataset = create(pointer, {
+  create(pointer, {
     hasPart: [Cube.create(pointer.namedNode(cube), {
       creator: cubeResource.creator,
     })],
   })
-  dataset.pointer.deleteOut(schema.dateCreated)
+  pointer.deleteOut(schema.dateCreated)
+  const existingMeta = extractExistingMetadata($rdf.dataset([...cubeResource.pointer.dataset]), datasetResource, datasetResource)
+  pointer.dataset.addAll([...existingMeta])
+
+  const newMetadata = (await cubeMetaQuery.execute(client.query))
+    .pipe(through2.obj(function (quad: Quad, enc, callback) {
+      const existingValues = [...pointer.dataset.match(quad.subject, quad.predicate)]
+
+      const { object } = quad
+      if (object.termType !== 'Literal' || existingValues.every((term: any) => term.object.language !== object.language)) {
+        this.push(quad)
+      }
+
+      callback()
+    }))
 
   return readable(merge(
-    await cubeMetaQuery.execute(client.query),
+    newMetadata,
     pointer.dataset.toStream(),
   ))
 }

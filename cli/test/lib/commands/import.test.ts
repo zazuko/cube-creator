@@ -1,7 +1,7 @@
 import { before, describe, it } from 'mocha'
 import { expect } from 'chai'
 import $rdf from 'rdf-ext'
-import { dcterms, qudt, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
+import { dcat, dcterms, qudt, schema, sh, vcard, xsd } from '@tpluscode/rdf-ns-builders'
 import namespace from '@rdfjs/namespace'
 import env from '@cube-creator/core/env'
 import { insertTestProject, insertPxCube } from '@cube-creator/testing/lib/seedData'
@@ -191,10 +191,14 @@ describe('@cube-creator/cli/lib/commands/import', function () {
     expect(hasRemovedDimension).to.be.false
   })
 
-  it.skip('keeps existing cube metadata', async () => {
-    const keptExistingDescription = await ASK`
-      ?dataset ${schema.hasPart} ${cube} .
-      ?dataset ${schema.description} ?description .
+  it('keeps existing cube metadata', async () => {
+    const keptExistingMeta = await ASK`
+      ?dataset ${schema.hasPart} ${cube} ;
+               ${schema.description} ?description ;
+               ${dcat.contactPoint} [
+                 ${vcard.fn} ?fn ;
+                 ${vcard.hasEmail} ?email ;
+               ] .
 
       filter (
         lang(?description) = "en"
@@ -203,6 +207,25 @@ describe('@cube-creator/cli/lib/commands/import', function () {
       .FROM(resource('cube-project/px/dataset'))
       .execute(ccClients.parsingClient.query)
 
-    expect(keptExistingDescription).to.be.true
+    expect(keptExistingMeta).to.be.true
+  })
+
+  it('keeps existing cube metadata literals, imports new languages', async () => {
+    const results = await SELECT`?unitText`
+      .WHERE`
+      ?dataset ${schema.hasPart} ${cube} ;
+               ${schema.unitText} ?unitText ;
+      .
+    `
+      .FROM(resource('cube-project/px/dataset'))
+      .execute(ccClients.parsingClient.query)
+    const literals = results.map((row) => row.unitText)
+
+    expect(literals).to.have.length(3)
+    expect(literals).to.deep.contain.members([
+      $rdf.literal('Anzahl (ha, m3)', 'de'),
+      $rdf.literal('Count, ha, m3', 'en'),
+      $rdf.literal('Nombre, ha, m3', 'fr'),
+    ])
   })
 })
