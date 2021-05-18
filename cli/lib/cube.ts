@@ -50,6 +50,7 @@ export function expirePreviousVersions(this: Pick<Context, 'variables' | 'log'>)
 export async function injectRevision(this: Pick<Context, 'variables' | 'log'>, jobUri?: string) {
   let cubeNamespace = this.variables.get('namespace')
   const revision = this.variables.get('revision')
+  const versionedDimensions = this.variables.get('versionedDimensions')
   let dataset: Dataset | undefined
   if (jobUri) {
     ({ dataset } = await loadDataset(jobUri))
@@ -91,6 +92,9 @@ export async function injectRevision(this: Pick<Context, 'variables' | 'log'>, j
       if (rebasedObject.termType === 'NamedNode' && !rebasedObject.equals(object) && isObservationDimension(predicate)) {
         // see https://github.com/zazuko/cube-creator/issues/658
         this.push($rdf.quad(rebasedObject, schema.sameAs, object, graph))
+
+        // see https://github.com/visualize-admin/visualization-tool/pull/75
+        versionedDimensions.add(predicate)
       }
     }
 

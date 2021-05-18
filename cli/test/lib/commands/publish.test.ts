@@ -322,5 +322,23 @@ describe('lib/commands/publish', function () {
 
       expect(sameAsAdded).to.be.false
     })
+
+    it('injects version to versioned dimensions', async () => {
+      const results = await SELECT`?dimension`
+        .WHERE`
+          ?shape a ${cube.Constraint} .
+          ?shape ${sh.property} ?property .
+          ?property ${sh.path} ?dimension ; ${schema.version} ?version
+        `
+        .FROM($rdf.namedNode('https://lindas.admin.ch/foen/cube'))
+        .execute(ccClients.parsingClient.query)
+
+      expect(results).to.have.length(2)
+      expect(results).to.deep.contain.members([{
+        dimension: ns.baseCube.station,
+      }, {
+        dimension: ns.baseCube.aggregation,
+      }])
+    })
   })
 })
