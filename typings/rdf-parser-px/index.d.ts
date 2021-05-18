@@ -11,6 +11,7 @@ declare module 'rdf-parser-px' {
     baseIRI: string
     encoding?: string
     metadata: Array<ColumnMetadata>
+    observer?: string
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-interface

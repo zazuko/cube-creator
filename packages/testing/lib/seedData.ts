@@ -52,6 +52,7 @@ export const insertPxCube = () => {
       titles: 'Jahr',
       datatype: xsd.gYear.value,
     }],
+    observer: 'http://example.org/observer',
   })
 
   const pxCubeStream = parser.import(pxStream)
