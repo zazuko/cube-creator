@@ -4,9 +4,7 @@
       {{ property.name }}
     </span>
     <b-field v-if="property.shape.description">
-      <vue-markdown class="help" :anchor-attributes="linkAttrs">
-        {{ property.shape.description }}
-      </vue-markdown>
+      <vue-markdown class="help" :anchor-attributes="linkAttrs" :source="property.shape.description" />
     </b-field>
     <b-field v-if="property.selectedEditor">
       <render-wc-template :template-result="renderMultiEditor()" />
