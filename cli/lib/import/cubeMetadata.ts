@@ -1,6 +1,6 @@
 import { cc } from '@cube-creator/core/namespace'
 import DatasetExt from 'rdf-ext/lib/Dataset'
-import { NamedNode, Quad, Term } from 'rdf-js'
+import { DatasetCore, NamedNode, Quad, Term } from 'rdf-js'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import type { Context } from 'barnard59-core/lib/Pipeline'
 import StreamClient from 'sparql-http-client'
@@ -38,6 +38,49 @@ function * extractExistingMetadata(dataset: DatasetExt, graph: Term, id: Term): 
   }
 }
 
+function createQuery(cube: NamedNode, datasetResource: NamedNode, graph: NamedNode | undefined) {
+  const cubeMetaQuery = CONSTRUCT`${datasetResource} ?p ?o`
+    .WHERE`
+      ${cube} ?p ?o .
+
+      filter(
+        !strstarts(str(?p), str(${ns.cube()}))
+      )
+    `
+  if (graph) {
+    return cubeMetaQuery.FROM(graph)
+  }
+
+  return cubeMetaQuery
+}
+
+function preserveExistingValues(dataset: DatasetCore) {
+  return through2.obj(function (quad: Quad, enc, callback) {
+    const existingValues = [...dataset.match(quad.subject, quad.predicate)]
+
+    const { object } = quad
+    if (object.termType !== 'Literal' || existingValues.every((term: any) => term.object.language !== object.language)) {
+      this.push(quad)
+    }
+
+    callback()
+  })
+}
+
+function prepareNewCubeResource(cubeResource: Cube.Cube, datasetResource: NamedNode) {
+  const pointer = clownface({ dataset: $rdf.dataset() }).namedNode(datasetResource)
+  create(pointer, {
+    hasPart: [Cube.create(pointer.node(cubeResource.id), {
+      creator: cubeResource.creator,
+    })],
+  })
+  pointer.deleteOut(schema.dateCreated)
+  const existingMeta = extractExistingMetadata($rdf.dataset([...cubeResource.pointer.dataset]), datasetResource, datasetResource)
+  pointer.dataset.addAll([...existingMeta])
+
+  return pointer.dataset
+}
+
 export default async function query(this: Context, { cube, graph, endpoint, ...rest }: CubeMetadataQuery) {
   const client = new StreamClient({
     endpointUrl: endpoint.value,
@@ -50,42 +93,14 @@ export default async function query(this: Context, { cube, graph, endpoint, ...r
     throw new Error(`Failed to load cube dataset. Response was: '${response?.xhr.statusText}'`)
   }
 
-  let cubeMetaQuery = CONSTRUCT`${datasetResource} ?p ?o`
-    .WHERE`
-      ${cube} ?p ?o .
+  const cubeMetaQuery = createQuery(cube, datasetResource, graph)
 
-      filter(
-        !strstarts(str(?p), str(${ns.cube()}))
-      )
-    `
-  if (graph) {
-    cubeMetaQuery = cubeMetaQuery.FROM(graph)
-  }
-
-  const pointer = clownface({ dataset: $rdf.dataset() }).namedNode(datasetResource)
-  create(pointer, {
-    hasPart: [Cube.create(pointer.namedNode(cube), {
-      creator: cubeResource.creator,
-    })],
-  })
-  pointer.deleteOut(schema.dateCreated)
-  const existingMeta = extractExistingMetadata($rdf.dataset([...cubeResource.pointer.dataset]), datasetResource, datasetResource)
-  pointer.dataset.addAll([...existingMeta])
+  const metaCollection = prepareNewCubeResource(cubeResource, datasetResource)
 
   const newMetadata = (await cubeMetaQuery.execute(client.query))
-    .pipe(through2.obj(function (quad: Quad, enc, callback) {
-      const existingValues = [...pointer.dataset.match(quad.subject, quad.predicate)]
-
-      const { object } = quad
-      if (object.termType !== 'Literal' || existingValues.every((term: any) => term.object.language !== object.language)) {
-        this.push(quad)
-      }
-
-      callback()
-    }))
 
   return readable(merge(
-    newMetadata,
-    pointer.dataset.toStream(),
+    newMetadata.pipe(preserveExistingValues(metaCollection)),
+    metaCollection.toStream(),
   ))
 }

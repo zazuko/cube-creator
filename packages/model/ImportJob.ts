@@ -44,7 +44,7 @@ export function ImportJobMixin<Base extends Constructor<RdfResource>>(base: Base
 
 ImportJobMixin.appliesTo = cc.ImportJob
 
-type RequiredProperties = 'name' | 'sourceCube' | 'sourceEndpoint' | 'cubeGraph'
+type RequiredProperties = 'name' | 'sourceCube' | 'sourceEndpoint' | 'cubeGraph' | 'dimensionMetadata' | 'dataset'
 
 export const create = initializer<ImportJob, RequiredProperties>(ImportJobMixin, {
   types: [cc.Job, cc.ImportJob],
