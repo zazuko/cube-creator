@@ -4,14 +4,12 @@ import fs from 'fs'
 import path from 'path'
 import { parsers } from '@rdfjs/formats-common'
 import $rdf from 'rdf-ext'
-import { DatasetCore, Quad, Term } from 'rdf-js'
+import { DatasetCore } from 'rdf-js'
 import { xsd, _void } from '@tpluscode/rdf-ns-builders'
 import { sparql } from '@tpluscode/rdf-string'
 import RdfPxParser from 'rdf-parser-px'
 import TripleToQuadTransform from 'rdf-transform-triple-to-quad'
 import { ccClients, mdClients } from './index'
-import through2 from 'through2'
-import { cube } from '@cube-creator/core/namespace'
 
 async function removeTestGraphs(client: ParsingClient, dataset: DatasetCore) {
   const graphs = [...dataset.match(null, _void.inDataset)].map(({ subject }) => subject)
@@ -40,16 +38,6 @@ export const insertTestDimensions = () => {
   return insertTestData('fuseki/shared-dimensions.trig', mdClients)
 }
 
-const oldCubeNs = /^http:\/\/ns\.bergnet\.org\/cube\//
-
-function rebaseCubeNs<T extends Term>(term: T): T {
-  if (term.termType === 'NamedNode') {
-    return $rdf.namedNode(term.value.replace(oldCubeNs, cube().value)) as any
-  }
-
-  return term
-}
-
 export const insertPxCube = () => {
   const client = new StreamClient({
     endpointUrl: process.env.PX_CUBE_QUERY_ENDPOINT!,
@@ -68,16 +56,6 @@ export const insertPxCube = () => {
 
   const pxCubeStream = parser.import(pxStream)
     .pipe(new TripleToQuadTransform($rdf.namedNode(process.env.PX_CUBE_GRAPH!)))
-    .pipe(through2.obj(function ({ subject, predicate, object, graph }: Quad, _, cb) {
-      this.push($rdf.quad(
-        rebaseCubeNs(subject),
-        rebaseCubeNs(predicate),
-        rebaseCubeNs(object),
-        graph,
-      ))
-
-      cb()
-    }))
 
   return client.store.put(pxCubeStream)
 }

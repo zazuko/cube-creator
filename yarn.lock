@@ -11175,10 +11175,10 @@ rdf-parser-csvw@^0.14.0, rdf-parser-csvw@^0.14.2:
     readable-stream "^3.4.0"
     uri-templates "^0.2.0"
 
-rdf-parser-px@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/rdf-parser-px/-/rdf-parser-px-0.1.0.tgz#84881c4a0a1e0e64269380488bb84d1ee4e12bee"
-  integrity sha512-rAbjj/9/vUsucwPp5HSz1UYwHBmWdbKROkQLaFy2b4Bl3wUzq5W+DVVUMO6l8j0H9XYhpY8pNRf4oM2UoJkfKA==
+rdf-parser-px@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/rdf-parser-px/-/rdf-parser-px-0.2.0.tgz#bc409743aa4ffb407c64266df5c6e48b19c7e3dd"
+  integrity sha512-mZ+VKfuAfz8rFmZNEFG1TuTjR9LJmiuhobmmumTXLIiHkcr4/+dppA6DMM6/5qHpZTV7t0H0r+UYoE6Ghb0g2A==
   dependencies:
     "@rdfjs/namespace" "^1.0.0"
     clownface "^1.2.0"
@@ -12748,7 +12748,7 @@ through2-reduce@1.1.1:
     through2 "~2.0.0"
     xtend "~4.0.1"
 
-through2@^2, through2@^2.0.0, through2@^2.0.3, through2@~2.0.0:
+through2@^2.0.0, through2@^2.0.3, through2@~2.0.0:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/through2/-/through2-2.0.5.tgz#01c1e39eb31d07cb7d03a96a70823260b23132cd"
   integrity sha512-/mrRod8xqpA+IHSLyGCQ2s8SPHiCDEeQJSep1jqLYeEUClOFG2Qsh+4FU6G9VeqpZnGW/Su8LQGc4YKni5rYSQ==

@@ -1,7 +1,7 @@
 import { before, describe, it } from 'mocha'
 import { expect } from 'chai'
 import $rdf from 'rdf-ext'
-import { dcterms, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
+import { dcterms, qudt, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import namespace from '@rdfjs/namespace'
 import env from '@cube-creator/core/env'
 import { insertTestProject, insertPxCube } from '@cube-creator/testing/lib/seedData'
@@ -127,7 +127,7 @@ describe('@cube-creator/cli/lib/commands/import', function () {
                     ${schema.hasPart} ?meta .
         ?meta ${schema.about} ${cubeNs('measure/12')} ;
               ${schema.name} "Bois de grumes en m3"@fr ;
-              <https://cube.link/scale/scaleOfMeasure> <https://cube.link/scale/Numerical> .
+              ${qudt.scaleType} ${qudt.RatioScale} .
       `.FROM(resource('cube-project/px/dimensions-metadata'))
       .execute(ccClients.parsingClient.query)
 
@@ -148,7 +148,7 @@ describe('@cube-creator/cli/lib/commands/import', function () {
   it('skips dimension metadata properties which are already set', async () => {
     const didNotReplace = await ASK`
           ?meta ${schema.about} ${cubeNs('measure/5')} ;
-                <https://cube.link/scale/scaleOfMeasure> <https://cube.link/scale/Foo>
+                ${qudt.scaleType} ${qudt.EnumerationScale}
         `
       .FROM(resource('cube-project/px/dimensions-metadata'))
       .execute(ccClients.parsingClient.query)

@@ -1,3 +1,4 @@
+PREFIX qudt: <http://qudt.org/schema/qudt/>
 base <https://cube-creator.lndo.site/>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix xsd: <http://www.w3.org/2001/XMLSchema#>
@@ -42,7 +43,7 @@ graph <cube-project/px/dimensions-metadata> {
     schema:about <http://example.org/px-cube/measure/5> ;
     schema:description "Total area of forests, including commercial forests"@en ;
     schema:name "Bundeswaelder in ha"@de , "Federation forests in hectares"@en ;
-    <https://cube.link/scale/scaleOfMeasure> <https://cube.link/scale/Foo> ;
+    qudt:scaleType qudt:EnumerationScale ;
   .
 
   <cube-project/px/dataset/dimension-metadata/remove>
