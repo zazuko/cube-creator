@@ -13,6 +13,7 @@ import { Hydra } from 'alcaeus/node'
 import { Project, PublishJob } from '@cube-creator/model'
 import '../variables'
 import '../hydra-cache'
+import TermSet from '@rdfjs/term-set'
 
 interface RunOptions {
   debug: boolean
@@ -63,6 +64,7 @@ export default function (pipelineId: NamedNode, log: Debugger) {
     variable.set('publish-graph-query-endpoint', publishStore?.endpoint || process.env.PUBLISH_GRAPH_QUERY_ENDPOINT)
     variable.set('publish-graph-store-user', publishStore?.user || process.env.PUBLISH_GRAPH_STORE_USER)
     variable.set('publish-graph-store-password', publishStore?.password || process.env.PUBLISH_GRAPH_STORE_PASSWORD)
+    variable.set('versionedDimensions', new TermSet())
 
     const timestamp = new Date()
     variable.set('timestamp', $rdf.literal(timestamp.toISOString(), xsd.dateTime))
