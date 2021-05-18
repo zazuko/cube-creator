@@ -27,7 +27,7 @@ export default async function query(this: Context, { endpoint, cube, graph }: Cu
     ?propertyS ?propertyP ?propertyO .
 
     ?set ${ns.cube.observation} ?observation .
-    ?observation ?observationP ?observationO .`
+    ?observationS ?observationP ?observationO .`
     .WHERE`
     {
       # Constraint Shape properties
@@ -59,7 +59,8 @@ export default async function query(this: Context, { endpoint, cube, graph }: Cu
               ${ns.cube.observationSet} ?set .
 
       ?set ${ns.cube.observation} ?observation .
-      ?observation ?observationP ?observationO .
+      ?observation (<>|!<>)* ?observationS .
+      ?observationS ?observationP ?observationO .
     }
     `
 

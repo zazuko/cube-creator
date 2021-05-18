@@ -66,12 +66,15 @@ describe('@cube-creator/cli/lib/commands/import', function () {
     expect(hasName).to.be.false
   })
 
-  it('does not copy dimension metadata into data graph', async () => {
-    const hasName = await ASK`${cubeNs('dimension/2/5')} ${schema.name} ?name`
+  it('copies observation concept data into data grap', async () => {
+    const hasConceptData = await ASK`
+        ?observation ${cubeNs('dimension/0')} ?concept .
+        ?concept ${schema.name} ?name
+      `
       .FROM(cubeDataGraph)
       .execute(ccClients.parsingClient.query)
 
-    expect(hasName).to.be.false
+    expect(hasConceptData).to.be.true
   })
 
   it('initializes dimension metadata collection', async () => {
