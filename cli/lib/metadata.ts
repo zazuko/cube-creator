@@ -40,11 +40,12 @@ export async function loadDataset(jobUri: string) {
 
 export async function injectMetadata(this: Context, jobUri: string) {
   const baseCube = $rdf.namedNode(this.variables.get('namespace'))
-  const revision = this.variables.get('revision')
+  const revision = $rdf.literal(this.variables.get('revision').toString(), xsd.integer)
   const cubeIdentifier = this.variables.get('cubeIdentifier')
   const { dataset, maintainer } = await loadDataset(jobUri)
   const datasetTriples = dataset.pointer.dataset.match(null, null, null, dataset.id)
   const timestamp = this.variables.get('timestamp')
+  const versionedDimensions = this.variables.get('versionedDimensions')
 
   return obj(async function (quad: Quad, _, callback) {
     const visited = new TermSet()
@@ -60,14 +61,14 @@ export async function injectMetadata(this: Context, jobUri: string) {
 
     // Cube Metadata
     if (rdf.type.equals(quad.predicate) && quad.object.equals(cube.Cube)) {
-      this.push($rdf.quad(quad.subject, schema.version, $rdf.literal(revision.toString(), xsd.integer)))
+      this.push($rdf.quad(quad.subject, schema.version, revision))
       this.push($rdf.quad(quad.subject, schema.dateModified, timestamp))
       this.push($rdf.quad(quad.subject, dcterms.modified, timestamp))
       this.push($rdf.quad(quad.subject, dcterms.identifier, $rdf.literal(cubeIdentifier)))
       this.push($rdf.quad(baseCube, schema.hasPart, quad.subject))
       this.push($rdf.quad(baseCube, rdf.type, schema.CreativeWork))
 
-      if (revision === 1) {
+      if (revision.value === '1') {
         this.push($rdf.quad(quad.subject, schema.datePublished, timestamp))
       }
 
@@ -84,6 +85,10 @@ export async function injectMetadata(this: Context, jobUri: string) {
     if (quad.predicate.equals(sh.path)) {
       const propertyShape = quad.subject
       const dimensions = [...datasetTriples.match(null, schema.about, quad.object)]
+
+      if (versionedDimensions.has(quad.object)) {
+        this.push($rdf.quad(propertyShape, schema.version, revision))
+      }
 
       for (const dim of dimensions) {
         const metadata = [...datasetTriples.match(dim.subject)]

@@ -1,4 +1,4 @@
-import { Literal, NamedNode } from 'rdf-js'
+import { Literal, NamedNode, Term } from 'rdf-js'
 
 declare module 'barnard59-core/lib/Pipeline' {
   interface VariableNames {
@@ -19,6 +19,7 @@ declare module 'barnard59-core/lib/Pipeline' {
     isObservationTable: boolean
     graph: string
     bnodeUuid: string
+    versionedDimensions: Set<Term>
     sourceCube: NamedNode
     sourceEndpoint: NamedNode
     sourceGraph: NamedNode | undefined
