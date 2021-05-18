@@ -51,7 +51,7 @@
   a :Step ;
   code:implementedBy
     [
-      code:link <file:../lib/import#cubeQuery> ;
+      code:link <file:../lib/import/cube#default> ;
       a code:EcmaScript ;
     ] ;
   code:arguments
@@ -73,7 +73,7 @@
   a :Step ;
   code:implementedBy
     [
-      code:link <file:../lib/import#dimensionsQuery> ;
+      code:link <file:../lib/import/dimensions#default> ;
       a code:EcmaScript ;
     ] ;
   code:arguments
@@ -99,7 +99,7 @@
   a :Step ;
   code:implementedBy
     [
-      code:link <file:../lib/import#cubeMetadataQuery> ;
+      code:link <file:../lib/import/cubeMetadata#default> ;
       a code:EcmaScript ;
     ] ;
   code:arguments
