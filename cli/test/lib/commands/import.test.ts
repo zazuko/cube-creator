@@ -1,7 +1,7 @@
 import { before, describe, it } from 'mocha'
 import { expect } from 'chai'
 import $rdf from 'rdf-ext'
-import { dcat, dcterms, qudt, schema, sh, vcard, xsd } from '@tpluscode/rdf-ns-builders'
+import { dcat, dcterms, qudt, schema, sh, time, vcard, xsd } from '@tpluscode/rdf-ns-builders'
 import namespace from '@rdfjs/namespace'
 import env from '@cube-creator/core/env'
 import { insertTestProject, insertPxCube } from '@cube-creator/testing/lib/seedData'
@@ -10,7 +10,7 @@ import * as ns from '@cube-creator/core/namespace'
 import { ccClients } from '@cube-creator/testing/lib'
 import { setupEnv } from '../../support/env'
 import runner from '../../../lib/commands/import'
-import { cc } from '@cube-creator/core/namespace'
+import { cc, meta } from '@cube-creator/core/namespace'
 
 describe('@cube-creator/cli/lib/commands/import', function () {
   this.timeout(200000)
@@ -192,6 +192,20 @@ describe('@cube-creator/cli/lib/commands/import', function () {
 
     expect(hasRemovedPart).to.be.false
     expect(hasRemovedDimension).to.be.false
+  })
+
+  it('keeps deep dimension metadata', async () => {
+    const didNotRemove = await ASK`
+          ?meta ${schema.about} ${cubeNs('measure/5')} ;
+                ${meta.dataKind} [
+                  a ${time.GeneralDateTimeDescription} ;
+                  ${time.unitType} ${time.unitHour} ;
+                ] ;
+        `
+      .FROM(resource('cube-project/px/dimensions-metadata'))
+      .execute(ccClients.parsingClient.query)
+
+    expect(didNotRemove).to.be.true
   })
 
   it('keeps existing cube metadata', async () => {

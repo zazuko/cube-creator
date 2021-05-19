@@ -59,7 +59,7 @@ function preserveExistingValues(dataset: DatasetCore) {
     const existingValues = [...dataset.match(quad.subject, quad.predicate)]
 
     const { object } = quad
-    if (object.termType !== 'Literal' || existingValues.every((term: any) => term.object.language !== object.language)) {
+    if (object.termType === 'Literal' && existingValues.every((term: any) => term.object.language !== object.language)) {
       this.push(quad)
     }
 

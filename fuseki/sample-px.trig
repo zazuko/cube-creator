@@ -1,3 +1,4 @@
+PREFIX time: <http://www.w3.org/2006/time#>
 PREFIX vcard: <http://www.w3.org/2006/vcard/ns#>
 PREFIX qudt: <http://qudt.org/schema/qudt/>
 base <https://cube-creator.lndo.site/>
@@ -12,6 +13,7 @@ prefix void: <http://rdfs.org/ns/void#>
 prefix cc: <https://cube-creator.zazuko.com/vocab#>
 prefix CubeProject: <https://cube-creator.zazuko.com/vocab#CubeProject/>
 prefix cube: <https://cube.link/>
+prefix meta: <https://cube.link/meta/>
 
 <px-example> a void:Dataset .
 
@@ -45,6 +47,11 @@ graph <cube-project/px/dimensions-metadata> {
     schema:description "Total area of forests, including commercial forests"@en ;
     schema:name "Bundeswaelder in ha"@de , "Federation forests in hectares"@en ;
     qudt:scaleType qudt:EnumerationScale ;
+    meta:dataKind
+      [
+        a time:GeneralDateTimeDescription ;
+        time:unitType time:unitHour ;
+      ] ;
   .
 
   <cube-project/px/dataset/dimension-metadata/remove>
