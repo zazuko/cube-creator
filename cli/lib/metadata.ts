@@ -4,15 +4,12 @@ import $rdf from 'rdf-ext'
 import { dcterms, rdf, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import { cc, cube } from '@cube-creator/core/namespace'
 import { Project, PublishJob } from '@cube-creator/model'
-import { Hydra } from 'alcaeus/node'
-import * as Models from '@cube-creator/model'
+import { HydraClient } from 'alcaeus/alcaeus'
 import TermSet from '@rdfjs/term-set'
 import type { Context } from 'barnard59-core/lib/Pipeline'
 import { loadDimensionMapping } from './output-mapper'
 
-Hydra.resources.factory.addMixin(...Object.values(Models))
-
-export async function loadDataset(jobUri: string) {
+export async function loadDataset(jobUri: string, Hydra: HydraClient) {
   const jobResource = await Hydra.loadResource<PublishJob>(jobUri)
   const job = jobResource.representation?.root
   if (!job) {
@@ -39,10 +36,11 @@ export async function loadDataset(jobUri: string) {
 }
 
 export async function injectMetadata(this: Context, jobUri: string) {
+  const Hydra = this.variables.get('apiClient')
   const baseCube = $rdf.namedNode(this.variables.get('namespace'))
   const revision = $rdf.literal(this.variables.get('revision').toString(), xsd.integer)
   const cubeIdentifier = this.variables.get('cubeIdentifier')
-  const { dataset, maintainer } = await loadDataset(jobUri)
+  const { dataset, maintainer } = await loadDataset(jobUri, Hydra)
   const datasetTriples = dataset.pointer.dataset.match(null, null, null, dataset.id)
   const timestamp = this.variables.get('timestamp')
   const versionedDimensions = this.variables.get('versionedDimensions')
@@ -100,7 +98,7 @@ export async function injectMetadata(this: Context, jobUri: string) {
           copyChildren(meta.object)
 
           if (meta.predicate.equals(cc.dimensionMapping)) {
-            const mapping = await loadDimensionMapping(meta.object.value)
+            const mapping = await loadDimensionMapping(meta.object.value, Hydra)
 
             if (mapping?.has(cc.sharedDimension).term) {
               this.push($rdf.triple(propertyShape, rdf.type, cube.SharedDimension))

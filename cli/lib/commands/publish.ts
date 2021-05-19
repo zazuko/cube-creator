@@ -1,7 +1,6 @@
-import { Hydra } from 'alcaeus/node'
+import { HydraClient } from 'alcaeus/alcaeus'
 import { CsvProject, ImportProject, PublishJob } from '@cube-creator/model'
 import '../variables'
-import '../hydra-cache'
 import { isCsvProject } from '@cube-creator/model/Project'
 import TermSet from '@rdfjs/term-set'
 import * as runner from './runner'
@@ -21,7 +20,9 @@ export default runner.create<PublishRunOptions>({
   },
   async prepare(options, variable) {
     const { publishStore, job: jobUri } = options
-    const { job, namespace, cubeIdentifier } = await getJob(jobUri)
+    const Hydra = variable.get('apiClient')
+
+    const { job, namespace, cubeIdentifier } = await getJob(jobUri, Hydra)
 
     variable.set('publish-graph-store-endpoint', publishStore?.endpoint || process.env.PUBLISH_GRAPH_STORE_ENDPOINT)
     variable.set('publish-graph-query-endpoint', publishStore?.endpoint || process.env.PUBLISH_GRAPH_QUERY_ENDPOINT)
@@ -43,7 +44,7 @@ export default runner.create<PublishRunOptions>({
   },
 })
 
-async function getJob(jobUri: string): Promise<{
+async function getJob(jobUri: string, Hydra: HydraClient): Promise<{
   job: PublishJob
   namespace: string
   cubeIdentifier: string

@@ -8,7 +8,11 @@ import { setupEnv } from '../support/env'
 import { Table } from '@rdfine/csvw'
 import { log } from '../support/logger'
 import type { Variables } from 'barnard59-core/lib/Pipeline'
+import * as Models from '@cube-creator/model'
+import * as Csvw from '@rdfine/csvw'
 
+Hydra.resources.factory.addMixin(...Object.values(Models))
+Hydra.resources.factory.addMixin(...Object.values(Csvw))
 Hydra.baseUri = env.API_CORE_BASE
 
 describe('lib/job', function () {
@@ -24,6 +28,7 @@ describe('lib/job', function () {
   beforeEach(() => {
     variables = new Map<any, any>([
       ['executionUrl', 'http://foo.runner/job/bar'],
+      ['apiClient', Hydra],
     ])
   })
 

@@ -1,19 +1,12 @@
 import stream from 'readable-stream'
-import { Hydra } from 'alcaeus/node'
+import { HydraClient } from 'alcaeus/alcaeus'
 import { Job, Table, TransformJob } from '@cube-creator/model'
-import * as Csvw from '@rdfine/csvw'
 import type * as Schema from '@rdfine/schema'
-import * as Models from '@cube-creator/model'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import type Logger from 'barnard59-core/lib/logger'
 import type { Context, Variables } from 'barnard59-core/lib/Pipeline'
 import $rdf from 'rdf-ext'
-import { ThingMixin } from '@rdfine/schema'
 import { log } from './log'
-
-Hydra.resources.factory.addMixin(...Object.values(Models))
-Hydra.resources.factory.addMixin(...Object.values(Csvw))
-Hydra.resources.factory.addMixin(ThingMixin)
 
 interface Params {
   jobUri: string
@@ -23,6 +16,9 @@ interface Params {
 
 async function loadTransformJob(jobUri: string, log: Logger, variables: Params['variables']): Promise<TransformJob> {
   log.debug(`Loading job ${jobUri}`)
+
+  const Hydra = variables.get('apiClient')
+
   const { representation, response } = await Hydra.loadResource<TransformJob>(jobUri)
   if (!representation || !representation.root) {
     throw new Error(`Did not find representation of job ${jobUri}. Server responded ${response?.xhr.status}`)
@@ -44,11 +40,12 @@ interface JobStatusUpdate {
   status: Schema.ActionStatusType
   modified: Date
   error?: Error
+  apiClient: HydraClient
 }
 
-export async function updateJobStatus({ jobUri, executionUrl, status, error, modified }: JobStatusUpdate) {
+export async function updateJobStatus({ jobUri, executionUrl, status, error, modified, apiClient }: JobStatusUpdate) {
   try {
-    const { representation } = await Hydra.loadResource<Job>(jobUri)
+    const { representation } = await apiClient.loadResource<Job>(jobUri)
     const job = representation?.root
     if (!job) {
       log('Could not load job to update')

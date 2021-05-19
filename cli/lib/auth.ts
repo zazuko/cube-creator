@@ -2,7 +2,7 @@
 import fetch from 'node-fetch'
 import { Debugger } from 'debug'
 import querystring from 'querystring'
-import { Hydra } from 'alcaeus/node'
+import { HydraClient } from 'alcaeus/alcaeus'
 import once from 'once'
 
 export type AuthConfig = {
@@ -95,7 +95,7 @@ function defaultAuthConfig(log: Debugger): AuthConfig {
   throw new Error('Incomplete OIDC config')
 }
 
-export function setupAuthentication(config: Partial<AuthConfig>, log: Debugger) {
+export function setupAuthentication(config: Partial<AuthConfig>, log: Debugger, Hydra: HydraClient) {
   let token: LiveToken | undefined
 
   Hydra.defaultHeaders = async () => {

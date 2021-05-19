@@ -1,12 +1,7 @@
-
 import type Pipeline from 'barnard59-core/lib/Pipeline'
 import { PublishJob, Project } from '@cube-creator/model'
-import { Hydra } from 'alcaeus/node'
 import { get } from 'barnard59-graph-store'
 import { Stream } from 'readable-stream'
-import * as Models from '@cube-creator/model'
-
-Hydra.resources.factory.addMixin(...Object.values(Models))
 
 interface Params {
   jobUri: string
@@ -16,6 +11,8 @@ interface Params {
 }
 
 export async function loadCube(this: Pipeline.Context, { jobUri, endpoint, user, password }: Params): Promise<Stream> {
+  const Hydra = this.variables.get('apiClient')
+
   const jobResource = await Hydra.loadResource<PublishJob>(jobUri)
   const job = jobResource.representation?.root
   if (!job) {

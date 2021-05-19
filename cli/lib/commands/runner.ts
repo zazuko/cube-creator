@@ -7,8 +7,11 @@ import bufferDebug from 'barnard59/lib/bufferDebug'
 import { schema, xsd } from '@tpluscode/rdf-ns-builders'
 import type { Variables } from 'barnard59-core/lib/Pipeline'
 import namespace from '@rdfjs/namespace'
+import * as Alcaeus from 'alcaeus/node'
+import { HydraResponse } from 'alcaeus'
+import { cc } from '@cube-creator/core/namespace'
+import * as Models from '@cube-creator/model'
 import { updateJobStatus } from '../job'
-import '../hydra-cache'
 import { log } from '../log'
 
 const ns = {
@@ -56,7 +59,17 @@ export function create<TOptions extends RunOptions>({ pipelineSources, prepare }
     const authConfig = {
       params: command.authParam,
     }
-    setupAuthentication(authConfig, log)
+
+    const apiClient = Alcaeus.create()
+    apiClient.resources.factory.addMixin(...Object.values(Models))
+    apiClient.cacheStrategy.shouldLoad = (previous: HydraResponse) => {
+      if (previous.representation?.root?.types.has(cc.CSVSource)) {
+        return true
+      }
+
+      return false
+    }
+    setupAuthentication(authConfig, log, apiClient)
 
     const pipelinePath = (filename: string) => path.join(basePath, `./pipelines/${filename}.ttl`)
     const dataset = await pipelineSources(command).reduce((previous, source) => {
@@ -67,6 +80,7 @@ export function create<TOptions extends RunOptions>({ pipelineSources, prepare }
     }, Promise.resolve($rdf.dataset()))
 
     log('Running job %s', jobUri)
+    variable.set('apiClient', apiClient)
     variable.set('jobUri', jobUri)
     variable.set('executionUrl', executionUrl)
     variable.set('graph-store-endpoint', graphStore?.endpoint || process.env.GRAPH_STORE_ENDPOINT)
@@ -97,6 +111,7 @@ export function create<TOptions extends RunOptions>({ pipelineSources, prepare }
       modified: new Date(),
       executionUrl: variable.get('executionUrl'),
       status: schema.ActiveActionStatus,
+      apiClient,
     })
 
     return run.promise
@@ -106,6 +121,7 @@ export function create<TOptions extends RunOptions>({ pipelineSources, prepare }
           jobUri: run.pipeline.context.variables.get('jobUri'),
           executionUrl: run.pipeline.context.variables.get('executionUrl'),
           status: schema.CompletedActionStatus,
+          apiClient,
         }))
       .catch(async (error) => {
         await updateJobStatus({
@@ -114,6 +130,7 @@ export function create<TOptions extends RunOptions>({ pipelineSources, prepare }
           executionUrl: run.pipeline.context.variables.get('executionUrl'),
           status: schema.FailedActionStatus,
           error,
+          apiClient,
         })
 
         throw error
