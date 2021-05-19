@@ -48,6 +48,8 @@ function createMetadataQuery(cube: NamedNode, graph?: NamedNode) {
       filter (
         !strstarts(str(?p), str(${sh()}))
       )
+
+      filter ( !isBlank(?o) )
     `
 
   if (graph) {

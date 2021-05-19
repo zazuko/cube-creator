@@ -46,6 +46,8 @@ function createQuery(cube: NamedNode, datasetResource: NamedNode, graph: NamedNo
       filter(
         !strstarts(str(?p), str(${ns.cube()}))
       )
+
+      filter ( !isBlank(?o) )
     `
   if (graph) {
     return cubeMetaQuery.FROM(graph)
