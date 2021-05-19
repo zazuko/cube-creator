@@ -78,9 +78,9 @@ describe('@cube-creator/cli/lib/commands/import', function () {
   })
 
   it('initializes dimension metadata collection', async () => {
-    const metadata = resource('cube-project/px/dimensions-metadata')
+    const metadata = resource('cube-project/px/dataset/dimension-metadata')
     const [dimensions] = await SELECT`( COUNT(?dim) as ?count )`
-      .FROM(resource('cube-project/px/dimensions-metadata'))
+      .FROM(resource('cube-project/px/dataset/dimension-metadata'))
       .WHERE`
           ${metadata} ${schema.hasPart} ?dimensionMetadata ; a ${cc.DimensionMetadataCollection} .
           ?dimensionMetadata ${schema.about} ?dim .
@@ -131,7 +131,7 @@ describe('@cube-creator/cli/lib/commands/import', function () {
         ?meta ${schema.about} ${cubeNs('measure/12')} ;
               ${schema.name} "Bois de grumes en m3"@fr ;
               ${qudt.scaleType} ${qudt.RatioScale} .
-      `.FROM(resource('cube-project/px/dimensions-metadata'))
+      `.FROM(resource('cube-project/px/dataset/dimension-metadata'))
       .execute(ccClients.parsingClient.query)
 
     expect(hasDimensionMeta).to.be.true
@@ -142,7 +142,7 @@ describe('@cube-creator/cli/lib/commands/import', function () {
           ?meta ${schema.about} ${cubeNs('measure/5')} ;
                 ${schema.description} ?desc .
         `
-      .FROM(resource('cube-project/px/dimensions-metadata'))
+      .FROM(resource('cube-project/px/dataset/dimension-metadata'))
       .execute(ccClients.parsingClient.query)
 
     expect(hasDescription).to.be.true
@@ -153,7 +153,7 @@ describe('@cube-creator/cli/lib/commands/import', function () {
           ?meta ${schema.about} ${cubeNs('measure/5')} ;
                 ${qudt.scaleType} ${qudt.EnumerationScale}
         `
-      .FROM(resource('cube-project/px/dimensions-metadata'))
+      .FROM(resource('cube-project/px/dataset/dimension-metadata'))
       .execute(ccClients.parsingClient.query)
 
     expect(didNotReplace).to.be.true
@@ -169,7 +169,7 @@ describe('@cube-creator/cli/lib/commands/import', function () {
             "de" = lang(?name)
           )
         `
-      .FROM(resource('cube-project/px/dimensions-metadata'))
+      .FROM(resource('cube-project/px/dataset/dimension-metadata'))
       .execute(ccClients.parsingClient.query)
 
     expect(result.name.value).to.eq('Bundeswaelder in ha')
@@ -181,13 +181,13 @@ describe('@cube-creator/cli/lib/commands/import', function () {
         ?collection a ${ns.cc.DimensionMetadataCollection} ;
                     ${schema.hasPart} ${resource('cube-project/px/dataset/dimension-metadata/remove')}
       `
-      .FROM(resource('cube-project/px/dimensions-metadata'))
+      .FROM(resource('cube-project/px/dataset/dimension-metadata'))
       .execute(ccClients.parsingClient.query)
 
     const hasRemovedDimension = await ASK`
         ?meta ${schema.about} ${cubeNs('measure/remove')}
       `
-      .FROM(resource('cube-project/px/dimensions-metadata'))
+      .FROM(resource('cube-project/px/dataset/dimension-metadata'))
       .execute(ccClients.parsingClient.query)
 
     expect(hasRemovedPart).to.be.false
@@ -202,7 +202,7 @@ describe('@cube-creator/cli/lib/commands/import', function () {
                   ${time.unitType} ${time.unitHour} ;
                 ] ;
         `
-      .FROM(resource('cube-project/px/dimensions-metadata'))
+      .FROM(resource('cube-project/px/dataset/dimension-metadata'))
       .execute(ccClients.parsingClient.query)
 
     expect(didNotRemove).to.be.true
