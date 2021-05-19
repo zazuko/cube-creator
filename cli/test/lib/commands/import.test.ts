@@ -28,6 +28,10 @@ describe('@cube-creator/cli/lib/commands/import', function () {
       debug: true,
       job: `${env.API_CORE_BASE}cube-project/px/jobs/import-job`,
     })
+    await runner({
+      debug: true,
+      job: `${env.API_CORE_BASE}cube-project/px/jobs/import-job`,
+    })
   })
 
   it('copies all observations', async () => {
@@ -206,6 +210,17 @@ describe('@cube-creator/cli/lib/commands/import', function () {
       .execute(ccClients.parsingClient.query)
 
     expect(didNotRemove).to.be.true
+  })
+
+  it('does not leave dangling blank nodes', async () => {
+    const results = await SELECT`?kind`.WHERE`
+          ?meta ${schema.about} ${cubeNs('measure/5')} ;
+                ${meta.dataKind} ?kind ;
+        `
+      .FROM(resource('cube-project/px/dataset/dimension-metadata'))
+      .execute(ccClients.parsingClient.query)
+
+    expect(results).to.have.length(1)
   })
 
   it('keeps existing cube metadata', async () => {

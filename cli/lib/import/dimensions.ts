@@ -74,7 +74,7 @@ function addMetadata({ id, metadataCollection, dimension, existingCollection, im
     dm.addOut(schema.about, dimension)
     const existingMetadata = existingCollection.has(schema.about, dimension)
     if (existingMetadata.term) {
-      existingCollection.dataset.match(existingMetadata.term)
+      existingCollection.dataset.match(existingMetadata.term, null, null, metadataCollection.term)
         .forEach(({ predicate, object }) => {
           dm.addOut(predicate, object, ptr => {
             if (object.termType === 'BlankNode') {
