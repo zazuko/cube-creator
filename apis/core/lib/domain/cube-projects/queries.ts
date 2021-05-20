@@ -5,6 +5,7 @@ import { NamedNode, Term } from 'rdf-js'
 import { cc } from '@cube-creator/core/namespace'
 import { DimensionMetadataCollection } from '@cube-creator/model'
 import { parsingClient } from '../../query-client'
+import { sparql, SparqlTemplateResult } from '@tpluscode/rdf-string'
 
 export async function findProject(metadataCollection: DimensionMetadataCollection): Promise<NamedNode | undefined> {
   const result = await SELECT`?project`
@@ -22,9 +23,54 @@ export async function findProject(metadataCollection: DimensionMetadataCollectio
   return result[0]?.project as any
 }
 
-export function exists(cubeIdentifier: string, maintainer: Term, client = parsingClient): Promise<boolean> {
-  return ASK`graph ?project {
-    ?project ${dcterms.identifier} ${$rdf.literal(cubeIdentifier)} .
-    ?project ${schema.maintainer} ${maintainer}
-  }`.execute(client.query)
+export function exists(cubeIdentifierOrUri: string | NamedNode, maintainer: Term, client = parsingClient): Promise<boolean> {
+  let patterns: SparqlTemplateResult[]
+
+  if (typeof cubeIdentifierOrUri === 'string') {
+    const cubeIdentifier = $rdf.literal(cubeIdentifierOrUri)
+
+    const clashingIdentifiers = sparql`graph ?project {
+      ?project ${dcterms.identifier} ${cubeIdentifier} .
+      ?project ${schema.maintainer} ${maintainer}
+    }`
+
+    const identifierClashesWithImportedCube = sparql`graph ?project {
+      ?project ${schema.maintainer} ${maintainer} .
+      ?project ${cc['CubeProject/sourceCube']} ?cube .
+    }
+
+    graph ${maintainer} {
+      ?org ${cc.namespace} ?ns
+
+      bind(iri(concat(str(?ns), ${cubeIdentifier})) as ?cube1)
+    }
+
+    filter ( ?cube = ?cube1 )`
+
+    patterns = [clashingIdentifiers, identifierClashesWithImportedCube]
+  } else {
+    const importedCubeClashedWithCsvCube = sparql`graph ?project {
+      ?project ${dcterms.identifier} ?cubeIdentifier .
+      ?project ${schema.maintainer} ?org .
+    }
+
+    graph ?org {
+      ?org ${cc.namespace} ?ns
+    }
+
+    bind(iri(concat(str(?ns), ?cubeIdentifier)) as ?cube)
+
+    filter (?cube = ${cubeIdentifierOrUri})`
+
+    const projectAlreadyImported = sparql`graph ?project {
+      ?project ${cc['CubeProject/sourceCube']} ${cubeIdentifierOrUri} .
+    }`
+
+    patterns = [importedCubeClashedWithCsvCube, projectAlreadyImported]
+  }
+
+  const [first, ...rest] = patterns
+  const union = rest.reduce((current, pattern) => sparql`${current} union { ${pattern} }`, sparql`{ ${first} }`)
+
+  return ASK`${union}`.execute(client.query)
 }

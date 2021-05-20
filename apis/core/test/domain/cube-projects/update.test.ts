@@ -16,6 +16,7 @@ import { Dataset, Project } from '@cube-creator/model'
 import { fromPointer } from '@cube-creator/model/Organization'
 import { updateProject } from '../../../lib/domain/cube-projects/update'
 import * as projectQueries from '../../../lib/domain/cube-projects/queries'
+import * as orgQueries from '../../../lib/domain/organization/query'
 
 describe('domain/cube-projects/update', () => {
   let store: TestResourceStore
@@ -41,6 +42,7 @@ describe('domain/cube-projects/update', () => {
       bar,
     ])
     projectExists = sinon.stub(projectQueries, 'exists').resolves(false)
+    sinon.stub(orgQueries, 'cubeNamespaceAllowed').resolves(true)
   })
 
   afterEach(sinon.restore)

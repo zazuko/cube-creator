@@ -39,6 +39,7 @@ describe('domain/cube-projects/create', () => {
       organizationId: organization.id,
     })
     projectExists = sinon.stub(projectQueries, 'exists').resolves(false)
+    sinon.stub(orgQueries, 'cubeNamespaceAllowed').resolves(true)
   })
 
   afterEach(() => {
