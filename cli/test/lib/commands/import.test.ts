@@ -15,7 +15,7 @@ import { cc, meta } from '@cube-creator/core/namespace'
 describe('@cube-creator/cli/lib/commands/import', function () {
   this.timeout(200000)
 
-  const cube = $rdf.namedNode('http://example.org/px-cube')
+  const cube = $rdf.namedNode('https://environment.ld.admin.ch/foen/example/px-cube')
   const cubeNs = namespace(`${cube.value}/`)
   const resource = namespace(env.API_CORE_BASE)
   const cubeDataGraph = resource('cube-project/px/cube-data')
