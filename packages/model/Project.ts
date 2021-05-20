@@ -43,7 +43,7 @@ export interface ProjectsCollection extends Collection<CsvProject | ImportProjec
 }
 
 export const isCsvProject = (project: CsvProject | ImportProject): project is CsvProject => {
-  return !!project.pointer.out(dcterms.identifier).term
+  return !!project.pointer.out(cc.csvMapping).term
 }
 
 export function ProjectMixin<Base extends Constructor>(base: Base): Mixin {
