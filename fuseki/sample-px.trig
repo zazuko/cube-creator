@@ -28,7 +28,7 @@ graph <cube-project/px> {
     rdfs:label "PX Cube Project" ;
     cc:jobCollection <cube-project/px/jobs> ;
     cc:projectSourceKind <https://cube-creator.lndo.site/shape/cube-project/create#ExistingCube> ;
-    CubeProject:sourceCube <http://example.org/px-cube> ;
+    CubeProject:sourceCube <https://environment.ld.admin.ch/foen/example/px-cube> ;
     CubeProject:sourceGraph <http://example.org/px-cube> ;
     CubeProject:sourceEndpoint <http://store:3030/px-cube> ;
 }
@@ -43,7 +43,7 @@ graph <cube-project/px/dataset/dimension-metadata> {
   .
 
   <cube-project/px/dataset/dimension-metadata/10>
-    schema:about <http://example.org/px-cube/measure/5> ;
+    schema:about <https://environment.ld.admin.ch/foen/example/px-cube/measure/5> ;
     schema:description "Total area of forests, including commercial forests"@en ;
     schema:name "Bundeswaelder in ha"@de , "Federation forests in hectares"@en ;
     qudt:scaleType qudt:EnumerationScale ;
@@ -55,7 +55,7 @@ graph <cube-project/px/dataset/dimension-metadata> {
   .
 
   <cube-project/px/dataset/dimension-metadata/remove>
-    schema:about <http://example.org/px-cube/measure/remove> ;
+    schema:about <https://environment.ld.admin.ch/foen/example/px-cube/measure/remove> ;
     schema:description "This will be removed by import"@en ;
   .
 }
@@ -64,7 +64,7 @@ graph <cube-project/px/dataset/dimension-metadata> {
 graph <cube-project/px/dataset> {
   <cube-project/px/dataset>
     a void:Dataset, hydra:Resource, schema:Dataset, dcat:Dataset ;
-    schema:hasPart <http://example.org/px-cube> ;
+    schema:hasPart <https://environment.ld.admin.ch/foen/example/px-cube> ;
     cc:dimensionMetadata <cube-project/px/dataset/dimension-metadata> ;
     dcterms:issued "2021-05-11"^^xsd:date ;
     schema:dateCreated "2021-05-11"^^xsd:date ;
@@ -73,7 +73,7 @@ graph <cube-project/px/dataset> {
     schema:unitText "Anzahl (ha, m3)"@de , "Count, ha, m3"@en ;
   .
 
-  <http://example.org/px-cube>
+  <https://environment.ld.admin.ch/foen/example/px-cube>
     a cube:Cube ;
     schema:dateCreated "2015-08-06"^^xsd:date ;
     dcterms:creator <user> ;
@@ -107,7 +107,7 @@ graph <cube-project/px/jobs/import-job> {
     cc:cubeGraph <cube-project/px/cube-data> ;
     cc:dimensionMetadata <cube-project/px/dataset/dimension-metadata> ;
     cc:dataset <cube-project/px/dataset> ;
-    CubeProject:sourceCube <http://example.org/px-cube> ;
+    CubeProject:sourceCube <https://environment.ld.admin.ch/foen/example/px-cube> ;
     CubeProject:sourceGraph <http://example.org/px-cube> ;
     CubeProject:sourceEndpoint <http://db.cube-creator.lndo.site/px-cube> ;
   .
