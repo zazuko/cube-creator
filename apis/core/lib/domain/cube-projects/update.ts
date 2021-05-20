@@ -8,6 +8,7 @@ import { CsvProject, ImportProject, Project } from '@cube-creator/model'
 import type { Organization } from '@rdfine/schema'
 import { exists } from './queries'
 import { isCsvProject } from '@cube-creator/model/Project'
+import { cubeNamespaceAllowed } from '../organization/query'
 
 interface UpdateProjectCommand {
   resource: GraphPointer
@@ -56,6 +57,14 @@ export async function updateProject({
   }
 
   if (!previousCube.equals(currentCube) || !maintainer.after.equals(maintainer.before)) {
+    if (await exists(currentCube, maintainer.after)) {
+      throw new DomainError('Another project already produces a cube with that URI')
+    }
+
+    if (await cubeNamespaceAllowed(currentCube, maintainer.after) === false) {
+      throw new DomainError("Imported cube does not match the Organisation's base URI")
+    }
+
     const dataset = await store.getResource(project.dataset)
     dataset.renameCube(previousCube, currentCube)
 

@@ -9,6 +9,7 @@ import { ResourceStore } from '../../ResourceStore'
 import * as id from '../identifiers'
 import { DomainError } from '@cube-creator/api-errors'
 import { exists } from './queries'
+import { cubeNamespaceAllowed } from '../organization/query'
 import error from 'http-errors'
 
 interface CreateProjectCommand {
@@ -78,6 +79,14 @@ async function createImportProjectResources({ resource, user, userName, projectN
   const sourceKind = resource.out(cc.projectSourceKind).term
   if (sourceKind?.termType !== 'NamedNode') {
     throw new Error('Invalid source kind')
+  }
+
+  if (await exists(sourceCube, maintainer)) {
+    throw new DomainError('Another project already produces a cube with that URI')
+  }
+
+  if (await cubeNamespaceAllowed(sourceCube, maintainer) === false) {
+    throw new DomainError("Imported cube does not match the Organisation's base URI")
   }
 
   const project = Project.createImportProject(projectNode, {
