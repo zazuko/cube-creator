@@ -1,5 +1,15 @@
 # @cube-creator/ui
 
+## 1.2.1
+
+### Patch Changes
+
+- a284b404: Alternating UI for `sh:xone` shapes
+- 1ac072a7: Show button to start import job
+- Updated dependencies [fc796075]
+  - @cube-creator/core@0.3.2
+  - @cube-creator/model@0.1.19
+
 ## 1.2.0
 
 ### Minor Changes

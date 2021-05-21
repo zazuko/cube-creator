@@ -1,5 +1,19 @@
 # @cube-creator/cli
 
+## 1.3.0
+
+### Minor Changes
+
+- c68b6857: Extracted the model of import project from CSV mapping project
+- e1fb39e7: Add `schema:version` to versioned dimensions (closes #711)
+
+### Patch Changes
+
+- 40642f88: Previous cubes would not be expired if there are gaps in version numbers (re. [visualize-admin/visualization-tool#80](https://github.com/visualize-admin/visualization-tool/issues/80)
+- Updated dependencies [fc796075]
+  - @cube-creator/core@0.3.2
+  - @cube-creator/model@0.1.19
+
 ## 1.2.2
 
 ### Patch Changes
