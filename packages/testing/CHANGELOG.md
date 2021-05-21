@@ -1,5 +1,12 @@
 # @cube-creator/testing
 
+## 0.1.18
+
+### Patch Changes
+
+- Updated dependencies [fc796075]
+  - @cube-creator/core@0.3.2
+
 ## 0.1.17
 
 ### Patch Changes

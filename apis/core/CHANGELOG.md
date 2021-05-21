@@ -1,5 +1,20 @@
 # @cube-creator/core-api
 
+## 1.2.0
+
+### Minor Changes
+
+- c68b6857: Extracted the model of import project from CSV mapping project
+- fc796075: Add ImportJob type and API capability
+
+### Patch Changes
+
+- Updated dependencies [fc796075]
+  - @cube-creator/core@0.3.2
+  - @cube-creator/model@0.1.19
+  - @cube-creator/api-errors@0.0.3
+  - @cube-creator/shared-dimensions-api@2.0.2
+
 ## 1.1.4
 
 ### Patch Changes

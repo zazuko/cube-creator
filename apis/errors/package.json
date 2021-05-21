@@ -1,9 +1,9 @@
 {
   "name": "@cube-creator/api-errors",
   "private": true,
-  "version": "0.0.2",
+  "version": "0.0.3",
   "dependencies": {
-    "@cube-creator/core": "0.3.1",
+    "@cube-creator/core": "0.3.2",
     "http-problem-details-mapper": "^0.1.7",
     "http-problem-details": "^0.1.5",
     "http-errors": "^1.8.0"

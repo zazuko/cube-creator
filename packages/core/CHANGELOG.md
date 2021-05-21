@@ -1,5 +1,11 @@
 # @cube-creator/core
 
+## 0.3.2
+
+### Patch Changes
+
+- fc796075: Add ImportJob type and API capability
+
 ## 0.3.1
 
 ### Patch Changes
