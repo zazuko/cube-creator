@@ -27,6 +27,18 @@ describe('uriTemplateParser', () => {
       expect(parsed.toString()).to.equal('/{column one}/{column two}')
       expect(parsed.columnNames).to.have.members(['column one', 'column two'])
     })
+
+    it('accepts apostrophe in column names', () => {
+      // given
+      const template = "/{column'one}/{column'two}"
+
+      // when
+      const parsed = parse(template)
+
+      // then
+      expect(parsed.toString()).to.equal("/{column'one}/{column'two}")
+      expect(parsed.columnNames).to.have.members(["column'one", "column'two"])
+    })
   })
 
   describe('renameColumnVariable', () => {
