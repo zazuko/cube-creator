@@ -59,7 +59,7 @@ describe('domain/cube-projects/update', () => {
 
     beforeEach(async () => {
       const resource = projectPointer()
-      project = (await createProject({ resource, store, projectsCollection, user, userName })).pointer as any
+      project = (await createProject({ resource, store, projectsCollection, user, userName })).project.pointer as any
 
       const datasetBefore = await store.get(project.out(cc.dataset).term)
       datasetBefore.out(schema.hasPart)
@@ -295,7 +295,7 @@ describe('domain/cube-projects/update', () => {
 
     beforeEach(async () => {
       const resource = projectPointer()
-      project = (await createProject({ resource, store, projectsCollection, user, userName })).pointer as any
+      project = (await createProject({ resource, store, projectsCollection, user, userName })).project.pointer as any
 
       const datasetBefore = await store.get(project.out(cc.dataset).term)
       datasetBefore.out(schema.hasPart)
