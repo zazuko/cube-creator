@@ -1,0 +1,19 @@
+@base <urn:pipeline:cube-creator> .
+@prefix : <https://pipeline.described.at/> .
+@prefix code: <https://code.described.at/> .
+
+<#validate>
+  a :Step ;
+  code:implementedBy
+    [
+      code:link <node:barnard59-base#map> ;
+      a code:EcmaScript ;
+    ] ;
+  code:arguments
+    (
+      [
+        code:link <file:../lib/validation#validate> ;
+        a code:EcmaScript ;
+      ]
+    ) ;
+.

@@ -56,19 +56,6 @@
                             p.variables.set('isObservationTable', isObservationTable)
                            }"""^^code:EcmaScript ) .
 
-<#validate>
-  a :Step ;
-  code:implementedBy [
-    code:link <node:barnard59-base#map> ;
-    a code:EcmaScript ;
-  ] ;
-  code:arguments (
-    [
-      code:link <file:../lib/validation#validate> ;
-      a code:EcmaScript ;
-    ]
-  ) ;
-.
 
 # ------------------------------
 #
@@ -89,6 +76,7 @@
                        <#toCubeShape>
                        <#flatten>
                        <#filterCubeLinks>
+                       <#setGraph>
                      ) ] .
 
 <#TransformCsv>
@@ -97,6 +85,7 @@
                        <#loadCsvStep>
                        <#parse>
                        <#filterNonObservationTable>
+                       <#setGraph>
                      ) ] .
 
 <#LoadCsv>

@@ -1,0 +1,114 @@
+PREFIX time: <http://www.w3.org/2006/time#>
+PREFIX vcard: <http://www.w3.org/2006/vcard/ns#>
+PREFIX qudt: <http://qudt.org/schema/qudt/>
+base <https://cube-creator.lndo.site/>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix dcat: <http://www.w3.org/ns/dcat#>
+prefix dcterms: <http://purl.org/dc/terms/>
+prefix schema: <http://schema.org/>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix hydra: <http://www.w3.org/ns/hydra/core#>
+prefix void: <http://rdfs.org/ns/void#>
+prefix cc: <https://cube-creator.zazuko.com/vocab#>
+prefix CubeProject: <https://cube-creator.zazuko.com/vocab#CubeProject/>
+prefix cube: <https://cube.link/>
+prefix meta: <https://cube.link/meta/>
+
+<px-example> a void:Dataset .
+
+<cube-project/px> void:inDataset <px-example> .
+graph <cube-project/px> {
+  <cube-project/px>
+    a cc:CubeProject, hydra:Resource ;
+    cc:dataset <cube-project/px/dataset> ;
+    cc:cubeGraph <cube-project/px/cube-data> ;
+    schema:maintainer <organization/bafu> ;
+    dcterms:creator <user> ;
+    rdfs:label "PX Cube Project" ;
+    cc:jobCollection <cube-project/px/jobs> ;
+    cc:projectSourceKind <https://cube-creator.lndo.site/shape/cube-project/create#ExistingCube> ;
+    CubeProject:sourceCube <http://example.org/px-cube> ;
+    CubeProject:sourceGraph <http://example.org/px-cube> ;
+    CubeProject:sourceEndpoint <http://store:3030/px-cube> ;
+}
+
+<cube-project/px/cube-data> void:inDataset <px-example> .
+<cube-project/px/dataset/dimension-metadata> void:inDataset <px-example> .
+graph <cube-project/px/dataset/dimension-metadata> {
+  <cube-project/px/dataset/dimension-metadata>
+    a cc:DimensionMetadataCollection, hydra:Resource ;
+    schema:hasPart <cube-project/px/dataset/dimension-metadata/10> ;
+    schema:hasPart <cube-project/px/dataset/dimension-metadata/remove> ;
+  .
+
+  <cube-project/px/dataset/dimension-metadata/10>
+    schema:about <http://example.org/px-cube/measure/5> ;
+    schema:description "Total area of forests, including commercial forests"@en ;
+    schema:name "Bundeswaelder in ha"@de , "Federation forests in hectares"@en ;
+    qudt:scaleType qudt:EnumerationScale ;
+    meta:dataKind
+      [
+        a time:GeneralDateTimeDescription ;
+        time:unitType time:unitHour ;
+      ] ;
+  .
+
+  <cube-project/px/dataset/dimension-metadata/remove>
+    schema:about <http://example.org/px-cube/measure/remove> ;
+    schema:description "This will be removed by import"@en ;
+  .
+}
+
+<cube-project/px/dataset> void:inDataset <px-example> .
+graph <cube-project/px/dataset> {
+  <cube-project/px/dataset>
+    a void:Dataset, hydra:Resource, schema:Dataset, dcat:Dataset ;
+    schema:hasPart <http://example.org/px-cube> ;
+    cc:dimensionMetadata <cube-project/px/dataset/dimension-metadata> ;
+    dcterms:issued "2021-05-11"^^xsd:date ;
+    schema:dateCreated "2021-05-11"^^xsd:date ;
+    schema:description "This cube is something imported from PX and this text is here to stay"@en ;
+    dcat:contactPoint [ vcard:fn 'Test Name' ; vcard:hasEmail 'test@mail.ch' ] ;
+    schema:unitText "Anzahl (ha, m3)"@de , "Count, ha, m3"@en ;
+  .
+
+  <http://example.org/px-cube>
+    a cube:Cube ;
+    schema:dateCreated "2015-08-06"^^xsd:date ;
+    dcterms:creator <user> ;
+  .
+}
+
+<cube-project/px/jobs> void:inDataset <px-example> .
+graph <cube-project/px/jobs> {
+  <cube-project/px/jobs>
+    a hydra:Collection, cc:JobCollection ;
+    cc:project <cube-project/px> ;
+    hydra:manages
+      [
+        hydra:property rdf:type ;
+        hydra:object cc:Job ;
+      ],
+      [
+        hydra:property cc:project ;
+        hydra:object <cube-project/px> ;
+      ]
+  .
+}
+
+<cube-project/px/jobs/import-job> void:inDataset <px-example> .
+graph <cube-project/px/jobs/import-job> {
+  <cube-project/px/jobs/import-job>
+    a hydra:Resource, cc:Job, cc:ImportJob ;
+    schema:name "Test import" ;
+    dcterms:created "2020-10-29T12:01:54"^^xsd:dateTime ;
+    schema:actionStatus schema:PotentialActionStatus ;
+    cc:cubeGraph <cube-project/px/cube-data> ;
+    cc:dimensionMetadata <cube-project/px/dataset/dimension-metadata> ;
+    cc:dataset <cube-project/px/dataset> ;
+    CubeProject:sourceCube <http://example.org/px-cube> ;
+    CubeProject:sourceGraph <http://example.org/px-cube> ;
+    CubeProject:sourceEndpoint <http://db.cube-creator.lndo.site/px-cube> ;
+  .
+}

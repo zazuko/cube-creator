@@ -10,6 +10,7 @@
    fuseki:services (
                      <#cube-creator>
                      <#shared-dimensions>
+                     <#px-cube>
                    ) .
 
 <#cube-creator> rdf:type fuseki:Service ;
@@ -37,4 +38,18 @@
                                       tdb:location "DB2" ;
                                       tdb:unionDefaultGraph true ;
                                      ] ;
+.
+
+<#px-cube> rdf:type fuseki:Service ;
+           rdfs:label "Sample PX cube database" ;
+           fuseki:name "px-cube" ;          # http://host:port/read
+           fuseki:serviceQuery "sparql" ;   # SPARQL query service
+           fuseki:serviceQuery "query" ;    # SPARQL query service (alt name)
+           fuseki:serviceUpdate "update" ;   # SPARQL update service
+           fuseki:serviceUpload "upload" ;   # Non-SPARQL upload service
+           fuseki:serviceReadWriteGraphStore "data" ;     # SPARQL Graph store protocol (read and write)
+           fuseki:dataset [
+                            rdf:type tdb:DatasetTDB ;
+                            tdb:location "DB3" ;
+                           ] ;
 .

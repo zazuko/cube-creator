@@ -3,17 +3,17 @@ import { before, describe, it } from 'mocha'
 import { expect } from 'chai'
 import $rdf from 'rdf-ext'
 import { ASK, CONSTRUCT, SELECT } from '@tpluscode/sparql-builder'
-import debug from 'debug'
 import { csvw, dcat, dcterms, qudt, rdf, schema, sh, vcard, xsd } from '@tpluscode/rdf-ns-builders'
 import { setupEnv } from '../../support/env'
-import { ccClients, insertTestProject } from '@cube-creator/testing/lib'
+import { ccClients } from '@cube-creator/testing/lib'
+import { insertTestProject } from '@cube-creator/testing/lib/seedData'
 import { cc, cube } from '@cube-creator/core/namespace'
 import clownface, { AnyPointer } from 'clownface'
-import publish from '../../../lib/commands/publish'
+import runner from '../../../lib/commands/publish'
 import namespace, { NamespaceBuilder } from '@rdfjs/namespace'
 import { NamedNode, Term } from 'rdf-js'
 
-describe('lib/commands/publish', function () {
+describe('@cube-creator/cli/lib/commands/publish', function () {
   this.timeout(200000)
 
   const ns = {
@@ -31,9 +31,6 @@ describe('lib/commands/publish', function () {
     let cubePointer: AnyPointer
     let targetCube: NamespaceBuilder
     before(async () => {
-      // given
-      const runner = publish($rdf.namedNode('urn:pipeline:cube-creator#Main'), debug('test'))
-
       // when
       await runner({
         debug: true,

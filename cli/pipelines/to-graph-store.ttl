@@ -4,9 +4,9 @@
 
 <#StreamOutput>
   a      :Pipeline ;
-  :steps [ :stepList ( _:setGraph _:upload ) ] ;.
+  :steps [ :stepList ( _:upload ) ] ;.
 
-_:setGraph
+<#setGraph>
   a                  :Step ;
   code:implementedBy [ a         code:EcmaScript ;
                        code:link <node:barnard59-base#setGraph> ] ;

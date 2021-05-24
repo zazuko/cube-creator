@@ -19,12 +19,15 @@
     "express": "^4.17.1",
     "hydra-box": "^0.6.2",
     "rdf-ext": "^1.3.0",
+    "rdf-parser-px": "^0.2.0",
+    "rdf-transform-triple-to-quad": "^1.0.2",
     "rdf-validate-shacl": "^0.2.3",
     "sparql-http-client": "^2.2.2"
   },
   "devDependencies": {
     "@types/hydra-box": "^0.6.0",
     "@types/rdf-js": "^4",
+    "@types/rdf-transform-triple-to-quad": "^1.0.0",
     "@types/rdf-validate-shacl": "^0.2.0",
     "@types/rdfjs__express-handler": "^1.1.2"
   }

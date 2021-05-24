@@ -1,5 +1,6 @@
 import { before, beforeEach, describe, it } from 'mocha'
-import { ccClients, insertTestProject } from '@cube-creator/testing/lib'
+import { ccClients } from '@cube-creator/testing/lib'
+import { insertTestProject } from '@cube-creator/testing/lib/seedData'
 import { namedNode } from '@cube-creator/testing/clownface'
 import { GraphPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'

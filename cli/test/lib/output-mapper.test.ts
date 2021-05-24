@@ -3,9 +3,13 @@ import { expect } from 'chai'
 import $rdf from 'rdf-ext'
 import { cube } from '@cube-creator/core/namespace'
 import { mapDimensions } from '../../lib/output-mapper'
-import { insertTestProject } from '@cube-creator/testing/lib'
+import { insertTestProject } from '@cube-creator/testing/lib/seedData'
 import { setupEnv } from '../support/env'
 import { env } from 'process'
+import { Hydra } from 'alcaeus/node'
+import * as Models from '@cube-creator/model'
+
+Hydra.resources.factory.addMixin(...Object.values(Models))
 
 describe('lib/output-mapper', function () {
   this.timeout(20 * 1000)
@@ -21,6 +25,7 @@ describe('lib/output-mapper', function () {
     const context = {
       variables: new Map<any, any>([
         ['jobUri', `${env.API_CORE_BASE}cube-project/ubd/csv-mapping/jobs/test-job`],
+        ['apiClient', Hydra],
       ]),
     }
 

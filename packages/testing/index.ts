@@ -1,6 +1,6 @@
 import program from 'commander'
 import debug from 'debug'
-import { insertTestDimensions, insertTestProject } from './lib'
+import { insertTestDimensions, insertTestProject, insertPxCube } from './lib/seedData'
 
 const log = debug('testing')
 log.enabled = true
@@ -18,7 +18,11 @@ async function main() {
   }
   if (inputs.includes('dimensions')) {
     log('Inserting sample shared dimensions')
-    return insertTestDimensions()
+    await insertTestDimensions()
+  }
+  if (inputs.includes('px-cube')) {
+    log('Inserting PX cube')
+    await insertPxCube()
   }
 }
 

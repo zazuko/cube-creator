@@ -1,7 +1,8 @@
 import namespace from '@rdfjs/namespace'
 import { expect } from 'chai'
 import { describe, it, before } from 'mocha'
-import { ccClients, insertTestProject } from '@cube-creator/testing/lib'
+import { ccClients } from '@cube-creator/testing/lib'
+import { insertTestProject } from '@cube-creator/testing/lib/seedData'
 import { exists } from '../../../lib/domain/cube-projects/queries'
 
 const ns = namespace('https://cube-creator.lndo.site/')

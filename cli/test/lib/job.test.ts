@@ -2,15 +2,17 @@ import { describe, before, beforeEach, it } from 'mocha'
 import { expect } from 'chai'
 import { Hydra } from 'alcaeus/node'
 import env from '@cube-creator/core/env'
-import { rdfs, schema } from '@tpluscode/rdf-ns-builders'
-import $rdf from 'rdf-ext'
-import { JobIterator } from '../../lib/job'
-import { insertTestProject } from '@cube-creator/testing/lib'
+import { TableIterator } from '../../lib/job'
+import { insertTestProject } from '@cube-creator/testing/lib/seedData'
 import { setupEnv } from '../support/env'
 import { Table } from '@rdfine/csvw'
 import { log } from '../support/logger'
 import type { Variables } from 'barnard59-core/lib/Pipeline'
+import * as Models from '@cube-creator/model'
+import * as Csvw from '@rdfine/csvw'
 
+Hydra.resources.factory.addMixin(...Object.values(Models))
+Hydra.resources.factory.addMixin(...Object.values(Csvw))
 Hydra.baseUri = env.API_CORE_BASE
 
 describe('lib/job', function () {
@@ -26,13 +28,14 @@ describe('lib/job', function () {
   beforeEach(() => {
     variables = new Map<any, any>([
       ['executionUrl', 'http://foo.runner/job/bar'],
+      ['apiClient', Hydra],
     ])
   })
 
-  describe('JobIterator', () => {
+  describe('TableIterator', () => {
     it('streams csv table objects from job', async () => {
       // given
-      const iteratorStream = new JobIterator({ jobUri: `${env.API_CORE_BASE}cube-project/ubd/csv-mapping/jobs/test-job`, log, variables })
+      const iteratorStream = new TableIterator({ jobUri: `${env.API_CORE_BASE}cube-project/ubd/csv-mapping/jobs/test-job`, log, variables })
 
       // when
       const results: Table[] = []
@@ -50,7 +53,7 @@ describe('lib/job', function () {
 
     it('sets cube URI as pipeline variable "graph"', async () => {
       // given
-      const iteratorStream = new JobIterator({ jobUri: `${env.API_CORE_BASE}cube-project/ubd/csv-mapping/jobs/test-job`, log, variables })
+      const iteratorStream = new TableIterator({ jobUri: `${env.API_CORE_BASE}cube-project/ubd/csv-mapping/jobs/test-job`, log, variables })
 
       // when
       await new Promise((resolve, reject) => {
@@ -62,36 +65,6 @@ describe('lib/job', function () {
 
       // then
       expect(variables.get('graph')).to.eq(`${env.API_CORE_BASE}cube-project/ubd/cube-data`)
-    })
-
-    it('updates execution URL and sets job status to active', async () => {
-      // given
-      const jobUri = `${env.API_CORE_BASE}cube-project/ubd/csv-mapping/jobs/test-job`
-      const iteratorStream = new JobIterator({ jobUri, log, variables })
-
-      // when
-      await new Promise((resolve, reject) => {
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        iteratorStream.on('data', () => {})
-        iteratorStream.on('end', resolve)
-        iteratorStream.on('error', reject)
-      })
-
-      // then
-      const job = await Hydra.loadResource(jobUri)
-      expect(job.representation?.root).to.matchShape({
-        property: [{
-          path: schema.actionStatus,
-          hasValue: schema.ActiveActionStatus,
-          minCount: 1,
-          maxCount: 1,
-        }, {
-          path: rdfs.seeAlso,
-          hasValue: $rdf.namedNode('http://foo.runner/job/bar'),
-          minCount: 1,
-          maxCount: 1,
-        }],
-      })
     })
   })
 })

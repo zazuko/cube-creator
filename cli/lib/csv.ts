@@ -4,7 +4,6 @@ import $rdf from 'rdf-ext'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import { Stream } from 'rdf-js'
 import * as Csvw from '@rdfine/csvw'
-import { Hydra } from 'alcaeus/node'
 import { readable } from 'duplex-to'
 import { CsvSource } from '@cube-creator/model'
 import fetch from 'node-fetch'
@@ -12,6 +11,7 @@ import type { Context } from 'barnard59-core/lib/Pipeline'
 
 export function openFromCsvw(this: Context, csvw: Csvw.Table) {
   const csvStream = new PassThrough()
+  const Hydra = this.variables.get('apiClient')
 
   Promise.resolve().then(async () => {
     const { response, representation } = await Hydra.loadResource<CsvSource>(csvw.url!)

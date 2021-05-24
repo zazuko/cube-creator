@@ -53,7 +53,7 @@ export async function injectRevision(this: Pick<Context, 'variables' | 'log'>, j
   const versionedDimensions = this.variables.get('versionedDimensions')
   let dataset: Dataset | undefined
   if (jobUri) {
-    ({ dataset } = await loadDataset(jobUri))
+    ({ dataset } = await loadDataset(jobUri, this.variables.get('apiClient')))
   }
 
   this.log.info(`Cube revision ${revision}`)

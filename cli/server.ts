@@ -5,11 +5,9 @@ import asyncMiddleware from 'middleware-async'
 import debug from 'debug'
 import cors from 'cors'
 import bodyParser from 'body-parser'
-import namespace from '@rdfjs/namespace'
 import dotenv from 'dotenv'
 import * as path from 'path'
-import * as transform from './lib/commands/transform'
-import * as publish from './lib/commands/publish'
+import * as command from './lib/commands'
 
 dotenv.config({
   path: path.resolve(__dirname, '.env'),
@@ -17,14 +15,6 @@ dotenv.config({
 dotenv.config({
   path: path.resolve(__dirname, '.test.env'),
 })
-
-const ns = {
-  pipeline: namespace('urn:pipeline:cube-creator'),
-}
-
-const pipelines = {
-  Entrypoint: ns.pipeline('#Main'),
-}
 
 async function main() {
   const log = debug('cube-creator')
@@ -39,9 +29,6 @@ async function main() {
 
   app.get('/', (req, res) => res.status(204).end())
 
-  const doTransform = transform.default(pipelines.Entrypoint, log)
-  const doPublish = publish.default(pipelines.Entrypoint, log)
-
   app.post('/', asyncMiddleware(async (req, res) => {
     const transformJob = req.body.TRANSFORM_JOB_URI
     const publishJob = req.body.PUBLISH_JOB_URI
@@ -52,15 +39,15 @@ async function main() {
     }
 
     if (transformJob) {
-      doTransform({ to: 'graph-store', job: transformJob, debug: true }).catch((e) => log(e))
+      command.transform({ to: 'graph-store', job: transformJob, debug: true }).catch((e) => log(e))
     }
 
     if (importJob) {
-      log('TODO: Import job pipeline')
+      command.importCube({ job: importJob, debug: true }).catch((e) => log(e))
     }
 
     if (publishJob) {
-      doPublish({ job: publishJob, debug: true }).catch((e) => log(e))
+      command.publish({ job: publishJob, debug: true }).catch((e) => log(e))
     }
     return res.status(202).end()
   }))
