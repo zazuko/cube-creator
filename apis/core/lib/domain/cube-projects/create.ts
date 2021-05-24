@@ -11,6 +11,7 @@ import { DomainError } from '@cube-creator/api-errors'
 import { exists } from './queries'
 import { cubeNamespaceAllowed } from '../organization/query'
 import error from 'http-errors'
+import { createImportJob } from '../job/create'
 
 interface CreateProjectCommand {
   projectsCollection: GraphPointer<NamedNode>
@@ -107,13 +108,18 @@ async function createImportProjectResources({ resource, user, userName, projectN
   return { project, dataset }
 }
 
+interface CreatedProject {
+  project: Project.Project
+  job?: GraphPointer<NamedNode>
+}
+
 export async function createProject({
   projectsCollection,
   resource,
   store,
   user,
   userName,
-}: CreateProjectCommand): Promise<Project.Project> {
+}: CreateProjectCommand): Promise<CreatedProject> {
   const label = resource.out(rdfs.label).value
   if (!label) {
     throw new Error('Missing project name')
@@ -128,7 +134,10 @@ export async function createProject({
 
   const projectNode = await store.createMember(projectsCollection.term, id.cubeProject(label))
 
-  if (shape('cube-project/create#CSV').equals(resource.out(cc.projectSourceKind).term)) {
+  const isCsvProject = shape('cube-project/create#CSV').equals(resource.out(cc.projectSourceKind).term)
+  const isImportProject = shape('cube-project/create#ExistingCube').equals(resource.out(cc.projectSourceKind).term)
+
+  if (isCsvProject) {
     ({ project, dataset } = await createCsvProjectResource({
       user,
       userName,
@@ -138,7 +147,7 @@ export async function createProject({
       maintainer,
       resource,
     }))
-  } else if (shape('cube-project/create#ExistingCube').equals(resource.out(cc.projectSourceKind).term)) {
+  } else if (isImportProject) {
     ({ project, dataset } = await createImportProjectResources({
       user,
       userName,
@@ -155,5 +164,13 @@ export async function createProject({
   project.initializeJobCollection(store)
   DimensionMetadata.createCollection(store.create(dataset.dimensionMetadata.id))
 
-  return project
+  if (isImportProject) {
+    const job = await createImportJob({
+      store,
+      resource: project.jobCollection.id,
+    })
+    return { project, job }
+  }
+
+  return { project }
 }

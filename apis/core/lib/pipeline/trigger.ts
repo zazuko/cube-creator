@@ -9,7 +9,7 @@ import TermMap from '@rdfjs/term-map'
 
 const pipelineURI = env.PIPELINE_URI
 
-function trigger(triggerRequestInit: (job: GraphPointer<NamedNode>, params: GraphPointer) => RequestInit) {
+function trigger(triggerRequestInit: (job: GraphPointer<NamedNode>, params?: GraphPointer) => RequestInit) {
   return async (job: GraphPointer<NamedNode>, params: GraphPointer, fetch = nodeFetch) => {
     if (!job) {
       throw new Error('Job URI missing')
@@ -90,7 +90,7 @@ export const github = trigger((job, params) => {
     body: JSON.stringify(body),
     headers: {
       accept: 'application/vnd.github.v3+json',
-      authorization: `Bearer ${params.out(dcterms.identifier).value}`,
+      authorization: `Bearer ${params?.out(dcterms.identifier).value}`,
     },
   }
 })
