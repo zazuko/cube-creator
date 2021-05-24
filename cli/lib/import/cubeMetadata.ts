@@ -5,7 +5,6 @@ import { schema } from '@tpluscode/rdf-ns-builders'
 import type { Context } from 'barnard59-core/lib/Pipeline'
 import StreamClient from 'sparql-http-client'
 import $rdf from 'rdf-ext'
-import { Hydra } from 'alcaeus/node'
 import { CONSTRUCT } from '@tpluscode/sparql-builder'
 import * as ns from '@cube-creator/core/namespace'
 import clownface from 'clownface'
@@ -89,6 +88,7 @@ export default async function query(this: Context, { cube, graph, endpoint, ...r
   })
 
   const datasetResource = $rdf.namedNode(rest.datasetResource)
+  const Hydra = this.variables.get('apiClient')
   const { representation, response } = await Hydra.loadResource(datasetResource)
   const cubeResource = representation?.get<Cube.Cube>(cube.value)
   if (!cubeResource) {

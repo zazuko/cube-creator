@@ -1,6 +1,5 @@
 import type { Context } from 'barnard59-core/lib/Pipeline'
 import ParsingClient from 'sparql-http-client/ParsingClient'
-import { Hydra } from 'alcaeus/node'
 import clownface, { AnyContext, AnyPointer, GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import { hydra, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
@@ -111,6 +110,7 @@ export default async function query(this: Context, { endpoint, cube, graph, meta
     endpointUrl: endpoint.value,
   })
 
+  const Hydra = this.variables.get('apiClient')
   const { response, representation } = await Hydra.loadResource(metadataResource)
   if (!representation?.root) {
     throw new Error(`Failed to load existing dimension metadata. Response was: '${response?.xhr.statusText}'`)
