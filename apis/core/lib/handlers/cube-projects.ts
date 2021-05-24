@@ -4,6 +4,12 @@ import { shaclValidate } from '../middleware/shacl'
 import { createProject } from '../domain/cube-projects/create'
 import { updateProject } from '../domain/cube-projects/update'
 import { deleteProject } from '../domain/cube-projects/delete'
+import * as triggers from '../pipeline/trigger'
+import { GraphPointer } from 'clownface'
+import { NamedNode } from 'rdf-js'
+import env from '@cube-creator/core/env'
+
+const trigger = (triggers as Record<string, (job: GraphPointer<NamedNode>, params?: GraphPointer) => void>)[env.PIPELINE_TYPE]
 
 export const post = protectedResource(
   shaclValidate,
@@ -15,7 +21,7 @@ export const post = protectedResource(
       throw new Error('User is not defined')
     }
 
-    const { pointer: project } = await createProject({
+    const { project: { pointer: project }, job } = await createProject({
       projectsCollection: await req.hydra.resource.clownface(),
       resource: await req.resource(),
       user,
@@ -23,6 +29,10 @@ export const post = protectedResource(
       store: req.resourceStore(),
     })
     await req.resourceStore().save()
+
+    if (job) {
+      trigger(job)
+    }
 
     res.status(201)
     res.header('Location', project.value)

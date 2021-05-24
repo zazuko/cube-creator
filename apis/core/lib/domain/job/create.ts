@@ -1,6 +1,6 @@
 import { cc } from '@cube-creator/core/namespace'
 import { GraphPointer } from 'clownface'
-import { NamedNode } from 'rdf-js'
+import { NamedNode, Term } from 'rdf-js'
 import * as Job from '@cube-creator/model/Job'
 import * as ImportJob from '@cube-creator/model/ImportJob'
 import { CsvMapping, Project, Dataset, ImportProject } from '@cube-creator/model'
@@ -20,7 +20,7 @@ interface StartPublicationCommand {
 }
 
 interface StartImportCommand {
-  resource: NamedNode
+  resource: Term
   store: ResourceStore
 }
 
