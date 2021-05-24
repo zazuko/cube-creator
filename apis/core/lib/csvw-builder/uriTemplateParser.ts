@@ -52,14 +52,14 @@ class ParsedTemplateWrapper implements ParsedTemplate {
 }
 
 export function parse(template: string): ParsedTemplate {
-  const escaped = template.replace(/{([^}]+)}/g, (_, name) => `{${encodeURIComponent(name)}}`)
+  const escaped = template.replace(/{([^}]+)}/g, (_, name) => `{${escape(name)}}`)
 
   const parsed = _parse(escaped)
   parsed.expressions.forEach(expression => {
     expression.params.forEach(p => {
       // TODO: required until grncdr/uri-template#19 is fixed
       p.explode = ''
-      p.name = decodeURIComponent(p.name)
+      p.name = unescape(p.name)
     })
   })
 
