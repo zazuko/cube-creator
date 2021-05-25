@@ -1,11 +1,11 @@
 import { cc } from '@cube-creator/core/namespace'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import { DatasetCore, NamedNode, Quad, Term } from 'rdf-js'
-import { schema } from '@tpluscode/rdf-ns-builders'
+import { dcterms, schema } from '@tpluscode/rdf-ns-builders'
 import type { Context } from 'barnard59-core/lib/Pipeline'
 import StreamClient from 'sparql-http-client'
 import $rdf from 'rdf-ext'
-import { CONSTRUCT } from '@tpluscode/sparql-builder'
+import { sparql, CONSTRUCT } from '@tpluscode/sparql-builder'
 import * as ns from '@cube-creator/core/namespace'
 import clownface from 'clownface'
 import { create } from '@cube-creator/model/Dataset'
@@ -37,8 +37,23 @@ function * extractExistingMetadata(dataset: DatasetExt, graph: Term, id: Term): 
   }
 }
 
+const mirroredProperties: [NamedNode, NamedNode][] = [
+  [schema.name, dcterms.title],
+  [schema.description, dcterms.description],
+]
+
 function createQuery(cube: NamedNode, datasetResource: NamedNode, graph: NamedNode | undefined) {
-  const cubeMetaQuery = CONSTRUCT`${datasetResource} ?p ?o`
+  const bindMirrored = mirroredProperties.reduce((patterns, [a, b]) =>
+    sparql`${patterns}
+
+    optional { filter(?p = ${a})
+      bind(${b} as ?p1)
+    }
+    optional { filter(?p = ${b})
+      bind(${a} as ?p1)
+    }`, sparql``)
+
+  const cubeMetaQuery = CONSTRUCT`${datasetResource} ?p ?o ; ?p1 ?o .`
     .WHERE`
       ${cube} ?p ?o .
 
@@ -47,6 +62,8 @@ function createQuery(cube: NamedNode, datasetResource: NamedNode, graph: NamedNo
       )
 
       filter ( !isBlank(?o) )
+
+      ${bindMirrored}
     `
   if (graph) {
     return cubeMetaQuery.FROM(graph)

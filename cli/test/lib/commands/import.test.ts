@@ -260,4 +260,17 @@ describe('@cube-creator/cli/lib/commands/import', function () {
       $rdf.literal('Nombre, ha, m3', 'fr'),
     ])
   })
+
+  it('adds values for mirrored properties', async () => {
+    const hasValues = await ASK`
+      ?dataset ${schema.hasPart} ${cube} ;
+               ${schema.name} ?title ;
+               ${dcterms.title} ?title ;
+               ${schema.description} ?desc ;
+               ${dcterms.description} ?desc ;
+     `.FROM(resource('cube-project/px/dataset'))
+      .execute(ccClients.parsingClient.query)
+
+    expect(hasValues).to.be.true
+  })
 })
