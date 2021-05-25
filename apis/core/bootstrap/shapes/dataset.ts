@@ -67,6 +67,11 @@ const orgQuery = sparql`construct {
   }
 }`
 
+/*
+ * Properties which are synchronised using `sh:equal` should also be added
+ * to `cli/lib/import/cubeMetadata.ts` so that importing a cube ensures
+ * both mirrored predicates are set
+ */
 export const DatasetShape = turtle`
 @prefix cld: <http://purl.org/cld/terms/> .
 @prefix dcam: <http://purl.org/dc/dcam/> .
