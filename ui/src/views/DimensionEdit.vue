@@ -21,14 +21,15 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { RuntimeOperation } from 'alcaeus'
 import { Shape } from '@rdfine/shacl'
-import clownface, { GraphPointer } from 'clownface'
+import { GraphPointer } from 'clownface'
 import { namespace } from 'vuex-class'
-import { Dataset, DimensionMetadata, DimensionMetadataCollection } from '@cube-creator/model'
+import { Dataset, DimensionMetadata } from '@cube-creator/model'
 import SidePane from '@/components/SidePane.vue'
 import HydraOperationFormWithRaw from '@/components/HydraOperationFormWithRaw.vue'
 import TermDisplay from '@/components/TermDisplay.vue'
 import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
+import { conciseBoundedDescription } from '@/graph'
 
 const projectNS = namespace('project')
 
@@ -37,7 +38,6 @@ const projectNS = namespace('project')
 })
 export default class extends Vue {
   @projectNS.State('cubeMetadata') cubeMetadata!: Dataset | null
-  @projectNS.State('dimensionMetadataCollection') dimensionMetadataCollection!: DimensionMetadataCollection | null
   @projectNS.Getter('findDimension') findDimension!: (id: string) => DimensionMetadata
 
   resource: GraphPointer | null = null;
@@ -50,9 +50,7 @@ export default class extends Vue {
       this.shape = await api.fetchOperationShape(this.operation)
     }
 
-    const graph = this.dimensionMetadataCollection?.id
-    const dataset = this.dimension.pointer.dataset.match(this.dimension.id, null, null, graph)
-    this.resource = clownface({ dataset, graph }).node(this.dimension.id)
+    this.resource = conciseBoundedDescription(this.dimension.pointer)
   }
 
   get cubeUri (): string | undefined {
