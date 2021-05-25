@@ -49,7 +49,7 @@ export default class extends Vue {
 
   getLabels (pointer: GraphPointer | null): Literal[] {
     if (pointer) {
-      return pointer.out(schema.name, { language: [this.selectedLanguage, '*'] }).terms
+      return pointer.out(schema.name).terms.filter(isLiteral) as Literal[]
     }
 
     return []
@@ -115,5 +115,9 @@ export default class extends Vue {
 
     return pointer
   }
+}
+
+function isLiteral (term: Term): term is Literal {
+  return term.termType === 'Literal'
 }
 </script>
