@@ -1299,9 +1299,9 @@
     sparql-http-client "^2.2.2"
 
 "@hydrofoil/shaperone-core@^0.7.0":
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-core/-/shaperone-core-0.7.0.tgz#6a81006a4070ba3d14fa5e6d2f8d85c19ba12142"
-  integrity sha512-d+Bn/5cvdCi19TwZlRqWQUe8XpQ1Vbrbjq8PsPDwqnl3pcmiRfSMkVF5z2fhHgQtxe4mrSpuwVXTHVNd+Vnkzg==
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-core/-/shaperone-core-0.7.1.tgz#eaad7ea1e8a77773c237993b5d66eb331d23bcc3"
+  integrity sha512-h5H0brfNn+7ZIz7TEYHcdvytfNevt1sEmPx6Iw4p6Bs3duaLB6OHZ6M633XZcPvsMUrzJEWFSUos65t0/x5++w==
   dependencies:
     "@captaincodeman/rdx" "^1.0.0-rc.8"
     "@rdf-esm/data-model" "^0.5.3"
