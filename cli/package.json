@@ -23,7 +23,7 @@
     "@sentry/tracing": "^6.2.0",
     "@tpluscode/rdf-ns-builders": "^0.4",
     "@tpluscode/rdfine": "^0.5.19",
-    "@tpluscode/sparql-builder": "^0.3.12",
+    "@tpluscode/sparql-builder": "^0.3.13",
     "alcaeus": "^1.0.1",
     "aws-sdk": "^2.559.0",
     "barnard59": "^0.1.2",
