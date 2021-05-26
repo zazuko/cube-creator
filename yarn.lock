@@ -1594,13 +1594,22 @@
     "@rdfjs/serializer-ntriples" "^1.0.3"
     rdfxml-streaming-parser "^1.3.6"
 
-"@rdf-esm/namespace@^0.5.1", "@rdf-esm/namespace@^0.5.2":
+"@rdf-esm/namespace@^0.5.1":
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/@rdf-esm/namespace/-/namespace-0.5.2.tgz#41a12d317a3be0589297a391e887e91755b66d4a"
   integrity sha512-/9MG/GDopNQX2PnoH2UfRnDEUhuqS/z8Bvws8r6CuNhd+FTm98DicK/YJNNg+/JWn5rwZ4XoVJ1XVoTbH1IeRw==
   dependencies:
     "@rdf-esm/data-model" "^0.5.1"
     "@rdfjs/namespace" "^1.1.0"
+
+"@rdf-esm/namespace@^0.5.2":
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/@rdf-esm/namespace/-/namespace-0.5.3.tgz#013ae57f410a885536087eb2ffd8ffb1e913a5af"
+  integrity sha512-WNSF5IBuGJfrXyoI/0WuWtNNNN5uxS34inmTFE2pS0e65LWQL1kUOkcDApq+IoKpKDn1k5TLN9UF4j7idNJzwQ==
+  dependencies:
+    "@rdf-esm/data-model" "^0.5.1"
+    "@rdfjs/namespace" "^1.1.0"
+    "@types/rdfjs__namespace" "*"
 
 "@rdf-esm/sink-map@^0.5.0", "@rdf-esm/sink-map@^0.5.4":
   version "0.5.4"
@@ -1779,7 +1788,16 @@
     rdf-transform-triple-to-quad "^1.0.2"
     readable-stream "^3.6.0"
 
-"@rdfjs/fetch-lite@^2.0.1", "@rdfjs/fetch-lite@^2.1.0":
+"@rdfjs/fetch-lite@^2.0.1":
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@rdfjs/fetch-lite/-/fetch-lite-2.1.1.tgz#0855e4dd490640241b368ef6e94412a033d414e0"
+  integrity sha512-4+HROQMjpl+zyrjDSJDjSf2Xmj0ExSA/4Jyyb3WLkPrnR53l0WWD+d8lUtzkywwGsHKQuRGyxKgt2VoYIYaXNw==
+  dependencies:
+    isstream "^0.1.2"
+    nodeify-fetch "^2.2.1"
+    readable-stream "^3.3.0"
+
+"@rdfjs/fetch-lite@^2.1.0":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@rdfjs/fetch-lite/-/fetch-lite-2.1.0.tgz#36205713cdd72304b1eda91de1e7d147fad3a3f7"
   integrity sha512-7P2+QBjSJ/oeN2CRySIrG0IHat7UDqf7KfpZ9IP/MhWN3AneTpuURlOVAKcP/tedsSdlf2ihnzO38C6uAd7ppQ==
@@ -1884,16 +1902,23 @@
   integrity sha512-2KfYa8mAnptRNeogxhQqkWNXqfYVWO04jQThtXKepySrIwYmz83+WlevQtA4VDLFe+kFd2TwgL29ekPe5XVUfA==
 
 "@rdfjs/term-map@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@rdfjs/term-map/-/term-map-1.0.0.tgz#97e8735f4e99c522099fabeacf73b0de94597452"
-  integrity sha512-xv0trp4DVZigpa8CAifrb0Py1pf07h3PjqRXhXEyM9+UPPoQhczQjYPxx5a+j4U1JQzwfD8vfpfFaveVrKJOSw==
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@rdfjs/term-map/-/term-map-1.0.1.tgz#5d929c5c98ef213e408275effe58abc24b7ab40a"
+  integrity sha512-3lE452Y1oJxqXFed/iUl017k+HyqLMIJz+t5EvdRHaoCvhTDtssK6FIQ9UeWTtCNmUGf52PpPPr5K/ad26yn7A==
   dependencies:
     "@rdfjs/to-ntriples" "^1.0.2"
 
-"@rdfjs/term-set@^1.0.0", "@rdfjs/term-set@^1.0.1":
+"@rdfjs/term-set@^1.0.0":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@rdfjs/term-set/-/term-set-1.0.1.tgz#f753f37c495e85ab91e62ec93ab7c6adea4b507b"
   integrity sha512-7+pSdm8R1nhSyP1xEqcQYFTARD/2iLr98tiAsSUfykCg0T0LrZ6j/3EEKmcKTWLMazMA9deRfmjPvzqMFwLBig==
+  dependencies:
+    "@rdfjs/to-ntriples" "^1.0.2"
+
+"@rdfjs/term-set@^1.0.1":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@rdfjs/term-set/-/term-set-1.0.2.tgz#f215b27ada58a7a8cce46af5caffa3b26642ef4b"
+  integrity sha512-t/R7nfiaPe4pZxeJpKl7x5TLMOTQiv8UzQ2WVmRxbSCeC1Pp9lWATuqmk2J9M+Wty40EkyoEFhf/AmPFeSFbug==
   dependencies:
     "@rdfjs/to-ntriples" "^1.0.2"
 
@@ -2472,7 +2497,7 @@
     "@types/rdf-js" "*"
     "@types/rdfjs__sink-map" "*"
 
-"@types/rdfjs__namespace@^1.1.1", "@types/rdfjs__namespace@^1.1.3":
+"@types/rdfjs__namespace@*", "@types/rdfjs__namespace@^1.1.1", "@types/rdfjs__namespace@^1.1.3":
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/@types/rdfjs__namespace/-/rdfjs__namespace-1.1.3.tgz#6fc6868b34cda0247afb163a6bf6a1caef9a17cd"
   integrity sha512-seCWK6z0TqF40ioY7lMhR624I9ovo7xhnhvhAvbWlxfXYtsoQ4QEoddaWFmJDqfat2M1Xv6ThRSN2JGm2OtTIw==
@@ -5105,9 +5130,9 @@ create-require@^1.1.0:
   integrity sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==
 
 cross-fetch@^3.0.4:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.1.2.tgz#ee0c2f18844c4fde36150c2a4ddc068d20c1bc41"
-  integrity sha512-+JhD65rDNqLbGmB3Gzs3HrEKC0aQnD+XA3SY6RjgkF88jV2q5cTc5+CwxlS3sdmLk98gpPt5CF9XRnPdlxZe6w==
+  version "3.1.4"
+  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.1.4.tgz#9723f3a3a247bf8b89039f3a380a9244e8fa2f39"
+  integrity sha512-1eAtFWdIubi6T4XPy6ei9iUFoKpUkIF971QLN8lIvvvwueI65+Nw5haMNKUwfJxabqlIIDODJKGrQ66gxC0PbQ==
   dependencies:
     node-fetch "2.6.1"
 
