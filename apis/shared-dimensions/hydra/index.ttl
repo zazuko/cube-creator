@@ -82,7 +82,7 @@ md:SharedDimensionTerms
       hydra-box:variables
         [
           a hydra:IriTemplate ;
-          hydra:template "/_terms{?dimension}" ;
+          hydra:template "/_terms?dimension={dimension}{&q}" ;
           hydra:variableRepresentation hydra:ExplicitRepresentation ;
           hydra:mapping
             [
@@ -90,6 +90,11 @@ md:SharedDimensionTerms
               hydra:property schema:inDefinedTermSet ;
               hydra:required true ;
               hydra:variable "dimension" ;
+            ],
+            [
+              a hydra:IriTemplateMapping ;
+              hydra:property hydra:freetextQuery ;
+              hydra:variable "q" ;
             ]
         ] ;
     ] .

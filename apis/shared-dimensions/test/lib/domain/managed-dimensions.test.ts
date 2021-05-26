@@ -33,7 +33,7 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimensions @SPAR
     it('returns terms for a given dimension', async () => {
       // when
       const dataset = await $rdf.dataset()
-        .import(await getSharedTerms(sharedDimension).execute(mdClients.streamClient.query))
+        .import(await getSharedTerms(sharedDimension, undefined).execute(mdClients.streamClient.query))
 
       // then
       expect(dataset.match(null, rdf.type, schema.DefinedTerm))
@@ -53,6 +53,27 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimensions @SPAR
           minCount: 1,
         }],
       })
+    })
+
+    it('returns top N terms', async () => {
+      // when
+      const dataset = await $rdf.dataset()
+        .import(await getSharedTerms(sharedDimension, undefined, 1).execute(mdClients.streamClient.query))
+
+      // then
+      expect(dataset.match(null, rdf.type, schema.DefinedTerm))
+        .to.have.property('size', 1)
+    })
+
+    it('returns terms filtered by input, case-insensitive', async () => {
+      // when
+      const dataset = await $rdf.dataset()
+        .import(await getSharedTerms(sharedDimension, 'r').execute(mdClients.streamClient.query))
+
+      // then
+      const [term, ...more] = dataset.match(null, rdf.type, schema.DefinedTerm)
+      expect(more).to.have.length(0)
+      expect(term.subject).to.deep.eq($rdf.namedNode('http://example.com/dimension/colors/red'))
     })
   })
 })

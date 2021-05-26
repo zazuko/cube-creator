@@ -1,8 +1,9 @@
-import { CONSTRUCT } from '@tpluscode/sparql-builder'
+import { CONSTRUCT, SELECT } from '@tpluscode/sparql-builder'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { md, meta } from '@cube-creator/core/namespace'
 import { Term } from 'rdf-js'
 import env from '../env'
+import $rdf from 'rdf-ext'
 
 export function getSharedDimensions() {
   return CONSTRUCT`
@@ -17,12 +18,31 @@ export function getSharedDimensions() {
     `
 }
 
-export function getSharedTerms(sharedDimension: Term) {
-  return CONSTRUCT`
-      ?term ?p ?o .
-    `
+export function getSharedTerms(sharedDimension: Term, freetextQuery: string | undefined, limit = 100) {
+  const term = $rdf.variable('term')
+  const name = $rdf.variable('name')
+
+  let select = SELECT.DISTINCT`${term}`
     .WHERE`
       ${sharedDimension} a ${meta.SharedDimension} .
-      ?term ${schema.inDefinedTermSet} ${sharedDimension} ; ?p ?o .
+      ${term} ${schema.inDefinedTermSet} ${sharedDimension} .
+      ${term} ${schema.name} ${name} .
+    `
+
+  if (freetextQuery) {
+    select = select.WHERE`FILTER (
+      REGEX(${name}, "^${freetextQuery}", "i")
+    )`
+  }
+
+  return CONSTRUCT`
+      ${term} ?p ?o .
+    `
+    .WHERE`
+      {
+        ${select.LIMIT(limit).ORDER().BY(name)}
+      }
+
+      ${term} ?p ?o .
     `
 }
