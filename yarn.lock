@@ -5344,7 +5344,12 @@ csv-generate@^3.3.0:
   resolved "https://registry.yarnpkg.com/csv-generate/-/csv-generate-3.3.0.tgz#0e25658f1bb9806d94fec7b270896a35c7eedf1a"
   integrity sha512-EXSru4QwEWKwM7wwsJbhrZC+mHEJrhQFoXlohHs80CAU8Qhlv9gaw1sjzNiC3Hr3oUx5skDmEiAlz+tnKWV0RA==
 
-csv-parse@^4.12.0, csv-parse@^4.15.3, csv-parse@^4.4.5:
+csv-parse@^4.12.0:
+  version "4.15.4"
+  resolved "https://registry.yarnpkg.com/csv-parse/-/csv-parse-4.15.4.tgz#ad1ec62aaf71a642982dfcb81f1848184d691db5"
+  integrity sha512-OdBbFc0yZhOm17lSxqkirrHlFFVpKRT0wp4DAGoJelsP3LbGzV9LNr7XmM/lrr0uGkCtaqac9UhP8PDHXOAbMg==
+
+csv-parse@^4.15.3, csv-parse@^4.4.5:
   version "4.15.3"
   resolved "https://registry.yarnpkg.com/csv-parse/-/csv-parse-4.15.3.tgz#8a62759617a920c328cb31c351b05053b8f92b10"
   integrity sha512-jlTqDvLdHnYMSr08ynNfk4IAUSJgJjTKy2U5CQBSu4cN9vQOJonLVZP4Qo4gKKrIgIQ5dr07UwOJdi+lRqT12w==
@@ -5800,9 +5805,9 @@ dotenv@^8.1.0, dotenv@^8.2.0:
   integrity sha512-8sJ78ElpbDJBHNeBzUbUVLsqKdccaa/BXF1uPTw3GrvQTBgrQrtObr2mUrE38vzYd8cEv+m/JBfDLioYcfXoaw==
 
 duplex-to@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/duplex-to/-/duplex-to-1.0.0.tgz#2c17dc5961486e7b0466b0cfcd72a3dd1e3e828d"
-  integrity sha512-pjJ6/s31+3gmQzzeT9y19Xv+cXaYwOKlHJtucmfP2USyQ+oMGeijwEpIUViad5OLujVicJ8AxkkF6e7C2d//DQ==
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/duplex-to/-/duplex-to-1.0.1.tgz#013c92d10e6ee253bf8c9ab631fa02f3e80871c4"
+  integrity sha512-Kzy1N99HKXDjG7rGVDuS5alWt+xw4Ii1NtTEAuLv4wYiYwkHZgnKOzfLqWN7/gpGa5zvmZCyj3eWf3vVp9ZWAw==
 
 duplexer@^0.1.1:
   version "0.1.2"
@@ -6579,9 +6584,9 @@ express-http-problem-details@^0.2.1:
     http-problem-details-mapper "^0.1.4"
 
 express-jwt-permissions@^1.3.3:
-  version "1.3.3"
-  resolved "https://registry.yarnpkg.com/express-jwt-permissions/-/express-jwt-permissions-1.3.3.tgz#77f15c359972b485bed608b3f7baeddc3fedd153"
-  integrity sha512-OcZDpoFqYf2YogKjvm9mc5+N9KNVb3FCP5BKWB/hW0CDm4IeQH7tXRuAstSA4MnpDm7AiWVS6TE1uaWjTgLy8Q==
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/express-jwt-permissions/-/express-jwt-permissions-1.3.4.tgz#da234b9fd04e0f9e6b85c38c1d0a15c61cf69b5c"
+  integrity sha512-FF4F5IZe2pNoTWRZ9yUIisluqneC21s3PelFH65QN0Tr9k4LkLp82yz0L2qMnFfOW6eFe+OGQrk4D+SIFsOhgw==
   dependencies:
     express-unless "^0.5.0"
     lodash.get "^4.4.2"
@@ -9717,9 +9722,9 @@ nanoid-dictionary@^4.2.0:
   integrity sha512-mLeTWGvp9jHbw6mXsHCGHKdJpGzy2gjF1ouS3tZER1DCZhXN/8Ks1w8fxLlIOn/8JhQmRBL1Y40q8kCPay6wNA==
 
 nanoid@^3.1.16, nanoid@^3.1.20:
-  version "3.1.22"
-  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.1.22.tgz#b35f8fb7d151990a8aebd5aa5015c03cf726f844"
-  integrity sha512-/2ZUaJX2ANuLtTvqTlgqBQNJoQO398KyJgZloL0PZkC0dpysjncRUPsFe3DUPzz/y3h+u7C46np8RMuvF3jsSQ==
+  version "3.1.23"
+  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.1.23.tgz#f744086ce7c2bc47ee0a8472574d5c78e4183a81"
+  integrity sha512-FiB0kzdP0FFVGDKlRLEQ1BgDzU87dy5NnzjeW9YZNt+/c3+q82EQDUwniSAUxp/F0gFNI1ZhKU1FqYsMuqZVnw==
 
 nanomatch@^1.2.9:
   version "1.2.13"
@@ -12217,9 +12222,9 @@ slug@^4.0.2:
   integrity sha512-c5XbWkwxHU13gAdSvBHQgnGy2sxv/REMz0ugcM0SOSBCO/N4wfU0TDBC3pgdOwVGjZwGnLBTRljXzdVYE+KYNw==
 
 slugify@^1.4.6:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/slugify/-/slugify-1.5.0.tgz#5f3c8e2a84105b54eb51486db1b468a599b3c9b8"
-  integrity sha512-Q2UPZ2udzquy1ElHfOLILMBMqBEXkiD3wE75qtBvV+FsDdZZjUqPZ44vqLTejAVq+wLLHacOMcENnP8+ZbzmIA==
+  version "1.5.3"
+  resolved "https://registry.yarnpkg.com/slugify/-/slugify-1.5.3.tgz#36e009864f5476bfd5db681222643d92339c890d"
+  integrity sha512-/HkjRdwPY3yHJReXu38NiusZw2+LLE2SrhkWJtmlPDB1fqFSvioYj62NkPcrKiNCgRLeGcGK7QBvr1iQwybeXw==
 
 smartwrap@^1.2.3:
   version "1.2.5"
