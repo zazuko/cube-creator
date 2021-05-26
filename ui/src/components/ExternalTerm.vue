@@ -107,13 +107,17 @@ export default class extends Vue {
   }
 
   async __fetch (url: string): Promise<GraphPointer | null> {
-    const resource = await api.fetchResource(url.toString())
-    const pointer = resource.pointer.node(this.node)
-    if (this.getLabels(pointer).length === 0) {
+    try {
+      const resource = await api.fetchResource(url.toString())
+      const pointer = resource.pointer.node(this.node)
+      if (this.getLabels(pointer).length === 0) {
+        return null
+      }
+
+      return pointer
+    } catch (e) {
       return null
     }
-
-    return pointer
   }
 }
 
