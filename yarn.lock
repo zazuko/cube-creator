@@ -1594,15 +1594,7 @@
     "@rdfjs/serializer-ntriples" "^1.0.3"
     rdfxml-streaming-parser "^1.3.6"
 
-"@rdf-esm/namespace@^0.5.1":
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/@rdf-esm/namespace/-/namespace-0.5.2.tgz#41a12d317a3be0589297a391e887e91755b66d4a"
-  integrity sha512-/9MG/GDopNQX2PnoH2UfRnDEUhuqS/z8Bvws8r6CuNhd+FTm98DicK/YJNNg+/JWn5rwZ4XoVJ1XVoTbH1IeRw==
-  dependencies:
-    "@rdf-esm/data-model" "^0.5.1"
-    "@rdfjs/namespace" "^1.1.0"
-
-"@rdf-esm/namespace@^0.5.2":
+"@rdf-esm/namespace@^0.5.1", "@rdf-esm/namespace@^0.5.2":
   version "0.5.3"
   resolved "https://registry.yarnpkg.com/@rdf-esm/namespace/-/namespace-0.5.3.tgz#013ae57f410a885536087eb2ffd8ffb1e913a5af"
   integrity sha512-WNSF5IBuGJfrXyoI/0WuWtNNNN5uxS34inmTFE2pS0e65LWQL1kUOkcDApq+IoKpKDn1k5TLN9UF4j7idNJzwQ==
@@ -2074,9 +2066,9 @@
   integrity sha512-gv7CE+3iQ6YNoEofgzMKWUgOHxY7Kozq06M4ls0PkOScOmvCoHTFD2XvPtqmADmXezQsMcZyM6VsHEilgHoasw==
 
 "@tpluscode/rdf-ns-builders@^0.4", "@tpluscode/rdf-ns-builders@^0.4.0":
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/@tpluscode/rdf-ns-builders/-/rdf-ns-builders-0.4.1.tgz#da61b1a87f147aebe021a9d0423e9a592530f45f"
-  integrity sha512-dA3zu64wLzBwwhF4nbE+yE2+qxuP6eqCAa7Hcr7dSiLoaMFkHUAdTB9bdixXY8pcOfcSy4aHuUkBuCnDrrbb6Q==
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@tpluscode/rdf-ns-builders/-/rdf-ns-builders-0.4.2.tgz#c9b7733b85b1529a6258a98c5bc6e8ec87120c0a"
+  integrity sha512-c9SdFVGBvCf4yCUuqOHs7GqAyWtvR8avvYey3wFlKd61EqrdaIZAa/YivG9p+bu2wJcgqjijkN+ASlhnBosZqw==
   dependencies:
     "@rdf-esm/namespace" "^0.5.1"
 
