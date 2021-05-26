@@ -3250,10 +3250,22 @@
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
-"@zazuko/rdf-vocabularies@*", "@zazuko/rdf-vocabularies@^2021.3.17":
+"@zazuko/rdf-vocabularies@*":
   version "2021.3.17"
   resolved "https://registry.yarnpkg.com/@zazuko/rdf-vocabularies/-/rdf-vocabularies-2021.3.17.tgz#c97ca397bdb9c61698bdf1ee658f896cbb86f7da"
   integrity sha512-js6c5W296c8cMP3nWPTauPH6NOM+yPZ1a+KqfHMwOz9C8kdEnOF0sApEwwvxNMqT0jrXshd9Qr4yqTGYGzTqfw==
+  dependencies:
+    "@rdfjs/parser-n3" "^1.1.4"
+    commander "^5.0.0"
+    pkg-dir "^5.0.0"
+    rdf-ext "^1.3.1"
+    readable-stream "^3.6.0"
+    string-to-stream "^3.0.1"
+
+"@zazuko/rdf-vocabularies@^2021.3.17":
+  version "2021.5.3"
+  resolved "https://registry.yarnpkg.com/@zazuko/rdf-vocabularies/-/rdf-vocabularies-2021.5.3.tgz#04b09c43ddbec65c70527aa21b1fe1fc4931bcfa"
+  integrity sha512-cbT2Cx+nnzbkY26O5Si0IZ01oNjqdE+WaMp89ijkcs9vxBzOCMGadKrucDXPEUIuVjk18TfPUYQ6tFqSB8R7CA==
   dependencies:
     "@rdfjs/parser-n3" "^1.1.4"
     commander "^5.0.0"
@@ -9695,9 +9707,9 @@ mz@^2.4.0:
     thenify-all "^1.0.0"
 
 n3@^1.3.5:
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/n3/-/n3-1.9.0.tgz#dd508c7b7f245f26257d45303bdf151b10226f18"
-  integrity sha512-63+NEVkNjFX77HmA8oifM9LGEOhpFT/fEdnfDDHjqt1CSLuVuK+f31kqkPI0T5m7x+Rdu0rSM4Sx2A0MuNp3rg==
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/n3/-/n3-1.10.0.tgz#4ebc725ad4c7a1ee4fac184b7b42114d620ba8c7"
+  integrity sha512-y+qpS0GktEBttOaDR+BF1t1G2fw4Xn4nCZWNn+7MvEmD2I4YpMH6OJF/xHKSwInCxOC9vu9eI6pluB9/RDUyZQ==
   dependencies:
     queue-microtask "^1.1.2"
     readable-stream "^3.6.0"
