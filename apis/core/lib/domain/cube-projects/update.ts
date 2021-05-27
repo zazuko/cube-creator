@@ -37,9 +37,6 @@ export async function updateProject({
 
   if (isCsvProject(project)) {
     const identifier = project.updateCubeIdentifier(resource.out(dcterms.identifier).value)
-    if (await exists(identifier.after, maintainer.after)) {
-      throw new DomainError('Another project is already using same identifier')
-    }
 
     currentCube = organization.createIdentifier({
       cubeIdentifier: identifier.after,
@@ -47,6 +44,12 @@ export async function updateProject({
     previousCube = previousOrganization.createIdentifier({
       cubeIdentifier: identifier.before,
     })
+
+    if (identifier.after !== identifier.before) {
+      if (await exists(identifier.after, maintainer.after)) {
+        throw new DomainError('Another project is already using same identifier')
+      }
+    }
   } else {
     const cubeId = project.updateImportCube(resource.out(cc['CubeProject/sourceCube']).term)
     currentCube = cubeId.after
