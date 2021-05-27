@@ -87,7 +87,8 @@ type SharedDimensionsTerms =
   'SharedDimensionTerm' |
   'SharedDimensionTerms' |
   'sharedDimensions' |
-  'terms'
+  'terms' |
+  'onlyValidTerms'
 
 type MetaTerms =
   'SharedDimension' |

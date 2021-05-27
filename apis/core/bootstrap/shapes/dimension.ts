@@ -1,4 +1,4 @@
-import { cc, meta, shape, sh1, cube } from '@cube-creator/core/namespace'
+import { cc, meta, shape, sh1, cube, md } from '@cube-creator/core/namespace'
 import { supportedLanguages } from '@cube-creator/core/languages'
 import { sparql, turtle } from '@tpluscode/rdf-string'
 import { lindasQuery } from '../lib/query'
@@ -254,7 +254,7 @@ ${shape('dimension/shared-mapping')} {
       ${sh.maxCount} 1 ;
       ${sh.order} 10 ;
     ] , [
-      ${sh.path} ${schema.valid} ;
+      ${sh.path} ${md.onlyValidTerms} ;
       ${sh.name} "Only current terms" ;
       ${sh.description} "Uncheck to show all Shared Terms" ;
       ${sh.datatype} ${xsd.boolean} ;
@@ -309,7 +309,7 @@ ${shape('dimension/shared-mapping')} {
           ${hydra.required} true ;
         ] , [
           ${hydra.variable} "valid" ;
-          ${hydra.property} ${schema.valid} ;
+          ${hydra.property} ${md.onlyValidTerms} ;
         ];
       ] ;
       ${sh.order} 20 ;

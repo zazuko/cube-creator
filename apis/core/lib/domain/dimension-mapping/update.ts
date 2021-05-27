@@ -33,6 +33,8 @@ export async function update({
     dimensionMappings.changeSharedDimension(sharedDimension)
   }
 
+  dimensionMappings.onlyValidTerms = newMappings.onlyValidTerms
+
   const newEntries = dimensionMappings.replaceEntries(newMappings.hadDictionaryMember)
 
   const { applyMappings } = cc

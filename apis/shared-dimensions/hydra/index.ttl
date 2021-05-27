@@ -98,7 +98,7 @@ md:SharedDimensionTerms
             ],
             [
               a hydra:IriTemplateMapping ;
-              hydra:property schema:valid ;
+              hydra:property md:onlyValidTerms ;
               hydra:variable "valid" ;
             ]
         ] ;
