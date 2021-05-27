@@ -43,15 +43,14 @@ export const post = protectedResource(
 export const put = protectedResource(
   shaclValidate,
   asyncMiddleware(async (req, res) => {
-    const project = await req.hydra.resource.clownface()
-    await updateProject({
+    const project = await updateProject({
       resource: await req.resource(),
       store: req.resourceStore(),
     })
     await req.resourceStore().save()
 
     res.status(200)
-    await res.dataset(project.dataset)
+    await res.dataset(project.pointer.dataset)
   }),
 )
 
