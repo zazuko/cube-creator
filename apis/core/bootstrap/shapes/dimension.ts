@@ -256,7 +256,7 @@ ${shape('dimension/shared-mapping')} {
     ] , [
       ${sh.path} ${md.onlyValidTerms} ;
       ${sh.name} "Only current terms" ;
-      ${sh.description} "Uncheck to show all Shared Terms" ;
+      ${sh.description} "Uncheck to show all Shared Terms, including deprecated" ;
       ${sh.datatype} ${xsd.boolean} ;
       ${sh.defaultValue} true ;
       ${sh.minCount} 1 ;
