@@ -1,0 +1,46 @@
+PREFIX api: <https://cube-creator.zazuko.com/vocab#>
+PREFIX hydra: <http://www.w3.org/ns/hydra/core#>
+PREFIX cc: <https://cube-creator.zazuko.com/vocab#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX schema: <http://schema.org/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+
+ENTRYPOINT "cube-project/ubd"
+
+HEADERS {
+  x-user "john-doe"
+  x-permission "pipelines:write"
+}
+
+With Class cc:CubeProject {
+    With Operation schema:UpdateAction {
+        Invoke {
+            Content-Type "text/turtle"
+
+            ```
+            base <https://cube-creator.lndo.site/>
+            prefix dcterms: <http://purl.org/dc/terms/>
+            prefix cc: <https://cube-creator.zazuko.com/vocab#>
+            prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+            prefix schema: <http://schema.org/>
+
+            <cube-project/ubd> a cc:CubeProject ;
+               rdfs:label "UBD28" ;
+               dcterms:creator <user> ;
+               dcterms:identifier "ubd/28" ;
+               schema:maintainer <organization/bafu> ;
+               cc:csvMapping <cube-project/ubd/csv-mapping> ;
+               cc:cubeGraph <cube-project/ubd/cube-data> ;
+               cc:dataset <cube-project/ubd/dataset> ;
+               cc:jobCollection <cube-project/ubd/jobs> ;
+               cc:latestPublishedRevision 1 ;
+               cc:projectSourceKind <shape/cube-project/create#CSV> .
+            ```
+        } => {
+            Expect Status 200
+
+            Expect Property rdfs:label "UBD28"
+        }
+    }
+}

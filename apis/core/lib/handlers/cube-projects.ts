@@ -50,8 +50,7 @@ export const put = protectedResource(
     })
     await req.resourceStore().save()
 
-    res.status(201)
-    res.header('Location', project.value)
+    res.status(200)
     await res.dataset(project.dataset)
   }),
 )
