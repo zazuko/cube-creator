@@ -254,6 +254,15 @@ ${shape('dimension/shared-mapping')} {
       ${sh.maxCount} 1 ;
       ${sh.order} 10 ;
     ] , [
+      ${sh.path} ${schema.valid} ;
+      ${sh.name} "Only current terms" ;
+      ${sh.description} "Uncheck to show all Shared Terms" ;
+      ${sh.datatype} ${xsd.boolean} ;
+      ${sh.defaultValue} true ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+      ${sh.order} 15 ;
+    ] , [
       ${sh.path} ${prov.hadDictionaryMember} ;
       ${sh.node} _:keyEntityPair ;
       ${sh.name} "Mappings" ;
@@ -293,12 +302,15 @@ ${shape('dimension/shared-mapping')} {
           ${sh.inversePath} ${prov.hadDictionaryMember} ;
         ] ;
         ${hydra.variableRepresentation} ${hydra.ExplicitRepresentation} ;
-        ${hydra.template} "dimension/_terms{?dimension}" ;
+        ${hydra.template} "dimension/_terms?dimension={dimension}{&valid}" ;
         ${hydra.mapping} [
           ${hydra.variable} "dimension" ;
           ${hydra.property} ${cc.sharedDimension} ;
           ${hydra.required} true ;
-        ] ;
+        ] , [
+          ${hydra.variable} "valid" ;
+          ${hydra.property} ${schema.valid} ;
+        ];
       ] ;
       ${sh.order} 20 ;
     ];

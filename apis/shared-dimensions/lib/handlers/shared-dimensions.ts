@@ -70,7 +70,7 @@ export const getTerms = asyncMiddleware(async (req, res, next) => {
   const queryParams = {
     sharedDimension: rewriteTerm(term),
     freetextQuery: query.has(hydra.freetextQuery).out(hydra.freetextQuery).value,
-    validThrough: query.has(schema.valid).terms.length ? new Date() : undefined,
+    validThrough: query.has(schema.valid, query.literal(true)).terms.length ? new Date() : undefined,
   }
 
   const collection = await getCollection({
