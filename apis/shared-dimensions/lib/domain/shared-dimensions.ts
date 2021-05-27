@@ -2,8 +2,9 @@ import { CONSTRUCT, SELECT } from '@tpluscode/sparql-builder'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { md, meta } from '@cube-creator/core/namespace'
 import { Term } from 'rdf-js'
-import env from '../env'
 import $rdf from 'rdf-ext'
+import { toRdf } from 'rdf-literal'
+import env from '../env'
 
 export function getSharedDimensions() {
   return CONSTRUCT`
@@ -18,7 +19,14 @@ export function getSharedDimensions() {
     `
 }
 
-export function getSharedTerms(sharedDimension: Term, freetextQuery: string | undefined, limit = 100) {
+interface GetSharedTerms {
+  sharedDimension: Term
+  freetextQuery: string | undefined
+  limit?: number
+  validThrough?: Date
+}
+
+export function getSharedTerms({ sharedDimension, freetextQuery, validThrough, limit = 100 }: GetSharedTerms) {
   const term = $rdf.variable('term')
   const name = $rdf.variable('name')
 
@@ -32,6 +40,16 @@ export function getSharedTerms(sharedDimension: Term, freetextQuery: string | un
   if (freetextQuery) {
     select = select.WHERE`FILTER (
       REGEX(${name}, "^${freetextQuery}", "i")
+    )`
+  }
+
+  if (validThrough) {
+    select = select.WHERE`OPTIONAL {
+      ${term} ${schema.validThrough} ?validThrough .
+    }
+
+    FILTER (
+      !bound(?validThrough) || ?validThrough >= ${toRdf(validThrough)}
     )`
   }
 

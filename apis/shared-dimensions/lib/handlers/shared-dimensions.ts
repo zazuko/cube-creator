@@ -67,13 +67,17 @@ export const getTerms = asyncMiddleware(async (req, res, next) => {
     return next(new httpError.NotFound())
   }
 
-  const search = query.has(hydra.freetextQuery).out(hydra.freetextQuery).value
+  const queryParams = {
+    sharedDimension: rewriteTerm(term),
+    freetextQuery: query.has(hydra.freetextQuery).out(hydra.freetextQuery).value,
+    validThrough: query.has(schema.valid).terms.length ? new Date() : undefined,
+  }
 
   const collection = await getCollection({
-    memberQuads: await getSharedTerms(rewriteTerm(term), search).execute(parsingClient.query),
+    memberQuads: await getSharedTerms(queryParams).execute(parsingClient.query),
     memberType: schema.DefinedTerm,
     collectionType: md.SharedDimensionTerms,
-    collection: termsCollectionId(term, search),
+    collection: termsCollectionId(term, queryParams.freetextQuery),
   })
 
   res.setLink(collection.value, 'canonical')
