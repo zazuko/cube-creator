@@ -45,12 +45,20 @@ export const get = asyncMiddleware(async (req, res) => {
   return res.dataset(collection.dataset)
 })
 
-function termsCollectionId(dimension: Term) {
-  return $rdf.namedNode(`${env.MANAGED_DIMENSIONS_BASE}dimension/_terms?dimension=${encodeURIComponent(dimension.value)}`)
+function termsCollectionId(dimension: Term, search?: string) {
+  const uri = new URL(`${env.MANAGED_DIMENSIONS_BASE}dimension/_terms`)
+  uri.searchParams.set('dimensions', dimension.value)
+
+  if (search) {
+    uri.searchParams.set('q', search)
+  }
+
+  return $rdf.namedNode(uri.toString())
 }
 
 export const getTerms = asyncMiddleware(async (req, res, next) => {
-  const termSet = clownface({ dataset: await req.dataset() })
+  const query = clownface({ dataset: await req.dataset() })
+  const termSet = query
     .has(schema.inDefinedTermSet)
     .out(schema.inDefinedTermSet)
 
@@ -59,14 +67,20 @@ export const getTerms = asyncMiddleware(async (req, res, next) => {
     return next(new httpError.NotFound())
   }
 
+  const queryParams = {
+    sharedDimension: rewriteTerm(term),
+    freetextQuery: query.has(hydra.freetextQuery).out(hydra.freetextQuery).value,
+    validThrough: query.has(md.onlyValidTerms, query.literal(true)).terms.length ? new Date() : undefined,
+  }
+
   const collection = await getCollection({
-    memberQuads: await getSharedTerms(rewriteTerm(term)).execute(parsingClient.query),
+    memberQuads: await getSharedTerms(queryParams).execute(parsingClient.query),
     memberType: schema.DefinedTerm,
     collectionType: md.SharedDimensionTerms,
-    collection: termsCollectionId(term),
+    collection: termsCollectionId(term, queryParams.freetextQuery),
   })
 
-  res.setLink(req.absoluteUrl(), 'canonical')
+  res.setLink(collection.value, 'canonical')
   return res.dataset(collection.dataset)
 })
 

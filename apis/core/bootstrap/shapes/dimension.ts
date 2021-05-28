@@ -1,4 +1,4 @@
-import { cc, meta, shape, sh1, cube } from '@cube-creator/core/namespace'
+import { cc, meta, shape, sh1, cube, md } from '@cube-creator/core/namespace'
 import { supportedLanguages } from '@cube-creator/core/languages'
 import { sparql, turtle } from '@tpluscode/rdf-string'
 import { lindasQuery } from '../lib/query'
@@ -254,6 +254,15 @@ ${shape('dimension/shared-mapping')} {
       ${sh.maxCount} 1 ;
       ${sh.order} 10 ;
     ] , [
+      ${sh.path} ${md.onlyValidTerms} ;
+      ${sh.name} "Only current terms" ;
+      ${sh.description} "Uncheck to show all Shared Terms, including deprecated" ;
+      ${sh.datatype} ${xsd.boolean} ;
+      ${sh.defaultValue} true ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+      ${sh.order} 15 ;
+    ] , [
       ${sh.path} ${prov.hadDictionaryMember} ;
       ${sh.node} _:keyEntityPair ;
       ${sh.name} "Mappings" ;
@@ -293,12 +302,15 @@ ${shape('dimension/shared-mapping')} {
           ${sh.inversePath} ${prov.hadDictionaryMember} ;
         ] ;
         ${hydra.variableRepresentation} ${hydra.ExplicitRepresentation} ;
-        ${hydra.template} "dimension/_terms{?dimension}" ;
+        ${hydra.template} "dimension/_terms?dimension={dimension}{&valid}" ;
         ${hydra.mapping} [
           ${hydra.variable} "dimension" ;
           ${hydra.property} ${cc.sharedDimension} ;
           ${hydra.required} true ;
-        ] ;
+        ] , [
+          ${hydra.variable} "valid" ;
+          ${hydra.property} ${md.onlyValidTerms} ;
+        ];
       ] ;
       ${sh.order} 20 ;
     ];

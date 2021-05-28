@@ -2,13 +2,14 @@ import { Literal, NamedNode, Term } from 'rdf-js'
 import { Constructor, property } from '@tpluscode/rdfine'
 import { prov, schema } from '@tpluscode/rdf-ns-builders'
 import { Dictionary, KeyEntityPair } from '@rdfine/prov'
-import { cc } from '@cube-creator/core/namespace'
+import { cc, md } from '@cube-creator/core/namespace'
 import TermMap from '@rdfjs/term-map'
 import $rdf from 'rdf-ext'
 
 interface DictionaryEx {
   about: NamedNode
   sharedDimension: NamedNode
+  onlyValidTerms: boolean
   replaceEntries(entries: KeyEntityPair[]): Map<Term, Term>
   changeSharedDimension(sharedDimension: NamedNode): void
   addMissingEntries(unmappedValues: Set<Literal>): void
@@ -29,6 +30,9 @@ export function ProvDictionaryMixinEx<Base extends Constructor<Dictionary>>(Reso
 
     @property({ path: cc.sharedDimension })
     sharedDimension!: NamedNode
+
+    @property({ path: md.onlyValidTerms })
+    onlyValidTerms!: boolean
 
     changeSharedDimension(sharedDimension: NamedNode) {
       this.sharedDimension = sharedDimension

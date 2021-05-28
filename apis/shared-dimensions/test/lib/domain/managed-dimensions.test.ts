@@ -31,9 +31,15 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimensions @SPAR
     const sharedDimension = $rdf.namedNode('http://example.com/dimension/colors')
 
     it('returns terms for a given dimension', async () => {
+      // given
+      const search = {
+        sharedDimension,
+        freetextQuery: undefined,
+      }
+
       // when
       const dataset = await $rdf.dataset()
-        .import(await getSharedTerms(sharedDimension).execute(mdClients.streamClient.query))
+        .import(await getSharedTerms(search).execute(mdClients.streamClient.query))
 
       // then
       expect(dataset.match(null, rdf.type, schema.DefinedTerm))
@@ -53,6 +59,59 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimensions @SPAR
           minCount: 1,
         }],
       })
+    })
+
+    it('returns top N terms', async () => {
+      // given
+      const search = {
+        sharedDimension,
+        freetextQuery: undefined,
+        limit: 1,
+      }
+
+      // when
+      const dataset = await $rdf.dataset()
+        .import(await getSharedTerms(search).execute(mdClients.streamClient.query))
+
+      // then
+      expect(dataset.match(null, rdf.type, schema.DefinedTerm))
+        .to.have.property('size', 1)
+    })
+
+    it('returns terms filtered by input, case-insensitive', async () => {
+      // given
+      const search = {
+        sharedDimension,
+        freetextQuery: 'r',
+      }
+      // when
+      const dataset = await $rdf.dataset()
+        .import(await getSharedTerms(search).execute(mdClients.streamClient.query))
+
+      // then
+      const [term, ...more] = dataset.match(null, rdf.type, schema.DefinedTerm)
+      expect(more).to.have.length(0)
+      expect(term.subject).to.deep.eq($rdf.namedNode('http://example.com/dimension/colors/red'))
+    })
+
+    it('returns terms only valid terms', async () => {
+      // given
+      const search = {
+        sharedDimension,
+        freetextQuery: undefined,
+        validThrough: new Date(Date.parse('2021-04-15')),
+      }
+      // when
+      const dataset = await $rdf.dataset()
+        .import(await getSharedTerms(search).execute(mdClients.streamClient.query))
+
+      // then
+      const terms = [...dataset.match(null, rdf.type, schema.DefinedTerm)].map(({ subject }) => subject)
+      expect(terms).to.have.length(2)
+      expect(terms).to.deep.contain.all.members([
+        $rdf.namedNode('http://example.com/dimension/colors/blue'),
+        $rdf.namedNode('http://example.com/dimension/colors/green'),
+      ])
     })
   })
 })

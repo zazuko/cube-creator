@@ -1,7 +1,9 @@
-import { CONSTRUCT } from '@tpluscode/sparql-builder'
+import { CONSTRUCT, SELECT } from '@tpluscode/sparql-builder'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { md, meta } from '@cube-creator/core/namespace'
 import { Term } from 'rdf-js'
+import $rdf from 'rdf-ext'
+import { toRdf } from 'rdf-literal'
 import env from '../env'
 
 export function getSharedDimensions() {
@@ -17,12 +19,48 @@ export function getSharedDimensions() {
     `
 }
 
-export function getSharedTerms(sharedDimension: Term) {
-  return CONSTRUCT`
-      ?term ?p ?o .
-    `
+interface GetSharedTerms {
+  sharedDimension: Term
+  freetextQuery: string | undefined
+  limit?: number
+  validThrough?: Date
+}
+
+export function getSharedTerms({ sharedDimension, freetextQuery, validThrough, limit = 100 }: GetSharedTerms) {
+  const term = $rdf.variable('term')
+  const name = $rdf.variable('name')
+
+  let select = SELECT.DISTINCT`${term}`
     .WHERE`
       ${sharedDimension} a ${meta.SharedDimension} .
-      ?term ${schema.inDefinedTermSet} ${sharedDimension} ; ?p ?o .
+      ${term} ${schema.inDefinedTermSet} ${sharedDimension} .
+      ${term} ${schema.name} ${name} .
+    `
+
+  if (freetextQuery) {
+    select = select.WHERE`FILTER (
+      REGEX(${name}, "^${freetextQuery}", "i")
+    )`
+  }
+
+  if (validThrough) {
+    select = select.WHERE`OPTIONAL {
+      ${term} ${schema.validThrough} ?validThrough .
+    }
+
+    FILTER (
+      !bound(?validThrough) || ?validThrough >= ${toRdf(validThrough)}
+    )`
+  }
+
+  return CONSTRUCT`
+      ${term} ?p ?o .
+    `
+    .WHERE`
+      {
+        ${select.LIMIT(limit).ORDER().BY(name)}
+      }
+
+      ${term} ?p ?o .
     `
 }

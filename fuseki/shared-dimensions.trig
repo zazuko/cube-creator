@@ -47,6 +47,7 @@ graph <http://example.com/dimension/colors> {
   <http://example.com/dimension/colors/red>
     a schema:DefinedTerm ;
     schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
+    schema:validThrough "2021-04-10T23:59:59Z"^^xsd:dateTime ;
     schema:identifier "red", "#F00", "#FF0000" ;
     schema:name "Red"@en, "Rot"@de, "Rouge"@fr, "Rosso"@it ;
     schema:inDefinedTermSet <http://example.com/dimension/colors> ;
@@ -55,6 +56,7 @@ graph <http://example.com/dimension/colors> {
   <http://example.com/dimension/colors/green>
     a schema:DefinedTerm ;
     schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
+    schema:validThrough "2021-04-20T23:59:59Z"^^xsd:dateTime ;
     schema:identifier "Green", "#0F0", "#00FF00" ;
     schema:name "Green"@en, "Grün"@de, "Verde"@fr, "Vert"@it ;
     schema:inDefinedTermSet <http://example.com/dimension/colors> ;
