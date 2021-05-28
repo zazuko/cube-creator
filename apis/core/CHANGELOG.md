@@ -1,5 +1,14 @@
 # @cube-creator/core-api
 
+## 1.2.1
+
+### Patch Changes
+
+- 506cb9b3: Apostrophe in column names would cause CSVW to fail to generate (fixes #728)
+- 8b966918: Regression: changing name of CSV Project was impossible (fixes #749)
+- Updated dependencies [fb4ffc0c]
+  - @cube-creator/shared-dimensions-api@2.1.0
+
 ## 1.2.0
 
 ### Minor Changes

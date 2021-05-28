@@ -1,5 +1,18 @@
 # @cube-creator/cli
 
+## 1.4.0
+
+### Minor Changes
+
+- 508bf91b: Import: Copy cube, observations, and cube constraint to project (closes #705)
+
+### Patch Changes
+
+- 9f3ed377: Publish job was not updated to show its running status
+- 201bf2fd: Apply mapped datatype to default value (fixes #717)
+- 1a7c09f1: Trigger import immediately when project is created (fixes #720)
+- 96e363e3: Better import cube metadata
+
 ## 1.3.0
 
 ### Minor Changes

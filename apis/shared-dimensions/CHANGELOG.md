@@ -1,5 +1,11 @@
 # @cube-creator/shared-dimensions-api
 
+## 2.1.0
+
+### Minor Changes
+
+- fb4ffc0c: Add free-text search to the dimension terms collection
+
 ## 2.0.2
 
 ### Patch Changes
