@@ -7,6 +7,7 @@
     label="label"
     track-by="value"
     :allow-empty="false"
+    :show-labels="false"
     close-on-select
   />
 </template>
@@ -31,10 +32,11 @@ export default class extends Vue {
   @Prop() property!: PropertyShape
   @Prop() update!: (newValue: Term | null) => void
   @Prop() value?: NamedNode;
-  @Prop() options!: [GraphPointer, string][]
+  @Prop() options?: [GraphPointer, string][]
 
   get _options (): Option[] {
-    return this.options.map(([pointer, label]) => ({ value: pointer.term.value, label, term: pointer.term }))
+    const options = this.options ?? []
+    return options.map(([pointer, label]) => ({ value: pointer.term.value, label, term: pointer.term }))
   }
 
   get _value (): Option | null {

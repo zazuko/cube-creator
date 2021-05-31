@@ -8,6 +8,7 @@
     width: 100%;
 
     border-color: $input-border-color;
+    padding-right: 2rem;
 }
 
 .multiselect__tags:hover {
@@ -20,6 +21,15 @@
     padding: 0;
     font-size: inherit;
     line-height: inherit;
+}
+
+.multiselect__placeholder {
+    width: 100%;
+}
+
+.multiselect__single {
+    white-space: nowrap;
+    overflow-x: hidden;
 }
 
 .multiselect--disabled .multiselect__tags {

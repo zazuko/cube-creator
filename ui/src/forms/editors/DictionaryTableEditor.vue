@@ -13,8 +13,13 @@
     <table class="terms-table">
       <tbody>
         <tr v-for="o in displayedObjects" :key="o.key" class="term-row">
-          <render-wc-template :template-result="renderer.renderFocusNode({ focusNode: o.object, shape: shape.node })" />
           <td>
+            <render-wc-template
+              class="term-pair"
+              :template-result="renderer.renderFocusNode({ focusNode: o.object, shape: shape.node })"
+            />
+          </td>
+          <td class="term-remove-col">
             <b-tooltip label="Remove value">
               <b-button icon-left="minus" @click.prevent="renderer.actions.removeObject(o.object)" type="is-white" />
             </b-tooltip>
@@ -92,8 +97,16 @@ export default class extends Vue {
 </style>
 
 <style>
-.term-row input,
-.term-row select {
-  min-width: 6rem;
+.term-pair {
+  display: flex;
+  justify-content: stretch;
+}
+
+.term-pair > * {
+  width: 50%;
+}
+
+.term-remove-col {
+  width: 2rem;
 }
 </style>
