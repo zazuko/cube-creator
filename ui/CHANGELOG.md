@@ -1,5 +1,14 @@
 # @cube-creator/ui
 
+## 1.2.2
+
+### Patch Changes
+
+- ef91512e: Dimension mapping: switch for hiding deprecated terms (closes #747)
+- 33bc3725: Opendata.swiss Contact Point sometimes showed false negative validation error
+- 96942e4b: Dimensions: previously saved **Data kind** would not show on subsequent edit form (fixes #740)
+- dd955a0e: Fix language switch for resource labels in Cube Preview
+
 ## 1.2.1
 
 ### Patch Changes
