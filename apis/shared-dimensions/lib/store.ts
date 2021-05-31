@@ -16,7 +16,12 @@ export interface SharedDimensionsStore {
   exists(id: NamedNode, type: NamedNode): Promise<boolean>
 }
 
-function resourceQueryPatterns(id: NamedNode) {
+function resourceQueryPatterns(id: NamedNode, strict: boolean) {
+  let rootPropPatterns = sparql`${id} ?rootProp ?rootObject .`
+  if (!strict) {
+    rootPropPatterns = sparql`OPTIONAL { ${rootPropPatterns} }`
+  }
+
   return sparql`
     ?rootShape ${sh.targetNode} ${id} .
     MINUS {
@@ -24,8 +29,8 @@ function resourceQueryPatterns(id: NamedNode) {
       ?propertyShape ${sh.node} ?rootShape .
     }
 
-    ?rootShape ${sh.property}/${sh.path} ?rootProp .
-    ${id} ?rootProp ?rootObject .
+    OPTIONAL { ?rootShape ${sh.property}/${sh.path} ?rootProp . }
+    ${rootPropPatterns}
 
     OPTIONAL {
       ?rootShape (${sh.property}/${sh.node})+ ?childPropShape .
@@ -44,7 +49,7 @@ function deleteQuery(id: NamedNode, graph: NamedNode) {
       ?s ?p ?o .
     `
     .WHERE`
-      ${resourceQueryPatterns(id)}
+      ${resourceQueryPatterns(id, false)}
 
       OPTIONAL {
         ?rootShape (!${sh.targetNode})* ?s .
@@ -59,7 +64,7 @@ export function getQuery(id: NamedNode, graph: NamedNode) {
     ?child ?childProp ?childObject .
   `
     .FROM(graph)
-    .WHERE`${resourceQueryPatterns(id)}`
+    .WHERE`${resourceQueryPatterns(id, true)}`
 }
 
 export default class Store implements SharedDimensionsStore {
