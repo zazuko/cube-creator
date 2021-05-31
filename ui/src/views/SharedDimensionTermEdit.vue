@@ -1,5 +1,10 @@
 <template>
   <side-pane :title="title" @close="onCancel">
+    <b-field label="URI" v-if="resource">
+      <span class="form-input">
+        {{ resource.term.value }}
+      </span>
+    </b-field>
     <hydra-operation-form-with-raw
       v-if="operation"
       :operation="operation"

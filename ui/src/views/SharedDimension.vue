@@ -15,6 +15,9 @@
         <thead>
           <tr>
             <th>
+              URI
+            </th>
+            <th>
               Name
             </th>
             <th>
@@ -34,6 +37,9 @@
         </thead>
         <tbody>
           <tr v-for="term in terms" :key="term.clientPath">
+            <td class="has-text-sm">
+              <term-display :term="term.id" />
+            </td>
             <td>
               <p v-for="(name, index) in term.name" :key="index">
                 <term-display :key="name.value" :term="name" :show-language="true" />
