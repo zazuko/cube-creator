@@ -248,7 +248,7 @@ ${shape('dimension/shared-mapping')} {
       ${sh.path} ${cc.sharedDimension} ;
       ${sh.name} "Shared dimension" ;
       ${sh.description} "**WARNING!** Changing the selected shared dimension will erase all current mappings" ;
-      ${dash.editor} ${dash.InstancesSelectEditor} ;
+      ${dash.editor} ${dash.AutoCompleteEditor} ;
       ${hydra.collection} ${sharedDimensionCollection} ;
       ${sh.nodeKind} ${sh.IRI} ;
       ${sh.maxCount} 1 ;
