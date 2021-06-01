@@ -45,9 +45,9 @@
     "vue-color": "^2.7.1",
     "vue-custom-element": "^3.2.14",
     "vue-markdown": "^2.2.4",
-    "vue-multiselect": "^2.1.6",
     "vue-property-decorator": "^9.0.2",
     "vue-router": "^3.4.7",
+    "vue-select": "^3.11.2",
     "vuex": "^3.4.0",
     "vuex-class": "^0.3.2",
     "vuex-oidc": "^3.10.1"

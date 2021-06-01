@@ -1,14 +1,11 @@
 <template>
-  <multi-select
+  <vue-select
     placeholder="Select"
-    @input="onInput"
-    :value="_value"
     :options="_options"
     label="label"
-    track-by="value"
-    :allow-empty="false"
-    :show-labels="false"
-    close-on-select
+    :value="_value"
+    @input="onInput"
+    :clearable="false"
   />
 </template>
 
@@ -17,7 +14,7 @@ import { Prop, Component, Vue } from 'vue-property-decorator'
 import type { PropertyShape } from '@rdfine/shacl'
 import { Term, NamedNode } from 'rdf-js'
 import { GraphPointer } from 'clownface'
-import MultiSelect from 'vue-multiselect'
+import VueSelect from 'vue-select'
 
 interface Option {
   label: string
@@ -26,7 +23,7 @@ interface Option {
 }
 
 @Component({
-  components: { MultiSelect },
+  components: { VueSelect },
 })
 export default class extends Vue {
   @Prop() property!: PropertyShape

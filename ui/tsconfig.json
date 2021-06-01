@@ -33,6 +33,7 @@
   "files": [
     "types/global.d.ts",
     "types/vue-markdown.d.ts",
+    "types/vue-select.d.ts",
   ],
   "include": [
     "src/**/*.ts",
