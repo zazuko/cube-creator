@@ -1,5 +1,11 @@
 # @cube-creator/shared-dimensions-api
 
+## 2.1.1
+
+### Patch Changes
+
+- 8c6c07c8: Techy: improve read/write of shared dimensions terms
+
 ## 2.1.0
 
 ### Minor Changes
