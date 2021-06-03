@@ -1,11 +1,13 @@
 <template>
   <vue-select
-    placeholder="Select"
+    :placeholder="placeholder"
     :options="_options"
     label="label"
     :value="_value"
     @input="onInput"
     :clearable="false"
+    :filterable="filterable"
+    @search="onSearch"
   />
 </template>
 
@@ -29,6 +31,8 @@ export default class extends Vue {
   @Prop() property!: PropertyShape
   @Prop() update!: (newValue: Term | null) => void
   @Prop() value?: NamedNode;
+  @Prop() placeholder!: string;
+  @Prop() filterable?: boolean;
   @Prop() options?: [GraphPointer, string][]
 
   get _options (): Option[] {
@@ -42,6 +46,10 @@ export default class extends Vue {
 
   onInput (value: Option | null): void {
     this.update(value?.term ?? null)
+  }
+
+  onSearch (freetextQuery: string, loading: () => void): void {
+    this.$emit('search', freetextQuery, loading)
   }
 }
 </script>
