@@ -163,6 +163,14 @@ describe('@cube-creator/cli/lib/commands/transform', function () {
       expect(observationValue[0]?.value).to.deep.eq($rdf.literal('', cube.Undefined))
     })
 
+    it('does not output ""^^cube:Undefined for non-Observation tables', async () => {
+      const hasName = await ASK`${cubeNs('station/neCHA')} ${schema.name} ?name`
+        .FROM(expectedGraph)
+        .execute(ccClients.parsingClient.query)
+
+      expect(hasName).to.be.false
+    })
+
     it('outputs cube:Undefined for missing value mapped to a shared dimension', async () => {
       const result = await SELECT`?value`
         .FROM(expectedGraph)
