@@ -16,7 +16,7 @@ export const focusNode = decorate((wrapped: FocusNodeTemplate): FocusNodeTemplat
 export const property = decorate((wrapped: PropertyTemplate): PropertyTemplate => {
   return (renderer, { property }) => {
     if (renderer.focusNode.focusNode.has(rdf.type, prov.KeyEntityPair).terms.length) {
-      return html`${repeat(property.objects, object => html`<td>${renderer.renderObject({ object })}</td>`)}`
+      return html`${repeat(property.objects, object => renderer.renderObject({ object }))}`
     }
 
     return wrapped(renderer, { property })

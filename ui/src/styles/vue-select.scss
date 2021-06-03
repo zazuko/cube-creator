@@ -1,0 +1,24 @@
+@import "vue-select/src/scss/vue-select.scss";
+
+
+.vs__dropdown-toggle {
+    @include input;
+
+    width: 100%;
+    max-width: 100%;
+    height: 2.5em;
+
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+
+.vs__selected-options {
+    overflow: hidden;
+}
+
+.vs__selected {
+    position: absolute;
+    white-space: nowrap;
+    overflow-x: hidden;
+}

@@ -1,13 +1,11 @@
 <template>
-  <multi-select
+  <vue-select
     placeholder="Select"
-    @input="onInput"
-    :value="_value"
     :options="_options"
     label="label"
-    track-by="value"
-    :allow-empty="false"
-    close-on-select
+    :value="_value"
+    @input="onInput"
+    :clearable="false"
   />
 </template>
 
@@ -16,7 +14,7 @@ import { Prop, Component, Vue } from 'vue-property-decorator'
 import type { PropertyShape } from '@rdfine/shacl'
 import { Term, NamedNode } from 'rdf-js'
 import { GraphPointer } from 'clownface'
-import MultiSelect from 'vue-multiselect'
+import VueSelect from 'vue-select'
 
 interface Option {
   label: string
@@ -25,16 +23,17 @@ interface Option {
 }
 
 @Component({
-  components: { MultiSelect },
+  components: { VueSelect },
 })
 export default class extends Vue {
   @Prop() property!: PropertyShape
   @Prop() update!: (newValue: Term | null) => void
   @Prop() value?: NamedNode;
-  @Prop() options!: [GraphPointer, string][]
+  @Prop() options?: [GraphPointer, string][]
 
   get _options (): Option[] {
-    return this.options.map(([pointer, label]) => ({ value: pointer.term.value, label, term: pointer.term }))
+    const options = this.options ?? []
+    return options.map(([pointer, label]) => ({ value: pointer.term.value, label, term: pointer.term }))
   }
 
   get _value (): Option | null {
