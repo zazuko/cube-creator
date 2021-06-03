@@ -11290,10 +11290,10 @@ rdf-normalize@^1.0.0:
   resolved "https://registry.yarnpkg.com/rdf-normalize/-/rdf-normalize-1.0.0.tgz#53496baf362cce9d9fca1f2216c6c30007f99cca"
   integrity sha1-U0lrrzYszp2fyh8iFsbDAAf5nMo=
 
-rdf-parser-csvw@^0.14.0, rdf-parser-csvw@^0.14.3:
-  version "0.14.3"
-  resolved "https://registry.yarnpkg.com/rdf-parser-csvw/-/rdf-parser-csvw-0.14.3.tgz#d610319f638a9e644c372a3264fcbecb79458b03"
-  integrity sha512-Vw8eu28PUWD+qYKUYziPB3XUe3lrFd0/kV3ndPTYKHr1ONP8mFIHU/mXJx/BU2QT+7s2vyKsPu4ApX/az80C6Q==
+rdf-parser-csvw@^0.14.0, rdf-parser-csvw@^0.14.4:
+  version "0.14.4"
+  resolved "https://registry.yarnpkg.com/rdf-parser-csvw/-/rdf-parser-csvw-0.14.4.tgz#40b232d913cc28f0b2a4ad4b7c6cd7f3352f811d"
+  integrity sha512-u/GQo69vAHhIb9+3jOZVR550NG1+Y8NHl6MCEfo2uQ5Ul2UT0KsClznFU8V0PmfRpWkcMv+f02UyWjcOsvkvhg==
   dependencies:
     "@rdfjs/data-model" "^1.1.2"
     commander "^3.0.1"
