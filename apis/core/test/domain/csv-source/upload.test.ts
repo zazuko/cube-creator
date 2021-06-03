@@ -114,7 +114,7 @@ describe('domain/csv-sources/upload', () => {
               minCount: 1,
             }, {
               path: csvw.headerRowCount,
-              hasValue: $rdf.literal('9', xsd.integer),
+              hasValue: $rdf.literal('11', xsd.integer),
               minCount: 1,
             }, {
               path: csvw.header,
@@ -130,8 +130,8 @@ describe('domain/csv-sources/upload', () => {
       expect(csvSource).to.matchShape({
         property: {
           path: csvw.column,
-          minCount: 9,
-          maxCount: 9,
+          minCount: 11,
+          maxCount: 11,
           node: {
             property: [{
               path: rdf.type,
