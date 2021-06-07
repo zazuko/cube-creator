@@ -1,5 +1,11 @@
 # @cube-creator/cli
 
+## 1.4.1
+
+### Patch Changes
+
+- b6032193: Transform: Do not produce `"undefined"` literals (fixes #754)
+
 ## 1.4.0
 
 ### Minor Changes

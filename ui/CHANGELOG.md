@@ -1,5 +1,11 @@
 # @cube-creator/ui
 
+## 1.2.4
+
+### Patch Changes
+
+- 7f8f3fab: Display shared dimension terms URI (fixes #739)
+
 ## 1.2.3
 
 ### Patch Changes
