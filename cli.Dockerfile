@@ -45,4 +45,4 @@ COPY --from=builder /app/dist/packages/ ./packages/
 ARG COMMIT
 ENV SENTRY_RELEASE=cube-creator-cli@$COMMIT
 
-ENTRYPOINT ["node", "cli/index.js"]
+ENTRYPOINT ["node", "--async-stack-traces", "cli/index.js"]
