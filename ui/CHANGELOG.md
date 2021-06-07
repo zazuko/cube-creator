@@ -1,5 +1,11 @@
 # @cube-creator/ui
 
+## 1.2.3
+
+### Patch Changes
+
+- beff2053: Use "search with filter" inputs for shared dimension mapping
+
 ## 1.2.2
 
 ### Patch Changes
