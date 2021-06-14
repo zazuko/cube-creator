@@ -1,5 +1,11 @@
 # @cube-creator/ui
 
+## 1.2.5
+
+### Patch Changes
+
+- 53f0bb81: Truncate project title to a reasonable width
+
 ## 1.2.4
 
 ### Patch Changes
