@@ -6,7 +6,7 @@
           <li :class="{ 'is-active': isActive }">
             <b-tooltip label="Project settings">
               <a :href="href" @click="navigate">
-                <h2 class="has-text-weight-bold">
+                <h2 class="project-title has-text-weight-bold truncate">
                   {{ project.title }}
                 </h2>
                 <b-icon icon="cog" class="ml-1" />
@@ -121,5 +121,9 @@ export default class CubeProjectView extends Vue {
 
 .tab-right ~ .tab-right {
   margin-left: 0;
+}
+
+.project-title {
+  max-width: 34rem;
 }
 </style>
