@@ -32,7 +32,7 @@ const properties: Initializer<PropertyShape>[] = [{
   path: sh.property,
   minCount: 1,
   maxCount: 1,
-  nodeKind: sh.BlankNode,
+  nodeKind: sh.BlankNodeOrIRI,
   defaultValue: $rdf.blankNode(),
   order: 30,
   node: {
@@ -65,7 +65,7 @@ const properties: Initializer<PropertyShape>[] = [{
       name: 'Data kind',
       path: meta.dataKind,
       maxCount: 1,
-      nodeKind: sh.BlankNode,
+      nodeKind: sh.BlankNodeOrIRI,
       order: 30,
       node: {
         property: [{
