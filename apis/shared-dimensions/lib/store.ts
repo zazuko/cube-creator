@@ -6,8 +6,10 @@ import ParsingClient from 'sparql-http-client/ParsingClient'
 import { rdf, sh } from '@tpluscode/rdf-ns-builders'
 import TermSet from '@rdfjs/term-set'
 import $rdf from 'rdf-ext'
+import { nanoid } from 'nanoid'
 import { parsingClient } from './sparql'
 import env from './env'
+import { removeBnodes } from './rewrite'
 
 export interface SharedDimensionsStore {
   load(id: Term | undefined): Promise<GraphPointer<NamedNode>>
@@ -81,14 +83,16 @@ export default class Store implements SharedDimensionsStore {
   }
 
   save(resource: GraphPointer<NamedNode>): Promise<void> {
-    const shape = this.extractShape(resource)
-    shape.addOut(sh.targetNode, resource)
+    const withoutBlanks = removeBnodes(resource)
+
+    const shape = this.extractShape(withoutBlanks)
+    shape.addOut(sh.targetNode, withoutBlanks)
 
     const insert = INSERT.DATA`GRAPH ${this.graph} {
-      ${resource.dataset}
+      ${withoutBlanks.dataset}
       ${shape.dataset}
     }`
-    const query = sparql`${deleteQuery(resource.term, this.graph)};\n${insert}`
+    const query = sparql`${deleteQuery(withoutBlanks.term, this.graph)};\n${insert}`
 
     return this.client.query.update(query.toString())
   }
@@ -98,7 +102,7 @@ export default class Store implements SharedDimensionsStore {
   }
 
   extractShape(resource: GraphPointer, dataset = $rdf.dataset(), visited = new TermSet()): GraphPointer {
-    const shape = clownface({ dataset }).blankNode()
+    const shape = clownface({ dataset }).namedNode(`urn:shape:${nanoid()}`)
     if (visited.has(resource.term)) {
       return shape
     }
@@ -116,7 +120,7 @@ export default class Store implements SharedDimensionsStore {
       }
 
       visitedPredicates.add(quad.predicate)
-      shape.addOut(sh.property, property => {
+      shape.addOut(sh.property, $rdf.namedNode(`urn:shape:${nanoid()}`), property => {
         property.addOut(sh.path, quad.predicate)
 
         if (quad.object.termType === 'NamedNode' || quad.object.termType === 'BlankNode') {
