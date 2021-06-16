@@ -1,6 +1,6 @@
 import { turtle } from '@tpluscode/rdf-string'
 import { hydra, rdf, rdfs, schema } from '@tpluscode/rdf-ns-builders'
-import { cc } from '@cube-creator/core/namespace'
+import { adminch, cc } from '@cube-creator/core/namespace'
 
 export const organizations = turtle`
 <organizations> {
@@ -21,6 +21,8 @@ export const organizations = turtle`
     ${rdfs.label} "Office fédéral de l'environnement OFEV"@fr ;
     ${rdfs.label} "Ufficio federale dell'ambiente UFAM"@it ;
     ${rdfs.label} "Federal Office for the Environment FOEN"@en ;
+    ${adminch.queryInterface} <https://enviroment.ld.admin.ch/query> ;
+    ${adminch.sparqlEndpoint} <https://enviroment.ld.admin.ch/sparql> ;
   .
 }
 `

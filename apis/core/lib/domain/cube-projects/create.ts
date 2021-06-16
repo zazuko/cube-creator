@@ -1,7 +1,7 @@
 import { GraphPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'
 import { dcterms, rdfs, schema } from '@tpluscode/rdf-ns-builders'
-import { cc, shape } from '@cube-creator/core/namespace'
+import { adminch, cc, shape } from '@cube-creator/core/namespace'
 import * as Project from '@cube-creator/model/Project'
 import * as Dataset from '@cube-creator/model/Dataset'
 import * as DimensionMetadata from '@cube-creator/model/DimensionMetadata'
@@ -50,12 +50,16 @@ async function createCsvProjectResource({ user, userName, projectNode, store, la
     sourceKind,
   })
 
+  const organization = await store.getResource(project.maintainer)
+
   const dataset = Dataset.create(store.create(project.dataset.id), {
     [dcterms.identifier.value]: project.cubeIdentifier,
+    [adminch.queryInteface.value]: organization.get(adminch.queryInterface),
+    [adminch.sparqlEndpoint.value]: organization.get(adminch.sparqlEndpoint),
   })
 
   project.initializeCsvMapping(store)
-  const organization = await store.getResource(project.maintainer)
+
   dataset.addCube(organization.createIdentifier({
     cubeIdentifier,
   }), user)
@@ -100,8 +104,11 @@ async function createImportProjectResources({ resource, user, userName, projectN
     sourceKind,
   })
 
+  const organization = await store.getResource(project.maintainer)
   const dataset = Dataset.create(store.create(project.dataset.id), {
     [dcterms.identifier.value]: project.sourceCube,
+    [adminch.queryInteface.value]: organization.get(adminch.queryInterface),
+    [adminch.sparqlEndpoint.value]: organization.get(adminch.sparqlEndpoint),
   })
   dataset.addCube(project.sourceCube, user)
 
