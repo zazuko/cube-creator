@@ -5,6 +5,7 @@
       :dimensions="dimensions"
       :selected-language="selectedLanguage"
       @selectLanguage="selectLanguage"
+      @refreshDimensions="refreshDimensions"
     />
 
     <router-view :key="$route.fullPath" />
@@ -37,6 +38,10 @@ export default class CubeDesignerView extends Vue {
 
   selectLanguage (language: string): void {
     this.$store.dispatch('project/selectLanguage', language)
+  }
+
+  refreshDimensions (): void {
+    this.$store.dispatch('project/fetchDimensionMetadataCollection')
   }
 }
 </script>

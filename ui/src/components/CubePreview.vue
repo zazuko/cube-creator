@@ -110,7 +110,7 @@
                 </b-select>
               </b-tooltip>
               <b-tooltip label="Refresh data">
-                <b-button icon-left="sync" @click="fetchCubeData" />
+                <b-button icon-left="sync" @click="refreshData" />
               </b-tooltip>
             </div>
           </td>
@@ -187,6 +187,14 @@ export default class extends Vue {
     }
 
     return null
+  }
+
+  async refreshData (): Promise<void> {
+    if (this.dimensions.length === 0) {
+      this.$emit('refreshDimensions')
+    }
+
+    return this.fetchCubeData()
   }
 
   @Watch('pageSize')
