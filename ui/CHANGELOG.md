@@ -1,5 +1,12 @@
 # @cube-creator/ui
 
+## 1.2.6
+
+### Patch Changes
+
+- 070da9ac: Attempt at fixing "Request Header Or Cookie Too Large" error (fix #767)
+- f91d1cde: Fix Cube Designer refresh button when dimensions were not loaded at page load (fix #764)
+
 ## 1.2.5
 
 ### Patch Changes

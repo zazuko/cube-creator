@@ -1,5 +1,11 @@
 # @cube-creator/shared-dimensions-api
 
+## 2.1.2
+
+### Patch Changes
+
+- 9bcbe22e: Techy: resources are stored without any blank nodes to avoid conflicts
+
 ## 2.1.1
 
 ### Patch Changes
