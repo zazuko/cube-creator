@@ -55,6 +55,17 @@ export default class App extends Vue {
 
   mounted (): void {
     this.$store.dispatch('app/loadCommonRDFProperties')
+
+    window.addEventListener('vuexoidc:userLoaded', this.onUserLoaded)
+  }
+
+  destroyed (): void {
+    window.removeEventListener('vuexoidc:userLoaded', this.onUserLoaded)
+  }
+
+  onUserLoaded (): void {
+    // Clear stale state in OIDC store to avoid "Request Header Or Cookie Too Large" error
+    this.$store.dispatch('auth/clearStaleState')
   }
 
   dismissMessage (message: Message): void {
