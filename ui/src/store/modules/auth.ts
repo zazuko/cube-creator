@@ -29,5 +29,6 @@ export function auth (): Module<VuexOidcState, RootState> {
     namespaced: true,
     publicRoutePaths: ['/oidc-error', '/logout'],
     routeBase: process.env.BASE_URL,
+    dispatchEventsOnWindow: true,
   })
 }
