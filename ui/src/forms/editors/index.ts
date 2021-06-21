@@ -159,7 +159,7 @@ export const autoComplete: Lazy<InstancesSelectEditor> = {
                             .options="${value.componentState.instances}"
                             .value="${value.object?.term}"
                             .placeholder="${label}"
-                            .filterable="${this.hasFreeTextQueryVariable}"
+                            .filterable="${this.hasFreeTextQueryVariable(params)}"
                             @search="${load.bind(this)}"></auto-complete>`
     }
   }
