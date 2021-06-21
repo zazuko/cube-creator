@@ -143,13 +143,13 @@ export const autoComplete: Lazy<InstancesSelectEditor> = {
           return
         }
 
-        loading(true)
+        loading?.(true)
         const pointers = await this.loadChoices(params, filter)
         const instances = pointers.map<Item>(p => [p, this.label(p, params.form)])
         params.updateComponentState({
           instances,
         })
-        loading(false)
+        loading?.(false)
       }
 
       const label = value.object ? this.label(property.shape.pointer.node(value.object), form) : 'Select'

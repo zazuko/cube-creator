@@ -8,6 +8,8 @@
     :clearable="false"
     :filterable="filterable"
     @search="onSearch"
+    @search:focus="__load"
+    :clear-search-on-blur="clearOnBlur"
   />
 </template>
 
@@ -35,6 +37,8 @@ export default class extends Vue {
   @Prop() filterable?: boolean;
   @Prop() options?: [GraphPointer, string][]
 
+  searchValue = ''
+
   get _options (): Option[] {
     const options = this.options ?? []
     return options.map(([pointer, label]) => ({ value: pointer.term.value, label, term: pointer.term }))
@@ -49,7 +53,16 @@ export default class extends Vue {
   }
 
   onSearch (freetextQuery: string, loading: () => void): void {
+    this.searchValue = freetextQuery
     this.$emit('search', freetextQuery, loading)
+  }
+
+  clearOnBlur (): boolean {
+    return false
+  }
+
+  __load (): void {
+    this.$emit('search', this.searchValue)
   }
 }
 </script>

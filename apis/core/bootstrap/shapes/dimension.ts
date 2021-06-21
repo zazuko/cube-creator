@@ -313,6 +313,7 @@ ${shape('dimension/shared-mapping')} {
         ] , [
           ${hydra.variable} "q" ;
           ${hydra.property} ${hydra.freetextQuery} ;
+          ${sh.minLength} 0 ;
         ];
       ] ;
       ${sh.order} 20 ;
