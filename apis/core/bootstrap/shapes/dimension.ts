@@ -302,7 +302,7 @@ ${shape('dimension/shared-mapping')} {
           ${sh.inversePath} ${prov.hadDictionaryMember} ;
         ] ;
         ${hydra.variableRepresentation} ${hydra.ExplicitRepresentation} ;
-        ${hydra.template} "dimension/_terms?dimension={dimension}{&valid}" ;
+        ${hydra.template} "dimension/_terms?dimension={dimension}{&valid,q}" ;
         ${hydra.mapping} [
           ${hydra.variable} "dimension" ;
           ${hydra.property} ${cc.sharedDimension} ;
@@ -310,9 +310,15 @@ ${shape('dimension/shared-mapping')} {
         ] , [
           ${hydra.variable} "valid" ;
           ${hydra.property} ${md.onlyValidTerms} ;
+        ] , [
+          ${hydra.variable} "q" ;
+          ${hydra.property} ${hydra.freetextQuery} ;
+          ${sh.minLength} 0 ;
         ];
       ] ;
       ${sh.order} 20 ;
     ];
   .
+
+  ${placeholderEntity} ${rdfs.label} "Select" .
 }`
