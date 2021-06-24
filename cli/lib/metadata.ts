@@ -1,5 +1,5 @@
 import { obj } from 'through2'
-import { Quad, Quad_Object as QuadObject } from 'rdf-js'
+import { Quad, Quad_Object as QuadObject, Quad_Subject as QuadSubject } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import { dcterms, rdf, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import { cc, cube } from '@cube-creator/core/namespace'
@@ -8,6 +8,7 @@ import { HydraClient } from 'alcaeus/alcaeus'
 import TermSet from '@rdfjs/term-set'
 import type { Context } from 'barnard59-core/lib/Pipeline'
 import { loadDimensionMapping } from './output-mapper'
+import TermMap from '@rdfjs/term-map'
 
 export async function loadDataset(jobUri: string, Hydra: HydraClient) {
   const jobResource = await Hydra.loadResource<PublishJob>(jobUri)
@@ -44,6 +45,8 @@ export async function injectMetadata(this: Context, jobUri: string) {
   const datasetTriples = dataset.pointer.dataset.match(null, null, null, dataset.id)
   const timestamp = this.variables.get('timestamp')
   const versionedDimensions = this.variables.get('versionedDimensions')
+
+  const propertyShapes = new TermMap<QuadSubject, QuadObject>()
 
   return obj(async function (quad: Quad, _, callback) {
     const visited = new TermSet()
@@ -84,9 +87,7 @@ export async function injectMetadata(this: Context, jobUri: string) {
       const propertyShape = quad.subject
       const dimensions = [...datasetTriples.match(null, schema.about, quad.object)]
 
-      if (versionedDimensions.has(quad.object)) {
-        this.push($rdf.quad(propertyShape, schema.version, revision))
-      }
+      propertyShapes.set(propertyShape, quad.object)
 
       for (const dim of dimensions) {
         const metadata = [...datasetTriples.match(dim.subject)]
@@ -112,6 +113,14 @@ export async function injectMetadata(this: Context, jobUri: string) {
       this.push($rdf.quad(quad.subject, cube.observedBy, maintainer.id))
     } else {
       this.push(quad)
+    }
+
+    callback()
+  }, function (callback) {
+    for (const [propertyShape, dimension] of propertyShapes) {
+      if (versionedDimensions.has(dimension)) {
+        this.push($rdf.quad(propertyShape, schema.version, revision))
+      }
     }
 
     callback()
