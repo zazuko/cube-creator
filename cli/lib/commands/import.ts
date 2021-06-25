@@ -27,14 +27,14 @@ export default create({
     const { dataset, dimensionMetadata, sourceCube, sourceGraph, sourceEndpoint, cubeGraph: { value: cubeGraph } } = await getJob(jobUri, Hydra)
 
     log('Importing cube %O', {
-      sourceCube, sourceGraph, sourceEndpoint, cubeGraph, dimensionMetadata, dataset,
+      sourceCube, sourceGraph, sourceEndpoint, cubeGraph, dimensionMetadata: dimensionMetadata.id, dataset,
     })
 
     variable.set('sourceCube', sourceCube)
     variable.set('sourceEndpoint', sourceEndpoint)
     variable.set('sourceGraph', sourceGraph)
     variable.set('graph', cubeGraph)
-    variable.set('metadataResource', dimensionMetadata.value)
+    variable.set('metadataResource', dimensionMetadata.id.value)
     variable.set('datasetResource', dataset.value)
   },
 })

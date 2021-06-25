@@ -273,4 +273,20 @@ describe('@cube-creator/cli/lib/commands/import', function () {
 
     expect(hasValues).to.be.true
   })
+
+  it('applies shared dimension mapping', async () => {
+    const results = await SELECT.DISTINCT`?value`
+      .FROM(cubeDataGraph)
+      .WHERE`
+          ${cube} a ${ns.cube.Cube} ;
+                  ${ns.cube.observationSet}/${ns.cube.observation}/${cubeNs('measure/11')} ?value .
+        `.execute(ccClients.parsingClient.query)
+
+    expect(results).to.deep.contain.members([{
+      value: $rdf.namedNode('http://example.com/dimension/colors/red'),
+    }])
+    expect(results).not.to.deep.contain.members([{
+      value: $rdf.literal('0', xsd.decimal),
+    }])
+  })
 })

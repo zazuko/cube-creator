@@ -26,7 +26,7 @@
 
 <#Observations>
   a :Pipeline, :ReadableObjectMode ;
-  :steps [ :stepList ( <#loadObservations> <#setGraph> ) ] .
+  :steps [ :stepList ( <#loadObservations> <#mapDimensions> <#setGraph> ) ] .
 
 <#Dimensions>
   a :Pipeline, :ReadableObjectMode ;
@@ -94,6 +94,14 @@
       code:value "metadataResource"^^:VariableName
     ]
 .
+
+<#mapDimensions>
+  a :Step ;
+  code:implementedBy
+    [
+      code:link <file:../lib/output-mapper#mapDimensions> ;
+      a code:EcmaScript ;
+    ] .
 
 <#loadCubeMetadata>
   a :Step ;

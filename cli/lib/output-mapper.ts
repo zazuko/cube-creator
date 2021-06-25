@@ -1,5 +1,5 @@
 import $rdf from 'rdf-ext'
-import { TransformJob } from '@cube-creator/model'
+import { ImportJob, TransformJob } from '@cube-creator/model'
 import { HydraClient } from 'alcaeus/alcaeus'
 import type { Context } from 'barnard59-core/lib/Pipeline'
 import { DatasetCore, Quad, Term } from 'rdf-js'
@@ -31,7 +31,7 @@ function load<T extends RdfResourceCore>(uri: string, Hydra: HydraClient, header
 }
 
 async function loadMetadata(jobUri: string, Hydra: HydraClient) {
-  const jobResource = await load<TransformJob>(jobUri, Hydra)
+  const jobResource = await load<TransformJob | ImportJob>(jobUri, Hydra)
   const job = jobResource.representation?.root
   if (!job) {
     throw new Error(`Did not find representation of job ${jobUri}. Server responded ${jobResource.response?.xhr.status}`)

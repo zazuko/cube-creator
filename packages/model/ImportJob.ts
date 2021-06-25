@@ -7,13 +7,15 @@ import { cc } from '@cube-creator/core/namespace'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { initializer } from './lib/initializer'
 import { Job } from './Job'
+import { DimensionMetadataCollection } from './DimensionMetadata'
+import { Link } from './lib/Link'
 
 export interface ImportJob extends Job {
   sourceCube: NamedNode
   sourceGraph?: NamedNode
   sourceEndpoint: NamedNode
   cubeGraph: NamedNode
-  dimensionMetadata: NamedNode
+  dimensionMetadata: Link<DimensionMetadataCollection>
   dataset: NamedNode
 }
 
@@ -32,8 +34,8 @@ export function ImportJobMixin<Base extends Constructor<RdfResource>>(base: Base
     @property()
     cubeGraph!: NamedNode
 
-    @property()
-    dimensionMetadata!: NamedNode
+    @property.resource()
+    dimensionMetadata!: Link<DimensionMetadataCollection>
 
     @property()
     dataset!: NamedNode
