@@ -1,3 +1,4 @@
+prefix prov: <http://www.w3.org/ns/prov#>
 PREFIX time: <http://www.w3.org/2006/time#>
 PREFIX vcard: <http://www.w3.org/2006/vcard/ns#>
 PREFIX qudt: <http://qudt.org/schema/qudt/>
@@ -39,6 +40,7 @@ graph <cube-project/px/dataset/dimension-metadata> {
   <cube-project/px/dataset/dimension-metadata>
     a cc:DimensionMetadataCollection, hydra:Resource ;
     schema:hasPart <cube-project/px/dataset/dimension-metadata/10> ;
+    schema:hasPart <cube-project/px/dataset/dimension-metadata/11> ;
     schema:hasPart <cube-project/px/dataset/dimension-metadata/remove> ;
   .
 
@@ -54,9 +56,32 @@ graph <cube-project/px/dataset/dimension-metadata> {
       ] ;
   .
 
+  <cube-project/px/dataset/dimension-metadata/11>
+    schema:about <https://environment.ld.admin.ch/foen/example/px-cube/measure/11> ;
+    cc:dimensionMapping <cube-project/px/dimension-mapping/measure-11> ;
+  .
+
   <cube-project/px/dataset/dimension-metadata/remove>
     schema:about <https://environment.ld.admin.ch/foen/example/px-cube/measure/remove> ;
     schema:description "This will be removed by import"@en ;
+  .
+}
+
+<cube-project/px/dimension-mapping/measure-11> void:inDataset <px-example> .
+graph <cube-project/px/dimension-mapping/measure-11> {
+  <cube-project/px/dimension-mapping/measure-11>
+    a prov:Dictionary, hydra:Resource ;
+    schema:about <https://environment.ld.admin.ch/foen/example/px-cube/measure/11> ;
+    cc:sharedDimension <http://example.com/dimension/colors> ;
+  .
+
+  <cube-project/px/dimension-mapping/measure-11>
+    prov:hadDictionaryMember
+      [
+        a prov:KeyEntityPair ;
+        prov:pairKey "0"^^xsd:decimal ;
+        prov:pairEntity <http://example.com/dimension/colors/red> ;
+      ] ;
   .
 }
 

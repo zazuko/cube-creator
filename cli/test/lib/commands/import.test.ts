@@ -12,15 +12,15 @@ import { setupEnv } from '../../support/env'
 import runner from '../../../lib/commands/import'
 import { cc, meta } from '@cube-creator/core/namespace'
 
-describe('@cube-creator/cli/lib/commands/import', function () {
-  this.timeout(200000)
-
+describe('@cube-creator/cli/lib/commands/import', () => {
   const cube = $rdf.namedNode('https://environment.ld.admin.ch/foen/example/px-cube')
   const cubeNs = namespace(`${cube.value}/`)
   const resource = namespace(env.API_CORE_BASE)
   const cubeDataGraph = resource('cube-project/px/cube-data')
 
-  before(async () => {
+  before(async function () {
+    this.timeout(0)
+
     setupEnv()
     await insertTestProject()
     await insertPxCube()
@@ -272,5 +272,21 @@ describe('@cube-creator/cli/lib/commands/import', function () {
       .execute(ccClients.parsingClient.query)
 
     expect(hasValues).to.be.true
+  })
+
+  it('applies shared dimension mapping', async () => {
+    const results = await SELECT.DISTINCT`?value`
+      .FROM(cubeDataGraph)
+      .WHERE`
+          ${cube} a ${ns.cube.Cube} ;
+                  ${ns.cube.observationSet}/${ns.cube.observation}/${cubeNs('measure/11')} ?value .
+        `.execute(ccClients.parsingClient.query)
+
+    expect(results).to.deep.contain.members([{
+      value: $rdf.namedNode('http://example.com/dimension/colors/red'),
+    }])
+    expect(results).not.to.deep.contain.members([{
+      value: $rdf.literal('0', xsd.decimal),
+    }])
   })
 })

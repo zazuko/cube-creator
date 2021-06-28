@@ -272,7 +272,7 @@ ${shape('dimension/shared-mapping')} {
     ] , [
       ${sh.path} ${cc.applyMappings} ;
       ${sh.name} "Apply mappings" ;
-      ${sh.description} "If checked, the Cube will be immediately updated with new mappings. Otherwise, running the transformation will be necessary" ;
+      ${sh.description} "If checked, the Cube will be immediately updated with new mappings. Otherwise, running the transformation/import will be necessary" ;
       ${sh.order} 30 ;
       ${sh.datatype} ${xsd.boolean} ;
       ${sh.defaultValue} false ;

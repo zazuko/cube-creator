@@ -1,5 +1,5 @@
 import $rdf from 'rdf-ext'
-import { TransformJob } from '@cube-creator/model'
+import { ImportJob, TransformJob } from '@cube-creator/model'
 import { HydraClient } from 'alcaeus/alcaeus'
 import type { Context } from 'barnard59-core/lib/Pipeline'
 import { DatasetCore, Quad, Term } from 'rdf-js'
@@ -31,7 +31,7 @@ function load<T extends RdfResourceCore>(uri: string, Hydra: HydraClient, header
 }
 
 async function loadMetadata(jobUri: string, Hydra: HydraClient) {
-  const jobResource = await load<TransformJob>(jobUri, Hydra)
+  const jobResource = await load<TransformJob | ImportJob>(jobUri, Hydra)
   const job = jobResource.representation?.root
   if (!job) {
     throw new Error(`Did not find representation of job ${jobUri}. Server responded ${jobResource.response?.xhr.status}`)
@@ -78,6 +78,31 @@ export async function mapDimensions(this: Pick<Context, 'variables'>) {
     return mappingTerm
   }
 
+  const valueCache = new TermMap<Term, TermMap<Term, Term | undefined>>()
+  const getMappedValue = async (mappingTerm: string, object: Term) => {
+    const dict = await loadDimensionMapping(mappingTerm, this.variables.get('apiClient'))
+    if (!dict) {
+      return undefined
+    }
+
+    let valueMap = valueCache.get(dict.term)
+    if (!valueMap) {
+      valueMap = new TermMap()
+      valueCache.set(dict.term, valueMap)
+    }
+
+    let value = valueMap.get(object)
+    if (!value) {
+      value = dict.out(prov.hadDictionaryMember)
+        .has(prov.pairKey, object)
+        .out(prov.pairEntity)
+        .term
+      valueMap.set(object, value)
+    }
+
+    return value
+  }
+
   return map(async (quad: Quad) => {
     const { subject, predicate, object, graph } = quad
     const mappingTerm = getDimensionMapping(predicate)
@@ -86,12 +111,9 @@ export async function mapDimensions(this: Pick<Context, 'variables'>) {
         return $rdf.quad(subject, predicate, cube.Undefined, graph)
       }
 
-      const dict = await loadDimensionMapping(mappingTerm.value, this.variables.get('apiClient'))
-      const mappedValue = dict?.out(prov.hadDictionaryMember)
-        .has(prov.pairKey, object)
-        .out(prov.pairEntity)
-      if (mappedValue?.term?.termType === 'NamedNode') {
-        return $rdf.quad(subject, predicate, mappedValue.term, graph)
+      const mappedValue = await getMappedValue(mappingTerm.value, object)
+      if (mappedValue?.termType === 'NamedNode') {
+        return $rdf.quad(subject, predicate, mappedValue, graph)
       }
     }
 
