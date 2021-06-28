@@ -12,15 +12,15 @@ import { setupEnv } from '../../support/env'
 import runner from '../../../lib/commands/import'
 import { cc, meta } from '@cube-creator/core/namespace'
 
-describe('@cube-creator/cli/lib/commands/import', function () {
-  this.timeout(360 * 1000)
-
+describe('@cube-creator/cli/lib/commands/import', () => {
   const cube = $rdf.namedNode('https://environment.ld.admin.ch/foen/example/px-cube')
   const cubeNs = namespace(`${cube.value}/`)
   const resource = namespace(env.API_CORE_BASE)
   const cubeDataGraph = resource('cube-project/px/cube-data')
 
-  before(async () => {
+  before(async function () {
+    this.timeout(0)
+
     setupEnv()
     await insertTestProject()
     await insertPxCube()
