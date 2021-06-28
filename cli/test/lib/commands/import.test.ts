@@ -13,7 +13,7 @@ import runner from '../../../lib/commands/import'
 import { cc, meta } from '@cube-creator/core/namespace'
 
 describe('@cube-creator/cli/lib/commands/import', function () {
-  this.timeout(200000)
+  this.timeout(360 * 1000)
 
   const cube = $rdf.namedNode('https://environment.ld.admin.ch/foen/example/px-cube')
   const cubeNs = namespace(`${cube.value}/`)
