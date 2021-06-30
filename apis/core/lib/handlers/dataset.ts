@@ -12,7 +12,7 @@ import { fromPointer } from '@rdfine/hydra/lib/IriTemplate'
 import { shaclValidate } from '../middleware/shacl'
 import { update } from '../domain/dataset/update'
 import { loadCubeShapes } from '../domain/queries/cube'
-import { streamClient } from '../query-client'
+import * as clients from '../query-client'
 import env from '@cube-creator/core/env'
 import { getCubesAndGraphs } from '../domain/dataset/queries'
 
@@ -33,7 +33,7 @@ export const put = protectedResource(
 
 export const get = protectedResource(asyncMiddleware(async (req, res) => {
   const dataset = await req.hydra.resource.clownface()
-  const shapeStream = await loadCubeShapes(req.hydra.resource.term, streamClient)
+  const shapeStream = await loadCubeShapes(req.hydra.resource.term, clients)
   const outStream = new PassThrough({
     objectMode: true,
   })

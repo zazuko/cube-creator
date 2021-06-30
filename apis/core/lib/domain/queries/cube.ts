@@ -1,39 +1,55 @@
-import { CONSTRUCT } from '@tpluscode/sparql-builder'
+import { CONSTRUCT, DESCRIBE, SELECT } from '@tpluscode/sparql-builder'
 import StreamClient from 'sparql-http-client/StreamClient'
-import { cc, cube } from '@cube-creator/core/namespace'
-import { Stream, Term } from 'rdf-js'
-import { csvw, schema } from '@tpluscode/rdf-ns-builders'
+import * as ns from '@cube-creator/core/namespace'
+import { NamedNode, Stream, Term } from 'rdf-js'
+import { schema, sh } from '@tpluscode/rdf-ns-builders'
 import { Readable } from 'stream'
+import ParsingClient from 'sparql-http-client/ParsingClient'
+import $rdf from 'rdf-ext'
+import clownface from 'clownface'
 
-export function loadCubeShapes(dataset: Term, client: StreamClient): Promise<Stream & Readable> {
-  return CONSTRUCT`
-    ?s ?p ?o .
-    ?cube ${cube.observationConstraint} ?shape .
-    ?project ${cc.cubeGraph} ?cubeData .
-  `
+async function selectIdentifiers(datasetId: Term, parsingClient: ParsingClient): Promise<Record<string, NamedNode>> {
+  const [result] = await SELECT`?cube ?cubeData ?project ?shape`
     .WHERE`
-    GRAPH ?project {
-      ?project ${cc.dataset} ${dataset} ;
-               ${cc.cubeGraph} ?cubeData .
-    }
+      GRAPH ?project {
+        ?project ${ns.cc.dataset} ${datasetId} ;
+                 ${ns.cc.cubeGraph} ?cubeData .
+      }
 
-    GRAPH ${dataset} {
-      ${dataset} ${schema.hasPart} ?cube
-    }
+      GRAPH ${datasetId} {
+        ${datasetId} ${schema.hasPart} ?cube
+      }
 
-    GRAPH ?cubeData {
-      ?s ?p ?o .
-      ?cube ${cube.observationConstraint} ?shape .
+      graph ?cubeData {
+        ?cube ${ns.cube.observationConstraint} ?shape .
+      }
+    `.execute(parsingClient.query)
 
-      # Exclude non-observation resources mapped from CSV rows
-      MINUS { ?s ${csvw.describes} ?o }
-      MINUS { ?s ^${csvw.describes} ?row }
+  return result as any
+}
 
-      # Exclude cube details from result
-      MINUS { ?s a ${cube.Observation} }
-      MINUS { ?s a ${cube.Cube} }
-      MINUS { ?s a ${cube.ObservationSet} }
-      MINUS { ?s ${cube.observation} ?c }
-    }`
-    .execute(client.query)
+function constructPropertyShapes(shape: NamedNode, cubeData: NamedNode, streamClient: StreamClient) {
+  return CONSTRUCT`?s ?p ?o. ${shape} ?sp ?so .`
+    .FROM(cubeData)
+    .WHERE`
+      ${shape} ?sp ?so .
+      ${shape} ${sh.property} ?property .
+
+      ?property ${sh.path} ?path .
+      ?property (<>|!<>)* ?s .
+      ?s ?p ?o
+    `
+    .execute(streamClient.query)
+}
+
+export async function loadCubeShapes(datasetId: Term, { parsingClient, streamClient }: { parsingClient: ParsingClient; streamClient: StreamClient }): Promise<Stream & Readable> {
+  const { cube, cubeData, project, shape } = await selectIdentifiers(datasetId, parsingClient)
+
+  const graph = clownface({ dataset: $rdf.dataset() })
+  graph.node(project).addOut(ns.cc.cubeGraph, cubeData)
+  graph.node(cube).addOut(ns.cube.observationConstraint, shape)
+
+  await graph.dataset.import(await constructPropertyShapes(shape, cubeData, streamClient))
+
+  return graph.dataset.toStream()
 }
