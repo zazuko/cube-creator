@@ -8,7 +8,7 @@ import ParsingClient from 'sparql-http-client/ParsingClient'
 import $rdf from 'rdf-ext'
 import clownface from 'clownface'
 
-async function selectIdentifiers(datasetId: Term, parsingClient: ParsingClient): Promise<Record<string, NamedNode>> {
+async function selectIdentifiers(datasetId: Term, parsingClient: ParsingClient): Promise<Record<string, NamedNode> | undefined> {
   const [result] = await SELECT`?cube ?cubeData ?project ?shape`
     .WHERE`
       GRAPH ?project {
@@ -43,13 +43,16 @@ function constructPropertyShapes(shape: NamedNode, cubeData: NamedNode, streamCl
 }
 
 export async function loadCubeShapes(datasetId: Term, { parsingClient, streamClient }: { parsingClient: ParsingClient; streamClient: StreamClient }): Promise<Stream & Readable> {
-  const { cube, cubeData, project, shape } = await selectIdentifiers(datasetId, parsingClient)
-
   const graph = clownface({ dataset: $rdf.dataset() })
-  graph.node(project).addOut(ns.cc.cubeGraph, cubeData)
-  graph.node(cube).addOut(ns.cube.observationConstraint, shape)
 
-  await graph.dataset.import(await constructPropertyShapes(shape, cubeData, streamClient))
+  const identifiers = await selectIdentifiers(datasetId, parsingClient)
+  if (identifiers) {
+    const { cube, cubeData, project, shape } = identifiers
+    graph.node(project).addOut(ns.cc.cubeGraph, cubeData)
+    graph.node(cube).addOut(ns.cube.observationConstraint, shape)
+
+    await graph.dataset.import(await constructPropertyShapes(shape, cubeData, streamClient))
+  }
 
   return graph.dataset.toStream()
 }
