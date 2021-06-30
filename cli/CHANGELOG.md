@@ -1,5 +1,12 @@
 # @cube-creator/cli
 
+## 1.4.2
+
+### Patch Changes
+
+- 9bb6292b: Shared dimension mappings applied during cube import
+- e61b013c: In some cubes the `schema:version` was not applied to dimensions (re. #776)
+
 ## 1.4.1
 
 ### Patch Changes

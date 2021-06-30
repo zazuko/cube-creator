@@ -1,5 +1,11 @@
 # @cube-creator/ui
 
+## 1.2.7
+
+### Patch Changes
+
+- 3fdcdbbb: Loading mapped dimension terms only by user input (closes #743)
+
 ## 1.2.6
 
 ### Patch Changes
