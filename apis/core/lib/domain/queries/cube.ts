@@ -1,4 +1,4 @@
-import { CONSTRUCT, DESCRIBE, SELECT } from '@tpluscode/sparql-builder'
+import { CONSTRUCT, SELECT } from '@tpluscode/sparql-builder'
 import StreamClient from 'sparql-http-client/StreamClient'
 import * as ns from '@cube-creator/core/namespace'
 import { NamedNode, Stream, Term } from 'rdf-js'
