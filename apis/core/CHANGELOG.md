@@ -1,5 +1,11 @@
 # @cube-creator/core-api
 
+## 1.2.4
+
+### Patch Changes
+
+- d82750e5: Cube Designer tab failed to load for large cubes. Reworked the source queries (closes #586)
+
 ## 1.2.3
 
 ### Patch Changes
