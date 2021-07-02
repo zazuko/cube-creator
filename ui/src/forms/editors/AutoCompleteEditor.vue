@@ -38,6 +38,7 @@ export default class extends Vue {
   @Prop() options?: [GraphPointer, string][]
 
   searchValue = ''
+  initialLoaded = false
 
   get _options (): Option[] {
     const options = this.options ?? []
@@ -53,7 +54,12 @@ export default class extends Vue {
   }
 
   onSearch (freetextQuery: string, loading: () => void): void {
+    if (this.initialLoaded && !freetextQuery) {
+      return
+    }
+
     this.searchValue = freetextQuery
+    this.initialLoaded = true
     this.$emit('search', freetextQuery, loading)
   }
 
