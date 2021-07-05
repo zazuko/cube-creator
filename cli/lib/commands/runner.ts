@@ -114,6 +114,21 @@ export function create<TOptions extends RunOptions>({ pipelineSources, prepare }
       apiClient,
     })
 
+    async function jobFailed(error: Error) {
+      await updateJobStatus({
+        modified: timestamp,
+        jobUri: run.pipeline.context.variables.get('jobUri'),
+        executionUrl: run.pipeline.context.variables.get('executionUrl'),
+        status: schema.FailedActionStatus,
+        error,
+        apiClient,
+      })
+
+      throw error
+    }
+
+    process.once('unhandledRejection' as any, jobFailed)
+
     return run.promise
       .then(() =>
         updateJobStatus({
@@ -123,17 +138,6 @@ export function create<TOptions extends RunOptions>({ pipelineSources, prepare }
           status: schema.CompletedActionStatus,
           apiClient,
         }))
-      .catch(async (error) => {
-        await updateJobStatus({
-          modified: timestamp,
-          jobUri: run.pipeline.context.variables.get('jobUri'),
-          executionUrl: run.pipeline.context.variables.get('executionUrl'),
-          status: schema.FailedActionStatus,
-          error,
-          apiClient,
-        })
-
-        throw error
-      })
+      .catch(jobFailed)
   }
 }
