@@ -71,26 +71,26 @@ export async function replaceValueWithDefinedTerms({ dimensionMapping, terms }: 
 }
 
 export async function getUnmappedValues(dimensionMapping: Term, dimension: Term, client = parsingClient): Promise<Set<Literal>> {
-  const results = await SELECT.DISTINCT`?value`
+  const [{ cubeGraph }] = await SELECT`?cubeGraph`
     .WHERE`${patternsToFindCubeGraph(dimensionMapping)}`
+    .execute(client.query)
+
+  const results = await SELECT.DISTINCT`?value`
+    .FROM(cubeGraph as any)
     .WHERE`{
-      SELECT DISTINCT ?value
+      SELECT ?value
       WHERE {
-        GRAPH ?cubeGraph {
-            ?shape a ${cube.Constraint} ; ${sh.property}  ?propShape .
-            ?propShape ${sh.path} ${dimension} ;
-                       ${sh.in}/${rdf.rest}* ?listNode .
-            ?listNode ${rdf.first} ?value .
-          }
+        ?shape a ${cube.Constraint} ; ${sh.property}  ?propShape .
+        ?propShape ${sh.path} ${dimension} ;
+                   ${sh.in}/${rdf.rest}* ?listNode .
+        ?listNode ${rdf.first} ?value .
       }
     }
     UNION
     {
-      SELECT DISTINCT ?value
+      SELECT ?value
       WHERE {
-        GRAPH ?cubeGraph {
-           ?observation a ${cube.Observation} ; ${dimension} ?value .
-        }
+        ?observation a ${cube.Observation} ; ${dimension} ?value .
       }
     }
 
