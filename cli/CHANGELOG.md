@@ -1,5 +1,11 @@
 # @cube-creator/cli
 
+## 1.4.3
+
+### Patch Changes
+
+- 9c34d544: Pipeline would not fail on `ECONNRESET` fetch error (closes #782)
+
 ## 1.4.2
 
 ### Patch Changes
