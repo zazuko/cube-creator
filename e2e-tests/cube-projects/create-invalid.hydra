@@ -122,7 +122,7 @@ With Class api:EntryPoint {
                 <> cc:projectSourceKind <https://cube-creator.lndo.site/shape/cube-project/create#ExistingCube> ;
                    rdfs:label "Test Project" ;
                    CubeProject:sourceCube <https://environment.ld.admin.ch/foen/ubd/28> ;
-                   CubeProject:sourceEndpoint <http://store:3030/px-cube> ;
+                   CubeProject:sourceEndpoint <http://db.cube-creator.lndo.site/px-cube> ;
                    schema:maintainer <https://cube-creator.lndo.site/organization/bafu> .
                 ```
             } => {
@@ -142,7 +142,7 @@ With Class api:EntryPoint {
                 <> cc:projectSourceKind <https://cube-creator.lndo.site/shape/cube-project/create#ExistingCube> ;
                    rdfs:label "Test Project" ;
                    CubeProject:sourceCube <https://environment.ld.admin.ch/foen/example/px-cube> ;
-                   CubeProject:sourceEndpoint <http://store:3030/px-cube> ;
+                   CubeProject:sourceEndpoint <http://db.cube-creator.lndo.site/px-cube> ;
                    schema:maintainer <https://cube-creator.lndo.site/organization/bafu> .
                 ```
             } => {
@@ -162,7 +162,7 @@ With Class api:EntryPoint {
                 <> cc:projectSourceKind <https://cube-creator.lndo.site/shape/cube-project/create#ExistingCube> ;
                    rdfs:label "Test Project" ;
                    CubeProject:sourceCube <https://environment.ld.admin.ch/bafu/example/px2> ;
-                   CubeProject:sourceEndpoint <http://store:3030/px-cube> ;
+                   CubeProject:sourceEndpoint <http://db.cube-creator.lndo.site/px-cube> ;
                    schema:maintainer <https://cube-creator.lndo.site/organization/bafu> .
                 ```
             } => {
