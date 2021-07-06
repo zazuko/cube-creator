@@ -1,5 +1,11 @@
 # @cube-creator/ui
 
+## 1.2.8
+
+### Patch Changes
+
+- 5ad95601: Selected shared term disappeared if result of search
+
 ## 1.2.7
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @cube-creator/core-api
 
+## 1.2.5
+
+### Patch Changes
+
+- ce492488: Long loading times of dimension mapping drawer
+
 ## 1.2.4
 
 ### Patch Changes
