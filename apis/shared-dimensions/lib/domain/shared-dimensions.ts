@@ -26,7 +26,7 @@ interface GetSharedTerms {
   validThrough?: Date
 }
 
-export function getSharedTerms({ sharedDimension, freetextQuery, validThrough, limit = 100 }: GetSharedTerms) {
+export function getSharedTerms({ sharedDimension, freetextQuery, validThrough, limit = 10 }: GetSharedTerms) {
   const term = $rdf.variable('term')
   const name = $rdf.variable('name')
 
