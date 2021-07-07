@@ -6,7 +6,6 @@
     :value="_value"
     @input="onInput"
     :clearable="false"
-    :filterable="filterable"
     @search="onSearch"
     @search:focus="__load"
     :clear-search-on-blur="clearOnBlur"
@@ -35,7 +34,6 @@ export default class extends Vue {
   @Prop() update!: (newValue: Term | null) => void
   @Prop() value?: NamedNode;
   @Prop() placeholder!: string;
-  @Prop() filterable?: boolean;
   @Prop() options?: [GraphPointer, string][]
   @Prop({ default: 300 }) debounceWait!: number
 
