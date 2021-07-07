@@ -74,21 +74,14 @@ export const enumSelect: Lazy<EnumSelectEditor> = {
   }
 }
 
-declare module '@hydrofoil/shaperone-core/components' {
-  interface InstancesSelectEditor {
-    hasFreeTextQueryVariable(params: SingleEditorRenderParams<InstancesSelect>): boolean
-  }
-}
-
 export const autoComplete: Lazy<InstancesSelectEditor> = {
   ...instancesSelectCore,
   editor: dash.AutoCompleteEditor,
-  hasFreeTextQueryVariable (params) {
-    return !!this.searchTemplate?.(params)?.mapping
-      .some(({ property }) => property?.equals(hydra.freetextQuery))
-  },
   init (params) {
-    if (!this.hasFreeTextQueryVariable(params)) {
+    const hasFreeTextQueryVariable = !!this.searchTemplate?.(params)?.mapping
+      .some(({ property }) => property?.equals(hydra.freetextQuery))
+
+    if (!hasFreeTextQueryVariable) {
       return instancesSelectCore.init?.call(this, params) || true
     }
 
@@ -159,7 +152,6 @@ export const autoComplete: Lazy<InstancesSelectEditor> = {
                             .options="${value.componentState.instances}"
                             .value="${value.object?.term}"
                             .placeholder="${label}"
-                            .filterable="${this.hasFreeTextQueryVariable(params)}"
                             @search="${load.bind(this)}"></auto-complete>`
     }
   }
