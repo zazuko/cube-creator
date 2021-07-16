@@ -38,7 +38,7 @@
         <tbody>
           <tr v-for="term in terms" :key="term.clientPath">
             <td class="has-text-sm">
-              <term-display :term="term.id" />
+              <term-display :term="term.canonical || term.id" />
             </td>
             <td>
               <p v-for="(name, index) in term.name" :key="index">

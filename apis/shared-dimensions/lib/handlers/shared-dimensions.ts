@@ -1,9 +1,9 @@
-import { hydra, rdf, schema } from '@tpluscode/rdf-ns-builders'
+import { hydra, oa, rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { asyncMiddleware } from 'middleware-async'
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
 import { Enrichment } from '@hydrofoil/labyrinth/lib/middleware/preprocessResource'
 import httpError from 'http-errors'
-import clownface from 'clownface'
+import clownface, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import { NamedNode, Quad, Term } from 'rdf-js'
 import { md } from '@cube-creator/core/namespace'
@@ -79,6 +79,11 @@ export const getTerms = asyncMiddleware(async (req, res, next) => {
     collectionType: md.SharedDimensionTerms,
     collection: termsCollectionId(term, queryParams.freetextQuery),
   })
+
+  collection.out(hydra.member)
+    .forEach((member: GraphPointer) => {
+      member.addOut(oa.canonical, member.value.replace('https://', ''))
+    })
 
   res.setLink(collection.value, 'canonical')
   return res.dataset(collection.dataset)

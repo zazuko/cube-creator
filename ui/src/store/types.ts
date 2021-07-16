@@ -39,4 +39,5 @@ export interface SharedDimensionTerm extends Resource {
   name: Term[]
   identifiers: string[]
   validThrough?: Date
+  canonical: Term | undefined
 }
