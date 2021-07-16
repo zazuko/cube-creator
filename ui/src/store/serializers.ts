@@ -16,7 +16,7 @@ import {
 } from '@cube-creator/model'
 import { IdentifierMapping, LiteralColumnMapping, ReferenceColumnMapping } from '@cube-creator/model/ColumnMapping'
 import { Link } from '@cube-creator/model/lib/Link'
-import { dcterms, rdf, rdfs, schema } from '@tpluscode/rdf-ns-builders'
+import { dcterms, oa, rdf, rdfs, schema } from '@tpluscode/rdf-ns-builders'
 import { RdfResource } from '@tpluscode/rdfine/RdfResource'
 import { Collection } from 'alcaeus'
 import { SharedDimension, SharedDimensionTerm } from './types'
@@ -218,11 +218,17 @@ export function serializeSharedDimension (dimension: RdfResource): SharedDimensi
 export function serializeSharedDimensionTerm (term: RdfResource): SharedDimensionTerm {
   const validThrough = term.pointer.out(schema.validThrough).value
 
+  let canonical
+  if (term.pointer.out(oa.canonical).term) {
+    canonical = term.pointer.namedNode(`https://${term.pointer.out(oa.canonical).value}`)
+  }
+
   return Object.freeze({
     ...serializeResource(term),
     name: term.pointer.out(schema.name).terms,
     identifiers: term.pointer.out(schema.identifier).values,
     validThrough: validThrough ? new Date(validThrough) : undefined,
+    canonical: canonical?.term,
   })
 }
 
