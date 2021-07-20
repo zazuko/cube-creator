@@ -219,19 +219,6 @@ const actions: ActionTree<ProjectState, RootState> = {
     return freshCollection
   },
 
-  async uploadCSVs (context, files) {
-    const operation = context.state.csvMapping?.sourcesCollection.actions?.upload ?? null
-    const uploads = files.map((file: File) => {
-      const headers = {
-        'content-type': 'text/csv',
-        'content-disposition': `file; filename="${file.name}"`,
-      }
-      return api.invokeSaveOperation(operation, file, headers)
-    })
-
-    return Promise.all(uploads)
-  },
-
   async replaceCSV (context, { source, file }) {
     const operation = source.actions.replace
     const headers = {

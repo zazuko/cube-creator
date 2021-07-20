@@ -1,80 +1,108 @@
 <template>
-  <side-pane title="Upload CSV file" @close="onCancel">
+  <side-pane title="Upload CSV file" @close="close">
     <form @submit.prevent="onSubmit">
       <b-message v-if="error" type="is-danger">
         {{ error }}
       </b-message>
 
       <b-field>
-        <b-upload v-model="files" multiple drag-drop accept=".csv">
-          <section class="section">
-            <div class="content has-text-centered">
-              <p>
-                <b-icon icon="upload" size="is-large" />
-              </p>
-              <p>Drop your files here or click to select files from your disk</p>
-            </div>
-          </section>
-        </b-upload>
+        <uppy-dashboard v-if="uppy" :uppy="uppy" :props="uppyDashboardOptions" />
       </b-field>
-
-      <div class="tags">
-        <span v-for="(file, index) in files" :key="index" class="tag is-primary">
-          {{ file.name }}
-          <button class="delete is-small" type="button" @click="removeFile(index)" />
-        </span>
-      </div>
-
-      <form-submit-cancel submit-label="Upload" @cancel="onCancel" :disabled="files.length === 0" />
     </form>
   </side-pane>
 </template>
 
 <script lang="ts">
+import * as $rdf from '@rdfjs/dataset'
+import RdfResourceImpl from '@tpluscode/rdfine'
+import { schema } from '@tpluscode/rdf-ns-builders'
+import AwsS3Multipart from '@uppy/aws-s3-multipart'
+import Uppy from '@uppy/core'
+import { Dashboard as UppyDashboard } from '@uppy/vue'
+import clownface from 'clownface'
 import { Component, Vue } from 'vue-property-decorator'
+import { namespace } from 'vuex-class'
+
+import { CsvMapping } from '@cube-creator/model'
+
+import { api } from '@/api'
 import SidePane from '@/components/SidePane.vue'
 import FormSubmitCancel from '@/components/FormSubmitCancel.vue'
-import { APIErrorConflict, APIErrorValidation, APIPayloadTooLarge } from '@/api/errors'
+
+import '@uppy/core/dist/style.css'
+import '@uppy/dashboard/dist/style.css'
+
+const projectNS = namespace('project')
+
+const apiURL = window.APP_CONFIG.apiCoreBase
+// TODO: Should I grab this from the API?
+const uploadURL = `${apiURL}upload`
 
 @Component({
-  components: { SidePane, FormSubmitCancel },
+  components: { UppyDashboard, SidePane, FormSubmitCancel },
 })
 export default class CSVUploadView extends Vue {
-  files: File[] = []
-  error: string | null = null
+  @projectNS.State('csvMapping') mapping!: CsvMapping
 
-  async onSubmit (): Promise<void> {
+  error: string | null = null
+  uppy: Uppy.Uppy<Uppy.StrictTypes> | null = null
+  uppyDashboardOptions = {
+    proudlyDisplayPoweredByUppy: false,
+    showLinkToFileUploadResult: false,
+    note: 'CSV files only',
+    doneButtonHandler: this.close,
+  }
+
+  mounted (): void {
+    const uppy = Uppy<Uppy.StrictTypes>({
+      restrictions: { allowedFileTypes: ['.csv'] },
+      meta: { csvMapping: this.mapping.id.value },
+    })
+
+    uppy.use(AwsS3Multipart, { companionUrl: uploadURL })
+    uppy.addPreProcessor(async () => {
+      // Hack to set fresh auth token before each upload
+      const token = this.$store.state.auth.access_token;
+      (uppy as any).plugins.uploader[0].client.opts.companionHeaders = { authorization: `Bearer ${token}` }
+    })
+    uppy.addPostProcessor(this.createSources)
+
+    this.uppy = uppy
+  }
+
+  beforeDestroy (): void {
+    this.uppy?.close()
+  }
+
+  async createSources (fileIDs: string[]): Promise<void> {
+    const operation = this.mapping.sourcesCollection.actions?.upload ?? null
+    const uploads = fileIDs.map((fileID) => {
+      const file = this.uppy?.getFile(fileID) as any
+      if (!file) throw new Error('File not found')
+
+      const dataset = $rdf.dataset()
+      const pointer = clownface({ dataset, term: $rdf.namedNode('') })
+        .addOut(schema.name, $rdf.literal(file.name))
+        .addOut(schema.identifier, $rdf.literal(file.s3Multipart.key))
+        .addOut(schema.contentUrl, $rdf.namedNode(file.uploadURL))
+      const resource = RdfResourceImpl.factory.createEntity(pointer)
+
+      return api.invokeSaveOperation(operation, resource)
+    })
+
     this.error = null
-    const loader = this.$buefy.loading.open({})
 
     try {
-      await this.$store.dispatch('project/uploadCSVs', this.files)
-
-      await this.$store.dispatch('project/refreshSourcesCollection')
-
-      this.$router.push({ name: 'CSVMapping' })
+      await Promise.all(uploads)
     } catch (e) {
-      if (e instanceof APIErrorConflict) {
-        this.error = 'Cannot upload a file with the same name twice'
-      } else if (e instanceof APIErrorValidation) {
-        this.error = e.details?.title ?? null
-      } else if (e instanceof APIPayloadTooLarge) {
-        this.error = 'CSV file is too large'
-      } else {
-        console.error(e)
-        this.error = e.toString()
-      }
-    } finally {
-      loader.close()
+      this.error = e.toString()
+      throw e
     }
   }
 
-  onCancel (): void {
+  async close (): Promise<void> {
+    await this.$store.dispatch('project/refreshSourcesCollection')
     this.$router.push({ name: 'CSVMapping' })
-  }
-
-  removeFile (index: number): void {
-    this.files.splice(index, 1)
   }
 }
 </script>
