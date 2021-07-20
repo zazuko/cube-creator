@@ -68,3 +68,51 @@ export async function uploadFile({
 
   return csvSource.pointer
 }
+
+interface CreateCSVSourceCommand {
+  csvMappingId: NamedNode
+  resource: GraphPointer
+  store: ResourceStore
+  fileStorage?: s3.FileStorage
+}
+
+export async function createCSVSource({
+  csvMappingId,
+  resource,
+  store,
+  fileStorage = s3,
+}: CreateCSVSourceCommand): Promise<GraphPointer> {
+  const csvMapping = await store.getResource<CsvMapping>(csvMappingId)
+
+  const fileName = resource.out(schema.name).value!
+  const key = resource.out(schema.identifier).value!
+  const location = resource.out(schema.contentUrl).term! as NamedNode
+
+  const csvSource = csvMapping.addSource(store, { fileName })
+  csvSource.setUploadedFile(key, location)
+
+  try {
+    const fileStream = await fileStorage.loadFile(key) as Readable
+    const head = await loadFileHeadString(fileStream, 500)
+    const { dialect, header, rows } = await sniffParse(head)
+    const sampleCol = sampleValues(header, rows)
+
+    csvSource.setDialect({
+      quoteChar: dialect.quote,
+      delimiter: dialect.delimiter,
+      header: true,
+      headerRowCount: header.length,
+    })
+
+    for (let index = 0; index < header.length; index++) {
+      const name = header[index]
+      const column = csvSource.appendOrUpdateColumn({ name, order: index })
+      column.samples = sampleCol[index]
+    }
+  } catch (err) {
+    error(err)
+    csvSource.pointer.addOut(schema.error, err.message)
+  }
+
+  return csvSource.pointer
+}

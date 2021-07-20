@@ -2,9 +2,8 @@ import * as express from 'express'
 import asyncMiddleware from 'middleware-async'
 import * as labyrinth from '@hydrofoil/labyrinth/resource'
 import { Enrichment } from '@hydrofoil/labyrinth/lib/middleware/preprocessResource'
-import { parse } from 'content-disposition'
 import { shaclValidate } from '../middleware/shacl'
-import { uploadFile } from '../domain/csv-source/upload'
+import { createCSVSource } from '../domain/csv-source/upload'
 import { cc } from '@cube-creator/core/namespace'
 import { deleteSource } from '../domain/csv-source/delete'
 import { update } from '../domain/csv-source/update'
@@ -24,15 +23,9 @@ export const post = labyrinth.protectedResource(
       throw new Error('Csv mapping was not a named node')
     }
 
-    const contentDisposition = req.headers['content-disposition']
-    const fileName = contentDisposition
-      ? parse(contentDisposition).parameters.filename
-      : new Date().toISOString()
-
-    const fileLocation = await uploadFile({
-      file: req,
-      fileName: fileName,
-      resource: csvMapping,
+    const fileLocation = await createCSVSource({
+      csvMappingId: csvMapping,
+      resource: await req.resource(),
       store: req.resourceStore(),
     })
     await req.resourceStore().save()
