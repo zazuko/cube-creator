@@ -36,7 +36,7 @@ import '@uppy/dashboard/dist/style.css'
 const projectNS = namespace('project')
 
 const apiURL = window.APP_CONFIG.apiCoreBase
-// TODO: Should I grab this from the API?
+// Maybe provide this URL in the Hydra API at some point
 const uploadURL = `${apiURL}upload`
 
 @Component({
