@@ -8,7 +8,6 @@ services:
     build:
       - npm i -g nodemon
     command: nodemon -w packages -w apis --verbose --ext ts,ttl,js,trig --ignore **/*.test.ts --ignore **/*.spec-graphs.ts --exec node --inspect=0.0.0.0:45671 -r ts-node/register --inspect apis/core/index.ts
-    port: 45670
     ssl: true
     overrides:
       image: node:14
@@ -50,8 +49,6 @@ services:
     ssl: false
     services:
       image: minio/minio:RELEASE.2020-12-03T05-49-24Z
-      ports:
-        - '9000:9000'
       command: usr/bin/docker-entrypoint.sh server /data
       environment:
         MINIO_ACCESS_KEY: minio
@@ -66,14 +63,9 @@ services:
     port: 80
     overrides:
       image: node:14
-      ports:
-        - '45681:45681'
       environment:
         TS_NODE_TRANSPILE_ONLY: "true"
         NODE_TLS_REJECT_UNAUTHORIZED: 0
-        # Requires override because port must be used in internal communication
-        GRAPH_STORE_ENDPOINT: http://db.cube-creator.lndo.site:3030/cube-creator/data
-        PUBLISH_GRAPH_STORE_ENDPOINT: http://db.cube-creator.lndo.site:3030/cube-creator/data
     moreHttpPorts:
           - 45681
 
