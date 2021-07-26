@@ -30,6 +30,7 @@ export interface UploadedFile extends UppyFile {
 export default class extends Vue {
   @Prop() afterUpload: any
   @Prop() fileMeta: any
+  @Prop({ default: true }) allowMultiple!: boolean
 
   uppy: Uppy.Uppy<Uppy.StrictTypes> | null = null
   uppyDashboardOptions = {
@@ -41,7 +42,10 @@ export default class extends Vue {
 
   mounted (): void {
     const uppy = Uppy<Uppy.StrictTypes>({
-      restrictions: { allowedFileTypes: ['.csv'] },
+      restrictions: {
+        allowedFileTypes: ['.csv'],
+        maxNumberOfFiles: this.allowMultiple ? null : 1,
+      },
       meta: this.fileMeta,
     })
 
@@ -62,8 +66,11 @@ export default class extends Vue {
 
   onUploaded (fileIds: string[]): Promise<void> {
     const files = fileIds.map(id => toUploadedFile(this.uppy?.getFile(id)))
+    const result = this.allowMultiple
+      ? files
+      : files[0]
 
-    return this.afterUpload(files)
+    return this.afterUpload(result)
   }
 
   onDone (): void {
