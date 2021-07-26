@@ -82,7 +82,7 @@ export const getTerms = asyncMiddleware(async (req, res, next) => {
 
   collection.out(hydra.member)
     .forEach((member: GraphPointer) => {
-      member.addOut(oa.canonical, member.value.replace('https://', ''))
+      member.addOut(oa.canonical, member)
     })
 
   res.setLink(collection.value, 'canonical')
