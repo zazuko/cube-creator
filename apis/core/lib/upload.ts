@@ -3,6 +3,7 @@ import os from 'os'
 import companion from '@uppy/companion'
 import env from '@cube-creator/core/env'
 import bodyParser from 'body-parser'
+import { nanoid } from 'nanoid'
 import $rdf from 'rdf-ext'
 
 const apiURL = new URL(env.API_CORE_BASE)
@@ -36,8 +37,7 @@ app.use(companion.app({
     path: '/upload',
   },
   filePath: os.tmpdir(),
-  // TODO
-  secret: 'X',
+  secret: nanoid(30),
 }))
 
 export default app
