@@ -8,7 +8,7 @@ import $rdf from 'rdf-ext'
 
 const apiURL = new URL(env.API_CORE_BASE)
 
-const app = express()
+const app = express.Router()
 
 app.use(bodyParser.json())
 
