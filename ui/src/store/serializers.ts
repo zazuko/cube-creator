@@ -33,10 +33,6 @@ export function serializeProjectsCollection (collection: ProjectsCollection): Pr
 export function serializeSourcesCollection (collection: SourcesCollection): SourcesCollection {
   return Object.freeze({
     ...serializeResource(collection),
-    actions: {
-      ...serializeActions(collection.actions),
-      upload: collection.actions.upload,
-    },
     member: collection.member.map(serializeSource),
   }) as unknown as SourcesCollection
 }

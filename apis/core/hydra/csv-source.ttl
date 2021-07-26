@@ -13,9 +13,9 @@ cc:CSVSourceCollection
     [
       a
         hydra:Operation,
-        cc:UploadCSVAction ;
+        schema:CreateAction ;
       hydra:title
-        "Upload CSV" ;
+        "Upload CSV file" ;
       hydra:method
         "POST" ;
       code:implementedBy

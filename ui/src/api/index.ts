@@ -8,7 +8,6 @@ import type { Shape } from '@rdfine/shacl'
 import store from '@/store'
 import { APIError } from './errors'
 import { apiResourceMixin } from './mixins/ApiResource'
-import CSVSourceCollectionMixin from './mixins/CSVSourceCollection'
 import CSVSourceMixin from './mixins/CSVSource'
 import TableMixin from './mixins/Table'
 import JobCollectionMixin from './mixins/JobCollection'
@@ -26,7 +25,6 @@ Hydra.baseUri = rootURL
 
 Hydra.resources.factory.addMixin(...Object.values(Models))
 Hydra.resources.factory.addMixin(apiResourceMixin(rootURL, segmentSeparator))
-Hydra.resources.factory.addMixin(CSVSourceCollectionMixin)
 Hydra.resources.factory.addMixin(CSVSourceMixin)
 Hydra.resources.factory.addMixin(TableMixin)
 Hydra.resources.factory.addMixin(JobCollectionMixin)

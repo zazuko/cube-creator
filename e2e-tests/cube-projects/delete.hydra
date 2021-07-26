@@ -38,7 +38,7 @@ With Class api:EntryPoint {
 With Class cc:CubeProject {
     Expect Link cc:csvMapping {
         Expect Property cc:csvSourceCollection {
-            Expect Operation cc:UploadCSVAction {
+            Expect Operation schema:CreateAction {
                 Invoke {
                     Content-Type "text/csv"
                     Content-Disposition "file; filename=test.jpg"

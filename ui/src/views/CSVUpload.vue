@@ -1,5 +1,5 @@
 <template>
-  <side-pane title="Upload CSV file" @close="close">
+  <side-pane :title="operation.title" @close="close">
     <form @submit.prevent="onSubmit">
       <b-message v-if="error" type="is-danger">
         {{ error }}
@@ -19,6 +19,7 @@ import { schema } from '@tpluscode/rdf-ns-builders'
 import AwsS3Multipart from '@uppy/aws-s3-multipart'
 import Uppy from '@uppy/core'
 import { Dashboard as UppyDashboard } from '@uppy/vue'
+import { RuntimeOperation } from 'alcaeus'
 import clownface from 'clownface'
 import { Component, Vue } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
@@ -74,8 +75,16 @@ export default class CSVUploadView extends Vue {
     this.uppy?.close()
   }
 
+  get operation (): RuntimeOperation {
+    const operation = this.mapping.sourcesCollection.actions?.create
+
+    if (!operation) throw new Error('Missing create operation')
+
+    return operation
+  }
+
   async createSources (fileIDs: string[]): Promise<void> {
-    const operation = this.mapping.sourcesCollection.actions?.upload ?? null
+    const operation = this.operation
     const uploads = fileIDs.map((fileID) => {
       const file = this.uppy?.getFile(fileID) as any
       if (!file) throw new Error('File not found')

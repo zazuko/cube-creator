@@ -9,7 +9,7 @@ HEADERS {
 }
 
 With Class cc:CSVSourceCollection {
-    Expect Operation cc:UploadCSVAction {
+    Expect Operation schema:CreateAction {
         Invoke {
             Content-Type "text/csv"
             Content-Disposition "file; filename=replace_test.csv"
@@ -38,7 +38,7 @@ With Class cc:CSVSource {
         } => {
             Expect Status 400
         }
-    
+
         Invoke {
             Content-Type "text/csv"
             ```

@@ -11,7 +11,7 @@
             </div>
             <div class="level-item">
               <hydra-operation-button
-                :operation="sourcesCollection.actions.upload"
+                :operation="sourcesCollection.actions.create"
                 :to="{ name: 'CSVUpload' }"
                 data-testid="upload-source"
               />
@@ -59,7 +59,7 @@
     </div>
     <p v-else>
       You haven't uploaded any CSV file yet.
-      <span v-if="sourcesCollection.actions.upload">
+      <span v-if="sourcesCollection.actions.create">
         Do you want to
         <router-link :to="{ name: 'CSVUpload' }">
           upload one
