@@ -218,17 +218,12 @@ export function serializeSharedDimension (dimension: RdfResource): SharedDimensi
 export function serializeSharedDimensionTerm (term: RdfResource): SharedDimensionTerm {
   const validThrough = term.pointer.out(schema.validThrough).value
 
-  let canonical
-  if (term.pointer.out(oa.canonical).term) {
-    canonical = term.pointer.namedNode(`https://${term.pointer.out(oa.canonical).value}`)
-  }
-
   return Object.freeze({
     ...serializeResource(term),
     name: term.pointer.out(schema.name).terms,
     identifiers: term.pointer.out(schema.identifier).values,
     validThrough: validThrough ? new Date(validThrough) : undefined,
-    canonical: canonical?.term,
+    canonical: term.pointer.out(oa.canonical).term,
   })
 }
 
