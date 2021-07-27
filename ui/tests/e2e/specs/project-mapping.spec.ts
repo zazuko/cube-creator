@@ -38,7 +38,7 @@ describe('CSV mapping flow', () => {
   it('Uploads a CSV file', () => {
     cy.get('[data-testid="upload-source"]').click()
 
-    cy.contains('select files').click()
+    cy.contains('browse files').click()
 
     cy.fixture('test.csv').then(fileContent => {
       cy.get('input[type="file"]').attachFile({
@@ -48,7 +48,9 @@ describe('CSV mapping flow', () => {
       })
     })
 
-    cy.get('form').submit()
+    cy.contains('Upload 1 file').click()
+
+    cy.contains('Done').click()
 
     cy.contains('test.csv').should('be.visible')
     cy.contains('column1').should('be.visible')

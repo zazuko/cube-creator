@@ -8,6 +8,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import AwsS3Multipart from '@uppy/aws-s3-multipart'
 import Uppy, { UppyFile } from '@uppy/core'
 import { Dashboard as UppyDashboard } from '@uppy/vue'
+import { prepareHeaders } from '@/api'
 import LoadingBlock from './LoadingBlock.vue'
 
 import '@uppy/core/dist/style.css'
@@ -52,8 +53,9 @@ export default class extends Vue {
     uppy.use(AwsS3Multipart, { companionUrl: uploadURL })
     uppy.addPreProcessor(async () => {
       // Hack to set fresh auth token before each upload
-      const token = this.$store.state.auth.access_token;
-      (uppy as any).plugins.uploader[0].client.opts.companionHeaders = { authorization: `Bearer ${token}` }
+      const headers = prepareHeaders(uploadURL, this.$store)
+      const headersObj = Object.fromEntries(headers.entries());
+      (uppy as any).plugins.uploader[0].client.opts.companionHeaders = headersObj
     })
     uppy.addPostProcessor(this.onUploaded)
 

@@ -5,7 +5,9 @@ import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import { hydra, sh } from '@tpluscode/rdf-ns-builders'
 import { ShapeBundle } from '@rdfine/shacl/bundles'
 import type { Shape } from '@rdfine/shacl'
+import { Store } from 'vuex'
 import store from '@/store'
+import { RootState } from '@/store/types'
 import { APIError } from './errors'
 import { apiResourceMixin } from './mixins/ApiResource'
 import CSVSourceMixin from './mixins/CSVSource'
@@ -31,28 +33,7 @@ Hydra.resources.factory.addMixin(JobCollectionMixin)
 Hydra.resources.factory.addMixin(...ShapeBundle)
 
 // Inject the access token in all requests if present
-Hydra.defaultHeaders = ({ uri }) => {
-  const headers = new Headers()
-
-  if (!uri.startsWith(rootURL)) {
-    return headers
-  }
-
-  const token = store.state.auth.access_token
-  if (token) {
-    headers.set('Authorization', `Bearer ${token}`)
-  }
-
-  if (process.env.VUE_APP_X_USER) {
-    headers.set('X-User', process.env.VUE_APP_X_USER)
-  }
-
-  if (process.env.VUE_APP_X_PERMISSION) {
-    headers.set('X-Permission', process.env.VUE_APP_X_PERMISSION)
-  }
-
-  return headers
-}
+Hydra.defaultHeaders = ({ uri }) => prepareHeaders(uri, store)
 
 // Cache API documentation because we know that it doesn't ever change.
 Hydra.cacheStrategy.shouldLoad = (previous) => {
@@ -141,4 +122,27 @@ export const api = {
 
     return response.response
   },
+}
+
+export function prepareHeaders (uri: string, store: Store<RootState>): Headers {
+  const headers = new Headers()
+
+  if (!uri.startsWith(rootURL)) {
+    return headers
+  }
+
+  const token = store.state.auth.access_token
+  if (token) {
+    headers.set('Authorization', `Bearer ${token}`)
+  }
+
+  if (process.env.VUE_APP_X_USER) {
+    headers.set('X-User', process.env.VUE_APP_X_USER)
+  }
+
+  if (process.env.VUE_APP_X_PERMISSION) {
+    headers.set('X-Permission', process.env.VUE_APP_X_PERMISSION)
+  }
+
+  return headers
 }

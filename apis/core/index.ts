@@ -47,7 +47,7 @@ async function main() {
     credentials: true,
     // Add OPTIONS
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Authorization', 'Origin', 'Content-Type', 'Accept'],
+    allowedHeaders: ['Authorization', 'Origin', 'Content-Type', 'Accept', 'X-User', 'X-Permission'],
     // Needed by uppy/companion
     exposedHeaders: ['Access-Control-Allow-Headers'],
   }))

@@ -1,16 +1,14 @@
 <template>
   <side-pane :title="operation.title" @close="close">
-    <form @submit.prevent="onSubmit">
-      <b-message v-if="error" type="is-danger">
-        {{ error }}
-      </b-message>
+    <b-message v-if="error" type="is-danger">
+      {{ error }}
+    </b-message>
 
-      <file-upload
-        :file-meta="fileMeta"
-        :after-upload="createSources"
-        @done="close"
-      />
-    </form>
+    <file-upload
+      :file-meta="fileMeta"
+      :after-upload="createSources"
+      @done="close"
+    />
   </side-pane>
 </template>
 
