@@ -1,5 +1,6 @@
 import { GraphPointer } from 'clownface'
 import { schema } from '@tpluscode/rdf-ns-builders'
+import { Conflict } from 'http-errors'
 import { Readable } from 'stream'
 import { NamedNode } from 'rdf-js'
 import * as s3 from '../../storage/s3'
@@ -8,6 +9,7 @@ import { ResourceStore } from '../../ResourceStore'
 import { loadFileHeadString } from '../csv/file-head'
 import { sniffParse } from '../csv'
 import { sampleValues } from '../csv/sample-values'
+import * as CsvSourceQueries from '../queries/csv-source'
 import { CsvMapping } from '@cube-creator/model'
 
 interface CreateCSVSourceCommand {
@@ -15,6 +17,7 @@ interface CreateCSVSourceCommand {
   resource: GraphPointer
   store: ResourceStore
   fileStorage?: s3.FileStorage
+  csvSourceQueries?: Pick<typeof CsvSourceQueries, 'sourceWithFilenameExists'>
 }
 
 export async function createCSVSource({
@@ -22,12 +25,17 @@ export async function createCSVSource({
   resource,
   store,
   fileStorage = s3,
+  csvSourceQueries: { sourceWithFilenameExists } = CsvSourceQueries,
 }: CreateCSVSourceCommand): Promise<GraphPointer> {
   const csvMapping = await store.getResource<CsvMapping>(csvMappingId)
 
   const fileName = resource.out(schema.name).value!
   const key = resource.out(schema.identifier).value!
   const location = resource.out(schema.contentUrl).term! as NamedNode
+
+  if (await sourceWithFilenameExists(csvMapping.id, fileName)) {
+    throw new Conflict(`A file with ${fileName} has already been added to the project`)
+  }
 
   const csvSource = csvMapping.addSource(store, { fileName })
   csvSource.setUploadedFile(key, location)
