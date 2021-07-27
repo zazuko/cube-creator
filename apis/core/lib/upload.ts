@@ -6,11 +6,28 @@ import bodyParser from 'body-parser'
 import { nanoid } from 'nanoid'
 import $rdf from 'rdf-ext'
 
+import { sourceWithFilenameExists } from './domain/queries/csv-source'
+
 const apiURL = new URL(env.API_CORE_BASE)
 
 const app = express.Router()
 
 app.use(bodyParser.json())
+
+// Check if file already exists before companion handler
+app.post('/s3/multipart', async (req, res, next) => {
+  const filename = req.body.filename
+  const metadata = req.body.metadata || {}
+  const csvMapping = $rdf.namedNode(metadata.csvMapping)
+
+  if (!metadata.csvMapping) {
+    res.status(400).send({ message: 'Missing csvMapping metadata' })
+  } else if (await sourceWithFilenameExists(csvMapping, filename)) {
+    res.status(409).send({ message: `A file named ${filename} has already been added to the project` })
+  } else {
+    next()
+  }
+})
 
 app.use(companion.app({
   providerOptions: {
@@ -23,11 +40,7 @@ app.use(companion.app({
       secret: env.AWS_SECRET_ACCESS_KEY,
       bucket: env.AWS_S3_BUCKET,
       acl: 'private',
-      getKey: (req: express.Request, filename: string, metadata: any) => {
-        // TODO: Check if file exists. Issue, `getKey` cannot return a promise.
-        const csvMapping = $rdf.namedNode(metadata.csvMapping)
-        return `${csvMapping.value.replace(env.API_CORE_BASE, '')}/${filename}`
-      },
+      getKey: (req: express.Request, filename: string, metadata: Record<string, string>) => buildKey(filename, metadata),
     },
   },
   server: {
@@ -39,5 +52,10 @@ app.use(companion.app({
   filePath: os.tmpdir(),
   secret: nanoid(30),
 }))
+
+function buildKey(filename: string, metadata: Record<string, string>) {
+  const csvMappingURI = metadata.csvMapping
+  return `${csvMappingURI.replace(env.API_CORE_BASE, '')}/${filename}`
+}
 
 export default app

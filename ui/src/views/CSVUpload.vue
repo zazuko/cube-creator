@@ -5,7 +5,11 @@
         {{ error }}
       </b-message>
 
-      <file-upload :file-meta="fileMeta" :after-upload="createSources" @done="close" />
+      <file-upload
+        :file-meta="fileMeta"
+        :after-upload="createSources"
+        @done="close"
+      />
     </form>
   </side-pane>
 </template>
@@ -36,7 +40,7 @@ export default class CSVUploadView extends Vue {
 
   error: string | null = null
 
-  get fileMeta (): any {
+  get fileMeta (): Record<string, string> {
     return { csvMapping: this.mapping.id.value }
   }
 
