@@ -81,8 +81,6 @@ export default class extends Vue {
 }
 
 function toUploadedFile (file: UppyFile | undefined): UploadedFile {
-  console.log(file)
-
   if (!file) throw new Error('File not found')
 
   if (!('uploadURL' in file)) throw new Error('Missing uploadURL')
