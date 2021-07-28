@@ -1,80 +1,81 @@
 <template>
-  <side-pane title="Upload CSV file" @close="onCancel">
-    <form @submit.prevent="onSubmit">
-      <b-message v-if="error" type="is-danger">
-        {{ error }}
-      </b-message>
+  <side-pane :title="operation.title" @close="close">
+    <b-message v-if="error" type="is-danger">
+      {{ error }}
+    </b-message>
 
-      <b-field>
-        <b-upload v-model="files" multiple drag-drop accept=".csv">
-          <section class="section">
-            <div class="content has-text-centered">
-              <p>
-                <b-icon icon="upload" size="is-large" />
-              </p>
-              <p>Drop your files here or click to select files from your disk</p>
-            </div>
-          </section>
-        </b-upload>
-      </b-field>
-
-      <div class="tags">
-        <span v-for="(file, index) in files" :key="index" class="tag is-primary">
-          {{ file.name }}
-          <button class="delete is-small" type="button" @click="removeFile(index)" />
-        </span>
-      </div>
-
-      <form-submit-cancel submit-label="Upload" @cancel="onCancel" :disabled="files.length === 0" />
-    </form>
+    <file-upload
+      :file-meta="fileMeta"
+      :after-upload="createSources"
+      @done="close"
+    />
   </side-pane>
 </template>
 
 <script lang="ts">
+import * as $rdf from '@rdfjs/dataset'
+import RdfResourceImpl from '@tpluscode/rdfine'
+import { schema } from '@tpluscode/rdf-ns-builders'
+import { RuntimeOperation } from 'alcaeus'
+import clownface from 'clownface'
 import { Component, Vue } from 'vue-property-decorator'
-import SidePane from '@/components/SidePane.vue'
+import { namespace } from 'vuex-class'
+
+import { CsvMapping } from '@cube-creator/model'
+
+import { api } from '@/api'
+import FileUpload, { UploadedFile } from '@/components/FileUpload.vue'
 import FormSubmitCancel from '@/components/FormSubmitCancel.vue'
-import { APIErrorConflict, APIErrorValidation, APIPayloadTooLarge } from '@/api/errors'
+import SidePane from '@/components/SidePane.vue'
+
+const projectNS = namespace('project')
 
 @Component({
-  components: { SidePane, FormSubmitCancel },
+  components: { FileUpload, SidePane, FormSubmitCancel },
 })
 export default class CSVUploadView extends Vue {
-  files: File[] = []
+  @projectNS.State('csvMapping') mapping!: CsvMapping
+
   error: string | null = null
 
-  async onSubmit (): Promise<void> {
+  get fileMeta (): Record<string, string> {
+    return { csvMapping: this.mapping.id.value }
+  }
+
+  get operation (): RuntimeOperation {
+    const operation = this.mapping.sourcesCollection.actions?.create
+
+    if (!operation) throw new Error('Missing create operation')
+
+    return operation
+  }
+
+  async createSources (files: UploadedFile[]): Promise<void> {
+    const operation = this.operation
+    const uploads = files.map((file) => {
+      const dataset = $rdf.dataset()
+      const pointer = clownface({ dataset, term: $rdf.namedNode('') })
+        .addOut(schema.name, $rdf.literal(file.name))
+        .addOut(schema.identifier, $rdf.literal(file.s3Multipart.key))
+        .addOut(schema.contentUrl, $rdf.namedNode(file.uploadURL))
+      const resource = RdfResourceImpl.factory.createEntity(pointer)
+
+      return api.invokeSaveOperation(operation, resource)
+    })
+
     this.error = null
-    const loader = this.$buefy.loading.open({})
 
     try {
-      await this.$store.dispatch('project/uploadCSVs', this.files)
-
-      await this.$store.dispatch('project/refreshSourcesCollection')
-
-      this.$router.push({ name: 'CSVMapping' })
+      await Promise.all(uploads)
     } catch (e) {
-      if (e instanceof APIErrorConflict) {
-        this.error = 'Cannot upload a file with the same name twice'
-      } else if (e instanceof APIErrorValidation) {
-        this.error = e.details?.title ?? null
-      } else if (e instanceof APIPayloadTooLarge) {
-        this.error = 'CSV file is too large'
-      } else {
-        console.error(e)
-        this.error = e.toString()
-      }
-    } finally {
-      loader.close()
+      this.error = e.toString()
+      throw e
     }
   }
 
-  onCancel (): void {
+  async close (): Promise<void> {
+    await this.$store.dispatch('project/refreshSourcesCollection')
     this.$router.push({ name: 'CSVMapping' })
-  }
-
-  removeFile (index: number): void {
-    this.files.splice(index, 1)
   }
 }
 </script>

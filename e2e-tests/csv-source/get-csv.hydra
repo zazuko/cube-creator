@@ -39,17 +39,16 @@ With Class api:EntryPoint {
 With Class cc:CubeProject {
     Expect Link cc:csvMapping {
         Expect Property cc:csvSourceCollection {
-            Expect Operation cc:UploadCSVAction {
+            Expect Operation schema:CreateAction {
                 Invoke {
-                    Content-Type "text/csv"
-                    Content-Disposition "file; filename='test.jpg'"
+                    Content-Type "text/turtle"
 
                     ```
-                    A,B,C
-                    1,2,test
-                    1,2,test
-                    1,2,test
-                    1,2,test
+                    prefix schema: <http://schema.org/>
+
+                    <> schema:name "test1.csv" ;
+                       schema:contentUrl <http://s3.cube-creator.lndo.site/cube-creator/test-data/upload-test-cube/test1.csv> ;
+                       schema:identifier "test-data/upload-test-cube/test1.csv" ;
                     ```
                 } => { }
             }

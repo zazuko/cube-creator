@@ -18,6 +18,7 @@ import { resourceStore } from './lib/middleware/resource'
 import { expectsDisambiguate, preferHydraCollection } from './lib/middleware/operations'
 import { errorMappers } from '@cube-creator/api-errors'
 import './lib/domain'
+import upload from './lib/upload'
 
 const apiPath = path.resolve(__dirname, 'hydra')
 const codePath = path.resolve(__dirname, 'lib')
@@ -41,7 +42,15 @@ async function main() {
   app.use(Sentry.Handlers.requestHandler())
   app.use(Sentry.Handlers.tracingHandler())
 
-  app.use(cors())
+  app.use(cors({
+    origin: '*',
+    credentials: true,
+    // Add OPTIONS
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Authorization', 'Origin', 'Content-Type', 'Accept', 'X-User', 'X-Permission'],
+    // Needed by uppy/companion
+    exposedHeaders: ['Access-Control-Allow-Headers'],
+  }))
 
   app.get('/ping', (req, res) => res.status(204).end())
 
@@ -56,6 +65,8 @@ async function main() {
   app.use(resource)
 
   app.use('/dimension', await sharedDimensions())
+
+  app.use('/upload', upload)
 
   app.use(resourceStore)
   app.use(await hydraBox({

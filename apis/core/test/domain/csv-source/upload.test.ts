@@ -8,7 +8,7 @@ import { Readable } from 'stream'
 import { cc } from '@cube-creator/core/namespace'
 import { Conflict } from 'http-errors'
 import { csvw, dtype, hydra, rdf, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
-import { uploadFile } from '../../../lib/domain/csv-source/upload'
+import { createCSVSource } from '../../../lib/domain/csv-source/upload'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import clownface, { GraphPointer } from 'clownface'
 import type { FileStorage } from '../../../lib/storage/s3'
@@ -20,6 +20,11 @@ describe('domain/csv-sources/upload', () => {
   let csvSourceQueries: typeof CsvSourceQueries
   let sourceWithFilenameExists: sinon.SinonStub
   let fileStream: Readable
+  const data = clownface({ dataset: $rdf.dataset() })
+    .namedNode('')
+    .addOut(schema.name, $rdf.literal('source.csv'))
+    .addOut(schema.identifier, $rdf.literal('test/source.csv'))
+    .addOut(schema.contentUrl, $rdf.namedNode('http://s3/test/source.csv'))
 
   beforeEach(() => {
     fileStream = fs.createReadStream(path.resolve(__dirname, '../../../../../minio/cube-creator/test-data/ubd28/input_CH_yearly_air_immission_basetable.csv'))
@@ -43,17 +48,15 @@ describe('domain/csv-sources/upload', () => {
 
     beforeEach(async () => {
       // given
-      const file = Buffer.alloc(0)
       const store = new TestResourceStore([
         csvMapping,
       ])
 
       // when
-      csvSource = await uploadFile({
-        resource: csvMapping.term,
+      csvSource = await createCSVSource({
+        csvMappingId: csvMapping.term,
+        resource: data,
         store,
-        file,
-        fileName: 'source.csv',
         fileStorage,
         csvSourceQueries,
       })
@@ -161,18 +164,16 @@ describe('domain/csv-sources/upload', () => {
   describe('when source filename already exists', () => {
     it('throws', () => {
       // given
-      const file = Buffer.alloc(0)
       const store = new TestResourceStore([
         csvMapping,
       ])
       sourceWithFilenameExists.resolves(true)
 
       // when
-      const creatingSource = uploadFile({
-        resource: csvMapping.term,
+      const creatingSource = createCSVSource({
+        csvMappingId: csvMapping.term,
+        resource: data,
         store,
-        file,
-        fileName: 'source.csv',
         fileStorage,
         csvSourceQueries,
       })
@@ -187,7 +188,6 @@ describe('domain/csv-sources/upload', () => {
 
     beforeEach(async () => {
       // given
-      const file = Buffer.alloc(0)
       const store = new TestResourceStore([
         csvMapping,
       ])
@@ -195,11 +195,10 @@ describe('domain/csv-sources/upload', () => {
       fileStream = fs.createReadStream(path.resolve(__dirname, '../../../../../minio/cube-creator/test-data/ubd28/empty.csv'))
 
       // when
-      csvSource = await uploadFile({
-        resource: csvMapping.term,
+      csvSource = await createCSVSource({
+        csvMappingId: csvMapping.term,
+        resource: data,
         store,
-        file,
-        fileName: 'source.csv',
         fileStorage,
         csvSourceQueries,
       })
