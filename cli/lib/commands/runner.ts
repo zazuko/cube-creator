@@ -83,6 +83,7 @@ export function create<TOptions extends RunOptions>({ pipelineSources, prepare }
     variable.set('apiClient', apiClient)
     variable.set('jobUri', jobUri)
     variable.set('executionUrl', executionUrl)
+    variable.set('graph-query-endpoint', process.env.GRAPH_QUERY_ENDPOINT)
     variable.set('graph-store-endpoint', graphStore?.endpoint || process.env.GRAPH_STORE_ENDPOINT)
     variable.set('graph-store-user', graphStore?.user || process.env.GRAPH_STORE_USER)
     variable.set('graph-store-password', graphStore?.password || process.env.GRAPH_STORE_PASSWORD)

@@ -41,10 +41,6 @@ export function excludeAllCsvw(quad: Quad): boolean {
   return removeCsvwTriples(quad, false) && removeDefaultProperties(quad)
 }
 
-export function fromPublished(quad: Quad): boolean {
-  return removeCsvwTriples(quad, false)
-}
-
 function rewriteBlankNode<T extends Term>(term: T, uuid: string): T | BlankNode {
   if (term.termType !== 'BlankNode') {
     return term

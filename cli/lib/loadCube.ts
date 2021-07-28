@@ -1,7 +1,9 @@
 import type Pipeline from 'barnard59-core/lib/Pipeline'
 import { PublishJob, Project } from '@cube-creator/model'
-import { get } from 'barnard59-graph-store'
-import { Stream } from 'readable-stream'
+import { Stream } from 'rdf-js'
+import { CONSTRUCT } from '@tpluscode/sparql-builder'
+import StreamClient from 'sparql-http-client/StreamClient'
+import { csvw } from '@tpluscode/rdf-ns-builders'
 
 interface Params {
   jobUri: string
@@ -27,5 +29,16 @@ export async function loadCube(this: Pipeline.Context, { jobUri, endpoint, user,
 
   this.log.info(`Source graph <${project.cubeGraph.value}>`)
 
-  return get({ endpoint, graph: project.cubeGraph.value, user, password })
+  const query = CONSTRUCT`?s ?p ?o`
+    .FROM(project.cubeGraph)
+    .WHERE`
+      ?s ?p ?o
+      filter (?p != ${csvw.describes})
+    `
+
+  return query.execute(new StreamClient({
+    endpointUrl: endpoint,
+    user,
+    password,
+  }).query)
 }
