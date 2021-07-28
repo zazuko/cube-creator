@@ -11,6 +11,7 @@ type ShapeTerms =
   'cube-project/update' |
   'table/create' |
   'table/update' |
+  'csv-source/create' |
   'csv-source/update' |
   'dataset/edit-metadata' |
   'job/update' |

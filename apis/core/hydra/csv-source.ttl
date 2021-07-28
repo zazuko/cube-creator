@@ -18,6 +18,9 @@ cc:CSVSourceCollection
         "Upload CSV file" ;
       hydra:method
         "POST" ;
+      hydra:expects
+        schema:MediaObject,
+        <shape/csv-source/create> ;
       code:implementedBy
         [
           a
@@ -74,7 +77,7 @@ cc:CSVSource
       a
         hydra:Operation,
         schema:UpdateAction ;
-        
+
       hydra:title
         "Edit CSV settings" ;
       hydra:method
@@ -107,6 +110,10 @@ cc:CSVSource
         ]
     ] ;
 .
+
+<shape/csv-source/create>
+  a
+    sh:Shape .
 
 <shape/csv-source/update>
   a
