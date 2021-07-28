@@ -124,8 +124,8 @@ export const api = {
   },
 }
 
-export function prepareHeaders (uri: string, store: Store<RootState>): Headers {
-  const headers = new Headers()
+export function prepareHeaders (uri: string, store: Store<RootState>): Record<string, string> {
+  const headers: Record<string, string> = {}
 
   if (!uri.startsWith(rootURL)) {
     return headers
@@ -133,15 +133,15 @@ export function prepareHeaders (uri: string, store: Store<RootState>): Headers {
 
   const token = store.state.auth.access_token
   if (token) {
-    headers.set('Authorization', `Bearer ${token}`)
+    headers.authorization = `Bearer ${token}`
   }
 
   if (process.env.VUE_APP_X_USER) {
-    headers.set('X-User', process.env.VUE_APP_X_USER)
+    headers['x-user'] = process.env.VUE_APP_X_USER
   }
 
   if (process.env.VUE_APP_X_PERMISSION) {
-    headers.set('X-Permission', process.env.VUE_APP_X_PERMISSION)
+    headers['x-permission'] = process.env.VUE_APP_X_PERMISSION
   }
 
   return headers
