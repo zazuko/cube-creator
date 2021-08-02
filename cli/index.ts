@@ -4,7 +4,7 @@ import '@sentry/tracing'
 import { transform, publish, importCube } from './lib/commands'
 import { capture } from './lib/telemetry'
 import './lib/variables'
-import { log } from './lib/log'
+import { logger } from './lib/log'
 
 function parseVariables(str: string, all: Map<string, string>) {
   return str
@@ -67,7 +67,7 @@ async function main() {
 main()
   .catch(async e => {
     Sentry.captureException(e)
-    log(e)
+    logger.error(e)
     await Sentry.close(2000)
     process.exit(1)
   })

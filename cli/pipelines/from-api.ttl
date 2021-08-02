@@ -8,6 +8,5 @@
 _:openCsvFromApi
   a                  :Step ;
   code:implementedBy [ code:link <file:../lib/csv#openFromCsvw> ;
-                       a         code:EcmaScript ] ;
-  code:arguments     ( "csvw"^^:VariableName ) .
+                       a         code:EcmaScript ] .
 

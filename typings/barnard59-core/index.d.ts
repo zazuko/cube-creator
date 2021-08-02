@@ -25,7 +25,7 @@ declare module 'barnard59-core/lib/logger' {
 
 declare module 'barnard59-core/lib/Pipeline' {
 
-  import type Logger from 'barnard59-core/lib/logger'
+  import type { Logger } from 'winston'
   import stream from 'stream'
 
   namespace Pipeline {
@@ -39,7 +39,7 @@ declare module 'barnard59-core/lib/Pipeline' {
     }
 
     interface Context {
-      log: Logger
+      logger: Logger
       variables: Variables
     }
   }

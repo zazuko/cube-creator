@@ -2,33 +2,26 @@ declare module 'barnard59' {
   export const fileToDataset: any
 }
 
-declare module 'barnard59/lib/bufferDebug'
+declare module 'barnard59/lib/bufferDebug.js'
 
-declare module 'barnard59/lib/runner' {
-  import { DatasetCore } from 'rdf-js'
+declare module 'barnard59/runner.js' {
   import { Writable } from 'stream'
-  import type { Debugger } from 'debug'
   import type * as Pipeline from 'barnard59-core/lib/Pipeline'
+  import type { GraphPointer } from 'clownface'
+  import type { Logger } from 'winston'
 
-  type Runner = {
+  type Runner = Promise<{
     pipeline: Pipeline
-    promise: Promise<any>
-  }
+    finished: Promise<any>
+  }>
 
   interface RunnerInit {
-    dataset: DatasetCore
     basePath: string
     outputStream: Writable
-    term: string
-    variable?: Pipeline.Variables
+    variables?: Pipeline.Variables
+    logger?: Logger
+    level?: 'error' | 'info' | 'debug'
   }
 
-  function create(options: RunnerInit): Runner
-
-  const log: Debugger
-
-  export {
-    create,
-    log,
-  }
+  export default function create(ptr: GraphPointer, options: RunnerInit): Runner
 }

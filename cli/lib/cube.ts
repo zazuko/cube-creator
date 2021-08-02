@@ -24,7 +24,7 @@ export function getCubeId({ ptr }: { ptr: GraphPointer }) {
   return ptr.out(cc.cube).term || ''
 }
 
-export function expirePreviousVersions(this: Pick<Context, 'variables' | 'log'>) {
+export function expirePreviousVersions(this: Pick<Context, 'variables' | 'logger'>) {
   const timestamp = this.variables.get('timestamp')
   const baseCube = $rdf.namedNode(this.variables.get('namespace'))
   const client = new StreamClient({
@@ -47,7 +47,7 @@ export function expirePreviousVersions(this: Pick<Context, 'variables' | 'log'>)
     .execute(client.query)
 }
 
-export async function injectRevision(this: Pick<Context, 'variables' | 'log'>, jobUri?: string) {
+export async function injectRevision(this: Pick<Context, 'variables' | 'logger'>, jobUri?: string) {
   let cubeNamespace = this.variables.get('namespace')
   const revision = this.variables.get('revision')
   const versionedDimensions = this.variables.get('versionedDimensions')
@@ -56,7 +56,7 @@ export async function injectRevision(this: Pick<Context, 'variables' | 'log'>, j
     ({ dataset } = await loadDataset(jobUri, this.variables.get('apiClient')))
   }
 
-  this.log.info(`Cube revision ${revision}`)
+  this.logger.info(`Cube revision ${revision}`)
 
   if (cubeNamespace.endsWith('/')) {
     cubeNamespace = cubeNamespace.slice(0, -1)

@@ -4,7 +4,7 @@ import $rdf from 'rdf-ext'
 import { cc, cube } from '@cube-creator/core/namespace'
 import { getObservationSetId, injectRevision } from '../../lib/cube'
 import { rdf } from '@tpluscode/rdf-ns-builders'
-import { log } from '../support/logger'
+import { logger } from '../support/logger'
 
 describe('lib/cube', () => {
   describe('getObservationSetId', () => {
@@ -64,7 +64,7 @@ describe('lib/cube', () => {
       it(`ensures a slash between base and version (term = ${term}; namespace = ${namespace})`, async () => {
         // given
         const context = {
-          log,
+          logger,
           variables: new Map<any, any>([
             ['namespace', 'http://example.com/cube/' + namespace],
             ['revision', 5],

@@ -3,14 +3,14 @@ import { HydraClient } from 'alcaeus/alcaeus'
 import { Job, Table, TransformJob } from '@cube-creator/model'
 import type * as Schema from '@rdfine/schema'
 import { schema } from '@tpluscode/rdf-ns-builders'
-import type Logger from 'barnard59-core/lib/logger'
+import type { Logger } from 'winston'
 import type { Context, Variables } from 'barnard59-core/lib/Pipeline'
 import $rdf from 'rdf-ext'
-import { log } from './log'
+import { logger } from './log'
 
 interface Params {
   jobUri: string
-  log: Logger
+  logger: Logger
   variables: Variables
 }
 
@@ -48,7 +48,7 @@ export async function updateJobStatus({ jobUri, executionUrl, status, error, mod
     const { representation } = await apiClient.loadResource<Job>(jobUri)
     const job = representation?.root
     if (!job) {
-      log('Could not load job to update')
+      logger.error('Could not load job to update')
       return
     }
 
@@ -57,7 +57,7 @@ export async function updateJobStatus({ jobUri, executionUrl, status, error, mod
     })
 
     if (!operation) {
-      log('Could not find schema:UpdateAction operation on Job')
+      logger.warn('Could not find schema:UpdateAction operation on Job')
       return
     }
 
@@ -74,12 +74,12 @@ export async function updateJobStatus({ jobUri, executionUrl, status, error, mod
       } as any
     }
 
-    log(`Updating job status to ${status.value}`)
+    logger.info(`Updating job status to ${status.value}`)
     await operation.invoke(JSON.stringify(job.toJSON()), {
       'Content-Type': 'application/ld+json',
     })
   } catch (e) {
-    log(`Failed to update job status: ${e.message}`)
+    logger.error(`Failed to update job status: ${e.message}`)
   }
 }
 
@@ -98,7 +98,7 @@ async function loadTables(job: TransformJob, log: Logger): Promise<Table[]> {
 }
 
 export class TableIterator extends stream.Readable {
-  constructor({ jobUri, log, variables }: Params) {
+  constructor({ jobUri, logger, variables }: Params) {
     super({
       objectMode: true,
       // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -107,35 +107,35 @@ export class TableIterator extends stream.Readable {
 
     Promise.resolve()
       .then(async () => {
-        const job = await loadTransformJob(jobUri, log, variables)
-        const tables = await loadTables(job, log)
+        const job = await loadTransformJob(jobUri, logger, variables)
+        const tables = await loadTables(job, logger)
 
         const loadMetadata = tables.reduce((metadata, table) => {
           if (!table.csvw.load) {
-            log.warn(`Skipping table '${table.name}'. Is it dereferencable?`)
+            logger.warn(`Skipping table '${table.name}'. Is it dereferencable?`)
             return metadata
           }
 
-          log.debug(`Loading csvw for table '${table.name}'`)
+          logger.debug(`Loading csvw for table '${table.name}'`)
           const promise = table.csvw.load()
             .then(({ representation }) => representation?.root)
             .then((csvwResource) => {
               if (!csvwResource) {
-                log.warn(`Skipping table '${table.name}'. Failed to dereference ${table.csvw.id.value}`)
+                logger.warn(`Skipping table '${table.name}'. Failed to dereference ${table.csvw.id.value}`)
                 return
               }
 
               if (!csvwResource.url) {
-                log.warn(`Skipping table '${table.name}'. Missing csvw:url property`)
+                logger.warn(`Skipping table '${table.name}'. Missing csvw:url property`)
                 return
               }
 
               if (!csvwResource.dialect) {
-                log.warn(`Skipping table '${table.name}'. CSV dialect not set`)
+                logger.warn(`Skipping table '${table.name}'. CSV dialect not set`)
                 return
               }
 
-              log.debug(`Will transform table '${table.name}' from ${csvwResource.url}. Dialect: delimiter=${csvwResource.dialect.delimiter} quote=${csvwResource.dialect.quoteChar}`)
+              logger.debug(`Will transform table '${table.name}' from ${csvwResource.url}. Dialect: delimiter=${csvwResource.dialect.delimiter} quote=${csvwResource.dialect.quoteChar}`)
 
               this.push({
                 isObservationTable: table.isObservationTable,
@@ -143,8 +143,8 @@ export class TableIterator extends stream.Readable {
               })
             })
             .catch(e => {
-              log.error(`Failed to load ${table.csvw.id.value}`)
-              log.error(e.message)
+              logger.error(`Failed to load ${table.csvw.id.value}`)
+              logger.error(e.message)
             })
 
           metadata.push(promise)
@@ -162,5 +162,5 @@ export class TableIterator extends stream.Readable {
 }
 
 export function loadCsvMappings(this: Context, jobUri: string) {
-  return new TableIterator({ jobUri, log: this.log, variables: this.variables })
+  return new TableIterator({ jobUri, logger: this.logger, variables: this.variables })
 }

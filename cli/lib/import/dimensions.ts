@@ -130,7 +130,7 @@ export default async function query(this: Context, { endpoint, cube, graph, meta
   for (let i = 1; i <= dimensions.length; i++) {
     const { dimension } = dimensions[i - 1]
 
-    this.log.debug(`Adding dimension ${dimension.value}`)
+    this.logger.debug(`Adding dimension ${dimension.value}`)
 
     addMetadata({
       id: i,

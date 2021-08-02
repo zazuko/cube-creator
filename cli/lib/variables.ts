@@ -1,5 +1,7 @@
 import { Literal, NamedNode, Term } from 'rdf-js'
 import { HydraClient } from 'alcaeus/alcaeus'
+import * as Csvw from '@rdfine/csvw'
+import DatasetExt from 'rdf-ext/lib/Dataset'
 
 declare module 'barnard59-core/lib/Pipeline' {
   interface VariableNames {
@@ -18,7 +20,6 @@ declare module 'barnard59-core/lib/Pipeline' {
     namespace: string
     cubeIdentifier: string
     timestamp: Literal
-    isObservationTable: boolean
     graph: string
     bnodeUuid: string
     versionedDimensions: Set<Term>
@@ -27,5 +28,6 @@ declare module 'barnard59-core/lib/Pipeline' {
     sourceGraph: NamedNode | undefined
     metadataResource: string
     datasetResource: string
+    transformed: { csvwResource: Csvw.Table<DatasetExt> ; isObservationTable: boolean }
   }
 }

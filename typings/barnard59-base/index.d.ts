@@ -1,8 +1,6 @@
-declare module 'barnard59-base/lib/map' {
+declare module 'barnard59-base/map.js' {
   import * as stream from 'stream'
   import type { Context } from 'barnard59-core/lib/Pipeline'
 
-  function map<T>(cb: (this: Context, chunk: T, encoding: string) => Promise<T> | T): stream.Transform
-
-  export = map
+  export default function map<T>(cb: (this: Context, chunk: T, encoding: string) => Promise<T> | T): stream.Transform
 }

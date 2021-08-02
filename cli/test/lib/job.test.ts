@@ -6,7 +6,7 @@ import { TableIterator } from '../../lib/job'
 import { insertTestProject } from '@cube-creator/testing/lib/seedData'
 import { setupEnv } from '../support/env'
 import { Table } from '@rdfine/csvw'
-import { log } from '../support/logger'
+import { logger } from '../support/logger'
 import type { Variables } from 'barnard59-core/lib/Pipeline'
 import * as Models from '@cube-creator/model'
 import * as Csvw from '@rdfine/csvw'
@@ -35,7 +35,7 @@ describe('lib/job', function () {
   describe('TableIterator', () => {
     it('streams csv table objects from job', async () => {
       // given
-      const iteratorStream = new TableIterator({ jobUri: `${env.API_CORE_BASE}cube-project/ubd/csv-mapping/jobs/test-job`, log, variables })
+      const iteratorStream = new TableIterator({ jobUri: `${env.API_CORE_BASE}cube-project/ubd/csv-mapping/jobs/test-job`, logger, variables })
 
       // when
       const results: Table[] = []
@@ -53,7 +53,7 @@ describe('lib/job', function () {
 
     it('sets cube URI as pipeline variable "graph"', async () => {
       // given
-      const iteratorStream = new TableIterator({ jobUri: `${env.API_CORE_BASE}cube-project/ubd/csv-mapping/jobs/test-job`, log, variables })
+      const iteratorStream = new TableIterator({ jobUri: `${env.API_CORE_BASE}cube-project/ubd/csv-mapping/jobs/test-job`, logger, variables })
 
       // when
       await new Promise((resolve, reject) => {

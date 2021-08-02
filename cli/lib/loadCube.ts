@@ -27,7 +27,7 @@ export async function loadCube(this: Pipeline.Context, { jobUri, endpoint, user,
     throw new Error(`Did not find representation of project ${job.project}. Server responded ${projectResource.response?.xhr.status}`)
   }
 
-  this.log.info(`Source graph <${project.cubeGraph.value}>`)
+  this.logger.info(`Source graph <${project.cubeGraph.value}>`)
 
   const query = CONSTRUCT`?s ?p ?o`
     .FROM(project.cubeGraph)

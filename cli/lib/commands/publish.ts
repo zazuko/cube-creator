@@ -4,7 +4,7 @@ import '../variables'
 import { isCsvProject } from '@cube-creator/model/Project'
 import TermSet from '@rdfjs/term-set'
 import * as runner from './runner'
-import { log } from '../log'
+import { logger } from '../log'
 
 interface PublishRunOptions extends runner.RunOptions {
   publishStore?: {
@@ -32,15 +32,15 @@ export default runner.create<PublishRunOptions>({
 
     variable.set('target-graph', job.publishGraph.value)
     if (process.env.PUBLISH_GRAPH_OVERRIDE) {
-      log('Overriding target graph from PUBLISH_GRAPH_OVERRIDE')
+      logger.info('Overriding target graph from PUBLISH_GRAPH_OVERRIDE')
       variable.set('target-graph', process.env.PUBLISH_GRAPH_OVERRIDE)
     }
-    log(`Publishing to graph <${variable.get('target-graph')}>`)
+    logger.info(`Publishing to graph <${variable.get('target-graph')}>`)
 
     variable.set('revision', job.revision)
     variable.set('namespace', namespace)
     variable.set('cubeIdentifier', cubeIdentifier)
-    log(`Publishing cube <${cubeIdentifier}>`)
+    logger.info(`Publishing cube <${cubeIdentifier}>`)
   },
 })
 

@@ -1,4 +1,8 @@
-import debug from 'debug'
+import winston from 'winston'
 
-export const log = debug('cube-creator')
-log.enabled = false
+export const logger = winston.createLogger({
+  format: winston.format.simple(),
+  transports: [
+    new winston.transports.Console(),
+  ],
+})

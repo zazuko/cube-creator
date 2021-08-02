@@ -1,9 +1,8 @@
 import path from 'path'
+import clownface from 'clownface'
 import $rdf from 'rdf-ext'
-import { fileToDataset } from 'barnard59'
+import fromFile from 'rdf-utils-fs/fromFile.js'
 import { setupAuthentication } from '../auth'
-import Runner from 'barnard59/lib/runner'
-import bufferDebug from 'barnard59/lib/bufferDebug'
 import { schema, xsd } from '@tpluscode/rdf-ns-builders'
 import type { Variables } from 'barnard59-core/lib/Pipeline'
 import namespace from '@rdfjs/namespace'
@@ -12,7 +11,8 @@ import { HydraResponse } from 'alcaeus'
 import { cc } from '@cube-creator/core/namespace'
 import * as Models from '@cube-creator/model'
 import { updateJobStatus } from '../job'
-import { log } from '../log'
+import { logger } from '../log'
+import { importDynamic } from '../module'
 
 const ns = {
   pipeline: namespace('urn:pipeline:cube-creator'),
@@ -48,13 +48,15 @@ interface Create<TOptions> {
   prepare?(options: TOptions, variable: Variables): Promise<void> | void
 }
 
+async function fileToDataset(filename: string) {
+  return $rdf.dataset().import(fromFile(filename))
+}
+
 export function create<TOptions extends RunOptions>({ pipelineSources, prepare }: Create<TOptions>) {
   const basePath = path.resolve(__dirname, '../../')
 
   return async function (command: TOptions) {
-    const { variable = new Map(), job: jobUri, debug = false, enableBufferMonitor = false, graphStore, executionUrl } = command
-
-    log.enabled = debug
+    const { variable: variables = new Map(), job: jobUri, debug = false, enableBufferMonitor = false, graphStore, executionUrl } = command
 
     const authConfig = {
       params: command.authParam,
@@ -69,48 +71,50 @@ export function create<TOptions extends RunOptions>({ pipelineSources, prepare }
 
       return false
     }
-    setupAuthentication(authConfig, log, apiClient)
+    setupAuthentication(authConfig, logger, apiClient)
 
     const pipelinePath = (filename: string) => path.join(basePath, `./pipelines/${filename}.ttl`)
     const dataset = await pipelineSources(command).reduce((previous, source) => {
       return Promise.resolve().then(async () => {
         const dataset = await previous
-        return dataset.merge(await fileToDataset('text/turtle', pipelinePath(source)))
+        return dataset.merge(await fileToDataset(pipelinePath(source)))
       })
     }, Promise.resolve($rdf.dataset()))
 
-    log('Running job %s', jobUri)
-    variable.set('apiClient', apiClient)
-    variable.set('jobUri', jobUri)
-    variable.set('executionUrl', executionUrl)
-    variable.set('graph-query-endpoint', process.env.GRAPH_QUERY_ENDPOINT)
-    variable.set('graph-store-endpoint', graphStore?.endpoint || process.env.GRAPH_STORE_ENDPOINT)
-    variable.set('graph-store-user', graphStore?.user || process.env.GRAPH_STORE_USER)
-    variable.set('graph-store-password', graphStore?.password || process.env.GRAPH_STORE_PASSWORD)
+    logger.info('Running job %s', jobUri)
+    variables.set('apiClient', apiClient)
+    variables.set('jobUri', jobUri)
+    variables.set('executionUrl', executionUrl)
+    variables.set('graph-query-endpoint', process.env.GRAPH_QUERY_ENDPOINT)
+    variables.set('graph-store-endpoint', graphStore?.endpoint || process.env.GRAPH_STORE_ENDPOINT)
+    variables.set('graph-store-user', graphStore?.user || process.env.GRAPH_STORE_USER)
+    variables.set('graph-store-password', graphStore?.password || process.env.GRAPH_STORE_PASSWORD)
 
     const timestamp = new Date()
-    variable.set('timestamp', $rdf.literal(timestamp.toISOString(), xsd.dateTime))
+    variables.set('timestamp', $rdf.literal(timestamp.toISOString(), xsd.dateTime))
 
-    await prepare?.(command, variable)
+    await prepare?.(command, variables)
 
-    const run = Runner.create({
+    const { default: Runner } = await importDynamic('barnard59/runner.js')
+    const run = await Runner(clownface({
+      dataset,
+      term: pipelines.Entrypoint,
+    }), {
       basePath: path.resolve(basePath, 'pipelines'),
       outputStream: process.stdout,
-      term: pipelines.Entrypoint.value,
-      dataset,
-      variable,
+      variables,
+      level: debug ? 'debug' : 'error',
     })
 
-    Runner.log.enabled = debug
-
     if (enableBufferMonitor) {
+      const { default: bufferDebug } = await importDynamic('barnard59/lib/bufferDebug.js')
       bufferDebug(run.pipeline)
     }
 
     await updateJobStatus({
       jobUri,
       modified: new Date(),
-      executionUrl: variable.get('executionUrl'),
+      executionUrl: variables.get('executionUrl'),
       status: schema.ActiveActionStatus,
       apiClient,
     })
@@ -130,7 +134,7 @@ export function create<TOptions extends RunOptions>({ pipelineSources, prepare }
 
     process.once('unhandledRejection' as any, jobFailed)
 
-    return run.promise
+    return run.finished
       .then(() =>
         updateJobStatus({
           modified: timestamp,

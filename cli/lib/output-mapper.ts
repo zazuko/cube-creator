@@ -3,7 +3,6 @@ import { ImportJob, TransformJob } from '@cube-creator/model'
 import { HydraClient } from 'alcaeus/alcaeus'
 import type { Context } from 'barnard59-core/lib/Pipeline'
 import { DatasetCore, Quad, Term } from 'rdf-js'
-import map from 'barnard59-base/lib/map'
 import { Dictionary } from '@rdfine/prov'
 import { prov, schema } from '@tpluscode/rdf-ns-builders'
 import { cc, cube } from '@cube-creator/core/namespace'
@@ -12,6 +11,7 @@ import { MultiPointer } from 'clownface'
 import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import { HydraResponse } from 'alcaeus'
 import { DefaultCsvwLiteral } from '@cube-creator/core/mapping'
+import { importDynamic } from './module'
 
 const undef = $rdf.literal('', cube.Undefined)
 
@@ -102,6 +102,8 @@ export async function mapDimensions(this: Pick<Context, 'variables'>) {
 
     return value
   }
+
+  const { default: map } = await importDynamic('barnard59-base/map.js')
 
   return map(async (quad: Quad) => {
     const { subject, predicate, object, graph } = quad

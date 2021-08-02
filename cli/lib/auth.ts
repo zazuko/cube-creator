@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import fetch from 'node-fetch'
-import { Debugger } from 'debug'
+import { Logger } from 'winston'
 import querystring from 'querystring'
 import { HydraClient } from 'alcaeus/alcaeus'
 import once from 'once'
@@ -44,7 +44,7 @@ const getMetadata = once(async (config: AuthConfig) => {
   return (await response.json()) as Metadata
 })
 
-const getToken = async function (config: AuthConfig, log: Debugger) {
+const getToken = async function (config: AuthConfig, log: Logger) {
   const metadata = await getMetadata(config)
 
   const params: Record<string, string> = {
@@ -69,7 +69,7 @@ const getToken = async function (config: AuthConfig, log: Debugger) {
     throw new Error(newToken.error_description || newToken.error)
   }
 
-  log('Renewed access token', newToken)
+  log.debug('Renewed access token', newToken)
 
   const expiration = Date.now() + newToken.expires_in * 1000
   return {
@@ -78,7 +78,7 @@ const getToken = async function (config: AuthConfig, log: Debugger) {
   }
 }
 
-function defaultAuthConfig(log: Debugger): AuthConfig {
+function defaultAuthConfig(log: Logger): AuthConfig {
   const clientId = process.env.AUTH_RUNNER_CLIENT_ID
   const clientSecret = process.env.AUTH_RUNNER_CLIENT_SECRET
   const issuer = process.env.AUTH_RUNNER_ISSUER
@@ -91,11 +91,11 @@ function defaultAuthConfig(log: Debugger): AuthConfig {
     }
   }
 
-  log('OIDC config %O', { clientId, clientSecret, issuer })
+  log.info('OIDC config %O', { clientId, clientSecret, issuer })
   throw new Error('Incomplete OIDC config')
 }
 
-export function setupAuthentication(config: Partial<AuthConfig>, log: Debugger, Hydra: HydraClient) {
+export function setupAuthentication(config: Partial<AuthConfig>, log: Logger, Hydra: HydraClient) {
   let token: LiveToken | undefined
 
   Hydra.defaultHeaders = async () => {
