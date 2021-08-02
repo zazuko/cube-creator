@@ -5,7 +5,6 @@ import RdfResource from '@tpluscode/rdfine'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { ResourceStore } from '../../ResourceStore'
 import { error } from '../../log'
-import { Readable } from 'stream'
 import * as s3 from '../../storage/s3'
 import { loadFileHeadString } from '../csv/file-head'
 import { parse } from '../csv'
@@ -42,7 +41,7 @@ export async function createOrUpdateColumns(csvSource: CsvSource, fileStorage: s
       throw new Error('Key to file missing')
     }
 
-    const fileStream = await fileStorage.loadFile(csvSource.associatedMedia.identifierLiteral) as Readable
+    const fileStream = fileStorage.loadFile(csvSource.associatedMedia.identifierLiteral)
     const head = await loadFileHeadString(fileStream, 500)
     const { header, rows } = await parse(head, {
       bom: true,
