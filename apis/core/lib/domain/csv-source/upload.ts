@@ -1,7 +1,6 @@
 import { GraphPointer } from 'clownface'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { Conflict } from 'http-errors'
-import { Readable } from 'stream'
 import { NamedNode } from 'rdf-js'
 import * as s3 from '../../storage/s3'
 import { error } from '../../log'
@@ -41,7 +40,7 @@ export async function createCSVSource({
   csvSource.setUploadedFile(key, location)
 
   try {
-    const fileStream = await fileStorage.loadFile(key) as Readable
+    const fileStream = fileStorage.loadFile(key)
     const head = await loadFileHeadString(fileStream, 500)
     const { dialect, header, rows } = await sniffParse(head)
     const sampleCol = sampleValues(header, rows)

@@ -40,7 +40,7 @@ export async function replaceFile({
 
   try {
     // Check header
-    const fileStream = await fileStorage.loadFile(tempKey) as Readable
+    const fileStream = fileStorage.loadFile(tempKey)
     const head = await loadFileHeadString(fileStream)
 
     const parserOptions = {
@@ -58,10 +58,7 @@ export async function replaceFile({
     }
 
     // copy new
-    const tempFile = await fileStorage.loadFile(tempKey)
-    if (!tempFile) {
-      throw new Error('File not found')
-    }
+    const tempFile = fileStorage.loadFile(tempKey)
     await fileStorage.saveFile(key, tempFile)
   } finally {
     await fileStorage.deleteFile(tempKey)
