@@ -19,10 +19,11 @@ app.post('/s3/multipart', async (req, res, next) => {
   const filename = req.body.filename
   const metadata = req.body.metadata || {}
   const csvMapping = $rdf.namedNode(metadata.csvMapping)
+  const isReplace = !!metadata.replace
 
   if (!metadata.csvMapping) {
     res.status(400).send({ message: 'Missing csvMapping metadata' })
-  } else if (await sourceWithFilenameExists(csvMapping, filename)) {
+  } else if (!isReplace && await sourceWithFilenameExists(csvMapping, filename)) {
     res.status(409).send({ message: `A file named ${filename} has already been added to the project` })
   } else {
     next()
@@ -54,8 +55,15 @@ app.use(companion.app({
 }))
 
 function buildKey(filename: string, metadata: Record<string, string>) {
+  const isReplace = !!metadata.replace
   const csvMappingURI = metadata.csvMapping
-  return `${csvMappingURI.replace(env.API_CORE_BASE, '')}/${filename}`
+
+  // When replacing a source file, we use a temporary file key to avoid
+  // overriding the file before it gets validated. The temporary files
+  // will then get deleted.
+  const fileKey = isReplace ? nanoid() : filename
+
+  return `${csvMappingURI.replace(env.API_CORE_BASE, '')}/${fileKey}`
 }
 
 export default app
