@@ -62,6 +62,8 @@ export async function injectMetadata(this: Context, jobUri: string) {
 
   const propertyShapes = new TermMap<QuadSubject, QuadObject>()
 
+  const span = tracer.startSpan('injectMetadata#stream', { attributes })
+
   return obj(async function (quad: Quad, _, callback) {
     const visited = new TermSet()
     const copyChildren = (subject: QuadObject) => {
@@ -138,16 +140,14 @@ export async function injectMetadata(this: Context, jobUri: string) {
 
     callback()
   }, function (callback) {
-    publishTracer.startActiveSpan('injectMetadata#finished', span => {
-      for (const [propertyShape, dimension] of propertyShapes) {
-        if (versionedDimensions.has(dimension)) {
-          this.push($rdf.quad(propertyShape, schema.version, revision))
-        }
+    for (const [propertyShape, dimension] of propertyShapes) {
+      if (versionedDimensions.has(dimension)) {
+        this.push($rdf.quad(propertyShape, schema.version, revision))
       }
+    }
 
-      span.end()
-    })
+    span.addEvent('added property versions')
 
     callback()
-  })
+  }).on('end', span.end.bind(span)).on('error', span.end.bind(span))
 }
