@@ -66,8 +66,16 @@ async function main() {
     .option('--auth-param <name=value>', 'Additional variables to pass to the token endpoint', parseVariables, new Map())
     .action(capture('Import', ({ job }) => ({ job }), importCube))
 
-  return trace.getTracer('cube-creator-cli').startActiveSpan('run', span => {
-    return program.parseAsync(process.argv).finally(span.end.bind(span))
+  return trace.getTracer('cube-creator-cli').startActiveSpan('run', async span => {
+    try {
+      return await program.parseAsync(process.argv)
+    } catch (err) {
+      span.recordException(err)
+      span.setStatus({ code: SpanStatusCode.ERROR, message: err.message })
+      throw err
+    } finally {
+      span.end()
+    }
   }).finally(shutdownOtel)
 }
 
