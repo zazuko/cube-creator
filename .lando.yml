@@ -73,7 +73,7 @@ services:
     scanner: false
     services:
       build:
-        context: .
+        context: ./otel
         dockerfile: .Dockerfile
       command: /otel/otelcol --config=/collector.yaml
       ports:
