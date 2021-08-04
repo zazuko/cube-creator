@@ -9,7 +9,7 @@ import { schema, sh } from '@tpluscode/rdf-ns-builders'
 import { Dataset } from '@cube-creator/model'
 import StreamClient from 'sparql-http-client/StreamClient'
 import { loadDataset } from './metadata'
-import { publishTracer } from './otel'
+import { tracer } from './otel/tracer'
 
 export const getObservationSetId = ({ dataset }: { dataset: DatasetCore }) => {
   const cubeId = [...dataset.match(null, cc.cube)][0].object.value
@@ -59,7 +59,7 @@ export async function injectRevision(this: Pick<Context, 'variables' | 'logger'>
     jobUri,
   }
 
-  const dataset = await publishTracer.startActiveSpan('injectRevision#setup', { attributes }, async span => {
+  const dataset = await tracer.startActiveSpan('injectRevision#setup', { attributes }, async span => {
     try {
       let dataset: Dataset | undefined
       if (jobUri) {

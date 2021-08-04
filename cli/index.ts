@@ -1,11 +1,12 @@
 import program from 'commander'
 import * as Sentry from '@sentry/node'
 import '@sentry/tracing'
-import { trace } from '@opentelemetry/api'
+import { SpanStatusCode } from '@opentelemetry/api'
 import { capture } from './lib/telemetry'
 import './lib/variables'
 import { logger } from './lib/log'
 import { opentelemetry } from './lib/otel'
+import { tracer } from './lib/otel/tracer'
 
 function parseVariables(str: string, all: Map<string, string>) {
   return str
@@ -66,7 +67,7 @@ async function main() {
     .option('--auth-param <name=value>', 'Additional variables to pass to the token endpoint', parseVariables, new Map())
     .action(capture('Import', ({ job }) => ({ job }), importCube))
 
-  return trace.getTracer('cube-creator-cli').startActiveSpan('run', async span => {
+  return tracer.startActiveSpan('run', async span => {
     try {
       return await program.parseAsync(process.argv)
     } catch (err) {

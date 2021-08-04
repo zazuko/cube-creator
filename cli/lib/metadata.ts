@@ -9,7 +9,7 @@ import TermSet from '@rdfjs/term-set'
 import type { Context } from 'barnard59-core/lib/Pipeline'
 import { loadDimensionMapping } from './output-mapper'
 import TermMap from '@rdfjs/term-map'
-import { publishTracer } from './otel'
+import { tracer } from './otel/tracer'
 
 export async function loadDataset(jobUri: string, Hydra: HydraClient) {
   const jobResource = await Hydra.loadResource<PublishJob>(jobUri)
@@ -51,7 +51,7 @@ export async function injectMetadata(this: Context, jobUri: string) {
     cubeIdentifier,
     timestamp: timestamp.value,
   }
-  const { dataset, maintainer } = await publishTracer.startActiveSpan('injectMetadata#setup', { attributes }, async span => {
+  const { dataset, maintainer } = await tracer.startActiveSpan('injectMetadata#setup', { attributes }, async span => {
     try {
       return await loadDataset(jobUri, Hydra)
     } finally {
@@ -76,7 +76,7 @@ export async function injectMetadata(this: Context, jobUri: string) {
 
     // Cube Metadata
     if (rdf.type.equals(quad.predicate) && quad.object.equals(cube.Cube)) {
-      publishTracer.startActiveSpan('injectMetadata#forCube', { attributes: { cube: quad.subject.value } }, span => {
+      tracer.startActiveSpan('injectMetadata#forCube', { attributes: { cube: quad.subject.value } }, span => {
         this.push($rdf.quad(quad.subject, schema.version, revision))
         this.push($rdf.quad(quad.subject, schema.dateModified, timestamp))
         this.push($rdf.quad(quad.subject, dcterms.modified, timestamp))
@@ -102,7 +102,7 @@ export async function injectMetadata(this: Context, jobUri: string) {
 
     // Dimension Metadata
     if (quad.predicate.equals(sh.path)) {
-      await publishTracer.startActiveSpan('injectMetadata#forCube', { attributes: { dimension: quad.object.value } }, async span => {
+      await tracer.startActiveSpan('injectMetadata#forCube', { attributes: { dimension: quad.object.value } }, async span => {
         const propertyShape = quad.subject
         const dimensions = [...datasetTriples.match(null, schema.about, quad.object)]
 
