@@ -1,62 +1,55 @@
 <template>
-  <side-pane title="Replace CSV file" @close="onCancel">
-    <form @submit.prevent="onSubmit">
-      <b-message v-if="error" type="is-danger">
-        {{ error }}
-      </b-message>
+  <side-pane :title="operation.title" @close="close">
+    <b-message v-if="error" type="is-danger">
+      {{ error }}
+    </b-message>
 
-      <div class="content">
-        <p>
-          You can upload a new CSV file to replace <em>{{ source.name }}</em>.
-        </p>
-        <p>
-          Columns must have the same names as the original CSV file.
-          New columns can be added.
-        </p>
-      </div>
+    <b-field>
+      <p>
+        You can upload a new CSV file to replace <em>{{ source.name }}</em>.
+      </p>
+    </b-field>
 
-      <b-field>
-        <b-upload v-model="file" drag-drop accept=".csv">
-          <section class="section">
-            <div class="content has-text-centered">
-              <p>
-                <b-icon icon="upload" size="is-large" />
-              </p>
-              <p>Drop your file here or click to select a file from your disk</p>
-            </div>
-          </section>
-        </b-upload>
-      </b-field>
+    <b-message type="is-info">
+      <ul class="list-disc list-inside">
+        <li>Columns must have the same names as the original CSV file.</li>
+        <li>New columns can be added.</li>
+      </ul>
+    </b-message>
 
-      <div class="tags">
-        <span v-if="file" class="tag is-primary">
-          {{ file.name }}
-          <button class="delete is-small" type="button" @click="removeFile" />
-        </span>
-      </div>
-
-      <form-submit-cancel submit-label="Replace CSV file" @cancel="onCancel" :disabled="!file" />
-    </form>
+    <file-upload
+      :file-meta="fileMeta"
+      :after-upload="replaceFile"
+      :allow-multiple="false"
+      @done="close"
+    />
   </side-pane>
 </template>
 
 <script lang="ts">
+import * as $rdf from '@rdfjs/dataset'
+import RdfResourceImpl from '@tpluscode/rdfine'
+import { schema } from '@tpluscode/rdf-ns-builders'
+import { RuntimeOperation } from 'alcaeus'
+import clownface from 'clownface'
 import { Component, Vue } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
+
+import { CsvMapping, CsvSource } from '@cube-creator/model'
+
+import { api } from '@/api'
+import FileUpload, { UploadedFile } from '@/components/FileUpload.vue'
 import SidePane from '@/components/SidePane.vue'
-import FormSubmitCancel from '@/components/FormSubmitCancel.vue'
-import { APIErrorValidation, APIPayloadTooLarge } from '@/api/errors'
-import { CsvSource } from '@cube-creator/model'
 
 const projectNS = namespace('project')
 
 @Component({
-  components: { SidePane, FormSubmitCancel },
+  components: { SidePane, FileUpload },
 })
 export default class CSVUploadView extends Vue {
+  @projectNS.State('csvMapping') mapping!: CsvMapping
   @projectNS.Getter('findSource') findSource!: (id: string) => CsvSource
 
-  file: File | null = null
   error: string | null = null
 
   get source (): CsvSource {
@@ -64,37 +57,50 @@ export default class CSVUploadView extends Vue {
     return this.findSource(sourceId)
   }
 
-  async onSubmit (): Promise<void> {
-    this.error = null
-    const loader = this.$buefy.loading.open({})
+  get operation (): RuntimeOperation {
+    const operation = this.source.actions.replace
 
-    try {
-      await this.$store.dispatch('project/replaceCSV', { source: this.source, file: this.file })
+    if (!operation) throw new Error('Missing replace operation')
 
-      await this.$store.dispatch('project/refreshSourcesCollection')
+    return operation
+  }
 
-      this.$router.push({ name: 'CSVMapping' })
-    } catch (e) {
-      if (e instanceof APIErrorValidation) {
-        this.error = e.details?.detail ?? e.toString()
-        console.log(e)
-      } else if (e instanceof APIPayloadTooLarge) {
-        this.error = 'CSV file is too large'
-      } else {
-        console.error(e)
-        this.error = e.toString()
-      }
-    } finally {
-      loader.close()
+  get fileMeta (): Record<string, string> {
+    return {
+      csvMapping: this.mapping.id.value,
+      replace: this.source.id.value,
     }
   }
 
-  onCancel (): void {
-    this.$router.push({ name: 'CSVMapping' })
+  async replaceFile (file: UploadedFile): Promise<void> {
+    const operation = this.operation
+    const dataset = $rdf.dataset()
+    const pointer = clownface({ dataset, term: $rdf.namedNode('') })
+      .addOut(schema.name, $rdf.literal(file.name))
+      .addOut(schema.identifier, $rdf.literal(file.s3Multipart.key))
+      .addOut(schema.contentUrl, $rdf.namedNode(file.uploadURL))
+    const resource = RdfResourceImpl.factory.createEntity(pointer)
+
+    this.error = null
+
+    try {
+      await api.invokeSaveOperation(operation, resource)
+
+      this.$buefy.toast.open({
+        message: 'CSV file was successfully replaced',
+        type: 'is-success',
+      })
+
+      await this.close()
+    } catch (e) {
+      this.error = e?.details?.detail ?? e.toString()
+      throw e
+    }
   }
 
-  removeFile (): void {
-    this.file = null
+  async close (): Promise<void> {
+    await this.$store.dispatch('project/refreshSourcesCollection')
+    this.$router.push({ name: 'CSVMapping' })
   }
 }
 </script>

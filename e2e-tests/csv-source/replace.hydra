@@ -17,8 +17,8 @@ With Class cc:CSVSourceCollection {
             prefix schema: <http://schema.org/>
 
             <> schema:name "original.csv" ;
-                schema:contentUrl <http://s3.cube-creator.lndo.site/cube-creator/test-data/replace-test-cube/original.csv> ;
-                schema:identifier "test-data/replace-test-cube/original.csv" ;
+               schema:contentUrl <http://s3.cube-creator.lndo.site/cube-creator/test-data/replace-test-cube/original.csv> ;
+               schema:identifier "test-data/replace-test-cube/original.csv" ;
             ```
         } => {
             Expect Status 201
@@ -29,23 +29,28 @@ With Class cc:CSVSourceCollection {
 With Class cc:CSVSource {
     Expect Operation cc:ReplaceCSVAction {
         Invoke {
-            Content-Type "text/csv"
+            Content-Type "text/turtle"
+
             ```
-            column1,column4
-            2010,1
+            prefix schema: <http://schema.org/>
+
+            <> schema:name "replacement_invalid.csv" ;
+               schema:contentUrl <http://s3.cube-creator.lndo.site/cube-creator/test-data/replace-test-cube/replacement_invalid.csv> ;
+               schema:identifier "test-data/replace-test-cube/replacement_invalid.csv" ;
             ```
         } => {
             Expect Status 400
         }
 
         Invoke {
-            Content-Type "text/csv"
+            Content-Type "text/turtle"
+
             ```
-            column1,column2,column3,column4
-            1,2,test,a
-            1,2,test,b
-            1,2,test1,c
-            1,2,test2,a
+            prefix schema: <http://schema.org/>
+
+            <> schema:name "replacement_valid.csv" ;
+               schema:contentUrl <http://s3.cube-creator.lndo.site/cube-creator/test-data/replace-test-cube/replacement_valid.csv> ;
+               schema:identifier "test-data/replace-test-cube/replacement_valid.csv" ;
             ```
         } => {
             Expect Status 200
