@@ -1,10 +1,11 @@
 import program from 'commander'
 import * as Sentry from '@sentry/node'
 import '@sentry/tracing'
-import { transform, publish, importCube } from './lib/commands'
+import { trace } from '@opentelemetry/api'
 import { capture } from './lib/telemetry'
 import './lib/variables'
 import { logger } from './lib/log'
+import { opentelemetry } from './lib/otel'
 
 function parseVariables(str: string, all: Map<string, string>) {
   return str
@@ -17,12 +18,16 @@ function parseVariables(str: string, all: Map<string, string>) {
 }
 
 async function main() {
+  const shutdownOtel = await opentelemetry()
+
   Sentry.init({
     integrations: [
       new Sentry.Integrations.Http({ tracing: true }),
     ],
     tracesSampleRate: 1.0,
   })
+
+  const { transform, publish, importCube } = await import('./lib/commands')
 
   program
     .name('docker run --rm zazuko/cube-creator-cli')
@@ -61,7 +66,9 @@ async function main() {
     .option('--auth-param <name=value>', 'Additional variables to pass to the token endpoint', parseVariables, new Map())
     .action(capture('Import', ({ job }) => ({ job }), importCube))
 
-  return program.parseAsync(process.argv)
+  return trace.getTracer('cube-creator-cli').startActiveSpan('run', span => {
+    return program.parseAsync(process.argv).finally(span.end.bind(span))
+  }).finally(shutdownOtel)
 }
 
 main()

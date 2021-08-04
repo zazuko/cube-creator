@@ -5,13 +5,21 @@
   "main": "index.js",
   "scripts": {
     "postinstall": "mkdir -p output; touch .env",
-    "transform": "dotenv -e ./.env -e ./.test.env -- sh -c 'ts-node index.ts transform --job \"$TRANSFORM_JOB\" --debug --to filesystem'",
-    "publish": "dotenv -e ./.env -e ./.test.env -- sh -c 'ts-node index.ts publish --job \"$PUBLISH_JOB\" --debug'",
+    "transform": "dotenv -e ./.env -e ./.test.env -e ../.local.env -- sh -c 'ts-node index.ts transform --job \"$TRANSFORM_JOB\" --debug --to filesystem'",
+    "publish": "dotenv -e ./.env -e ./.test.env -e ../.local.env -- sh -c 'ts-node index.ts publish --job \"$PUBLISH_JOB\" --debug'",
     "build": "tsc"
   },
   "dependencies": {
     "@cube-creator/core": "0.3.2",
     "@cube-creator/model": "0.1.19",
+    "@opentelemetry/api": "^1.0.0",
+    "@opentelemetry/exporter-collector": "^0.22.0",
+    "@opentelemetry/instrumentation-http": "^0.22.0",
+    "@opentelemetry/instrumentation-winston": "^0.22.0",
+    "@opentelemetry/resources": "^0.22.0",
+    "@opentelemetry/sdk-node": "^0.22.0",
+    "@opentelemetry/semantic-conventions": "^0.22.0",
+    "@opentelemetry/tracing": "^0.22.0",
     "@rdfine/csvw": "^0.6.3",
     "@rdfine/prov": "^0.1.1",
     "@rdfine/schema": "^0.6.3",
