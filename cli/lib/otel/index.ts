@@ -4,11 +4,11 @@ import { WinstonInstrumentation } from '@opentelemetry/instrumentation-winston'
 import { Resource, envDetector, processDetector } from '@opentelemetry/resources'
 import { NodeSDK } from '@opentelemetry/sdk-node'
 import { ResourceAttributes } from '@opentelemetry/semantic-conventions'
-import { BatchSpanProcessor } from '@opentelemetry/tracing'
 
 const sdk = new NodeSDK({
   // Automatic detection is disabled, see comment below
   autoDetectResources: false,
+  traceExporter: new CollectorTraceExporter(),
   instrumentations: [
     new HttpInstrumentation(),
     new WinstonInstrumentation(),
@@ -35,10 +35,6 @@ const onError = async (err: Error) => {
 export async function opentelemetry() {
   try {
     await sdk.detectResources({ detectors: [envDetector, processDetector] })
-
-    const exporter = new CollectorTraceExporter()
-    const spanProcessor = new BatchSpanProcessor(exporter)
-    sdk.configureTracerProvider({}, spanProcessor)
 
     await sdk.start()
 
