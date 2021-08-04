@@ -1,5 +1,12 @@
 # @cube-creator/shared-dimensions-api
 
+## 2.1.3
+
+### Patch Changes
+
+- acf4f50d: Only load 10 shared terms when mapping
+- 800233c8: Displaying the canonical term URI on Shared Dimension screen (closes #787)
+
 ## 2.1.2
 
 ### Patch Changes
