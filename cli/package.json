@@ -16,6 +16,7 @@
     "@opentelemetry/exporter-collector": "^0.22.0",
     "@opentelemetry/instrumentation-http": "^0.22.0",
     "@opentelemetry/instrumentation-winston": "^0.22.0",
+    "@opentelemetry/metrics": "0.22.0",
     "@opentelemetry/resources": "^0.22.0",
     "@opentelemetry/sdk-node": "^0.22.0",
     "@opentelemetry/semantic-conventions": "^0.22.0",

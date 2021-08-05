@@ -1472,7 +1472,7 @@
     "@nodelib/fs.scandir" "2.1.4"
     fastq "^1.6.0"
 
-"@opentelemetry/api-metrics@0.22.0":
+"@opentelemetry/api-metrics@0.22.0", "@opentelemetry/api-metrics@^0.22.0":
   version "0.22.0"
   resolved "https://registry.yarnpkg.com/@opentelemetry/api-metrics/-/api-metrics-0.22.0.tgz#ea8e79600fe9818b70d2d2666440d156a7390541"
   integrity sha512-hrErhb+JphdErB1WuBwpCnO1FjiKfKzO9DjhvquzzM8SYL2bBpYEvTpBTU9cenRnRHUbUAfHI1X384vm37HKeQ==
@@ -1487,7 +1487,7 @@
   resolved "https://registry.yarnpkg.com/@opentelemetry/context-async-hooks/-/context-async-hooks-0.22.0.tgz#bf00a1f43e77f98e52349cde058a9bc56f9a4e95"
   integrity sha512-JakZ9NJCiaf8FJ6lcR2Fle9xkBKxSFbXK4mk9gZ14totNh9SOTiUBUk08bAnATWUINrQlN8/5hpGKi5gs+FUxQ==
 
-"@opentelemetry/core@0.22.0":
+"@opentelemetry/core@0.22.0", "@opentelemetry/core@^0.22.0":
   version "0.22.0"
   resolved "https://registry.yarnpkg.com/@opentelemetry/core/-/core-0.22.0.tgz#9281cb76a828f0347dcec7925a11ad2e9debf922"
   integrity sha512-x6JxuQ4rY2x39GEXJSqMgyf8XZPNNiZrGcCMhZSrtypq/WXlsJuxMNnUAl2hj2rpSGGukhhWn5cMpCmMJJz1hw==
@@ -1505,6 +1505,16 @@
     "@opentelemetry/metrics" "0.22.0"
     "@opentelemetry/resources" "0.22.0"
     "@opentelemetry/tracing" "0.22.0"
+
+"@opentelemetry/host-metrics@0.22.0":
+  version "0.22.0"
+  resolved "https://registry.yarnpkg.com/@opentelemetry/host-metrics/-/host-metrics-0.22.0.tgz#bf3e3ec275ca9b9d2700d7a2649334806f0005d7"
+  integrity sha512-xbOKHYiO2KG3RHeDSd3+VjOItEpjXnOmFWL+5Q7AxCHym08qibiPDH+YTRYG7p7tyzNqi1ChcIIUs31l2uN85g==
+  dependencies:
+    "@opentelemetry/api-metrics" "^0.22.0"
+    "@opentelemetry/core" "^0.22.0"
+    "@opentelemetry/metrics" "^0.22.0"
+    systeminformation "^5.0.0"
 
 "@opentelemetry/instrumentation-http@^0.22.0":
   version "0.22.0"
@@ -1533,7 +1543,7 @@
     semver "^7.3.2"
     shimmer "^1.2.1"
 
-"@opentelemetry/metrics@0.22.0":
+"@opentelemetry/metrics@0.22.0", "@opentelemetry/metrics@^0.22.0":
   version "0.22.0"
   resolved "https://registry.yarnpkg.com/@opentelemetry/metrics/-/metrics-0.22.0.tgz#5101ce0476baec6254cdf62493c472164d6832e7"
   integrity sha512-Ida3ZYSIx7RzKDicUxUP2/R03vN85Z+ZvZ8ioIfYFDMriai4zsFgMTbpEOmFUXfV3Oc5WOEq/DVonuMq1Dgzyw==
@@ -13748,6 +13758,11 @@ symbol-observable@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-1.0.1.tgz#8340fc4702c3122df5d22288f88283f513d3fdd4"
   integrity sha1-g0D8RwLDEi310iKI+IKD9RPT/dQ=
+
+systeminformation@^5.0.0:
+  version "5.8.0"
+  resolved "https://registry.yarnpkg.com/systeminformation/-/systeminformation-5.8.0.tgz#43e6d0918d7d42c65e53e36059f0849354ab2873"
+  integrity sha512-l4drbK2PtNynGKblaShY9hDLW/gg1zxUq2+Yk4gTyd6a2JUvFyTGP8PhHV9iOh+MzS25PQa8W1t0kvcIvr9n7Q==
 
 table@^5.2.3:
   version "5.4.6"
