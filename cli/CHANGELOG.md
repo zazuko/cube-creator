@@ -1,5 +1,11 @@
 # @cube-creator/cli
 
+## 1.4.4
+
+### Patch Changes
+
+- ee9d6dbd: Switch to GHCR
+
 ## 1.4.3
 
 ### Patch Changes
