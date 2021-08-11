@@ -26,7 +26,8 @@ declare module 'barnard59-core/lib/logger' {
 declare module 'barnard59-core/lib/Pipeline' {
 
   import type { Logger } from 'winston'
-  import stream from 'stream'
+  import type stream from 'readable-stream'
+  import type { GraphPointer } from 'clownface'
 
   namespace Pipeline {
     // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -44,8 +45,15 @@ declare module 'barnard59-core/lib/Pipeline' {
     }
   }
 
+  interface PipelineStep {
+    stream: stream.Readable | stream.Writable
+  }
+
   class Pipeline extends stream.Stream {
     context: Pipeline.Context
+    ptr: GraphPointer
+    stream: stream.Readable | stream.Writable
+    children: PipelineStep[]
   }
 
   export = Pipeline

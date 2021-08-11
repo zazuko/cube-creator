@@ -10,3 +10,5 @@ const meterProvider = new MeterProvider({
 
 const meter = meterProvider.getMeter('quad stream meter')
 export const quadCounter = meter.createCounter('quads')
+
+export const bufferObserver = meter.createValueObserver('buffer')

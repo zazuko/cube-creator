@@ -4,7 +4,7 @@ import $rdf from 'rdf-ext'
 import fromFile from 'rdf-utils-fs/fromFile.js'
 import { setupAuthentication } from '../auth'
 import { schema, xsd } from '@tpluscode/rdf-ns-builders'
-import type { Variables } from 'barnard59-core/lib/Pipeline'
+import type * as Pipeline from 'barnard59-core/lib/Pipeline'
 import namespace from '@rdfjs/namespace'
 import * as Alcaeus from 'alcaeus/node'
 import { HydraResponse } from 'alcaeus'
@@ -13,6 +13,7 @@ import * as Models from '@cube-creator/model'
 import { updateJobStatus } from '../job'
 import { logger } from '../log'
 import { importDynamic } from '../module'
+import bufferDebug from '../bufferDebug'
 
 const ns = {
   pipeline: namespace('urn:pipeline:cube-creator'),
@@ -26,7 +27,7 @@ export interface RunOptions {
   debug: boolean
   job: string
   executionUrl?: string
-  variable?: Variables
+  variable?: Pipeline.Variables
   graphStore?: {
     endpoint: string
     user: string
@@ -45,7 +46,7 @@ interface Create<TOptions> {
   /**
    * Set any additional pipeline variables here
    */
-  prepare?(options: TOptions, variable: Variables): Promise<void> | void
+  prepare?(options: TOptions, variable: Pipeline.Variables): Promise<void> | void
 }
 
 async function fileToDataset(filename: string) {
@@ -56,7 +57,7 @@ export function create<TOptions extends RunOptions>({ pipelineSources, prepare }
   const basePath = path.resolve(__dirname, '../../')
 
   return async function (command: TOptions) {
-    const { variable: variables = new Map(), job: jobUri, debug = false, enableBufferMonitor = false, graphStore, executionUrl } = command
+    const { variable: variables = new Map(), job: jobUri, debug = false, graphStore, executionUrl } = command
 
     const authConfig = {
       params: command.authParam,
@@ -106,10 +107,7 @@ export function create<TOptions extends RunOptions>({ pipelineSources, prepare }
       level: debug ? 'debug' : 'error',
     })
 
-    if (enableBufferMonitor) {
-      const { default: bufferDebug } = await importDynamic('barnard59/lib/bufferDebug.js')
-      bufferDebug(run.pipeline)
-    }
+    bufferDebug(run.pipeline, jobUri, { interval: 100 })
 
     await updateJobStatus({
       jobUri,
