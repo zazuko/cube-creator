@@ -17,6 +17,7 @@ export const organizations = turtle`
     a ${schema.Organization} ;
     ${cc.publishGraph}  <https://lindas.admin.ch/foen/cube> ;
     ${cc.namespace} <https://environment.ld.admin.ch/foen/> ;
+    ${schema.dataset} <https://environment.ld.admin.ch/.well-known/void> ;
     ${rdfs.label} "Bundesamt für Umwelt BAFU"@de ;
     ${rdfs.label} "Office fédéral de l'environnement OFEV"@fr ;
     ${rdfs.label} "Ufficio federale dell'ambiente UFAM"@it ;

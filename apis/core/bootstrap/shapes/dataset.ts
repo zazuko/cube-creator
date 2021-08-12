@@ -4,6 +4,7 @@ import { hydra, rdfs, sh, dcat, dcterms, xsd, rdf, vcard, schema, _void, dash } 
 import { sparql, turtle } from '@tpluscode/rdf-string'
 import $rdf from 'rdf-ext'
 import { lindasQuery } from '../lib/query'
+import { Draft, Published } from '@cube-creator/model/Cube'
 
 const shapeId = shape('dataset/edit-metadata')
 const temporalFromTo = $rdf.namedNode(shapeId.value + '#temporalFromTo')
@@ -140,10 +141,10 @@ ${shapeId} {
       ${sh.nodeKind} ${sh.IRI} ;
       ${sh.in}
           (
-              <https://ld.admin.ch/definedTerm/CreativeWorkStatus/Draft>
-              <https://ld.admin.ch/definedTerm/CreativeWorkStatus/Published>
+              ${Draft}
+              ${Published}
           ) ;
-      ${sh.defaultValue} <https://ld.admin.ch/definedTerm/CreativeWorkStatus/Draft> ;
+      ${sh.defaultValue} ${Draft} ;
       ${sh.order} 30 ;
       ${sh.description} "Only published datasets will be listed in the external tools. A draft will be nevertheless be public." ;
     ] ;

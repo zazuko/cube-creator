@@ -1,5 +1,6 @@
 import { Literal, NamedNode, Term } from 'rdf-js'
 import { HydraClient } from 'alcaeus/alcaeus'
+import { PublishJob } from '../../packages/model/Job'
 
 declare module 'barnard59-core/lib/Pipeline' {
   interface VariableNames {
@@ -13,6 +14,7 @@ declare module 'barnard59-core/lib/Pipeline' {
     'publish-graph-store-endpoint': string
     'publish-graph-store-user': string
     'publish-graph-store-password': string
+    'publish-job': PublishJob
     'target-graph': string
     revision: number
     namespace: string
