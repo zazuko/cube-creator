@@ -33,7 +33,6 @@ export interface RunOptions {
     user: string
     password: string
   }
-  enableBufferMonitor?: boolean
   authParam?: Map<string, string>
 }
 
