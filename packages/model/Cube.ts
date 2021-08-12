@@ -6,6 +6,10 @@ import { dcterms, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import { cc, cube } from '@cube-creator/core/namespace'
 import { initializer } from './lib/initializer'
 import { NamedNode } from 'rdf-js'
+import { namedNode } from '@rdf-esm/data-model'
+
+export const Draft = namedNode('https://ld.admin.ch/definedTerm/CreativeWorkStatus/Draft')
+export const Published = namedNode('https://ld.admin.ch/definedTerm/CreativeWorkStatus/Published')
 
 export interface Cube extends RdfResourceCore {
   dateCreated: Date

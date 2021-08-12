@@ -2,7 +2,7 @@ import env from '@cube-creator/core/env'
 import { before, describe, it } from 'mocha'
 import { expect } from 'chai'
 import $rdf from 'rdf-ext'
-import { ASK, CONSTRUCT, SELECT } from '@tpluscode/sparql-builder'
+import { ASK, CONSTRUCT, DELETE, SELECT, WITH } from '@tpluscode/sparql-builder'
 import { csvw, dcat, dcterms, qudt, rdf, schema, sh, vcard, xsd } from '@tpluscode/rdf-ns-builders'
 import { setupEnv } from '../../support/env'
 import { ccClients } from '@cube-creator/testing/lib'
@@ -12,6 +12,7 @@ import clownface, { AnyPointer } from 'clownface'
 import runner from '../../../lib/commands/publish'
 import namespace, { NamespaceBuilder } from '@rdfjs/namespace'
 import { NamedNode, Term } from 'rdf-js'
+import { Published } from '../../../../packages/model/Cube'
 
 describe('@cube-creator/cli/lib/commands/publish', function () {
   this.timeout(200000)
@@ -20,31 +21,31 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
     baseCube: namespace('https://environment.ld.admin.ch/foen/ubd/28/'),
   }
 
-  const executionUrl = 'http://example.com/transformation-test'
+  const executionUrl = 'http://example.com/publishing-test'
 
-  before(async () => {
+  async function resetData() {
     setupEnv()
     await insertTestProject()
-  })
+  }
 
-  describe('produces triples', async function () {
-    let cubePointer: AnyPointer
-    let targetCube: NamespaceBuilder
-    before(async () => {
-      // when
-      await runner({
-        debug: true,
-        job: `${env.API_CORE_BASE}cube-project/ubd/csv-mapping/jobs/test-publish-job`,
-        executionUrl,
-      })
-      await new Promise((resolve) =>
-        setTimeout(resolve, 100),
-      )
+  let cubePointer: AnyPointer
+  let targetCube: NamespaceBuilder
+  const job = $rdf.namedNode(`${env.API_CORE_BASE}cube-project/ubd/csv-mapping/jobs/test-publish-job`)
+  async function runJob() {
+    // when
+    await runner({
+      debug: true,
+      job: job.value,
+      executionUrl,
+    })
+    await new Promise((resolve) =>
+      setTimeout(resolve, 100),
+    )
 
-      // then
-      const project = $rdf.namedNode('https://cube-creator.lndo.site/cube-project/ubd')
-      const [{ expectedGraph }] = await SELECT`?expectedGraph`
-        .WHERE`
+    // then
+    const project = $rdf.namedNode('https://cube-creator.lndo.site/cube-project/ubd')
+    const [{ expectedGraph }] = await SELECT`?expectedGraph`
+      .WHERE`
           graph ${project} {
             ${project} ${schema.maintainer} ?org .
           }
@@ -53,17 +54,43 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
             ?org ${cc.publishGraph} ?expectedGraph .
           }
         `
-        .execute(ccClients.parsingClient.query)
+      .execute(ccClients.parsingClient.query)
 
-      targetCube = namespace(ns.baseCube('3/').value)
+    targetCube = namespace(ns.baseCube('3/').value)
 
-      const dataset = await $rdf.dataset().import(await CONSTRUCT`?s ?p ?o`
-        .FROM(expectedGraph as NamedNode)
-        .WHERE`?s ?p ?o`
-        .execute(ccClients.streamClient.query))
+    const dataset = await $rdf.dataset().import(await CONSTRUCT`?s ?p ?o`
+      .FROM(expectedGraph as NamedNode)
+      .WHERE`?s ?p ?o`
+      .execute(ccClients.streamClient.query))
 
-      cubePointer = clownface({ dataset })
+    cubePointer = clownface({ dataset })
+  }
+
+  describe('publishing published', () => {
+    before(resetData)
+    before(() => {
+      return WITH(job, DELETE`
+        ${job} ${schema.creativeWorkStatus} ?status
+      `.INSERT`
+        ${job} ${schema.creativeWorkStatus} ${Published}
+      `.WHERE`
+        ${job} ${schema.creativeWorkStatus} ?status
+      `).execute(ccClients.parsingClient.query)
     })
+    before(runJob)
+
+    it('adds a link to void dataset', async () => {
+      const hasVoidLink = await ASK`<https://environment.ld.admin.ch/.well-known/void> ${schema.dataset} ${targetCube()}`
+        .FROM($rdf.namedNode('https://lindas.admin.ch/foen/cube'))
+        .execute(ccClients.streamClient.query)
+
+      expect(hasVoidLink).to.be.true
+    })
+  })
+
+  describe('publishing draft', () => {
+    before(resetData)
+    before(runJob)
 
     it('does not remove previously published triples', () => {
       const prevCube = cubePointer.namedNode(ns.baseCube('1'))
@@ -336,6 +363,14 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
       }, {
         dimension: ns.baseCube.aggregation,
       }])
+    })
+
+    it('does not add link to void dataset', async () => {
+      const hasVoidLink = await ASK`?void ${schema.dataset} ${targetCube()}`
+        .FROM($rdf.namedNode('https://lindas.admin.ch/foen/cube'))
+        .execute(ccClients.streamClient.query)
+
+      expect(hasVoidLink).to.be.false
     })
   })
 })

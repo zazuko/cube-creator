@@ -14,6 +14,7 @@ interface CreateIdentifier {
 interface OrganizationEx {
   publishGraph: NamedNode
   namespace: NamedNode
+  dataset?: NamedNode
   createIdentifier(params: CreateIdentifier): NamedNode
 }
 
@@ -30,6 +31,9 @@ export function OrganizationMixin<Base extends Constructor<Omit<Organization, ke
 
     @property()
     namespace!: NamedNode
+
+    @property({ path: schema.dataset })
+    dataset?: NamedNode
 
     createIdentifier({ cubeIdentifier, termName }: CreateIdentifier): NamedNode {
       const namespace = this.namespace.value.match(/[/#]$/) ? this.namespace.value : `${this.namespace.value}/`

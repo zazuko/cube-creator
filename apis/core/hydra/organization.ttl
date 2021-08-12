@@ -1,0 +1,29 @@
+BASE <urn:hydra-box:api>
+PREFIX cc:        <https://cube-creator.zazuko.com/vocab#>
+prefix hydra:     <http://www.w3.org/ns/hydra/core#>
+prefix hydra-box: <http://hydra-box.org/schema/>
+prefix code:      <https://code.described.at/>
+prefix query:     <http://hypermedia.app/query#>
+prefix sh:        <http://www.w3.org/ns/shacl#>
+PREFIX schema:    <http://schema.org/>
+PREFIX void:      <http://rdfs.org/ns/void#>
+prefix view:      <https://cube.link/view/>
+
+schema:Organization
+  a
+    hydra:Class ;
+  hydra:supportedOperation
+    [
+      a
+        hydra:Operation ;
+      hydra:method
+        "GET" ;
+      code:implementedBy
+        [
+          a
+            code:EcmaScript ;
+          code:link
+            <file:handlers/dataset#get> ;
+        ] ;
+    ]
+.
