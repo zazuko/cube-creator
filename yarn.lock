@@ -1808,23 +1808,28 @@
   integrity sha512-2KfYa8mAnptRNeogxhQqkWNXqfYVWO04jQThtXKepySrIwYmz83+WlevQtA4VDLFe+kFd2TwgL29ekPe5XVUfA==
 
 "@rdfjs/term-map@^1.0.0":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@rdfjs/term-map/-/term-map-1.0.1.tgz#5d929c5c98ef213e408275effe58abc24b7ab40a"
-  integrity sha512-3lE452Y1oJxqXFed/iUl017k+HyqLMIJz+t5EvdRHaoCvhTDtssK6FIQ9UeWTtCNmUGf52PpPPr5K/ad26yn7A==
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@rdfjs/term-map/-/term-map-1.1.0.tgz#253b863ca3f8c0f8c3b05ec5df301c6a0a05ba58"
+  integrity sha512-utCLVQEZdEL664XoYuBQwMIk0Q5MD6qNPEt12DcmuAlQUS0b0kQ+WL50wyJP1BpWYjOJLokIVTUtphZWnj25BQ==
   dependencies:
-    "@rdfjs/to-ntriples" "^1.0.2"
+    "@rdfjs/to-ntriples" "^2.0.0"
 
 "@rdfjs/term-set@^1.0.0", "@rdfjs/term-set@^1.0.1":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@rdfjs/term-set/-/term-set-1.0.2.tgz#f215b27ada58a7a8cce46af5caffa3b26642ef4b"
-  integrity sha512-t/R7nfiaPe4pZxeJpKl7x5TLMOTQiv8UzQ2WVmRxbSCeC1Pp9lWATuqmk2J9M+Wty40EkyoEFhf/AmPFeSFbug==
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@rdfjs/term-set/-/term-set-1.1.0.tgz#36adb73683262e94f135f0bb0cdf71d983e70960"
+  integrity sha512-QQ4yzVe1Rvae/GN9SnOhweHNpaxQtnAjeOVciP/yJ0Gfxtbphy2tM56ZsRLV04Qq5qMcSclZIe6irYyEzx/UwQ==
   dependencies:
-    "@rdfjs/to-ntriples" "^1.0.2"
+    "@rdfjs/to-ntriples" "^2.0.0"
 
 "@rdfjs/to-ntriples@^1.0.1", "@rdfjs/to-ntriples@^1.0.2":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@rdfjs/to-ntriples/-/to-ntriples-1.0.2.tgz#c2fe8f6e8d8010c2315c0a816d1cd42a4447965e"
   integrity sha512-ngw5XAaGHjgGiwWWBPGlfdCclHftonmbje5lMys4G2j4NvfExraPIuRZgjSnd5lg4dnulRVUll8tRbgKO+7EDA==
+
+"@rdfjs/to-ntriples@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@rdfjs/to-ntriples/-/to-ntriples-2.0.0.tgz#ad70822e2ddf068fd1291b505e5c678c17af7a30"
+  integrity sha512-nDhpfhx6W6HKsy4HjyLp3H1nbrX1CiUCWhWQwKcYZX1s9GOjcoQTwY7GUUbVec0hzdJDQBR6gnjxtENBDt482Q==
 
 "@rdfjs/types@*":
   version "1.0.1"
@@ -2373,11 +2378,11 @@
     "@types/rdf-js" "*"
 
 "@types/rdfjs__dataset@^1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@types/rdfjs__dataset/-/rdfjs__dataset-1.0.4.tgz#9c2a59414cf607a9aa66abcf5a07a3bb2ed56dae"
-  integrity sha512-hfiR6i/M7cn49oJI3HVM2Pcc6tfSNycHobXdmL0USJNkZN/tSkIia4F3ijOSRj0Ni34NrjcTAHD+Ty9DcWL5hw==
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@types/rdfjs__dataset/-/rdfjs__dataset-1.0.5.tgz#2338ed702e5b2a7fd04690d6a76affa80f049cf6"
+  integrity sha512-8OBC9Kr/ZSgNoUTe5mHTDPHaPt8Xen4XbYfqcbYv56d+4WdKliHXaFmFc0L4I5vsynE5JGu21Hvg2zWgX1Az6Q==
   dependencies:
-    "@types/rdf-js" "*"
+    rdf-js "^4.0.2"
 
 "@types/rdfjs__express-handler@*", "@types/rdfjs__express-handler@^1.1.1", "@types/rdfjs__express-handler@^1.1.2":
   version "1.1.2"
@@ -2434,18 +2439,18 @@
     "@types/rdf-js" "*"
 
 "@types/rdfjs__term-map@^1.0.0", "@types/rdfjs__term-map@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@types/rdfjs__term-map/-/rdfjs__term-map-1.0.1.tgz#2309ad40f3d9f1b100a1f02076d84c9c8dee6b5c"
-  integrity sha512-1cp1cdpqmqbTu5U3Mt7H2ayhlNbxjogUdfEbcFgORv1CxhAg6mxGzhImAQAxY7BtZi1LiQlcIkFv3RicUOHtVg==
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@types/rdfjs__term-map/-/rdfjs__term-map-1.0.2.tgz#c135bf857888e0516c7ec1b3dc2b82e0f5ad1a3a"
+  integrity sha512-Ae674zmrAHh9zl4uLL9cGdYt77ugUOMIvn0z+uA6RHOwBQZn1LrXcjGK37cBwbxvw7bZ0NYPtcDbn5Vs8f/+ZQ==
   dependencies:
-    "@types/rdf-js" "*"
+    rdf-js "^4.0.2"
 
 "@types/rdfjs__term-set@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@types/rdfjs__term-set/-/rdfjs__term-set-1.0.2.tgz#977ff77d71a76bbb1e56fb1ca974bea7cc370f92"
-  integrity sha512-xRSPtnuBdSBC8cMxGDBUEG8LTAVG9gjuK7q/JjDOTSWMTFUcfjDMntMgqqF/82MBTfDiCwJ0bFTS3iQrZb3ANw==
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@types/rdfjs__term-set/-/rdfjs__term-set-1.0.3.tgz#d44c222d9f12642274e68a7b42673209cab70366"
+  integrity sha512-+BNhhBuDeYwR7yNDetqkaTbHIZ1Tt++vSfuzOdFGORxSLs1bxSl6Ae31jA2E+ePgZGbKRSGjLlWyUv1k7krjww==
   dependencies:
-    "@types/rdf-js" "*"
+    rdf-js "^4.0.2"
 
 "@types/readable-stream@^2.3.9":
   version "2.3.9"
