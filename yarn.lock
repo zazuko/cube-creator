@@ -2516,11 +2516,11 @@
   integrity sha512-K5K+yml8LTo9bWJI/rECfIPrGgxdpeNbj+d53lwN4QjW1MCwlkhUms+gtdzigTeUyBr09+u8BwOIY3MXvHdcsA==
 
 "@types/sparql-http-client@^2", "@types/sparql-http-client@^2.2.5":
-  version "2.2.5"
-  resolved "https://registry.yarnpkg.com/@types/sparql-http-client/-/sparql-http-client-2.2.5.tgz#fd42a8ba3d85198d063b73acbb1feddae4bcda4d"
-  integrity sha512-bk9fctozEqrdenjfdCcYlPsiFKcZ9aKI8joDwwzUQBpHGl4uEP+Rpxi6j0+S3pp+KfhxxRTTnyHbULfQ4BFNxQ==
+  version "2.2.7"
+  resolved "https://registry.yarnpkg.com/@types/sparql-http-client/-/sparql-http-client-2.2.7.tgz#b8c19e07d46c892998c9953c0f1b0990a950d8bb"
+  integrity sha512-XTGiM3M8fKuvsLP4Ykx28Oltya2Ztfc7XZxmAOJkRG/yFqU0GM7AVXtjF/q/Xtkrio8c/TuNsmQWmoA3I2eIZg==
   dependencies:
-    "@types/rdf-js" "*"
+    rdf-js "^4.0.2"
 
 "@types/superagent@*":
   version "4.1.10"
