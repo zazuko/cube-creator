@@ -3342,9 +3342,9 @@
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
 "@zazuko/rdf-vocabularies@*", "@zazuko/rdf-vocabularies@^2021.3.17":
-  version "2021.5.3"
-  resolved "https://registry.yarnpkg.com/@zazuko/rdf-vocabularies/-/rdf-vocabularies-2021.5.3.tgz#04b09c43ddbec65c70527aa21b1fe1fc4931bcfa"
-  integrity sha512-cbT2Cx+nnzbkY26O5Si0IZ01oNjqdE+WaMp89ijkcs9vxBzOCMGadKrucDXPEUIuVjk18TfPUYQ6tFqSB8R7CA==
+  version "2021.6.10"
+  resolved "https://registry.yarnpkg.com/@zazuko/rdf-vocabularies/-/rdf-vocabularies-2021.6.10.tgz#a8d8dd22934b160e0f6cd52d2fc3ab2f91eb4b70"
+  integrity sha512-Cwflod4ACJfAhrx7RcMGvG0DaDR8QBJfWWBOjuntvSnTbZ6+79ycuvfG0Hde3gyUfT31ncLy6yuFhiDGqH+ETw==
   dependencies:
     "@rdfjs/parser-n3" "^1.1.4"
     commander "^5.0.0"
