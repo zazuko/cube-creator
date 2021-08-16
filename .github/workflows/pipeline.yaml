@@ -29,19 +29,10 @@ jobs:
       EXECUTION_URL: "https://${{ github.repository }}/actions/runs/${{ github.run_id }}"
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1.4.4
+      - uses: actions/setup-node@v2.4.0
         with:
           node-version: 14
-
-      - name: Retrieve yarn cache
-        uses: actions/cache@v2
-        env:
-          cache-name: yarn-cache
-        with:
-          path: ~/.cache
-          key: ${{ runner.os }}-yarn-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+          cache: 'yarn'
 
       - run: yarn install --ci --prefer-offline
 
