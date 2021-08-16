@@ -4,8 +4,8 @@ import clownface, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import { NamedNode } from 'rdf-js'
 import DatasetExt from 'rdf-ext/lib/Dataset'
-import { dcat, dcterms, hydra, rdf, schema, sh, _void, xsd } from '@tpluscode/rdf-ns-builders'
-import { cc, cube } from '@cube-creator/core/namespace'
+import { dcat, dcterms, hydra, rdf, schema, sh, vcard, _void, xsd } from '@tpluscode/rdf-ns-builders'
+import { cc, cube, lindas } from '@cube-creator/core/namespace'
 import { ex } from '@cube-creator/testing/lib/namespace'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import { update } from '../../../lib/domain/dataset/update'
@@ -157,5 +157,47 @@ describe('domain/dataset/update', () => {
     // then
     expect(result.out(schema.hasPart).terms).to.not.deep.contain.members([ex.Foo])
     expect(result.out(cc.dimensionMetadata).terms).to.not.deep.contain.members([ex.Bar])
+  })
+
+  it('populates lindas contact point from dcat contact point', async () => {
+    // given
+    const updatedResource = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('dataset') })
+      .addOut(dcterms.title, 'title')
+      .addOut(dcat.contactPoint, org => {
+        org
+          .addOut(rdf.type, vcard.Organization)
+          .addOut(vcard.fn, $rdf.literal('The contact'))
+          .addOut(vcard.hasEmail, $rdf.literal('the-contact@example.org'))
+      })
+
+    // when
+    const result = await update({ dataset, resource: updatedResource, store })
+
+    // then
+    expect(result).to.matchShape({
+      property: [{
+        path: lindas.contactPoint,
+        maxCount: 1,
+        minCount: 1,
+        node: {
+          property: [{
+            path: rdf.type,
+            hasValue: schema.Person,
+            minCount: 1,
+            maxCount: 1,
+          }, {
+            path: schema.name,
+            hasValue: $rdf.literal('The contact'),
+            minCount: 1,
+            maxCount: 1,
+          }, {
+            path: schema.email,
+            hasValue: $rdf.literal('the-contact@example.org'),
+            minCount: 1,
+            maxCount: 1,
+          }],
+        },
+      }],
+    })
   })
 })
