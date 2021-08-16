@@ -35,10 +35,10 @@
   "devDependencies": {
     "@cube-creator/testing": "^0.1.18",
     "@types/camouflage-rewrite": "^1.2.0",
-    "@types/sinon": "^9.0.11",
+    "@types/sinon": "^10.0.0",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "mocha": "^9.0.0",
-    "sinon": "^9.0.3"
+    "sinon": "^11.0.0"
   }
 }
