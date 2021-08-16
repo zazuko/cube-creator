@@ -13,6 +13,7 @@ import { update } from '../../../lib/domain/dataset/update'
 describe('domain/dataset/update', () => {
   let store: TestResourceStore
   let dataset: GraphPointer<NamedNode, DatasetExt>
+  let organization: GraphPointer<NamedNode, DatasetExt>
 
   beforeEach(() => {
     dataset = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('dataset') })
@@ -21,8 +22,12 @@ describe('domain/dataset/update', () => {
     dataset.namedNode('cube')
       .addOut(rdf.type, cube.Cube)
       .addIn(schema.hasPart, dataset)
+    organization = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('organization/myorg') })
+      .addOut(lindas.queryInterface, $rdf.namedNode('https://myorg/query'))
+      .addOut(lindas.sparqlEndpoint, $rdf.namedNode('https://myorg/sparql'))
     store = new TestResourceStore([
       dataset,
+      organization,
     ])
   })
 
@@ -197,6 +202,31 @@ describe('domain/dataset/update', () => {
             maxCount: 1,
           }],
         },
+      }],
+    })
+  })
+
+  it('populates lindas query URIs from organization', async () => {
+    // given
+    const updatedResource = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('dataset') })
+      .addOut(dcterms.title, 'title')
+      .addOut(dcterms.creator, $rdf.namedNode('organization/myorg'))
+
+    // when
+    const result = await update({ dataset, resource: updatedResource, store })
+
+    // then
+    expect(result).to.matchShape({
+      property: [{
+        path: lindas.queryInterface,
+        minCount: 1,
+        maxCount: 1,
+        hasValue: $rdf.namedNode('https://myorg/query'),
+      }, {
+        path: lindas.sparqlEndpoint,
+        minCount: 1,
+        maxCount: 1,
+        hasValue: $rdf.namedNode('https://myorg/sparql'),
       }],
     })
   })
