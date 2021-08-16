@@ -14400,9 +14400,9 @@ vuex-class@^0.3.2:
   integrity sha512-m0w7/FMsNcwJgunJeM+wcNaHzK2KX1K1rw2WUQf7Q16ndXHo7pflRyOV/E8795JO/7fstyjH3EgqBI4h4n4qXQ==
 
 vuex-oidc@^3.10.1:
-  version "3.10.2"
-  resolved "https://registry.yarnpkg.com/vuex-oidc/-/vuex-oidc-3.10.2.tgz#11324c1320b5a1e25f6ce7705eaf9ef1e9adc9d3"
-  integrity sha512-BH/4db3dAkpPZCQHwvzylzmxo9L7t9NzJ0kOyXJYYaXc4kiXgBayjhuwkYIWElg6E1qRYwigexIlO7rhakAabA==
+  version "3.10.3"
+  resolved "https://registry.yarnpkg.com/vuex-oidc/-/vuex-oidc-3.10.3.tgz#d7c9e268006b1c5ec95c116c4ea6aa0aab7f7f5d"
+  integrity sha512-fUSOOq9cYgp+BJYzaIZCv+UVyQHF43QUE7JWjxnbqqW2dvPug3E+X8QTJ2Wo72Eq0k6Ac9YqqWF5xOf5I05+bQ==
 
 vuex@^3.4.0:
   version "3.6.2"
