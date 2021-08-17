@@ -23,8 +23,8 @@ describe('domain/dataset/update', () => {
       .addOut(rdf.type, cube.Cube)
       .addIn(schema.hasPart, dataset)
     organization = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('organization/myorg') })
-      .addOut(lindas.queryInterface, $rdf.namedNode('https://myorg/query'))
-      .addOut(lindas.sparqlEndpoint, $rdf.namedNode('https://myorg/sparql'))
+      .addOut(dcat.accessURL, $rdf.namedNode('https://myorg/query'))
+      .addOut(_void.sparqlEndpoint, $rdf.namedNode('https://myorg/sparql'))
     store = new TestResourceStore([
       dataset,
       organization,
@@ -218,12 +218,12 @@ describe('domain/dataset/update', () => {
     // then
     expect(result).to.matchShape({
       property: [{
-        path: lindas.queryInterface,
+        path: dcat.accessURL,
         minCount: 1,
         maxCount: 1,
         hasValue: $rdf.namedNode('https://myorg/query'),
       }, {
-        path: lindas.sparqlEndpoint,
+        path: _void.sparqlEndpoint,
         minCount: 1,
         maxCount: 1,
         hasValue: $rdf.namedNode('https://myorg/sparql'),

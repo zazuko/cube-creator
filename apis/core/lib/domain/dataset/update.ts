@@ -58,14 +58,14 @@ export async function update({
   if (organizationId) {
     const organization = await store.get(organizationId)
 
-    const queryInterface = organization.out(lindas.queryInterface).term
-    if (queryInterface) {
-      datasetResource.addOut(lindas.queryInterface, queryInterface)
+    const accessURL = organization.out(dcat.accessURL).term
+    if (accessURL) {
+      datasetResource.addOut(dcat.accessURL, accessURL)
     }
 
-    const sparqlEndpoint = organization.out(lindas.sparqlEndpoint).term
+    const sparqlEndpoint = organization.out(_void.sparqlEndpoint).term
     if (sparqlEndpoint) {
-      datasetResource.addOut(lindas.sparqlEndpoint, sparqlEndpoint)
+      datasetResource.addOut(_void.sparqlEndpoint, sparqlEndpoint)
     }
   }
 
