@@ -2343,9 +2343,9 @@
   integrity sha512-niAuZrwrjKck4+XhoCw6AAVQBENHftpXw9F4ryk66fTgYaKQ53R4FI7c9vUGGw5vQis1HKBHDR1gcYI/Bq1xvw==
 
 "@types/node@^14.14.7":
-  version "14.14.35"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.35.tgz#42c953a4e2b18ab931f72477e7012172f4ffa313"
-  integrity sha512-Lt+wj8NVPx0zUmUwumiVXapmaLUcAk3yPuHCFVXras9k5VT9TdhJqKqGVUQCD60OTMCl0qxJ57OiTL0Mic3Iag==
+  version "14.17.9"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.17.9.tgz#b97c057e6138adb7b720df2bd0264b03c9f504fd"
+  integrity sha512-CMjgRNsks27IDwI785YMY0KLt3co/c0cQ5foxHYv/shC2w8oOnVwz5Ubq1QG5KzrcW+AXk6gzdnxIkDnTvzu3g==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.1"
@@ -2408,11 +2408,11 @@
     rdf-js "^4.0.2"
 
 "@types/rdf-transform-triple-to-quad@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@types/rdf-transform-triple-to-quad/-/rdf-transform-triple-to-quad-1.0.0.tgz#548ad610f44a81dfdd8623c6f7c23de6d0d7c6e2"
-  integrity sha512-tRapMPDJW1rsK3h2Pecu7+/4meEk4KykaRBLTNByGuRNAkAL4N7P6I2/NezgheaPojq5ZRdgNNtO6KwMHNSXLw==
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@types/rdf-transform-triple-to-quad/-/rdf-transform-triple-to-quad-1.0.2.tgz#1b76003fd73109f0d39736f0acccef3688c9142b"
+  integrity sha512-n7bBBXcuOantdpgo5heshD944pDeHc3k0amDaPQeMXQEDPMRdRMdJqv2QJ6Xk4ilyzetHiqiA6P7fCNkrwJDuA==
   dependencies:
-    "@types/rdf-js" "*"
+    rdf-js "^4.0.2"
 
 "@types/rdf-validate-datatype@^0.1":
   version "0.1.1"
@@ -2477,11 +2477,11 @@
     rdf-js "^4.0.2"
 
 "@types/rdfjs__parser-n3@^1.1.2":
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/@types/rdfjs__parser-n3/-/rdfjs__parser-n3-1.1.2.tgz#f120321ff6c90c0fa0906704e35301893ab41888"
-  integrity sha512-9YDhj3rUjzm5Y61Xl6H3uOexFIvjUbfg6+WHdxN97LjxkHNnmn4yEP/UjShYOvznPkIcjPvfUXrLjvJMdKN1xQ==
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/@types/rdfjs__parser-n3/-/rdfjs__parser-n3-1.1.5.tgz#08e9c1771e3be890b183c360b3c3230dd6e7712f"
+  integrity sha512-HLG3uULuaHJK6Wwbq+hIQkvjla86rrsXrFvhyz2EBYQZoIr858BI4vcs6YMO7kkaLc/wCPZS71Ueedpf+8beOQ==
   dependencies:
-    "@types/rdf-js" "*"
+    rdf-js "^4.0.2"
 
 "@types/rdfjs__sink-map@*", "@types/rdfjs__sink-map@^1.0.0":
   version "1.0.2"
