@@ -26,7 +26,7 @@
     "@tpluscode/rdf-ns-builders": "^1.0.0",
     "@tpluscode/rdf-string": "^0.2.23",
     "@tpluscode/rdfine": "^0.5.23",
-    "@tpluscode/sparql-builder": "^0.3.12",
+    "@tpluscode/sparql-builder": "^0.3.15",
     "@types/content-disposition": "^0.5.3",
     "@types/rdfjs__term-set": "^1.0.2",
     "@types/set-link": "^1.0.1",
