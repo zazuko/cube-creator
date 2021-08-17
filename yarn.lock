@@ -2057,9 +2057,9 @@
     "@zazuko/rdf-vocabularies" "*"
 
 "@tpluscode/rdfine@^0.5.13", "@tpluscode/rdfine@^0.5.15", "@tpluscode/rdfine@^0.5.17", "@tpluscode/rdfine@^0.5.19", "@tpluscode/rdfine@^0.5.20", "@tpluscode/rdfine@^0.5.23", "@tpluscode/rdfine@^0.5.24", "@tpluscode/rdfine@^0.5.25", "@tpluscode/rdfine@^0.5.27", "@tpluscode/rdfine@^0.5.29":
-  version "0.5.29"
-  resolved "https://registry.yarnpkg.com/@tpluscode/rdfine/-/rdfine-0.5.29.tgz#9eec1e36925abc61f18bb537143c3b3d019ae394"
-  integrity sha512-CKudIrhJ2JmnW2gTmVZOrcjN4niKYV9DxEFoo9hndsMary8CdsYT5avzbXtc2B9YcW62lYBMl609TEETTx64Fw==
+  version "0.5.30"
+  resolved "https://registry.yarnpkg.com/@tpluscode/rdfine/-/rdfine-0.5.30.tgz#586b5ab08195d3a8f0ce85ad575203f36e7c6fd3"
+  integrity sha512-nmkFrmbnyFXH5nIsRo/3vXCZUu/hbLX6JSEDX9WG07Xphg144rERint1dlsEZ1Ty+ZuvMunKx57LvSR6JXTFsw==
   dependencies:
     "@rdf-esm/data-model" "^0.5.3"
     "@rdf-esm/namespace" "^0.5.2"
