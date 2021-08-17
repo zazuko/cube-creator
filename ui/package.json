@@ -28,7 +28,7 @@
     "@rdfjs/term-set": "^1.0.1",
     "@sentry/tracing": "^6.2.0",
     "@sentry/vue": "^6.2.0",
-    "@tpluscode/rdf-ns-builders": "^0.4",
+    "@tpluscode/rdf-ns-builders": "^1.0.0",
     "@tpluscode/rdfine": "^0.5.19",
     "@uppy/aws-s3-multipart": "^1.8.18",
     "@uppy/core": "^1.19.2",

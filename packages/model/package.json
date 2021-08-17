@@ -6,10 +6,10 @@
     "@cube-creator/core": "0.3.2",
     "@rdf-esm/data-model": "^0.5.3",
     "@rdfine/csvw": "^0.6.3",
-    "@rdfine/hydra": "^0.6.4",
+    "@rdfine/hydra": "^0.7.0",
     "@rdfine/rdfs": "^0.6.3",
     "@rdfine/schema": "^0.6.3",
-    "@tpluscode/rdf-ns-builders": "^0.4.0",
+    "@tpluscode/rdf-ns-builders": "^1.0.0",
     "@tpluscode/rdfine": "^0.5.19",
     "alcaeus": "^1.0.1"
   },

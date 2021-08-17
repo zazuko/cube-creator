@@ -21,7 +21,7 @@
     "@rdfjs/term-set": "^1.0.1",
     "@sentry/node": "^6.2.0",
     "@sentry/tracing": "^6.2.0",
-    "@tpluscode/rdf-ns-builders": "^0.4",
+    "@tpluscode/rdf-ns-builders": "^1.0.0",
     "@tpluscode/rdfine": "^0.5.19",
     "@tpluscode/sparql-builder": "^0.3.13",
     "alcaeus": "^1.0.1",
@@ -59,7 +59,7 @@
   },
   "devDependencies": {
     "@cube-creator/testing": "^0.1.18",
-    "@tpluscode/rdf-ns-builders": "^0.4",
+    "@tpluscode/rdf-ns-builders": "^1.0.0",
     "@tpluscode/rdf-string": "^0.2.21",
     "@tpluscode/sparql-builder": "^0.3.10",
     "@types/body-parser": "^1.19.0",
