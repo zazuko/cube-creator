@@ -1,5 +1,12 @@
 # @cube-creator/core-api
 
+## 1.2.7
+
+### Patch Changes
+
+- 38c1d3bc: Add LINDAS contact point to dataset
+- 8ecf3bc9: Add LINDAS query interface and SPARQL endpoint to dataset
+
 ## 1.2.6
 
 ### Patch Changes
