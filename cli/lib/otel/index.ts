@@ -1,4 +1,4 @@
-import { CollectorTraceExporter } from '@opentelemetry/exporter-collector'
+import { CollectorTraceExporter, CollectorMetricExporter } from '@opentelemetry/exporter-collector'
 import { HttpInstrumentation } from '@opentelemetry/instrumentation-http'
 import { WinstonInstrumentation } from '@opentelemetry/instrumentation-winston'
 import { Resource, envDetector, processDetector } from '@opentelemetry/resources'
@@ -9,6 +9,7 @@ const sdk = new NodeSDK({
   // Automatic detection is disabled, see comment below
   autoDetectResources: false,
   traceExporter: new CollectorTraceExporter(),
+  metricExporter: new CollectorMetricExporter(),
   instrumentations: [
     new HttpInstrumentation(),
     new WinstonInstrumentation(),

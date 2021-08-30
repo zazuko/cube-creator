@@ -4,9 +4,7 @@ import '@sentry/tracing'
 import { SpanStatusCode } from '@opentelemetry/api'
 import { capture } from './lib/telemetry'
 import './lib/variables'
-import { logger } from './lib/log'
 import { opentelemetry } from './lib/otel'
-import { tracer } from './lib/otel/tracer'
 
 function parseVariables(str: string, all: Map<string, string>) {
   return str
@@ -28,6 +26,8 @@ async function main() {
     tracesSampleRate: 1.0,
   })
 
+  const { logger } = await import('./lib/log')
+  const { tracer } = await import('./lib/otel/tracer')
   const { transform, publish, importCube } = await import('./lib/commands')
 
   program
@@ -70,17 +70,19 @@ async function main() {
     } catch (err) {
       span.recordException(err)
       span.setStatus({ code: SpanStatusCode.ERROR, message: err.message })
+      Sentry.captureException(err)
+      logger.error(err)
       throw err
     } finally {
       span.end()
     }
-  }).finally(shutdownOtel)
+  }).finally(async () => {
+    await Sentry.close(2000)
+    await shutdownOtel()
+  })
 }
 
 main()
-  .catch(async e => {
-    Sentry.captureException(e)
-    logger.error(e)
-    await Sentry.close(2000)
+  .catch(() => {
     process.exit(1)
   })

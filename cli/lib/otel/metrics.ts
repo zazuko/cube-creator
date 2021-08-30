@@ -1,14 +1,7 @@
-import { CollectorMetricExporter } from '@opentelemetry/exporter-collector'
-import { MeterProvider } from '@opentelemetry/metrics'
+import { metrics } from '@opentelemetry/api-metrics'
 
-const exporter = new CollectorMetricExporter()
+const meter = metrics.getMeter('@cube-creator/cli')
 
-const meterProvider = new MeterProvider({
-  exporter,
-  interval: 2000,
-})
-
-const meter = meterProvider.getMeter('quad stream meter')
 export const quadCounter = meter.createCounter('quads')
 
 export const bufferObserver = meter.createValueObserver('buffer')
