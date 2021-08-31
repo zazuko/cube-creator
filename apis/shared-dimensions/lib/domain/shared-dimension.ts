@@ -83,7 +83,7 @@ export async function createTerm({ termSet, resource, store }: CreateTerm): Prom
 interface UpdateSharedDimension {
   resource: GraphPointer<NamedNode>
   store: SharedDimensionsStore
-  shape: MultiPointer
+  shape: MultiPointer | undefined
 }
 
 function removeSubgraph(pointer: GraphPointer, predicate?: Term) {
@@ -97,7 +97,7 @@ function removeSubgraph(pointer: GraphPointer, predicate?: Term) {
 
 export async function update({ resource, store, shape }: UpdateSharedDimension): Promise<GraphPointer> {
   const ignoredProperties = shape
-    .out(sh.ignoredProperties)
+    ?.out(sh.ignoredProperties)
     .list() || []
 
   for (const ignoredProperty of ignoredProperties) {
