@@ -25,6 +25,7 @@ export interface Project extends RdfResource {
   maintainer: Link<Organization>
   publishedRevision: number
   sourceKind: NamedNode
+  export: NamedNode
 }
 
 export interface CsvProject extends Project {
@@ -84,6 +85,9 @@ export function ProjectMixin<Base extends Constructor>(base: Base): Mixin {
 
     @property({ path: cc['CubeProject/sourceEndpoint'] })
     sourceEndpoint!: NamedNode
+
+    @property({ path: cc.export, initial: childResource('export') })
+    export!: NamedNode
   }
 
   return Impl

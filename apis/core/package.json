@@ -21,6 +21,7 @@
     "@rdfjs/parser-n3": "^1.1.4",
     "@rdfjs/term-map": "^1.0.0",
     "@rdfjs/term-set": "^1.0.1",
+    "@rdfjs-elements/formats-pretty": "^0.3.2",
     "@sentry/node": "^6.2.0",
     "@sentry/tracing": "^6.2.0",
     "@tpluscode/rdf-ns-builders": "^1.0.0",

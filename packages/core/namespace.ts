@@ -69,7 +69,8 @@ type CubeCreatorProperty =
   'dimensionType' |
   'CubeProject/sourceCube' |
   'CubeProject/sourceEndpoint' |
-  'CubeProject/sourceGraph'
+  'CubeProject/sourceGraph' |
+  'export'
 
 type OtherTerms =
   'dash'

@@ -1,0 +1,21 @@
+PREFIX api: <https://cube-creator.zazuko.com/vocab#>
+PREFIX hydra: <http://www.w3.org/ns/hydra/core#>
+PREFIX cc: <https://cube-creator.zazuko.com/vocab#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX schema: <http://schema.org/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+
+ENTRYPOINT "cube-project/ubd"
+
+HEADERS {
+  x-user "john-doe"
+  x-permission "pipelines:write"
+}
+
+With Class cc:CubeProject {
+    Expect Link cc:export {
+        Expect Header Content-Disposition 'attachment; filename="UBD28 Project.trig"'
+        Expect Header Content-Type "application/trig"
+    }
+}

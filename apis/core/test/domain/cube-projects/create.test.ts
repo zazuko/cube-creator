@@ -252,6 +252,22 @@ describe('domain/cube-projects/create', () => {
       expect(project.csvMapping).to.be.ok
     })
 
+    it('initializes export link', async () => {
+      // given
+      const resource = clownface({ dataset: $rdf.dataset() })
+        .namedNode('')
+        .addOut(rdfs.label, 'Foo bar project')
+        .addOut(schema.maintainer, organization.id)
+        .addOut(dcterms.identifier, 'ubd/28')
+        .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
+
+      // when
+      const { project } = await createProject({ resource, store, projectsCollection, user, userName })
+
+      // then
+      expect(project.export).to.be.ok
+    })
+
     it('initializes project links to child resources dataset and cube graph', async () => {
       // given
       const resource = clownface({ dataset: $rdf.dataset() })
@@ -464,6 +480,23 @@ describe('domain/cube-projects/create', () => {
 
       // then
       expect(project.csvMapping).to.be.undefined
+    })
+
+    it('initializes export link', async () => {
+      // given
+      const resource = await clownface({ dataset: $rdf.dataset() })
+        .namedNode('')
+        .addOut(rdfs.label, 'Foo bar project')
+        .addOut(cc.projectSourceKind, shape('cube-project/create#ExistingCube'))
+        .addOut(cc['CubeProject/sourceCube'], $rdf.namedNode('http://example.cube/'))
+        .addOut(cc['CubeProject/sourceEndpoint'], $rdf.namedNode('http://example.endpoint/'))
+        .addOut(schema.maintainer, organization.id)
+
+      // when
+      const { project } = await createProject({ resource, store, projectsCollection, user, userName })
+
+      // then
+      expect(project.export).to.be.ok
     })
 
     it('throws when cube URI is missing', async () => {

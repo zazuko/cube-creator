@@ -40,6 +40,7 @@ With Class api:EntryPoint {
                 Expect Property cc:cubeGraph
                 Expect Property schema:maintainer
                 Expect Property dcterms:identifier
+                Expect Property cc:export
 
                 // Project dataset
                 Expect Link cc:dataset {

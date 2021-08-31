@@ -1,13 +1,17 @@
 import asyncMiddleware from 'middleware-async'
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
+import { serializers } from '@rdfjs-elements/formats-pretty'
 import { shaclValidate } from '../middleware/shacl'
 import { createProject } from '../domain/cube-projects/create'
 import { updateProject } from '../domain/cube-projects/update'
 import { deleteProject } from '../domain/cube-projects/delete'
+import { getExportedProject } from '../domain/cube-projects/export'
 import * as triggers from '../pipeline/trigger'
 import { GraphPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'
 import env from '@cube-creator/core/env'
+import { cc, cube, meta } from '@cube-creator/core/namespace'
+import * as ns from '@tpluscode/rdf-ns-builders'
 
 const trigger = (triggers as Record<string, (job: GraphPointer<NamedNode>, params?: GraphPointer) => void>)[env.PIPELINE_TYPE]
 
@@ -66,3 +70,37 @@ export const remove = protectedResource(
     res.sendStatus(204)
   }),
 )
+
+export const getExport = protectedResource(asyncMiddleware(async (req, res) => {
+  const { project, data } = await getExportedProject({
+    resource: req.hydra.resource.term,
+    store: req.resourceStore(),
+  })
+
+  res.setHeader('Content-Disposition', `attachment; filename="${project.label}.trig"`)
+  res.setHeader('Content-Type', 'application/trig')
+
+  const quadStream: any = serializers.import('application/trig', data, {
+    prefixes: {
+      cc: cc().value,
+      rdf: ns.rdf().value,
+      rdfs: ns.rdfs().value,
+      xsd: ns.xsd().value,
+      schema: ns.schema().value,
+      dcterms: ns.dcterms().value,
+      vcard: ns.vcard().value,
+      dcat: ns.dcat().value,
+      hydra: ns.hydra().value,
+      dtype: ns.dtype().value,
+      csvw: ns.csvw().value,
+      qudt: ns.qudt().value,
+      time: ns.time().value,
+      unit: ns.unit().value,
+      prov: ns.prov().value,
+      void: ns._void().value,
+      cube: cube().value,
+      meta: meta().value,
+    },
+  })
+  quadStream.pipe(res)
+}))

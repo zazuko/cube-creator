@@ -33,6 +33,7 @@ graph <cube-project/ubd> {
     rdfs:label "UBD28 Project" ;
     cc:jobCollection <cube-project/ubd/jobs> ;
     cc:projectSourceKind <https://cube-creator.lndo.site/shape/cube-project/create#CSV> ;
+    cc:export <cube-project/ubd/export> ;
   .
   <user> schema:name "User Name"
 }
