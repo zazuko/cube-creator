@@ -3,7 +3,7 @@ import { HttpInstrumentation } from '@opentelemetry/instrumentation-http'
 import { WinstonInstrumentation } from '@opentelemetry/instrumentation-winston'
 import { Resource, envDetector, processDetector } from '@opentelemetry/resources'
 import { NodeSDK } from '@opentelemetry/sdk-node'
-import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions'
+import { ResourceAttributes } from '@opentelemetry/semantic-conventions'
 
 const sdk = new NodeSDK({
   // Automatic detection is disabled, see comment below
@@ -15,7 +15,7 @@ const sdk = new NodeSDK({
     new WinstonInstrumentation(),
   ],
   resource: new Resource({
-    [SemanticResourceAttributes.SERVICE_NAME]: 'cube-creator-cli',
+    [ResourceAttributes.SERVICE_NAME]: 'cube-creator-cli',
   }),
 })
 
