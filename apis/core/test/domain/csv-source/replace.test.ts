@@ -20,6 +20,7 @@ describe('domain/csv-sources/replace', () => {
   let csvMapping: GraphPointer<NamedNode, DatasetExt>
   const data = clownface({ dataset: $rdf.dataset() })
     .namedNode('')
+    .addOut(cc.sourceKind, cc.MediaLocal)
     .addOut(schema.name, $rdf.literal('source.csv'))
     .addOut(schema.identifier, $rdf.literal('test/source.csv'))
     .addOut(schema.contentUrl, $rdf.namedNode('http://s3/test/source.csv'))
@@ -30,6 +31,7 @@ describe('domain/csv-sources/replace', () => {
       loadFile: sinon.stub().callsFake(getfileStream),
       saveFile: sinon.stub().resolves({ Location: 'file-location' }),
       deleteFile: sinon.spy(),
+      getDownloadLink: sinon.spy(),
     }
 
     csvMapping = clownface({ dataset: $rdf.dataset() })
@@ -84,7 +86,7 @@ describe('domain/csv-sources/replace', () => {
       })
     })
 
-    it('source graph is not touched', () => {
+    it('associated media is updated', () => {
       expect(csvSourceUpdate).to.matchShape({
         property: [{
           path: rdf.type,
@@ -104,15 +106,21 @@ describe('domain/csv-sources/replace', () => {
           node: {
             property: [
               {
+                path: cc.sourceKind,
+                hasValue: cc.MediaLocal,
+                minCount: 1,
+                maxCount: 1,
+              },
+              {
                 path: schema.identifier,
                 datatype: xsd.string,
-                hasValue: 'file.csv',
+                hasValue: 'test/source.csv',
                 minCount: 1,
                 maxCount: 1,
               }, {
                 path: schema.contentUrl,
                 nodeKind: sh.IRI,
-                hasValue: $rdf.namedNode('url.to.file'),
+                hasValue: $rdf.namedNode('http://s3/test/source.csv'),
                 minCount: 1,
                 maxCount: 1,
               }],
@@ -131,11 +139,9 @@ describe('domain/csv-sources/replace', () => {
     })
 
     it('File handler have been called', () => {
-      // copy temp to permanant
-      expect(fileStorage.saveFile).has.been.calledOnce
-      // read temp, copy file, read columns and sample
-      expect(fileStorage.loadFile).has.been.calledThrice
-      // delete old file, delete temp
+      // validate file, read columns and sample
+      expect(fileStorage.loadFile).has.been.calledTwice
+      // delete old file
       expect(fileStorage.deleteFile).has.been.calledOnce
     })
 
@@ -226,7 +232,7 @@ describe('domain/csv-sources/replace', () => {
       })
     })
 
-    it('source graph is not touched', () => {
+    it('updates associated media', () => {
       expect(csvSourceUpdate).to.matchShape({
         property: [{
           path: rdf.type,
@@ -246,15 +252,21 @@ describe('domain/csv-sources/replace', () => {
           node: {
             property: [
               {
+                path: cc.sourceKind,
+                hasValue: cc.MediaLocal,
+                minCount: 1,
+                maxCount: 1,
+              },
+              {
                 path: schema.identifier,
                 datatype: xsd.string,
-                hasValue: 'file.csv',
+                hasValue: 'test/source.csv',
                 minCount: 1,
                 maxCount: 1,
               }, {
                 path: schema.contentUrl,
                 nodeKind: sh.IRI,
-                hasValue: $rdf.namedNode('url.to.file'),
+                hasValue: $rdf.namedNode('http://s3/test/source.csv'),
                 minCount: 1,
                 maxCount: 1,
               }],
@@ -264,11 +276,9 @@ describe('domain/csv-sources/replace', () => {
     })
 
     it('File handler have been called', () => {
-      // copy temp to permanant
-      expect(fileStorage.saveFile).has.been.calledOnce
-      // read temp, copy file, read columns and sample
-      expect(fileStorage.loadFile).has.been.calledThrice
-      // delete old file, delete temp
+      // validate file, read columns and sample
+      expect(fileStorage.loadFile).has.been.calledTwice
+      // delete old file
       expect(fileStorage.deleteFile).has.been.calledOnce
     })
 

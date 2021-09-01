@@ -26,6 +26,7 @@ describe('domain/csv-sources/upload', () => {
       loadFile: sinon.stub().callsFake(() => fileStream),
       saveFile: sinon.stub().resolves({ Location: 'file-location' }),
       deleteFile: sinon.spy(),
+      getDownloadLink: sinon.spy(),
     }
     csvSource = clownface({ dataset: $rdf.dataset() })
       .namedNode('source')

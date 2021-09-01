@@ -20,6 +20,7 @@ describe('domain/csv-sources/delete', () => {
       loadFile: sinon.spy(),
       saveFile: sinon.spy(),
       deleteFile: sinon.spy(),
+      getDownloadLink: sinon.spy(),
     }
 
     async function * tableGenerator() {

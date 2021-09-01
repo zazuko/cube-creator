@@ -22,6 +22,7 @@ describe('domain/csv-sources/upload', () => {
   let fileStream: Readable
   const data = clownface({ dataset: $rdf.dataset() })
     .namedNode('')
+    .addOut(cc.sourceKind, cc.MediaLocal)
     .addOut(schema.name, $rdf.literal('source.csv'))
     .addOut(schema.identifier, $rdf.literal('test/source.csv'))
     .addOut(schema.contentUrl, $rdf.namedNode('http://s3/test/source.csv'))
@@ -32,6 +33,7 @@ describe('domain/csv-sources/upload', () => {
       loadFile: sinon.stub().callsFake(() => fileStream),
       saveFile: sinon.stub().resolves({ Location: 'file-location' }),
       deleteFile: sinon.spy(),
+      getDownloadLink: sinon.spy(),
     }
     sourceWithFilenameExists = sinon.stub().resolves(false)
     csvSourceQueries = {
