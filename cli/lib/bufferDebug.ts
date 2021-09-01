@@ -57,7 +57,7 @@ function bufferDebug(pipeline: Pipeline, jobUri: string, { interval = 10 } = {})
   const boundMeters = new Map<string, BoundBaseObserver>()
   function getMeter(step: string) {
     const bound = boundMeters.get(step) || bufferObserver.bind({
-      jobUri,
+      job_uri: jobUri,
       pipeline: pipeline.ptr.value,
       step,
       pid,

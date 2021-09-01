@@ -5,9 +5,8 @@ import { quadCounter } from './otel/metrics'
 export function quads(this: Context, name: string) {
   const jobUri = this.variables.get('jobUri')
   const bound = quadCounter.bind({
-    pid: process.pid.toString(),
     name,
-    jobId: jobUri.substr(jobUri.lastIndexOf('/') + 1),
+    job_id: jobUri.substr(jobUri.lastIndexOf('/') + 1),
   })
   const forwarder = new PassThrough({
     objectMode: true,
