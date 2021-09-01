@@ -3,6 +3,7 @@ import { SELECT } from '@tpluscode/sparql-builder'
 
 import { parsingClient } from '../../query-client'
 import { cc } from '@cube-creator/core/namespace'
+import { ResourceIdentifier } from '@tpluscode/rdfine'
 
 export async function * getTablesForMapping(csvMapping: NamedNode, client = parsingClient) {
   const results = await SELECT
@@ -24,7 +25,7 @@ export async function * getTablesForMapping(csvMapping: NamedNode, client = pars
   }
 }
 
-export async function * getLinkedTablesForSource(csvSource: NamedNode, client = parsingClient) {
+export async function * getLinkedTablesForSource(csvSource: ResourceIdentifier, client = parsingClient) {
   const results = await SELECT
     .DISTINCT`?table`
     .WHERE`

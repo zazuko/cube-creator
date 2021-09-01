@@ -9,6 +9,7 @@ import * as s3 from '../../storage/s3'
 import { loadFileHeadString } from '../csv/file-head'
 import { parse } from '../csv'
 import { sampleValues } from '../csv/sample-values'
+import { getMediaStorage } from '../../storage'
 
 interface UpdateCsvSourceCommand {
   resource: GraphPointer<NamedNode>
@@ -37,11 +38,8 @@ export async function update({
 
 export async function createOrUpdateColumns(csvSource: CsvSource, fileStorage: s3.FileStorage): Promise<void> {
   try {
-    if (!csvSource.associatedMedia.identifierLiteral) {
-      throw new Error('Key to file missing')
-    }
-
-    const fileStream = fileStorage.loadFile(csvSource.associatedMedia.identifierLiteral)
+    const storage = getMediaStorage(csvSource.associatedMedia, fileStorage)
+    const fileStream = await storage.getStream(csvSource.associatedMedia)
     const head = await loadFileHeadString(fileStream, 500)
     const { header, rows } = await parse(head, {
       bom: true,

@@ -1,8 +1,8 @@
 import { cc } from '@cube-creator/core/namespace'
 import { CsvSource } from '@cube-creator/model'
 import * as CsvColumn from '@cube-creator/model/CsvColumn'
+import { mediaObjectFromPointer } from '@cube-creator/model/CsvSource'
 import { Constructor, property } from '@tpluscode/rdfine'
-import { MediaObjectMixin } from '@rdfine/schema'
 import { NamedNode } from 'rdf-js'
 import { csvw, schema } from '@tpluscode/rdf-ns-builders'
 import type * as Csvw from '@rdfine/csvw'
@@ -17,7 +17,7 @@ interface CreateOrUpdateColumn {
 interface ApiCsvSource {
   error?: string
 
-  setUploadedFile(key: string, contentUrl: NamedNode): void
+  setUploadedFile(kind: NamedNode, key: string, contentUrl: NamedNode): void
   /**
    * Returns true if the dialect has actually changed
    */
@@ -36,15 +36,16 @@ export default function Mixin<Base extends Constructor<Omit<CsvSource, keyof Api
     @property.literal({ path: schema.error })
     error?: string
 
-    setUploadedFile(key: string, contentUrl: NamedNode): void {
+    setUploadedFile(sourceKind: NamedNode, key: string, contentUrl: NamedNode): void {
       if (this.associatedMedia) {
-        throw new Error('Source file already exists')
+        this.associatedMedia.pointer.deleteOut()
       }
 
-      this.associatedMedia = new MediaObjectMixin.Class(this.pointer.blankNode(), {
+      this.associatedMedia = mediaObjectFromPointer(this.pointer.blankNode(), {
         identifierLiteral: key,
+        sourceKind,
         contentUrl,
-      }) as any
+      })
     }
 
     setDialect(dialect: Partial<Csvw.Dialect>): boolean {

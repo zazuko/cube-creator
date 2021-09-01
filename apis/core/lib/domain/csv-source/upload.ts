@@ -10,6 +10,8 @@ import { sniffParse } from '../csv'
 import { sampleValues } from '../csv/sample-values'
 import * as CsvSourceQueries from '../queries/csv-source'
 import { CsvMapping } from '@cube-creator/model'
+import { cc } from '@cube-creator/core/namespace'
+import { getMediaStorage } from '../../storage'
 
 interface CreateCSVSourceCommand {
   csvMappingId: NamedNode
@@ -28,8 +30,9 @@ export async function createCSVSource({
 }: CreateCSVSourceCommand): Promise<GraphPointer> {
   const csvMapping = await store.getResource<CsvMapping>(csvMappingId)
 
+  const sourceKind = resource.out(cc.sourceKind).term! as NamedNode
   const fileName = resource.out(schema.name).value!
-  const key = resource.out(schema.identifier).value!
+  const key = resource.out(schema.identifier).value! || ''
   const location = resource.out(schema.contentUrl).term! as NamedNode
 
   if (await sourceWithFilenameExists(csvMapping.id, fileName)) {
@@ -37,10 +40,12 @@ export async function createCSVSource({
   }
 
   const csvSource = csvMapping.addSource(store, { fileName })
-  csvSource.setUploadedFile(key, location)
+  csvSource.setUploadedFile(sourceKind, key, location)
 
   try {
-    const fileStream = fileStorage.loadFile(key)
+    const media = csvSource.associatedMedia
+    const storage = getMediaStorage(media, fileStorage)
+    const fileStream = await storage.getStream(media)
     const head = await loadFileHeadString(fileStream, 500)
     const { dialect, header, rows } = await sniffParse(head)
     const sampleCol = sampleValues(header, rows)

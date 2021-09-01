@@ -50,6 +50,7 @@ export function serializeSource (source: CsvSource): CsvSource {
     columns: source.columns.map(serializeColumn),
     dialect: source.dialect,
     csvMapping: source.csvMapping,
+    associatedMedia: Object.freeze(source.associatedMedia),
   }) as unknown as CsvSource
 }
 

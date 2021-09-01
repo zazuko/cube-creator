@@ -7,8 +7,13 @@ import { createCSVSource } from '../domain/csv-source/upload'
 import { cc } from '@cube-creator/core/namespace'
 import { deleteSource } from '../domain/csv-source/delete'
 import { update } from '../domain/csv-source/update'
-import { getPresignedLink, setPresignedLink } from '../domain/csv-source/lib/getDownloadLink'
 import { replaceFile } from '../domain/csv-source/replace'
+import { mediaObjectFromPointer } from '../../../../packages/model/CsvSource'
+import { getMediaStorage } from '../storage'
+import { GraphPointer } from 'clownface'
+import { schema } from '@tpluscode/rdf-ns-builders'
+import { NamedNode } from 'rdf-js'
+import * as s3 from '../storage/s3'
 
 export const post = labyrinth.protectedResource(
   shaclValidate,
@@ -102,3 +107,22 @@ export const replace = labyrinth.protectedResource(
     await res.dataset(csvSource.dataset)
   }),
 )
+
+function getPresignedLink(csvSource: GraphPointer, fileStorage: s3.FileStorage = s3): string {
+  const mediaPointer = csvSource.out(schema.associatedMedia) as GraphPointer<NamedNode>
+  const media = mediaObjectFromPointer(mediaPointer)
+  const storage = getMediaStorage(media, fileStorage)
+
+  return storage.getDownloadLink(media)
+}
+
+function setPresignedLink(csvSource: GraphPointer, fileStorage: s3.FileStorage = s3): void {
+  const s3DirectDownload = getPresignedLink(csvSource, fileStorage)
+
+  if (s3DirectDownload) {
+    csvSource
+      .out(schema.associatedMedia)
+      .deleteOut(schema.contentUrl)
+      .addOut(schema.contentUrl, csvSource.namedNode(s3DirectDownload))
+  }
+}

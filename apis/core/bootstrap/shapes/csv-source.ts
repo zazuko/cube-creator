@@ -1,17 +1,25 @@
 import { cc, shape } from '@cube-creator/core/namespace'
-import { csvw, dash, hydra, rdfs, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
+import { csvw, dash, hydra, rdf, rdfs, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import { turtle } from '@tpluscode/rdf-string'
 import $rdf from 'rdf-ext'
 
 const shapeCreateId = shape('csv-source/create')
 const shapeUpdateId = shape('csv-source/update')
 const csvSourceDialect = $rdf.namedNode(shapeUpdateId.value + '#csvSourceDialect')
+const s3BucketId = shape('csv-source/s3Bucket')
 
 export const CSVSourceCreateShape = turtle`
 ${shapeCreateId} {
   ${shapeCreateId} a ${sh.NodeShape}, ${hydra.Resource} ;
     ${sh.targetClass} ${schema.MediaObject} ;
     ${rdfs.label} "CSV Source Media Object" ;
+    ${sh.property} [
+      ${sh.name} "Source type" ;
+      ${sh.path} ${cc.sourceKind} ;
+      ${sh.in} ( ${cc.MediaLocal} ${cc.MediaURL} ${cc.MediaExternalS3} ) ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+    ] ;
     ${sh.property} [
       ${sh.name} "File name" ;
       ${sh.path} ${schema.name} ;
@@ -26,9 +34,91 @@ ${shapeCreateId} {
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
     ] ;
+    ${sh.xone} (
+      [
+        ${sh.closed} true ;
+        ${sh.ignoredProperties} (
+          ${cc.sourceKind}
+          ${schema.name}
+          ${schema.contentUrl}
+          ${rdf.type}
+        ) ;
+        ${sh.property} [
+          ${sh.path} ${cc.sourceKind} ;
+          ${sh.hasValue} ${cc.MediaLocal} ;
+          ${dash.hidden} true ;
+        ] ;
+        ${sh.property} [
+          ${sh.name} "S3 key" ;
+          ${sh.path} ${schema.identifier} ;
+          ${sh.datatype} ${xsd.string} ;
+          ${sh.minCount} 1 ;
+          ${sh.maxCount} 1 ;
+        ] ;
+      ]
+      [
+        ${sh.closed} true ;
+        ${sh.ignoredProperties} (
+          ${cc.sourceKind}
+          ${schema.name}
+          ${schema.contentUrl}
+          ${rdf.type}
+        ) ;
+        ${sh.property} [
+          ${sh.path} ${cc.sourceKind} ;
+          ${sh.hasValue} ${cc.MediaURL} ;
+          ${dash.hidden} true ;
+        ] ;
+      ]
+      [
+        ${sh.closed} true ;
+        ${sh.ignoredProperties} (
+          ${cc.sourceKind}
+          ${schema.name}
+          ${schema.contentUrl}
+          ${rdf.type}
+        ) ;
+        ${sh.property} [
+          ${sh.path} ${cc.sourceKind} ;
+          ${sh.hasValue} ${cc.MediaExternalS3} ;
+          ${dash.hidden} true ;
+        ] ;
+        ${sh.property} [
+          ${sh.name} "S3 key" ;
+          ${sh.path} ${schema.identifier} ;
+          ${sh.datatype} ${xsd.string} ;
+          ${sh.minCount} 1 ;
+          ${sh.maxCount} 1 ;
+        ] ;
+        ${sh.property} [
+          ${sh.name} "S3 bucket" ;
+          ${sh.path} ${cc.s3Bucket} ;
+          ${sh.node} ${s3BucketId} ;
+          ${sh.class} ${cc.S3Bucket} ;
+          ${sh.minCount} 1 ;
+          ${sh.maxCount} 1 ;
+          ${dash.editor} ${dash.DetailsEditor} ;
+        ] ;
+      ]
+    ) ;
+  .
+
+  ${s3BucketId} a ${sh.NodeShape} ;
+    ${sh.targetClass} ${cc.S3Bucket} ;
     ${sh.property} [
-      ${sh.name} "S3 key" ;
-      ${sh.path} ${schema.identifier} ;
+      ${sh.path} ${cc.endpoint} ;
+      ${sh.nodeKind} ${sh.IRI} ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+    ] ;
+    ${sh.property} [
+      ${sh.path} ${cc.apiKey} ;
+      ${sh.datatype} ${xsd.string} ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+    ] ;
+    ${sh.property} [
+      ${sh.path} ${cc.apiSecret} ;
       ${sh.datatype} ${xsd.string} ;
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
