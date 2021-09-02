@@ -34,17 +34,18 @@
 
 <#StreamOutput>
   a :Pipeline, :WritableObjectMode ;
-  :steps [ :stepList ( _:upload ) ] ;.
+  :steps     [ :stepList ( _:serialize _:save ) ] ;
+  :variables [ :variable [ a      :Variable ;
+                             :name  "targetFile" ;
+                             :value "./cli/output/transformed.nt" ] ] .
 
-_:upload
+_:serialize
   a                  :Step ;
-  code:implementedBy [ a         code:EcmaScriptModule ;
-                         code:link <node:barnard59-graph-store/post.js#default> ] ;
-  code:arguments     [ code:name  "endpoint" ;
-                         code:value "PUBLISH_GRAPH_STORE_ENDPOINT"^^:VariableName ] ;
-  code:arguments     [ code:name  "user" ;
-                         code:value "PUBLISH_GRAPH_STORE_USER"^^:VariableName ] ;
-  code:arguments     [ code:name  "password" ;
-                         code:value "PUBLISH_GRAPH_STORE_PASSWORD"^^:VariableName ] ;
-  code:arguments     [ code:name  "maxQuadsPerRequest" ;
-                         code:value "Infinity"^^code:EcmaScript ] .
+  code:implementedBy [ code:link <node:barnard59-formats/ntriples.js#serialize> ;
+                         a         code:EcmaScriptModule ] .
+
+_:save
+  a                  :Step ;
+  code:implementedBy [ code:link <node:fs#createWriteStream> ;
+                         a         code:EcmaScript ] ;
+  code:arguments     ( "targetFile"^^:VariableName ) .

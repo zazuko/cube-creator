@@ -1477,12 +1477,7 @@
   resolved "https://registry.yarnpkg.com/@opentelemetry/api-metrics/-/api-metrics-0.22.0.tgz#ea8e79600fe9818b70d2d2666440d156a7390541"
   integrity sha512-hrErhb+JphdErB1WuBwpCnO1FjiKfKzO9DjhvquzzM8SYL2bBpYEvTpBTU9cenRnRHUbUAfHI1X384vm37HKeQ==
 
-"@opentelemetry/api@^1.0.0", "@opentelemetry/api@^1.0.1":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@opentelemetry/api/-/api-1.0.2.tgz#921e1f2b2484b762d77225a8a25074482d93fccf"
-  integrity sha512-DCF9oC89ao8/EJUqrp/beBlDR8Bp2R43jqtzayqCoomIvkwTuPfLcHdVhIGRR69GFlkykFjcDW+V92t0AS7Tww==
-
-"@opentelemetry/api@^1.0.2":
+"@opentelemetry/api@^1.0.0", "@opentelemetry/api@^1.0.1", "@opentelemetry/api@^1.0.2":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/@opentelemetry/api/-/api-1.0.3.tgz#13a12ae9e05c2a782f7b5e84c3cbfda4225eaf80"
   integrity sha512-puWxACExDe9nxbBB3lOymQFrLYml2dVOrd7USiVRnSbgXE+KwBu+HxFvxrzfqsiSda9IWsXJG1ef7C1O2/GmKQ==
@@ -4116,10 +4111,9 @@ barnard59-rdf@^1.0.0:
     rdf-transform-triple-to-quad "^1.0.2"
     readable-stream "^3.6.0"
 
-barnard59@^1.1.0:
+"barnard59@github:zazuko/barnard59#otel-improvements":
   version "1.1.0"
-  resolved "https://registry.yarnpkg.com/barnard59/-/barnard59-1.1.0.tgz#9b5d6916d35e245cf209b08b50e86cad3e5dbb3c"
-  integrity sha512-H52VeWNBxQ63hXv4at/w11wP2OM0b0n7dubZyEaSmOEfAAcAawR69NrRH6gk2+/OKdX1BFyZRgnnS/nCr4JI/g==
+  resolved "https://codeload.github.com/zazuko/barnard59/tar.gz/995e67e1d053be31d52914dce783d8faf57c7ff4"
   dependencies:
     "@opentelemetry/api" "^1.0.0"
     "@opentelemetry/exporter-collector" "^0.22.0"
@@ -4128,6 +4122,7 @@ barnard59@^1.1.0:
     "@opentelemetry/resources" "^0.22.0"
     "@opentelemetry/sdk-node" "^0.22.0"
     "@opentelemetry/semantic-conventions" "^0.22.0"
+    "@opentelemetry/tracing" "^0.22.0"
     "@rdfjs/namespace" "^1.1.0"
     barnard59-core "^1.0.0"
     clownface "^1.2.0"

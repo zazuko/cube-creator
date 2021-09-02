@@ -3,71 +3,6 @@ env_file:
   - .local.env
   - .env
 services:
-  core:
-    type: node:custom
-    build:
-      - npm i -g nodemon
-    command: nodemon -w packages -w apis --verbose --ext ts,ttl,js,trig --ignore **/*.test.ts --ignore **/*.spec-graphs.ts --exec node --inspect=0.0.0.0:45671 -r ts-node/register --inspect apis/core/index.ts
-    ssl: true
-    overrides:
-      image: node:14
-      ports:
-        - '45671:45671'
-      environment:
-        TS_NODE_TRANSPILE_ONLY: "true"
-        TS_NODE_PROJECT: apis/core/tsconfig.json
-        # This should be kept in sync with api.Dockerfile
-        DEBUG: creator*,hydra*,hydra-box*,labyrinth*,dimensions*
-      depends_on:
-        store:
-          condition: service_healthy
-    moreHttpPorts:
-      - 45671
-  ui:
-    type: node:13
-    command: (cd ui; yarn serve --public app.cube-creator.lndo.site --hostname 0.0.0.0 --port 80)
-    ssl: true
-  store:
-    type: compose
-    services:
-      image: blankdots/jena-fuseki:fuseki3.13.1
-      command: /docker-entrypoint.sh /jena-fuseki/start-fuseki.sh
-      environment:
-        ADMIN_PASSWORD: password
-        ENABLE_DATA_WRITE: "true"
-        ENABLE_UPDATE: "true"
-        ENABLE_UPLOAD: "true"
-      volumes:
-        - ./fuseki/config.ttl:/data/fuseki/config/config.ttl
-      healthcheck:
-        test: wget --no-verbose --tries=1 --spider http://localhost:3030 || exit 1
-        interval: 5s
-        timeout: 3s
-        retries: 3
-  s3:
-    type: compose
-    ssl: false
-    services:
-      image: minio/minio:RELEASE.2020-12-03T05-49-24Z
-      command: usr/bin/docker-entrypoint.sh server /data
-      environment:
-        MINIO_ACCESS_KEY: minio
-        MINIO_SECRET_KEY: password
-      volumes:
-        - ./minio:/data/
-  pipeline:
-    type: node:custom
-    build:
-      - npm i -g nodemon
-    command: nodemon -w packages --verbose --ext ts,ttl,js,trig --ignore **/*.spec.ts --ignore **/*.spec-graphs.ts --exec node --inspect=0.0.0.0:45681 -r ts-node/register --inspect cli/server.ts
-    port: 80
-    overrides:
-      image: node:14
-      environment:
-        TS_NODE_TRANSPILE_ONLY: "true"
-        NODE_TLS_REJECT_UNAUTHORIZED: 0
-    moreHttpPorts:
-          - 45681
   collector:
     type: compose
     scanner: false
@@ -97,16 +32,6 @@ services:
         - ./otel/prometheus.yaml:/prometheus.yaml:ro
 
 proxy:
-  store:
-    - db.cube-creator.lndo.site:3030
-  core:
-    - cube-creator.lndo.site:45670
-  ui:
-    - app.cube-creator.lndo.site
-  s3:
-    - s3.cube-creator.lndo.site:9000
-  pipeline:
-    - pipeline.cube-creator.lndo.site
   collector:
     - otel.cube-creator.lndo.site:55681
   jaeger:
