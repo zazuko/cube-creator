@@ -12,6 +12,7 @@ import { NamedNode } from 'rdf-js'
 import env from '@cube-creator/core/env'
 import { cc, cube, meta } from '@cube-creator/core/namespace'
 import * as ns from '@tpluscode/rdf-ns-builders'
+import cors from 'cors'
 
 const trigger = (triggers as Record<string, (job: GraphPointer<NamedNode>, params?: GraphPointer) => void>)[env.PIPELINE_TYPE]
 
@@ -71,7 +72,7 @@ export const remove = protectedResource(
   }),
 )
 
-export const getExport = protectedResource(asyncMiddleware(async (req, res) => {
+export const getExport = protectedResource(cors({ exposedHeaders: 'content-disposition' }), asyncMiddleware(async (req, res) => {
   const { project, data } = await getExportedProject({
     resource: req.hydra.resource.term,
     store: req.resourceStore(),

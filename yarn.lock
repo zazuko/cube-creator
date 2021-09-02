@@ -2075,6 +2075,11 @@
   resolved "https://registry.yarnpkg.com/@soda/get-current-script/-/get-current-script-1.0.2.tgz#a53515db25d8038374381b73af20bb4f2e508d87"
   integrity sha512-T7VNNlYVM1SgQ+VsMYhnDkcGmWhQdL0bDyGm5TlQ3GBXnJscEClUUOKduWTmm2zCnvNLC1hc3JpuXjs/nFOc5w==
 
+"@tinyhttp/content-disposition@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@tinyhttp/content-disposition/-/content-disposition-2.0.0.tgz#9ea10b1123eac96072903486a4d2362fee1d8f0c"
+  integrity sha512-pg2Css3/OCsew8Rqh9YIu4b6vdSyIzJ+hJc7xVuERfMx3OypEoulLKgy1J/jYxVXb2/KRovXLN04mmrfANLpEQ==
+
 "@tpluscode/eslint-config@^0.1.1":
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@tpluscode/eslint-config/-/eslint-config-0.1.1.tgz#5562e9753d4a4e9bd6ee4785baeaf9e6c7f42bfc"
