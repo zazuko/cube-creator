@@ -1,12 +1,14 @@
 import TermMap from '@rdfjs/term-map'
 import { rdf } from '@tpluscode/rdf-ns-builders'
 import sinon from 'sinon'
+import $rdf from 'rdf-ext'
 import { SharedDimensionsStore } from '../../lib/store'
 
 export function testStore(): SharedDimensionsStore {
   const resources = new TermMap()
 
   const store: SharedDimensionsStore = {
+    graph: $rdf.namedNode('dimensions-graph'),
     async load(term) {
       return term && resources.get(term)
     },
