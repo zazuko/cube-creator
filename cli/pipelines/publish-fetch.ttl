@@ -1,0 +1,47 @@
+@base <urn:pipeline:cube-creator> .
+@prefix : <https://pipeline.described.at/> .
+@prefix code: <https://code.described.at/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+<#Main> a :Pipeline ;
+  :steps
+    [
+      :stepList
+        ( <#loadCube> <#countQuads> <#StreamOutput> ) ;
+    ] .
+
+<#countQuads>
+  a :Step ;
+  code:implementedBy
+    [
+      a code:EcmaScriptModule ;
+      code:link <file:../lib/counters.mjs#quads>
+    ] ;
+  code:arguments ( "quads" ) ;
+.
+
+<#loadCube>
+  a                  :Step ;
+  code:implementedBy [ a         code:EcmaScriptModule ;
+                         code:link <file:../lib/loadCube.mjs#loadCube> ] ;
+
+  code:arguments     [ code:name  "endpoint" ;
+                         code:value "GRAPH_QUERY_ENDPOINT"^^:VariableName ] ;
+  code:arguments     [ code:name  "user" ;
+                         code:value "GRAPH_STORE_USER"^^:VariableName ] ;
+  code:arguments     [ code:name  "password" ;
+                         code:value "GRAPH_STORE_PASSWORD"^^:VariableName ] .
+
+<#StreamOutput>
+  a :Pipeline, :WritableObjectMode ;
+  :steps [ :stepList ( _:serialize _:upload ) ] .
+
+_:serialize
+  a                  :Step ;
+  code:implementedBy [ code:link <node:barnard59-formats/ntriples.js#serialize> ;
+                         a         code:EcmaScriptModule ] .
+
+_:upload
+  a                  :Step ;
+  code:implementedBy [ a         code:EcmaScriptModule ;
+                         code:link <file:../lib/upload.mjs#plainFetch> ]  .
