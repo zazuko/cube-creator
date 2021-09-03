@@ -17,7 +17,7 @@ With Class hydra:Resource {
         Expect Type md:SharedDimensions
         Expect Property hydra:member {
             Expect Property md:terms
-            ExpectProperty md:export
+            Expect Property md:export
         }
 
         Expect Operation schema:CreateAction {
