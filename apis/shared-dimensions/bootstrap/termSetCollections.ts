@@ -7,3 +7,6 @@ export const termSets = (ptr: BootstrappedResourceFactory) =>
 
 export const terms = (ptr: BootstrappedResourceFactory) =>
   ptr('_terms').addOut(rdf.type, md.SharedDimensionTerms)
+
+export const exportSet = (ptr: BootstrappedResourceFactory) =>
+  ptr('_export').addOut(rdf.type, md.SharedDimensionExport)

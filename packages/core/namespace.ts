@@ -86,9 +86,11 @@ type SharedDimensionsTerms =
   'SharedDimensions' |
   'SharedDimensionTerm' |
   'SharedDimensionTerms' |
+  'SharedDimensionExport' |
   'sharedDimensions' |
   'terms' |
-  'onlyValidTerms'
+  'onlyValidTerms' |
+  'export'
 
 type MetaTerms =
   'SharedDimension' |
