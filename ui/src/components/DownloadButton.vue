@@ -1,5 +1,5 @@
 <template>
-  <b-button type="is-link is-light" icon-left="download" @click="download" :loading="loading">
+  <b-button type="is-link is-light" icon-left="download" @click="download" :loading="loading" v-if="this.resource">
     {{ title }}
   </b-button>
 </template>
@@ -13,19 +13,21 @@ import { Resource } from 'alcaeus'
 
 @Component
 export default class DownloadButton extends Vue {
-  @Prop({ required: true }) resource!: Resource
+  @Prop({ required: true }) resource: Resource | undefined
 
   loading = false
 
   get title (): string {
-    const [operation] = this.resource.findOperations({
+    const [operation] = this.resource?.findOperations({
       byMethod: 'GET'
-    })
+    }) || []
 
     return operation?.title || 'Download'
   }
 
   async download (): Promise<void> {
+    if (!this.resource) return
+
     const anchor = document.createElement('a')
     document.body.appendChild(anchor)
 

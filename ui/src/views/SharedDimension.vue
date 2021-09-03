@@ -8,6 +8,7 @@
         <div>
           <hydra-operation-button :operation="dimension.actions.replace" :to="{ name: 'SharedDimensionEdit' }" />
           <hydra-operation-button :operation="dimension.actions.delete" @click="deleteDimension(dimension)" />
+          <download-button :resource="dimension.export" />
         </div>
         <shared-dimension-tags :dimension="dimension" />
       </div>
@@ -97,6 +98,7 @@ import PageContent from '@/components/PageContent.vue'
 import SharedDimensionTags from '@/components/SharedDimensionTags.vue'
 import TermDisplay from '@/components/TermDisplay.vue'
 import TermWithLanguage from '@/components/TermWithLanguage.vue'
+import DownloadButton from '@/components/DownloadButton.vue'
 import { SharedDimension, SharedDimensionTerm } from '@/store/types'
 
 const appNS = namespace('app')
@@ -110,6 +112,7 @@ const sharedDimensionNS = namespace('sharedDimension')
     SharedDimensionTags,
     TermDisplay,
     TermWithLanguage,
+    DownloadButton
   },
 })
 export default class extends Vue {

@@ -10,12 +10,18 @@ export function getSharedDimensions() {
   return CONSTRUCT`
     ?termSet ?p ?o .
     ?termSet ${md.terms} ?terms .
+    ?termSet ${md.export} ?export .
   `
     .WHERE`
       ?termSet a ${schema.DefinedTermSet}, ${meta.SharedDimension} .
       ?termSet ?p ?o .
 
       BIND ( IRI(CONCAT("${env.MANAGED_DIMENSIONS_BASE}", "dimension/_terms?dimension=", ENCODE_FOR_URI(STR(?termSet)))) as ?terms )
+
+      OPTIONAL {
+        ?termSet a ${md.SharedDimension} .
+        BIND ( IRI(CONCAT("${env.MANAGED_DIMENSIONS_BASE}", "dimension/_export?dimension=", ENCODE_FOR_URI(STR(?termSet)))) as ?export )
+      }
     `
 }
 
