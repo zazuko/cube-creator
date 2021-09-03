@@ -1,13 +1,17 @@
-import { describe, it, beforeEach } from 'mocha'
+import { describe, it, beforeEach, before } from 'mocha'
 import { expect } from 'chai'
 import { blankNode, namedNode } from '@cube-creator/testing/clownface'
+import { insertTestDimensions } from '@cube-creator/testing/lib/seedData'
+import { mdClients } from '@cube-creator/testing/lib/index'
 import { dcterms, hydra, rdf, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import { md, meta } from '@cube-creator/core/namespace'
-import { create, createTerm, update } from '../../../lib/domain/shared-dimension'
+import { create, createTerm, update, getExportedDimension } from '../../../lib/domain/shared-dimension'
 import { SharedDimensionsStore } from '../../../lib/store'
 import { testStore } from '../../support/store'
 import $rdf from 'rdf-ext'
+import { DatasetCore } from 'rdf-js'
 import httpError from 'http-errors'
+import clownface from 'clownface'
 
 describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () => {
   describe('create', () => {
@@ -172,6 +176,87 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () =
       // expect
       expect(saved.dataset).to.have.property('size', 1)
       expect(saved.out(schema.name).value).to.eq('Term set')
+    })
+  })
+
+  describe('getExportedDimension @SPARQL', () => {
+    let dataset: DatasetCore
+
+    const termSetId = $rdf.namedNode('https://ld.admin.ch/cube/dimension/technologies')
+
+    before(async function () {
+      this.timeout(20000)
+      await insertTestDimensions()
+
+      const store = testStore()
+      await store.save(namedNode(termSetId))
+
+      const { data } = await getExportedDimension({
+        resource: termSetId,
+        store,
+        client: mdClients.streamClient,
+      })
+      dataset = await $rdf.dataset().import(data)
+    })
+
+    it('exports set and terms', () => {
+      const graph = clownface({ dataset })
+      const termSet = graph.node(termSetId)
+
+      // then
+      expect(termSet.in(schema.inDefinedTermSet).terms).to.have.length(3)
+    })
+
+    it('exports shapes for set and terms', () => {
+      const graph = clownface({ dataset })
+      const termSet = graph.node(termSetId)
+      const terms = termSet.in(schema.inDefinedTermSet)
+      const haveShape = graph.node([termSet, ...terms.toArray()])
+
+      // then
+      expect(haveShape.in(sh.targetNode).terms).to.have.length(4)
+    })
+
+    it('exports dimension properties', () => {
+      const dimension = clownface({ dataset }).node(termSetId)
+
+      expect(dimension).to.matchShape({
+        property: [{
+          path: schema.validFrom,
+          minCount: 1,
+          maxCount: 1,
+          hasValue: $rdf.literal('2021-01-20T23:59:59Z', xsd.dateTime),
+        }, {
+          path: schema.name,
+          minCount: 1,
+          maxCount: 1,
+          hasValue: $rdf.literal('Technologies', 'en'),
+        }],
+      })
+    })
+
+    it('exports term properties', () => {
+      const dimension = clownface({ dataset })
+        .namedNode('https://ld.admin.ch/cube/dimension/technologies/rdf')
+
+      expect(dimension).to.matchShape({
+        property: [{
+          path: schema.validFrom,
+          minCount: 1,
+          maxCount: 1,
+          hasValue: $rdf.literal('2021-01-20T23:59:59Z', xsd.dateTime),
+        }, {
+          path: schema.name,
+          minCount: 1,
+          maxCount: 1,
+          hasValue: $rdf.literal('RDF', 'en'),
+        }, {
+          path: schema.identifier,
+          minCount: 1,
+          maxCount: 1,
+          hasValue: 'rdf',
+        }],
+      })
     })
   })
 })

@@ -8,7 +8,7 @@ export function testStore(): SharedDimensionsStore {
   const resources = new TermMap()
 
   const store: SharedDimensionsStore = {
-    graph: $rdf.namedNode('dimensions-graph'),
+    graph: $rdf.namedNode('https://lindas.admin.ch/cube/dimension'),
     async load(term) {
       return term && resources.get(term)
     },
