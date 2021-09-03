@@ -44,10 +44,6 @@
                          a         code:EcmaScriptModule ] .
 
 <#StreamOutput>
-  a :Pipeline, :WritableObjectMode ;
-  :steps [ :stepList ( _:upload ) ] ;.
-
-_:upload
   a                  :Step ;
   code:implementedBy [ a         code:EcmaScriptModule ;
                          code:link <node:barnard59-graph-store/post.js#default> ] ;

@@ -7,8 +7,11 @@
   :steps
     [
       :stepList
-        ( <#loadCube> <#countQuads> <#StreamOutput> ) ;
-    ] .
+        ( <#loadCube> <#countQuads> _:serialize _:save ) ;
+    ];
+  :variables [ :variable [ a      :Variable ;
+                             :name  "targetFile" ;
+                             :value "./cli/output/transformed.nt" ] ].
 
 <#countQuads>
   a :Step ;
@@ -31,13 +34,6 @@
                          code:value "GRAPH_STORE_USER"^^:VariableName ] ;
   code:arguments     [ code:name  "password" ;
                          code:value "GRAPH_STORE_PASSWORD"^^:VariableName ] .
-
-<#StreamOutput>
-  a :Pipeline, :WritableObjectMode ;
-  :steps     [ :stepList ( _:serialize _:save ) ] ;
-  :variables [ :variable [ a      :Variable ;
-                             :name  "targetFile" ;
-                             :value "./cli/output/transformed.nt" ] ] .
 
 _:serialize
   a                  :Step ;
