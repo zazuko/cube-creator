@@ -45,7 +45,7 @@ export default function Mixin<Base extends Constructor<Omit<CsvSource, keyof Api
         identifierLiteral: key,
         sourceKind,
         contentUrl,
-      })
+      }) as any
     }
 
     setDialect(dialect: Partial<Csvw.Dialect>): boolean {

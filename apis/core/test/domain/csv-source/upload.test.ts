@@ -11,12 +11,14 @@ import { csvw, dtype, hydra, rdf, schema, sh, xsd } from '@tpluscode/rdf-ns-buil
 import { createCSVSource } from '../../../lib/domain/csv-source/upload'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import clownface, { GraphPointer } from 'clownface'
-import type { FileStorage } from '../../../lib/storage/s3'
 import type * as CsvSourceQueries from '../../../lib/domain/queries/csv-source'
 import '../../../lib/domain'
+import type { MediaStorage } from '../../../lib/storage'
+import type { MediaObject } from '@rdfine/schema'
 
 describe('domain/csv-sources/upload', () => {
-  let fileStorage: FileStorage
+  let storage: MediaStorage
+  let getStorage: (media: MediaObject) => MediaStorage
   let csvSourceQueries: typeof CsvSourceQueries
   let sourceWithFilenameExists: sinon.SinonStub
   let fileStream: Readable
@@ -29,12 +31,12 @@ describe('domain/csv-sources/upload', () => {
 
   beforeEach(() => {
     fileStream = fs.createReadStream(path.resolve(__dirname, '../../../../../minio/cube-creator/test-data/ubd28/input_CH_yearly_air_immission_basetable.csv'))
-    fileStorage = {
-      loadFile: sinon.stub().callsFake(() => fileStream),
-      saveFile: sinon.stub().resolves({ Location: 'file-location' }),
-      deleteFile: sinon.spy(),
+    storage = {
+      getStream: sinon.stub().callsFake(() => fileStream),
+      delete: sinon.spy(),
       getDownloadLink: sinon.spy(),
     }
+    getStorage = () => (storage)
     sourceWithFilenameExists = sinon.stub().resolves(false)
     csvSourceQueries = {
       sourceWithFilenameExists,
@@ -59,7 +61,7 @@ describe('domain/csv-sources/upload', () => {
         csvMappingId: csvMapping.term,
         resource: data,
         store,
-        fileStorage,
+        getStorage,
         csvSourceQueries,
       })
     })
@@ -176,7 +178,7 @@ describe('domain/csv-sources/upload', () => {
         csvMappingId: csvMapping.term,
         resource: data,
         store,
-        fileStorage,
+        getStorage,
         csvSourceQueries,
       })
 
@@ -201,7 +203,7 @@ describe('domain/csv-sources/upload', () => {
         csvMappingId: csvMapping.term,
         resource: data,
         store,
-        fileStorage,
+        getStorage,
         csvSourceQueries,
       })
     })

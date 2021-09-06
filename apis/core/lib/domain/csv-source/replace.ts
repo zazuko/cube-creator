@@ -1,6 +1,6 @@
 import { GraphPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'
-import * as s3 from '../../storage/s3'
+import type { MediaObject } from '@rdfine/schema'
 import { ResourceStore } from '../../ResourceStore'
 import { loadFileHeadString } from '../csv/file-head'
 import { parse } from '../csv'
@@ -9,22 +9,21 @@ import { mediaObjectFromPointer } from '@cube-creator/model/CsvSource'
 import { createOrUpdateColumns } from './update'
 import { DomainError } from '@cube-creator/api-errors'
 import { ResourceNode } from '@tpluscode/rdfine/RdfResource'
+import type { MediaStorage } from '../../storage'
 import { getMediaStorage } from '../../storage'
-import { MediaObject } from '@rdfine/schema'
-import { MediaStorage } from '../../storage/types'
 
 interface ReplaceCSVCommand {
   csvSourceId: NamedNode
   resource: ResourceNode
   store: ResourceStore
-  fileStorage?: s3.FileStorage
+  getStorage?: (m: MediaObject) => MediaStorage
 }
 
 export async function replaceFile({
   csvSourceId,
   resource,
   store,
-  fileStorage = s3,
+  getStorage = getMediaStorage,
 }: ReplaceCSVCommand): Promise<GraphPointer> {
   const csvSource = await store.getResource<CsvSource>(csvSourceId)
 
@@ -32,13 +31,13 @@ export async function replaceFile({
   csvSource.error = undefined
 
   const newMedia = mediaObjectFromPointer(resource)
-  const newStorage = getMediaStorage(newMedia, fileStorage)
+  const newStorage = getStorage(newMedia)
 
   try {
     await validateNewFile(csvSource, newMedia, newStorage)
 
     // Delete old file
-    const oldStorage = getMediaStorage(csvSource.associatedMedia, fileStorage)
+    const oldStorage = getStorage(csvSource.associatedMedia)
     oldStorage.delete(csvSource.associatedMedia)
 
     const sourceKind = newMedia.sourceKind!
@@ -46,7 +45,7 @@ export async function replaceFile({
     const location = newMedia.contentUrl!
     csvSource.setUploadedFile(sourceKind, key, location)
 
-    await createOrUpdateColumns(csvSource, fileStorage)
+    await createOrUpdateColumns(csvSource, getStorage)
 
     return csvSource.pointer
   } catch (e) {

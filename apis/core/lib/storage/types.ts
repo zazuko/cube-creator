@@ -1,5 +1,5 @@
-import { MediaObject } from '@rdfine/schema'
-import { Readable } from 'stream'
+import type { MediaObject } from '@rdfine/schema'
+import type { Readable } from 'stream'
 
 export interface MediaStorage {
   getStream(media: MediaObject): Promise<Readable>

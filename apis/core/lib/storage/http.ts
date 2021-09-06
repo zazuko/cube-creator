@@ -1,4 +1,4 @@
-import { MediaObject } from '@rdfine/schema'
+import type { MediaObject } from '@rdfine/schema'
 import fetch from 'node-fetch'
 import { Readable } from 'stream'
 import type { MediaStorage } from './types'

@@ -13,7 +13,6 @@ import { getMediaStorage } from '../storage'
 import { GraphPointer } from 'clownface'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { NamedNode } from 'rdf-js'
-import * as s3 from '../storage/s3'
 
 export const post = labyrinth.protectedResource(
   shaclValidate,
@@ -108,16 +107,16 @@ export const replace = labyrinth.protectedResource(
   }),
 )
 
-function getPresignedLink(csvSource: GraphPointer, fileStorage: s3.FileStorage = s3): string {
+function getPresignedLink(csvSource: GraphPointer): string {
   const mediaPointer = csvSource.out(schema.associatedMedia) as GraphPointer<NamedNode>
   const media = mediaObjectFromPointer(mediaPointer)
-  const storage = getMediaStorage(media, fileStorage)
+  const storage = getMediaStorage(media)
 
   return storage.getDownloadLink(media)
 }
 
-function setPresignedLink(csvSource: GraphPointer, fileStorage: s3.FileStorage = s3): void {
-  const s3DirectDownload = getPresignedLink(csvSource, fileStorage)
+function setPresignedLink(csvSource: GraphPointer): void {
+  const s3DirectDownload = getPresignedLink(csvSource)
 
   if (s3DirectDownload) {
     csvSource

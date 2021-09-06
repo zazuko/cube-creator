@@ -10,12 +10,14 @@ import DatasetExt from 'rdf-ext/lib/Dataset'
 import { csvw, dtype, rdf, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import clownface, { GraphPointer } from 'clownface'
-import type { FileStorage } from '../../../lib/storage/s3'
 import { replaceFile } from '../../../lib/domain/csv-source/replace'
 import { DomainError } from '@cube-creator/api-errors'
+import type { MediaStorage } from '../../../lib/storage'
+import type { MediaObject } from '@rdfine/schema'
 
 describe('domain/csv-sources/replace', () => {
-  let fileStorage: FileStorage
+  let storage: MediaStorage
+  let getStorage: (media: MediaObject) => MediaStorage
   let csvSource: GraphPointer<NamedNode, DatasetExt>
   let csvMapping: GraphPointer<NamedNode, DatasetExt>
   const data = clownface({ dataset: $rdf.dataset() })
@@ -27,12 +29,12 @@ describe('domain/csv-sources/replace', () => {
 
   beforeEach(() => {
     const getfileStream = () => fs.createReadStream(path.resolve(__dirname, '../../fixtures/CH_yearly_air_immission_unit_id.csv'))
-    fileStorage = {
-      loadFile: sinon.stub().callsFake(getfileStream),
-      saveFile: sinon.stub().resolves({ Location: 'file-location' }),
-      deleteFile: sinon.spy(),
+    storage = {
+      getStream: sinon.stub().callsFake(getfileStream),
+      delete: sinon.spy(),
       getDownloadLink: sinon.spy(),
     }
+    getStorage = () => (storage)
 
     csvMapping = clownface({ dataset: $rdf.dataset() })
       .namedNode('csv-mapping')
@@ -82,7 +84,7 @@ describe('domain/csv-sources/replace', () => {
         csvSourceId: csvSource.term,
         resource: data,
         store,
-        fileStorage,
+        getStorage,
       })
     })
 
@@ -140,9 +142,9 @@ describe('domain/csv-sources/replace', () => {
 
     it('File handler have been called', () => {
       // validate file, read columns and sample
-      expect(fileStorage.loadFile).has.been.calledTwice
+      expect(storage.getStream).has.been.calledTwice
       // delete old file
-      expect(fileStorage.deleteFile).has.been.calledOnce
+      expect(storage.delete).has.been.calledOnce
     })
 
     it('updates or creates columns with samples', () => {
@@ -228,7 +230,7 @@ describe('domain/csv-sources/replace', () => {
         csvSourceId: csvSource.term,
         resource: data,
         store,
-        fileStorage,
+        getStorage,
       })
     })
 
@@ -277,9 +279,9 @@ describe('domain/csv-sources/replace', () => {
 
     it('File handler have been called', () => {
       // validate file, read columns and sample
-      expect(fileStorage.loadFile).has.been.calledTwice
+      expect(storage.getStream).has.been.calledTwice
       // delete old file
-      expect(fileStorage.deleteFile).has.been.calledOnce
+      expect(storage.delete).has.been.calledOnce
     })
 
     it('updates columns with samples', () => {
@@ -358,7 +360,7 @@ describe('domain/csv-sources/replace', () => {
         csvSourceId: csvSource.term,
         resource: data,
         store,
-        fileStorage,
+        getStorage,
       })
 
       // then

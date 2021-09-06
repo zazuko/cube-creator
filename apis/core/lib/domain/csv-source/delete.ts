@@ -1,23 +1,24 @@
 import { NamedNode, Term } from 'rdf-js'
 import { ResourceStore } from '../../ResourceStore'
-import * as s3 from '../../storage/s3'
 import { cc } from '@cube-creator/core/namespace'
 import $rdf from 'rdf-ext'
+import type { MediaObject } from '@rdfine/schema'
 import { getLinkedTablesForSource } from '../queries/table'
 import { deleteTable } from '../table/delete'
+import type { MediaStorage } from '../../storage'
 import { getMediaStorage } from '../../storage'
 import { CsvSource } from '@cube-creator/model'
 
 interface DeleteSourceCommand {
   resource: NamedNode | Term
   store: ResourceStore
-  fileStorage?: s3.FileStorage
+  getStorage?: (m: MediaObject) => MediaStorage
 }
 
 export async function deleteSource({
   resource,
   store,
-  fileStorage = s3,
+  getStorage = getMediaStorage,
 }: DeleteSourceCommand): Promise<void> {
   if (resource.termType !== 'NamedNode') return
 
@@ -34,7 +35,7 @@ export async function deleteSource({
   }
 
   // Delete S3 resource
-  const storage = getMediaStorage(csvSource.associatedMedia, fileStorage)
+  const storage = getStorage(csvSource.associatedMedia)
   await storage.delete(csvSource.associatedMedia)
 
   // Delete links from in csv-mapping

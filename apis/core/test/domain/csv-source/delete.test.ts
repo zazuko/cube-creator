@@ -6,22 +6,24 @@ import { cc } from '@cube-creator/core/namespace'
 import { rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import clownface from 'clownface'
-import type { FileStorage } from '../../../lib/storage/s3'
 import * as TableQueries from '../../../lib/domain/queries/table'
 import '../../../lib/domain'
 import { deleteSource } from '../../../lib/domain/csv-source/delete'
 import * as DeleteTable from '../../../lib/domain/table/delete'
+import type { MediaStorage } from '../../../lib/storage'
+import type { MediaObject } from '@rdfine/schema'
 
 describe('domain/csv-sources/delete', () => {
-  let fileStorage: FileStorage
+  let storage: MediaStorage
+  let getStorage: (media: MediaObject) => MediaStorage
 
   beforeEach(() => {
-    fileStorage = {
-      loadFile: sinon.spy(),
-      saveFile: sinon.spy(),
-      deleteFile: sinon.spy(),
+    storage = {
+      getStream: sinon.spy(),
+      delete: sinon.spy(),
       getDownloadLink: sinon.spy(),
     }
+    getStorage = () => (storage)
 
     async function * tableGenerator() {
       yield $rdf.namedNode('table')
@@ -54,10 +56,12 @@ describe('domain/csv-sources/delete', () => {
       csvSource, table,
     ])
     // when
-    await deleteSource({ resource: csvSource.term, store: store, fileStorage })
+    await deleteSource({ resource: csvSource.term, store: store, getStorage })
 
     // then
-    expect(fileStorage.deleteFile).calledOnceWithExactly('FileKey')
+    expect(storage.delete).to.have.been.calledWith(sinon.match({
+      id: csvSource.out(schema.associatedMedia).term,
+    }))
     expect(csvMapping.out(cc.csvSource).term).to.be.undefined
     expect(DeleteTable.deleteTable).to.have.been.calledWith(sinon.match({
       resource: table.term,

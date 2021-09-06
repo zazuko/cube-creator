@@ -11,23 +11,25 @@ import { csvw, rdf, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import clownface, { GraphPointer } from 'clownface'
-import type { FileStorage } from '../../../lib/storage/s3'
 import '../../../lib/domain'
 import { update } from '../../../lib/domain/csv-source/update'
+import type { MediaStorage } from '../../../lib/storage'
+import type { MediaObject } from '@rdfine/schema'
 
 describe('domain/csv-sources/upload', () => {
-  let fileStorage: FileStorage
+  let storage: MediaStorage
+  let getStorage: (media: MediaObject) => MediaStorage
   let csvSource: GraphPointer<NamedNode, DatasetExt>
   let fileStream: Readable
 
   beforeEach(() => {
     fileStream = fs.createReadStream(path.resolve(__dirname, '../../../../../minio/cube-creator/test-data/ubd28/input_CH_yearly_air_immission_basetable.csv'))
-    fileStorage = {
-      loadFile: sinon.stub().callsFake(() => fileStream),
-      saveFile: sinon.stub().resolves({ Location: 'file-location' }),
-      deleteFile: sinon.spy(),
+    storage = {
+      getStream: sinon.stub().callsFake(() => fileStream),
+      delete: sinon.spy(),
       getDownloadLink: sinon.spy(),
     }
+    getStorage = () => (storage)
     csvSource = clownface({ dataset: $rdf.dataset() })
       .namedNode('source')
       .addOut(rdf.type, cc.CSVSource)
@@ -59,7 +61,7 @@ describe('domain/csv-sources/upload', () => {
     // when
     const changed = await update({
       resource,
-      fileStorage,
+      getStorage,
       store,
     })
 
@@ -90,12 +92,12 @@ describe('domain/csv-sources/upload', () => {
     // when
     await update({
       resource,
-      fileStorage,
+      getStorage,
       store,
     })
 
     // then
-    expect(fileStorage.loadFile).not.called
+    expect(storage.getStream).not.called
   })
 
   it('loads the source file when dialect changes', async () => {
@@ -115,12 +117,12 @@ describe('domain/csv-sources/upload', () => {
     // when
     await update({
       resource,
-      fileStorage,
+      getStorage,
       store,
     })
 
     // then
-    expect(fileStorage.loadFile).calledOnceWithExactly('file.csv')
+    expect(storage.getStream).to.have.been.calledOnce
   })
 
   it('it updates dialect when necessary', async () => {
@@ -141,7 +143,7 @@ describe('domain/csv-sources/upload', () => {
     // when
     const changed = await update({
       resource,
-      fileStorage,
+      getStorage,
       store,
     })
 
@@ -186,7 +188,7 @@ describe('domain/csv-sources/upload', () => {
     // when
     const changed = await update({
       resource,
-      fileStorage,
+      getStorage,
       store,
     })
 
