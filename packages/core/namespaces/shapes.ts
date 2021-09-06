@@ -19,7 +19,8 @@ type ShapeTerms =
   'column-mapping/literal' |
   'column-mapping/reference' |
   'dimension/metadata' |
-  'dimension/shared-mapping'
+  'dimension/shared-mapping' |
+  'csv-source/s3Bucket'
 
 type ShapesNamespace = (term: ShapeTerms) => NamedNode
 

@@ -32,7 +32,8 @@ type CubeCreatorClass =
   'ReplaceCSVAction' |
   'MediaLocal' |
   'MediaURL' |
-  'MediaExternalS3'
+  'MediaExternalS3' |
+  'S3Bucket'
 
 type CubeCreatorProperty =
   'projectSourceKind' |
@@ -73,7 +74,11 @@ type CubeCreatorProperty =
   'dimensionType' |
   'CubeProject/sourceCube' |
   'CubeProject/sourceEndpoint' |
-  'CubeProject/sourceGraph'
+  'CubeProject/sourceGraph' |
+  's3Bucket' |
+  'endpoint' |
+  'apiKey' |
+  'apiSecret'
 
 type OtherTerms =
   'dash'
