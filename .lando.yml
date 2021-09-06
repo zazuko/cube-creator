@@ -68,6 +68,33 @@ services:
         NODE_TLS_REJECT_UNAUTHORIZED: 0
     moreHttpPorts:
           - 45681
+  collector:
+    type: compose
+    scanner: false
+    services:
+      build:
+        context: ./otel
+        dockerfile: .Dockerfile
+      command: /otel/otelcol --config=/collector.yaml
+      ports:
+        - 55681:55681
+        - 8889:8889
+      volumes:
+        - ./otel/collector.yaml:/collector.yaml:ro
+  jaeger:
+    type: compose
+    scanner: false
+    services:
+      image: jaegertracing/all-in-one:1.22
+      command: /go/bin/all-in-one-linux --sampling.strategies-file=/etc/jaeger/sampling_strategies.json
+  prometheus:
+    type: compose
+    scanner: false
+    services:
+      image: prom/prometheus:v2.26.0
+      command: /bin/prometheus --config.file=/prometheus.yaml --web.enable-lifecycle
+      volumes:
+        - ./otel/prometheus.yaml:/prometheus.yaml:ro
 
 proxy:
   store:
@@ -80,3 +107,9 @@ proxy:
     - s3.cube-creator.lndo.site:9000
   pipeline:
     - pipeline.cube-creator.lndo.site
+  collector:
+    - otel.cube-creator.lndo.site:55681
+  jaeger:
+    - jaeger.cube-creator.lndo.site:16686
+  prometheus:
+    - prometheus.cube-creator.lndo.site:9090

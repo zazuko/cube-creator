@@ -9,6 +9,7 @@ import { schema, sh } from '@tpluscode/rdf-ns-builders'
 import { Dataset } from '@cube-creator/model'
 import StreamClient from 'sparql-http-client/StreamClient'
 import { loadDataset } from './metadata'
+import { tracer } from './otel/tracer'
 
 export const getObservationSetId = ({ dataset }: { dataset: DatasetCore }) => {
   const cubeId = [...dataset.match(null, cc.cube)][0].object.value
@@ -51,16 +52,31 @@ export async function injectRevision(this: Pick<Context, 'variables' | 'logger'>
   let cubeNamespace = this.variables.get('namespace')
   const revision = this.variables.get('revision')
   const versionedDimensions = this.variables.get('versionedDimensions')
-  let dataset: Dataset | undefined
-  if (jobUri) {
-    ({ dataset } = await loadDataset(jobUri, this.variables.get('apiClient')))
+
+  const attributes = {
+    cubeNamespace,
+    revision,
+    jobUri,
   }
 
-  this.logger.info(`Cube revision ${revision}`)
+  const dataset = await tracer.startActiveSpan('injectRevision#setup', { attributes }, async span => {
+    try {
+      let dataset: Dataset | undefined
+      if (jobUri) {
+        ({ dataset } = await loadDataset(jobUri, this.variables.get('apiClient')))
+      }
 
-  if (cubeNamespace.endsWith('/')) {
-    cubeNamespace = cubeNamespace.slice(0, -1)
-  }
+      this.logger.info(`Cube revision ${revision}`)
+
+      if (cubeNamespace.endsWith('/')) {
+        cubeNamespace = cubeNamespace.slice(0, -1)
+      }
+
+      return dataset
+    } finally {
+      span.end()
+    }
+  })
 
   function rebase<T extends Term>(term: T, rev = revision): T {
     if (term.termType === 'NamedNode' && term.value.startsWith(cubeNamespace)) {

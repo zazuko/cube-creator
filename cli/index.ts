@@ -1,10 +1,10 @@
 import program from 'commander'
 import * as Sentry from '@sentry/node'
 import '@sentry/tracing'
-import { transform, publish, importCube } from './lib/commands'
+import { SpanStatusCode } from '@opentelemetry/api'
 import { capture } from './lib/telemetry'
 import './lib/variables'
-import { logger } from './lib/log'
+import { opentelemetry } from './lib/otel'
 
 function parseVariables(str: string, all: Map<string, string>) {
   return str
@@ -17,12 +17,18 @@ function parseVariables(str: string, all: Map<string, string>) {
 }
 
 async function main() {
+  const shutdownOtel = await opentelemetry()
+
   Sentry.init({
     integrations: [
       new Sentry.Integrations.Http({ tracing: true }),
     ],
     tracesSampleRate: 1.0,
   })
+
+  const { logger } = await import('./lib/log')
+  const { tracer } = await import('./lib/otel/tracer')
+  const { transform, publish, importCube } = await import('./lib/commands')
 
   program
     .name('docker run --rm zazuko/cube-creator-cli')
@@ -35,7 +41,6 @@ async function main() {
     .option('--execution-url <executionUrl>', 'Link to job execution')
     .option('-v, --variable <name=value>', 'Pipeline variables', parseVariables, new Map())
     .option('--debug', 'Print diagnostic information to standard output')
-    .option('--enable-buffer-monitor', 'enable histogram of buffer usage')
     .option('--auth-param <name=value>', 'Additional variables to pass to the token endpoint', parseVariables, new Map())
     .action(capture('Transform', ({ job }) => ({ job }), transform))
 
@@ -46,7 +51,6 @@ async function main() {
     .option('--execution-url <executionUrl>', 'Link to job execution')
     .option('-v, --variable <name=value>', 'Pipeline variables', parseVariables, new Map())
     .option('--debug', 'Print diagnostic information to standard output')
-    .option('--enable-buffer-monitor', 'enable histogram of buffer usage')
     .option('--auth-param <name=value>', 'Additional variables to pass to the token endpoint', parseVariables, new Map())
     .action(capture('Publish', ({ job }) => ({ job }), publish))
 
@@ -57,17 +61,28 @@ async function main() {
     .option('--execution-url <executionUrl>', 'Link to job execution')
     .option('-v, --variable <name=value>', 'Pipeline variables', parseVariables, new Map())
     .option('--debug', 'Print diagnostic information to standard output')
-    .option('--enable-buffer-monitor', 'enable histogram of buffer usage')
     .option('--auth-param <name=value>', 'Additional variables to pass to the token endpoint', parseVariables, new Map())
     .action(capture('Import', ({ job }) => ({ job }), importCube))
 
-  return program.parseAsync(process.argv)
+  return tracer.startActiveSpan('run', async span => {
+    try {
+      return await program.parseAsync(process.argv)
+    } catch (err) {
+      span.recordException(err)
+      span.setStatus({ code: SpanStatusCode.ERROR, message: err.message })
+      Sentry.captureException(err)
+      logger.error(err)
+      throw err
+    } finally {
+      span.end()
+    }
+  }).finally(async () => {
+    await Sentry.close(2000)
+    await shutdownOtel()
+  })
 }
 
 main()
-  .catch(async e => {
-    Sentry.captureException(e)
-    logger.error(e)
-    await Sentry.close(2000)
+  .catch(() => {
     process.exit(1)
   })
