@@ -15,8 +15,10 @@ With Class cc:CSVSourceCollection {
 
             ```
             prefix schema: <http://schema.org/>
+            prefix cc: <https://cube-creator.zazuko.com/vocab#>
 
-            <> schema:name "original.csv" ;
+            <> cc:sourceKind cc:MediaLocal ;
+               schema:name "original.csv" ;
                schema:contentUrl <http://s3.cube-creator.lndo.site/cube-creator/test-data/replace-test-cube/original.csv> ;
                schema:identifier "test-data/replace-test-cube/original.csv" ;
             ```
@@ -33,8 +35,10 @@ With Class cc:CSVSource {
 
             ```
             prefix schema: <http://schema.org/>
+            prefix cc: <https://cube-creator.zazuko.com/vocab#>
 
-            <> schema:name "replacement_invalid.csv" ;
+            <> cc:sourceKind cc:MediaLocal ;
+               schema:name "replacement_invalid.csv" ;
                schema:contentUrl <http://s3.cube-creator.lndo.site/cube-creator/test-data/replace-test-cube/replacement_invalid.csv> ;
                schema:identifier "test-data/replace-test-cube/replacement_invalid.csv" ;
             ```
@@ -47,8 +51,10 @@ With Class cc:CSVSource {
 
             ```
             prefix schema: <http://schema.org/>
+            prefix cc: <https://cube-creator.zazuko.com/vocab#>
 
-            <> schema:name "replacement_valid.csv" ;
+            <> cc:sourceKind cc:MediaLocal ;
+               schema:name "replacement_valid.csv" ;
                schema:contentUrl <http://s3.cube-creator.lndo.site/cube-creator/test-data/replace-test-cube/replacement_valid.csv> ;
                schema:identifier "test-data/replace-test-cube/replacement_valid.csv" ;
             ```
