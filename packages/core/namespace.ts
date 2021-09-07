@@ -46,6 +46,7 @@ type CubeCreatorProperty =
   'identifierTemplate' |
   'project' |
   'dataset' |
+  'datasets' |
   'namespace' |
   'cubeGraph' |
   'columnMapping' |

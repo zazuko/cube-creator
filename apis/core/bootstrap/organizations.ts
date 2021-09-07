@@ -24,6 +24,7 @@ export const organizations = turtle`
     ${rdfs.label} "Federal Office for the Environment FOEN"@en ;
     ${dcat.accessURL} <https://environment.ld.admin.ch/query> ;
     ${_void.sparqlEndpoint} <https://environment.ld.admin.ch/sparql> ;
+    ${cc.datasets} <organization/bafu/datasets> ;
   .
 }
 `

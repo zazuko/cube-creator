@@ -4,6 +4,7 @@ prefix hydra:     <http://www.w3.org/ns/hydra/core#>
 prefix hydra-box: <http://hydra-box.org/schema/>
 prefix code:      <https://code.described.at/>
 prefix query:     <http://hypermedia.app/query#>
+prefix rdf:       <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix sh:        <http://www.w3.org/ns/shacl#>
 PREFIX schema:    <http://schema.org/>
 PREFIX void:      <http://rdfs.org/ns/void#>
@@ -25,5 +26,22 @@ schema:Organization
           code:link
             <file:handlers/dataset#get> ;
         ] ;
-    ]
+    ] ;
+  hydra:supportedProperty
+    [ hydra:property cc:datasets ] ;
+.
+
+cc:datasets
+  a rdf:Property, hydra:Link ;
+  hydra:supportedOperation
+    [
+      a hydra:Operation ;
+      hydra:title "List organization datasets" ;
+      hydra:method "GET" ;
+      code:implementedBy
+        [
+          a code:EcmaScript ;
+          code:link <file:handlers/organization#getDatasets> ;
+        ] ;
+    ] ;
 .

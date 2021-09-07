@@ -1,6 +1,6 @@
 import { CsvMapping, Table } from '@cube-creator/model'
-import { ASK, SELECT } from '@tpluscode/sparql-builder'
-import { NamedNode, Term } from 'rdf-js'
+import { ASK, CONSTRUCT, SELECT } from '@tpluscode/sparql-builder'
+import { NamedNode, Quad, Term } from 'rdf-js'
 import { cc } from '@cube-creator/core/namespace'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { parsingClient } from '../../query-client'
@@ -57,4 +57,17 @@ export function cubeNamespaceAllowed(cube: NamedNode, organization: Term, client
       STRSTARTS( str(${cube}), str(?ns) )
     )
   }`.execute(client.query)
+}
+
+export function fetchOrganizationDatasets(organization: NamedNode, client = parsingClient): Promise<Quad[]> {
+  return CONSTRUCT`?s ?p ?o`
+    .WHERE`
+      GRAPH ?project {
+        ?project ${schema.maintainer} ${organization} .
+        ?project ${cc.dataset} ?dataset .
+      }
+      GRAPH ?dataset {
+        ?s ?p ?o .
+      }
+    `.execute(client.query)
 }
