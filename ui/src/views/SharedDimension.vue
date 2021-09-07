@@ -1,16 +1,18 @@
 <template>
   <page-content class="container-narrow">
     <div v-if="dimension">
-      <div class="mb-4 is-flex is-align-items-center gap-2">
-        <h2 class="title is-size-4 mb-0">
-          {{ dimension.name }}
-        </h2>
-        <div>
+      <div class="mb-4 is-flex is-justify-content-space-between is-align-items-center gap-2">
+        <div class="is-flex is-align-items-center gap-2">
+          <h2 class="title is-size-4 mb-0">
+            {{ dimension.name }}
+          </h2>
+          <shared-dimension-tags :dimension="dimension" />
+        </div>
+        <div class="is-flex is-align-items-center gap-1">
           <hydra-operation-button :operation="dimension.actions.replace" :to="{ name: 'SharedDimensionEdit' }" />
           <hydra-operation-button :operation="dimension.actions.delete" @click="deleteDimension(dimension)" />
-          <download-button :resource="dimension.export" />
+          <download-button :resource="dimension.export" size="is-small" type="is-white" />
         </div>
-        <shared-dimension-tags :dimension="dimension" />
       </div>
       <table class="table is-narrow is-bordered is-striped is-fullwidth" v-if="terms">
         <thead>
