@@ -123,6 +123,25 @@ With Class cc:CubeProject {
                     Expect Property <http://schema.org/associatedMedia>
                     Expect Property <http://schema.org/error> "Invalid Record Length: expect 1, got 2 on line 3"
                 }
+
+                // Upload from remote URL
+                Invoke {
+                    Content-Type "text/turtle"
+
+                    ```
+                    prefix schema: <http://schema.org/>
+                    prefix cc: <https://cube-creator.zazuko.com/vocab#>
+
+                    <> cc:sourceKind cc:MediaURL ;
+                       schema:name "addresses.csv" ;
+                       schema:contentUrl <https://people.sc.fsu.edu/~jburkardt/data/csv/addresses.csv> ;
+                    ```
+                } => {
+                    Expect Status 201
+                    Expect Type <https://cube-creator.zazuko.com/vocab#CSVSource>
+                    Expect Property <http://schema.org/associatedMedia>
+                    Expect Property <http://www.w3.org/ns/csvw#column>
+                }
             }
         }
     }
