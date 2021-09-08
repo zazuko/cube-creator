@@ -33,7 +33,7 @@ export async function createCSVSource({
 
   const sourceKind = resource.out(cc.sourceKind).term! as NamedNode
   const fileName = resource.out(schema.name).value!
-  const key = resource.out(schema.identifier).value! || ''
+  const key = resource.out(schema.identifier).value || ''
   const location = resource.out(schema.contentUrl).term! as NamedNode
 
   if (await sourceWithFilenameExists(csvMapping.id, fileName)) {
