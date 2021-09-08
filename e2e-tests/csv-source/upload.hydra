@@ -133,8 +133,8 @@ With Class cc:CubeProject {
                     prefix cc: <https://cube-creator.zazuko.com/vocab#>
 
                     <> cc:sourceKind cc:MediaURL ;
-                       schema:name "addresses.csv" ;
-                       schema:contentUrl <https://people.sc.fsu.edu/~jburkardt/data/csv/addresses.csv> ;
+                       schema:name "remote.csv" ;
+                       schema:contentUrl <https://raw.githubusercontent.com/zazuko/cube-creator/b793194eb33b90f9fbea536cc71f2d6fd79b7427/minio/cube-creator/test-data/upload-test-cube/test1.csv> ;
                     ```
                 } => {
                     Expect Status 201
