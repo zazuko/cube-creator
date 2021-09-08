@@ -1,7 +1,7 @@
 import { cc } from '@cube-creator/core/namespace'
 import { CsvSource } from '@cube-creator/model'
 import * as CsvColumn from '@cube-creator/model/CsvColumn'
-import { mediaObjectFromPointer } from '@cube-creator/model/CsvSource'
+import { fromPointer as mediaObjectFromPointer } from '@cube-creator/model/MediaObject'
 import { Constructor, property } from '@tpluscode/rdfine'
 import { NamedNode } from 'rdf-js'
 import { csvw, schema } from '@tpluscode/rdf-ns-builders'
