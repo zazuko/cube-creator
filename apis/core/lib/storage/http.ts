@@ -11,7 +11,7 @@ export const httpStorage: MediaStorage = {
     return response.body as Readable
   },
 
-  // Cannot delete remote file
+  // Deleting remote file is a noop
   async delete() {
     return null
   },
