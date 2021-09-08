@@ -208,6 +208,7 @@ export function serializeSharedDimension (dimension: RdfResource): SharedDimensi
     name: dimension.pointer.out(schema.name, { language: displayLanguage }).value,
     terms: dimension.pointer.out(md.terms).term,
     validThrough: validThrough ? new Date(validThrough) : undefined,
+    export: dimension.get(md.export)
   })
 }
 

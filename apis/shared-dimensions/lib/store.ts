@@ -12,6 +12,7 @@ import env from './env'
 import { removeBnodes } from './rewrite'
 
 export interface SharedDimensionsStore {
+  graph: NamedNode
   load(id: Term | undefined): Promise<GraphPointer<NamedNode>>
   save(resource: GraphPointer<NamedNode>): Promise<void>
   delete(id: NamedNode): Promise<void>
@@ -70,7 +71,7 @@ export function getQuery(id: NamedNode, graph: NamedNode) {
 }
 
 export default class Store implements SharedDimensionsStore {
-  constructor(private client: ParsingClient, private graph: NamedNode) {
+  constructor(private client: ParsingClient, public graph: NamedNode) {
   }
 
   async load(term: NamedNode) {
