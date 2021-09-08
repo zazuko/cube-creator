@@ -1,4 +1,4 @@
-import type Pipeline from 'barnard59-core/lib/Pipeline'
+import type * as Pipeline from 'barnard59-core/lib/Pipeline'
 import { PublishJob, Project } from '@cube-creator/model'
 import { Stream } from 'rdf-js'
 import { CONSTRUCT } from '@tpluscode/sparql-builder'

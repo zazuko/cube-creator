@@ -27,7 +27,7 @@ export interface RunOptions {
   debug: boolean
   job: string
   executionUrl?: string
-  variable?: Pipeline.Variables
+  variable?: Pipeline.VariableMap
   graphStore?: {
     endpoint: string
     user: string
@@ -45,7 +45,7 @@ interface Create<TOptions> {
   /**
    * Set any additional pipeline variables here
    */
-  prepare?(options: TOptions, variable: Pipeline.Variables): Promise<void> | void
+  prepare?(options: TOptions, variable: Pipeline.VariableMap): Promise<void> | void
 }
 
 async function fileToDataset(filename: string) {

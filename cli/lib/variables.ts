@@ -4,8 +4,8 @@ import * as Csvw from '@rdfine/csvw'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import { PublishJob } from '../../packages/model/Job'
 
-declare module 'barnard59-core/lib/Pipeline' {
-  interface VariableNames {
+declare module 'barnard59-core' {
+  interface Variables {
     apiClient: HydraClient
     jobUri: string
     executionUrl: string

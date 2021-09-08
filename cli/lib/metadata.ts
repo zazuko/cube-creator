@@ -97,9 +97,9 @@ export async function injectMetadata(this: Context, jobUri: string) {
         }
 
         // add </.well-known/void> link to cubes with published status
-      if (job.status?.equals(Published) && maintainer.dataset) {
-        this.push($rdf.quad(maintainer.dataset, schema.dataset, quad.subject))
-      }[...datasetTriples.match(dataset.id)]
+        if (job.status?.equals(Published) && maintainer.dataset) {
+          this.push($rdf.quad(maintainer.dataset, schema.dataset, quad.subject))
+        }[...datasetTriples.match(dataset.id)]
           .filter(q => !q.predicate.equals(schema.hasPart) && !q.predicate.equals(cc.dimensionMetadata))
           .forEach(metadata => {
             this.push($rdf.triple(quad.subject, metadata.predicate, metadata.object))
