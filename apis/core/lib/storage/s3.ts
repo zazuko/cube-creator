@@ -8,13 +8,6 @@ import type { MediaStorage } from './types'
 
 const logError = log.extend('s3').extend('error')
 
-export interface FileStorage {
-  loadFile(path: string): Readable
-  saveFile(path: string, contents: Buffer | Readable | string): Promise<aws.S3.ManagedUpload.SendData>
-  deleteFile(path: string): Promise<PromiseResult<aws.S3.DeleteObjectOutput, aws.AWSError>>
-  getDownloadLink(path: string): string
-}
-
 const s3 = new aws.S3({
   endpoint: env.AWS_S3_ENDPOINT,
   s3ForcePathStyle: true,
