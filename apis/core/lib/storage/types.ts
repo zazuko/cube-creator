@@ -6,3 +6,5 @@ export interface MediaStorage {
   delete(media: MediaObject): Promise<any>
   getDownloadLink(media: MediaObject): string
 }
+
+export type GetMediaStorage = (m: MediaObject) => MediaStorage

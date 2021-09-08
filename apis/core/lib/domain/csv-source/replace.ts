@@ -9,14 +9,14 @@ import { fromPointer as mediaObjectFromPointer } from '@cube-creator/model/Media
 import { createOrUpdateColumns } from './update'
 import { DomainError } from '@cube-creator/api-errors'
 import { ResourceNode } from '@tpluscode/rdfine/RdfResource'
-import type { MediaStorage } from '../../storage'
+import type { GetMediaStorage, MediaStorage } from '../../storage'
 import { getMediaStorage } from '../../storage'
 
 interface ReplaceCSVCommand {
   csvSourceId: NamedNode
   resource: ResourceNode
   store: ResourceStore
-  getStorage?: (m: MediaObject) => MediaStorage
+  getStorage?: GetMediaStorage
 }
 
 export async function replaceFile({

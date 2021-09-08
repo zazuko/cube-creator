@@ -6,7 +6,7 @@ import { httpStorage } from './http'
 import * as s3 from './s3'
 import { MediaStorage } from './types'
 
-export type { MediaStorage } from './types'
+export type { GetMediaStorage, MediaStorage } from './types'
 
 export function getMediaStorage(media: MediaObject): MediaStorage {
   const sourceKind = media.sourceKind

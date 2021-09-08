@@ -1,6 +1,5 @@
 import { GraphPointer } from 'clownface'
 import { schema } from '@tpluscode/rdf-ns-builders'
-import type { MediaObject } from '@rdfine/schema'
 import { Conflict } from 'http-errors'
 import { NamedNode } from 'rdf-js'
 import { error } from '../../log'
@@ -11,14 +10,14 @@ import { sampleValues } from '../csv/sample-values'
 import * as CsvSourceQueries from '../queries/csv-source'
 import { CsvMapping } from '@cube-creator/model'
 import { cc } from '@cube-creator/core/namespace'
-import type { MediaStorage } from '../../storage'
+import type { GetMediaStorage } from '../../storage'
 import { getMediaStorage } from '../../storage'
 
 interface CreateCSVSourceCommand {
   csvMappingId: NamedNode
   resource: GraphPointer
   store: ResourceStore
-  getStorage?: (m: MediaObject) => MediaStorage
+  getStorage?: GetMediaStorage
   csvSourceQueries?: Pick<typeof CsvSourceQueries, 'sourceWithFilenameExists'>
 }
 

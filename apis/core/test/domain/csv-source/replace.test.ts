@@ -12,12 +12,11 @@ import { TestResourceStore } from '../../support/TestResourceStore'
 import clownface, { GraphPointer } from 'clownface'
 import { replaceFile } from '../../../lib/domain/csv-source/replace'
 import { DomainError } from '@cube-creator/api-errors'
-import type { MediaStorage } from '../../../lib/storage'
-import type { MediaObject } from '@rdfine/schema'
+import type { GetMediaStorage, MediaStorage } from '../../../lib/storage'
 
 describe('domain/csv-sources/replace', () => {
   let storage: MediaStorage
-  let getStorage: (media: MediaObject) => MediaStorage
+  let getStorage: GetMediaStorage
   let csvSource: GraphPointer<NamedNode, DatasetExt>
   let csvMapping: GraphPointer<NamedNode, DatasetExt>
   const data = clownface({ dataset: $rdf.dataset() })

@@ -10,12 +10,11 @@ import * as TableQueries from '../../../lib/domain/queries/table'
 import '../../../lib/domain'
 import { deleteSource } from '../../../lib/domain/csv-source/delete'
 import * as DeleteTable from '../../../lib/domain/table/delete'
-import type { MediaStorage } from '../../../lib/storage'
-import type { MediaObject } from '@rdfine/schema'
+import type { GetMediaStorage, MediaStorage } from '../../../lib/storage'
 
 describe('domain/csv-sources/delete', () => {
   let storage: MediaStorage
-  let getStorage: (media: MediaObject) => MediaStorage
+  let getStorage: GetMediaStorage
 
   beforeEach(() => {
     storage = {

@@ -13,12 +13,11 @@ import { TestResourceStore } from '../../support/TestResourceStore'
 import clownface, { GraphPointer } from 'clownface'
 import type * as CsvSourceQueries from '../../../lib/domain/queries/csv-source'
 import '../../../lib/domain'
-import type { MediaStorage } from '../../../lib/storage'
-import type { MediaObject } from '@rdfine/schema'
+import type { GetMediaStorage, MediaStorage } from '../../../lib/storage'
 
 describe('domain/csv-sources/upload', () => {
   let storage: MediaStorage
-  let getStorage: (media: MediaObject) => MediaStorage
+  let getStorage: GetMediaStorage
   let csvSourceQueries: typeof CsvSourceQueries
   let sourceWithFilenameExists: sinon.SinonStub
   let fileStream: Readable

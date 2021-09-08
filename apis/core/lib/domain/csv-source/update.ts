@@ -3,19 +3,18 @@ import { NamedNode } from 'rdf-js'
 import { CsvSource } from '@cube-creator/model'
 import RdfResource from '@tpluscode/rdfine'
 import { schema } from '@tpluscode/rdf-ns-builders'
-import type { MediaObject } from '@rdfine/schema'
 import { ResourceStore } from '../../ResourceStore'
 import { error } from '../../log'
 import { loadFileHeadString } from '../csv/file-head'
 import { parse } from '../csv'
 import { sampleValues } from '../csv/sample-values'
-import type { MediaStorage } from '../../storage'
+import type { GetMediaStorage } from '../../storage'
 import { getMediaStorage } from '../../storage'
 
 interface UpdateCsvSourceCommand {
   resource: GraphPointer<NamedNode>
   store: ResourceStore
-  getStorage?: (m: MediaObject) => MediaStorage
+  getStorage?: GetMediaStorage
 }
 
 export async function update({
@@ -37,7 +36,7 @@ export async function update({
   return csvSource.pointer
 }
 
-export async function createOrUpdateColumns(csvSource: CsvSource, getStorage: (media: MediaObject) => MediaStorage): Promise<void> {
+export async function createOrUpdateColumns(csvSource: CsvSource, getStorage: GetMediaStorage): Promise<void> {
   try {
     const storage = getStorage(csvSource.associatedMedia)
     const fileStream = await storage.getStream(csvSource.associatedMedia)
