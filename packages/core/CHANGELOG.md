@@ -1,5 +1,12 @@
 # @cube-creator/core
 
+## 0.3.3
+
+### Patch Changes
+
+- 271cb671: Ability to map a CSV file hosted on a remote server via URL
+- 6872eb8e: Exporting project
+
 ## 0.3.2
 
 ### Patch Changes

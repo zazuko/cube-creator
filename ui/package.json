@@ -1,6 +1,6 @@
 {
   "name": "@cube-creator/ui",
-  "version": "1.2.9",
+  "version": "1.3.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -11,8 +11,8 @@
     "serve-local": "nodenv --env ../.local.env --exec 'vue-cli-service serve'"
   },
   "dependencies": {
-    "@cube-creator/core": "0.3.2",
-    "@cube-creator/model": "0.1.19",
+    "@cube-creator/core": "0.3.3",
+    "@cube-creator/model": "0.1.20",
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
     "@fortawesome/free-regular-svg-icons": "^5.15.1",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",

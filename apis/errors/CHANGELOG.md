@@ -1,5 +1,13 @@
 # @cube-creator/api-errors
 
+## 0.0.4
+
+### Patch Changes
+
+- Updated dependencies [271cb671]
+- Updated dependencies [6872eb8e]
+  - @cube-creator/core@0.3.3
+
 ## 0.0.3
 
 ### Patch Changes
