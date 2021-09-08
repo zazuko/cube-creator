@@ -103,6 +103,20 @@ const projectProperties = turtle`
         ${sh.order} 60 ;
       ] ;
     ]
+    [
+      ${sh.closed} true ;
+      ${sh.ignoredProperties} (
+        ${rdfs.label}
+        ${schema.maintainer}
+        ${rdf.type}
+        ${generatedProperties}
+      ) ;
+      ${sh.property} [
+        ${sh.path} ${cc.projectSourceKind} ;
+        ${sh.hasValue} ${shape('cube-project/create#ExportedProject')} ;
+        ${dash.hidden} true ;
+      ] ;
+    ]
   ) ;`
 
 export const CubeProjectShape = turtle`
