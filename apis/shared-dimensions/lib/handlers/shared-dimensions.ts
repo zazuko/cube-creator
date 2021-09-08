@@ -47,7 +47,7 @@ export const get = asyncMiddleware(async (req, res) => {
 
 function termsCollectionId(dimension: Term, search?: string) {
   const uri = new URL(`${env.MANAGED_DIMENSIONS_BASE}dimension/_terms`)
-  uri.searchParams.set('dimensions', dimension.value)
+  uri.searchParams.set('dimension', dimension.value)
 
   if (search) {
     uri.searchParams.set('q', search)

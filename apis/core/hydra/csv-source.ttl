@@ -98,9 +98,12 @@ cc:CSVSource
         hydra:Operation,
           cc:ReplaceCSVAction ;
       hydra:title
-        "Replace CSV-File" ;
+        "Replace CSV file" ;
       hydra:method
         "PATCH" ;
+      hydra:expects
+        schema:MediaObject,
+        <shape/csv-source/create> ;
       code:implementedBy
         [
           a

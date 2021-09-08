@@ -1,5 +1,4 @@
 import aws from 'aws-sdk'
-import { readable } from 'is-stream'
 import { Readable } from 'stream'
 import { PromiseResult } from 'aws-sdk/lib/request'
 import env from '@cube-creator/core/env'
@@ -8,7 +7,7 @@ import { log } from '../log'
 const logError = log.extend('s3').extend('error')
 
 export interface FileStorage {
-  loadFile(path: string): Promise<Readable | null>
+  loadFile(path: string): Readable
   saveFile(path: string, contents: Buffer | Readable | string): Promise<aws.S3.ManagedUpload.SendData>
   deleteFile(path: string): Promise<PromiseResult<aws.S3.DeleteObjectOutput, aws.AWSError>>
 }
@@ -48,27 +47,11 @@ export function getDownloadLink(path: string): string {
   })
 }
 
-export async function loadFile(path: string): Promise<Readable | null> {
-  const file = await s3.getObject({
+export function loadFile(path: string): Readable {
+  return s3.getObject({
     ...defaultS3Options,
     Key: path,
-  }).promise()
-
-  if (file.Body instanceof Buffer) {
-    const readable = new Readable()
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    readable._read = () => { }
-    readable.push(file.Body)
-    readable.push(null)
-    return readable
-  }
-
-  if (readable(file.Body)) {
-    return file.Body as Readable
-  }
-
-  logError('Could not read file "%s" from S3. It was neither Buffer or Readable', path)
-  return null
+  }).createReadStream()
 }
 
 export async function loadFileString(path: string): Promise<string | null> {

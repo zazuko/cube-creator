@@ -18,6 +18,11 @@ describe('domain/csv-sources/replace', () => {
   let fileStorage: FileStorage
   let csvSource: GraphPointer<NamedNode, DatasetExt>
   let csvMapping: GraphPointer<NamedNode, DatasetExt>
+  const data = clownface({ dataset: $rdf.dataset() })
+    .namedNode('')
+    .addOut(schema.name, $rdf.literal('source.csv'))
+    .addOut(schema.identifier, $rdf.literal('test/source.csv'))
+    .addOut(schema.contentUrl, $rdf.namedNode('http://s3/test/source.csv'))
 
   beforeEach(() => {
     const getfileStream = () => fs.createReadStream(path.resolve(__dirname, '../../fixtures/CH_yearly_air_immission_unit_id.csv'))
@@ -66,16 +71,15 @@ describe('domain/csv-sources/replace', () => {
             .addOut(dtype.order, 2)
         })
 
-      const file = Buffer.alloc(0)
       const store = new TestResourceStore([
         csvSource,
       ])
 
       // when
       csvSourceUpdate = await replaceFile({
-        resource: csvSource.term,
+        csvSourceId: csvSource.term,
+        resource: data,
         store,
-        file,
         fileStorage,
       })
     })
@@ -127,8 +131,8 @@ describe('domain/csv-sources/replace', () => {
     })
 
     it('File handler have been called', () => {
-      // save temp and save permanant
-      expect(fileStorage.saveFile).has.been.calledTwice
+      // copy temp to permanant
+      expect(fileStorage.saveFile).has.been.calledOnce
       // read temp, copy file, read columns and sample
       expect(fileStorage.loadFile).has.been.calledThrice
       // delete old file, delete temp
@@ -209,16 +213,15 @@ describe('domain/csv-sources/replace', () => {
             .addOut(dtype.order, 3)
         })
 
-      const file = Buffer.alloc(0)
       const store = new TestResourceStore([
         csvSource,
       ])
 
       // when
       csvSourceUpdate = await replaceFile({
-        resource: csvSource.term,
+        csvSourceId: csvSource.term,
+        resource: data,
         store,
-        file,
         fileStorage,
       })
     })
@@ -261,8 +264,8 @@ describe('domain/csv-sources/replace', () => {
     })
 
     it('File handler have been called', () => {
-      // save temp and save permanant
-      expect(fileStorage.saveFile).has.been.calledTwice
+      // copy temp to permanant
+      expect(fileStorage.saveFile).has.been.calledOnce
       // read temp, copy file, read columns and sample
       expect(fileStorage.loadFile).has.been.calledThrice
       // delete old file, delete temp
@@ -336,16 +339,15 @@ describe('domain/csv-sources/replace', () => {
             .addOut(dtype.order, 2)
         })
 
-      const file = Buffer.alloc(0)
       const store = new TestResourceStore([
         csvSource,
       ])
 
       // when
       const csvSourceUpdate = replaceFile({
-        resource: csvSource.term,
+        csvSourceId: csvSource.term,
+        resource: data,
         store,
-        file,
         fileStorage,
       })
 

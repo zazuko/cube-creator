@@ -1,11 +1,12 @@
 import asyncMiddleware from 'middleware-async'
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
-import clownface from 'clownface'
+import clownface, { GraphPointer } from 'clownface'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 import { createTerm, update } from '../domain/shared-dimension'
 import { store } from '../store'
 import { shaclValidate } from '../middleware/shacl'
 import { rewrite } from '../rewrite'
+import shapes from '../shapes'
 
 export const post = protectedResource(shaclValidate, asyncMiddleware(async (req, res) => {
   const term = await createTerm({
@@ -20,10 +21,16 @@ export const post = protectedResource(shaclValidate, asyncMiddleware(async (req,
 }))
 
 export const put = protectedResource(shaclValidate, asyncMiddleware(async (req, res) => {
+  const hydraExpects = req.hydra.operation.out(hydra.expects).term
+  let shape: GraphPointer | undefined
+  if (hydraExpects?.termType === 'NamedNode') {
+    shape = shapes.get(hydraExpects)?.()
+  }
+
   const dimension = await update({
     resource: rewrite(await req.resource()),
     store: store(),
-    shape: req.hydra.operation.out(hydra.expects),
+    shape,
   })
 
   return res.dataset(dimension.dataset)

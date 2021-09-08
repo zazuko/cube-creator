@@ -91,8 +91,8 @@ export const replace = labyrinth.protectedResource(
   shaclValidate,
   asyncMiddleware(async (req, res) => {
     const csvSource = await replaceFile({
-      file: req,
-      resource: req.hydra.resource.term,
+      csvSourceId: req.hydra.resource.term,
+      resource: await req.resource(),
       store: req.resourceStore(),
     })
     await req.resourceStore().save()

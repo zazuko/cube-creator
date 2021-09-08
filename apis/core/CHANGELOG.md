@@ -1,5 +1,22 @@
 # @cube-creator/core-api
 
+## 1.2.7
+
+### Patch Changes
+
+- 38c1d3bc: Add LINDAS contact point to dataset
+- 8ecf3bc9: Add LINDAS query interface and SPARQL endpoint to dataset
+
+## 1.2.6
+
+### Patch Changes
+
+- 68e85c61: Add support for very large CSV files
+- ee9d6dbd: Switch to GHCR
+- Updated dependencies [acf4f50d]
+- Updated dependencies [800233c8]
+  - @cube-creator/shared-dimensions-api@2.1.3
+
 ## 1.2.5
 
 ### Patch Changes

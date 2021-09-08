@@ -24,6 +24,7 @@ export default runner.create<PublishRunOptions>({
 
     const { job, namespace, cubeIdentifier } = await getJob(jobUri, Hydra)
 
+    variable.set('publish-job', job)
     variable.set('publish-graph-store-endpoint', publishStore?.endpoint || process.env.PUBLISH_GRAPH_STORE_ENDPOINT)
     variable.set('publish-graph-query-endpoint', publishStore?.endpoint || process.env.PUBLISH_GRAPH_QUERY_ENDPOINT)
     variable.set('publish-graph-store-user', publishStore?.user || process.env.PUBLISH_GRAPH_STORE_USER)

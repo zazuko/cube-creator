@@ -9,6 +9,7 @@ import TermSet from '@rdfjs/term-set'
 import type { Context } from 'barnard59-core/lib/Pipeline'
 import { loadDimensionMapping } from './output-mapper'
 import TermMap from '@rdfjs/term-map'
+import { Published } from '@cube-creator/model/Cube'
 import { tracer } from './otel/tracer'
 
 export async function loadDataset(jobUri: string, Hydra: HydraClient) {
@@ -33,7 +34,11 @@ export async function loadDataset(jobUri: string, Hydra: HydraClient) {
     throw new Error(`Dataset ${project.dataset} not loaded`)
   }
 
-  const { maintainer } = project
+  const maintainer = (await project.maintainer.load?.())?.representation?.root
+  if (!maintainer) {
+    throw new Error(`Organization profile for ${project.maintainer.id.value} not loaded`)
+  }
+
   return { dataset, maintainer }
 }
 
@@ -44,6 +49,7 @@ export async function injectMetadata(this: Context, jobUri: string) {
   const cubeIdentifier = this.variables.get('cubeIdentifier')
   const timestamp = this.variables.get('timestamp')
   const versionedDimensions = this.variables.get('versionedDimensions')
+  const job = this.variables.get('publish-job')
 
   const attributes = {
     baseCube: baseCube.value,
@@ -90,7 +96,10 @@ export async function injectMetadata(this: Context, jobUri: string) {
           this.push($rdf.quad(quad.subject, schema.datePublished, timestamp))
         }
 
-        [...datasetTriples.match(dataset.id)]
+        // add </.well-known/void> link to cubes with published status
+      if (job.status?.equals(Published) && maintainer.dataset) {
+        this.push($rdf.quad(maintainer.dataset, schema.dataset, quad.subject))
+      }[...datasetTriples.match(dataset.id)]
           .filter(q => !q.predicate.equals(schema.hasPart) && !q.predicate.equals(cc.dimensionMetadata))
           .forEach(metadata => {
             this.push($rdf.triple(quad.subject, metadata.predicate, metadata.object))

@@ -1,29 +1,28 @@
 import { GraphPointer } from 'clownface'
-import { Readable } from 'stream'
 import { NamedNode } from 'rdf-js'
 import * as s3 from '../../storage/s3'
 import { ResourceStore } from '../../ResourceStore'
 import { loadFileHeadString } from '../csv/file-head'
 import { parse } from '../csv'
 import { CsvSource } from '@cube-creator/model'
-import { nanoid } from 'nanoid'
 import { createOrUpdateColumns } from './update'
 import { DomainError } from '@cube-creator/api-errors'
+import { schema } from '@tpluscode/rdf-ns-builders'
 
 interface ReplaceCSVCommand {
-  file: Readable | Buffer
-  resource: NamedNode
+  csvSourceId: NamedNode
+  resource: GraphPointer
   store: ResourceStore
   fileStorage?: s3.FileStorage
 }
 
 export async function replaceFile({
-  file,
+  csvSourceId,
   resource,
   store,
   fileStorage = s3,
 }: ReplaceCSVCommand): Promise<GraphPointer> {
-  const csvSource = await store.getResource<CsvSource>(resource)
+  const csvSource = await store.getResource<CsvSource>(csvSourceId)
 
   // Remove any previous error
   csvSource.error = undefined
@@ -33,14 +32,11 @@ export async function replaceFile({
     throw new DomainError(`S3 key is missing for ${resource}`)
   }
 
-  const tempKey = `temp/${nanoid()}`
-
-  // Upload file to temp location
-  await fileStorage.saveFile(tempKey, file)
+  const tempKey = resource.out(schema.identifier).value!
 
   try {
     // Check header
-    const fileStream = await fileStorage.loadFile(tempKey) as Readable
+    const fileStream = fileStorage.loadFile(tempKey)
     const head = await loadFileHeadString(fileStream)
 
     const parserOptions = {
@@ -58,10 +54,7 @@ export async function replaceFile({
     }
 
     // copy new
-    const tempFile = await fileStorage.loadFile(tempKey)
-    if (!tempFile) {
-      throw new Error('File not found')
-    }
+    const tempFile = fileStorage.loadFile(tempKey)
     await fileStorage.saveFile(key, tempFile)
   } finally {
     await fileStorage.deleteFile(tempKey)

@@ -1,5 +1,5 @@
-import { cc } from '@cube-creator/core/namespace'
-import { dcat, hydra, rdf, schema, _void } from '@tpluscode/rdf-ns-builders'
+import { cc, lindas } from '@cube-creator/core/namespace'
+import { dcat, dcterms, hydra, rdf, schema, vcard, _void } from '@tpluscode/rdf-ns-builders'
 import { GraphPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'
 import { ResourceStore } from '../../ResourceStore'
@@ -35,6 +35,39 @@ export async function update({
 
   datasetResource.deleteOut(schema.hasPart).addOut(schema.hasPart, hasPart.terms)
   datasetResource.deleteOut(cc.dimensionMetadata).addOut(cc.dimensionMetadata, dimensionMetadata.terms)
+
+  // Set LINDAS-specific contact point
+  datasetResource.out(dcat.contactPoint).forEach(contact => {
+    datasetResource.addOut(lindas.contactPoint, lindasContact => {
+      lindasContact.addOut(rdf.type, schema.Person)
+
+      const name = contact.out(vcard.fn).term
+      if (name) {
+        lindasContact.addOut(schema.name, name)
+      }
+
+      const email = contact.out(vcard.hasEmail).term
+      if (email) {
+        lindasContact.addOut(schema.email, email)
+      }
+    })
+  })
+
+  // Set LINDAS query interface and sparql endpoint
+  const organizationId = datasetResource.out(dcterms.creator).term
+  if (organizationId) {
+    const organization = await store.get(organizationId)
+
+    const accessURL = organization.out(dcat.accessURL).term
+    if (accessURL) {
+      datasetResource.addOut(dcat.accessURL, accessURL)
+    }
+
+    const sparqlEndpoint = organization.out(_void.sparqlEndpoint).term
+    if (sparqlEndpoint) {
+      datasetResource.addOut(_void.sparqlEndpoint, sparqlEndpoint)
+    }
+  }
 
   return datasetResource
 }

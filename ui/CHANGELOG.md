@@ -1,5 +1,15 @@
 # @cube-creator/ui
 
+## 1.2.9
+
+### Patch Changes
+
+- 68e85c61: Add support for very large CSV files
+- faa1c2a5: Text filtering not working in static select boxes (fixes #788)
+- 800233c8: Displaying the canonical term URI on Shared Dimension screen (closes #787)
+- ee9d6dbd: Switch to GHCR
+- f079cb43: Reduce the number of search requests from shared term dropdown
+
 ## 1.2.8
 
 ### Patch Changes
