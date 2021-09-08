@@ -4,38 +4,38 @@
       {{ error }}
     </b-message>
 
-    <file-upload
+    <csv-upload-form
+      :is-loading="isLoading"
       :file-meta="fileMeta"
-      :after-upload="createSources"
-      @done="close"
+      @submit="submit"
+      @close="close"
     />
   </side-pane>
 </template>
 
 <script lang="ts">
-import * as $rdf from '@rdfjs/dataset'
 import RdfResourceImpl from '@tpluscode/rdfine'
-import { schema } from '@tpluscode/rdf-ns-builders'
 import { RuntimeOperation } from 'alcaeus'
-import clownface from 'clownface'
+import { GraphPointer } from 'clownface'
 import { Component, Vue } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
 
 import { CsvMapping } from '@cube-creator/model'
 
 import { api } from '@/api'
-import FileUpload, { UploadedFile } from '@/components/FileUpload.vue'
+import CsvUploadForm from '@/components/CsvUploadForm.vue'
 import FormSubmitCancel from '@/components/FormSubmitCancel.vue'
 import SidePane from '@/components/SidePane.vue'
 
 const projectNS = namespace('project')
 
 @Component({
-  components: { FileUpload, SidePane, FormSubmitCancel },
+  components: { CsvUploadForm, SidePane, FormSubmitCancel },
 })
 export default class CSVUploadView extends Vue {
   @projectNS.State('csvMapping') mapping!: CsvMapping
 
+  isLoading = false
   error: string | null = null
 
   get fileMeta (): Record<string, string> {
@@ -50,26 +50,30 @@ export default class CSVUploadView extends Vue {
     return operation
   }
 
-  async createSources (files: UploadedFile[]): Promise<void> {
+  async submit (mediaObjects: GraphPointer[]): Promise<void> {
     const operation = this.operation
-    const uploads = files.map((file) => {
-      const dataset = $rdf.dataset()
-      const pointer = clownface({ dataset, term: $rdf.namedNode('') })
-        .addOut(schema.name, $rdf.literal(file.name))
-        .addOut(schema.identifier, $rdf.literal(file.s3Multipart.key))
-        .addOut(schema.contentUrl, $rdf.namedNode(file.uploadURL))
-      const resource = RdfResourceImpl.factory.createEntity(pointer)
+    const uploads = mediaObjects.map((mediaObject) => {
+      const resource = RdfResourceImpl.factory.createEntity(mediaObject)
 
       return api.invokeSaveOperation(operation, resource)
     })
 
     this.error = null
+    this.isLoading = true
 
     try {
       await Promise.all(uploads)
+
+      this.$buefy.toast.open({
+        message: 'CSV files were successfully uploaded',
+        type: 'is-success',
+      })
+
+      await this.close()
     } catch (e) {
-      this.error = e.toString()
-      throw e
+      this.error = e?.details?.detail ?? e.toString()
+    } finally {
+      this.isLoading = false
     }
   }
 

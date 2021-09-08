@@ -1,5 +1,5 @@
 import { cc, shape } from '@cube-creator/core/namespace'
-import { csvw, dash, hydra, rdfs, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
+import { csvw, dash, hydra, rdf, rdfs, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import { turtle } from '@tpluscode/rdf-string'
 import $rdf from 'rdf-ext'
 
@@ -12,6 +12,13 @@ ${shapeCreateId} {
   ${shapeCreateId} a ${sh.NodeShape}, ${hydra.Resource} ;
     ${sh.targetClass} ${schema.MediaObject} ;
     ${rdfs.label} "CSV Source Media Object" ;
+    ${sh.property} [
+      ${sh.name} "Source type" ;
+      ${sh.path} ${cc.sourceKind} ;
+      ${sh.in} ( ${cc.MediaLocal} ${cc.MediaURL} ) ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+    ] ;
     ${sh.property} [
       ${sh.name} "File name" ;
       ${sh.path} ${schema.name} ;
@@ -26,13 +33,43 @@ ${shapeCreateId} {
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
     ] ;
-    ${sh.property} [
-      ${sh.name} "S3 key" ;
-      ${sh.path} ${schema.identifier} ;
-      ${sh.datatype} ${xsd.string} ;
-      ${sh.minCount} 1 ;
-      ${sh.maxCount} 1 ;
-    ] ;
+    ${sh.xone} (
+      [
+        ${sh.closed} true ;
+        ${sh.ignoredProperties} (
+          ${cc.sourceKind}
+          ${schema.name}
+          ${schema.contentUrl}
+          ${rdf.type}
+        ) ;
+        ${sh.property} [
+          ${sh.path} ${cc.sourceKind} ;
+          ${sh.hasValue} ${cc.MediaLocal} ;
+          ${dash.hidden} true ;
+        ] ;
+        ${sh.property} [
+          ${sh.name} "S3 key" ;
+          ${sh.path} ${schema.identifier} ;
+          ${sh.datatype} ${xsd.string} ;
+          ${sh.minCount} 1 ;
+          ${sh.maxCount} 1 ;
+        ] ;
+      ]
+      [
+        ${sh.closed} true ;
+        ${sh.ignoredProperties} (
+          ${cc.sourceKind}
+          ${schema.name}
+          ${schema.contentUrl}
+          ${rdf.type}
+        ) ;
+        ${sh.property} [
+          ${sh.path} ${cc.sourceKind} ;
+          ${sh.hasValue} ${cc.MediaURL} ;
+          ${dash.hidden} true ;
+        ] ;
+      ]
+    ) ;
   .
 }
 `

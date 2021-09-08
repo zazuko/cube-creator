@@ -2,7 +2,6 @@ import { GraphPointer } from 'clownface'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { Conflict } from 'http-errors'
 import { NamedNode } from 'rdf-js'
-import * as s3 from '../../storage/s3'
 import { error } from '../../log'
 import { ResourceStore } from '../../ResourceStore'
 import { loadFileHeadString } from '../csv/file-head'
@@ -10,12 +9,15 @@ import { sniffParse } from '../csv'
 import { sampleValues } from '../csv/sample-values'
 import * as CsvSourceQueries from '../queries/csv-source'
 import { CsvMapping } from '@cube-creator/model'
+import { cc } from '@cube-creator/core/namespace'
+import type { GetMediaStorage } from '../../storage'
+import { getMediaStorage } from '../../storage'
 
 interface CreateCSVSourceCommand {
   csvMappingId: NamedNode
   resource: GraphPointer
   store: ResourceStore
-  fileStorage?: s3.FileStorage
+  getStorage?: GetMediaStorage
   csvSourceQueries?: Pick<typeof CsvSourceQueries, 'sourceWithFilenameExists'>
 }
 
@@ -23,13 +25,14 @@ export async function createCSVSource({
   csvMappingId,
   resource,
   store,
-  fileStorage = s3,
+  getStorage = getMediaStorage,
   csvSourceQueries: { sourceWithFilenameExists } = CsvSourceQueries,
 }: CreateCSVSourceCommand): Promise<GraphPointer> {
   const csvMapping = await store.getResource<CsvMapping>(csvMappingId)
 
+  const sourceKind = resource.out(cc.sourceKind).term! as NamedNode
   const fileName = resource.out(schema.name).value!
-  const key = resource.out(schema.identifier).value!
+  const key = resource.out(schema.identifier).value || ''
   const location = resource.out(schema.contentUrl).term! as NamedNode
 
   if (await sourceWithFilenameExists(csvMapping.id, fileName)) {
@@ -37,10 +40,12 @@ export async function createCSVSource({
   }
 
   const csvSource = csvMapping.addSource(store, { fileName })
-  csvSource.setUploadedFile(key, location)
+  csvSource.setUploadedFile(sourceKind, key, location)
 
   try {
-    const fileStream = fileStorage.loadFile(key)
+    const media = csvSource.associatedMedia
+    const storage = getStorage(media)
+    const fileStream = await storage.getStream(media)
     const head = await loadFileHeadString(fileStream, 500)
     const { dialect, header, rows } = await sniffParse(head)
     const sampleCol = sampleValues(header, rows)

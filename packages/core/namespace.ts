@@ -29,7 +29,9 @@ type CubeCreatorClass =
   'TransformJob' |
   'ImportJob' |
   'PublishJob' |
-  'ReplaceCSVAction'
+  'ReplaceCSVAction' |
+  'MediaLocal' |
+  'MediaURL'
 
 type CubeCreatorProperty =
   'projectSourceKind' |
@@ -38,6 +40,7 @@ type CubeCreatorProperty =
   'csvSource' |
   'csvSourceCollection' |
   'csvColumnSample' |
+  'sourceKind' |
   'csvw' |
   'tables' |
   'identifierTemplate' |

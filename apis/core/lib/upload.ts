@@ -58,12 +58,21 @@ function buildKey(filename: string, metadata: Record<string, string>) {
   const isReplace = !!metadata.replace
   const csvMappingURI = metadata.csvMapping
 
-  // When replacing a source file, we use a temporary file key to avoid
-  // overriding the file before it gets validated. The temporary files
-  // will then get deleted.
-  const fileKey = isReplace ? nanoid() : filename
+  // When replacing a source file, we add a random value in the file name to
+  // avoid overriding the old version before validation.
+  const fileKey = isReplace ? addRandom(filename) : filename
 
   return `${csvMappingURI.replace(env.API_CORE_BASE, '')}/${fileKey}`
+}
+
+function addRandom(filename: string) {
+  const parts = filename.split('.')
+  const random = nanoid()
+
+  const start = parts.slice(0, -1).join('.')
+  const ext = parts.slice(-1)[0]
+
+  return [start, random].filter(Boolean).join('-') + '.' + ext
 }
 
 export default app

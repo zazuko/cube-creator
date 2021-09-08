@@ -5,21 +5,22 @@ import RdfResource from '@tpluscode/rdfine'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { ResourceStore } from '../../ResourceStore'
 import { error } from '../../log'
-import * as s3 from '../../storage/s3'
 import { loadFileHeadString } from '../csv/file-head'
 import { parse } from '../csv'
 import { sampleValues } from '../csv/sample-values'
+import type { GetMediaStorage } from '../../storage'
+import { getMediaStorage } from '../../storage'
 
 interface UpdateCsvSourceCommand {
   resource: GraphPointer<NamedNode>
   store: ResourceStore
-  fileStorage?: s3.FileStorage
+  getStorage?: GetMediaStorage
 }
 
 export async function update({
   resource,
   store,
-  fileStorage = s3,
+  getStorage = getMediaStorage,
 }: UpdateCsvSourceCommand): Promise<GraphPointer> {
   const changed = RdfResource.factory.createEntity<CsvSource>(resource)
   const csvSource = await store.getResource<CsvSource>(resource.term)
@@ -29,19 +30,16 @@ export async function update({
     csvSource.pointer.deleteOut(schema.error)
     csvSource.columns = []
 
-    await createOrUpdateColumns(csvSource, fileStorage)
+    await createOrUpdateColumns(csvSource, getStorage)
   }
 
   return csvSource.pointer
 }
 
-export async function createOrUpdateColumns(csvSource: CsvSource, fileStorage: s3.FileStorage): Promise<void> {
+export async function createOrUpdateColumns(csvSource: CsvSource, getStorage: GetMediaStorage): Promise<void> {
   try {
-    if (!csvSource.associatedMedia.identifierLiteral) {
-      throw new Error('Key to file missing')
-    }
-
-    const fileStream = fileStorage.loadFile(csvSource.associatedMedia.identifierLiteral)
+    const storage = getStorage(csvSource.associatedMedia)
+    const fileStream = await storage.getStream(csvSource.associatedMedia)
     const head = await loadFileHeadString(fileStream, 500)
     const { header, rows } = await parse(head, {
       bom: true,

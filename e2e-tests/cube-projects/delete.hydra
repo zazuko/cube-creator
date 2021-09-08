@@ -44,8 +44,10 @@ With Class cc:CubeProject {
 
                     ```
                     prefix schema: <http://schema.org/>
+                    prefix cc: <https://cube-creator.zazuko.com/vocab#>
 
-                    <> schema:name "test.csv" ;
+                    <> cc:sourceKind cc:MediaLocal ;
+                       schema:name "test.csv" ;
                        schema:contentUrl <http://s3.cube-creator.lndo.site/cube-creator/test-data/delete-test-cube/test.csv> ;
                        schema:identifier "test-data/delete-test-cube/test.csv" ;
                     ```
