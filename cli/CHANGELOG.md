@@ -1,5 +1,19 @@
 # @cube-creator/cli
 
+## 1.5.0
+
+### Minor Changes
+
+- b793194e: Add void dataset link to cubes published with "Published" status (re. #730)
+
+### Patch Changes
+
+- Updated dependencies [271cb671]
+- Updated dependencies [b793194e]
+- Updated dependencies [6872eb8e]
+  - @cube-creator/core@0.3.3
+  - @cube-creator/model@0.1.20
+
 ## 1.4.4
 
 ### Patch Changes
