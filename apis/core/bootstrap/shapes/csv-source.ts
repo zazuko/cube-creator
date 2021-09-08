@@ -6,7 +6,6 @@ import $rdf from 'rdf-ext'
 const shapeCreateId = shape('csv-source/create')
 const shapeUpdateId = shape('csv-source/update')
 const csvSourceDialect = $rdf.namedNode(shapeUpdateId.value + '#csvSourceDialect')
-const s3BucketId = shape('csv-source/s3Bucket')
 
 export const CSVSourceCreateShape = turtle`
 ${shapeCreateId} {
@@ -16,7 +15,7 @@ ${shapeCreateId} {
     ${sh.property} [
       ${sh.name} "Source type" ;
       ${sh.path} ${cc.sourceKind} ;
-      ${sh.in} ( ${cc.MediaLocal} ${cc.MediaURL} ${cc.MediaExternalS3} ) ;
+      ${sh.in} ( ${cc.MediaLocal} ${cc.MediaURL} ) ;
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
     ] ;
@@ -70,59 +69,7 @@ ${shapeCreateId} {
           ${dash.hidden} true ;
         ] ;
       ]
-      [
-        ${sh.closed} true ;
-        ${sh.ignoredProperties} (
-          ${cc.sourceKind}
-          ${schema.name}
-          ${schema.contentUrl}
-          ${rdf.type}
-        ) ;
-        ${sh.property} [
-          ${sh.path} ${cc.sourceKind} ;
-          ${sh.hasValue} ${cc.MediaExternalS3} ;
-          ${dash.hidden} true ;
-        ] ;
-        ${sh.property} [
-          ${sh.name} "S3 key" ;
-          ${sh.path} ${schema.identifier} ;
-          ${sh.datatype} ${xsd.string} ;
-          ${sh.minCount} 1 ;
-          ${sh.maxCount} 1 ;
-        ] ;
-        ${sh.property} [
-          ${sh.name} "S3 bucket" ;
-          ${sh.path} ${cc.s3Bucket} ;
-          ${sh.node} ${s3BucketId} ;
-          ${sh.class} ${cc.S3Bucket} ;
-          ${sh.minCount} 1 ;
-          ${sh.maxCount} 1 ;
-          ${dash.editor} ${dash.DetailsEditor} ;
-        ] ;
-      ]
     ) ;
-  .
-
-  ${s3BucketId} a ${sh.NodeShape} ;
-    ${sh.targetClass} ${cc.S3Bucket} ;
-    ${sh.property} [
-      ${sh.path} ${cc.endpoint} ;
-      ${sh.nodeKind} ${sh.IRI} ;
-      ${sh.minCount} 1 ;
-      ${sh.maxCount} 1 ;
-    ] ;
-    ${sh.property} [
-      ${sh.path} ${cc.apiKey} ;
-      ${sh.datatype} ${xsd.string} ;
-      ${sh.minCount} 1 ;
-      ${sh.maxCount} 1 ;
-    ] ;
-    ${sh.property} [
-      ${sh.path} ${cc.apiSecret} ;
-      ${sh.datatype} ${xsd.string} ;
-      ${sh.minCount} 1 ;
-      ${sh.maxCount} 1 ;
-    ] ;
   .
 }
 `

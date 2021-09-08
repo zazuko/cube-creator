@@ -17,9 +17,6 @@
         </b-button>
       </form>
     </b-tab-item>
-    <b-tab-item label="S3" value="MediaExternalS3" disabled>
-      TODO
-    </b-tab-item>
   </b-tabs>
 </template>
 
