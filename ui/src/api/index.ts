@@ -13,7 +13,11 @@ import { apiResourceMixin } from './mixins/ApiResource'
 import CSVSourceMixin from './mixins/CSVSource'
 import TableMixin from './mixins/Table'
 import JobCollectionMixin from './mixins/JobCollection'
+import OperationMixin from './mixins/Operation'
 import * as Models from '@cube-creator/model'
+import { findNodes } from 'clownface-shacl-path'
+import { FileLiteral } from '@/forms/FileLiteral'
+import { GraphPointer } from 'clownface'
 
 const rootURL = window.APP_CONFIG.apiCoreBase
 const segmentSeparator = '!!' // used to replace slash in URI to prevent escaping
@@ -30,6 +34,7 @@ Hydra.resources.factory.addMixin(apiResourceMixin(rootURL, segmentSeparator))
 Hydra.resources.factory.addMixin(CSVSourceMixin)
 Hydra.resources.factory.addMixin(TableMixin)
 Hydra.resources.factory.addMixin(JobCollectionMixin)
+Hydra.resources.factory.addMixin(OperationMixin)
 Hydra.resources.factory.addMixin(...ShapeBundle)
 
 // Inject the access token in all requests if present
@@ -79,12 +84,57 @@ export const api = {
     return null
   },
 
+  prepareOperationBody (data: RdfResource | File, operation: RuntimeOperation): { body: File | FormData | string; contentHeaders: HeadersInit } {
+    if (data instanceof File) {
+      return {
+        body: data,
+        contentHeaders: { 'content-type': data.type },
+      }
+    }
+
+    const embeddedFiles = operation.multiPartPaths
+      .reduce((previous, { pointer: path }) => {
+        return [
+          ...previous,
+          ...findNodes(data.pointer, path).toArray()
+        ]
+      }, [] as GraphPointer[])
+
+    const body = JSON.stringify(data.toJSON())
+
+    if (embeddedFiles.length) {
+      const formData = new FormData()
+      formData.append('representation', new Blob([body], {
+        type: 'application/ld+json'
+      }))
+
+      for (const file of embeddedFiles) {
+        const term = file.term instanceof FileLiteral ? file.term : null
+        if (term) {
+          formData.append(term.value, term.file)
+        }
+      }
+
+      return {
+        body: formData,
+        // not setting 'multipart/form-data' because the browser will do that
+        // only this way the multipart boundary is set automatically
+        contentHeaders: {},
+      }
+    }
+
+    return {
+      body,
+      contentHeaders: { 'content-type': 'application/ld+json' }
+    }
+  },
+
   async invokeSaveOperation<T extends RdfResource = RdfResource> (operation: RuntimeOperation | null, data: RdfResource | File, headers: Record<string, string> = {}): Promise<T> {
     if (!operation) throw new Error('Operation does not exist')
 
-    const serializedData = data instanceof File ? data : JSON.stringify(data.toJSON())
-    const response = await operation.invoke(serializedData, {
-      'content-type': 'application/ld+json',
+    const { body, contentHeaders } = this.prepareOperationBody(data, operation)
+    const response = await operation.invoke(body, {
+      ...contentHeaders,
       ...headers,
     })
 

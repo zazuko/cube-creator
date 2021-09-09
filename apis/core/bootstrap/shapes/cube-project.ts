@@ -1,4 +1,4 @@
-import { cc, sh1, shape } from '@cube-creator/core/namespace'
+import { cc, sh1, shape, editor } from '@cube-creator/core/namespace'
 import { dash, dcterms, hydra, rdf, rdfs, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { turtle } from '@tpluscode/rdf-string'
 import $rdf from 'rdf-ext'
@@ -116,6 +116,14 @@ const projectProperties = turtle`
         ${sh.hasValue} ${shape('cube-project/create#ExportedProject')} ;
         ${dash.hidden} true ;
       ] ;
+      ${sh.property} [
+        ${sh.name} "Project data" ;
+        ${sh.path} ${cc.export} ;
+        ${dash.editor} ${editor.FileUpload} ;
+        ${sh.minCount} 1 ;
+        ${sh.maxCount} 1 ;
+        ${sh.order} 40 ;
+      ];
     ]
   ) ;`
 
@@ -134,6 +142,7 @@ ${shape('cube-project/create')} {
       ${sh.in} (
         ${shape('cube-project/create#CSV')}
         ${shape('cube-project/create#ExistingCube')}
+        ${shape('cube-project/create#ExportedProject')}
       ) ;
       ${sh.defaultValue} ${shape('cube-project/create#CSV')} ;
       ${sh.order} 20 ;
@@ -149,6 +158,11 @@ ${shape('cube-project/create')} {
   ${shape('cube-project/create#ExistingCube')}
     ${rdfs.label} "Existing Cube" ;
     ${rdfs.comment} "Add metadata to a Cube resulting of another pipeline" ;
+  .
+
+  ${shape('cube-project/create#ExportedProject')}
+    ${rdfs.label} "Exported project" ;
+    ${rdfs.comment} "Import project backup" ;
   .
 }
 

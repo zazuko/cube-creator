@@ -298,3 +298,14 @@ export const dictionaryTable: Lazy<MultiEditorComponent<DictionaryTable>> = {
     }
   }
 }
+
+export const fileUpload: Lazy<SingleEditorComponent> = {
+  editor: ns.editor.FileUpload,
+  async lazyRender () {
+    await import('./FileUploadEditor.vue').then(createCustomElement('file-upload-editor'))
+
+    return (arg, { update }) => {
+      return html`<file-upload-editor .update="${update}"></file-upload-editor>`
+    }
+  }
+}
