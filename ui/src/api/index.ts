@@ -84,14 +84,7 @@ export const api = {
     return null
   },
 
-  prepareOperationBody (data: RdfResource | File, operation: RuntimeOperation): { body: File | FormData | string; contentHeaders: HeadersInit } {
-    if (data instanceof File) {
-      return {
-        body: data,
-        contentHeaders: { 'content-type': data.type },
-      }
-    }
-
+  prepareOperationBody (data: RdfResource, operation: RuntimeOperation): { body: File | FormData | string; contentHeaders: HeadersInit } {
     const embeddedFiles = operation.multiPartPaths
       .reduce((previous, { pointer: path }) => {
         return [
@@ -129,7 +122,7 @@ export const api = {
     }
   },
 
-  async invokeSaveOperation<T extends RdfResource = RdfResource> (operation: RuntimeOperation | null, data: RdfResource | File, headers: Record<string, string> = {}): Promise<T> {
+  async invokeSaveOperation<T extends RdfResource = RdfResource> (operation: RuntimeOperation | null, data: RdfResource, headers: Record<string, string> = {}): Promise<T> {
     if (!operation) throw new Error('Operation does not exist')
 
     const { body, contentHeaders } = this.prepareOperationBody(data, operation)
