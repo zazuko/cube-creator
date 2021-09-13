@@ -4,13 +4,14 @@ import { ResourceStore } from '../../ResourceStore'
 import * as id from '../identifiers'
 import { dcterms, rdfs, schema } from '@tpluscode/rdf-ns-builders'
 import { createMinimalProject, Project } from '@cube-creator/model/Project'
-import { cc } from '@cube-creator/core/namespace'
+import { cc, shape } from '@cube-creator/core/namespace'
 import $rdf from 'rdf-ext'
 import { exists } from './queries'
 import { DomainError } from '../../../../errors/domain'
 import { BadRequest } from 'http-errors'
 import { Transform } from 'stream'
 import { obj } from 'through2'
+import TermSet from '@rdfjs/term-set'
 
 export type Files = Record<string, (project: Project) => Stream>
 
@@ -27,6 +28,11 @@ interface ImportedProject {
   project: Project
   importedDataset: DatasetCore
 }
+
+const sourceKinds = new TermSet([
+  shape('cube-project/create#ExistingCube'),
+  shape('cube-project/create#CSV'),
+])
 
 /**
  * Ensures that URI of the project itself in the stream,
@@ -61,11 +67,11 @@ export async function importProject({
 }: ImportProject): Promise<ImportedProject> {
   const label = resource.out(rdfs.label).value
   if (!label) {
-    throw new Error('Missing project name')
+    throw new BadRequest('Missing project name')
   }
   const maintainer = resource.out(schema.maintainer).term
   if (!maintainer) {
-    throw new Error('Missing organization')
+    throw new BadRequest('Missing organization')
   }
 
   const projectNode = await store.createMember(projectsCollection.term, id.cubeProject(label))
@@ -95,7 +101,7 @@ export async function importProject({
     throw new DomainError('Another project is already using same identifier')
   }
   const sourceKind = importedProject.out(cc.projectSourceKind).term
-  if (!sourceKind || sourceKind.termType !== 'NamedNode') {
+  if (!sourceKind || sourceKind.termType !== 'NamedNode' || !sourceKinds.has(sourceKind)) {
     throw new BadRequest('Missing or invalid cc:projectSourceKind name in imported data')
   }
   project.sourceKind = sourceKind
