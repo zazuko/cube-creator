@@ -1730,10 +1730,10 @@
     "@rdf-esm/sink-map" "^0.5.4"
     "@rdfjs/serializer-jsonld-ext" "^2.0.0"
 
-"@rdfjs-elements/formats-pretty@^0.3.2":
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/@rdfjs-elements/formats-pretty/-/formats-pretty-0.3.2.tgz#150abe9d55c8ecb619a205082d40ce6c4d046a23"
-  integrity sha512-BAdvoGKnYUnoT59sCYsip+RWyBP7nh3w7Ghmyl77DtjJHzkFSiCmpj+6LiOZgYvXi24JenUJBEcyMjptYEqu1A==
+"@rdfjs-elements/formats-pretty@^0.3.2", "@rdfjs-elements/formats-pretty@^0.3.3":
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/@rdfjs-elements/formats-pretty/-/formats-pretty-0.3.3.tgz#c0b9a6a1c247240fe46cc7bb705815e63de5fb62"
+  integrity sha512-V348jIRTsFFJuaBVysAhYM8JiPcFUtEaxMf5fynJ4nGoJWMFsaP+sE/+8rl1ik79DVeKnGVwbb4MfL4Q0ykUKg==
   dependencies:
     "@graphy/content.nq.read" "^4.3.3"
     "@graphy/content.trig.read" "^4.3.3"
@@ -2129,10 +2129,10 @@
     clownface "^1"
     once "^1.4.0"
 
-"@tpluscode/sparql-builder@^0.3.15", "@tpluscode/sparql-builder@^0.3.9":
-  version "0.3.15"
-  resolved "https://registry.yarnpkg.com/@tpluscode/sparql-builder/-/sparql-builder-0.3.15.tgz#fd7063a0a51d5ed8f39b85b608a08fdeb4602562"
-  integrity sha512-GGaL4FZ4roC9eE4D4+G9yzSsztYEHfYp/w9SuxShnKheuLZ/HtF+ukrPPYcLyyq9m3S4xwH5AafQioUqIejasA==
+"@tpluscode/sparql-builder@^0.3.15", "@tpluscode/sparql-builder@^0.3.16", "@tpluscode/sparql-builder@^0.3.9":
+  version "0.3.16"
+  resolved "https://registry.yarnpkg.com/@tpluscode/sparql-builder/-/sparql-builder-0.3.16.tgz#b0057b4e58fb3c9417d10942a6f985831b187587"
+  integrity sha512-VMfO4YsNZnQDp1iXUCyHa/x9n7vnv7pVqCGaurJjTYD1/wMxxoqC054ghYCALe3bQEd5749ll4cKARBtbz3ddw==
   dependencies:
     "@rdf-esm/data-model" "^0.5.4"
     "@rdf-esm/term-set" "^0.5.0"
@@ -2347,6 +2347,11 @@
   integrity sha512-aDA8WfZHU/J1OeQmrP+DfGrl1tb0cwNIuiiIqK3+S21gQ+aWg2n4OIvmFHpd2A4yQdZfjikC4XIYVNtX+b9qgg==
   dependencies:
     "@types/node" "*"
+
+"@types/mime-types@^2":
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@types/mime-types/-/mime-types-2.1.1.tgz#d9ba43490fa3a3df958759adf69396c3532cf2c1"
+  integrity sha512-vXOTGVSLR2jMw440moWTC7H19iUyLtP3Z1YTj7cSsubOICinjMxFeb/V57v9QdyyPGbbWolUFSSmSiRSn94tFw==
 
 "@types/mime@^1":
   version "1.3.2"
@@ -9968,7 +9973,7 @@ mime-types@2.1.25:
   dependencies:
     mime-db "1.42.0"
 
-mime-types@^2.1.12, mime-types@~2.1.17, mime-types@~2.1.19, mime-types@~2.1.24:
+mime-types@^2, mime-types@^2.1.12, mime-types@~2.1.17, mime-types@~2.1.19, mime-types@~2.1.24:
   version "2.1.32"
   resolved "https://registry.yarnpkg.com/mime-types/-/mime-types-2.1.32.tgz#1d00e89e7de7fe02008db61001d9e02852670fd5"
   integrity sha512-hJGaVS4G4c9TSMYh2n6SQAGrC4RnfU+daP8G7cSCmaqNjiOoUY0VHCMS42pxnQmVF1GWwFhbHWn3RIxCqTmZ9A==

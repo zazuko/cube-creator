@@ -42,7 +42,7 @@ async function createCsvProjectResource({ user, userName, projectNode, store, la
     throw new DomainError('Another project is already using same identifier')
   }
 
-  const project = Project.create(projectNode, {
+  const project = Project.createCsvProject(projectNode, {
     creator: { id: user, name: userName },
     label,
     maintainer,

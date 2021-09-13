@@ -1,6 +1,7 @@
 import { cc } from '@cube-creator/core/namespace'
 import { Project } from '@cube-creator/model/Project'
 import { SELECT } from '@tpluscode/sparql-builder'
+import { IN } from '@tpluscode/sparql-builder/expressions'
 import type { NamedNode, Stream, Term } from 'rdf-js'
 import StreamClient from 'sparql-http-client'
 import through2 from 'through2'
@@ -8,6 +9,7 @@ import $rdf from 'rdf-ext'
 import { streamClient } from '../../query-client'
 import { ResourceStore } from '../../ResourceStore'
 import { dcterms, schema } from '@tpluscode/rdf-ns-builders'
+import { rdfs } from '@tpluscode/rdf-ns-builders/strict'
 
 interface GetExportedProject {
   resource: NamedNode
@@ -46,23 +48,13 @@ export async function getExportedProject({ resource, store, client = streamClien
     GRAPH ?g { ?s ?p ?o }
 
     FILTER (
-      # Exclude project creator
-      ?g != ${project.id} || ?p != ${dcterms.creator}
+      # Exclude properties added on creation
+      ?g != ${project.id} || ?p ${IN(dcterms.creator, schema.maintainer, cc.latestPublishedRevision, rdfs.label)}
     )
 
     FILTER (
       # Exclude project creator
       ?g != ${project.id} || ( ?g = ${project.id} && ?s = ${project.id} )
-    )
-
-    FILTER (
-      # Exclude project maintainer Organization
-      ?g != ${project.id} || ?p != ${schema.maintainer}
-    )
-
-    FILTER (
-      # Exclude project latest version
-      ?g != ${project.id} || ?p != ${cc.latestPublishedRevision}
     )
     `
     .execute(client.query)
