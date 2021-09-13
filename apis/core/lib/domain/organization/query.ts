@@ -5,6 +5,7 @@ import { cc } from '@cube-creator/core/namespace'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { parsingClient } from '../../query-client'
 import $rdf from 'rdf-ext'
+import { Published } from '@cube-creator/model/Cube'
 
 type FindOrganization = {
   table: Table
@@ -68,6 +69,8 @@ export function fetchOrganizationDatasets(organization: NamedNode, client = pars
       }
       GRAPH ?dataset {
         ?s ?p ?o .
+        ?s ${schema.workExample} <https://ld.admin.ch/application/opendataswiss> .
+        ?s ${schema.creativeWorkStatus} ${Published} .
       }
     `.execute(client.query)
 }
