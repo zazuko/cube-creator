@@ -6,7 +6,7 @@ import { ccClients } from '@cube-creator/testing/lib'
 import clownface from 'clownface'
 import { DatasetCore } from 'rdf-js'
 import $rdf from 'rdf-ext'
-import { dcterms, rdf, rdfs, schema } from '@tpluscode/rdf-ns-builders/strict'
+import { dcterms, rdf, schema } from '@tpluscode/rdf-ns-builders/strict'
 import { getExportedProject } from '../../../lib/domain/cube-projects/export'
 import ResourceStore from '../../../lib/ResourceStore'
 
