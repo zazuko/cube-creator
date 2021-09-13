@@ -35,7 +35,7 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/export @SPARQL', () =>
       expect(project).to.matchShape({
         targetNode: [projectId],
         property: [{
-          path: rdfs.label,
+          path: cc.projectSourceKind,
           minCount: 1,
           maxCount: 1,
         }],

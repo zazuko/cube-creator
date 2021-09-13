@@ -49,7 +49,7 @@ export async function getExportedProject({ resource, store, client = streamClien
 
     FILTER (
       # Exclude properties added on creation
-      ?g != ${project.id} || ?p ${IN(dcterms.creator, schema.maintainer, cc.latestPublishedRevision, rdfs.label)}
+      ?g != ${project.id} || ?p NOT ${IN(dcterms.creator, schema.maintainer, cc.latestPublishedRevision, rdfs.label)}
     )
 
     FILTER (
