@@ -33,7 +33,7 @@ const projectProperties = turtle`
     ${sh.nodeKind} ${sh.IRI} ;
     ${dash.editor} ${dash.InstancesSelectEditor} ;
     ${hydra.collection} <organizations> ;
-    ${sh.order} 30 ;
+    ${sh.order} 20 ;
   ] ;
   ${sh.xone} (
     [
@@ -145,7 +145,7 @@ ${shape('cube-project/create')} {
         ${shape('cube-project/create#ExportedProject')}
       ) ;
       ${sh.defaultValue} ${shape('cube-project/create#CSV')} ;
-      ${sh.order} 20 ;
+      ${sh.order} 30 ;
     ] ;
     ${projectProperties}
   .
