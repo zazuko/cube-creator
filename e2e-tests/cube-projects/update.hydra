@@ -35,7 +35,7 @@ With Class cc:CubeProject {
                cc:dataset <cube-project/ubd/dataset> ;
                cc:jobCollection <cube-project/ubd/jobs> ;
                cc:latestPublishedRevision 1 ;
-               cc:projectSourceKind <shape/cube-project/create#CSV> .
+               cc:projectSourceKind <https://cube-creator.zazuko.com/vocab#projectSourceKind/CSV> .
             ```
         } => {
             Expect Status 200

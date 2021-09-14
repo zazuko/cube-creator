@@ -11,16 +11,19 @@ interface ShaclMiddlewareOptions {
   loadResource(id: NamedNode): Promise<GraphPointer<NamedNode> | null>
   loadResourcesTypes(ids: Term[]): Promise<Quad[]>
   getTargetNode?(req: Request, res: Response): NamedNode | undefined
+  parseResource?(req: Request): Promise<GraphPointer<NamedNode>>
 }
 
-export const shaclMiddleware = ({ getTargetNode, loadResource, loadResourcesTypes }: ShaclMiddlewareOptions) => asyncMiddleware(async (req, res, next) => {
-  let resource: GraphPointer<NamedNode>
+async function defaultParse(req: Request) {
   if (!req.dataset) {
-    resource = clownface({ dataset: $rdf.dataset() }).node(req.hydra.term)
-  } else {
-    resource = await req.resource()
+    return clownface({ dataset: $rdf.dataset() }).node(req.hydra.term)
   }
 
+  return req.resource()
+}
+
+export const shaclMiddleware = ({ getTargetNode, loadResource, loadResourcesTypes, parseResource = defaultParse }: ShaclMiddlewareOptions) => asyncMiddleware(async (req, res, next) => {
+  const resource = await parseResource(req)
   const targetNode = getTargetNode?.(req, res) || resource.term
 
   const shapes = $rdf.dataset()

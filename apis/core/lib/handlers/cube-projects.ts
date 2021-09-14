@@ -1,4 +1,5 @@
 import asyncMiddleware from 'middleware-async'
+import conditional from 'express-conditional-middleware'
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
 import { serializers } from '@rdfjs-elements/formats-pretty'
 import { shaclValidate } from '../middleware/shacl'
@@ -13,10 +14,12 @@ import env from '@cube-creator/core/env'
 import { cc, cube, meta } from '@cube-creator/core/namespace'
 import * as ns from '@tpluscode/rdf-ns-builders'
 import cors from 'cors'
+import { isMultipart } from './lib'
+import { postImportedProject } from './cube-projects/import'
 
 const trigger = (triggers as Record<string, (job: GraphPointer<NamedNode>, params?: GraphPointer) => void>)[env.PIPELINE_TYPE]
 
-export const post = protectedResource(
+const postDirect = protectedResource(
   shaclValidate,
   asyncMiddleware(async (req, res) => {
     const user = req.user?.id
@@ -44,6 +47,8 @@ export const post = protectedResource(
     await res.dataset(project.dataset)
   }),
 )
+
+export const post = conditional(isMultipart, postImportedProject, postDirect)
 
 export const put = protectedResource(
   shaclValidate,

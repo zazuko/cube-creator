@@ -1,4 +1,4 @@
-import { cc, sh1, shape } from '@cube-creator/core/namespace'
+import { cc, sh1, shape, editor } from '@cube-creator/core/namespace'
 import { dash, dcterms, hydra, rdf, rdfs, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { turtle } from '@tpluscode/rdf-string'
 import $rdf from 'rdf-ext'
@@ -33,7 +33,7 @@ const projectProperties = turtle`
     ${sh.nodeKind} ${sh.IRI} ;
     ${dash.editor} ${dash.InstancesSelectEditor} ;
     ${hydra.collection} <organizations> ;
-    ${sh.order} 30 ;
+    ${sh.order} 20 ;
   ] ;
   ${sh.xone} (
     [
@@ -46,7 +46,7 @@ const projectProperties = turtle`
       ) ;
       ${sh.property} [
         ${sh.path} ${cc.projectSourceKind} ;
-        ${sh.hasValue} ${shape('cube-project/create#CSV')} ;
+        ${sh.hasValue} ${cc['projectSourceKind/CSV']} ;
         ${dash.hidden} true ;
       ] ;
       ${sh.property} [
@@ -70,7 +70,7 @@ const projectProperties = turtle`
       ) ;
       ${sh.property} [
         ${sh.path} ${cc.projectSourceKind} ;
-        ${sh.hasValue} ${shape('cube-project/create#ExistingCube')} ;
+        ${sh.hasValue} ${cc['projectSourceKind/ExistingCube']} ;
         ${dash.hidden} true ;
       ] ;
       ${sh.property} [
@@ -103,6 +103,28 @@ const projectProperties = turtle`
         ${sh.order} 60 ;
       ] ;
     ]
+    [
+      ${sh.closed} true ;
+      ${sh.ignoredProperties} (
+        ${rdfs.label}
+        ${schema.maintainer}
+        ${rdf.type}
+        ${generatedProperties}
+      ) ;
+      ${sh.property} [
+        ${sh.path} ${cc.projectSourceKind} ;
+        ${sh.hasValue} ${cc['projectSourceKind/ExportedProject']} ;
+        ${dash.hidden} true ;
+      ] ;
+      ${sh.property} [
+        ${sh.name} "Project data" ;
+        ${sh.path} ${cc.export} ;
+        ${dash.editor} ${editor.FileUpload} ;
+        ${sh.minCount} 1 ;
+        ${sh.maxCount} 1 ;
+        ${sh.order} 40 ;
+      ];
+    ]
   ) ;`
 
 export const CubeProjectShape = turtle`
@@ -118,23 +140,29 @@ ${shape('cube-project/create')} {
       ${sh.maxCount} 1 ;
       ${sh.nodeKind} ${sh.IRI} ;
       ${sh.in} (
-        ${shape('cube-project/create#CSV')}
-        ${shape('cube-project/create#ExistingCube')}
+        ${cc['projectSourceKind/CSV']}
+        ${cc['projectSourceKind/ExistingCube']}
+        ${cc['projectSourceKind/ExportedProject']}
       ) ;
-      ${sh.defaultValue} ${shape('cube-project/create#CSV')} ;
-      ${sh.order} 20 ;
+      ${sh.defaultValue} ${cc['projectSourceKind/CSV']} ;
+      ${sh.order} 30 ;
     ] ;
     ${projectProperties}
   .
 
-  ${shape('cube-project/create#CSV')}
+  ${cc['projectSourceKind/CSV']}
     ${rdfs.label} "CSV File(s)" ;
     ${rdfs.comment} "Map CSV files to a new Cube" ;
   .
 
-  ${shape('cube-project/create#ExistingCube')}
+  ${cc['projectSourceKind/ExistingCube']}
     ${rdfs.label} "Existing Cube" ;
     ${rdfs.comment} "Add metadata to a Cube resulting of another pipeline" ;
+  .
+
+  ${cc['projectSourceKind/ExportedProject']}
+    ${rdfs.label} "Exported project" ;
+    ${rdfs.comment} "Import project backup" ;
   .
 }
 

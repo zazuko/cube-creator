@@ -24,7 +24,7 @@ With Class api:EntryPoint {
                 PREFIX schema: <http://schema.org/>
                 PREFIX dcterms: <http://purl.org/dc/terms/>
 
-                <> cc:projectSourceKind <https://cube-creator.lndo.site/shape/cube-project/create#CSV> ;
+                <> cc:projectSourceKind <https://cube-creator.zazuko.com/vocab#projectSourceKind/CSV> ;
                    rdfs:label "GetCSV Test Project" ;
                    dcterms:identifier "get-csv-test-cube" ;
                    schema:maintainer <https://cube-creator.lndo.site/organization/bafu> .

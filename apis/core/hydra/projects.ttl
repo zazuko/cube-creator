@@ -6,6 +6,7 @@ prefix query:  <http://hypermedia.app/query#>
 prefix sh:     <http://www.w3.org/ns/shacl#>
 PREFIX schema: <http://schema.org/>
 prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix hex:    <https://w3id.org/hydra/extension#>
 
 cc:CubeProject
   a
@@ -95,6 +96,7 @@ cc:ProjectsCollection
           code:link
             <file:handlers/cube-projects#post> ;
         ] ;
+      hex:multiPartPath cc:export ;
     ] .
 
 <shape/cube-project/create>

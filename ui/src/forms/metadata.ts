@@ -5,4 +5,5 @@ import * as ns from '@cube-creator/core/namespace'
 export const Metadata = dataset([
   quad(ns.editor.RadioButtons, rdfs.label, literal('Radio buttons')),
   quad(ns.editor.DictionaryTableEditor, rdf.type, dash.MultiEditor),
+  quad(ns.editor.FileUpload, rdf.type, dash.MultiEditor),
 ])

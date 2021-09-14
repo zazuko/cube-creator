@@ -44,3 +44,11 @@ export const dictionaryTable: MultiEditor = {
     return 0
   }
 }
+
+// todo: should return null or be removed altogether after https://github.com/hypermedia-app/shaperone/issues/156
+export const fileUpload: MultiEditor = {
+  term: ns.editor.FileUpload,
+  match () {
+    return 0
+  }
+}
