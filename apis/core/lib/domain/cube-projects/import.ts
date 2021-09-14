@@ -2,7 +2,7 @@ import { DatasetCore, NamedNode, Quad, Stream, Term } from 'rdf-js'
 import clownface, { GraphPointer } from 'clownface'
 import { ResourceStore } from '../../ResourceStore'
 import * as id from '../identifiers'
-import { dcterms, rdfs, schema } from '@tpluscode/rdf-ns-builders'
+import { dcterms, rdfs, schema, rdf } from '@tpluscode/rdf-ns-builders/strict'
 import { createMinimalProject, Project } from '@cube-creator/model/Project'
 import { cc } from '@cube-creator/core/namespace'
 import $rdf from 'rdf-ext'
@@ -57,6 +57,17 @@ export function adjustTerms(project: Project): Transform {
   })
 }
 
+function setCsvSourceErrors(dataset: DatasetCore) {
+  // errors will notify users that CSVs need to be uploaded
+  clownface({ dataset })
+    .has(rdf.type, cc.CSVSource)
+    .forEach(source => {
+      clownface({ dataset, graph: source.term })
+        .node(source)
+        .addOut(schema.error, 'CSV must be uploaded after importing project')
+    })
+}
+
 export async function importProject({
   projectsCollection,
   store,
@@ -105,6 +116,8 @@ export async function importProject({
     throw new BadRequest('Missing or invalid cc:projectSourceKind name in imported data')
   }
   project.sourceKind = sourceKind
+
+  setCsvSourceErrors(importedDataset)
 
   // ensure no duplicates for properties
   importedProject.deleteOut([

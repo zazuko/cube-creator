@@ -261,6 +261,45 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/import', () => {
         rdfs.label,
       ]).terms).to.be.empty
     })
+
+    it('sets error message to CSV source', async () => {
+      // given
+      const exported = (project: Project) => {
+        const dataset = $rdf.dataset()
+
+        clownface({ dataset, graph: project.id })
+          .node(project.id)
+          .addOut(dcterms.identifier, 'UBD')
+          .addOut(dcterms.creator, $rdf.namedNode('previous creator'))
+          .addOut(cc.latestPublishedRevision, 10)
+          .addOut(schema.maintainer, ex.Bar)
+          .addOut(rdfs.label, 'UBD29')
+          .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
+
+        const csvSource = $rdf.namedNode(`${project.id.value}/source`)
+        clownface({ dataset, graph: csvSource })
+          .namedNode(csvSource)
+          .addOut(rdf.type, cc.CSVSource)
+
+        return dataset.toStream()
+      }
+      resource.addOut(cc.export, 'ubd.trig')
+
+      // when
+      const { project, importedDataset } = await testImportProject({
+        files: {
+          'ubd.trig': exported,
+        },
+      })
+
+      // then
+      const importedCsvSource = clownface({
+        dataset: importedDataset,
+        graph: $rdf.namedNode(`${project.id.value}/source`),
+        term: $rdf.namedNode(`${project.id.value}/source`),
+      })
+      expect(importedCsvSource.out(schema.error).terms).to.be.not.empty
+    })
   })
 
   describe('adjustTerms', () => {
