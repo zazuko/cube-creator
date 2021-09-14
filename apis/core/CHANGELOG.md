@@ -1,5 +1,15 @@
 # @cube-creator/core-api
 
+## 1.4.0
+
+### Minor Changes
+
+- 6970ccf0: Create a project by importing backed up resources
+
+### Patch Changes
+
+- 9273ef4c: Add SFA and SFOE organizations
+
 ## 1.3.0
 
 ### Minor Changes
