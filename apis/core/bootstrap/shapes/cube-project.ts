@@ -46,7 +46,7 @@ const projectProperties = turtle`
       ) ;
       ${sh.property} [
         ${sh.path} ${cc.projectSourceKind} ;
-        ${sh.hasValue} ${shape('cube-project/create#CSV')} ;
+        ${sh.hasValue} ${cc['projectSourceKind/CSV']} ;
         ${dash.hidden} true ;
       ] ;
       ${sh.property} [
@@ -70,7 +70,7 @@ const projectProperties = turtle`
       ) ;
       ${sh.property} [
         ${sh.path} ${cc.projectSourceKind} ;
-        ${sh.hasValue} ${shape('cube-project/create#ExistingCube')} ;
+        ${sh.hasValue} ${cc['projectSourceKind/ExistingCube']} ;
         ${dash.hidden} true ;
       ] ;
       ${sh.property} [
@@ -113,7 +113,7 @@ const projectProperties = turtle`
       ) ;
       ${sh.property} [
         ${sh.path} ${cc.projectSourceKind} ;
-        ${sh.hasValue} ${shape('cube-project/create#ExportedProject')} ;
+        ${sh.hasValue} ${cc['projectSourceKind/ExportedProject']} ;
         ${dash.hidden} true ;
       ] ;
       ${sh.property} [
@@ -140,27 +140,27 @@ ${shape('cube-project/create')} {
       ${sh.maxCount} 1 ;
       ${sh.nodeKind} ${sh.IRI} ;
       ${sh.in} (
-        ${shape('cube-project/create#CSV')}
-        ${shape('cube-project/create#ExistingCube')}
-        ${shape('cube-project/create#ExportedProject')}
+        ${cc['projectSourceKind/CSV']}
+        ${cc['projectSourceKind/ExistingCube']}
+        ${cc['projectSourceKind/ExportedProject']}
       ) ;
-      ${sh.defaultValue} ${shape('cube-project/create#CSV')} ;
+      ${sh.defaultValue} ${cc['projectSourceKind/CSV']} ;
       ${sh.order} 30 ;
     ] ;
     ${projectProperties}
   .
 
-  ${shape('cube-project/create#CSV')}
+  ${cc['projectSourceKind/CSV']}
     ${rdfs.label} "CSV File(s)" ;
     ${rdfs.comment} "Map CSV files to a new Cube" ;
   .
 
-  ${shape('cube-project/create#ExistingCube')}
+  ${cc['projectSourceKind/ExistingCube']}
     ${rdfs.label} "Existing Cube" ;
     ${rdfs.comment} "Add metadata to a Cube resulting of another pipeline" ;
   .
 
-  ${shape('cube-project/create#ExportedProject')}
+  ${cc['projectSourceKind/ExportedProject']}
     ${rdfs.label} "Exported project" ;
     ${rdfs.comment} "Import project backup" ;
   .

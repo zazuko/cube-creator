@@ -4,7 +4,7 @@ import clownface from 'clownface'
 import $rdf from 'rdf-ext'
 import { NamedNode } from 'rdf-js'
 import { dcat, rdf, rdfs, schema, sh, _void, hydra, xsd, dcterms } from '@tpluscode/rdf-ns-builders'
-import { cc, cube, shape } from '@cube-creator/core/namespace'
+import { cc, cube } from '@cube-creator/core/namespace'
 import { createProject } from '../../../lib/domain/cube-projects/create'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import '../../../lib/domain'
@@ -53,7 +53,7 @@ describe('domain/cube-projects/create', () => {
       .addOut(rdfs.label, 'Foo bar project')
       .addOut(dcterms.identifier, 'ubd/28')
       .addOut(schema.maintainer, organization.id)
-      .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
+      .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
 
     // when
     const { project } = await createProject({ resource, store, projectsCollection, user, userName })
@@ -75,7 +75,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(dcterms.identifier, 'ubd/28')
         .addOut(schema.maintainer, organization.id)
-        .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
+        .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
 
       // when
       ;({ project } = await createProject({ resource, store, projectsCollection, user, userName }))
@@ -134,7 +134,7 @@ describe('domain/cube-projects/create', () => {
       .addOut(rdfs.label, 'Foo bar project')
       .addOut(dcterms.identifier, 'ubd/28')
       .addOut(schema.maintainer, organization.id)
-      .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
+      .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
 
     // when
     const { project } = await createProject({ resource, store, projectsCollection, user, userName })
@@ -159,7 +159,7 @@ describe('domain/cube-projects/create', () => {
       .addOut(rdfs.label, 'Foo bar project')
       .addOut(dcterms.identifier, 'ubd/28')
       .addOut(schema.maintainer, organization.id)
-      .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
+      .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
 
     // when
     const { project } = await createProject({ resource, store, projectsCollection, user, userName })
@@ -209,7 +209,7 @@ describe('domain/cube-projects/create', () => {
       .addOut(rdfs.label, 'Foo bar project')
       .addOut(dcterms.identifier, 'ubd/28')
       .addOut(schema.maintainer, organization.id)
-      .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
+      .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
 
     // when
     const promise = createProject({ resource, store, projectsCollection, user, userName })
@@ -226,13 +226,13 @@ describe('domain/cube-projects/create', () => {
       .addOut(rdfs.label, 'Foo bar project')
       .addOut(schema.maintainer, organization.id)
       .addOut(dcterms.identifier, 'ubd/28')
-      .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
+      .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
 
     // when
     const { project } = await createProject({ resource, store, projectsCollection, user, userName })
 
     // then
-    expect(project.sourceKind).to.deep.eq(shape('cube-project/create#CSV'))
+    expect(project.sourceKind).to.deep.eq(cc['projectSourceKind/CSV'])
   })
 
   describe('CSV project', () => {
@@ -243,7 +243,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(schema.maintainer, organization.id)
         .addOut(dcterms.identifier, 'ubd/28')
-        .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
+        .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
 
       // when
       const { project } = await createProject({ resource, store, projectsCollection, user, userName })
@@ -259,7 +259,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(schema.maintainer, organization.id)
         .addOut(dcterms.identifier, 'ubd/28')
-        .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
+        .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
 
       // when
       const { project } = await createProject({ resource, store, projectsCollection, user, userName })
@@ -276,7 +276,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(schema.maintainer, organization.id)
         .addOut(dcterms.identifier, 'ubd/28')
         .addOut(cc.publishGraph, $rdf.namedNode('http://example.com/published-cube'))
-        .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
+        .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
 
       // when
       const { project } = await createProject({ resource, store, projectsCollection, user, userName })
@@ -304,7 +304,7 @@ describe('domain/cube-projects/create', () => {
       const resource = clownface({ dataset: $rdf.dataset() })
         .namedNode('')
         .addOut(rdfs.label, 'Foo bar project')
-        .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
+        .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
         .addOut(dcterms.identifier, 'ubd/28')
         .addOut(schema.maintainer, organization.id)
 
@@ -336,7 +336,7 @@ describe('domain/cube-projects/create', () => {
       const resource = clownface({ dataset: $rdf.dataset() })
         .namedNode('')
         .addOut(rdfs.label, 'Foo bar project')
-        .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
+        .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
         .addOut(dcterms.identifier, 'ubd/28')
         .addOut(schema.maintainer, organization.id)
 
@@ -374,7 +374,7 @@ describe('domain/cube-projects/create', () => {
       const resource = clownface({ dataset: $rdf.dataset() })
         .namedNode('')
         .addOut(rdfs.label, 'Foo bar project')
-        .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
+        .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
         .addOut(dcterms.identifier, 'ubd/28')
         .addOut(schema.maintainer, organization.id)
 
@@ -421,7 +421,7 @@ describe('domain/cube-projects/create', () => {
       const resource = clownface({ dataset: $rdf.dataset() })
         .namedNode('')
         .addOut(rdfs.label, 'Foo bar project')
-        .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
+        .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
         .addOut(dcterms.identifier, 'ubd/28')
         .addOut(schema.maintainer, organization.id)
 
@@ -470,7 +470,7 @@ describe('domain/cube-projects/create', () => {
       const resource = await clownface({ dataset: $rdf.dataset() })
         .namedNode('')
         .addOut(rdfs.label, 'Foo bar project')
-        .addOut(cc.projectSourceKind, shape('cube-project/create#ExistingCube'))
+        .addOut(cc.projectSourceKind, cc['projectSourceKind/ExistingCube'])
         .addOut(cc['CubeProject/sourceCube'], $rdf.namedNode('http://example.cube/'))
         .addOut(cc['CubeProject/sourceEndpoint'], $rdf.namedNode('http://example.endpoint/'))
         .addOut(schema.maintainer, organization.id)
@@ -487,7 +487,7 @@ describe('domain/cube-projects/create', () => {
       const resource = await clownface({ dataset: $rdf.dataset() })
         .namedNode('')
         .addOut(rdfs.label, 'Foo bar project')
-        .addOut(cc.projectSourceKind, shape('cube-project/create#ExistingCube'))
+        .addOut(cc.projectSourceKind, cc['projectSourceKind/ExistingCube'])
         .addOut(cc['CubeProject/sourceCube'], $rdf.namedNode('http://example.cube/'))
         .addOut(cc['CubeProject/sourceEndpoint'], $rdf.namedNode('http://example.endpoint/'))
         .addOut(schema.maintainer, organization.id)
@@ -506,7 +506,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(rdfs.label, 'Import project')
         .addOut(schema.maintainer, organization.id)
         .addOut(cc['CubeProject/sourceEndpoint'], $rdf.namedNode('http://example.endpoint/'))
-        .addOut(cc.projectSourceKind, shape('cube-project/create#ExistingCube'))
+        .addOut(cc.projectSourceKind, cc['projectSourceKind/ExistingCube'])
 
       // when
       const promise = createProject({ resource, store, projectsCollection, user, userName })
@@ -523,7 +523,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(schema.maintainer, organization.id)
         .addOut(cc['CubeProject/sourceCube'], $rdf.literal('http://example.cube/'))
         .addOut(cc['CubeProject/sourceEndpoint'], $rdf.namedNode('http://example.endpoint/'))
-        .addOut(cc.projectSourceKind, shape('cube-project/create#ExistingCube'))
+        .addOut(cc.projectSourceKind, cc['projectSourceKind/ExistingCube'])
 
       // when
       const promise = createProject({ resource, store, projectsCollection, user, userName })
@@ -539,7 +539,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(rdfs.label, 'Import project')
         .addOut(schema.maintainer, organization.id)
         .addOut(cc['CubeProject/sourceCube'], $rdf.namedNode('http://example.cube/'))
-        .addOut(cc.projectSourceKind, shape('cube-project/create#ExistingCube'))
+        .addOut(cc.projectSourceKind, cc['projectSourceKind/ExistingCube'])
 
       // when
       const promise = createProject({ resource, store, projectsCollection, user, userName })
@@ -557,7 +557,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(cc['CubeProject/sourceCube'], $rdf.namedNode('http://example.cube/'))
         .addOut(cc['CubeProject/sourceEndpoint'], $rdf.namedNode('http://example.endpoint/'))
         .addOut(cc.publishGraph, $rdf.namedNode('http://example.com/published-cube'))
-        .addOut(cc.projectSourceKind, shape('cube-project/create#ExistingCube'))
+        .addOut(cc.projectSourceKind, cc['projectSourceKind/ExistingCube'])
 
       // when
       const { project } = await createProject({ resource, store, projectsCollection, user, userName })

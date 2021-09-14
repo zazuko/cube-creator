@@ -4,7 +4,7 @@ import { ResourceStore } from '../../ResourceStore'
 import * as id from '../identifiers'
 import { dcterms, rdfs, schema } from '@tpluscode/rdf-ns-builders'
 import { createMinimalProject, Project } from '@cube-creator/model/Project'
-import { cc, shape } from '@cube-creator/core/namespace'
+import { cc } from '@cube-creator/core/namespace'
 import $rdf from 'rdf-ext'
 import { exists } from './queries'
 import { DomainError } from '../../../../errors/domain'
@@ -30,8 +30,8 @@ interface ImportedProject {
 }
 
 const sourceKinds = new TermSet([
-  shape('cube-project/create#ExistingCube'),
-  shape('cube-project/create#CSV'),
+  cc['projectSourceKind/ExistingCube'],
+  cc['projectSourceKind/CSV'],
 ])
 
 /**

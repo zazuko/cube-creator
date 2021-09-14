@@ -76,7 +76,10 @@ type CubeCreatorProperty =
   'export'
 
 type OtherTerms =
-  'dash'
+  'dash' |
+  'projectSourceKind/CSV' |
+  'projectSourceKind/ExistingCube' |
+  'projectSourceKind/ExportedProject'
 
 type MetaDataProperty =
   'publishOnOpendata' |

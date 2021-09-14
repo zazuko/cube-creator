@@ -9,7 +9,7 @@ import { dcterms, rdf, rdfs, schema } from '@tpluscode/rdf-ns-builders/strict'
 import { ex } from '@cube-creator/testing/lib/namespace'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import { fromPointer, Project } from '@cube-creator/model/Project'
-import { cc, shape } from '@cube-creator/core/namespace'
+import { cc } from '@cube-creator/core/namespace'
 import namespace from '@rdfjs/namespace'
 import * as sinon from 'sinon'
 import * as projectQueries from '../../../lib/domain/cube-projects/queries'
@@ -189,7 +189,7 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/import', () => {
         clownface({ dataset, graph: project.id })
           .node(project.id)
           .addOut(dcterms.identifier, 'UBD')
-          .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
+          .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
 
         return dataset.toStream()
       }
@@ -220,7 +220,7 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/import', () => {
           maxCount: 1,
         }, {
           path: cc.projectSourceKind,
-          hasValue: shape('cube-project/create#CSV'),
+          hasValue: cc['projectSourceKind/CSV'],
           minCount: 1,
           maxCount: 1,
         }],
@@ -239,7 +239,7 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/import', () => {
           .addOut(cc.latestPublishedRevision, 10)
           .addOut(schema.maintainer, ex.Bar)
           .addOut(rdfs.label, 'UBD29')
-          .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
+          .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
 
         return dataset.toStream()
       }

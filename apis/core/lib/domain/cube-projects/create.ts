@@ -1,7 +1,7 @@
 import { GraphPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'
 import { dcterms, rdfs, schema } from '@tpluscode/rdf-ns-builders'
-import { cc, shape } from '@cube-creator/core/namespace'
+import { cc } from '@cube-creator/core/namespace'
 import * as Project from '@cube-creator/model/Project'
 import * as Dataset from '@cube-creator/model/Dataset'
 import * as DimensionMetadata from '@cube-creator/model/DimensionMetadata'
@@ -134,8 +134,8 @@ export async function createProject({
 
   const projectNode = await store.createMember(projectsCollection.term, id.cubeProject(label))
 
-  const isCsvProject = shape('cube-project/create#CSV').equals(resource.out(cc.projectSourceKind).term)
-  const isImportProject = shape('cube-project/create#ExistingCube').equals(resource.out(cc.projectSourceKind).term)
+  const isCsvProject = cc['projectSourceKind/CSV'].equals(resource.out(cc.projectSourceKind).term)
+  const isImportProject = cc['projectSourceKind/ExistingCube'].equals(resource.out(cc.projectSourceKind).term)
 
   if (isCsvProject) {
     ({ project, dataset } = await createCsvProjectResource({
