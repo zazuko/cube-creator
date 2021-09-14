@@ -2256,6 +2256,13 @@
   dependencies:
     "@types/ms" "*"
 
+"@types/express-conditional-middleware@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@types/express-conditional-middleware/-/express-conditional-middleware-2.1.0.tgz#d62a79da58423cb1ebc4fcbbf1d251245474975d"
+  integrity sha512-aEUd39bQuYcs0eq8iqDGJmKyLyeiw+Qjqdu1XiGmQ3Tduw1Fv5xbGjZl8RS4lN1uBkul18Euvu4l/heJjgxRLg==
+  dependencies:
+    "@types/express" "*"
+
 "@types/express-jwt@0.0.42", "@types/express-jwt@^0.0.42":
   version "0.0.42"
   resolved "https://registry.yarnpkg.com/@types/express-jwt/-/express-jwt-0.0.42.tgz#4f04e1fadf9d18725950dc041808a4a4adf7f5ae"
