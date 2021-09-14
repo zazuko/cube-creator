@@ -77,6 +77,34 @@ export async function createPublishJob({
   return jobPointer
 }
 
+export async function createUnlistJob({
+  resource,
+  store,
+}: StartPublicationCommand): Promise<GraphPointer<NamedNode>> {
+  const jobCollection = (await store.get(resource))!
+  const projectPointer = jobCollection.out(cc.project).term
+
+  if (!projectPointer || projectPointer.termType !== 'NamedNode') {
+    throw new Error('Project not found from jobs collection')
+  }
+
+  const project = await store.getResource<Project>(projectPointer)
+  const organization = await store.getResource(project.maintainer)
+
+  if (!organization.publishGraph) {
+    throw new DomainError('Cannot unlist cube. Project does not have publish graph')
+  }
+
+  const jobPointer = await store.createMember(jobCollection.term, id.job(jobCollection))
+  Job.createUnlist(jobPointer, {
+    project: projectPointer,
+    name: 'Unlist job',
+    publishGraph: organization.publishGraph,
+  })
+
+  return jobPointer
+}
+
 export async function createImportJob({ store, resource }: StartImportCommand): Promise<GraphPointer<NamedNode>> {
   const jobCollection = await store.get(resource)
   const project = await store.getResource<ImportProject>(jobCollection.out(cc.project).term)

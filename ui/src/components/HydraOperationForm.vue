@@ -10,6 +10,7 @@
       :submit-label="_submitLabel"
       :is-submitting="isSubmitting"
       :show-cancel="showCancel"
+      :submit-button-type="submitButtonType"
       :disabled="!shape"
       @cancel="$emit('cancel')"
     />
@@ -38,6 +39,7 @@ export default class HydraOperationForm extends Vue {
   @Prop({ default: false }) isSubmitting!: boolean
   @Prop() showCancel?: boolean
   @Prop() submitLabel?: string
+  @Prop() submitButtonType?: string
 
   __clone: GraphPointer | null = null
 

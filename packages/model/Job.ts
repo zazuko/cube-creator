@@ -34,6 +34,11 @@ export interface PublishJob extends Job {
   query?: string
 }
 
+export interface UnlistJob extends Job {
+  project: NamedNode
+  publishGraph: NamedNode
+}
+
 export function isPublishJob(job: Job): job is PublishJob {
   return job.types.has(cc.PublishJob)
 }
@@ -117,5 +122,26 @@ type RequiredPropertiesPublish = 'name' | 'project' | 'revision' | 'publishGraph
 
 export const createPublish = initializer<PublishJob, RequiredPropertiesPublish>(PublishJobMixin, {
   types: [cc.Job, cc.PublishJob],
+  actionStatus: schema.PotentialActionStatus,
+})
+
+export function UnlistJobMixin<Base extends Constructor<RdfResource>>(base: Base): Mixin {
+  class Impl extends ResourceMixin(ActionMixin(base)) implements Partial<UnlistJob> {
+    @property({ path: cc.project })
+    project!: NamedNode
+
+    @property({ path: cc.publishGraph })
+    publishGraph!: NamedNode
+  }
+
+  return Impl
+}
+
+UnlistJobMixin.appliesTo = cc.UnlistJob
+
+type RequiredPropertiesUnlist = 'name' | 'project' | 'publishGraph'
+
+export const createUnlist = initializer<UnlistJob, RequiredPropertiesUnlist>(UnlistJobMixin, {
+  types: [cc.Job, cc.UnlistJob],
   actionStatus: schema.PotentialActionStatus,
 })

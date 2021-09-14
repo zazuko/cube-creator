@@ -1,11 +1,23 @@
 <template>
   <div v-if="jobCollection">
-    <div class="container-narrow">
-      <job-form
-        v-if="jobCollection.actions.createPublish"
-        :operation="jobCollection.actions.createPublish"
-        class="box"
-      />
+    <div class="container-narrow columns">
+      <div class="column">
+        <job-form
+          v-if="jobCollection.actions.createPublish"
+          :operation="jobCollection.actions.createPublish"
+          class="box"
+        />
+      </div>
+      <div class="column">
+        <job-form
+          v-if="jobCollection.actions.createUnlist"
+          :operation="jobCollection.actions.createUnlist"
+          :confirm="true"
+          confirmation-message="Are you sure you want to unlist this cube? This operation is not reversible."
+          submit-button-type="is-danger"
+          class="box"
+        />
+      </div>
     </div>
 
     <div class="jobs content">
@@ -51,7 +63,7 @@ import LoadingBlock from '@/components/LoadingBlock.vue'
 import JobForm from '@/components/JobForm.vue'
 import JobItem from '@/components/JobItem.vue'
 import ExternalTerm from '@/components/ExternalTerm.vue'
-import { JobCollection, PublishJob } from '@cube-creator/model'
+import { JobCollection, PublishJob, UnlistJob } from '@cube-creator/model'
 
 const projectNS = namespace('project')
 
@@ -60,7 +72,7 @@ const projectNS = namespace('project')
 })
 export default class PublicationView extends Vue {
   @projectNS.State('jobCollection') jobCollection!: JobCollection | null;
-  @projectNS.Getter('publishJobs') jobs!: PublishJob[]
+  @projectNS.Getter('publicationJobs') jobs!: (PublishJob | UnlistJob)[]
 }
 </script>
 
