@@ -18,10 +18,10 @@ export const organizations = turtle`
     ${cc.publishGraph}  <https://lindas.admin.ch/foen/cube> ;
     ${cc.namespace} <https://environment.ld.admin.ch/foen/> ;
     ${schema.dataset} <https://environment.ld.admin.ch/.well-known/void> ;
-    ${rdfs.label} "Bundesamt für Umwelt BAFU"@de ;
-    ${rdfs.label} "Office fédéral de l'environnement OFEV"@fr ;
-    ${rdfs.label} "Ufficio federale dell'ambiente UFAM"@it ;
-    ${rdfs.label} "Federal Office for the Environment FOEN"@en ;
+    ${rdfs.label} "Bundesamt für Umwelt"@de ;
+    ${rdfs.label} "Office fédéral de l'environnement"@fr ;
+    ${rdfs.label} "Ufficio federale dell'ambiente"@it ;
+    ${rdfs.label} "Federal Office for the Environment"@en ;
     ${dcat.accessURL} <https://environment.ld.admin.ch/query> ;
     ${_void.sparqlEndpoint} <https://environment.ld.admin.ch/sparql> ;
   .
