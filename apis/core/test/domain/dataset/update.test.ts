@@ -9,6 +9,7 @@ import { cc, cube, lindas } from '@cube-creator/core/namespace'
 import { ex } from '@cube-creator/testing/lib/namespace'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import { update } from '../../../lib/domain/dataset/update'
+import { Published } from '@cube-creator/model/Cube'
 
 describe('domain/dataset/update', () => {
   let store: TestResourceStore
@@ -55,6 +56,20 @@ describe('domain/dataset/update', () => {
         minCount: 1,
       }],
     })
+  })
+
+  it('populates legacy creativeWorkStatus', async () => {
+    // given
+    const updatedResource = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('dataset') })
+      .addOut(schema.creativeWorkStatus, Published)
+
+    // when
+    const result = await update({ dataset, resource: updatedResource, store })
+
+    // then
+    const statuses = result.out(schema.creativeWorkStatus).values
+    expect(statuses).to.contain(Published.value)
+    expect(statuses).to.contain('https://ld.admin.ch/definedTerm/CreativeWorkStatus/Published')
   })
 
   it('replaces blank node children', async () => {

@@ -335,10 +335,10 @@ ${shapeId} {
 <https://ld.admin.ch/application/opendataswiss> a skos:Concept ;
   rdfs:label "opendata.swiss" .
 
-<https://ld.admin.ch/definedTerm/CreativeWorkStatus/Published> a schema:DefinedTerm;
+${Published} a schema:DefinedTerm;
   rdfs:label "Published" .
 
-<https://ld.admin.ch/definedTerm/CreativeWorkStatus/Draft> a schema:DefinedTerm;
+${Draft} a schema:DefinedTerm;
   rdfs:label "Draft" .
 
 freq:annual a skos:Concept ;
