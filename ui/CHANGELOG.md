@@ -1,5 +1,15 @@
 # @cube-creator/ui
 
+## 1.4.0
+
+### Minor Changes
+
+- 6970ccf0: Create a project by importing backed up resources
+
+### Patch Changes
+
+- b4ab9977: Put Organization before the project source type on creation form
+
 ## 1.3.0
 
 ### Minor Changes
