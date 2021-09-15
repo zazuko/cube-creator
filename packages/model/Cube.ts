@@ -8,8 +8,8 @@ import { initializer } from './lib/initializer'
 import { NamedNode } from 'rdf-js'
 import { namedNode } from '@rdf-esm/data-model'
 
-export const Draft = namedNode('https://ld.admin.ch/definedTerm/CreativeWorkStatus/Draft')
-export const Published = namedNode('https://ld.admin.ch/definedTerm/CreativeWorkStatus/Published')
+export const Draft = namedNode('https://ld.admin.ch/vocabulary/CreativeWorkStatus/Draft')
+export const Published = namedNode('https://ld.admin.ch/vocabulary/CreativeWorkStatus/Published')
 
 export interface Cube extends RdfResourceCore {
   dateCreated: Date
