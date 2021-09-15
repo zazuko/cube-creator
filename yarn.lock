@@ -3568,10 +3568,10 @@ ajv@^8.0.1:
     require-from-string "^2.0.2"
     uri-js "^4.2.2"
 
-alcaeus@^1.0.1, alcaeus@^1.1.3, alcaeus@^1.2.0:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/alcaeus/-/alcaeus-1.2.1.tgz#cd3ec7b837e3913e84992361255e591e68bac6c9"
-  integrity sha512-h1rr/+MHDIJDJmzb183gN4HziMFzUQLr8cX9gibfMpk9ZyUfoPZpAdSsqqLI4w4Jse61iL4pcKR0QdRmEPk80g==
+alcaeus@^1.0.1, alcaeus@^1.2.0, alcaeus@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/alcaeus/-/alcaeus-1.3.1.tgz#7c9e7e94d6a9622dad11c42b7447d127aee1199b"
+  integrity sha512-ZEQMPGxJ6UAisezVihw5uog1C+6FvF+h+peQNwCMWHhyzu2D7u88/uxjScSgBw1hjJ3aa9JB8LWCZy21yoikCQ==
   dependencies:
     "@rdf-esm/data-model" "^0.5.3"
     "@rdf-esm/formats-common" "^0.5.3"
@@ -3589,6 +3589,7 @@ alcaeus@^1.0.1, alcaeus@^1.1.3, alcaeus@^1.2.0:
     isomorphic-form-data "^2.0.0"
     parse-link-header "^1.0.1"
     rdf-dataset-indexed "^0.4.0"
+    rdf-literal "^1.3.0"
     rdf-transform-triple-to-quad "^1.0.2"
     readable-stream "^3.6.0"
 
@@ -11841,7 +11842,7 @@ rdf-cube-view-query@^1:
     rdf-sparql-builder "^0.1.5"
     sparql-http-client "^2.2.2"
 
-rdf-data-factory@^1.0.1, rdf-data-factory@^1.1.0:
+rdf-data-factory@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/rdf-data-factory/-/rdf-data-factory-1.1.0.tgz#d0510b9f100dd79e94f29559a12d4a5a585054d6"
   integrity sha512-g8feOVZ/KL1OK2Pco/jDBDFh4m29QDsOOD+rWloG9qFvIzRFchGy2CviLUX491E0ByewXxMpaq/A3zsWHQA16A==
@@ -11882,13 +11883,13 @@ rdf-js@*, rdf-js@^4.0.2:
   dependencies:
     "@rdfjs/types" "*"
 
-rdf-literal@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/rdf-literal/-/rdf-literal-1.2.0.tgz#3159cce5587007144ea4a3a713cea31af4fc0c68"
-  integrity sha512-N7nyfp/xzoiUuJt0xZ80BvBGkCPwWejgVDkCxWDSuooXKSows4ToW+KouYkMHLcoFzGg1Rlw2lk6btjMJg5aSA==
+rdf-literal@^1.2.0, rdf-literal@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/rdf-literal/-/rdf-literal-1.3.0.tgz#7524f09e51ae25ca03b1d600260a0f6834fe0baf"
+  integrity sha512-5u5L4kPYNZANie5AE4gCXqwpNO/p9E/nUcDurk05XAOJT/pt9rQlDk6+BX7j3dNSee3h9GS4xlLoWxQDj7sXtg==
   dependencies:
-    "@types/rdf-js" "^4.0.0"
-    rdf-data-factory "^1.0.1"
+    "@rdfjs/types" "*"
+    rdf-data-factory "^1.1.0"
 
 rdf-loader-code@^0.2.0:
   version "0.2.0"

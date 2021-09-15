@@ -126,7 +126,7 @@ export const api = {
     if (!operation) throw new Error('Operation does not exist')
 
     const { body, contentHeaders } = this.prepareOperationBody(data, operation)
-    const response = await operation.invoke(body, {
+    const response = await operation.invoke<T>(body, {
       ...contentHeaders,
       ...headers,
     })
@@ -135,8 +135,7 @@ export const api = {
       throw await APIError.fromResponse(response)
     }
 
-    // TODO: Is there anything I can do to avoid casting as `unknown`?
-    const resource: unknown = response.representation?.root
+    const resource = response.representation?.root
     if (!resource) {
       throw new Error('Response does not contain created resource')
     }
