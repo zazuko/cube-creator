@@ -248,11 +248,13 @@ ${shapeId} {
       ${hydra.collection} ${lindasQuery(themesQuery)} ;
     ] ;
     ${sh.property} [
-      ${sh.name} "Opendata.swiss Tags" ;
+      ${sh.name} "Opendata.swiss Keywords" ;
       ${sh.path} ${dcat.keyword} ;
+      ${sh.datatype} ${rdf.langString} ;
+      ${sh.languageIn} ( ${supportedLanguages} ) ;
       ${sh.minLength} 1 ;
       ${sh.order} 110 ;
-      ${sh.description} "Tags are additional keywords to classify datasets along ad-hoc categories.";
+      ${sh.description} "Additional keywords to classify datasets along ad-hoc categories. Enter each keyword in a separate entry.";
     ] ;
     ${sh.property} [
       ${sh.name} "Opendata.swiss Landing page" ;
