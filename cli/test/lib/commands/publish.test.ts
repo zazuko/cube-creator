@@ -191,7 +191,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
     it('"deprecates" previous cubes', async function () {
       expect(cubePointer.namedNode(ns.baseCube('1'))).to.matchShape({
         property: [{
-          path: schema.validThrough,
+          path: schema.expires,
           datatype: xsd.dateTime,
           minCount: 1,
           maxCount: 1,
