@@ -33,6 +33,22 @@ describe('domain/csv/parse', () => {
     expect(lines2.length).to.eq(21)
   })
 
+  it('reads parts of a file with CRLF line endings', async () => {
+    const path = resolve(__dirname, '../../fixtures/CH_yearly_air_immission_basetable_crlf.csv')
+    const fileContent = await fs.readFile(path)
+
+    const input1 = fileContent.toString()
+    const input2 = await loadFileHeadString(createReadStream(path))
+
+    expect(input1).not.to.eq(input2)
+
+    const lines1 = input1?.split(/\r\n/) || []
+    const lines2 = input2?.split('\n') || []
+    const firstLine2 = lines2[0]
+    expect(lines1[0]).to.eq(firstLine2)
+    expect(lines2.length).to.eq(21)
+  })
+
   it('parses all lines on short file', async () => {
     const path = resolve(__dirname, '../../fixtures/CH_yearly_air_immission_unit_id.csv')
 

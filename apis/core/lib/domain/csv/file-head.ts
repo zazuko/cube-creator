@@ -1,5 +1,7 @@
 import { Readable } from 'stream'
 
+const lineEnding = /\r?\n/g
+
 export function loadFileHeadString(
   stream: Readable,
   uniqueLines = 20,
@@ -9,7 +11,7 @@ export function loadFileHeadString(
   stream.on('readable', () => {
     let chunk
     while ((chunk = stream.read(10000)) !== null) {
-      let string = chunk.toString()
+      let string: string = chunk.toString()
       if (!string.includes('\n')) {
         // continue reading until we reach the first \n
         partialLine += string
@@ -23,13 +25,16 @@ export function loadFileHeadString(
       // carry the beginning of the last line over to next iteration
       if (!string.endsWith('\n')) {
         partialLine = string.substring(string.lastIndexOf('\n') + '\n'.length)
-        string = string.substring(0, string.lastIndexOf('\n'))
+        const lineEndings = string.match(lineEnding)
+        if (lineEndings) {
+          string = string.substring(0, string.lastIndexOf(lineEndings[lineEndings.length - 1]))
+        }
       }
 
-      const newLines = string.split('\n')
+      const newLines = string.split(/\r?\n/)
       // always keep the 1st line
       if (lines.length === 0) {
-        lines.push(newLines.shift() as string)
+        lines.push(newLines.shift()!)
       }
 
       // only keep unique lines otherwise
