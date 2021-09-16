@@ -4,6 +4,7 @@ import { createReadStream, promises as fs } from 'fs'
 import { resolve } from 'path'
 import { sniffParse } from '../../../lib/domain/csv'
 import { loadFileHeadString } from '../../../lib/domain/csv/file-head'
+import { Readable } from 'stream'
 
 describe('domain/csv/parse', () => {
   it('sniffs and parses', async () => {
@@ -34,19 +35,21 @@ describe('domain/csv/parse', () => {
   })
 
   it('reads parts of a file with CRLF line endings', async () => {
-    const path = resolve(__dirname, '../../fixtures/CH_yearly_air_immission_basetable_crlf.csv')
-    const fileContent = await fs.readFile(path)
+    const input = `"station_id","pollutant_id","aggregation_id","limitvalue","year","value","unit_id","value_remark"\r
+"blBAS","so2","annualmean",30,1984,31.9,"µg/m3","incomplete series"\r
+"blBAS","so2","annualmean",30,1985,40.2,"µg/m3","incomplete series"\r
+"blBAS","so2","annualmean",30,1985,40.2,"µg/m3","incomplete series"\r
+"blBAS","so2","annualmean",30,1985,40.2,"µg/m3","incomplete series"\r
+"blBAS","so2","annualmean",30,1986,33.6,"µg/m3","incomplete series"\r
+"blBAS","so2","annualmean",30,1987,33,"µg/m3","incomplete series"`
+    const stream = new Readable()
+    stream.push(input)
+    stream.push(null)
+    const head = await loadFileHeadString(stream)
 
-    const input1 = fileContent.toString()
-    const input2 = await loadFileHeadString(createReadStream(path))
-
-    expect(input1).not.to.eq(input2)
-
-    const lines1 = input1?.split(/\r\n/) || []
-    const lines2 = input2?.split('\n') || []
-    const firstLine2 = lines2[0]
-    expect(lines1[0]).to.eq(firstLine2)
-    expect(lines2.length).to.eq(21)
+    const lines = head.split('\n')
+    expect(lines[0]).to.eq('"station_id","pollutant_id","aggregation_id","limitvalue","year","value","unit_id","value_remark"')
+    expect(lines.length).to.eq(5)
   })
 
   it('parses all lines on short file', async () => {
