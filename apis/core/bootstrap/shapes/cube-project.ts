@@ -12,6 +12,7 @@ const generatedProperties = [
   cc.jobCollection,
   cc.latestPublishedRevision,
   cc.csvMapping,
+  cc.export,
 ]
 
 const projectProperties = turtle`
