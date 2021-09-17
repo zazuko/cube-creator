@@ -1,5 +1,19 @@
 # @cube-creator/shared-dimensions-api
 
+## 2.2.0
+
+### Minor Changes
+
+- 7ec5b557: Add API resource to export entire shared dimension
+
+### Patch Changes
+
+- ae6f3354: Remove ignored properties when saving shared dimension
+- Updated dependencies [271cb671]
+- Updated dependencies [6872eb8e]
+  - @cube-creator/core@0.3.3
+  - @cube-creator/api-errors@0.0.4
+
 ## 2.1.3
 
 ### Patch Changes

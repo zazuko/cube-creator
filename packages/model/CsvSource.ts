@@ -5,14 +5,15 @@ import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import { Constructor, property } from '@tpluscode/rdfine'
 import { csvw, schema } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
-import { MediaObjectMixin } from '@rdfine/schema'
 import { DialectMixin } from '@rdfine/csvw'
+import { MediaObjectMixin as SchemaMediaObjectMixin } from '@rdfine/schema'
 import { initializer } from './lib/initializer'
 import { Link } from './lib/Link'
 import { CsvMapping } from './CsvMapping'
 import { CsvColumn, CsvColumnMixin } from './CsvColumn'
 import type { Collection } from '@rdfine/hydra'
 import { blankNode } from '@rdf-esm/data-model'
+import { MediaObjectMixin } from './MediaObject'
 
 export interface CsvSource extends RdfResource {
   associatedMedia: Schema.MediaObject
@@ -30,7 +31,7 @@ export interface SourcesCollection extends Collection<CsvSource> {
 
 export function CsvSourceMixin<Base extends Constructor>(base: Base): Mixin {
   class Impl extends base implements Partial<CsvSource> {
-    @property.resource({ path: schema.associatedMedia, as: [MediaObjectMixin] })
+    @property.resource({ path: schema.associatedMedia, as: [MediaObjectMixin, SchemaMediaObjectMixin] })
     associatedMedia!: Schema.MediaObject
 
     @property.literal({ path: schema.name })

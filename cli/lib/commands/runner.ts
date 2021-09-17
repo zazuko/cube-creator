@@ -7,7 +7,6 @@ import { schema, xsd } from '@tpluscode/rdf-ns-builders'
 import type * as Pipeline from 'barnard59-core/lib/Pipeline'
 import namespace from '@rdfjs/namespace'
 import * as Alcaeus from 'alcaeus/node'
-import { HydraResponse } from 'alcaeus'
 import { cc } from '@cube-creator/core/namespace'
 import * as Models from '@cube-creator/model'
 import { updateJobStatus } from '../job'
@@ -64,7 +63,7 @@ export function create<TOptions extends RunOptions>({ pipelineSources, prepare }
 
     const apiClient = Alcaeus.create()
     apiClient.resources.factory.addMixin(...Object.values(Models))
-    apiClient.cacheStrategy.shouldLoad = (previous: HydraResponse) => {
+    apiClient.cacheStrategy.shouldLoad = previous => {
       if (previous.representation?.root?.types.has(cc.CSVSource)) {
         return true
       }

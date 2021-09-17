@@ -4,7 +4,7 @@ import $rdf from 'rdf-ext'
 import { NamedNode } from 'rdf-js'
 import env from '../lib/env'
 import { log } from '../lib/log'
-import { terms, termSets } from './termSetCollections'
+import { terms, termSets, exportSet } from './termSetCollections'
 import { entrypoint } from './entrypoint'
 import { store } from '../lib/store'
 import shapes from './shapes'
@@ -19,6 +19,7 @@ const pointerFactory = (term: string) => clownface({ dataset: $rdf.dataset(), te
 const resources = [
   terms(pointerFactory),
   termSets(pointerFactory),
+  exportSet(pointerFactory),
   entrypoint(pointerFactory, ns),
   ...shapes,
 ]

@@ -29,7 +29,9 @@ type CubeCreatorClass =
   'TransformJob' |
   'ImportJob' |
   'PublishJob' |
-  'ReplaceCSVAction'
+  'ReplaceCSVAction' |
+  'MediaLocal' |
+  'MediaURL'
 
 type CubeCreatorProperty =
   'projectSourceKind' |
@@ -38,6 +40,7 @@ type CubeCreatorProperty =
   'csvSource' |
   'csvSourceCollection' |
   'csvColumnSample' |
+  'sourceKind' |
   'csvw' |
   'tables' |
   'identifierTemplate' |
@@ -69,10 +72,14 @@ type CubeCreatorProperty =
   'dimensionType' |
   'CubeProject/sourceCube' |
   'CubeProject/sourceEndpoint' |
-  'CubeProject/sourceGraph'
+  'CubeProject/sourceGraph' |
+  'export'
 
 type OtherTerms =
-  'dash'
+  'dash' |
+  'projectSourceKind/CSV' |
+  'projectSourceKind/ExistingCube' |
+  'projectSourceKind/ExportedProject'
 
 type MetaDataProperty =
   'publishOnOpendata' |
@@ -85,9 +92,11 @@ type SharedDimensionsTerms =
   'SharedDimensions' |
   'SharedDimensionTerm' |
   'SharedDimensionTerms' |
+  'SharedDimensionExport' |
   'sharedDimensions' |
   'terms' |
-  'onlyValidTerms'
+  'onlyValidTerms' |
+  'export'
 
 type MetaTerms =
   'SharedDimension' |
@@ -109,3 +118,4 @@ export const editor = namespace(cc.dash.value)
 export const freq = namespace(prefixes.freq)
 export const sh1 = namespace('https://forms.hypermedia.app/shaperone#')
 export const lindas = namespace('https://schema.ld.admin.ch/')
+export const hex = namespace('https://w3id.org/hydra/extension#')

@@ -24,7 +24,7 @@ With Class api:EntryPoint {
                 PREFIX schema: <http://schema.org/>
                 PREFIX dcterms: <http://purl.org/dc/terms/>
 
-                <> cc:projectSourceKind <https://cube-creator.lndo.site/shape/cube-project/create#CSV> ;
+                <> cc:projectSourceKind <https://cube-creator.zazuko.com/vocab#projectSourceKind/CSV> ;
                    rdfs:label "Upload Test Project" ;
                    dcterms:identifier "upload-test-cube" ;
                    schema:maintainer <https://cube-creator.lndo.site/organization/bafu> .
@@ -45,8 +45,10 @@ With Class cc:CubeProject {
 
                     ```
                     prefix schema: <http://schema.org/>
+                    prefix cc: <https://cube-creator.zazuko.com/vocab#>
 
-                    <> schema:name "test1.csv" ;
+                    <> cc:sourceKind cc:MediaLocal ;
+                       schema:name "test1.csv" ;
                        schema:contentUrl <http://s3.cube-creator.lndo.site/cube-creator/test-data/upload-test-cube/test1.csv> ;
                        schema:identifier "test-data/upload-test-cube/test1.csv" ;
                     ```
@@ -74,8 +76,10 @@ With Class cc:CubeProject {
 
                     ```
                     prefix schema: <http://schema.org/>
+                    prefix cc: <https://cube-creator.zazuko.com/vocab#>
 
-                    <> schema:name "test2.jpg" ;
+                    <> cc:sourceKind cc:MediaLocal ;
+                       schema:name "test2.jpg" ;
                        schema:contentUrl <http://s3.cube-creator.lndo.site/cube-creator/test-data/upload-test-cube/test2.jpg> ;
                        schema:identifier "test-data/upload-test-cube/test2.jpg" ;
                     ```
@@ -90,8 +94,10 @@ With Class cc:CubeProject {
 
                     ```
                     prefix schema: <http://schema.org/>
+                    prefix cc: <https://cube-creator.zazuko.com/vocab#>
 
-                    <> schema:name "test1.csv" ;
+                    <> cc:sourceKind cc:MediaLocal ;
+                       schema:name "test1.csv" ;
                        schema:contentUrl <http://s3.cube-creator.lndo.site/cube-creator/test-data/upload-test-cube/test1.csv> ;
                        schema:identifier "test-data/upload-test-cube/test1.csv" ;
                     ```
@@ -104,8 +110,10 @@ With Class cc:CubeProject {
 
                     ```
                     prefix schema: <http://schema.org/>
+                    prefix cc: <https://cube-creator.zazuko.com/vocab#>
 
-                    <> schema:name "invalid-csv.csv" ;
+                    <> cc:sourceKind cc:MediaLocal ;
+                       schema:name "invalid-csv.csv" ;
                        schema:contentUrl <http://s3.cube-creator.lndo.site/cube-creator/test-data/upload-test-cube/invalid-csv.csv> ;
                        schema:identifier "test-data/upload-test-cube/invalid-csv.csv" ;
                     ```
@@ -114,6 +122,25 @@ With Class cc:CubeProject {
                     Expect Type <https://cube-creator.zazuko.com/vocab#CSVSource>
                     Expect Property <http://schema.org/associatedMedia>
                     Expect Property <http://schema.org/error> "Invalid Record Length: expect 1, got 2 on line 3"
+                }
+
+                // Upload from remote URL
+                Invoke {
+                    Content-Type "text/turtle"
+
+                    ```
+                    prefix schema: <http://schema.org/>
+                    prefix cc: <https://cube-creator.zazuko.com/vocab#>
+
+                    <> cc:sourceKind cc:MediaURL ;
+                       schema:name "remote.csv" ;
+                       schema:contentUrl <https://raw.githubusercontent.com/zazuko/cube-creator/b793194eb33b90f9fbea536cc71f2d6fd79b7427/minio/cube-creator/test-data/upload-test-cube/test1.csv> ;
+                    ```
+                } => {
+                    Expect Status 201
+                    Expect Type <https://cube-creator.zazuko.com/vocab#CSVSource>
+                    Expect Property <http://schema.org/associatedMedia>
+                    Expect Property <http://www.w3.org/ns/csvw#column>
                 }
             }
         }

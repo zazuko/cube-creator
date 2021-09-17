@@ -1,5 +1,31 @@
 # @cube-creator/ui
 
+## 1.4.0
+
+### Minor Changes
+
+- 6970ccf0: Create a project by importing backed up resources
+
+### Patch Changes
+
+- b4ab9977: Put Organization before the project source type on creation form
+
+## 1.3.0
+
+### Minor Changes
+
+- 6872eb8e: Exporting project
+- 440ad533: Button to download exported shared dimension
+
+### Patch Changes
+
+- 271cb671: Ability to map a CSV file hosted on a remote server via URL
+- Updated dependencies [271cb671]
+- Updated dependencies [b793194e]
+- Updated dependencies [6872eb8e]
+  - @cube-creator/core@0.3.3
+  - @cube-creator/model@0.1.20
+
 ## 1.2.9
 
 ### Patch Changes

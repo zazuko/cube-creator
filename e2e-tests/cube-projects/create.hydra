@@ -23,7 +23,7 @@ With Class api:EntryPoint {
                 PREFIX schema: <http://schema.org/>
                 prefix dcterms: <http://purl.org/dc/terms/>
 
-                <> cc:projectSourceKind <https://cube-creator.lndo.site/shape/cube-project/create#CSV> ;
+                <> cc:projectSourceKind <https://cube-creator.zazuko.com/vocab#projectSourceKind/CSV> ;
                    rdfs:label "Test Project" ;
                    dcterms:identifier "test-cube" ;
                    schema:maintainer <https://cube-creator.lndo.site/organization/bafu> .
@@ -40,6 +40,7 @@ With Class api:EntryPoint {
                 Expect Property cc:cubeGraph
                 Expect Property schema:maintainer
                 Expect Property dcterms:identifier
+                Expect Property cc:export
 
                 // Project dataset
                 Expect Link cc:dataset {
@@ -61,7 +62,7 @@ With Class api:EntryPoint {
                 PREFIX schema: <http://schema.org/>
                 prefix dcterms: <http://purl.org/dc/terms/>
 
-                <> cc:projectSourceKind <https://cube-creator.lndo.site/shape/cube-project/create#CSV> ;
+                <> cc:projectSourceKind <https://cube-creator.zazuko.com/vocab#projectSourceKind/CSV> ;
                    rdfs:label "Test Project" ;
                    dcterms:identifier "test-cube" ;
                    schema:maintainer <https://cube-creator.lndo.site/organization/bafu> .

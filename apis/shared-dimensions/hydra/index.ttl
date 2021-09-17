@@ -67,6 +67,34 @@ sh:NodeShape
     ] ;
 .
 
+md:SharedDimensionExport
+  a hydra:Class ;
+  hydra:supportedOperation
+    [
+      a hydra:Operation ;
+      hydra:title "Export" ;
+      hydra:method "GET" ;
+      code:implementedBy
+        [
+          a code:EcmaScript ;
+          code:link <file:handlers/shared-dimension#getExport> ;
+        ] ;
+      hydra-box:variables
+        [
+          a hydra:IriTemplate ;
+          hydra:template "/_export?dimension={dimension}" ;
+          hydra:variableRepresentation hydra:ExplicitRepresentation ;
+          hydra:mapping
+            [
+              a hydra:IriTemplateMapping ;
+              hydra:property schema:inDefinedTermSet ;
+              hydra:required true ;
+              hydra:variable "dimension" ;
+            ]
+        ] ;
+    ] ;
+.
+
 md:SharedDimensionTerms
   a hydra:Class ;
   rdfs:subClassOf hydra:Collection ;
@@ -112,6 +140,12 @@ md:SharedDimension
         code:EcmaScript ;
       code:link
         <file:handlers/shared-dimensions#injectTermsLink> ;
+    ] ,
+    [
+      a
+        code:EcmaScript ;
+      code:link
+        <file:handlers/shared-dimensions#injectExportLink> ;
     ] ;
   query:cascadeDelete
     [

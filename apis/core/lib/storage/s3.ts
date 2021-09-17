@@ -1,16 +1,12 @@
 import aws from 'aws-sdk'
 import { Readable } from 'stream'
 import { PromiseResult } from 'aws-sdk/lib/request'
+import type { MediaObject } from '@rdfine/schema'
 import env from '@cube-creator/core/env'
 import { log } from '../log'
+import type { MediaStorage } from './types'
 
 const logError = log.extend('s3').extend('error')
-
-export interface FileStorage {
-  loadFile(path: string): Readable
-  saveFile(path: string, contents: Buffer | Readable | string): Promise<aws.S3.ManagedUpload.SendData>
-  deleteFile(path: string): Promise<PromiseResult<aws.S3.DeleteObjectOutput, aws.AWSError>>
-}
 
 const s3 = new aws.S3({
   endpoint: env.AWS_S3_ENDPOINT,
@@ -67,4 +63,26 @@ export async function loadFileString(path: string): Promise<string | null> {
   }
   logError('Could not read file "%s" from S3.', path)
   return null
+}
+
+export const mediaStorage: MediaStorage = {
+  async getStream(media: MediaObject) {
+    return loadFile(getKey(media))
+  },
+
+  async delete(media: MediaObject) {
+    return deleteFile(getKey(media))
+  },
+
+  getDownloadLink(media: MediaObject) {
+    return getDownloadLink(getKey(media))
+  },
+}
+
+function getKey(media: MediaObject): string {
+  const key = media.identifierLiteral
+
+  if (!key) throw new Error('Missing media identifier')
+
+  return key
 }

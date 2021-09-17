@@ -35,14 +35,14 @@ export function expirePreviousVersions(this: Pick<Context, 'variables' | 'logger
   })
 
   return CONSTRUCT`
-    ?cube ${schema.validThrough} ${timestamp}
+    ?cube ${schema.expires} ${timestamp} .
   `.WHERE`
     ${baseCube} ${schema.hasPart} ?cube .
 
-    OPTIONAL { ?cube ${schema.validThrough} ?validThrough }
+    OPTIONAL { ?cube ${schema.expires} ?expires }
 
     filter (
-      !bound(?validThrough)
+      !bound(?expires)
     )
   `.FROM($rdf.namedNode(this.variables.get('target-graph')))
     .execute(client.query)

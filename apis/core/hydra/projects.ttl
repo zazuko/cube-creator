@@ -6,6 +6,7 @@ prefix query:  <http://hypermedia.app/query#>
 prefix sh:     <http://www.w3.org/ns/shacl#>
 PREFIX schema: <http://schema.org/>
 prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix hex:    <https://w3id.org/hydra/extension#>
 
 cc:CubeProject
   a
@@ -17,7 +18,9 @@ cc:CubeProject
     [ hydra:property
         cc:dataset ],
     [ hydra:property
-        cc:csvMapping ] ;
+          cc:csvMapping ] ,
+    [ hydra:property
+          cc:export ] ;
   hydra:supportedOperation
     [
       a
@@ -93,6 +96,7 @@ cc:ProjectsCollection
           code:link
             <file:handlers/cube-projects#post> ;
         ] ;
+      hex:multiPartPath cc:export ;
     ] .
 
 <shape/cube-project/create>
@@ -121,6 +125,22 @@ cc:cubeGraph
             code:EcmaScript ;
           code:link
             <file:handlers/cube-data#get> ;
+        ] ;
+    ] ;
+.
+
+
+cc:export
+  a rdf:Property, hydra:Link ;
+  hydra:supportedOperation
+    [
+      a hydra:Operation ;
+      hydra:title "Export project" ;
+      hydra:method "GET" ;
+      code:implementedBy
+        [
+          a code:EcmaScript ;
+          code:link <file:handlers/cube-projects#getExport> ;
         ] ;
     ] ;
 .

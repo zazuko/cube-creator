@@ -28,7 +28,7 @@ graph <cube-project/px> {
     dcterms:creator <user> ;
     rdfs:label "PX Cube Project" ;
     cc:jobCollection <cube-project/px/jobs> ;
-    cc:projectSourceKind <https://cube-creator.lndo.site/shape/cube-project/create#ExistingCube> ;
+    cc:projectSourceKind <https://cube-creator.zazuko.com/vocab#projectSourceKind/ExistingCube> ;
     CubeProject:sourceCube <https://environment.ld.admin.ch/foen/example/px-cube> ;
     CubeProject:sourceGraph <http://example.org/px-cube> ;
     CubeProject:sourceEndpoint <http://db.cube-creator.lndo.site/px-cube> ;

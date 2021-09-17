@@ -1,5 +1,35 @@
 # @cube-creator/core-api
 
+## 1.4.0
+
+### Minor Changes
+
+- 6970ccf0: Create a project by importing backed up resources
+
+### Patch Changes
+
+- 9273ef4c: Add SFA and SFOE organizations
+
+## 1.3.0
+
+### Minor Changes
+
+- 6872eb8e: Exporting project
+
+### Patch Changes
+
+- 271cb671: Ability to map a CSV file hosted on a remote server via URL
+- b793194e: Add void dataset link to cubes published with "Published" status (re. #730)
+- Updated dependencies [271cb671]
+- Updated dependencies [7ec5b557]
+- Updated dependencies [b793194e]
+- Updated dependencies [6872eb8e]
+- Updated dependencies [ae6f3354]
+  - @cube-creator/core@0.3.3
+  - @cube-creator/model@0.1.20
+  - @cube-creator/shared-dimensions-api@2.2.0
+  - @cube-creator/api-errors@0.0.4
+
 ## 1.2.7
 
 ### Patch Changes

@@ -67,11 +67,8 @@ export default class extends Vue {
 
   onUploaded (fileIds: string[]): Promise<void> {
     const files = fileIds.map(id => toUploadedFile(this.uppy?.getFile(id)))
-    const result = this.allowMultiple
-      ? files
-      : files[0]
 
-    return this.afterUpload(result)
+    return this.afterUpload(files)
   }
 
   onDone (): void {

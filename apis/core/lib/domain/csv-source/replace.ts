@@ -1,67 +1,75 @@
 import { GraphPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'
-import * as s3 from '../../storage/s3'
+import type { MediaObject } from '@rdfine/schema'
 import { ResourceStore } from '../../ResourceStore'
 import { loadFileHeadString } from '../csv/file-head'
 import { parse } from '../csv'
 import { CsvSource } from '@cube-creator/model'
+import { fromPointer as mediaObjectFromPointer } from '@cube-creator/model/MediaObject'
 import { createOrUpdateColumns } from './update'
 import { DomainError } from '@cube-creator/api-errors'
-import { schema } from '@tpluscode/rdf-ns-builders'
+import { ResourceNode } from '@tpluscode/rdfine/RdfResource'
+import type { GetMediaStorage, MediaStorage } from '../../storage'
+import { getMediaStorage } from '../../storage'
 
 interface ReplaceCSVCommand {
   csvSourceId: NamedNode
-  resource: GraphPointer
+  resource: ResourceNode
   store: ResourceStore
-  fileStorage?: s3.FileStorage
+  getStorage?: GetMediaStorage
 }
 
 export async function replaceFile({
   csvSourceId,
   resource,
   store,
-  fileStorage = s3,
+  getStorage = getMediaStorage,
 }: ReplaceCSVCommand): Promise<GraphPointer> {
   const csvSource = await store.getResource<CsvSource>(csvSourceId)
 
   // Remove any previous error
   csvSource.error = undefined
 
-  const key = csvSource.associatedMedia.identifierLiteral
-  if (!key) {
-    throw new DomainError(`S3 key is missing for ${resource}`)
-  }
-
-  const tempKey = resource.out(schema.identifier).value!
+  const newMedia = mediaObjectFromPointer(resource)
+  const newStorage = getStorage(newMedia)
 
   try {
-    // Check header
-    const fileStream = fileStorage.loadFile(tempKey)
-    const head = await loadFileHeadString(fileStream)
+    await validateNewFile(csvSource, newMedia, newStorage)
 
-    const parserOptions = {
-      to: 1,
-      bom: true,
-      delimiter: csvSource.dialect.delimiter,
-      quote: csvSource.dialect.quoteChar,
-    }
+    // Delete old file
+    const oldStorage = getStorage(csvSource.associatedMedia)
+    oldStorage.delete(csvSource.associatedMedia)
 
-    const { header } = await parse(head, parserOptions)
+    const sourceKind = newMedia.sourceKind!
+    const key = newMedia.identifierLiteral || ''
+    const location = newMedia.contentUrl!
+    csvSource.setUploadedFile(sourceKind, key, location)
 
-    const missingColumns = csvSource.columns.filter((column) => !header.includes(column.name)).map((column) => column.name)
-    if (missingColumns.length > 0) {
-      throw new DomainError(`The columns "${missingColumns.toString()}" are missing in this file`)
-    }
+    await createOrUpdateColumns(csvSource, getStorage)
 
-    // copy new
-    const tempFile = fileStorage.loadFile(tempKey)
-    await fileStorage.saveFile(key, tempFile)
-  } finally {
-    await fileStorage.deleteFile(tempKey)
+    return csvSource.pointer
+  } catch (e) {
+    newStorage.delete(newMedia)
+    throw e
+  }
+}
+
+async function validateNewFile(csvSource: CsvSource, media: MediaObject, storage: MediaStorage): Promise<void> {
+  const fileStream = await storage.getStream(media)
+  const head = await loadFileHeadString(fileStream)
+
+  const parserOptions = {
+    to: 1,
+    bom: true,
+    delimiter: csvSource.dialect.delimiter,
+    quote: csvSource.dialect.quoteChar,
   }
 
-  // call update
-  await createOrUpdateColumns(csvSource, fileStorage)
+  // Check header
+  const { header } = await parse(head, parserOptions)
 
-  return csvSource.pointer
+  const missingColumns = csvSource.columns.filter((column) => !header.includes(column.name)).map((column) => column.name)
+  if (missingColumns.length > 0) {
+    throw new DomainError(`The columns "${missingColumns.toString()}" are missing in this file`)
+  }
 }

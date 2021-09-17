@@ -25,6 +25,7 @@ export interface Project extends RdfResource {
   maintainer: Link<Organization>
   publishedRevision: number
   sourceKind: NamedNode
+  export: Link
 }
 
 export interface CsvProject extends Project {
@@ -84,6 +85,9 @@ export function ProjectMixin<Base extends Constructor>(base: Base): Mixin {
 
     @property({ path: cc['CubeProject/sourceEndpoint'] })
     sourceEndpoint!: NamedNode
+
+    @property.resource({ path: cc.export, initial: childResource('export') })
+    export!: Link
   }
 
   return Impl
@@ -91,10 +95,13 @@ export function ProjectMixin<Base extends Constructor>(base: Base): Mixin {
 
 ProjectMixin.appliesTo = cc.CubeProject
 
-type CsvProjectMandatoryFields = 'creator' | 'label' | 'maintainer' | 'cubeIdentifier' | 'sourceKind'
-export const create = initializer<CsvProject, CsvProjectMandatoryFields>(ProjectMixin)
+type MinimalFields = 'creator' | 'label' | 'maintainer'
+export const createMinimalProject = initializer<Project, MinimalFields>(ProjectMixin)
 
-type ImportProjectMandatoryFields = 'creator' | 'label' | 'maintainer' | 'sourceCube' | 'sourceEndpoint' | 'sourceKind'
+type CsvProjectMandatoryFields = MinimalFields | 'cubeIdentifier' | 'sourceKind'
+export const createCsvProject = initializer<CsvProject, CsvProjectMandatoryFields>(ProjectMixin)
+
+type ImportProjectMandatoryFields = MinimalFields | 'sourceCube' | 'sourceEndpoint' | 'sourceKind'
 export const createImportProject = initializer<ImportProject, ImportProjectMandatoryFields>(ProjectMixin)
 
 export const fromPointer = <D extends DatasetCore>(pointer: GraphPointer<ResourceIdentifier, D>, initializer: Initializer<Project> = {}): Project & RdfResourceCore<D> => {

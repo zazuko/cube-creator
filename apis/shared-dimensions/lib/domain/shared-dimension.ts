@@ -1,5 +1,5 @@
 import clownface, { GraphPointer, MultiPointer } from 'clownface'
-import { NamedNode, Quad, Term } from 'rdf-js'
+import { NamedNode, Quad, Stream, Term } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import { dcterms, hydra, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { md, meta } from '@cube-creator/core/namespace'
@@ -7,6 +7,9 @@ import { DomainError } from '@cube-creator/api-errors'
 import env from '../env'
 import { SharedDimensionsStore } from '../store'
 import httpError from 'http-errors'
+import { DESCRIBE } from '@tpluscode/sparql-builder'
+import { streamClient } from '../sparql'
+import { StreamClient } from 'sparql-http-client/StreamClient'
 
 interface CreateSharedDimension {
   resource: GraphPointer<NamedNode>
@@ -106,4 +109,32 @@ export async function update({ resource, store, shape }: UpdateSharedDimension):
 
   await store.save(resource)
   return resource
+}
+
+interface GetExportedDimension {
+  resource: NamedNode
+  store: SharedDimensionsStore
+  client?: StreamClient
+}
+
+interface ExportedDimension {
+  dimension: GraphPointer
+  data: Stream
+}
+
+export async function getExportedDimension({ resource, store, client = streamClient }: GetExportedDimension): Promise<ExportedDimension> {
+  const dimension = await store.load(resource)
+
+  const data = await DESCRIBE`${dimension.term} ?term ?shape ?setShape`
+    .FROM(store.graph)
+    .WHERE`
+      ${dimension.term} a ${md.SharedDimension} .
+
+      ?term ${schema.inDefinedTermSet} ${dimension.term} .
+
+      OPTIONAL { ?shape ${sh.targetNode} ?term . }
+      OPTIONAL { ?setShape ${sh.targetNode} ${dimension.term} . }
+    `.execute(client.query)
+
+  return { dimension, data }
 }

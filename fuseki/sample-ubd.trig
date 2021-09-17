@@ -32,7 +32,8 @@ graph <cube-project/ubd> {
     dcterms:creator <user> ;
     rdfs:label "UBD28 Project" ;
     cc:jobCollection <cube-project/ubd/jobs> ;
-    cc:projectSourceKind <https://cube-creator.lndo.site/shape/cube-project/create#CSV> ;
+    cc:projectSourceKind <https://cube-creator.zazuko.com/vocab#projectSourceKind/CSV> ;
+    cc:export <cube-project/ubd/export> ;
   .
   <user> schema:name "User Name"
 }
@@ -55,7 +56,7 @@ graph <cube-project/ubd/dataset> {
     dcat:contactPoint [ vcard:fn 'Test Name' ;
                         vcard:hasEmail 'test@mail.ch' ] ;
     schema:workExample <https://ld.admin.ch/application/visualize> ;
-    schema:creativeWorkStatus <https://ld.admin.ch/definedTerm/CreativeWorkStatus/Draft> ;
+    schema:creativeWorkStatus <https://ld.admin.ch/vocabulary/CreativeWorkStatus/Draft> ;
   .
 
   <https://environment.ld.admin.ch/foen/ubd/28/>
@@ -701,7 +702,7 @@ graph <cube-project/ubd/csv-mapping/jobs/test-publish-job> {
     schema:actionStatus schema:PotentialActionStatus ;
     cc:publishGraph <https://lindas.admin.ch/foen/cube> ;
     cc:revision 3 ;
-    schema:creativeWorkStatus <https://ld.admin.ch/definedTerm/CreativeWorkStatus/Draft> ;
+    schema:creativeWorkStatus <https://ld.admin.ch/vocabulary/CreativeWorkStatus/Draft> ;
     schema:workExample <https://ld.admin.ch/application/visualize> ;
   .
 }
@@ -716,7 +717,7 @@ graph <cube-project/ubd/csv-mapping/jobs/finished-publish-job> {
     schema:actionStatus schema:CompletedActionStatus ;
     cc:publishGraph <https://lindas.admin.ch/foen/cube> ;
     cc:revision 1 ;
-    schema:creativeWorkStatus <https://ld.admin.ch/definedTerm/CreativeWorkStatus/Draft> ;
+    schema:creativeWorkStatus <https://ld.admin.ch/vocabulary/CreativeWorkStatus/Draft> ;
     schema:workExample <https://ld.admin.ch/application/visualize> ;
   .
 }

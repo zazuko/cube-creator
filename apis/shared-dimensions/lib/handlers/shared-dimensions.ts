@@ -103,3 +103,7 @@ export const post = protectedResource(shaclValidate, asyncMiddleware(async (req,
 export const injectTermsLink: Enrichment = async (req, pointer) => {
   pointer.deleteOut(md.terms).addOut(md.terms, termsCollectionId(pointer.term))
 }
+
+export const injectExportLink: Enrichment = async (req, pointer) => {
+  pointer.addOut(md.export, pointer.namedNode(`${env.MANAGED_DIMENSIONS_BASE}dimension/_export?dimension=${pointer.value}`))
+}

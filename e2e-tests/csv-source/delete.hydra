@@ -24,7 +24,7 @@ With Class api:EntryPoint {
                 PREFIX schema: <http://schema.org/>
                 PREFIX dcterms: <http://purl.org/dc/terms/>
 
-                <> cc:projectSourceKind <https://cube-creator.lndo.site/shape/cube-project/create#CSV> ;
+                <> cc:projectSourceKind <https://cube-creator.zazuko.com/vocab#projectSourceKind/CSV> ;
                    rdfs:label "Delete Source Test Project" ;
                    dcterms:identifier "delete-csv-test-cube" ;
                    schema:maintainer <https://cube-creator.lndo.site/organization/bafu> .
@@ -45,8 +45,10 @@ With Class cc:CubeProject {
 
                     ```
                     prefix schema: <http://schema.org/>
+                    prefix cc: <https://cube-creator.zazuko.com/vocab#>
 
-                    <> schema:name "test.csv" ;
+                    <> cc:sourceKind cc:MediaLocal ;
+                       schema:name "test.csv" ;
                        schema:contentUrl <http://s3.cube-creator.lndo.site/cube-creator/test-data/delete-source-test-cube/test.csv> ;
                        schema:identifier "test-data/delete-source-test-cube/test.csv" ;
                     ```

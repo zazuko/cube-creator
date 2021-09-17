@@ -163,6 +163,7 @@ export const update = (): Initializer<NodeShape> => ({
   ignoredProperties: [
     dcterms.identifier,
     md.terms,
+    md.export,
   ],
   property: [
     ...properties,

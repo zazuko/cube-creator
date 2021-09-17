@@ -15,6 +15,14 @@
         submit-label="Save project settings"
       />
     </div>
+    <div class="box container-narrow" v-if="project.export">
+      <h3 class="title is-5">
+        Export project
+      </h3>
+      <b-field>
+        <download-button :resource="project.export" />
+      </b-field>
+    </div>
     <div class="box container-narrow" v-if="project.actions.delete">
       <h3 class="title is-5">
         Delete project
@@ -36,6 +44,7 @@ import { Vue, Component } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
 import { Project } from '@cube-creator/model'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
+import DownloadButton from '@/components/DownloadButton.vue'
 import { GraphPointer } from 'clownface'
 import { Shape } from '@rdfine/shacl'
 import { api } from '@/api'
@@ -44,7 +53,7 @@ import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 const projectNS = namespace('project')
 
 @Component({
-  components: { HydraOperationForm },
+  components: { HydraOperationForm, DownloadButton },
 })
 export default class CubeProjectEditView extends Vue {
   @projectNS.State('project') project!: Project

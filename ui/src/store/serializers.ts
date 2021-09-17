@@ -50,6 +50,7 @@ export function serializeSource (source: CsvSource): CsvSource {
     columns: source.columns.map(serializeColumn),
     dialect: source.dialect,
     csvMapping: source.csvMapping,
+    associatedMedia: Object.freeze(source.associatedMedia),
   }) as unknown as CsvSource
 }
 
@@ -208,6 +209,7 @@ export function serializeSharedDimension (dimension: RdfResource): SharedDimensi
     name: dimension.pointer.out(schema.name, { language: displayLanguage }).value,
     terms: dimension.pointer.out(md.terms).term,
     validThrough: validThrough ? new Date(validThrough) : undefined,
+    export: dimension.get(md.export)
   })
 }
 

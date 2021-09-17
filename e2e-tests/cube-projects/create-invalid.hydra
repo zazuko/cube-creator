@@ -18,7 +18,7 @@ With Class api:EntryPoint {
                 prefix cc: <https://cube-creator.zazuko.com/vocab#>
                 prefix schema: <http://schema.org/>
 
-                <> cc:projectSourceKind <https://cube-creator.lndo.site/shape/cube-project/create#CSV> ;
+                <> cc:projectSourceKind <https://cube-creator.zazuko.com/vocab#projectSourceKind/CSV> ;
                    schema:maintainer <https://cube-creator.lndo.site/organization/bafu> .
                 ```
             } => {
@@ -31,7 +31,7 @@ With Class api:EntryPoint {
                 ```
                 prefix cc: <https://cube-creator.zazuko.com/vocab#>
                 prefix schema: <http://schema.org/>
-                <> cc:projectSourceKind <https://cube-creator.lndo.site/shape/cube-project/create#Foo> ;
+                <> cc:projectSourceKind <https://cube-creator.zazuko.com/vocab#projectSourceKind/Foo> ;
                    schema:maintainer <https://cube-creator.lndo.site/organization/bafu> .
                 ```
             } => {
@@ -46,7 +46,7 @@ With Class api:EntryPoint {
                 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
                 prefix schema: <http://schema.org/>
 
-                <> cc:projectSourceKind <https://cube-creator.lndo.site/shape/cube-project/create#CSV> ;
+                <> cc:projectSourceKind <https://cube-creator.zazuko.com/vocab#projectSourceKind/CSV> ;
                    rdfs:label "" ;
                    schema:maintainer <https://cube-creator.lndo.site/organization/bafu> .
                 ```
@@ -62,7 +62,7 @@ With Class api:EntryPoint {
                 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
                 prefix schema: <http://schema.org/>
 
-                <> cc:projectSourceKind <https://cube-creator.lndo.site/shape/cube-project/create#CSV> ;
+                <> cc:projectSourceKind <https://cube-creator.zazuko.com/vocab#projectSourceKind/CSV> ;
                    rdfs:label "Test Project" ;
                    cc:namespace <http://example.com/test-cube> ;
                    schema:maintainer <https://cube-creator.lndo.site/organization/bafu> .
@@ -81,7 +81,7 @@ With Class api:EntryPoint {
                 prefix dcterms: <http://purl.org/dc/terms/>
                 prefix schema: <http://schema.org/>
 
-                <> cc:projectSourceKind <https://cube-creator.lndo.site/shape/cube-project/create#CSV> ;
+                <> cc:projectSourceKind <https://cube-creator.zazuko.com/vocab#projectSourceKind/CSV> ;
                    rdfs:label "Test Project" ;
                    dcterms:identifier "ubd/28" ;
                    schema:maintainer <https://cube-creator.lndo.site/organization/bafu> .
@@ -100,7 +100,7 @@ With Class api:EntryPoint {
                 prefix dcterms: <http://purl.org/dc/terms/>
                 prefix schema: <http://schema.org/>
 
-                <> cc:projectSourceKind <https://cube-creator.lndo.site/shape/cube-project/create#CSV> ;
+                <> cc:projectSourceKind <https://cube-creator.zazuko.com/vocab#projectSourceKind/CSV> ;
                    rdfs:label "Test Project" ;
                    dcterms:identifier "example/px-cube" ;
                    schema:maintainer <https://cube-creator.lndo.site/organization/bafu> .
@@ -119,7 +119,7 @@ With Class api:EntryPoint {
                 prefix CubeProject: <https://cube-creator.zazuko.com/vocab#CubeProject/>
                 prefix schema: <http://schema.org/>
 
-                <> cc:projectSourceKind <https://cube-creator.lndo.site/shape/cube-project/create#ExistingCube> ;
+                <> cc:projectSourceKind <https://cube-creator.zazuko.com/vocab#projectSourceKind/ExistingCube> ;
                    rdfs:label "Test Project" ;
                    CubeProject:sourceCube <https://environment.ld.admin.ch/foen/ubd/28> ;
                    CubeProject:sourceEndpoint <http://db.cube-creator.lndo.site/px-cube> ;
@@ -139,7 +139,7 @@ With Class api:EntryPoint {
                 prefix CubeProject: <https://cube-creator.zazuko.com/vocab#CubeProject/>
                 prefix schema: <http://schema.org/>
 
-                <> cc:projectSourceKind <https://cube-creator.lndo.site/shape/cube-project/create#ExistingCube> ;
+                <> cc:projectSourceKind <https://cube-creator.zazuko.com/vocab#projectSourceKind/ExistingCube> ;
                    rdfs:label "Test Project" ;
                    CubeProject:sourceCube <https://environment.ld.admin.ch/foen/example/px-cube> ;
                    CubeProject:sourceEndpoint <http://db.cube-creator.lndo.site/px-cube> ;
@@ -159,7 +159,7 @@ With Class api:EntryPoint {
                 prefix CubeProject: <https://cube-creator.zazuko.com/vocab#CubeProject/>
                 prefix schema: <http://schema.org/>
 
-                <> cc:projectSourceKind <https://cube-creator.lndo.site/shape/cube-project/create#ExistingCube> ;
+                <> cc:projectSourceKind <https://cube-creator.zazuko.com/vocab#projectSourceKind/ExistingCube> ;
                    rdfs:label "Test Project" ;
                    CubeProject:sourceCube <https://environment.ld.admin.ch/bafu/example/px2> ;
                    CubeProject:sourceEndpoint <http://db.cube-creator.lndo.site/px-cube> ;

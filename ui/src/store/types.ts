@@ -33,6 +33,7 @@ export interface SharedDimension extends Resource {
   name?: string
   terms?: Term
   validThrough?: Date
+  export?: Resource
 }
 
 export interface SharedDimensionTerm extends Resource {

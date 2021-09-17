@@ -8,7 +8,7 @@ import DatasetExt from 'rdf-ext/lib/Dataset'
 import { NamedNode } from 'rdf-js'
 import { ResourceIdentifier } from '@tpluscode/rdfine'
 import { dcterms, rdfs, schema } from '@tpluscode/rdf-ns-builders'
-import { cc, shape } from '@cube-creator/core/namespace'
+import { cc } from '@cube-creator/core/namespace'
 import { createProject } from '../../../lib/domain/cube-projects/create'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import '../../../lib/domain'
@@ -54,7 +54,7 @@ describe('domain/cube-projects/update', () => {
         .addOut(rdfs.label, 'Created name')
         .addOut(schema.maintainer, bafu.id)
         .addOut(dcterms.identifier, 'cube')
-        .addOut(cc.projectSourceKind, shape('cube-project/create#CSV'))
+        .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
     }
 
     beforeEach(async () => {
@@ -290,7 +290,7 @@ describe('domain/cube-projects/update', () => {
         .addOut(schema.maintainer, bafu.id)
         .addOut(cc['CubeProject/sourceCube'], $rdf.namedNode('http://external.cube'))
         .addOut(cc['CubeProject/sourceEndpoint'], $rdf.namedNode('http://external.cube/query'))
-        .addOut(cc.projectSourceKind, shape('cube-project/create#ExistingCube'))
+        .addOut(cc.projectSourceKind, cc['projectSourceKind/ExistingCube'])
     }
 
     beforeEach(async () => {

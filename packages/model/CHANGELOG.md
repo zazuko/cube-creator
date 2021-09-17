@@ -1,5 +1,16 @@
 # @cube-creator/model
 
+## 0.1.20
+
+### Patch Changes
+
+- 271cb671: Ability to map a CSV file hosted on a remote server via URL
+- b793194e: Add void dataset link to cubes published with "Published" status (re. #730)
+- 6872eb8e: Exporting project
+- Updated dependencies [271cb671]
+- Updated dependencies [6872eb8e]
+  - @cube-creator/core@0.3.3
+
 ## 0.1.19
 
 ### Patch Changes

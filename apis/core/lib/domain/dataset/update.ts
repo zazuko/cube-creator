@@ -1,4 +1,5 @@
 import { cc, lindas } from '@cube-creator/core/namespace'
+import { Draft, Published } from '@cube-creator/model/Cube'
 import { dcat, dcterms, hydra, rdf, schema, vcard, _void } from '@tpluscode/rdf-ns-builders'
 import { GraphPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'
@@ -67,6 +68,16 @@ export async function update({
     if (sparqlEndpoint) {
       datasetResource.addOut(_void.sparqlEndpoint, sparqlEndpoint)
     }
+  }
+
+  // Populate legacy Draft and Published statuses until all clients have migrated
+  const status = datasetResource.out(schema.creativeWorkStatus).term
+  const DraftLegacy = datasetResource.namedNode('https://ld.admin.ch/definedTerm/CreativeWorkStatus/Draft')
+  const PublishedLegacy = datasetResource.namedNode('https://ld.admin.ch/definedTerm/CreativeWorkStatus/Published')
+  if (Published.equals(status)) {
+    datasetResource.addOut(schema.creativeWorkStatus, PublishedLegacy)
+  } else if (Draft.equals(status)) {
+    datasetResource.addOut(schema.creativeWorkStatus, DraftLegacy)
   }
 
   return datasetResource
