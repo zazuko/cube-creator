@@ -2316,20 +2316,39 @@
   dependencies:
     "@types/express" "*"
 
-"@types/barnard59-core@*", "@types/barnard59-core@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@types/barnard59-core/-/barnard59-core-1.0.0.tgz#449c4dcf89770cf37bf53edac63b73fa5cfaa10c"
-  integrity sha512-prdp+wcIePIBW2VTN6Lg2taPNSahC96LA9vWGjV9hJbth/zaumEiam5zGo4b8qpsRlq9vBGNYJbCL8PsF2DCNQ==
+"@types/barnard59-base@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@types/barnard59-base/-/barnard59-base-1.0.1.tgz#85eea6c3d49cbb4f256d9154f38dfe6ddda547f5"
+  integrity sha512-USpxmnVLclpJC4E2zWA0f16NqYPNtZTAZU2+PWE7tbMjQwz1uNqgfuMlt2TnvgfrIAW2uHoWUoCfdNviyugmYw==
+  dependencies:
+    "@types/barnard59-core" "*"
+    "@types/glob" "*"
+    "@types/node" "*"
+    "@types/readable-stream" "*"
+
+"@types/barnard59-core@*", "@types/barnard59-core@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@types/barnard59-core/-/barnard59-core-1.0.2.tgz#6b4b86de1edcd88614f45ad45e01f63ffdbf3b40"
+  integrity sha512-3gqZ/VzEcVl3L4MWlcKdwo9NJWNUUJcJl5WbPIp0RQTlxfBnlZ8qVmxkynvOB3M/cERqmcqHHLfgJ8utDx7LSw==
   dependencies:
     "@types/clownface" "*"
     "@types/rdf-loaders-registry" "*"
+    "@types/readable-stream" "*"
     rdf-js "^4.0.2"
     winston "^3.3.3"
 
-"@types/barnard59@^1.0.0":
+"@types/barnard59-graph-store@^1.0.0":
   version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@types/barnard59/-/barnard59-1.0.0.tgz#ee9d40f4df0e42e1f8818d7c4fee5dfa1e4c3e09"
-  integrity sha512-Y/KidDq1nsmArlH1UaBxHfjQTD2Er6+M8J8vnrjq/189vS+YUEluZLQhclQpczJ8Pr4cKnosogvPG7WMUn3Y8A==
+  resolved "https://registry.yarnpkg.com/@types/barnard59-graph-store/-/barnard59-graph-store-1.0.0.tgz#7701ec2d5e2a268aa62d133ef50da4fda01cb8a3"
+  integrity sha512-/FBnZ381ujjcVU9bSmV6t9oaPJTjGkxaUEnHJMdzJxW0Ge8FgQtjsb6LLzpwRRn/yZfFD932mBM8ETX1Kkw8KQ==
+  dependencies:
+    "@types/readable-stream" "*"
+    rdf-js "^4.0.2"
+
+"@types/barnard59@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@types/barnard59/-/barnard59-1.0.1.tgz#43976265763ef16286bd1e863ac570631891ed94"
+  integrity sha512-tJ/gKJlk1lbpFUy5ofbpjSwjYNNWz12r4JNbh49EktqoNpI4cMNrEI0VUtCFZutV1ne050+d1tfm2c+bvteFKw==
   dependencies:
     "@types/barnard59-core" "*"
     "@types/clownface" "*"
@@ -2480,10 +2499,10 @@
     "@types/qs" "*"
     "@types/serve-static" "*"
 
-"@types/glob@^7.1.1":
-  version "7.1.3"
-  resolved "https://registry.yarnpkg.com/@types/glob/-/glob-7.1.3.tgz#e6ba80f36b7daad2c685acd9266382e68985c183"
-  integrity sha512-SEYeGAIQIQX8NN6LDKprLjbrd5dARM5EXsd8GI/A5l0apYI1fGMWgPHSe4ZKL4eozlAyI+doUE9XbYS4xCkQ1w==
+"@types/glob@*", "@types/glob@^7.1.1":
+  version "7.1.4"
+  resolved "https://registry.yarnpkg.com/@types/glob/-/glob-7.1.4.tgz#ea59e21d2ee5c517914cb4bc8e4153b99e566672"
+  integrity sha512-w+LsMxKyYQm347Otw+IfBXOv9UWVjpHpCDdbBMt8Kz/xbvCYNjP+0qPh91Km3iKfSRLBB0P7fAMf0KHrPu+MyA==
   dependencies:
     "@types/minimatch" "*"
     "@types/node" "*"
@@ -2765,7 +2784,7 @@
   dependencies:
     rdf-js "^4.0.2"
 
-"@types/readable-stream@^2.3.11", "@types/readable-stream@^2.3.9":
+"@types/readable-stream@*", "@types/readable-stream@^2.3.11", "@types/readable-stream@^2.3.9":
   version "2.3.11"
   resolved "https://registry.yarnpkg.com/@types/readable-stream/-/readable-stream-2.3.11.tgz#942bc4574a1d7ca4368cb9cb4352e3d2b4b51dea"
   integrity sha512-0z+/apYJwKFz/RHp6mOMxz/y7xOvWPYPevuCEyAY3gXsjtaac02E26RvxA+I96rfvmVH/dEMGXNvyJfViR1FSQ==

@@ -7,7 +7,7 @@ import { insertTestProject } from '@cube-creator/testing/lib/seedData'
 import { setupEnv } from '../support/env'
 import { Table } from '@rdfine/csvw'
 import { logger } from '../support/logger'
-import type { Variables } from 'barnard59-core/lib/Pipeline'
+import type { VariableMap } from 'barnard59-core'
 import * as Models from '@cube-creator/model'
 import * as Csvw from '@rdfine/csvw'
 
@@ -18,7 +18,7 @@ Hydra.baseUri = env.API_CORE_BASE
 describe('lib/job', function () {
   this.timeout(360 * 1000)
 
-  let variables: Variables
+  let variables: VariableMap
 
   before(async () => {
     setupEnv()

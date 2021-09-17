@@ -4,7 +4,7 @@ import $rdf from 'rdf-ext'
 import fromFile from 'rdf-utils-fs/fromFile.js'
 import { setupAuthentication } from '../auth'
 import { schema, xsd } from '@tpluscode/rdf-ns-builders'
-import type * as Pipeline from 'barnard59-core/lib/Pipeline'
+import type { VariableMap } from 'barnard59-core'
 import namespace from '@rdfjs/namespace'
 import * as Alcaeus from 'alcaeus/node'
 import { cc } from '@cube-creator/core/namespace'
@@ -26,7 +26,7 @@ export interface RunOptions {
   debug: boolean
   job: string
   executionUrl?: string
-  variable?: Pipeline.VariableMap
+  variable?: VariableMap
   graphStore?: {
     endpoint: string
     user: string
@@ -44,7 +44,7 @@ interface Create<TOptions> {
   /**
    * Set any additional pipeline variables here
    */
-  prepare?(options: TOptions, variable: Pipeline.VariableMap): Promise<void> | void
+  prepare?(options: TOptions, variable: VariableMap): Promise<void> | void
 }
 
 async function fileToDataset(filename: string) {

@@ -4,7 +4,7 @@ import { Job, Table, TransformJob } from '@cube-creator/model'
 import type * as Schema from '@rdfine/schema'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import type { Logger } from 'winston'
-import type { Context, VariableMap } from 'barnard59-core/lib/Pipeline'
+import type { Context, VariableMap } from 'barnard59-core'
 import $rdf from 'rdf-ext'
 import { logger } from './log'
 

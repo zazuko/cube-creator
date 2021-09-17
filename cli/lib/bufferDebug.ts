@@ -3,7 +3,7 @@ import type Pipeline from 'barnard59-core/lib/Pipeline'
 import type { BoundBaseObserver } from '@opentelemetry/api-metrics'
 import { bufferObserver } from './otel/metrics'
 
-const { finished } = stream
+const { finished } = stream as any
 
 function bufferStatePair({ state, step }: any): { key: string; value: number } {
   const key = step.ptr.value // `[${index}] (${mode}) ${step.ptr.value} (${state.length}/${state.highWaterMark})`
@@ -20,7 +20,7 @@ function bufferInfo(pipeline: Pipeline) {
   }
 
   return steps.reduce<Record<string, number>>((data, step, index) => {
-    if ('_writableState' in step.stream) {
+    if ('_writableState' in step.stream!) {
       const { key, value } = bufferStatePair({
         index,
         mode: 'write',
@@ -31,7 +31,7 @@ function bufferInfo(pipeline: Pipeline) {
       data[key] = value
     }
 
-    if ('_readableState' in step.stream) {
+    if ('_readableState' in step.stream!) {
       const { key, value } = bufferStatePair({
         index,
         mode: 'read',
