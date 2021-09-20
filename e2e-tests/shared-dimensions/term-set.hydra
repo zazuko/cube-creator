@@ -39,6 +39,25 @@ With Class meta:SharedDimension {
             Expect Property schema:validFrom
             Expect Property schema:validThrough
         }
+
+        Invoke {
+            Content-Type "text/turtle"
+
+            ```
+            prefix schema: <http://schema.org/>
+            prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+            prefix qudt: <http://qudt.org/schema/qudt/>
+            prefix meta: <https://cube.link/meta/>
+            prefix sh: <http://www.w3.org/ns/shacl#>
+            prefix dcterms: <http://purl.org/dc/terms/>
+
+            <> schema:name "node.js"@en ;
+               dcterms:identifier "NodeJs" ;
+               schema:validThrough "2022-01-01T00:00:00Z"^^xsd:dateTime .
+            ```
+        } => {
+            Expect Status 400
+        }
     }
 
     Expect Operation schema:ReplaceAction {

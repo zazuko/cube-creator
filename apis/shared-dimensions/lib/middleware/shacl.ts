@@ -5,7 +5,9 @@ import env from '../env'
 
 export const shaclValidate = shaclMiddleware({
   async loadResource(id) {
-    return shapes.get(id)?.() || null
+    const mappedId = $rdf.namedNode(id.value.replace(env.MANAGED_DIMENSIONS_API_BASE, env.MANAGED_DIMENSIONS_BASE))
+
+    return shapes.get(mappedId)?.() || null
   },
   async loadResourcesTypes() {
     return []
