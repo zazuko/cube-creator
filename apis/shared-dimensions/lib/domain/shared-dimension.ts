@@ -1,6 +1,7 @@
 import clownface, { GraphPointer, MultiPointer } from 'clownface'
 import { NamedNode, Quad, Stream, Term } from 'rdf-js'
 import $rdf from 'rdf-ext'
+import through2 from 'through2'
 import { dcterms, hydra, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { md, meta } from '@cube-creator/core/namespace'
 import { DomainError } from '@cube-creator/api-errors'
@@ -10,6 +11,8 @@ import httpError from 'http-errors'
 import { DESCRIBE } from '@tpluscode/sparql-builder'
 import { streamClient } from '../sparql'
 import { StreamClient } from 'sparql-http-client/StreamClient'
+
+export { importDimension } from './shared-dimension/import'
 
 interface CreateSharedDimension {
   resource: GraphPointer<NamedNode>
@@ -46,6 +49,7 @@ export async function create({ resource, store }: CreateSharedDimension): Promis
   const termSet = clownface({ dataset })
     .namedNode(termSetId)
     .addOut(rdf.type, [hydra.Resource, schema.DefinedTermSet, meta.SharedDimension, md.SharedDimension])
+    .deleteOut(md.createAs)
 
   await store.save(termSet)
   return termSet
@@ -125,7 +129,7 @@ interface ExportedDimension {
 export async function getExportedDimension({ resource, store, client = streamClient }: GetExportedDimension): Promise<ExportedDimension> {
   const dimension = await store.load(resource)
 
-  const data = await DESCRIBE`${dimension.term} ?term ?shape ?setShape`
+  const quads = await DESCRIBE`${dimension.term} ?term ?shape ?setShape`
     .FROM(store.graph)
     .WHERE`
       ${dimension.term} a ${md.SharedDimension} .
@@ -136,5 +140,27 @@ export async function getExportedDimension({ resource, store, client = streamCli
       OPTIONAL { ?setShape ${sh.targetNode} ${dimension.term} . }
     `.execute(client.query)
 
-  return { dimension, data }
+  const baseUriPattern = new RegExp(`^${env.MANAGED_DIMENSIONS_BASE}`)
+  function removeBase<T extends Term>(term: T): T {
+    if (term.termType === 'NamedNode') {
+      return $rdf.namedNode(term.value.replace(baseUriPattern, '')) as any
+    }
+
+    return term
+  }
+
+  const transformToQuads = through2.obj(function (quad: Quad, _, callback) {
+    this.push($rdf.quad(
+      removeBase(quad.subject),
+      removeBase(quad.predicate),
+      removeBase(quad.object),
+      removeBase(quad.graph),
+    ))
+    callback()
+  })
+
+  return {
+    dimension,
+    data: quads.pipe(transformToQuads),
+  }
 }

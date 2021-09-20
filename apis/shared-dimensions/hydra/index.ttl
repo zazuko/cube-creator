@@ -8,6 +8,7 @@ BASE <urn:hydra-box:api>
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix meta: <https://cube.link/meta/> .
 @prefix query: <http://hypermedia.app/query#> .
+@prefix hex: <https://w3id.org/hydra/extension#> .
 
 <api>
   a hydra:ApiDocumentation ;
@@ -46,7 +47,8 @@ md:SharedDimensions
            [
              a code:EcmaScript ;
              code:link <file:handlers/shared-dimensions#post> ;
-           ]
+           ] ;
+         hex:multiPartPath md:export ;
        ]
 .
 

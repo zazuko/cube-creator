@@ -64,6 +64,24 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () =
       })
     })
 
+    it('removes md:createAs', async () => {
+      // given
+      const resource = namedNode('')
+        .addOut(dcterms.identifier, 'canton')
+        .addOut(md.createAs, 'Import')
+
+      // when
+      const termSet = await create({ resource, store })
+
+      // then
+      expect(termSet).to.matchShape({
+        property: [{
+          path: md.createAs,
+          maxCount: 0,
+        }],
+      })
+    })
+
     it('throws if identifier is already used', async () => {
       // given
       await store.save(namedNode('https://cube-creator.lndo.site/shared-dimensions/term-set/canton'))

@@ -24,10 +24,12 @@ With Class meta:SharedDimension {
             prefix meta: <https://cube.link/meta/>
             prefix sh: <http://www.w3.org/ns/shacl#>
             prefix dcterms: <http://purl.org/dc/terms/>
+            PREFIX md: <https://cube-creator.zazuko.com/shared-dimensions/vocab#>
 
             <> schema:name "node.js"@en ;
                dcterms:identifier "node-js" ;
-               schema:validThrough "2022-01-01T00:00:00Z"^^xsd:dateTime .
+               schema:validThrough "2022-01-01T00:00:00Z"^^xsd:dateTime ;
+               md:createAs "New dimension" .
             ```
         } => {
             Expect Status 201
@@ -50,10 +52,12 @@ With Class meta:SharedDimension {
             prefix meta: <https://cube.link/meta/>
             prefix sh: <http://www.w3.org/ns/shacl#>
             prefix dcterms: <http://purl.org/dc/terms/>
+            PREFIX md: <https://cube-creator.zazuko.com/shared-dimensions/vocab#>
 
             <> schema:name "node.js"@en ;
                dcterms:identifier "NodeJs" ;
-               schema:validThrough "2022-01-01T00:00:00Z"^^xsd:dateTime .
+               schema:validThrough "2022-01-01T00:00:00Z"^^xsd:dateTime ;
+               md:createAs "New dimension" .
             ```
         } => {
             Expect Status 400

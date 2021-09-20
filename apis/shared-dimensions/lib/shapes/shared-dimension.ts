@@ -3,7 +3,7 @@ import { supportedLanguages } from '@cube-creator/core/languages'
 import type { Initializer } from '@tpluscode/rdfine/RdfResource'
 import type { NodeShape, PropertyShape } from '@rdfine/shacl'
 import $rdf from 'rdf-ext'
-import { md, meta, sh1 } from '@cube-creator/core/namespace'
+import { editor, md, meta, sh1 } from '@cube-creator/core/namespace'
 
 const properties: Initializer<PropertyShape>[] = [{
   name: 'Name',
@@ -147,16 +147,48 @@ const properties: Initializer<PropertyShape>[] = [{
 }]
 
 export const create = (): Initializer<NodeShape> => ({
-  closed: true,
-  property: [{
-    name: 'Identifier',
-    description: 'A lowercase, alphanumeric value which identifies a shared dimension',
-    path: dcterms.identifier,
-    order: 0,
-    pattern: '^[a-z0-9-]+$',
+  [sh1.xoneDiscriminator.value]: md.createAs,
+  property: {
+    path: md.createAs,
     minCount: 1,
     maxCount: 1,
-  }, ...properties],
+    in: ['New dimension', 'Import'],
+    defaultValue: 'New dimension',
+  },
+  xone: [{
+    closed: true,
+    types: [sh.NodeShape],
+    ignoredProperties: [
+      sh.property,
+    ],
+    property: [{
+      path: md.createAs,
+      hasValue: 'Import',
+      [dash.hidden.value]: true,
+    }, {
+      name: 'Exported dimension',
+      path: md.export,
+      minCount: 1,
+      maxCount: 1,
+      order: 5,
+      [dash.editor.value]: editor.FileUpload,
+    }],
+  }, {
+    closed: true,
+    property: [{
+      path: md.createAs,
+      hasValue: 'New dimension',
+      [dash.hidden.value]: true,
+    }, {
+      name: 'Identifier',
+      description: 'A lowercase, alphanumeric value which identifies a shared dimension',
+      path: dcterms.identifier,
+      order: 0,
+      pattern: '^[a-z0-9-]+$',
+      minCount: 1,
+      maxCount: 1,
+    }, ...properties],
+  }],
 })
 
 export const update = (): Initializer<NodeShape> => ({

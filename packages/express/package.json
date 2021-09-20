@@ -1,0 +1,17 @@
+{
+  "name": "@cube-creator/express",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@rdfjs-elements/formats-pretty": "^0.3.3",
+    "clownface": "^1.4.0",
+    "http-errors": "^1.8.0",
+    "middleware-async": "^1.2.7",
+    "mime-types": "^2",
+    "once": "^1.4.0",
+    "rdf-ext": "^1.3.5"
+  },
+  "devDependencies": {
+    "@types/mime-types": "^2"
+  }
+}
