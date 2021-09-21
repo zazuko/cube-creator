@@ -49,7 +49,6 @@ With Class cc:CubeProject {
 
                     <> cc:sourceKind cc:MediaLocal ;
                        schema:name "test1.csv" ;
-                       schema:contentUrl <http://s3.cube-creator.lndo.site/cube-creator/test-data/upload-test-cube/test1.csv> ;
                        schema:identifier "test-data/upload-test-cube/test1.csv" ;
                     ```
                 } => { }

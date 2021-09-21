@@ -17,7 +17,7 @@ interface CreateOrUpdateColumn {
 interface ApiCsvSource {
   error?: string
 
-  setUploadedFile(kind: NamedNode, key: string, contentUrl: NamedNode): void
+  setUploadedFile(kind: NamedNode, key: string | undefined, contentUrl: NamedNode | undefined): void
   /**
    * Returns true if the dialect has actually changed
    */
@@ -36,7 +36,7 @@ export default function Mixin<Base extends Constructor<Omit<CsvSource, keyof Api
     @property.literal({ path: schema.error })
     error?: string
 
-    setUploadedFile(sourceKind: NamedNode, key: string, contentUrl: NamedNode): void {
+    setUploadedFile(sourceKind: NamedNode, key: string | undefined, contentUrl: NamedNode | undefined): void {
       if (this.associatedMedia) {
         this.associatedMedia.pointer.deleteOut()
       }

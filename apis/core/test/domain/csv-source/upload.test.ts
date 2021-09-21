@@ -26,7 +26,6 @@ describe('domain/csv-sources/upload', () => {
     .addOut(cc.sourceKind, cc.MediaLocal)
     .addOut(schema.name, $rdf.literal('source.csv'))
     .addOut(schema.identifier, $rdf.literal('test/source.csv'))
-    .addOut(schema.contentUrl, $rdf.namedNode('http://s3/test/source.csv'))
 
   beforeEach(() => {
     fileStream = fs.createReadStream(path.resolve(__dirname, '../../../../../minio/cube-creator/test-data/ubd28/input_CH_yearly_air_immission_basetable.csv'))
@@ -90,11 +89,6 @@ describe('domain/csv-sources/upload', () => {
             }, {
               path: schema.identifier,
               datatype: xsd.string,
-              minCount: 1,
-              maxCount: 1,
-            }, {
-              path: schema.contentUrl,
-              nodeKind: sh.IRI,
               minCount: 1,
               maxCount: 1,
             }],

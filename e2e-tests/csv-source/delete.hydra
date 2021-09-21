@@ -49,7 +49,6 @@ With Class cc:CubeProject {
 
                     <> cc:sourceKind cc:MediaLocal ;
                        schema:name "test.csv" ;
-                       schema:contentUrl <http://s3.cube-creator.lndo.site/cube-creator/test-data/delete-source-test-cube/test.csv> ;
                        schema:identifier "test-data/delete-source-test-cube/test.csv" ;
                     ```
                 } => {
