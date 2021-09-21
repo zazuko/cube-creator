@@ -28,7 +28,7 @@ export async function replaceFile({
   const csvSource = await store.getResource<CsvSource>(csvSourceId)
 
   // Remove any previous error
-  csvSource.error = undefined
+  csvSource.errors = []
 
   const newMedia = mediaObjectFromPointer(resource)
   const newStorage = getStorage(newMedia)
