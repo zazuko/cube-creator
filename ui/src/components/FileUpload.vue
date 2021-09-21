@@ -53,8 +53,9 @@ export default class extends Vue {
     uppy.use(AwsS3Multipart, { companionUrl: uploadURL })
     uppy.addPreProcessor(async () => {
       // Hack to set fresh auth token before each upload
-      const headers = prepareHeaders(uploadURL, this.$store);
-      (uppy as any).plugins.uploader[0].client.opts.companionHeaders = headers
+      const headers = prepareHeaders(uploadURL, this.$store)
+      const plugin = uppy.getPlugin('AwsS3Multipart') as any
+      plugin.client.opts.companionHeaders = headers
     })
     uppy.addPostProcessor(this.onUploaded)
 
