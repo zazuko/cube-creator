@@ -44,9 +44,9 @@
             </b-dropdown>
           </div>
         </div>
-        <b-message v-if="source.error" type="is-danger" class="content">
+        <b-message v-if="source.errors.length" type="is-danger" class="content">
           <p>An error occurred while parsing the CSV file:</p>
-          <pre>{{ source.error }}</pre>
+          <pre v-for="error in source.errors" :key="error">{{ error }}</pre>
           <div class="content" v-if="source.actions.delete || source.actions.edit">
             <p>To fix the issue, you can:</p>
             <ul>

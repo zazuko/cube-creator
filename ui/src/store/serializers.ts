@@ -46,7 +46,7 @@ export function serializeSource (source: CsvSource): CsvSource {
       download: source.actions.download,
     },
     name: source.name,
-    error: source.error,
+    errors: source.errors,
     columns: source.columns.map(serializeColumn),
     dialect: source.dialect,
     csvMapping: source.csvMapping,
