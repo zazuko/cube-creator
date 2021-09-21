@@ -41,13 +41,17 @@ export default class CsvUploadForm extends Vue {
   fileUrl = ''
 
   submitLocal (files: UploadedFile[]): void {
-    const mediaObjects = files.map((file) =>
-      clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('') })
+    const mediaObjects = files.map((file) => {
+      const contentUrl = file.uploadURL.startsWith('http')
+        ? file.uploadURL
+        : `https://${file.uploadURL}`
+
+      return clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('') })
         .addOut(cc.sourceKind, cc.MediaLocal)
         .addOut(schema.name, $rdf.literal(file.name))
         .addOut(schema.identifier, $rdf.literal(file.s3Multipart.key))
-        .addOut(schema.contentUrl, $rdf.namedNode(file.uploadURL))
-    )
+        .addOut(schema.contentUrl, $rdf.namedNode(contentUrl))
+    })
 
     this.$emit('submit', mediaObjects)
   }
