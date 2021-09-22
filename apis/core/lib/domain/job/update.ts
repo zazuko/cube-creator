@@ -1,3 +1,4 @@
+import $rdf from 'rdf-ext'
 import { NamedNode } from 'rdf-js'
 import { GraphPointer } from 'clownface'
 import { Job, JobMixin, ImportProject, Dataset, CsvProject } from '@cube-creator/model'
@@ -32,6 +33,15 @@ function lindasWebQueryLink(cube: NamedNode, version: number, cubeGraph: NamedNo
   return queryLink.toString()
 }
 
+function visualizeLink(cube: NamedNode) {
+  const language = 'en'
+  const visualizeLink = new URL(`/${language}/create/new`, env.VISUALIZE_UI)
+
+  visualizeLink.searchParams.set('cube', cube.value)
+
+  return visualizeLink.toString()
+}
+
 export async function update({ resource, store }: JobUpdateParams): Promise<GraphPointer> {
   const changes = RdfResource.factory.createEntity<Job>(resource, [JobMixin])
   const job = await store.getResource<Job>(resource.term)
@@ -52,14 +62,20 @@ export async function update({ resource, store }: JobUpdateParams): Promise<Grap
 
       const organization = await store.getResource<Organization>(project.maintainer)
 
-      if (env.has('TRIFID_UI')) {
-        const cubeId = isCsvProject(project)
-          ? organization.createIdentifier({
-            cubeIdentifier: project.cubeIdentifier,
-          })
-          : project.sourceCube
+      const cubeId = isCsvProject(project)
+        ? organization.createIdentifier({
+          cubeIdentifier: project.cubeIdentifier,
+        })
+        : project.sourceCube
 
+      if (env.has('TRIFID_UI')) {
         job.query = lindasWebQueryLink(cubeId, job.revision, job.publishGraph)
+      }
+
+      const visualize = $rdf.namedNode('https://ld.admin.ch/application/visualize')
+      const isPublishedToVisualize = dataset.pointer.has(schema.workExample, visualize).terms.length > 0
+      if (env.has('VISUALIZE_UI') && isPublishedToVisualize) {
+        job.visualize = visualizeLink(cubeId)
       }
     }
   }

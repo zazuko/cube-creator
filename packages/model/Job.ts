@@ -32,6 +32,7 @@ export interface PublishJob extends Job {
   publishedTo?: Term
   status?: Term
   query?: string
+  visualize?: string
 }
 
 export function isPublishJob(job: Job): job is PublishJob {
@@ -106,6 +107,9 @@ export function PublishJobMixin<Base extends Constructor<RdfResource>>(base: Bas
 
     @property.literal({ path: schema.query })
     query?: string
+
+    @property.literal({ path: cc.visualize })
+    visualize?: string
   }
 
   return Impl

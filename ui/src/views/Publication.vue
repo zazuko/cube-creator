@@ -33,6 +33,10 @@
               <span>Open in LINDAS</span>
               <b-icon icon="chevron-right" />
             </a>
+            <a v-if="job.visualize" :href="job.visualize" target="_blank" rel="noopener" class="button is-small">
+              <span>Open in Visualize</span>
+              <b-icon icon="chevron-right" />
+            </a>
           </template>
         </job-item>
       </div>
