@@ -46,7 +46,6 @@ export default class CsvUploadForm extends Vue {
         .addOut(cc.sourceKind, cc.MediaLocal)
         .addOut(schema.name, $rdf.literal(file.name))
         .addOut(schema.identifier, $rdf.literal(file.s3Multipart.key))
-        .addOut(schema.contentUrl, $rdf.namedNode(file.uploadURL))
     )
 
     this.$emit('submit', mediaObjects)

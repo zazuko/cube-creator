@@ -40,9 +40,9 @@ export async function replaceFile({
     const oldStorage = getStorage(csvSource.associatedMedia)
     oldStorage.delete(csvSource.associatedMedia)
 
-    const sourceKind = newMedia.sourceKind!
-    const key = newMedia.identifierLiteral || ''
-    const location = newMedia.contentUrl!
+    const sourceKind = newMedia.sourceKind
+    const key = newMedia.identifierLiteral
+    const location = newMedia.contentUrl
     csvSource.setUploadedFile(sourceKind, key, location)
 
     await createOrUpdateColumns(csvSource, getStorage)

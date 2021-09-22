@@ -32,8 +32,8 @@ export async function createCSVSource({
 
   const sourceKind = resource.out(cc.sourceKind).term! as NamedNode
   const fileName = resource.out(schema.name).value!
-  const key = resource.out(schema.identifier).value || ''
-  const location = resource.out(schema.contentUrl).term! as NamedNode
+  const key = resource.out(schema.identifier).value || undefined
+  const location = (resource.out(schema.contentUrl).term || undefined) as NamedNode | undefined
 
   if (await sourceWithFilenameExists(csvMapping.id, fileName)) {
     throw new Conflict(`A file with ${fileName} has already been added to the project`)

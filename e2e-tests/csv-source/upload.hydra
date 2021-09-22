@@ -49,7 +49,6 @@ With Class cc:CubeProject {
 
                     <> cc:sourceKind cc:MediaLocal ;
                        schema:name "test1.csv" ;
-                       schema:contentUrl <http://s3.cube-creator.lndo.site/cube-creator/test-data/upload-test-cube/test1.csv> ;
                        schema:identifier "test-data/upload-test-cube/test1.csv" ;
                     ```
                 } => {
@@ -80,7 +79,6 @@ With Class cc:CubeProject {
 
                     <> cc:sourceKind cc:MediaLocal ;
                        schema:name "test2.jpg" ;
-                       schema:contentUrl <http://s3.cube-creator.lndo.site/cube-creator/test-data/upload-test-cube/test2.jpg> ;
                        schema:identifier "test-data/upload-test-cube/test2.jpg" ;
                     ```
                 } => {
@@ -98,7 +96,6 @@ With Class cc:CubeProject {
 
                     <> cc:sourceKind cc:MediaLocal ;
                        schema:name "test1.csv" ;
-                       schema:contentUrl <http://s3.cube-creator.lndo.site/cube-creator/test-data/upload-test-cube/test1.csv> ;
                        schema:identifier "test-data/upload-test-cube/test1.csv" ;
                     ```
                 } => {
@@ -114,7 +111,6 @@ With Class cc:CubeProject {
 
                     <> cc:sourceKind cc:MediaLocal ;
                        schema:name "invalid-csv.csv" ;
-                       schema:contentUrl <http://s3.cube-creator.lndo.site/cube-creator/test-data/upload-test-cube/invalid-csv.csv> ;
                        schema:identifier "test-data/upload-test-cube/invalid-csv.csv" ;
                     ```
                 } => {

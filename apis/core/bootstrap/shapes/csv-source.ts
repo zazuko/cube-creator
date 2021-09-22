@@ -26,20 +26,12 @@ ${shapeCreateId} {
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
     ] ;
-    ${sh.property} [
-      ${sh.name} "File location URL" ;
-      ${sh.path} ${schema.contentUrl} ;
-      ${sh.nodeKind} ${sh.IRI} ;
-      ${sh.minCount} 1 ;
-      ${sh.maxCount} 1 ;
-    ] ;
     ${sh.xone} (
       [
         ${sh.closed} true ;
         ${sh.ignoredProperties} (
           ${cc.sourceKind}
           ${schema.name}
-          ${schema.contentUrl}
           ${rdf.type}
         ) ;
         ${sh.property} [
@@ -60,13 +52,19 @@ ${shapeCreateId} {
         ${sh.ignoredProperties} (
           ${cc.sourceKind}
           ${schema.name}
-          ${schema.contentUrl}
           ${rdf.type}
         ) ;
         ${sh.property} [
           ${sh.path} ${cc.sourceKind} ;
           ${sh.hasValue} ${cc.MediaURL} ;
           ${dash.hidden} true ;
+        ] ;
+        ${sh.property} [
+          ${sh.name} "File location URL" ;
+          ${sh.path} ${schema.contentUrl} ;
+          ${sh.nodeKind} ${sh.IRI} ;
+          ${sh.minCount} 1 ;
+          ${sh.maxCount} 1 ;
         ] ;
       ]
     ) ;
