@@ -1,5 +1,4 @@
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
-import multer from 'multer'
 import { multiPartResourceHandler } from '@cube-creator/express/multipart'
 import asyncMiddleware from 'middleware-async'
 import { INSERT } from '@tpluscode/sparql-builder'
@@ -8,7 +7,6 @@ import { importProject } from '../../domain/cube-projects/import'
 import { streamClient } from '../../query-client'
 
 export const postImportedProject = protectedResource(
-  multer().any(),
   multiPartResourceHandler,
   shaclValidate.override({
     parseResource: req => req.parseFromMultipart(),

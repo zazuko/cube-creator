@@ -1,4 +1,4 @@
-import type E from 'express'
+import E, { Router } from 'express'
 import { parsers } from '@rdfjs-elements/formats-pretty'
 import once from 'once'
 import { BadRequest } from 'http-errors'
@@ -8,6 +8,7 @@ import { NamedNode, Stream } from 'rdf-js'
 import asyncMiddleware from 'middleware-async'
 import { Readable } from 'stream'
 import mime from 'mime-types'
+import multer from 'multer'
 
 export function isMultipart(req: E.Request) {
   return req.get('content-type')?.includes('multipart/form-data')
@@ -43,7 +44,10 @@ function parseFile(file: Express.Multer.File, baseIRI: string): Stream & Readabl
   return parserStream as any
 }
 
-export const multiPartResourceHandler = asyncMiddleware((req, res, next) => {
+export const multiPartResourceHandler: E.Router = Router()
+
+multiPartResourceHandler.use(multer().any())
+multiPartResourceHandler.use(asyncMiddleware((req, res, next) => {
   req.parseFromMultipart = once(async () => {
     const { files } = req
 
@@ -52,7 +56,7 @@ export const multiPartResourceHandler = asyncMiddleware((req, res, next) => {
     }
     const representation = files.find(file => file.fieldname === 'representation')
     if (!representation) {
-      throw new Error('Missing request part "representation"')
+      throw new BadRequest('Missing request part "representation"')
     }
 
     return clownface({
@@ -75,4 +79,4 @@ export const multiPartResourceHandler = asyncMiddleware((req, res, next) => {
   }
 
   next()
-})
+}))

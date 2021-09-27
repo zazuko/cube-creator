@@ -1,5 +1,4 @@
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
-import multer from 'multer'
 import asyncMiddleware from 'middleware-async'
 import { multiPartResourceHandler } from '@cube-creator/express/multipart'
 import { shaclValidate } from '../../middleware/shacl'
@@ -8,7 +7,6 @@ import { importDimension } from '../../domain/shared-dimension'
 import { store } from '../../store'
 
 export const postImportedDimension = protectedResource(
-  multer().any(),
   multiPartResourceHandler,
   shaclValidate.override({
     parseResource: req => req.parseFromMultipart(),
