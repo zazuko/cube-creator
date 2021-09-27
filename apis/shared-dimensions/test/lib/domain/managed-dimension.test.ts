@@ -200,17 +200,18 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () =
   describe('getExportedDimension @SPARQL', () => {
     let dataset: DatasetCore
 
-    const termSetId = $rdf.namedNode('https://ld.admin.ch/cube/dimension/technologies')
+    const termSetId = $rdf.namedNode('dimension/technologies')
 
     before(async function () {
       this.timeout(20000)
       await insertTestDimensions()
 
+      const resource = namedNode(`https://ld.admin.ch/cube/${termSetId}`)
       const store = testStore()
-      await store.save(namedNode(termSetId))
+      await store.save(resource)
 
       const { data } = await getExportedDimension({
-        resource: termSetId,
+        resource: resource.term,
         store,
         client: mdClients.streamClient,
       })
@@ -255,7 +256,7 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () =
 
     it('exports term properties', () => {
       const dimension = clownface({ dataset })
-        .namedNode('https://ld.admin.ch/cube/dimension/technologies/rdf')
+        .namedNode('dimension/technologies/rdf')
 
       expect(dimension).to.matchShape({
         property: [{
