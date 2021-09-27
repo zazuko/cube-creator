@@ -23,6 +23,19 @@ export async function findProject(metadataCollection: DimensionMetadataCollectio
   return result[0]?.project as any
 }
 
+export async function findProjectMaintainerForDataset(datasetId: NamedNode): Promise<NamedNode | undefined> {
+  const result = await SELECT`?maintainer`
+    .WHERE`
+      GRAPH ?maintainer {
+        ?project ${cc.dataset} ${datasetId} .
+        ?project ${schema.maintainer} ?maintainer .
+      }
+    `
+    .execute(parsingClient.query)
+
+  return result[0]?.maintainer as any
+}
+
 export function exists(cubeIdentifierOrUri: string | NamedNode, maintainer: Term, client = parsingClient): Promise<boolean> {
   let patterns: SparqlTemplateResult[]
 

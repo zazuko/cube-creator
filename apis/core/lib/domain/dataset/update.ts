@@ -1,20 +1,23 @@
 import { cc, lindas } from '@cube-creator/core/namespace'
 import { Draft, Published } from '@cube-creator/model/Cube'
-import { dcat, dcterms, hydra, rdf, schema, vcard, _void } from '@tpluscode/rdf-ns-builders'
+import { dcat, hydra, rdf, schema, vcard, _void } from '@tpluscode/rdf-ns-builders'
 import { GraphPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'
 import { ResourceStore } from '../../ResourceStore'
+import { findProjectMaintainerForDataset } from '../cube-projects/queries'
 
 interface AddMetaDataCommand {
   dataset: GraphPointer<NamedNode>
   resource: GraphPointer
   store: ResourceStore
+  findMaintainer?: (dataset: NamedNode) => Promise<NamedNode | undefined>
 }
 
 export async function update({
   dataset,
   resource,
   store,
+  findMaintainer = findProjectMaintainerForDataset,
 }: AddMetaDataCommand): Promise<GraphPointer> {
   const datasetResource = await store.get(dataset.term)
 
@@ -55,7 +58,7 @@ export async function update({
   })
 
   // Set LINDAS query interface and sparql endpoint
-  const organizationId = datasetResource.out(dcterms.creator).term
+  const organizationId = await findMaintainer(dataset.term)
   if (organizationId) {
     const organization = await store.get(organizationId)
 
