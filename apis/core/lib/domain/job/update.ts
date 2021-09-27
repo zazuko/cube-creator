@@ -61,7 +61,6 @@ export async function update({ resource, store }: JobUpdateParams): Promise<Grap
       }
 
       const organization = await store.getResource<Organization>(project.maintainer)
-
       const cubeId = isCsvProject(project)
         ? organization.createIdentifier({
           cubeIdentifier: project.cubeIdentifier,
@@ -69,13 +68,27 @@ export async function update({ resource, store }: JobUpdateParams): Promise<Grap
         : project.sourceCube
 
       if (env.has('TRIFID_UI')) {
-        job.query = lindasWebQueryLink(cubeId, job.revision, job.publishGraph)
+        job.addWorkExample({
+          url: $rdf.namedNode(lindasWebQueryLink(cubeId, job.revision, job.publishGraph)),
+          encodingFormat: 'Application/Sparql-query',
+          name: [
+            $rdf.literal('SPARQL Endpoint mit Vorauswahl des Graph', 'de'),
+            $rdf.literal('SPARQL Endpoint with graph preselection', 'en'),
+            $rdf.literal('SPARQL Endpoint avec présélection du graphe', 'fr'),
+          ],
+        })
       }
 
       const visualize = $rdf.namedNode('https://ld.admin.ch/application/visualize')
       const isPublishedToVisualize = dataset.pointer.has(schema.workExample, visualize).terms.length > 0
       if (env.has('VISUALIZE_UI') && isPublishedToVisualize) {
-        job.visualize = visualizeLink(cubeId)
+        job.addWorkExample({
+          url: $rdf.namedNode(visualizeLink(cubeId)),
+          encodingFormat: 'text/html',
+          name: [
+            $rdf.literal('visualize.admin.ch'),
+          ],
+        })
       }
     }
   }
