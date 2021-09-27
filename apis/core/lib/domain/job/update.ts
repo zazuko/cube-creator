@@ -2,7 +2,7 @@ import $rdf from 'rdf-ext'
 import { NamedNode } from 'rdf-js'
 import { GraphPointer } from 'clownface'
 import { Job, JobMixin, ImportProject, Dataset, CsvProject } from '@cube-creator/model'
-import { isPublishJob } from '@cube-creator/model/Job'
+import { isPublishJob, PublishJob, WorkExampleInput } from '@cube-creator/model/Job'
 import RdfResource from '@tpluscode/rdfine'
 import env from '@cube-creator/core/env'
 import { DESCRIBE } from '@tpluscode/sparql-builder'
@@ -67,29 +67,8 @@ export async function update({ resource, store }: JobUpdateParams): Promise<Grap
         })
         : project.sourceCube
 
-      if (env.has('TRIFID_UI')) {
-        job.addWorkExample({
-          url: $rdf.namedNode(lindasWebQueryLink(cubeId, job.revision, job.publishGraph)),
-          encodingFormat: 'Application/Sparql-query',
-          name: [
-            $rdf.literal('SPARQL Endpoint mit Vorauswahl des Graph', 'de'),
-            $rdf.literal('SPARQL Endpoint with graph preselection', 'en'),
-            $rdf.literal('SPARQL Endpoint avec présélection du graphe', 'fr'),
-          ],
-        })
-      }
-
-      const visualize = $rdf.namedNode('https://ld.admin.ch/application/visualize')
-      const isPublishedToVisualize = dataset.pointer.has(schema.workExample, visualize).terms.length > 0
-      if (env.has('VISUALIZE_UI') && isPublishedToVisualize) {
-        job.addWorkExample({
-          url: $rdf.namedNode(visualizeLink(cubeId)),
-          encodingFormat: 'text/html',
-          name: [
-            $rdf.literal('visualize.admin.ch'),
-          ],
-        })
-      }
+      const workExamples = prepareWorkExamples(cubeId, job, dataset)
+      workExamples.forEach(workExample => job.addWorkExample(workExample))
     }
   }
 
@@ -108,4 +87,34 @@ export async function update({ resource, store }: JobUpdateParams): Promise<Grap
   }
 
   return job.pointer
+}
+
+export function prepareWorkExamples(cubeId: NamedNode, job: PublishJob, dataset: Dataset): WorkExampleInput[] {
+  const workExamples = []
+
+  if (env.has('TRIFID_UI')) {
+    workExamples.push({
+      url: $rdf.namedNode(lindasWebQueryLink(cubeId, job.revision, job.publishGraph)),
+      encodingFormat: $rdf.literal('Application/Sparql-query'),
+      name: [
+        $rdf.literal('SPARQL Endpoint mit Vorauswahl des Graph', 'de'),
+        $rdf.literal('SPARQL Endpoint with graph preselection', 'en'),
+        $rdf.literal('SPARQL Endpoint avec présélection du graphe', 'fr'),
+      ],
+    })
+  }
+
+  const visualize = $rdf.namedNode('https://ld.admin.ch/application/visualize')
+  const isPublishedToVisualize = dataset.pointer.has(schema.workExample, visualize).terms.length > 0
+  if (env.has('VISUALIZE_UI') && isPublishedToVisualize) {
+    workExamples.push({
+      url: $rdf.namedNode(visualizeLink(cubeId)),
+      encodingFormat: $rdf.literal('text/html'),
+      name: [
+        $rdf.literal('visualize.admin.ch'),
+      ],
+    })
+  }
+
+  return workExamples
 }

@@ -235,6 +235,40 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
       })
     })
 
+    it('adds work examples', async function () {
+      const cube = cubePointer.namedNode(targetCube())
+
+      const shape = clownface({ dataset: $rdf.dataset(), term: $rdf.blankNode() })
+        .addOut(sh.property, property => {
+          property
+            .addOut(sh.path, schema.workExample)
+            .addOut(sh.minCount, $rdf.literal('3', xsd.int))
+            .addOut(sh.maxCount, $rdf.literal('3', xsd.int))
+            .addList(sh.or, [
+              property.node($rdf.blankNode()).addOut(sh.hasValue, $rdf.namedNode('https://ld.admin.ch/application/visualize')),
+              // Link to visualize
+              property.node($rdf.blankNode()).addOut(sh.node, nodeVis => {
+                nodeVis
+                  .addOut(sh.property, prop => {
+                    prop
+                      .addOut(sh.path, schema.encodingFormat)
+                      .addOut(sh.hasValue, $rdf.literal('text/html'))
+                  })
+              }),
+              // Link to lindas query
+              property.node($rdf.blankNode()).addOut(sh.node, nodeSparql => {
+                nodeSparql
+                  .addOut(sh.property, prop => {
+                    prop
+                      .addOut(sh.path, schema.encodingFormat)
+                      .addOut(sh.hasValue, $rdf.literal('Application/Sparql-query'))
+                  })
+              }),
+            ])
+        })
+      expect(cube).to.matchShape(shape)
+    })
+
     it('emits organization as cube:observedBy value', async () => {
       const observedBy = cubePointer.has(cube.observedBy).out(cube.observedBy).terms
 

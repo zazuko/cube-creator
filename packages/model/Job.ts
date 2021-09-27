@@ -32,7 +32,7 @@ export interface PublishJob extends Job {
   publishedTo: Term | undefined
   status?: Term
   query?: string
-  workExamples?: CreativeWork[]
+  workExamples: CreativeWork[]
   addWorkExample(attrs: any): void
 }
 
@@ -89,10 +89,10 @@ export const createTransform = initializer<TransformJob, RequiredProperties>(Tra
   actionStatus: schema.PotentialActionStatus,
 })
 
-interface WorkExampleInput {
+export interface WorkExampleInput {
   name: Literal[]
   url: NamedNode
-  encodingFormat: string
+  encodingFormat: Literal
 }
 
 export function PublishJobMixin<Base extends Constructor<RdfResource>>(base: Base): Mixin {

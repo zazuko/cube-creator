@@ -1,5 +1,5 @@
 import { obj } from 'through2'
-import { Quad, Quad_Object as QuadObject, Quad_Subject as QuadSubject } from 'rdf-js'
+import { Literal, NamedNode, Quad, Quad_Object as QuadObject, Quad_Subject as QuadSubject, Term } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import { dcterms, rdf, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import { cc, cube } from '@cube-creator/core/namespace'
@@ -10,6 +10,7 @@ import type { Context } from 'barnard59-core/lib/Pipeline'
 import { loadDimensionMapping } from './output-mapper'
 import TermMap from '@rdfjs/term-map'
 import { Published } from '@cube-creator/model/Cube'
+import { prepareWorkExamples } from '../../apis/core/lib/domain/job/update'
 
 export async function loadDataset(jobUri: string, Hydra: HydraClient) {
   const jobResource = await Hydra.loadResource<PublishJob>(jobUri)
@@ -83,6 +84,19 @@ export async function injectMetadata(this: Context, jobUri: string) {
       if (job.status?.equals(Published) && maintainer.dataset) {
         this.push($rdf.quad(maintainer.dataset, schema.dataset, quad.subject))
       }
+
+      // Links to visualize and lindas
+      const workExamples = prepareWorkExamples(baseCube, job, dataset)
+      workExamples.forEach(workExampleData => {
+        const workExample = $rdf.blankNode()
+        this.push($rdf.quad(quad.subject, schema.workExample, workExample))
+        this.push($rdf.quad(workExample, rdf.type, schema.CreativeWork))
+        workExampleData.name.forEach(name => {
+          this.push($rdf.quad(workExample, schema.name, name))
+        })
+        this.push($rdf.quad(workExample, schema.url, workExampleData.url))
+        this.push($rdf.quad(workExample, schema.encodingFormat, workExampleData.encodingFormat))
+      });
 
       [...datasetTriples.match(dataset.id)]
         .filter(q => !q.predicate.equals(schema.hasPart) && !q.predicate.equals(cc.dimensionMetadata))
