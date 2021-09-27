@@ -2,6 +2,7 @@ import clownface, { GraphPointer, MultiPointer } from 'clownface'
 import { NamedNode, Quad, Stream, Term } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import through2 from 'through2'
+import TermSet from '@rdfjs/term-set'
 import { dcterms, hydra, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { md, meta } from '@cube-creator/core/namespace'
 import { DomainError } from '@cube-creator/api-errors'
@@ -126,18 +127,36 @@ interface ExportedDimension {
   data: Stream
 }
 
+const excludedProps = new TermSet<Term>([
+  md.export,
+  md.terms,
+])
+
+const filterProperties = through2.obj(function (chunk: Quad, _, next) {
+  if (!excludedProps.has(chunk.predicate)) {
+    this.push(chunk)
+  }
+  next()
+})
+
 export async function getExportedDimension({ resource, store, client = streamClient }: GetExportedDimension): Promise<ExportedDimension> {
   const dimension = await store.load(resource)
 
-  const quads = await DESCRIBE`${dimension.term} ?term ?shape ?setShape`
+  const quads = await DESCRIBE`${dimension.term} ?term ?shape ?setShape ?shapeProp ?setShapeProp`
     .FROM(store.graph)
     .WHERE`
       ${dimension.term} a ${md.SharedDimension} .
 
       ?term ${schema.inDefinedTermSet} ${dimension.term} .
 
-      OPTIONAL { ?shape ${sh.targetNode} ?term . }
-      OPTIONAL { ?setShape ${sh.targetNode} ${dimension.term} . }
+      OPTIONAL {
+        ?shape ${sh.targetNode} ?term .
+        ?shape ${sh.property} ?shapeProp .
+      }
+      OPTIONAL {
+        ?setShape ${sh.targetNode} ${dimension.term} .
+        ?setShape ${sh.property} ?setShapeProp .
+      }
     `.execute(client.query)
 
   const baseUriPattern = new RegExp(`^${env.MANAGED_DIMENSIONS_BASE}`)
@@ -161,6 +180,6 @@ export async function getExportedDimension({ resource, store, client = streamCli
 
   return {
     dimension,
-    data: quads.pipe(transformToQuads),
+    data: quads.pipe(filterProperties).pipe(transformToQuads),
   }
 }
