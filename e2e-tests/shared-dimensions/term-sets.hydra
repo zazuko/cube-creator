@@ -31,10 +31,12 @@ With Class hydra:Resource {
                 prefix meta: <https://cube.link/meta/>
                 prefix sh: <http://www.w3.org/ns/shacl#>
                 prefix dcterms: <http://purl.org/dc/terms/>
+                prefix md: <https://cube-creator.zazuko.com/shared-dimensions/vocab#>
 
                 <> schema:name "Categories"@en ;
                    dcterms:identifier "categories" ;
                    schema:validFrom "2020-02-20T00:00:00"^^xsd:dateTime ;
+                   md:createAs "New dimension" ;
                    sh:property [
                      schema:name "Categories"@en ;
                      qudt:scaleType qudt:NominalScale ;

@@ -28,8 +28,7 @@ With Class meta:SharedDimension {
 
             <> schema:name "node.js"@en ;
                dcterms:identifier "node-js" ;
-               schema:validThrough "2022-01-01T00:00:00Z"^^xsd:dateTime ;
-               md:createAs "New dimension" .
+               schema:validThrough "2022-01-01T00:00:00Z"^^xsd:dateTime .
             ```
         } => {
             Expect Status 201
@@ -56,8 +55,7 @@ With Class meta:SharedDimension {
 
             <> schema:name "node.js"@en ;
                dcterms:identifier "NodeJs" ;
-               schema:validThrough "2022-01-01T00:00:00Z"^^xsd:dateTime ;
-               md:createAs "New dimension" .
+               schema:validThrough "2022-01-01T00:00:00Z"^^xsd:dateTime .
             ```
         } => {
             Expect Status 400
