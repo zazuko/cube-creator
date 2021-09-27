@@ -11,6 +11,10 @@ import { namedNode } from '@cube-creator/testing/clownface'
 import { importDimension } from '../../../../lib/domain/shared-dimension/import'
 import { SharedDimensionsStore } from '../../../../lib/store'
 import { testStore } from '../../../support/store'
+import { mdClients } from '../../../../../../packages/testing/lib/index'
+import { ASK } from '@tpluscode/sparql-builder'
+import env from '../../../../lib/env'
+import { nanoid } from 'nanoid'
 
 describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension/import', () => {
   describe('importDimension', () => {
@@ -186,14 +190,15 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension/import
       await expect(promise).to.eventually.be.rejectedWith(/already exists/)
     })
 
-    it('inserts dimension data to database', async () => {
+    it('inserts dimension data to database without blank nodes @SPARQL', async () => {
       // given
+      const dimension = $rdf.namedNode(`${env.MANAGED_DIMENSIONS_BASE}dim-${nanoid()}`)
       resource.addOut(md.export, 'dim.ttl')
       files['dim.ttl'] = () => {
         const dataset = $rdf.dataset()
 
         clownface({ dataset })
-          .namedNode('dim')
+          .namedNode(dimension)
           .addOut(rdf.type, [
             md.SharedDimension,
             meta.SharedDimension,
@@ -216,11 +221,20 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension/import
         files,
         store,
         resource,
-        client,
+        client: mdClients.streamClient,
       })
 
       // then
-      expect(client.query.update).to.have.been.calledOnce
+      const correctlySaved = ASK`
+        ${dimension} a ${md.SharedDimension} ; ${sh.property} ?defaultMeta .
+        ?shape ${sh.targetNode} ${dimension} .
+
+        FILTER ( isIRI(?defaultMeta) )
+        FILTER ( isIRI(?shape) )
+      `
+        .FROM($rdf.namedNode(env.MANAGED_DIMENSIONS_GRAPH))
+        .execute(mdClients.streamClient.query)
+      await expect(correctlySaved).to.eventually.be.true
     })
 
     it('returns loaded dimension', async () => {

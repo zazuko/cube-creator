@@ -1,5 +1,5 @@
 import clownface, { GraphPointer, MultiPointer } from 'clownface'
-import { NamedNode, Quad, Stream, Term } from 'rdf-js'
+import { BlankNode, NamedNode, Quad, Stream, Term } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import through2 from 'through2'
 import TermSet from '@rdfjs/term-set'
@@ -12,6 +12,7 @@ import httpError from 'http-errors'
 import { DESCRIBE } from '@tpluscode/sparql-builder'
 import { streamClient } from '../sparql'
 import { StreamClient } from 'sparql-http-client/StreamClient'
+import TermMap from '@rdfjs/term-map'
 
 export { importDimension } from './shared-dimension/import'
 
@@ -132,12 +133,34 @@ const excludedProps = new TermSet<Term>([
   md.terms,
 ])
 
-const filterProperties = through2.obj(function (chunk: Quad, _, next) {
+const filterProperties = () => through2.obj(function (chunk: Quad, _, next) {
   if (!excludedProps.has(chunk.predicate)) {
     this.push(chunk)
   }
   next()
 })
+
+function urnToBlanks() {
+  const urns = new TermMap<Term, BlankNode>()
+
+  return through2.obj(function (quad: Quad, _, next) {
+    let { subject, predicate, object, graph } = quad
+
+    if (subject.value.startsWith('urn:')) {
+      const blank = urns.get(subject) || $rdf.blankNode()
+      urns.set(subject, blank)
+      subject = blank
+    }
+    if (object.value.startsWith('urn:')) {
+      const blank = urns.get(object) || $rdf.blankNode()
+      urns.set(object, blank)
+      object = blank
+    }
+
+    this.push($rdf.quad(subject, predicate, object, graph))
+    next()
+  })
+}
 
 export async function getExportedDimension({ resource, store, client = streamClient }: GetExportedDimension): Promise<ExportedDimension> {
   const dimension = await store.load(resource)
@@ -180,6 +203,6 @@ export async function getExportedDimension({ resource, store, client = streamCli
 
   return {
     dimension,
-    data: quads.pipe(filterProperties).pipe(transformToQuads),
+    data: quads.pipe(filterProperties()).pipe(transformToQuads).pipe(urnToBlanks()),
   }
 }

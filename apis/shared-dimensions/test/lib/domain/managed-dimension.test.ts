@@ -12,6 +12,7 @@ import $rdf from 'rdf-ext'
 import { DatasetCore } from 'rdf-js'
 import httpError from 'http-errors'
 import clownface from 'clownface'
+import { validateTermSet } from '../../../lib/domain/shared-dimension/import'
 
 describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () => {
   describe('create', () => {
@@ -276,6 +277,18 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () =
           hasValue: 'rdf',
         }],
       })
+    })
+
+    it('exported data conforms import shape', async () => {
+      // given
+      const termSet = clownface({ dataset }).namedNode('dimension/technologies')
+
+      // when
+      const report = await validateTermSet(termSet)
+
+      // then
+      const messages = report.results.flatMap(({ message }) => message.map(({ value }) => value))
+      expect(report.conforms).to.eq(true, messages.join('\n'))
     })
   })
 })

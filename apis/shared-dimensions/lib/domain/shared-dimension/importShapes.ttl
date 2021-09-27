@@ -129,7 +129,7 @@
         ] ;
       sh:minCount 1 ;
       sh:maxCount 1 ;
-      sh:message "Every term and set set must have a shape" ;
+      sh:message "Every term and term set must have a shape" ;
     ],
     [
       sh:path schema:validFrom ;
