@@ -2,7 +2,7 @@ import { DatasetCore, NamedNode, Term } from 'rdf-js'
 import { Organization, OrganizationMixin as SchemaOrganizationMixin } from '@rdfine/schema'
 import { Constructor, namespace, property, ResourceIdentifier } from '@tpluscode/rdfine'
 import { cc } from '@cube-creator/core/namespace'
-import { schema } from '@tpluscode/rdf-ns-builders'
+import { dcat, schema, _void } from '@tpluscode/rdf-ns-builders'
 import RdfResourceImpl, { Initializer, RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import type { GraphPointer } from 'clownface'
 
@@ -15,6 +15,8 @@ interface OrganizationEx {
   publishGraph: NamedNode
   namespace: NamedNode
   dataset?: NamedNode
+  accessURL: NamedNode
+  sparqlEndpoint: NamedNode
   createIdentifier(params: CreateIdentifier): NamedNode
 }
 
@@ -34,6 +36,12 @@ export function OrganizationMixin<Base extends Constructor<Omit<Organization, ke
 
     @property({ path: schema.dataset })
     dataset?: NamedNode
+
+    @property({ path: dcat.accessURL })
+    accessURL!: NamedNode
+
+    @property({ path: _void.sparqlEndpoint })
+    sparqlEndpoint!: NamedNode
 
     createIdentifier({ cubeIdentifier, termName }: CreateIdentifier): NamedNode {
       const namespace = this.namespace.value.match(/[/#]$/) ? this.namespace.value : `${this.namespace.value}/`

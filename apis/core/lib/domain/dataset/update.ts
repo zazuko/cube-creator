@@ -1,6 +1,6 @@
 import { cc, lindas } from '@cube-creator/core/namespace'
 import { Draft, Published } from '@cube-creator/model/Cube'
-import { dcat, dcterms, hydra, rdf, schema, vcard, _void } from '@tpluscode/rdf-ns-builders'
+import { dcat, hydra, rdf, schema, vcard, _void } from '@tpluscode/rdf-ns-builders'
 import { GraphPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'
 import { ResourceStore } from '../../ResourceStore'
@@ -53,22 +53,6 @@ export async function update({
       }
     })
   })
-
-  // Set LINDAS query interface and sparql endpoint
-  const organizationId = datasetResource.out(dcterms.creator).term
-  if (organizationId) {
-    const organization = await store.get(organizationId)
-
-    const accessURL = organization.out(dcat.accessURL).term
-    if (accessURL) {
-      datasetResource.addOut(dcat.accessURL, accessURL)
-    }
-
-    const sparqlEndpoint = organization.out(_void.sparqlEndpoint).term
-    if (sparqlEndpoint) {
-      datasetResource.addOut(_void.sparqlEndpoint, sparqlEndpoint)
-    }
-  }
 
   // Populate legacy Draft and Published statuses until all clients have migrated
   const status = datasetResource.out(schema.creativeWorkStatus).term

@@ -3,7 +3,7 @@ import { before, describe, it } from 'mocha'
 import { expect } from 'chai'
 import $rdf from 'rdf-ext'
 import { ASK, CONSTRUCT, DELETE, SELECT, WITH } from '@tpluscode/sparql-builder'
-import { csvw, dcat, dcterms, qudt, rdf, schema, sh, vcard, xsd } from '@tpluscode/rdf-ns-builders'
+import { csvw, dcat, dcterms, qudt, rdf, schema, sh, vcard, xsd, _void } from '@tpluscode/rdf-ns-builders'
 import { setupEnv } from '../../support/env'
 import { ccClients } from '@cube-creator/testing/lib'
 import { insertTestProject } from '@cube-creator/testing/lib/seedData'
@@ -184,6 +184,22 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
           hasValue: $rdf.literal('ubd/28'),
           minCount: 1,
           maxCount: 1,
+        }],
+      })
+    })
+
+    it('adds lindas query URIs from maintainer', async () => {
+      expect(cubePointer.namedNode(targetCube())).to.matchShape({
+        property: [{
+          path: dcat.accessURL,
+          minCount: 1,
+          maxCount: 1,
+          hasValue: $rdf.namedNode('https://environment.ld.admin.ch/query'),
+        }, {
+          path: _void.sparqlEndpoint,
+          minCount: 1,
+          maxCount: 1,
+          hasValue: $rdf.namedNode('https://environment.ld.admin.ch/sparql'),
         }],
       })
     })
