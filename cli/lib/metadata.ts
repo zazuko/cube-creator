@@ -1,7 +1,7 @@
 import { obj } from 'through2'
 import { Quad, Quad_Object as QuadObject, Quad_Subject as QuadSubject } from 'rdf-js'
 import $rdf from 'rdf-ext'
-import { dcterms, rdf, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
+import { dcat, dcterms, rdf, schema, sh, xsd, _void } from '@tpluscode/rdf-ns-builders'
 import { cc, cube } from '@cube-creator/core/namespace'
 import { Project, PublishJob } from '@cube-creator/model'
 import { HydraClient } from 'alcaeus/alcaeus'
@@ -74,6 +74,10 @@ export async function injectMetadata(this: Context, jobUri: string) {
       this.push($rdf.quad(quad.subject, dcterms.identifier, $rdf.literal(cubeIdentifier)))
       this.push($rdf.quad(baseCube, schema.hasPart, quad.subject))
       this.push($rdf.quad(baseCube, rdf.type, schema.CreativeWork))
+
+      // Set LINDAS query interface and sparql endpoint
+      this.push($rdf.quad(quad.subject, dcat.accessURL, maintainer.accessURL))
+      this.push($rdf.quad(quad.subject, _void.sparqlEndpoint, maintainer.sparqlEndpoint))
 
       if (revision.value === '1') {
         this.push($rdf.quad(quad.subject, schema.datePublished, timestamp))

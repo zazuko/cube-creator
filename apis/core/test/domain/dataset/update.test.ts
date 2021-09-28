@@ -15,10 +15,6 @@ describe('domain/dataset/update', () => {
   let store: TestResourceStore
   let dataset: GraphPointer<NamedNode, DatasetExt>
   let organization: GraphPointer<NamedNode, DatasetExt>
-  const maintainer = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('organization/my-maintainer-org') })
-    .addOut(dcat.accessURL, $rdf.namedNode('https://myorg/query'))
-    .addOut(_void.sparqlEndpoint, $rdf.namedNode('https://myorg/sparql'))
-  const findMaintainer: () => Promise<NamedNode> = () => new Promise((resolve) => resolve(maintainer.term))
 
   beforeEach(() => {
     dataset = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('dataset') })
@@ -31,7 +27,6 @@ describe('domain/dataset/update', () => {
     store = new TestResourceStore([
       dataset,
       organization,
-      maintainer,
     ])
   })
 
@@ -44,7 +39,7 @@ describe('domain/dataset/update', () => {
       .addOut(dcterms.description, description)
 
     // when
-    const result = await update({ dataset, resource: updatedResource, store, findMaintainer })
+    const result = await update({ dataset, resource: updatedResource, store })
 
     // then
     expect(result.out(dcterms.title).value).to.eq(title)
@@ -67,7 +62,7 @@ describe('domain/dataset/update', () => {
       .addOut(schema.creativeWorkStatus, Published)
 
     // when
-    const result = await update({ dataset, resource: updatedResource, store, findMaintainer })
+    const result = await update({ dataset, resource: updatedResource, store })
 
     // then
     const statuses = result.out(schema.creativeWorkStatus).values
@@ -91,7 +86,7 @@ describe('domain/dataset/update', () => {
       })
 
     // when
-    const result = await update({ dataset, resource: updatedResource, store, findMaintainer })
+    const result = await update({ dataset, resource: updatedResource, store })
 
     // then
     expect(result).to.matchShape({
@@ -135,7 +130,7 @@ describe('domain/dataset/update', () => {
       })
 
     // when
-    const result = await update({ dataset, resource: updatedResource, store, findMaintainer })
+    const result = await update({ dataset, resource: updatedResource, store })
 
     // then
     const cubeTriples = result.dataset.match(dataset.namedNode('cube').term)
@@ -147,10 +142,9 @@ describe('domain/dataset/update', () => {
     dataset.namedNode('foo').addOut(rdf.type, schema.Person)
     const updatedResource = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('dataset') })
       .addOut(dcterms.title, 'title')
-    const findMaintainer: () => Promise<undefined> = () => new Promise((resolve) => resolve(undefined))
 
     // when
-    const result = await update({ dataset, resource: updatedResource, store, findMaintainer })
+    const result = await update({ dataset, resource: updatedResource, store })
 
     // then
     expect(result.namedNode('foo').out().terms).to.have.length(0)
@@ -176,7 +170,7 @@ describe('domain/dataset/update', () => {
       .addOut(cc.dimensionMetadata, ex.Bar)
 
     // when
-    const result = await update({ dataset, resource: updatedResource, store, findMaintainer })
+    const result = await update({ dataset, resource: updatedResource, store })
 
     // then
     expect(result.out(schema.hasPart).terms).to.not.deep.contain.members([ex.Foo])
@@ -195,7 +189,7 @@ describe('domain/dataset/update', () => {
       })
 
     // when
-    const result = await update({ dataset, resource: updatedResource, store, findMaintainer })
+    const result = await update({ dataset, resource: updatedResource, store })
 
     // then
     expect(result).to.matchShape({
@@ -221,30 +215,6 @@ describe('domain/dataset/update', () => {
             maxCount: 1,
           }],
         },
-      }],
-    })
-  })
-
-  it('populates lindas query URIs from organization', async () => {
-    // given
-    const updatedResource = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('dataset') })
-      .addOut(dcterms.title, 'title')
-
-    // when
-    const result = await update({ dataset, resource: updatedResource, store, findMaintainer })
-
-    // then
-    expect(result).to.matchShape({
-      property: [{
-        path: dcat.accessURL,
-        minCount: 1,
-        maxCount: 1,
-        hasValue: $rdf.namedNode('https://myorg/query'),
-      }, {
-        path: _void.sparqlEndpoint,
-        minCount: 1,
-        maxCount: 1,
-        hasValue: $rdf.namedNode('https://myorg/sparql'),
       }],
     })
   })

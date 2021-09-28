@@ -4,20 +4,17 @@ import { dcat, hydra, rdf, schema, vcard, _void } from '@tpluscode/rdf-ns-builde
 import { GraphPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'
 import { ResourceStore } from '../../ResourceStore'
-import { findProjectMaintainerForDataset } from '../cube-projects/queries'
 
 interface AddMetaDataCommand {
   dataset: GraphPointer<NamedNode>
   resource: GraphPointer
   store: ResourceStore
-  findMaintainer?: (dataset: NamedNode) => Promise<NamedNode | undefined>
 }
 
 export async function update({
   dataset,
   resource,
   store,
-  findMaintainer = findProjectMaintainerForDataset,
 }: AddMetaDataCommand): Promise<GraphPointer> {
   const datasetResource = await store.get(dataset.term)
 
@@ -56,22 +53,6 @@ export async function update({
       }
     })
   })
-
-  // Set LINDAS query interface and sparql endpoint
-  const organizationId = await findMaintainer(dataset.term)
-  if (organizationId) {
-    const organization = await store.get(organizationId)
-
-    const accessURL = organization.out(dcat.accessURL).term
-    if (accessURL) {
-      datasetResource.addOut(dcat.accessURL, accessURL)
-    }
-
-    const sparqlEndpoint = organization.out(_void.sparqlEndpoint).term
-    if (sparqlEndpoint) {
-      datasetResource.addOut(_void.sparqlEndpoint, sparqlEndpoint)
-    }
-  }
 
   // Populate legacy Draft and Published statuses until all clients have migrated
   const status = datasetResource.out(schema.creativeWorkStatus).term
