@@ -1,5 +1,15 @@
 # @cube-creator/shared-dimensions-api
 
+## 2.3.0
+
+### Minor Changes
+
+- 227a5743: Shared dimension import (closes #814)
+
+### Patch Changes
+
+- dcca674b: Validation would not fire when creating shared dimension
+
 ## 2.2.0
 
 ### Minor Changes
