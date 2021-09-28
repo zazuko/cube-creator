@@ -48,7 +48,7 @@ export async function importDimension({
   resource,
   store,
   client = streamClient,
-}: ImportDimension): Promise<ImportedDimension> {
+}: ImportDimension): Promise<ImportedDimension | ValidationReport> {
   const importedDimension = resource.out(md.export).value
   if (!importedDimension) {
     throw new BadRequest('Import must contain exactly one Shared Dimension')
@@ -71,9 +71,9 @@ export async function importDimension({
     throw new BadRequest('Import must contain exactly one Shared Dimension')
   }
 
-  const { conforms } = await validateTermSet(termSet)
-  if (!conforms) {
-    throw new httpError.BadRequest('Imported dimension is invalid')
+  const report = await validateTermSet(termSet)
+  if (!report.conforms) {
+    return report
   }
 
   if (await store.exists(termSet.term, schema.DefinedTermSet)) {

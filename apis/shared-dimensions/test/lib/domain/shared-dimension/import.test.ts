@@ -15,6 +15,7 @@ import { mdClients } from '../../../../../../packages/testing/lib/index'
 import { ASK } from '@tpluscode/sparql-builder'
 import env from '../../../../lib/env'
 import { nanoid } from 'nanoid'
+import ValidationReport from 'rdf-validate-shacl/src/validation-report'
 
 describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension/import', () => {
   describe('importDimension', () => {
@@ -127,7 +128,7 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension/import
       await expect(promise).to.eventually.be.rejectedWith(/exactly one Shared Dimension/)
     })
 
-    it('throws when imported shared dimension is incomplete', async () => {
+    it('returns validation report when imported shared dimension is incomplete', async () => {
       // given
       resource.addOut(md.export, 'dim.ttl')
       files['dim.ttl'] = () => {
@@ -149,7 +150,7 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension/import
       })
 
       // then
-      await expect(promise).to.eventually.be.rejectedWith(/invalid/)
+      await expect(promise).to.eventually.be.instanceof(ValidationReport)
     })
 
     it('throws when shared dimension already exists', async () => {
