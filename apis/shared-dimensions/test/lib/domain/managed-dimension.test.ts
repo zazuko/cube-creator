@@ -12,6 +12,7 @@ import $rdf from 'rdf-ext'
 import { DatasetCore } from 'rdf-js'
 import httpError from 'http-errors'
 import clownface from 'clownface'
+import { validateTermSet } from '../../../lib/domain/shared-dimension/import'
 
 describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () => {
   describe('create', () => {
@@ -60,6 +61,24 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () =
           hasValue: [hydra.Resource, schema.DefinedTermSet, meta.SharedDimension, md.SharedDimension],
           minCount: 4,
           maxCount: 4,
+        }],
+      })
+    })
+
+    it('removes md:createAs', async () => {
+      // given
+      const resource = namedNode('')
+        .addOut(dcterms.identifier, 'canton')
+        .addOut(md.createAs, 'Import')
+
+      // when
+      const termSet = await create({ resource, store })
+
+      // then
+      expect(termSet).to.matchShape({
+        property: [{
+          path: md.createAs,
+          maxCount: 0,
         }],
       })
     })
@@ -182,17 +201,18 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () =
   describe('getExportedDimension @SPARQL', () => {
     let dataset: DatasetCore
 
-    const termSetId = $rdf.namedNode('https://ld.admin.ch/cube/dimension/technologies')
+    const termSetId = $rdf.namedNode('dimension/technologies')
 
     before(async function () {
       this.timeout(20000)
       await insertTestDimensions()
 
+      const resource = namedNode(`https://ld.admin.ch/cube/${termSetId}`)
       const store = testStore()
-      await store.save(namedNode(termSetId))
+      await store.save(resource)
 
       const { data } = await getExportedDimension({
-        resource: termSetId,
+        resource: resource.term,
         store,
         client: mdClients.streamClient,
       })
@@ -237,7 +257,7 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () =
 
     it('exports term properties', () => {
       const dimension = clownface({ dataset })
-        .namedNode('https://ld.admin.ch/cube/dimension/technologies/rdf')
+        .namedNode('dimension/technologies/rdf')
 
       expect(dimension).to.matchShape({
         property: [{
@@ -257,6 +277,18 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () =
           hasValue: 'rdf',
         }],
       })
+    })
+
+    it('exported data conforms import shape', async () => {
+      // given
+      const termSet = clownface({ dataset }).namedNode('dimension/technologies')
+
+      // when
+      const report = await validateTermSet(termSet)
+
+      // then
+      const messages = report.results.flatMap(({ message }) => message.map(({ value }) => value))
+      expect(report.conforms).to.eq(true, messages.join('\n'))
     })
   })
 })

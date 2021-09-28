@@ -14,6 +14,9 @@ import { store } from '../store'
 import { parsingClient } from '../sparql'
 import env from '../env'
 import { rewrite, rewriteTerm } from '../rewrite'
+import conditional from 'express-conditional-middleware'
+import { isMultipart } from '@cube-creator/express/multipart'
+import { postImportedDimension } from './shared-dimension/import'
 
 interface CollectionHandler {
   memberType: NamedNode
@@ -89,7 +92,7 @@ export const getTerms = asyncMiddleware(async (req, res, next) => {
   return res.dataset(collection.dataset)
 })
 
-export const post = protectedResource(shaclValidate, asyncMiddleware(async (req, res) => {
+const postDirect = protectedResource(shaclValidate, asyncMiddleware(async (req, res) => {
   const pointer = await create({
     resource: rewrite(await req.resource()),
     store: store(),
@@ -99,6 +102,8 @@ export const post = protectedResource(shaclValidate, asyncMiddleware(async (req,
   res.status(201)
   return res.dataset(pointer.dataset)
 }))
+
+export const post = conditional(isMultipart, postImportedDimension, postDirect)
 
 export const injectTermsLink: Enrichment = async (req, pointer) => {
   pointer.deleteOut(md.terms).addOut(md.terms, termsCollectionId(pointer.term))

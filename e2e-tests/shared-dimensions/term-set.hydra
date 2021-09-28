@@ -24,6 +24,7 @@ With Class meta:SharedDimension {
             prefix meta: <https://cube.link/meta/>
             prefix sh: <http://www.w3.org/ns/shacl#>
             prefix dcterms: <http://purl.org/dc/terms/>
+            PREFIX md: <https://cube-creator.zazuko.com/shared-dimensions/vocab#>
 
             <> schema:name "node.js"@en ;
                dcterms:identifier "node-js" ;
@@ -50,6 +51,7 @@ With Class meta:SharedDimension {
             prefix meta: <https://cube.link/meta/>
             prefix sh: <http://www.w3.org/ns/shacl#>
             prefix dcterms: <http://purl.org/dc/terms/>
+            PREFIX md: <https://cube-creator.zazuko.com/shared-dimensions/vocab#>
 
             <> schema:name "node.js"@en ;
                dcterms:identifier "NodeJs" ;

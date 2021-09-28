@@ -17,20 +17,35 @@ describe('@cube-creator/shared-dimensions-api/lib/shapes', () => {
       shape = shapes.get(ns.shape['shape/shared-dimension-create'])!()
     })
 
-    it('is valid when resource has all required props', () => {
-      // given
-      const resource = blankNode()
-        .addOut(dcterms.identifier, $rdf.literal('test'))
-        .addOut(schema.name, $rdf.literal('Test', 'en'))
-        .addOut(sh.property, prop => {
-          prop
-            .addOut(qudt.scaleType, qudt.NominalScale)
-            .addOut(rdf.type, schema.GeoShape)
-            .addOut(schema.name, $rdf.literal('Test', 'en'))
-        })
+    describe('New dimension', () => {
+      it('is valid when resource has all required props', () => {
+        // given
+        const resource = blankNode()
+          .addOut(md.createAs, 'New dimension')
+          .addOut(dcterms.identifier, $rdf.literal('test'))
+          .addOut(schema.name, $rdf.literal('Test', 'en'))
+          .addOut(sh.property, prop => {
+            prop
+              .addOut(qudt.scaleType, qudt.NominalScale)
+              .addOut(rdf.type, schema.GeoShape)
+              .addOut(schema.name, $rdf.literal('Test', 'en'))
+          })
 
-      // then
-      expect(resource).to.matchShape(shape)
+        // then
+        expect(resource).to.matchShape(shape)
+      })
+    })
+
+    describe('Import', () => {
+      it('is valid when resource has all required props', () => {
+        // given
+        const resource = blankNode()
+          .addOut(md.createAs, 'Import')
+          .addOut(md.export, 'cantons.trig')
+
+        // then
+        expect(resource).to.matchShape(shape)
+      })
     })
   })
 

@@ -96,7 +96,8 @@ type SharedDimensionsTerms =
   'sharedDimensions' |
   'terms' |
   'onlyValidTerms' |
-  'export'
+  'export' |
+  'createAs'
 
 type MetaTerms =
   'SharedDimension' |

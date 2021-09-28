@@ -8,7 +8,7 @@ import { BadRequest } from 'http-errors'
 import { dcterms, rdf, rdfs, schema } from '@tpluscode/rdf-ns-builders/strict'
 import { ex } from '@cube-creator/testing/lib/namespace'
 import DatasetExt from 'rdf-ext/lib/Dataset'
-import { fromPointer, Project } from '@cube-creator/model/Project'
+import { fromPointer } from '@cube-creator/model/Project'
 import { cc } from '@cube-creator/core/namespace'
 import namespace from '@rdfjs/namespace'
 import * as sinon from 'sinon'
@@ -69,11 +69,11 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/import', () => {
 
     it('throws identifier is already used', async () => {
       // given
-      const exported = (project: Project) => {
+      const exported = (project: string) => {
         const dataset = $rdf.dataset()
 
-        clownface({ dataset, graph: project.id })
-          .node(project.id)
+        clownface({ dataset, graph: $rdf.namedNode(project) })
+          .namedNode(project)
           .addOut(dcterms.identifier, 'UBD')
 
         return dataset.toStream()
@@ -94,11 +94,11 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/import', () => {
 
     it('throws when exported file is missing', async () => {
       // given
-      const exported = (project: Project) => {
+      const exported = (project: string) => {
         const dataset = $rdf.dataset()
 
-        clownface({ dataset, graph: project.id })
-          .node(project.id)
+        clownface({ dataset, graph: $rdf.namedNode(project) })
+          .namedNode(project)
           .addOut(dcterms.identifier, 'UBD')
 
         return dataset.toStream()
@@ -155,11 +155,11 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/import', () => {
     ].forEach(([what, term]) => {
       it('it throws when exported project source kind is ' + what, async () => {
       // given
-        const exported = (project: Project) => {
+        const exported = (project: string) => {
           const dataset = $rdf.dataset()
 
-          const ptr = clownface({ dataset, graph: project.id })
-            .node(project.id)
+          const ptr = clownface({ dataset, graph: $rdf.namedNode(project) })
+            .namedNode(project)
             .addOut(dcterms.identifier, 'UBD')
           if (term) {
             ptr.addOut(cc.projectSourceKind, term)
@@ -183,11 +183,11 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/import', () => {
 
     it('it returns created project when successful', async () => {
       // given
-      const exported = (project: Project) => {
+      const exported = (project: string) => {
         const dataset = $rdf.dataset()
 
-        clownface({ dataset, graph: project.id })
-          .node(project.id)
+        clownface({ dataset, graph: $rdf.namedNode(project) })
+          .namedNode(project)
           .addOut(dcterms.identifier, 'UBD')
           .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
 
@@ -229,11 +229,11 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/import', () => {
 
     it('removes properties which are created as part of project', async () => {
       // given
-      const exported = (project: Project) => {
+      const exported = (project: string) => {
         const dataset = $rdf.dataset()
 
-        clownface({ dataset, graph: project.id })
-          .node(project.id)
+        clownface({ dataset, graph: $rdf.namedNode(project) })
+          .namedNode(project)
           .addOut(dcterms.identifier, 'UBD')
           .addOut(dcterms.creator, $rdf.namedNode('previous creator'))
           .addOut(cc.latestPublishedRevision, 10)
@@ -264,11 +264,11 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/import', () => {
 
     it('sets error message to CSV source', async () => {
       // given
-      const exported = (project: Project) => {
+      const exported = (project: string) => {
         const dataset = $rdf.dataset()
 
-        clownface({ dataset, graph: project.id })
-          .node(project.id)
+        clownface({ dataset, graph: $rdf.namedNode(project) })
+          .namedNode(project)
           .addOut(dcterms.identifier, 'UBD')
           .addOut(dcterms.creator, $rdf.namedNode('previous creator'))
           .addOut(cc.latestPublishedRevision, 10)
@@ -276,7 +276,7 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/import', () => {
           .addOut(rdfs.label, 'UBD29')
           .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
 
-        const csvSource = $rdf.namedNode(`${project.id.value}/source`)
+        const csvSource = $rdf.namedNode(`${project}source`)
         clownface({ dataset, graph: csvSource })
           .namedNode(csvSource)
           .addOut(rdf.type, cc.CSVSource)

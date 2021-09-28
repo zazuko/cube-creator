@@ -99,7 +99,10 @@ export default class Store implements SharedDimensionsStore {
   }
 
   exists(id: NamedNode, type: NamedNode) {
-    return ASK`${id} ${sh.node} ?shape ; ${rdf.type} ${type}`.FROM(this.graph).execute(this.client.query)
+    return ASK`
+      ${id} ${rdf.type} ${type} .
+      ?shape ${sh.targetNode} ${id} .
+    `.FROM(this.graph).execute(this.client.query)
   }
 
   extractShape(resource: GraphPointer, dataset = $rdf.dataset(), visited = new TermSet()): GraphPointer {

@@ -1,0 +1,166 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix schema: <http://schema.org/> .
+@prefix dash: <http://datashapes.org/dash#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix qudt: <http://qudt.org/schema/qudt/> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix hydra: <http://www.w3.org/ns/hydra/core#> .
+@prefix cc: <https://cube-creator.zazuko.com/vocab#> .
+@prefix md: <https://cube-creator.zazuko.com/shared-dimensions/vocab#> .
+@prefix meta: <https://cube.link/meta/> .
+
+[] a sh:NodeShape ;
+  rdfs:label "Validates shapes describing terms and term sets" ;
+  sh:targetSubjectsOf sh:targetNode ;
+  sh:property
+    [
+      sh:path sh:property ;
+      sh:minCount 1 ;
+      sh:node
+        [
+          sh:property
+            [
+              sh:path sh:path ;
+              sh:minCount 1 ;
+              sh:maxCount 1
+            ]
+        ]
+    ] .
+
+[] a sh:NodeShape ;
+  rdfs:label "Validates shared dimension" ;
+  sh:targetClass md:SharedDimension ;
+  sh:property
+    [
+      sh:path schema:name ;
+      sh:datatype rdf:langString ;
+      sh:uniqueLang true ;
+      sh:minCount 1 ;
+    ],
+    [
+      sh:path rdf:type ;
+      sh:hasValue md:SharedDimension, meta:SharedDimension, schema:DefinedTermSet, hydra:Resource ;
+    ],
+    [
+      sh:path
+        [
+          sh:alternativePath
+            (
+              md:export
+              md:terms
+            ) ;
+        ] ;
+      sh:maxCount 0 ;
+      sh:message "Properties md:export and md:terms must not be imported" ;
+    ],
+    [
+      sh:path sh:property ;
+      sh:minCount 1 ;
+      sh:maxCount 1 ;
+      sh:nodeKind sh:BlankNodeOrIRI ;
+      sh:node
+        [
+          sh:property
+            [
+              sh:path schema:name ;
+              sh:datatype rdf:langString ;
+              sh:uniqueLang true ;
+            ],
+            [
+              sh:path qudt:scaleType ;
+              sh:maxCount 1 ;
+              sh:in
+                (
+                  qudt:NominalScale
+                  qudt:Ordinalscale
+                ) ;
+            ],
+            [
+              sh:path meta:dataKind ;
+              sh:nodeKind sh:BlankNodeOrIRI ;
+              sh:maxCount 1 ;
+              sh:node
+                [
+                  sh:property
+                    [
+                      sh:path rdf:type ;
+                      sh:nodeKind sh:IRI ;
+                      sh:minCount 1 ;
+                      sh:maxCount 1 ;
+                      sh:in
+                        (
+                          schema:GeoCoordinates
+                          schema:GeoShape
+                          time:GeneralDateTimeDescription
+                        ) ;
+                    ],
+                    [
+                      sh:path time:unitType ;
+                      sh:maxCount 1 ;
+                      sh:nodeKind sh:IRI ;
+                      sh:in
+                        (
+                          time:unitYear
+                          time:unitMonth
+                          time:unitWeek
+                          time:unitDay
+                          time:unitHour
+                          time:unitMinute
+                          time:unitSecond
+                        ) ;
+                    ] ;
+                ] ;
+            ] ;
+        ] ;
+    ] .
+
+[] a sh:NodeShape ;
+  rdfs:label "Validates common properties of shared dimension and terms" ;
+  sh:targetClass md:SharedDimension, md:SharedDimensionTerm ;
+  sh:property
+    [
+      sh:name "Target Node" ;
+      sh:path
+        [
+          sh:inversePath sh:targetNode ;
+        ] ;
+      sh:minCount 1 ;
+      sh:maxCount 1 ;
+      sh:message "Every term and term set must have a shape" ;
+    ],
+    [
+      sh:path schema:validFrom ;
+      sh:datatype xsd:dateTime ;
+      sh:maxCount 1 ;
+    ],
+    [
+      sh:path schema:validThrough ;
+      sh:datatype xsd:dateTime ;
+      sh:maxCount 1 ;
+    ] .
+
+[] a sh:NodeShape ;
+  rdfs:label "Validates shared dimension terms" ;
+  sh:targetClass md:SharedDimensionTerm ;
+  sh:property
+    [
+      sh:path schema:identifier ;
+      sh:datatype xsd:string ;
+      sh:pattern "^[a-z0-9-]+$" ;
+    ],
+    [
+      sh:path schema:inDefinedTermSet ;
+      # Parsed with shared dimension URI as base
+      # Will check that all terms are part of the imported set
+      sh:hasValue <> ;
+      sh:minCount 1 ;
+      sh:maxCount 1 ;
+    ],
+    [
+      sh:path rdf:type ;
+      sh:hasValue md:SharedDimensionTerm, schema:DefinedTerm ;
+    ] .
+

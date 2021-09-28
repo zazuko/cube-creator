@@ -76,6 +76,7 @@ graph <https://lindas.admin.ch/cube/dimension> {
     a schema:DefinedTermSet, meta:SharedDimension, hydra:Resource, md:SharedDimension ;
     schema:name "Technologies"@en ;
     schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
+    sh:property [] ;
   .
 
   [
