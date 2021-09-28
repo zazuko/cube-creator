@@ -1,5 +1,13 @@
 # @cube-creator/cli
 
+## 1.5.1
+
+### Patch Changes
+
+- 0e1f078c: Use schema:expires instead of schema:validThrough to expire cubes
+- Updated dependencies [7e0f6f26]
+  - @cube-creator/model@0.1.21
+
 ## 1.5.0
 
 ### Minor Changes
