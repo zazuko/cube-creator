@@ -153,25 +153,6 @@ describe('domain/job/update', () => {
         .addOut(cc.publishGraph, job.namedNode('http://example.com/publish-graph'))
     })
 
-    it('sets lindas web query link', async () => {
-      // given
-      const resource = clownface({ dataset: $rdf.dataset() })
-        .namedNode('job')
-        .addOut(schema.actionStatus, schema.CompletedActionStatus)
-
-      // when
-      await update({
-        resource,
-        store,
-      })
-
-      // then
-      const link = new URL(job.out(schema.query).value!)
-      const params = new URLSearchParams(link.hash)
-      expect(link.hostname).to.eq('lindas.admin.ch')
-      expect(params.get('endpoint')).to.be.ok
-    })
-
     it("increments project's cc:publishedRevision when succeeded", async () => {
       // given
       const resource = clownface({ dataset: $rdf.dataset() })

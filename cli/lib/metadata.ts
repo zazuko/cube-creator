@@ -1,5 +1,5 @@
 import { obj } from 'through2'
-import { Quad, Quad_Object as QuadObject, Quad_Subject as QuadSubject } from 'rdf-js'
+import { Literal, NamedNode, Quad, Quad_Object as QuadObject, Quad_Subject as QuadSubject } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import { dcat, dcterms, rdf, schema, sh, xsd, _void } from '@tpluscode/rdf-ns-builders'
 import { cc, cube } from '@cube-creator/core/namespace'
@@ -87,6 +87,18 @@ export async function injectMetadata(this: Context, jobUri: string) {
       if (job.status?.equals(Published) && maintainer.dataset) {
         this.push($rdf.quad(maintainer.dataset, schema.dataset, quad.subject))
       }
+
+      // Copy workExamples from job
+      const predicatesToCopy = [rdf.type, schema.name, schema.url, schema.encodingFormat]
+      job.workExamples.forEach(jobWorkExample => {
+        const workExample = $rdf.blankNode()
+        this.push($rdf.quad(quad.subject, schema.workExample, workExample))
+        predicatesToCopy.forEach(predicate => {
+          jobWorkExample.pointer.out(predicate).forEach(object => {
+            this.push($rdf.quad(workExample, predicate, object.term as NamedNode | Literal))
+          })
+        })
+      });
 
       [...datasetTriples.match(dataset.id)]
         .filter(q => !q.predicate.equals(schema.hasPart) && !q.predicate.equals(cc.dimensionMetadata))

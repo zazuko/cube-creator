@@ -3,12 +3,12 @@ import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import type { Collection } from '@rdfine/hydra'
 import type * as Rdfs from '@rdfine/rdfs'
 import { ResourceMixin } from '@rdfine/rdfs'
-import { Action, ActionMixin } from '@rdfine/schema'
+import { Action, ActionMixin, CreativeWork, CreativeWorkMixin } from '@rdfine/schema'
 import { cc } from '@cube-creator/core/namespace'
 import { TableCollection } from './Table'
 import { Link } from './lib/Link'
-import { NamedNode, Term } from 'rdf-js'
-import { schema, dcterms, rdfs } from '@tpluscode/rdf-ns-builders'
+import { Literal, NamedNode, Term } from 'rdf-js'
+import { schema, dcterms, rdfs, rdf } from '@tpluscode/rdf-ns-builders'
 import { initializer } from './lib/initializer'
 import { DimensionMetadataCollection } from './DimensionMetadata'
 
@@ -29,9 +29,11 @@ export interface PublishJob extends Job {
   project: NamedNode
   revision: number
   publishGraph: NamedNode
-  publishedTo?: Term
+  publishedTo: Term | undefined
   status?: Term
   query?: string
+  workExamples: CreativeWork[]
+  addWorkExample(attrs: any): void
 }
 
 export function isPublishJob(job: Job): job is PublishJob {
@@ -87,6 +89,12 @@ export const createTransform = initializer<TransformJob, RequiredProperties>(Tra
   actionStatus: schema.PotentialActionStatus,
 })
 
+export interface WorkExampleInput {
+  name: Literal[]
+  url: NamedNode
+  encodingFormat: Literal
+}
+
 export function PublishJobMixin<Base extends Constructor<RdfResource>>(base: Base): Mixin {
   class Impl extends ResourceMixin(ActionMixin(base)) implements Partial<PublishJob> {
     @property({ path: cc.project })
@@ -98,12 +106,40 @@ export function PublishJobMixin<Base extends Constructor<RdfResource>>(base: Bas
     @property({ path: cc.publishGraph })
     publishGraph!: NamedNode
 
-    @property({ path: schema.workExample })
-    publishedTo?: NamedNode
-
     @property({ path: schema.creativeWorkStatus })
     status?: NamedNode
 
+    get publishedTo(): Term | undefined {
+      return this.pointer
+        .out(schema.workExample)
+        .filter(example => example.out(schema.encodingFormat).terms.length === 0)
+        .term
+    }
+
+    set publishedTo(term: Term | undefined) {
+      if (term) {
+        this.pointer.addOut(schema.workExample, term)
+      }
+    }
+
+    get workExamples(): CreativeWork[] {
+      return this.pointer
+        .out(schema.workExample)
+        .filter(example => example.out(schema.encodingFormat).terms.length > 0)
+        .map(workExampleP => new CreativeWorkMixin.Class(workExampleP as any) as CreativeWork)
+    }
+
+    addWorkExample(attrs: WorkExampleInput) {
+      return this.pointer.addOut(schema.workExample, workExample => {
+        workExample
+          .addOut(rdf.type, schema.CreativeWork)
+          .addOut(schema.name, attrs.name)
+          .addOut(schema.url, attrs.url)
+          .addOut(schema.encodingFormat, attrs.encodingFormat)
+      })
+    }
+
+    // Legacy. Kept to support old data.
     @property.literal({ path: schema.query })
     query?: string
   }

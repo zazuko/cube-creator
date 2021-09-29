@@ -29,8 +29,20 @@
           </div>
 
           <template #actions>
+            <!-- Support for legacy job.query -->
             <a v-if="job.query" :href="job.query" target="_blank" rel="noopener" class="button is-small">
               <span>Open in LINDAS</span>
+              <b-icon icon="chevron-right" />
+            </a>
+            <a
+              v-for="workExample in job.workExamples"
+              :key="workExample.id.value"
+              :href="workExample.url.value"
+              target="_blank"
+              rel="noopener"
+              class="button is-small"
+            >
+              <span>{{ workExampleLabel(workExample) }}</span>
               <b-icon icon="chevron-right" />
             </a>
           </template>
@@ -52,15 +64,23 @@ import JobForm from '@/components/JobForm.vue'
 import JobItem from '@/components/JobItem.vue'
 import ExternalTerm from '@/components/ExternalTerm.vue'
 import { JobCollection, PublishJob } from '@cube-creator/model'
+import { schema } from '@tpluscode/rdf-ns-builders'
+import { CreativeWork } from '@rdfine/schema'
 
+const appNS = namespace('app')
 const projectNS = namespace('project')
 
 @Component({
   components: { ExternalTerm, LoadingBlock, JobForm, JobItem },
 })
 export default class PublicationView extends Vue {
+  @appNS.State('language') language!: string[]
   @projectNS.State('jobCollection') jobCollection!: JobCollection | null;
   @projectNS.Getter('publishJobs') jobs!: PublishJob[]
+
+  workExampleLabel (workExample: CreativeWork): string {
+    return workExample.pointer.out(schema.name, { language: this.language }).value || 'Example'
+  }
 }
 </script>
 
