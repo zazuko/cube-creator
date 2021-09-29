@@ -97,7 +97,7 @@ export function prepareWorkExamples(cubeId: NamedNode, job: Job.PublishJob, data
   if (env.has('TRIFID_UI')) {
     workExamples.push({
       url: $rdf.namedNode(lindasWebQueryLink(cubeId, job.revision, job.publishGraph)),
-      encodingFormat: $rdf.literal('Application/Sparql-query'),
+      encodingFormat: $rdf.literal('application/sparql-query'),
       name: [
         $rdf.literal('SPARQL Endpoint mit Vorauswahl des Graph', 'de'),
         $rdf.literal('SPARQL Endpoint with graph preselection', 'en'),
