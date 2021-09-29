@@ -1,5 +1,11 @@
 # @cube-creator/ui
 
+## 1.5.1
+
+### Patch Changes
+
+- 7b497c4f: Show link to visualize on publish jobs
+
 ## 1.5.0
 
 ### Minor Changes

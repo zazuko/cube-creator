@@ -1,5 +1,11 @@
 # @cube-creator/cli
 
+## 1.5.2
+
+### Patch Changes
+
+- ddb70cfc: Provide links to visualize.admin.ch and lindas query UI on the published dataset (as work examples)
+
 ## 1.5.1
 
 ### Patch Changes
