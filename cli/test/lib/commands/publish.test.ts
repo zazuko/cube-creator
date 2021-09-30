@@ -12,7 +12,7 @@ import { cc, cube } from '@cube-creator/core/namespace'
 import clownface, { AnyPointer } from 'clownface'
 import runner from '../../../lib/commands/publish'
 import namespace, { NamespaceBuilder } from '@rdfjs/namespace'
-import { NamedNode, Term } from 'rdf-js'
+import { NamedNode } from 'rdf-js'
 import { Published } from '../../../../packages/model/Cube'
 
 describe('@cube-creator/cli/lib/commands/publish', function () {
@@ -279,6 +279,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
           minCount: 1,
         }, {
           path: cube.observedBy,
+          hasValue: $rdf.namedNode('http://example.com/organization-id'),
           minCount: 1,
         }, {
           path: ns.baseCube('dimension/year'),
@@ -339,12 +340,6 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
             ])
         })
       expect(cube).to.matchShape(shape)
-    })
-
-    it('emits organization as cube:observedBy value', async () => {
-      const observedBy = cubePointer.has(cube.observedBy).out(cube.observedBy).terms
-
-      expect(observedBy).to.containAll<Term>(observer => observer.equals($rdf.namedNode(`${env.API_CORE_BASE}organization/bafu`)))
     })
 
     it('dimension meta data has been copied', async function () {

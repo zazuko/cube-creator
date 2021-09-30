@@ -63,6 +63,7 @@ graph <cube-project/ubd/dataset> {
                         vcard:hasEmail 'test@mail.ch' ] ;
     schema:workExample <https://ld.admin.ch/application/visualize> ;
     schema:creativeWorkStatus <https://ld.admin.ch/vocabulary/CreativeWorkStatus/Draft> ;
+    dcterms:creator <http://example.com/organization-id> ;
   .
 
   <https://environment.ld.admin.ch/foen/ubd/28>

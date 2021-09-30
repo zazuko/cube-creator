@@ -26,8 +26,8 @@ const projectProperties = turtle`
     ${sh.order} 10 ;
   ] ;
   ${sh.property} [
-    ${sh.name} "Organization" ;
-    ${sh.description} "The owner of the published cube dataset" ;
+    ${sh.name} "Publishing profile" ;
+    ${sh.description} "Defines core cube publishing settings (location, endpoints, etc)" ;
     ${sh.path} ${schema.maintainer} ;
     ${sh.class} ${schema.Organization} ;
     ${sh.minCount} 1 ;
