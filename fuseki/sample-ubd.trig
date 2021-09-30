@@ -702,6 +702,16 @@ graph <cube-project/ubd/csv-mapping/jobs/test-publish-job> {
     cc:revision 3 ;
     schema:creativeWorkStatus <https://ld.admin.ch/vocabulary/CreativeWorkStatus/Draft> ;
     schema:workExample <https://ld.admin.ch/application/visualize> ;
+    schema:workExample [
+      schema:name "LINDAS query UI"@en ;
+      schema:url "https://example.org/query/" ;
+      schema:encodingFormat "text/html" ;
+    ] ;
+    schema:workExample [
+      schema:name "visualize.admin.ch" ;
+      schema:url "https://visualize.admin.ch/create/new?cube=the-cube" ;
+      schema:encodingFormat "Application/Sparql-query" ;
+    ] ;
   .
 }
 

@@ -84,7 +84,7 @@ describe('domain/job/create', () => {
       expect(job.out(rdf.type).values).to.contain(cc.PublishJob.value)
       expect(job.out(cc.publishGraph).term).to.deep.eq($rdf.namedNode('publishGraph'))
       expect(job.out(schema.creativeWorkStatus).term).to.deep.eq(ex.Draft)
-      expect(job.out(schema.workExample).term).to.deep.eq(ex.Visualise)
+      expect(job.out(schema.workExample).values).to.include(ex.Visualise.value)
     })
 
     it('sets next revision to job resource', async () => {
@@ -96,6 +96,19 @@ describe('domain/job/create', () => {
 
       // then
       expect(job.out(cc.revision).term).to.deep.eq($rdf.literal('4', xsd.integer))
+    })
+
+    it('sets lindas web query link', async () => {
+      // when
+      const job = await createPublishJob({ resource: jobCollection.term, store })
+
+      // then
+      const links = job.out(schema.workExample).map(example => example.out(schema.url).value).filter(Boolean)
+      const linkUrl = links[0] || ''
+      const link = new URL(linkUrl)
+      const params = new URLSearchParams(link.hash)
+      expect(link.hostname).to.eq('lindas.admin.ch')
+      expect(params.get('endpoint')).to.be.ok
     })
 
     it('throws when organization has no publish graph', async () => {

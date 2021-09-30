@@ -9,14 +9,14 @@ export interface Message {
 }
 
 export interface AppState {
-  language: string
+  language: string[]
   messages: Message[]
   loading: boolean
   commonRDFProperties: string[]
 }
 
 const initialState = {
-  language: 'en',
+  language: ['en', '*'],
   messages: [],
   loading: false,
   commonRDFProperties: [],
