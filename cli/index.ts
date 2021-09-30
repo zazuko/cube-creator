@@ -1,7 +1,7 @@
 import program from 'commander'
 import * as Sentry from '@sentry/node'
 import '@sentry/tracing'
-import { transform, publish, unlist, importCube } from './lib/commands'
+import { transform, publish, unlist, importCube, timeoutJobs } from './lib/commands'
 import { capture } from './lib/telemetry'
 import './lib/variables'
 import { log } from './lib/log'
@@ -60,6 +60,13 @@ async function main() {
     .option('--enable-buffer-monitor', 'enable histogram of buffer usage')
     .option('--auth-param <name=value>', 'Additional variables to pass to the token endpoint', parseVariables, new Map())
     .action(capture('Unlist', ({ job }) => ({ job }), unlist))
+
+  program
+    .command('timeout-jobs')
+    .description('Fails jobs which have been active for an excessive amount of time')
+    .requiredOption('--execution-url <executionUrl>', 'Link to job execution')
+    .option('--duration <duration>', 'ISO8601 duration', 'PT6H')
+    .action(capture('Timeout', ({ executionUrl }) => ({ executionUrl }), timeoutJobs))
 
   program
     .command('import')
