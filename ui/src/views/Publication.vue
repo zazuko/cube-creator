@@ -1,11 +1,23 @@
 <template>
   <div v-if="jobCollection">
-    <div class="container-narrow">
-      <job-form
-        v-if="jobCollection.actions.createPublish"
-        :operation="jobCollection.actions.createPublish"
-        class="box"
-      />
+    <div class="container-narrow columns">
+      <div class="column">
+        <job-form
+          v-if="jobCollection.actions.createPublish"
+          :operation="jobCollection.actions.createPublish"
+          class="box"
+        />
+      </div>
+      <div class="column">
+        <job-form
+          v-if="jobCollection.actions.createUnlist"
+          :operation="jobCollection.actions.createUnlist"
+          :confirm="true"
+          confirmation-message="Are you sure you want to unlist this cube? This operation is not reversible."
+          submit-button-type="is-danger"
+          class="box"
+        />
+      </div>
     </div>
 
     <div class="jobs content">
@@ -29,8 +41,20 @@
           </div>
 
           <template #actions>
+            <!-- Support for legacy job.query -->
             <a v-if="job.query" :href="job.query" target="_blank" rel="noopener" class="button is-small">
               <span>Open in LINDAS</span>
+              <b-icon icon="chevron-right" />
+            </a>
+            <a
+              v-for="workExample in job.workExamples"
+              :key="workExample.id.value"
+              :href="workExample.url.value"
+              target="_blank"
+              rel="noopener"
+              class="button is-small"
+            >
+              <span>{{ workExampleLabel(workExample) }}</span>
               <b-icon icon="chevron-right" />
             </a>
           </template>
@@ -51,16 +75,24 @@ import LoadingBlock from '@/components/LoadingBlock.vue'
 import JobForm from '@/components/JobForm.vue'
 import JobItem from '@/components/JobItem.vue'
 import ExternalTerm from '@/components/ExternalTerm.vue'
-import { JobCollection, PublishJob } from '@cube-creator/model'
+import { JobCollection, PublishJob, UnlistJob } from '@cube-creator/model'
+import { schema } from '@tpluscode/rdf-ns-builders'
+import { CreativeWork } from '@rdfine/schema'
 
+const appNS = namespace('app')
 const projectNS = namespace('project')
 
 @Component({
   components: { ExternalTerm, LoadingBlock, JobForm, JobItem },
 })
 export default class PublicationView extends Vue {
+  @appNS.State('language') language!: string[]
   @projectNS.State('jobCollection') jobCollection!: JobCollection | null;
-  @projectNS.Getter('publishJobs') jobs!: PublishJob[]
+  @projectNS.Getter('publicationJobs') jobs!: (PublishJob | UnlistJob)[]
+
+  workExampleLabel (workExample: CreativeWork): string {
+    return workExample.pointer.out(schema.name, { language: this.language }).value || 'Example'
+  }
 }
 </script>
 

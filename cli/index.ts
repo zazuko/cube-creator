@@ -28,7 +28,7 @@ async function main() {
 
   const { logger } = await import('./lib/log')
   const { tracer } = await import('./lib/otel/tracer')
-  const { transform, publish, importCube } = await import('./lib/commands')
+  const { transform, publish, unlist, importCube } = await import('./lib/commands')
 
   program
     .name('docker run --rm zazuko/cube-creator-cli')
@@ -53,6 +53,17 @@ async function main() {
     .option('--debug', 'Print diagnostic information to standard output')
     .option('--auth-param <name=value>', 'Additional variables to pass to the token endpoint', parseVariables, new Map())
     .action(capture('Publish', ({ job }) => ({ job }), publish))
+
+  program
+    .command('unlist')
+    .description('Unlist all versions of published cube')
+    .requiredOption('--job <job>', '(required) URL of a Cube Creator unlist job')
+    .option('--execution-url <executionUrl>', 'Link to job execution')
+    .option('-v, --variable <name=value>', 'Pipeline variables', parseVariables, new Map())
+    .option('--debug', 'Print diagnostic information to standard output')
+    .option('--enable-buffer-monitor', 'enable histogram of buffer usage')
+    .option('--auth-param <name=value>', 'Additional variables to pass to the token endpoint', parseVariables, new Map())
+    .action(capture('Unlist', ({ job }) => ({ job }), unlist))
 
   program
     .command('import')

@@ -7,6 +7,7 @@ ADD ./apis/core/package.json ./apis/core/
 ADD ./apis/errors/package.json ./apis/errors/
 ADD ./apis/shared-dimensions/package.json ./apis/shared-dimensions/
 ADD ./packages/core/package.json ./packages/core/
+ADD ./packages/express/package.json ./packages/express/
 ADD ./packages/model/package.json ./packages/model/
 ADD ./packages/testing/package.json ./packages/testing/
 ADD ./packages/express-rdf-request/package.json ./packages/express-rdf-request/
@@ -33,6 +34,7 @@ ADD ./apis/core/package.json ./apis/core/
 ADD ./apis/errors/package.json ./apis/errors/
 ADD ./apis/shared-dimensions/package.json ./apis/shared-dimensions/
 ADD ./packages/core/package.json ./packages/core/
+ADD ./packages/express/package.json ./packages/express/
 ADD ./packages/model/package.json ./packages/model/
 ADD ./packages/testing/package.json ./packages/testing/
 ADD ./packages/express-rdf-request/package.json ./packages/express-rdf-request/

@@ -1,7 +1,7 @@
 import { obj } from 'through2'
-import { Quad, Quad_Object as QuadObject, Quad_Subject as QuadSubject } from 'rdf-js'
+import { Literal, NamedNode, Quad, Quad_Object as QuadObject, Quad_Subject as QuadSubject } from 'rdf-js'
 import $rdf from 'rdf-ext'
-import { dcterms, rdf, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
+import { dcat, dcterms, rdf, schema, sh, xsd, _void } from '@tpluscode/rdf-ns-builders'
 import { cc, cube } from '@cube-creator/core/namespace'
 import { Project, PublishJob } from '@cube-creator/model'
 import { HydraClient } from 'alcaeus/alcaeus'
@@ -92,6 +92,10 @@ export async function injectMetadata(this: Context, jobUri: string) {
         this.push($rdf.quad(baseCube, schema.hasPart, quad.subject))
         this.push($rdf.quad(baseCube, rdf.type, schema.CreativeWork))
 
+        // Set LINDAS query interface and sparql endpoint
+        this.push($rdf.quad(quad.subject, dcat.accessURL, maintainer.accessURL))
+        this.push($rdf.quad(quad.subject, _void.sparqlEndpoint, maintainer.sparqlEndpoint))
+
         if (revision.value === '1') {
           this.push($rdf.quad(quad.subject, schema.datePublished, timestamp))
         }
@@ -99,7 +103,21 @@ export async function injectMetadata(this: Context, jobUri: string) {
         // add </.well-known/void> link to cubes with published status
         if (job.status?.equals(Published) && maintainer.dataset) {
           this.push($rdf.quad(maintainer.dataset, schema.dataset, quad.subject))
-        }[...datasetTriples.match(dataset.id)]
+        }
+
+        // Copy workExamples from job
+        const predicatesToCopy = [rdf.type, schema.name, schema.url, schema.encodingFormat]
+        job.workExamples.forEach(jobWorkExample => {
+          const workExample = $rdf.blankNode()
+          this.push($rdf.quad(quad.subject, schema.workExample, workExample))
+          predicatesToCopy.forEach(predicate => {
+            jobWorkExample.pointer.out(predicate).forEach(object => {
+              this.push($rdf.quad(workExample, predicate, object.term as NamedNode | Literal))
+            })
+          })
+        });
+
+        [...datasetTriples.match(dataset.id)]
           .filter(q => !q.predicate.equals(schema.hasPart) && !q.predicate.equals(cc.dimensionMetadata))
           .forEach(metadata => {
             this.push($rdf.triple(quad.subject, metadata.predicate, metadata.object))

@@ -1,5 +1,20 @@
 # @cube-creator/core-api
 
+## 1.4.1
+
+### Patch Changes
+
+- e6b9d882: Fix saving cube metadata
+- e05525ae: Projects became impossible to save (fixes #839, fixes #857)
+- b47905ec: Allow specifying language of opendata.swiss keywords
+- 4b1d224c: Project with error messages on its CSV sources would fail to load after import
+- 09a95f09: CSV upload failed to parse files with Windows line endings (fixes #840)
+- Updated dependencies [227a5743]
+- Updated dependencies [dcca674b]
+- Updated dependencies [7e0f6f26]
+  - @cube-creator/shared-dimensions-api@2.3.0
+  - @cube-creator/model@0.1.21
+
 ## 1.4.0
 
 ### Minor Changes

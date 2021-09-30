@@ -39,6 +39,9 @@ cc:TransformJob
 cc:PublishJob
   a hydra:Class .
 
+cc:UnlistJob
+  a hydra:Class .
+
 cc:ImportJob
   a hydra:Class .
 
@@ -107,6 +110,27 @@ cc:JobCollection
             code:EcmaScript ;
           code:link
             <file:handlers/jobs#publish> ;
+        ] ;
+    ],
+    [
+      a
+        hydra:Operation,
+        cc:UnlistAction ;
+      hydra:title
+        "Unlist cube" ;
+      hydra:description
+        "Unlist all existing versions of this cube" ;
+      hydra:method
+        "POST" ;
+      hydra:expects
+        cc:UnlistJob ,
+        <shape/job/trigger> ;
+      code:implementedBy
+        [
+          a
+            code:EcmaScript ;
+          code:link
+            <file:handlers/jobs#unlist> ;
         ] ;
     ]
 .

@@ -3,7 +3,7 @@ import { before, describe, it } from 'mocha'
 import { expect } from 'chai'
 import $rdf from 'rdf-ext'
 import { ASK, CONSTRUCT, DELETE, SELECT, WITH } from '@tpluscode/sparql-builder'
-import { csvw, dcat, dcterms, qudt, rdf, schema, sh, vcard, xsd } from '@tpluscode/rdf-ns-builders'
+import { csvw, dcat, dcterms, qudt, rdf, schema, sh, vcard, xsd, _void } from '@tpluscode/rdf-ns-builders'
 import { setupEnv } from '../../support/env'
 import { ccClients } from '@cube-creator/testing/lib'
 import { insertTestProject } from '@cube-creator/testing/lib/seedData'
@@ -188,6 +188,22 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
       })
     })
 
+    it('adds lindas query URIs from maintainer', async () => {
+      expect(cubePointer.namedNode(targetCube())).to.matchShape({
+        property: [{
+          path: dcat.accessURL,
+          minCount: 1,
+          maxCount: 1,
+          hasValue: $rdf.namedNode('https://environment.ld.admin.ch/query'),
+        }, {
+          path: _void.sparqlEndpoint,
+          minCount: 1,
+          maxCount: 1,
+          hasValue: $rdf.namedNode('https://environment.ld.admin.ch/sparql'),
+        }],
+      })
+    })
+
     it('"deprecates" previous cubes', async function () {
       expect(cubePointer.namedNode(ns.baseCube('1'))).to.matchShape({
         property: [{
@@ -233,6 +249,40 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
           maxCount: 1,
         }],
       })
+    })
+
+    it('adds work examples', async function () {
+      const cube = cubePointer.namedNode(targetCube())
+
+      const shape = clownface({ dataset: $rdf.dataset(), term: $rdf.blankNode() })
+        .addOut(sh.property, property => {
+          property
+            .addOut(sh.path, schema.workExample)
+            .addOut(sh.minCount, $rdf.literal('3', xsd.int))
+            .addOut(sh.maxCount, $rdf.literal('3', xsd.int))
+            .addList(sh.or, [
+              property.node($rdf.blankNode()).addOut(sh.hasValue, $rdf.namedNode('https://ld.admin.ch/application/visualize')),
+              // Link to visualize
+              property.node($rdf.blankNode()).addOut(sh.node, nodeVis => {
+                nodeVis
+                  .addOut(sh.property, prop => {
+                    prop
+                      .addOut(sh.path, schema.encodingFormat)
+                      .addOut(sh.hasValue, $rdf.literal('text/html'))
+                  })
+              }),
+              // Link to lindas query
+              property.node($rdf.blankNode()).addOut(sh.node, nodeSparql => {
+                nodeSparql
+                  .addOut(sh.property, prop => {
+                    prop
+                      .addOut(sh.path, schema.encodingFormat)
+                      .addOut(sh.hasValue, $rdf.literal('Application/Sparql-query'))
+                  })
+              }),
+            ])
+        })
+      expect(cube).to.matchShape(shape)
     })
 
     it('emits organization as cube:observedBy value', async () => {

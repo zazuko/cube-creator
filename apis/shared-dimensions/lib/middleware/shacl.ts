@@ -3,9 +3,13 @@ import $rdf from 'rdf-ext'
 import shapes from '../shapes'
 import env from '../env'
 
-export const shaclValidate = shaclMiddleware({
+type CreateMiddleware = Pick<Parameters<typeof shaclMiddleware>[0], 'parseResource'>
+
+const createMiddleware = ({ parseResource }: CreateMiddleware = {}) => shaclMiddleware({
   async loadResource(id) {
-    return shapes.get(id)?.() || null
+    const mappedId = $rdf.namedNode(id.value.replace(env.MANAGED_DIMENSIONS_API_BASE, env.MANAGED_DIMENSIONS_BASE))
+
+    return shapes.get(mappedId)?.() || null
   },
   async loadResourcesTypes() {
     return []
@@ -20,4 +24,12 @@ export const shaclValidate = shaclMiddleware({
     // however, I don't understand why only when updating existing resources
     return undefined
   },
+  parseResource,
 })
+
+type Middleware = typeof createMiddleware & {
+  override: typeof createMiddleware
+}
+
+export const shaclValidate: Middleware = createMiddleware() as any
+shaclValidate.override = createMiddleware

@@ -103,7 +103,6 @@ import TermWithLanguage from '@/components/TermWithLanguage.vue'
 import DownloadButton from '@/components/DownloadButton.vue'
 import { SharedDimension, SharedDimensionTerm } from '@/store/types'
 
-const appNS = namespace('app')
 const sharedDimensionNS = namespace('sharedDimension')
 
 @Component({
@@ -118,7 +117,6 @@ const sharedDimensionNS = namespace('sharedDimension')
   },
 })
 export default class extends Vue {
-  @appNS.State('language') language!: string
   @sharedDimensionNS.State('dimension') dimension!: SharedDimension | null
   @sharedDimensionNS.State('terms') terms!: SharedDimensionTerm[] | null
 

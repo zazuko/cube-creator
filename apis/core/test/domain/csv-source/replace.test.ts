@@ -24,7 +24,6 @@ describe('domain/csv-sources/replace', () => {
     .addOut(cc.sourceKind, cc.MediaLocal)
     .addOut(schema.name, $rdf.literal('source.csv'))
     .addOut(schema.identifier, $rdf.literal('test/source.csv'))
-    .addOut(schema.contentUrl, $rdf.namedNode('http://s3/test/source.csv'))
 
   beforeEach(() => {
     const getfileStream = () => fs.createReadStream(path.resolve(__dirname, '../../fixtures/CH_yearly_air_immission_unit_id.csv'))
@@ -56,7 +55,6 @@ describe('domain/csv-sources/replace', () => {
         .addOut(cc.csvMapping, csvMapping)
         .addOut(schema.associatedMedia, file => {
           file.addOut(schema.identifier, 'file.csv')
-            .addOut(schema.contentUrl, $rdf.namedNode('url.to.file'))
         })
         .addOut(csvw.column, $rdf.namedNode('column/unit_id'), column => {
           column.addOut(rdf.type, csvw.Column)
@@ -116,12 +114,6 @@ describe('domain/csv-sources/replace', () => {
                 path: schema.identifier,
                 datatype: xsd.string,
                 hasValue: 'test/source.csv',
-                minCount: 1,
-                maxCount: 1,
-              }, {
-                path: schema.contentUrl,
-                nodeKind: sh.IRI,
-                hasValue: $rdf.namedNode('http://s3/test/source.csv'),
                 minCount: 1,
                 maxCount: 1,
               }],
@@ -197,7 +189,6 @@ describe('domain/csv-sources/replace', () => {
         .addOut(cc.csvMapping, csvMapping)
         .addOut(schema.associatedMedia, file => {
           file.addOut(schema.identifier, 'file.csv')
-            .addOut(schema.contentUrl, $rdf.namedNode('url.to.file'))
         })
         .addOut(csvw.column, $rdf.namedNode('column/unit_id'), column => {
           column.addOut(rdf.type, csvw.Column)
@@ -262,12 +253,6 @@ describe('domain/csv-sources/replace', () => {
                 path: schema.identifier,
                 datatype: xsd.string,
                 hasValue: 'test/source.csv',
-                minCount: 1,
-                maxCount: 1,
-              }, {
-                path: schema.contentUrl,
-                nodeKind: sh.IRI,
-                hasValue: $rdf.namedNode('http://s3/test/source.csv'),
                 minCount: 1,
                 maxCount: 1,
               }],

@@ -14,7 +14,7 @@ import env from '@cube-creator/core/env'
 import { cc, cube, meta } from '@cube-creator/core/namespace'
 import * as ns from '@tpluscode/rdf-ns-builders'
 import cors from 'cors'
-import { isMultipart } from './lib'
+import { isMultipart } from '@cube-creator/express/multipart'
 import { postImportedProject } from './cube-projects/import'
 
 const trigger = (triggers as Record<string, (job: GraphPointer<NamedNode>, params?: GraphPointer) => void>)[env.PIPELINE_TYPE]

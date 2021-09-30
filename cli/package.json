@@ -1,6 +1,6 @@
 {
   "name": "@cube-creator/cli",
-  "version": "1.5.0",
+  "version": "1.5.2",
   "description": "Runs a pipeline to create an RDF data cube",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@cube-creator/core": "0.3.3",
-    "@cube-creator/model": "0.1.20",
+    "@cube-creator/model": "0.1.21",
     "@opentelemetry/api": "^1.0.2",
     "@opentelemetry/api-metrics": "^0.22.0",
     "@opentelemetry/exporter-collector": "^0.22.0",

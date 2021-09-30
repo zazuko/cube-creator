@@ -54,14 +54,12 @@ import SharedDimensionTags from '@/components/SharedDimensionTags.vue'
 import TermWithLanguage from '@/components/TermWithLanguage.vue'
 import { SharedDimension } from '@/store/types'
 
-const appNS = namespace('app')
 const sharedDimensionsNS = namespace('sharedDimensions')
 
 @Component({
   components: { PageContent, LoadingBlock, HydraOperationButton, SharedDimensionTags, TermWithLanguage },
 })
 export default class CubeProjectsView extends Vue {
-  @appNS.State('language') language!: string
   @sharedDimensionsNS.State('collection') collection!: Collection | null
   @sharedDimensionsNS.Getter('dimensions') dimensions!: SharedDimension[]
 

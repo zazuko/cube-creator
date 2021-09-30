@@ -1,5 +1,23 @@
 # @cube-creator/ui
 
+## 1.5.1
+
+### Patch Changes
+
+- 7b497c4f: Show link to visualize on publish jobs
+
+## 1.5.0
+
+### Minor Changes
+
+- 227a5743: Shared dimension import (closes #814)
+
+### Patch Changes
+
+- 28545849: Fix S3 uploads "invalid relative URL" error
+- Updated dependencies [7e0f6f26]
+  - @cube-creator/model@0.1.21
+
 ## 1.4.0
 
 ### Minor Changes

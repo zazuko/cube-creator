@@ -317,7 +317,6 @@ graph <cube-project/ubd/csv-source/ubd> {
   <cube-project/ubd/csv-source/ubd>
     a cc:CSVSource, hydra:Resource ;
     schema:associatedMedia  [ a  schema:MediaObject ;
-                              schema:contentUrl <http://s3.cube-creator.lndo.site/cube-creator/test-data/ubd28/input_CH_yearly_air_immission_basetable.csv> ;
                               schema:identifier "test-data/ubd28/input_CH_yearly_air_immission_basetable.csv";
                             ] ;
     schema:name "ubd.csv" ;
@@ -415,7 +414,6 @@ graph <cube-project/ubd/csv-source/stations> {
     a cc:CSVSource, hydra:Resource ;
     cc:csvMapping <cube-project/ubd/csv-mapping> ;
     schema:associatedMedia  [ a  schema:MediaObject ;
-                              schema:contentUrl <http://s3.cube-creator.lndo.site/cube-creator/test-data/ubd28/input_CH_yearly_air_immission_basetable.csv> ;
                               schema:identifier "test-data/ubd28/input_CH_yearly_air_immission_basetable.csv";
                             ] ;
     schema:name "stations.csv" ;
@@ -704,6 +702,28 @@ graph <cube-project/ubd/csv-mapping/jobs/test-publish-job> {
     cc:revision 3 ;
     schema:creativeWorkStatus <https://ld.admin.ch/vocabulary/CreativeWorkStatus/Draft> ;
     schema:workExample <https://ld.admin.ch/application/visualize> ;
+    schema:workExample [
+      schema:name "LINDAS query UI"@en ;
+      schema:url "https://example.org/query/" ;
+      schema:encodingFormat "text/html" ;
+    ] ;
+    schema:workExample [
+      schema:name "visualize.admin.ch" ;
+      schema:url "https://visualize.admin.ch/create/new?cube=the-cube" ;
+      schema:encodingFormat "Application/Sparql-query" ;
+    ] ;
+  .
+}
+
+<cube-project/ubd/csv-mapping/jobs/test-unlist-job> void:inDataset <ubd-example> .
+graph <cube-project/ubd/csv-mapping/jobs/test-unlist-job> {
+  <cube-project/ubd/csv-mapping/jobs/test-unlist-job>
+    a hydra:Resource, cc:Job, cc:UnlistJob ;
+    cc:project <cube-project/ubd> ;
+    dcterms:created "2020-10-29T12:01:00"^^xsd:dateTime ;
+    rdfs:seeAlso <https://github.com/zazuko/cube-creator/actions/runs/345020889> ;
+    schema:actionStatus schema:PotentialActionStatus ;
+    cc:publishGraph <https://lindas.admin.ch/foen/cube> ;
   .
 }
 

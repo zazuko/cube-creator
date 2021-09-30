@@ -1,9 +1,10 @@
-import { DatasetCore, NamedNode, Quad, Stream, Term } from 'rdf-js'
+import { DatasetCore, NamedNode, Quad, Term } from 'rdf-js'
 import clownface, { GraphPointer } from 'clownface'
 import { ResourceStore } from '../../ResourceStore'
 import * as id from '../identifiers'
 import { dcterms, rdfs, schema, rdf } from '@tpluscode/rdf-ns-builders/strict'
 import { createMinimalProject, Project } from '@cube-creator/model/Project'
+import { Files } from '@cube-creator/express/multipart'
 import { cc } from '@cube-creator/core/namespace'
 import $rdf from 'rdf-ext'
 import { exists } from './queries'
@@ -12,8 +13,6 @@ import { BadRequest } from 'http-errors'
 import { Transform } from 'stream'
 import { obj } from 'through2'
 import TermSet from '@rdfjs/term-set'
-
-export type Files = Record<string, (project: Project) => Stream>
 
 interface ImportProject {
   projectsCollection: GraphPointer<NamedNode>
@@ -100,7 +99,7 @@ export async function importProject({
       throw new BadRequest(`Missing file ${file.value}`)
     }
 
-    await importedDataset.import(next(project))
+    await importedDataset.import(next(project.id.value + '/').pipe(adjustTerms(project)))
   }
 
   const importedProject = clownface({ dataset: importedDataset, graph: project.id }).node(project.id)

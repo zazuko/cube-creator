@@ -1,5 +1,11 @@
 # @cube-creator/model
 
+## 0.1.21
+
+### Patch Changes
+
+- 7e0f6f26: Use https://ld.admin.ch/vocabulary/ instead of https://ld.admin.ch/definedTerm/
+
 ## 0.1.20
 
 ### Patch Changes

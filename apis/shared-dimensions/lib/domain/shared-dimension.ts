@@ -1,6 +1,8 @@
 import clownface, { GraphPointer, MultiPointer } from 'clownface'
-import { NamedNode, Quad, Stream, Term } from 'rdf-js'
+import { BlankNode, NamedNode, Quad, Stream, Term } from 'rdf-js'
 import $rdf from 'rdf-ext'
+import through2 from 'through2'
+import TermSet from '@rdfjs/term-set'
 import { dcterms, hydra, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { md, meta } from '@cube-creator/core/namespace'
 import { DomainError } from '@cube-creator/api-errors'
@@ -10,6 +12,9 @@ import httpError from 'http-errors'
 import { DESCRIBE } from '@tpluscode/sparql-builder'
 import { streamClient } from '../sparql'
 import { StreamClient } from 'sparql-http-client/StreamClient'
+import TermMap from '@rdfjs/term-map'
+
+export { importDimension } from './shared-dimension/import'
 
 interface CreateSharedDimension {
   resource: GraphPointer<NamedNode>
@@ -46,6 +51,7 @@ export async function create({ resource, store }: CreateSharedDimension): Promis
   const termSet = clownface({ dataset })
     .namedNode(termSetId)
     .addOut(rdf.type, [hydra.Resource, schema.DefinedTermSet, meta.SharedDimension, md.SharedDimension])
+    .deleteOut(md.createAs)
 
   await store.save(termSet)
   return termSet
@@ -122,19 +128,81 @@ interface ExportedDimension {
   data: Stream
 }
 
+const excludedProps = new TermSet<Term>([
+  md.export,
+  md.terms,
+])
+
+const filterProperties = () => through2.obj(function (chunk: Quad, _, next) {
+  if (!excludedProps.has(chunk.predicate)) {
+    this.push(chunk)
+  }
+  next()
+})
+
+function urnToBlanks() {
+  const urns = new TermMap<Term, BlankNode>()
+
+  return through2.obj(function (quad: Quad, _, next) {
+    let { subject, predicate, object, graph } = quad
+
+    if (subject.value.startsWith('urn:')) {
+      const blank = urns.get(subject) || $rdf.blankNode()
+      urns.set(subject, blank)
+      subject = blank
+    }
+    if (object.value.startsWith('urn:')) {
+      const blank = urns.get(object) || $rdf.blankNode()
+      urns.set(object, blank)
+      object = blank
+    }
+
+    this.push($rdf.quad(subject, predicate, object, graph))
+    next()
+  })
+}
+
 export async function getExportedDimension({ resource, store, client = streamClient }: GetExportedDimension): Promise<ExportedDimension> {
   const dimension = await store.load(resource)
 
-  const data = await DESCRIBE`${dimension.term} ?term ?shape ?setShape`
+  const quads = await DESCRIBE`${dimension.term} ?term ?shape ?setShape ?shapeProp ?setShapeProp`
     .FROM(store.graph)
     .WHERE`
       ${dimension.term} a ${md.SharedDimension} .
 
       ?term ${schema.inDefinedTermSet} ${dimension.term} .
 
-      OPTIONAL { ?shape ${sh.targetNode} ?term . }
-      OPTIONAL { ?setShape ${sh.targetNode} ${dimension.term} . }
+      OPTIONAL {
+        ?shape ${sh.targetNode} ?term .
+        ?shape ${sh.property} ?shapeProp .
+      }
+      OPTIONAL {
+        ?setShape ${sh.targetNode} ${dimension.term} .
+        ?setShape ${sh.property} ?setShapeProp .
+      }
     `.execute(client.query)
 
-  return { dimension, data }
+  const baseUriPattern = new RegExp(`^${env.MANAGED_DIMENSIONS_BASE}`)
+  function removeBase<T extends Term>(term: T): T {
+    if (term.termType === 'NamedNode') {
+      return $rdf.namedNode(term.value.replace(baseUriPattern, '')) as any
+    }
+
+    return term
+  }
+
+  const transformToQuads = through2.obj(function (quad: Quad, _, callback) {
+    this.push($rdf.quad(
+      removeBase(quad.subject),
+      removeBase(quad.predicate),
+      removeBase(quad.object),
+      removeBase(quad.graph),
+    ))
+    callback()
+  })
+
+  return {
+    dimension,
+    data: quads.pipe(filterProperties()).pipe(transformToQuads).pipe(urnToBlanks()),
+  }
 }

@@ -2,7 +2,7 @@ import { Literal, NamedNode, Term } from 'rdf-js'
 import { HydraClient } from 'alcaeus/alcaeus'
 import * as Csvw from '@rdfine/csvw'
 import DatasetExt from 'rdf-ext/lib/Dataset'
-import { PublishJob } from '../../packages/model/Job'
+import { PublishJob, UnlistJob } from '../../packages/model/Job'
 
 declare module 'barnard59-core' {
   interface Variables {
@@ -17,6 +17,7 @@ declare module 'barnard59-core' {
     'publish-graph-store-user': string
     'publish-graph-store-password': string
     'publish-job': PublishJob
+    'unlist-job': UnlistJob
     'target-graph': string
     revision: number
     namespace: string

@@ -3,7 +3,7 @@
     <hr>
     <b-field class="buttons" :addons="false">
       <div class="control">
-        <b-button native-type="submit" class="button is-primary" :disabled="disabled" :loading="isSubmitting">
+        <b-button native-type="submit" class="button" :type="submitButtonType" :disabled="disabled" :loading="isSubmitting">
           {{ _submitLabel }}
         </b-button>
       </div>
@@ -25,6 +25,7 @@ export default class FormSubmitCancel extends Vue {
   @Prop() disabled?: boolean
   @Prop() isSubmitting?: boolean
   @Prop({ default: true }) showCancel?: boolean
+  @Prop({ default: 'is-primary' }) submitButtonType?: string
 
   get _submitLabel (): string {
     return this.submitLabel || 'Save'

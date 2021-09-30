@@ -6,6 +6,7 @@ import { hydra, rdf, sh } from '@tpluscode/rdf-ns-builders'
 import SHACLValidator from 'rdf-validate-shacl'
 import clownface, { GraphPointer } from 'clownface'
 import { ProblemDocument } from 'http-problem-details'
+import ValidationReport from 'rdf-validate-shacl/src/validation-report'
 
 interface ShaclMiddlewareOptions {
   loadResource(id: NamedNode): Promise<GraphPointer<NamedNode> | null>
@@ -20,6 +21,33 @@ async function defaultParse(req: Request) {
   }
 
   return req.resource()
+}
+
+interface ValidationResponseOptions {
+  title?: string
+  detail?: string
+  type?: string
+}
+
+export function validationReportResponse(res: Response, validationReport: ValidationReport, {
+  title = 'Request validation error',
+  detail = 'The request payload does not conform to the SHACL description of this endpoint.',
+  type = 'http://tempuri.org/BadRequest',
+}: ValidationResponseOptions = {}): void {
+  const responseReport = validationReport.results.map((r) => ({
+    message: r.message.map((message) => message.value),
+    path: r.path?.value,
+  }))
+  const response = new ProblemDocument({
+    status: 400,
+    title,
+    detail,
+    type,
+  }, {
+    report: responseReport,
+  })
+
+  res.status(400).send(response)
 }
 
 export const shaclMiddleware = ({ getTargetNode, loadResource, loadResourcesTypes, parseResource = defaultParse }: ShaclMiddlewareOptions) => asyncMiddleware(async (req, res, next) => {
@@ -61,18 +89,5 @@ export const shaclMiddleware = ({ getTargetNode, loadResource, loadResourcesType
     return next()
   }
 
-  const responseReport = validationReport.results.map((r) => ({
-    message: r.message.map((message) => message.value),
-    path: r.path?.value,
-  }))
-  const response = new ProblemDocument({
-    status: 400,
-    title: 'Request validation error',
-    detail: 'The request payload does not conform to the SHACL description of this endpoint.',
-    type: 'http://tempuri.org/BadRequest',
-  }, {
-    report: responseReport,
-  })
-
-  res.status(400).send(response)
+  validationReportResponse(res, validationReport)
 })

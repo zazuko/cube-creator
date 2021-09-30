@@ -1,0 +1,3 @@
+PREFIX schema: <http://schema.org/>
+
+<john-doe> a schema:Person .

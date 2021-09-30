@@ -24,8 +24,6 @@ describe('domain/dataset/update', () => {
       .addOut(rdf.type, cube.Cube)
       .addIn(schema.hasPart, dataset)
     organization = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('organization/myorg') })
-      .addOut(dcat.accessURL, $rdf.namedNode('https://myorg/query'))
-      .addOut(_void.sparqlEndpoint, $rdf.namedNode('https://myorg/sparql'))
     store = new TestResourceStore([
       dataset,
       organization,
@@ -217,31 +215,6 @@ describe('domain/dataset/update', () => {
             maxCount: 1,
           }],
         },
-      }],
-    })
-  })
-
-  it('populates lindas query URIs from organization', async () => {
-    // given
-    const updatedResource = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('dataset') })
-      .addOut(dcterms.title, 'title')
-      .addOut(dcterms.creator, $rdf.namedNode('organization/myorg'))
-
-    // when
-    const result = await update({ dataset, resource: updatedResource, store })
-
-    // then
-    expect(result).to.matchShape({
-      property: [{
-        path: dcat.accessURL,
-        minCount: 1,
-        maxCount: 1,
-        hasValue: $rdf.namedNode('https://myorg/query'),
-      }, {
-        path: _void.sparqlEndpoint,
-        minCount: 1,
-        maxCount: 1,
-        hasValue: $rdf.namedNode('https://myorg/sparql'),
       }],
     })
   })

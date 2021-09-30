@@ -124,8 +124,8 @@ const getters: GetterTree<ProjectState, RootState> = {
     return getters.jobs.filter((job: Job) => job.types.has(cc.TransformJob) || job.types.has(cc.ImportJob))
   },
 
-  publishJobs (state, getters): Job[] {
-    return getters.jobs.filter((job: Job) => job.types.has(cc.PublishJob))
+  publicationJobs (state, getters): Job[] {
+    return getters.jobs.filter((job: Job) => job.types.has(cc.PublishJob) || job.types.has(cc.UnlistJob))
   },
 }
 

@@ -33,6 +33,9 @@ export const local = trigger(job => {
   if (job.has(rdf.type, cc.PublishJob).values.length > 0) {
     form.append('PUBLISH_JOB_URI', job.value)
   }
+  if (job.has(rdf.type, cc.UnlistJob).values.length > 0) {
+    form.append('UNLIST_JOB_URI', job.value)
+  }
   if (job.has(rdf.type, cc.ImportJob).values.length > 0) {
     form.append('IMPORT_JOB_URI', job.value)
   }
@@ -56,6 +59,9 @@ export const gitlab = trigger(job => {
   if (job.has(rdf.type, cc.PublishJob).values.length > 0) {
     form.append('variables[PUBLISH_JOB]', job.value)
   }
+  if (job.has(rdf.type, cc.UnlistJob).values.length > 0) {
+    form.append('variables[UNLIST_JOB]', job.value)
+  }
   if (job.has(rdf.type, cc.ImportJob).values.length > 0) {
     form.append('variables[IMPORT_JOB]', job.value)
   }
@@ -69,6 +75,7 @@ export const gitlab = trigger(job => {
 const githubJobTypes = new TermMap([
   [cc.TransformJob, 'transform_job'],
   [cc.PublishJob, 'transform_job'],
+  [cc.UnlistJob, 'unlist_job'],
   [cc.ImportJob, 'import_job'],
 ])
 

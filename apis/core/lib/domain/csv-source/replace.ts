@@ -28,7 +28,7 @@ export async function replaceFile({
   const csvSource = await store.getResource<CsvSource>(csvSourceId)
 
   // Remove any previous error
-  csvSource.error = undefined
+  csvSource.errors = []
 
   const newMedia = mediaObjectFromPointer(resource)
   const newStorage = getStorage(newMedia)
@@ -40,9 +40,9 @@ export async function replaceFile({
     const oldStorage = getStorage(csvSource.associatedMedia)
     oldStorage.delete(csvSource.associatedMedia)
 
-    const sourceKind = newMedia.sourceKind!
-    const key = newMedia.identifierLiteral || ''
-    const location = newMedia.contentUrl!
+    const sourceKind = newMedia.sourceKind
+    const key = newMedia.identifierLiteral
+    const location = newMedia.contentUrl
     csvSource.setUploadedFile(sourceKind, key, location)
 
     await createOrUpdateColumns(csvSource, getStorage)
