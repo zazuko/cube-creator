@@ -21,12 +21,12 @@ describe('CSV mapping flow', () => {
       .find('input')
       .type('ubd/29')
 
-    cy.contains('.form-property', 'Organization')
+    cy.contains('.form-property', 'Organization profiles')
       .find('select')
       .select('https://cube-creator.lndo.site/organization/bafu')
 
     // Click somewhere to validate the organization selection
-    cy.contains('.form-property', 'Organization')
+    cy.contains('.form-property', 'Organization profiles')
       .click()
 
     cy.get('form').submit()
