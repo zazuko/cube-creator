@@ -32,8 +32,9 @@ async function main() {
   app.post('/', asyncMiddleware(async (req, res) => {
     const transformJob = req.body.TRANSFORM_JOB_URI
     const publishJob = req.body.PUBLISH_JOB_URI
+    const unlistJob = req.body.UNLIST_JOB_URI
     const importJob = req.body.IMPORT_JOB_URI
-    if (!transformJob && !publishJob && !importJob) {
+    if (!transformJob && !publishJob && !unlistJob && !importJob) {
       res.status(400)
       return res.send('No job defined')
     }
@@ -49,6 +50,11 @@ async function main() {
     if (publishJob) {
       command.publish({ job: publishJob, debug: true }).catch((e) => log(e))
     }
+
+    if (unlistJob) {
+      command.unlist({ job: unlistJob, debug: true }).catch((e) => log(e))
+    }
+
     return res.status(202).end()
   }))
 

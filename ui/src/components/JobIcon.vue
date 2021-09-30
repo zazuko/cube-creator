@@ -17,6 +17,8 @@ export default class extends Vue {
   get icon (): string {
     if (this.job.types.has(cc.PublishJob)) {
       return 'upload'
+    } else if (this.job.types.has(cc.UnlistJob)) {
+      return 'eye-slash'
     } else if (this.job.types.has(cc.TransformJob)) {
       return 'random'
     } else if (this.job.types.has(cc.ImportJob)) {

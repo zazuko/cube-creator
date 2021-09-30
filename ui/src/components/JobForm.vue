@@ -11,6 +11,7 @@
       :is-submitting="isSubmitting"
       @submit="onSubmit"
       :show-cancel="false"
+      :submit-button-type="submitButtonType"
     />
   </div>
 </template>
@@ -32,6 +33,9 @@ import { NamedNode } from 'rdf-js'
 })
 export default class JobForm extends Vue {
   @Prop() operation!: RuntimeOperation
+  @Prop() submitButtonType?: string
+  @Prop({ default: false }) confirm!: boolean
+  @Prop({ default: 'Are you sure?' }) confirmationMessage!: string
 
   resource: GraphPointer = Object.freeze(clownface({ dataset: dataset() }).namedNode('').addOut(rdf.type, this.resourceType))
   shape: Shape | null = null
@@ -51,6 +55,11 @@ export default class JobForm extends Vue {
   }
 
   async onSubmit (resource: GraphPointer): Promise<void> {
+    if (this.confirm) {
+      const confirmation = await this.askConfirmation()
+      if (!confirmation) return
+    }
+
     this.error = null
     this.isSubmitting = true
 
@@ -75,6 +84,24 @@ export default class JobForm extends Vue {
     } finally {
       this.isSubmitting = false
     }
+  }
+
+  async askConfirmation (): Promise<boolean> {
+    return new Promise((resolve) => {
+      this.$buefy.dialog.confirm({
+        title: this.operation.title,
+        message: this.confirmationMessage,
+        confirmText: 'Confirm',
+        type: 'is-danger',
+        hasIcon: true,
+        onConfirm () {
+          resolve(true)
+        },
+        onCancel () {
+          resolve(false)
+        },
+      })
+    })
   }
 }
 </script>

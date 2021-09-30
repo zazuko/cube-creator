@@ -23,12 +23,14 @@ type CubeCreatorClass =
   'TransformAction' |
   'ImportAction' |
   'PublishAction' |
+  'UnlistAction' |
   'DimensionMetadataCollection' |
   'SharedDimensionsCollection' |
   'Observations' |
   'TransformJob' |
   'ImportJob' |
   'PublishJob' |
+  'UnlistJob' |
   'ReplaceCSVAction' |
   'MediaLocal' |
   'MediaURL'

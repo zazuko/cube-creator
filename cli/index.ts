@@ -1,7 +1,7 @@
 import program from 'commander'
 import * as Sentry from '@sentry/node'
 import '@sentry/tracing'
-import { transform, publish, importCube } from './lib/commands'
+import { transform, publish, unlist, importCube } from './lib/commands'
 import { capture } from './lib/telemetry'
 import './lib/variables'
 import { log } from './lib/log'
@@ -49,6 +49,17 @@ async function main() {
     .option('--enable-buffer-monitor', 'enable histogram of buffer usage')
     .option('--auth-param <name=value>', 'Additional variables to pass to the token endpoint', parseVariables, new Map())
     .action(capture('Publish', ({ job }) => ({ job }), publish))
+
+  program
+    .command('unlist')
+    .description('Unlist all versions of published cube')
+    .requiredOption('--job <job>', '(required) URL of a Cube Creator unlist job')
+    .option('--execution-url <executionUrl>', 'Link to job execution')
+    .option('-v, --variable <name=value>', 'Pipeline variables', parseVariables, new Map())
+    .option('--debug', 'Print diagnostic information to standard output')
+    .option('--enable-buffer-monitor', 'enable histogram of buffer usage')
+    .option('--auth-param <name=value>', 'Additional variables to pass to the token endpoint', parseVariables, new Map())
+    .action(capture('Unlist', ({ job }) => ({ job }), unlist))
 
   program
     .command('import')
