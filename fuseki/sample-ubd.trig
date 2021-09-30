@@ -680,6 +680,34 @@ graph <cube-project/ubd/csv-mapping/jobs/test-job> {
   .
 }
 
+<cube-project/ubd/csv-mapping/jobs/hung-job> void:inDataset <ubd-example> .
+graph <cube-project/ubd/csv-mapping/jobs/hung-job> {
+  <cube-project/ubd/csv-mapping/jobs/hung-job>
+    a hydra:Resource, cc:Job, cc:TransformJob ;
+    cc:tables <cube-project/ubd/csv-mapping/tables> ;
+    cc:dimensionMetadata <cube-project/ubd/dimensions-metadata> ;
+    schema:name "hung job" ;
+    cc:cubeGraph <cube-project/ubd/cube-data> ;
+    dcterms:created "2020-10-29T12:01:54Z"^^xsd:dateTime ;
+    dcterms:modified "2020-10-29T12:01:54Z"^^xsd:dateTime ;
+    schema:actionStatus schema:ActiveActionStatus ;
+  .
+}
+
+<cube-project/ubd/csv-mapping/jobs/active-job> void:inDataset <ubd-example> .
+graph <cube-project/ubd/csv-mapping/jobs/active-job> {
+  <cube-project/ubd/csv-mapping/jobs/active-job>
+    a hydra:Resource, cc:Job, cc:TransformJob ;
+    cc:tables <cube-project/ubd/csv-mapping/tables> ;
+    cc:dimensionMetadata <cube-project/ubd/dimensions-metadata> ;
+    schema:name "active job job" ;
+    cc:cubeGraph <cube-project/ubd/cube-data> ;
+    dcterms:created "2020-10-29T15:01:54Z"^^xsd:dateTime ;
+    dcterms:modified "2020-10-29T15:01:54Z"^^xsd:dateTime ;
+    schema:actionStatus schema:ActiveActionStatus ;
+  .
+}
+
 <cube-project/ubd/csv-mapping/jobs/broken-job> void:inDataset <ubd-example> .
 graph <cube-project/ubd/csv-mapping/jobs/broken-job> {
   <cube-project/ubd/csv-mapping/jobs/broken-job>
