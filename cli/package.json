@@ -87,6 +87,7 @@
     "@types/rdfjs__term-set": "^1.0.2",
     "@types/readable-stream": "^2.3.9",
     "@types/sinon": "^10.0.2",
+    "@types/sinon-chai": "^3.2.4",
     "@types/sparql-http-client": "^2",
     "@types/through2": "^2.0.36",
     "chai": "^4.2.0",
@@ -95,6 +96,7 @@
     "dotenv-cli": "^3.1.0",
     "mocha": "^9.0.0",
     "sinon": "^11.1.2",
+    "sinon-chai": "^3.5.0",
     "sparql-http-client": "^2.2.2"
   },
   "repository": {
