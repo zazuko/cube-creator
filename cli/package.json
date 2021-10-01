@@ -7,6 +7,7 @@
     "postinstall": "mkdir -p output; touch .env",
     "transform": "dotenv -e ./.env -e ./.test.env -- sh -c 'ts-node index.ts transform --job \"$TRANSFORM_JOB\" --debug --to filesystem'",
     "publish": "dotenv -e ./.env -e ./.test.env -- sh -c 'ts-node index.ts publish --job \"$PUBLISH_JOB\" --debug'",
+    "expire-timedout": "dotenv -e ./.env -e ./.test.env -- sh -c 'ts-node index.ts timeout-jobs'",
     "build": "tsc"
   },
   "dependencies": {
