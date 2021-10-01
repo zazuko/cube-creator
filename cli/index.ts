@@ -64,9 +64,8 @@ async function main() {
   program
     .command('timeout-jobs')
     .description('Fails jobs which have been active for an excessive amount of time')
-    .requiredOption('--execution-url <executionUrl>', 'Link to job execution')
     .option('--duration <duration>', 'ISO8601 duration', 'PT6H')
-    .action(capture('Timeout', ({ executionUrl }) => ({ executionUrl }), timeoutJobs))
+    .action(capture('Timeout', () => ({ }), timeoutJobs))
 
   program
     .command('import')

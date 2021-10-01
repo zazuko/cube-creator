@@ -3,6 +3,7 @@ import ParsingClient from 'sparql-http-client/ParsingClient'
 import { dcterms, schema } from '@tpluscode/rdf-ns-builders/strict'
 import * as Alcaeus from 'alcaeus/node'
 import { cc } from '@cube-creator/core/namespace'
+import * as Models from '@cube-creator/model'
 import { parse, toSeconds } from 'iso8601-duration'
 import { toRdf } from 'rdf-literal'
 import { updateJobStatus } from '../job'
@@ -10,14 +11,12 @@ import { setupAuthentication } from '../auth'
 import { log } from '../log'
 
 interface TimeoutJobs {
-  executionUrl: string
   duration: string
   now?(): number
   updateJob?: typeof updateJobStatus
 }
 
 export async function timeoutJobs({
-  executionUrl,
   duration,
   now = Date.now,
   updateJob = updateJobStatus,
@@ -50,6 +49,7 @@ export async function timeoutJobs({
     .execute(client.query)
 
   const apiClient = Alcaeus.create()
+  apiClient.resources.factory.addMixin(...Object.values(Models))
   setupAuthentication({}, log, apiClient)
 
   const updateRequests = overtimeJobs
@@ -58,7 +58,8 @@ export async function timeoutJobs({
       apiClient,
       modified: new Date(now()),
       status: schema.FailedActionStatus,
-      executionUrl,
+      executionUrl: undefined,
+      error: 'Job exceeded maximum running time',
     }).then(() => {
       log('Updated job %s', job.value)
     }).catch(log))
