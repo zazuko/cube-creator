@@ -52,17 +52,15 @@ export async function timeoutJobs({
   apiClient.resources.factory.addMixin(...Object.values(Models))
   setupAuthentication({}, log, apiClient)
 
-  const updateRequests = overtimeJobs
-    .map(({ job }) => updateJob({
+  for (const { job } of overtimeJobs) {
+    await updateJob({
       jobUri: job.value,
       apiClient,
       modified: new Date(now()),
       status: schema.FailedActionStatus,
       executionUrl: undefined,
       error: 'Job exceeded maximum running time',
-    }).then(() => {
-      log('Updated job %s', job.value)
-    }).catch(log))
-
-  await Promise.all(updateRequests)
+    })
+    log('Updated job %s', job.value)
+  }
 }
