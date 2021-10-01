@@ -28,7 +28,7 @@ async function main() {
 
   const { logger } = await import('./lib/log')
   const { tracer } = await import('./lib/otel/tracer')
-  const { transform, publish, unlist, importCube } = await import('./lib/commands')
+  const { transform, publish, unlist, importCube, timeoutJobs } = await import('./lib/commands')
 
   program
     .name('docker run --rm zazuko/cube-creator-cli')
@@ -64,6 +64,13 @@ async function main() {
     .option('--enable-buffer-monitor', 'enable histogram of buffer usage')
     .option('--auth-param <name=value>', 'Additional variables to pass to the token endpoint', parseVariables, new Map())
     .action(capture('Unlist', ({ job }) => ({ job }), unlist))
+
+  program
+    .command('timeout-jobs')
+    .description('Fails jobs which have been active for an excessive amount of time')
+    .requiredOption('--execution-url <executionUrl>', 'Link to job execution')
+    .option('--duration <duration>', 'ISO8601 duration', 'PT6H')
+    .action(capture('Timeout', ({ executionUrl }) => ({ executionUrl }), timeoutJobs))
 
   program
     .command('import')
