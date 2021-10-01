@@ -22,6 +22,8 @@ export async function timeoutJobs({
   now = Date.now,
   updateJob = updateJobStatus,
 }: TimeoutJobs): Promise<void> {
+  log.enabled = true
+
   const client = new ParsingClient({
     endpointUrl: process.env.GRAPH_QUERY_ENDPOINT!,
     user: process.env.GRAPH_STORE_USER,
@@ -30,6 +32,8 @@ export async function timeoutJobs({
 
   const timeout = toSeconds(parse(duration))
   const startDate = new Date(now() - (timeout * 1000))
+
+  log('Will expire jobs active since before %s', startDate.toISOString())
 
   const overtimeJobs = await SELECT`?job`
     .WHERE`
