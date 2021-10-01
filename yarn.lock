@@ -2458,6 +2458,14 @@
   dependencies:
     "@types/ms" "*"
 
+"@types/duplex-to@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@types/duplex-to/-/duplex-to-1.0.0.tgz#0cb142f2f8a957194b58b3024d12618dc629df74"
+  integrity sha512-O36BBBx01gpaHEpF71FeyudYv+zA/EWmy+pegX1JMwO5MURqOwytluDTINFLznEdN5GZ/pA8qVc2O2tcJp6prQ==
+  dependencies:
+    "@types/node" "*"
+    "@types/readable-stream" "*"
+
 "@types/express-conditional-middleware@^2.1.0":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@types/express-conditional-middleware/-/express-conditional-middleware-2.1.0.tgz#d62a79da58423cb1ebc4fcbbf1d251245474975d"
@@ -2691,6 +2699,13 @@
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@types/rdf-transform-triple-to-quad/-/rdf-transform-triple-to-quad-1.0.2.tgz#1b76003fd73109f0d39736f0acccef3688c9142b"
   integrity sha512-n7bBBXcuOantdpgo5heshD944pDeHc3k0amDaPQeMXQEDPMRdRMdJqv2QJ6Xk4ilyzetHiqiA6P7fCNkrwJDuA==
+  dependencies:
+    rdf-js "^4.0.2"
+
+"@types/rdf-utils-fs@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@types/rdf-utils-fs/-/rdf-utils-fs-2.1.0.tgz#14802cc6281337048b9a866baff13fdcfba91dae"
+  integrity sha512-58ppXiRaGq9tJdUE3jK1J0nN+EDmkejVFpPQXqR8KtjOCxHUa8WNH77xGg3ASYRHzNjz/F2dPKxZFlR2N3pwvg==
   dependencies:
     rdf-js "^4.0.2"
 
