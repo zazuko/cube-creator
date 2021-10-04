@@ -4,10 +4,12 @@ import { cc } from '@cube-creator/core/namespace'
 import { GraphPointer } from 'clownface'
 import type { Context } from 'barnard59-core/lib/Pipeline'
 import { obj } from 'through2'
-import { CONSTRUCT } from '@tpluscode/sparql-builder'
+import { CONSTRUCT, sparql } from '@tpluscode/sparql-builder'
+import { IN } from '@tpluscode/sparql-builder/expressions'
 import { schema, sh } from '@tpluscode/rdf-ns-builders'
 import { Dataset } from '@cube-creator/model'
 import StreamClient from 'sparql-http-client/StreamClient'
+import { Draft } from '@cube-creator/model/Cube'
 import { loadDataset } from './metadata'
 
 export const getObservationSetId = ({ dataset }: { dataset: DatasetCore }) => {
@@ -33,10 +35,24 @@ export function expirePreviousVersions(this: Pick<Context, 'variables' | 'log'>)
     password: this.variables.get('publish-graph-store-password'),
   })
 
+  const job = this.variables.get('publish-job')
+  let onlyDraftCubes = sparql``
+  if (Draft.equals(job?.status)) {
+    onlyDraftCubes = sparql`
+      ?cube ${schema.creativeWorkStatus} ?status .
+
+      filter (
+        ?status ${IN(Draft, $rdf.namedNode('https://ld.admin.ch/definedTerm/CreativeWorkStatus/Draft'))}
+      )
+    `
+  }
+
   return CONSTRUCT`
     ?cube ${schema.expires} ${timestamp} .
   `.WHERE`
     ${baseCube} ${schema.hasPart} ?cube .
+
+    ${onlyDraftCubes}
 
     OPTIONAL { ?cube ${schema.expires} ?expires }
 

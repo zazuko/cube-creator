@@ -68,7 +68,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
 
   describe('publishing published', () => {
     before(resetData)
-    before(() => {
+    before(function makeCubePublished() {
       return WITH(job, DELETE`
         ${job} ${schema.creativeWorkStatus} ?status
       `.INSERT`
@@ -85,6 +85,25 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
         .execute(ccClients.streamClient.query)
 
       expect(hasVoidLink).to.be.true
+    })
+
+    it('"deprecates" all previous cubes', async function () {
+      expect(cubePointer.namedNode(ns.baseCube('1'))).to.matchShape({
+        property: [{
+          path: schema.expires,
+          datatype: xsd.dateTime,
+          minCount: 1,
+          maxCount: 1,
+        }],
+      })
+      expect(cubePointer.namedNode(ns.baseCube('2'))).to.matchShape({
+        property: [{
+          path: schema.expires,
+          datatype: xsd.dateTime,
+          minCount: 1,
+          maxCount: 1,
+        }],
+      })
     })
   })
 
@@ -204,13 +223,20 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
       })
     })
 
-    it('"deprecates" previous cubes', async function () {
+    it('"deprecates" only previous draft cubes', async function () {
       expect(cubePointer.namedNode(ns.baseCube('1'))).to.matchShape({
         property: [{
           path: schema.expires,
           datatype: xsd.dateTime,
           minCount: 1,
           maxCount: 1,
+        }],
+      })
+      expect(cubePointer.namedNode(ns.baseCube('2'))).to.matchShape({
+        property: [{
+          path: schema.expires,
+          datatype: xsd.dateTime,
+          maxCount: 0,
         }],
       })
     })
