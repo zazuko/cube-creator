@@ -7,7 +7,7 @@ import { obj } from 'through2'
 import { CONSTRUCT, sparql } from '@tpluscode/sparql-builder'
 import { IN } from '@tpluscode/sparql-builder/expressions'
 import { schema, sh } from '@tpluscode/rdf-ns-builders'
-import { Dataset } from '@cube-creator/model'
+import { Dataset, PublishJob } from '@cube-creator/model'
 import StreamClient from 'sparql-http-client/StreamClient'
 import { Draft } from '@cube-creator/model/Cube'
 import { loadDataset } from './metadata'
@@ -35,9 +35,9 @@ export function expirePreviousVersions(this: Pick<Context, 'variables' | 'log'>)
     password: this.variables.get('publish-graph-store-password'),
   })
 
-  const job = this.variables.get('publish-job')
   let onlyDraftCubes = sparql``
-  if (Draft.equals(job?.status)) {
+  const publishJob: PublishJob | undefined = this.variables.get('publish-job')
+  if (publishJob && Draft.equals(publishJob.status)) {
     onlyDraftCubes = sparql`
       ?cube ${schema.creativeWorkStatus} ?status .
 
