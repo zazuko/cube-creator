@@ -1,5 +1,11 @@
 # @cube-creator/ui
 
+## 1.5.2
+
+### Patch Changes
+
+- bd084b85: Add button to unlist all published versions of a cube
+
 ## 1.5.1
 
 ### Patch Changes
