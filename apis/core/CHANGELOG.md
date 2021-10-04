@@ -1,5 +1,11 @@
 # @cube-creator/core-api
 
+## 1.4.2
+
+### Patch Changes
+
+- bd084b85: Add job to unlist cube
+
 ## 1.4.1
 
 ### Patch Changes

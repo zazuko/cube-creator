@@ -1,5 +1,15 @@
 # @cube-creator/cli
 
+## 1.6.0
+
+### Minor Changes
+
+- 1e0a5c5a: Command to mark overdue jobs as failed (to be run periodically) (closes #790)
+
+### Patch Changes
+
+- bd084b85: Add job to unlist cube
+
 ## 1.5.2
 
 ### Patch Changes
