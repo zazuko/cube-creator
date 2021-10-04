@@ -18,7 +18,6 @@ import RdfResourceImpl from '@tpluscode/rdfine'
 import { RuntimeOperation } from 'alcaeus'
 import { GraphPointer } from 'clownface'
 import { Component, Vue } from 'vue-property-decorator'
-import { namespace } from 'vuex-class'
 
 import { CsvMapping } from '@cube-creator/model'
 
@@ -26,14 +25,13 @@ import { api } from '@/api'
 import CsvUploadForm from '@/components/CsvUploadForm.vue'
 import FormSubmitCancel from '@/components/FormSubmitCancel.vue'
 import SidePane from '@/components/SidePane.vue'
-
-const projectNS = namespace('project')
+import * as storeNs from '../store/namespace'
 
 @Component({
   components: { CsvUploadForm, SidePane, FormSubmitCancel },
 })
 export default class CSVUploadView extends Vue {
-  @projectNS.State('csvMapping') mapping!: CsvMapping
+  @storeNs.project.State('csvMapping') mapping!: CsvMapping
 
   isLoading = false
   error: string | null = null

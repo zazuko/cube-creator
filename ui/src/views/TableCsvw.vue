@@ -30,20 +30,18 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import { namespace } from 'vuex-class'
 import '@rdfjs-elements/rdf-editor'
 import SidePane from '@/components/SidePane.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import { Table } from '@cube-creator/model'
 import Remote, { RemoteData } from '@/remote'
-
-const projectNS = namespace('project')
+import * as storeNs from '../store/namespace'
 
 @Component({
   components: { SidePane, LoadingBlock },
 })
 export default class TableCreateView extends Vue {
-  @projectNS.Getter('findTable') findTable!: (id: string) => Table | null
+  @storeNs.project.Getter('findTable') findTable!: (id: string) => Table | null
 
   csvw: RemoteData<string> = Remote.loading()
   selectedFormat = 'application/ld+json'

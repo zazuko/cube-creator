@@ -41,7 +41,6 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import { namespace } from 'vuex-class'
 import { Project } from '@cube-creator/model'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import DownloadButton from '@/components/DownloadButton.vue'
@@ -49,14 +48,13 @@ import { GraphPointer } from 'clownface'
 import { Shape } from '@rdfine/shacl'
 import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
-
-const projectNS = namespace('project')
+import * as storeNs from '../store/namespace'
 
 @Component({
   components: { HydraOperationForm, DownloadButton },
 })
 export default class CubeProjectEditView extends Vue {
-  @projectNS.State('project') project!: Project
+  @storeNs.project.State('project') project!: Project
 
   resource: GraphPointer | null = null
   shape: Shape | null = null

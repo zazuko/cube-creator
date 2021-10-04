@@ -15,13 +15,11 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { namespace } from 'vuex-class'
-
-const authNS = namespace('auth')
+import * as storeNs from '../store/namespace'
 
 @Component
 export default class LogoutView extends Vue {
-  @authNS.Getter('oidcIsAuthenticated') isAuthenticated!: boolean
+  @storeNs.auth.Getter('oidcIsAuthenticated') isAuthenticated!: boolean
 
   mounted (): void {
     if (this.isAuthenticated) {

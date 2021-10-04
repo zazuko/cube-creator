@@ -55,19 +55,17 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { namespace } from 'vuex-class'
 import { ProjectsCollection, Project } from '@cube-creator/model'
 import PageContent from '@/components/PageContent.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import HydraOperationButton from '@/components/HydraOperationButton.vue'
-
-const projectsNS = namespace('projects')
+import * as storeNs from '../store/namespace'
 
 @Component({
   components: { PageContent, LoadingBlock, HydraOperationButton },
 })
 export default class CubeProjectsView extends Vue {
-  @projectsNS.State('collection') projectsCollection!: ProjectsCollection | null;
+  @storeNs.projects.State('collection') projectsCollection!: ProjectsCollection | null;
 
   async mounted (): Promise<void> {
     await this.$store.dispatch('projects/fetchCollection')

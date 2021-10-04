@@ -45,23 +45,21 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { namespace } from 'vuex-class'
 import { Collection } from 'alcaeus'
 import PageContent from '@/components/PageContent.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import HydraOperationButton from '@/components/HydraOperationButton.vue'
 import SharedDimensionTags from '@/components/SharedDimensionTags.vue'
 import TermWithLanguage from '@/components/TermWithLanguage.vue'
-import { SharedDimension } from '@/store/types'
-
-const sharedDimensionsNS = namespace('sharedDimensions')
+import * as storeNs from '../store/namespace'
+import { SharedDimension } from '../store/types'
 
 @Component({
   components: { PageContent, LoadingBlock, HydraOperationButton, SharedDimensionTags, TermWithLanguage },
 })
 export default class CubeProjectsView extends Vue {
-  @sharedDimensionsNS.State('collection') collection!: Collection | null
-  @sharedDimensionsNS.Getter('dimensions') dimensions!: SharedDimension[]
+  @storeNs.sharedDimensions.State('collection') collection!: Collection | null
+  @storeNs.sharedDimensions.Getter('dimensions') dimensions!: SharedDimension[]
 
   async mounted (): Promise<void> {
     await this.$store.dispatch('sharedDimensions/fetchEntrypoint')

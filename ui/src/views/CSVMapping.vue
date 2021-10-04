@@ -84,23 +84,21 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator'
-import { namespace } from 'vuex-class'
 import CsvSourceMapping from '@/components/CsvSourceMapping.vue'
 import HydraOperationButton from '@/components/HydraOperationButton.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import { CsvMapping, SourcesCollection, TableCollection, Table, CsvSource, ColumnMapping } from '@cube-creator/model'
-
-const projectNS = namespace('project')
+import * as storeNs from '../store/namespace'
 
 @Component({
   components: { CsvSourceMapping, HydraOperationButton, LoadingBlock },
 })
 export default class CSVMappingView extends Vue {
-  @projectNS.State('csvMapping') mapping!: CsvMapping | null;
-  @projectNS.State('sourcesCollection') sourcesCollection!: SourcesCollection | null;
-  @projectNS.State('tableCollection') tableCollection!: TableCollection | null;
-  @projectNS.Getter('sources') sources!: CsvSource[];
-  @projectNS.Getter('tables') tables!: Table[];
+  @storeNs.project.State('csvMapping') mapping!: CsvMapping | null;
+  @storeNs.project.State('sourcesCollection') sourcesCollection!: SourcesCollection | null;
+  @storeNs.project.State('tableCollection') tableCollection!: TableCollection | null;
+  @storeNs.project.Getter('sources') sources!: CsvSource[];
+  @storeNs.project.Getter('tables') tables!: Table[];
 
   activeArrows: string[] = []
 

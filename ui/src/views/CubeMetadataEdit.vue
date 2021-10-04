@@ -19,7 +19,6 @@ import { Component, Vue } from 'vue-property-decorator'
 import { RuntimeOperation } from 'alcaeus'
 import type { Shape } from '@rdfine/shacl'
 import { GraphPointer } from 'clownface'
-import { namespace } from 'vuex-class'
 import { Dataset } from '@cube-creator/model'
 import SidePane from '@/components/SidePane.vue'
 import HydraOperationFormWithRaw from '@/components/HydraOperationFormWithRaw.vue'
@@ -27,14 +26,13 @@ import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 import { cc, cube } from '@cube-creator/core/namespace'
 import { conciseBoundedDescription } from '@/graph'
-
-const projectNS = namespace('project')
+import * as storeNs from '../store/namespace'
 
 @Component({
   components: { SidePane, HydraOperationFormWithRaw },
 })
 export default class CubeMetadataEdit extends Vue {
-  @projectNS.State('cubeMetadata') cubeMetadata!: Dataset;
+  @storeNs.project.State('cubeMetadata') cubeMetadata!: Dataset;
 
   resource: GraphPointer | null = null;
   shape: Shape | null = null;

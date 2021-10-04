@@ -13,7 +13,6 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { namespace } from 'vuex-class'
 import { RuntimeOperation } from 'alcaeus'
 import clownface, { GraphPointer } from 'clownface'
 import { rdf, schema } from '@tpluscode/rdf-ns-builders'
@@ -21,11 +20,10 @@ import $rdf from '@rdf-esm/dataset'
 import { ReferenceColumnMapping, CsvSource, Table } from '@cube-creator/model'
 import { cc } from '@cube-creator/core/namespace'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
+import { api } from '@/api'
 import { ErrorDetails } from '@/api/errors'
 import { Shape } from '@rdfine/shacl'
-import { api } from '@/api'
-
-const projectNS = namespace('project')
+import * as storeNs from '../store/namespace'
 
 @Component({
   components: { HydraOperationForm },
@@ -39,9 +37,9 @@ export default class extends Vue {
   @Prop({ default: false }) isSubmitting!: boolean
   @Prop() submitLabel?: string
 
-  @projectNS.Getter('findTable') findTable!: (id: string) => Table
-  @projectNS.Getter('findSource') findSource!: (id: string) => CsvSource
-  @projectNS.Getter('tables') tables!: Table[]
+  @storeNs.project.Getter('findTable') findTable!: (id: string) => Table
+  @storeNs.project.Getter('findSource') findSource!: (id: string) => CsvSource
+  @storeNs.project.Getter('tables') tables!: Table[]
 
   resource: GraphPointer = clownface({ dataset: $rdf.dataset() }).namedNode('').addOut(rdf.type, cc.LiteralColumnMapping)
   shape: Shape | null = null;

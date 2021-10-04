@@ -70,7 +70,6 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { namespace } from 'vuex-class'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import JobForm from '@/components/JobForm.vue'
 import JobItem from '@/components/JobItem.vue'
@@ -78,17 +77,15 @@ import ExternalTerm from '@/components/ExternalTerm.vue'
 import { JobCollection, PublishJob, UnlistJob } from '@cube-creator/model'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { CreativeWork } from '@rdfine/schema'
-
-const appNS = namespace('app')
-const projectNS = namespace('project')
+import * as storeNs from '../store/namespace'
 
 @Component({
   components: { ExternalTerm, LoadingBlock, JobForm, JobItem },
 })
 export default class PublicationView extends Vue {
-  @appNS.State('language') language!: string[]
-  @projectNS.State('jobCollection') jobCollection!: JobCollection | null;
-  @projectNS.Getter('publicationJobs') jobs!: (PublishJob | UnlistJob)[]
+  @storeNs.app.State('language') language!: string[]
+  @storeNs.project.State('jobCollection') jobCollection!: JobCollection | null;
+  @storeNs.project.Getter('publicationJobs') jobs!: (PublishJob | UnlistJob)[]
 
   workExampleLabel (workExample: CreativeWork): string {
     return workExample.pointer.out(schema.name, { language: this.language }).value || 'Example'

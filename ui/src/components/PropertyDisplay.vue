@@ -6,17 +6,16 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { namespace } from 'vuex-class'
 import { Term } from 'rdf-js'
 import { shrink } from '@/rdf-properties'
-import { CreateIdentifier } from '@/store/modules/project'
-
-const projectNS = namespace('project')
+import { CreateIdentifier } from '../store/modules/project'
+import * as storeNs from '../store/namespace'
 
 @Component
 export default class PropertyDisplay extends Vue {
   @Prop() term!: Term
-  @projectNS.State('createIdentifier') createIdentifier!: CreateIdentifier
+
+  @storeNs.project.State('createIdentifier') createIdentifier!: CreateIdentifier
 
   get value (): string {
     return this.term.value || ''

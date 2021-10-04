@@ -26,10 +26,10 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import { namespace } from 'vuex-class'
 import $rdf from '@rdfjs/data-model'
 import { Term } from 'rdf-js'
 import TermSet from '@rdf-esm/term-set'
+import RdfResource from '@tpluscode/rdfine/RdfResource'
 import { GraphPointer } from 'clownface'
 import { Dataset, Project } from '@cube-creator/model'
 import SidePane from '@/components/SidePane.vue'
@@ -37,17 +37,15 @@ import LoadingBlock from '@/components/LoadingBlock.vue'
 import TermDisplay from '@/components/TermDisplay.vue'
 import CubePreviewValue from '@/components/CubePreviewValue.vue'
 import { api } from '@/api'
-import RdfResource from '@tpluscode/rdfine/RdfResource'
-
-const projectNS = namespace('project')
+import * as storeNs from '../store/namespace'
 
 @Component({
   components: { CubePreviewValue, LoadingBlock, SidePane, TermDisplay },
 })
 export default class ResourcePreview extends Vue {
-  @projectNS.State('project') project!: Project | null
-  @projectNS.State('cubeMetadata') cubeMetadata!: Dataset | null
-  @projectNS.State('selectedLanguage') selectedLanguage!: string
+  @storeNs.project.State('project') project!: Project | null
+  @storeNs.project.State('cubeMetadata') cubeMetadata!: Dataset | null
+  @storeNs.project.State('selectedLanguage') selectedLanguage!: string
 
   get cubeUri (): string | undefined {
     return this.cubeMetadata?.hasPart[0]?.id.value

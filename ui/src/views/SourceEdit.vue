@@ -16,7 +16,6 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import { namespace } from 'vuex-class'
 import { GraphPointer } from 'clownface'
 import { RuntimeOperation } from 'alcaeus'
 import type { Shape } from '@rdfine/shacl'
@@ -25,15 +24,14 @@ import SidePane from '@/components/SidePane.vue'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
-
-const projectNS = namespace('project')
+import * as storeNs from '../store/namespace'
 
 @Component({
   components: { SidePane, HydraOperationForm },
 })
 export default class CubeProjectEditView extends Vue {
-  @projectNS.State('project') project!: Project
-  @projectNS.Getter('findSource') findSource!: (id: string) => CsvSource
+  @storeNs.project.State('project') project!: Project
+  @storeNs.project.Getter('findSource') findSource!: (id: string) => CsvSource
 
   resource: GraphPointer | null = null;
   isSubmitting = false;

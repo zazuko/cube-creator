@@ -10,17 +10,14 @@
 
 <script lang="ts">
 import { Prop, Component, Vue } from 'vue-property-decorator'
-import { namespace } from 'vuex-class'
 import { Store } from 'vuex'
 import { Term } from 'rdf-js'
 import * as $rdf from '@rdf-esm/data-model'
-import store from '@/store'
-import { RootState } from '@/store/types'
 import { expand, shrink } from '@/rdf-properties'
-import { CreateIdentifier } from '@/store/modules/project'
-
-const projectNS = namespace('project')
-const appNS = namespace('app')
+import store from '../../store'
+import { RootState } from '../../store/types'
+import { CreateIdentifier } from '../../store/modules/project'
+import * as storeNs from '../../store/namespace'
 
 @Component
 export default class extends Vue {
@@ -36,8 +33,8 @@ export default class extends Vue {
     // Do nothing
   }
 
-  @projectNS.State((state) => state.createIdentifier) createIdentifier!: CreateIdentifier
-  @appNS.State('commonRDFProperties') rdfProperties!: string[]
+  @storeNs.project.State((state) => state.createIdentifier) createIdentifier!: CreateIdentifier
+  @storeNs.app.State('commonRDFProperties') rdfProperties!: string[]
 
   get textValue (): string {
     if (!this.value) {

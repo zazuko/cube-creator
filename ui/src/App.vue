@@ -35,18 +35,16 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import NavBar from '@/components/NavBar.vue'
-import { namespace } from 'vuex-class'
 import { APIErrorAuthorization } from './api/errors'
-import { Message } from '@/store/modules/app'
-
-const appNS = namespace('app')
+import { Message } from './store/modules/app'
+import * as storeNs from './store/namespace'
 
 @Component({
   components: { NavBar },
 })
 export default class App extends Vue {
-  @appNS.State('loading') isLoading!: boolean
-  @appNS.State('messages') messages!: Message[]
+  @storeNs.app.State('loading') isLoading!: boolean
+  @storeNs.app.State('messages') messages!: Message[]
 
   get release (): string {
     const commit = process.env.VUE_APP_COMMIT?.slice(0, 7) ?? 'dev'
