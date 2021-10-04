@@ -101,6 +101,8 @@ async function main() {
 }
 
 main()
-  .catch(() => {
+  .catch(async (err) => {
+    const { logger } = await import('./lib/log')
+    logger.error(err)
     process.exit(1)
   })
