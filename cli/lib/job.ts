@@ -39,7 +39,7 @@ interface JobStatusUpdate {
   executionUrl: string | undefined
   status: Schema.ActionStatusType
   modified: Date
-  error?: Error
+  error?: Error | string
   apiClient: HydraClient
 }
 
@@ -67,10 +67,13 @@ export async function updateJobStatus({ jobUri, executionUrl, status, error, mod
       job.seeAlso = $rdf.namedNode(executionUrl) as any
     }
     if (error) {
+      const name = error instanceof Error ? error.name : error
+      const description = error instanceof Error ? error.stack : ''
+
       job.error = {
         types: [schema.Thing],
-        name: error.message,
-        description: error.stack,
+        name,
+        description,
       } as any
     }
 
