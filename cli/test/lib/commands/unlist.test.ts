@@ -74,5 +74,13 @@ describe.only('@cube-creator/cli/lib/commands/unlist', function () {
         maxCount: 1,
       }],
     })
+    expect(cubePointer.namedNode(ns.baseCube('2'))).to.matchShape({
+      property: [{
+        path: schema.expires,
+        datatype: xsd.dateTime,
+        minCount: 1,
+        maxCount: 1,
+      }],
+    })
   })
 })

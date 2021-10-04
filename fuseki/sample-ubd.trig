@@ -41,9 +41,13 @@ graph <cube-project/ubd> {
 <https://lindas.admin.ch/foen/cube> void:inDataset <ubd-example> .
 graph <https://lindas.admin.ch/foen/cube> {
   <https://environment.ld.admin.ch/foen/ubd/28/>
-    schema:hasPart <https://environment.ld.admin.ch/foen/ubd/28/1> .
+    schema:hasPart <https://environment.ld.admin.ch/foen/ubd/28/1> ;
+    schema:hasPart <https://environment.ld.admin.ch/foen/ubd/28/2> .
 
-  <https://environment.ld.admin.ch/foen/ubd/28/1> a cube:Cube .
+  <https://environment.ld.admin.ch/foen/ubd/28/1> a cube:Cube ;
+    schema:creativeWorkStatus <https://ld.admin.ch/vocabulary/CreativeWorkStatus/Draft> .
+  <https://environment.ld.admin.ch/foen/ubd/28/2> a cube:Cube ;
+    schema:creativeWorkStatus <https://ld.admin.ch/vocabulary/CreativeWorkStatus/Published> .
 }
 
 <cube-project/ubd/dataset> void:inDataset <ubd-example> .
