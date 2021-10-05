@@ -39,25 +39,6 @@
               <ExternalTerm :resource="job.publishedTo" />
             </b-tag>
           </div>
-
-          <template #actions>
-            <!-- Support for legacy job.query -->
-            <a v-if="job.query" :href="job.query" target="_blank" rel="noopener" class="button is-small">
-              <span>Open in LINDAS</span>
-              <b-icon icon="chevron-right" />
-            </a>
-            <a
-              v-for="workExample in job.workExamples"
-              :key="workExample.id.value"
-              :href="workExample.url.value"
-              target="_blank"
-              rel="noopener"
-              class="button is-small"
-            >
-              <span>{{ workExampleLabel(workExample) }}</span>
-              <b-icon icon="chevron-right" />
-            </a>
-          </template>
         </job-item>
       </div>
       <p v-else class="has-text-grey">
