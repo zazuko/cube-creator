@@ -23,6 +23,7 @@
     "@sentry/node": "^6.2.0",
     "@sentry/tracing": "^6.2.0",
     "@tpluscode/rdf-ns-builders": "^1.0.0",
+    "@tpluscode/rdf-string": "^0.2.24",
     "@tpluscode/rdfine": "^0.5.19",
     "@tpluscode/sparql-builder": "^0.3.15",
     "alcaeus": "^1.0.1",
