@@ -34,8 +34,8 @@ export interface ResourceStore {
   get(id: string | Term | undefined, opts?: GetOptions): Promise<GraphPointer<NamedNode>>
   get(id: string | Term | undefined, opts: { allowMissing: true }): Promise<GraphPointer<NamedNode> | undefined>
 
-  getResource<T extends RdfResourceCore>(id: string | Term | undefined | Link<T>, opts?: GetOptions): Promise<T>
   getResource<T extends RdfResourceCore>(id: string | Term | undefined | Link<T>, opts: { allowMissing: true }): Promise<T> | undefined
+  getResource<T extends RdfResourceCore>(id: string | Term | undefined | Link<T>, opts?: GetOptions): Promise<T>
 
   /**
    * Creates a new resource a puts in the in-memory store
