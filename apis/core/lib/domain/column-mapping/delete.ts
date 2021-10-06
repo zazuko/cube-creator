@@ -22,7 +22,8 @@ export async function deleteColumnMapping({
   tableQueries: { getTableForColumnMapping } = TableQueries,
   columnMappingQueries: { dimensionIsUsedByOtherMapping } = ColumnMappingQueries,
 }: DeleteColumnMappingCommand): Promise<void> {
-  const columnMapping = await store.getResource<ColumnMapping>(resource)
+  const columnMapping = await store.getResource<ColumnMapping>(resource, { allowMissing: true })
+  if (!columnMapping) return
 
   const tableId = await getTableForColumnMapping(columnMapping.id as NamedNode)
   const table = await store.getResource<Table>(tableId)
