@@ -1,19 +1,26 @@
 <template>
   <div v-if="job" class="is-flex is-flex-direction-column gap-4">
-    <header>
-      <h2 class="title is-5">
-        <job-icon :job="job" :show-label="true" />
+    <header class="">
+      <h2 class="title is-5 mb-2 is-flex is-align-items-center gap-2">
         {{ job.name }}
-        <span class="has-text-weight-normal"> - {{ job.created | format-date }}</span>
+        <job-status :job="job" :show-label="true" />
       </h2>
-      <job-status :job="job" :show-label="true" />
+      <p class="has-text-grey-dark">
+        Triggered at {{ job.created | format-date }}
+      </p>
     </header>
     <div class="is-flex gap-1">
-      <a :disabled="!link" :href="link" target="_blank" class="button is-small">
-        <span>Logs</span>
-        <b-icon icon="chevron-right" />
-      </a>
-      <!-- Support for legacy job.query -->
+      <b-tag v-if="job.revision">
+        Version {{ job.revision }}
+      </b-tag>
+      <b-tag v-if="job.status">
+        <ExternalTerm :resource="job.status" />
+      </b-tag>
+      <b-tag v-if="job.publishedTo">
+        <ExternalTerm :resource="job.publishedTo" />
+      </b-tag>
+    </div>
+    <div class="is-flex gap-1">
       <a v-if="job.query" :href="job.query" target="_blank" rel="noopener" class="button is-small">
         <span>Open in LINDAS</span>
         <b-icon icon="chevron-right" />
@@ -27,11 +34,17 @@
         class="button is-small"
       >
         <span>{{ workExampleLabel(workExample) }}</span>
-        <b-icon icon="chevron-right" />
+        <b-icon icon="external-link-alt" />
       </a>
     </div>
-    <div v-show="job.error" class="section has-background-danger-light">
-      {{ job.error }}
+    <div>
+      <a :disabled="!link" :href="link" target="_blank" rel="noopener noreferer" class="button is-small mb-1">
+        <b-icon icon="book" />
+        <span>View full log</span>
+      </a>
+      <pre v-show="error" class="has-background-danger-light">
+        {{ error }}
+      </pre>
     </div>
   </div>
   <loading-block v-else />
@@ -42,13 +55,13 @@ import { Job } from '@cube-creator/model'
 import { CreativeWork } from '@rdfine/schema'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { Component, Vue } from 'vue-property-decorator'
-import JobIcon from '../components/JobIcon.vue'
+import ExternalTerm from '@/components/ExternalTerm.vue'
 import JobStatus from '../components/JobStatus.vue'
 import LoadingBlock from '../components/LoadingBlock.vue'
 import * as storeNs from '../store/namespace'
 
 @Component({
-  components: { JobIcon, JobStatus, LoadingBlock },
+  components: { ExternalTerm, JobStatus, LoadingBlock },
 })
 export default class JobView extends Vue {
   @storeNs.app.State('language') language!: string[]
@@ -66,11 +79,19 @@ export default class JobView extends Vue {
   get link (): string | undefined {
     return this.job?.link?.id.value
   }
+
+  get error (): string | undefined {
+    return this.job?.error?.pointer.out(schema.description).value
+  }
 }
 </script>
 
 <style scoped>
   a[disabled] {
     cursor: not-allowed;
+  }
+
+  div:empty {
+    display: none !important;
   }
 </style>
