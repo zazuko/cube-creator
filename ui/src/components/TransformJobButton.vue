@@ -10,14 +10,21 @@
     >
       {{ operationLabel }}
     </b-button>
-    <b-dropdown v-if="transformJobs.length > 0" position="is-bottom-left" class="control">
+    <b-dropdown
+      v-if="transformJobs.length > 0"
+      position="is-bottom-left"
+      class="control"
+      scrollable
+      max-height="400"
+      trap-focus
+    >
       <b-tooltip label="Previous jobs" slot="trigger" position="is-left">
         <button class="button is-small">
           <job-status :job="transformJobs[0]" />
         </button>
       </b-tooltip>
-      <b-dropdown-item :focusable="false" custom paddingless>
-        <job-item v-for="job in transformJobs" :key="job.clientPath" :job="job" />
+      <b-dropdown-item v-for="job in transformJobs" :key="job.clientPath" has-link paddingless class="is-flex">
+        <job-item :job="job" class="px-3" />
       </b-dropdown-item>
     </b-dropdown>
   </span>
