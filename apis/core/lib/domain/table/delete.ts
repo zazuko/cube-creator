@@ -1,7 +1,6 @@
 import { NamedNode } from 'rdf-js'
 import { ResourceStore } from '../../ResourceStore'
 import { cc } from '@cube-creator/core/namespace'
-import * as DimensionMetadataQueries from '../queries/dimension-metadata'
 import * as TableQueries from '../queries/table'
 import * as ColumnMappingQueries from '../queries/column-mapping'
 import { deleteColumnMapping } from '../column-mapping/delete'
@@ -9,7 +8,6 @@ import { deleteColumnMapping } from '../column-mapping/delete'
 interface DeleteTableCommand {
   resource: NamedNode
   store: ResourceStore
-  dimensionMetadataQueries?: Pick<typeof DimensionMetadataQueries, 'getDimensionMetaDataCollection'>
   tableQueries?: Pick<typeof TableQueries, 'getTableForColumnMapping'>
   columnMappingQueries?: Pick<typeof ColumnMappingQueries, 'dimensionIsUsedByOtherMapping'| 'getReferencingMappingsForTable'>
 }
@@ -17,7 +15,6 @@ interface DeleteTableCommand {
 export async function deleteTable({
   resource: tableTerm,
   store,
-  dimensionMetadataQueries: { getDimensionMetaDataCollection } = DimensionMetadataQueries,
   tableQueries: { getTableForColumnMapping } = TableQueries,
   columnMappingQueries: { dimensionIsUsedByOtherMapping, getReferencingMappingsForTable } = ColumnMappingQueries,
 }: DeleteTableCommand): Promise<void> {
