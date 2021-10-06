@@ -6,6 +6,7 @@ import { ResourceStore } from '../../ResourceStore'
 import { dcterms, rdfs, schema } from '@tpluscode/rdf-ns-builders'
 import { CsvProject, ImportProject, Project } from '@cube-creator/model'
 import type { Organization } from '@rdfine/schema'
+import type { Dictionary } from '@rdfine/prov'
 import { exists } from './queries'
 import { isCsvProject } from '@cube-creator/model/Project'
 import { cubeNamespaceAllowed } from '../organization/query'
@@ -73,6 +74,13 @@ export async function updateProject({
 
     const metadata = await store.getResource(dataset.dimensionMetadata)
     metadata.renameDimensions(previousCube, currentCube)
+
+    for (const dimMetadata of metadata.hasPart) {
+      if (dimMetadata.mappings) {
+        const mappings = await store.getResource<Dictionary>(dimMetadata.mappings)
+        mappings.renameDimension(previousCube, currentCube)
+      }
+    }
   }
 
   return project
