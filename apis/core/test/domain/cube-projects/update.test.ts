@@ -7,8 +7,9 @@ import * as sinon from 'sinon'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import { NamedNode } from 'rdf-js'
 import { ResourceIdentifier } from '@tpluscode/rdfine'
-import { dcterms, rdfs, schema } from '@tpluscode/rdf-ns-builders'
+import { dcterms, prov, rdfs, schema, rdf } from '@tpluscode/rdf-ns-builders/strict'
 import { cc } from '@cube-creator/core/namespace'
+import { namedNode } from '@cube-creator/testing/clownface'
 import { createProject } from '../../../lib/domain/cube-projects/create'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import '../../../lib/domain'
@@ -65,12 +66,20 @@ describe('domain/cube-projects/update', () => {
       datasetBefore.out(schema.hasPart)
         .addOut(rdfs.label, 'Cube')
 
+      const yearDimension = $rdf.namedNode('http://bafu.namespace/cube/year')
+
+      const dimensionMapping = namedNode('year-mapping')
+        .addOut(rdf.type, prov.Dictionary)
+        .addOut(schema.about, yearDimension)
+      store.push(dimensionMapping)
+
       const dataset = await store.getResource<Dataset>(project.out(cc.dataset).term)
       const metadataBefore = await store.get(dataset?.dimensionMetadata.id)
       metadataBefore.addOut(schema.hasPart, dimension => {
         dimension
-          .addOut(schema.about, $rdf.namedNode('http://bafu.namespace/cube/year'))
+          .addOut(schema.about, yearDimension)
           .addOut(rdfs.label, $rdf.literal('Jahr', 'de'))
+          .addOut(cc.dimensionMapping, dimensionMapping)
       })
     })
 
@@ -155,6 +164,17 @@ describe('domain/cube-projects/update', () => {
           },
         })
       })
+
+      it('rebases schema:about of dimension mappings', async () => {
+        const mappingAfter = await store.get('year-mapping')
+
+        expect(mappingAfter).to.matchShape({
+          property: {
+            path: schema.about,
+            hasValue: $rdf.namedNode('http://bar.namespace/cube/year'),
+          },
+        })
+      })
     })
 
     describe('when cube identifier changes', function () {
@@ -211,6 +231,17 @@ describe('domain/cube-projects/update', () => {
                 hasValue: $rdf.literal('Jahr', 'de'),
               }],
             },
+          },
+        })
+      })
+
+      it('rebases schema:about of dimension mappings', async () => {
+        const mappingAfter = await store.get('year-mapping')
+
+        expect(mappingAfter).to.matchShape({
+          property: {
+            path: schema.about,
+            hasValue: $rdf.namedNode('http://bafu.namespace/new/cube/year'),
           },
         })
       })

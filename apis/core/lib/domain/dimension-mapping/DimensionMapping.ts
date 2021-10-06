@@ -13,6 +13,7 @@ interface DictionaryEx {
   replaceEntries(entries: KeyEntityPair[]): Map<Term, Term>
   changeSharedDimension(sharedDimension: NamedNode): void
   addMissingEntries(unmappedValues: Set<Literal>): void
+  renameDimension(oldCube: NamedNode, newCube: NamedNode): void
 }
 
 declare module '@rdfine/prov' {
@@ -97,6 +98,15 @@ export function ProvDictionaryMixinEx<Base extends Constructor<Dictionary>>(Reso
         ...currentEntries,
         ...newEntries,
       ]
+    }
+
+    renameDimension(oldCube: NamedNode, newCube: NamedNode | undefined) {
+      if (!newCube) {
+        return
+      }
+
+      const pattern = new RegExp(`^${oldCube.value}`)
+      this.about = $rdf.namedNode(this.about.value.replace(pattern, newCube.value))
     }
   }
 
