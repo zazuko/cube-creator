@@ -94,12 +94,10 @@
 <script lang="ts">
 import { Prop, Component, Vue } from 'vue-property-decorator'
 import { Term } from 'rdf-js'
-import { namespace } from 'vuex-class'
 import { ColumnMapping, Table } from '@cube-creator/model'
 import HydraOperationButton from './HydraOperationButton.vue'
 import PropertyDisplay from './PropertyDisplay.vue'
-
-const projectNS = namespace('project')
+import * as storeNs from '../store/namespace'
 
 @Component({
   components: { HydraOperationButton, PropertyDisplay },
@@ -107,7 +105,7 @@ const projectNS = namespace('project')
 export default class MapperTable extends Vue {
   @Prop() readonly table!: Table;
 
-  @projectNS.Getter('getTable') getTable!: (uri: Term) => Table
+  @storeNs.project.Getter('getTable') getTable!: (uri: Term) => Table
 
   getTableColor (tableId: Term): string {
     try {

@@ -120,6 +120,11 @@ const getters: GetterTree<ProjectState, RootState> = {
     return jobs.sort(({ created: created1 }, { created: created2 }) => created2.getTime() - created1.getTime())
   },
 
+  findJob (_state, getters) {
+    return (id: string) =>
+      getters.jobs.find(({ clientPath }: { clientPath: string}) => clientPath === id)
+  },
+
   transformJobs (state, getters): Job[] {
     return getters.jobs.filter((job: Job) => job.types.has(cc.TransformJob) || job.types.has(cc.ImportJob))
   },

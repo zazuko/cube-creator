@@ -29,7 +29,6 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import { namespace } from 'vuex-class'
 import { RuntimeOperation } from 'alcaeus'
 import { ColumnMapping, Table, CsvSource } from '@cube-creator/model'
 import { cc } from '@cube-creator/core/namespace'
@@ -39,16 +38,15 @@ import SidePane from '@/components/SidePane.vue'
 import ReferenceColumnMappingForm from '@/components/ReferenceColumnMappingForm.vue'
 import LiteralColumnMappingForm from '@/components/LiteralColumnMappingForm.vue'
 import { Term } from 'rdf-js'
-
-const projectNS = namespace('project')
+import * as storeNs from '../store/namespace'
 
 @Component({
   components: { SidePane, LiteralColumnMappingForm, ReferenceColumnMappingForm },
 })
 export default class CubeProjectEditView extends Vue {
-  @projectNS.Getter('findColumnMapping') findColumnMapping!: (id: string) => ColumnMapping | null
-  @projectNS.Getter('getSource') getSource!: (uri: Term) => CsvSource
-  @projectNS.Getter('tables') tables!: Table[]
+  @storeNs.project.Getter('findColumnMapping') findColumnMapping!: (id: string) => ColumnMapping | null
+  @storeNs.project.Getter('getSource') getSource!: (uri: Term) => CsvSource
+  @storeNs.project.Getter('tables') tables!: Table[]
 
   isSubmitting = false;
   error: ErrorDetails | null = null;

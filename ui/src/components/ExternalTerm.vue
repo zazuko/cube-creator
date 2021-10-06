@@ -9,23 +9,20 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 import TermDisplay from './TermDisplay.vue'
 import { api } from '@/api'
 import { Project } from '@cube-creator/model'
-import { namespace } from 'vuex-class'
 import { DESCRIBE } from '@tpluscode/sparql-builder'
 import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import { GraphPointer } from 'clownface'
 import { Literal, NamedNode, Term } from 'rdf-js'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import TermWithLanguage from '@/components/TermWithLanguage.vue'
-
-const projectNS = namespace('project')
-const apiNS = namespace('api')
+import * as storeNs from '../store/namespace'
 
 @Component({
   components: { TermWithLanguage, TermDisplay }
 })
 export default class extends Vue {
-  @projectNS.State('project') project!: Project | null
-  @apiNS.Getter('publicQueryEndpoint') publicQueryEndpoint!: string | null
+  @storeNs.project.State('project') project!: Project | null
+  @storeNs.api.Getter('publicQueryEndpoint') publicQueryEndpoint!: string | null
 
   @Prop({ required: true }) resource!: RdfResourceCore | NamedNode
   @Prop({ default: 'en' }) selectedLanguage!: string

@@ -37,7 +37,6 @@
 
 <script lang="ts">
 import { Vue, Component, Watch } from 'vue-property-decorator'
-import { namespace } from 'vuex-class'
 import { RuntimeOperation } from 'alcaeus'
 import { GraphPointer } from 'clownface'
 import { Term } from 'rdf-js'
@@ -46,8 +45,7 @@ import SidePane from '@/components/SidePane.vue'
 import ReferenceColumnMappingForm from '@/components/ReferenceColumnMappingForm.vue'
 import LiteralColumnMappingForm from '@/components/LiteralColumnMappingForm.vue'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
-
-const projectNS = namespace('project')
+import * as storeNs from '../store/namespace'
 
 type ColumnMappingType = 'literal' | 'reference'
 
@@ -55,8 +53,8 @@ type ColumnMappingType = 'literal' | 'reference'
   components: { SidePane, LiteralColumnMappingForm, ReferenceColumnMappingForm },
 })
 export default class CubeProjectEditView extends Vue {
-  @projectNS.Getter('findTable') findTable!: (id: string) => Table
-  @projectNS.Getter('getSource') getSource!: (uri: Term) => CsvSource
+  @storeNs.project.Getter('findTable') findTable!: (id: string) => Table
+  @storeNs.project.Getter('getSource') getSource!: (uri: Term) => CsvSource
 
   columnMappingType: ColumnMappingType = 'literal'
   isSubmitting = false;

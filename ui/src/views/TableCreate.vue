@@ -27,7 +27,6 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import { namespace } from 'vuex-class'
 import clownface, { GraphPointer } from 'clownface'
 import { RuntimeOperation } from 'alcaeus'
 import { dataset } from '@rdf-esm/dataset'
@@ -39,16 +38,15 @@ import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 import { SourcesCollection, CsvSource, CsvColumn } from '@cube-creator/model'
-
-const projectNS = namespace('project')
+import * as storeNs from '../store/namespace'
 
 @Component({
   components: { SidePane, HydraOperationForm },
 })
 export default class TableCreateView extends Vue {
-  @projectNS.State('sourcesCollection') sourcesCollection!: SourcesCollection
-  @projectNS.State((state) => state.tableCollection.actions.create) operation!: RuntimeOperation | null
-  @projectNS.Getter('findSource') findSource!: (id: string) => CsvSource | null
+  @storeNs.project.State('sourcesCollection') sourcesCollection!: SourcesCollection
+  @storeNs.project.State((state) => state.tableCollection.actions.create) operation!: RuntimeOperation | null
+  @storeNs.project.Getter('findSource') findSource!: (id: string) => CsvSource | null
 
   resource: GraphPointer | null = clownface({ dataset: dataset() }).namedNode('')
   shape: Shape | null = null

@@ -15,21 +15,19 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { namespace } from 'vuex-class'
 import type { Dataset, DimensionMetadata, DimensionMetadataCollection } from '@cube-creator/model'
 import CubePreview from '@/components/CubePreview.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
-
-const projectNS = namespace('project')
+import * as storeNs from '../store/namespace'
 
 @Component({
   components: { CubePreview, LoadingBlock },
 })
 export default class CubeDesignerView extends Vue {
-  @projectNS.State('cubeMetadata') cubeMetadata!: Dataset | null
-  @projectNS.State('selectedLanguage') selectedLanguage!: string
-  @projectNS.State('dimensionMetadataCollection') dimensionMetadataCollection!: DimensionMetadataCollection | null
-  @projectNS.Getter('dimensions') dimensions!: DimensionMetadata[]
+  @storeNs.project.State('cubeMetadata') cubeMetadata!: Dataset | null
+  @storeNs.project.State('selectedLanguage') selectedLanguage!: string
+  @storeNs.project.State('dimensionMetadataCollection') dimensionMetadataCollection!: DimensionMetadataCollection | null
+  @storeNs.project.Getter('dimensions') dimensions!: DimensionMetadata[]
 
   async mounted (): Promise<void> {
     await this.$store.dispatch('project/fetchCubeMetadata')

@@ -22,7 +22,6 @@ import { Component, Vue } from 'vue-property-decorator'
 import { RuntimeOperation } from 'alcaeus'
 import { Shape } from '@rdfine/shacl'
 import { GraphPointer } from 'clownface'
-import { namespace } from 'vuex-class'
 import { Dataset, DimensionMetadata } from '@cube-creator/model'
 import SidePane from '@/components/SidePane.vue'
 import HydraOperationFormWithRaw from '@/components/HydraOperationFormWithRaw.vue'
@@ -30,15 +29,14 @@ import TermDisplay from '@/components/TermDisplay.vue'
 import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 import { conciseBoundedDescription } from '@/graph'
-
-const projectNS = namespace('project')
+import * as storeNs from '../store/namespace'
 
 @Component({
   components: { SidePane, HydraOperationFormWithRaw, TermDisplay },
 })
 export default class extends Vue {
-  @projectNS.State('cubeMetadata') cubeMetadata!: Dataset | null
-  @projectNS.Getter('findDimension') findDimension!: (id: string) => DimensionMetadata
+  @storeNs.project.State('cubeMetadata') cubeMetadata!: Dataset | null
+  @storeNs.project.Getter('findDimension') findDimension!: (id: string) => DimensionMetadata
 
   resource: GraphPointer | null = null;
   shape: Shape | null = null;

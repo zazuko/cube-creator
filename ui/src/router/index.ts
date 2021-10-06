@@ -13,6 +13,7 @@ import CubeProjectEdit from '@/views/CubeProjectEdit.vue'
 import CSVMapping from '@/views/CSVMapping.vue'
 import CSVUpload from '@/views/CSVUpload.vue'
 import CSVReplace from '@/views/CSVReplace.vue'
+import Job from '@/views/Job.vue'
 import SourceEdit from '@/views/SourceEdit.vue'
 import TableCreate from '@/views/TableCreate.vue'
 import TableEdit from '@/views/TableEdit.vue'
@@ -144,6 +145,11 @@ const routes: Array<RouteConfig> = [
             path: 'publication',
             name: 'Publication',
             component: Publication,
+          },
+          {
+            path: 'job/:jobId',
+            name: 'Job',
+            component: Job,
           },
         ],
       },

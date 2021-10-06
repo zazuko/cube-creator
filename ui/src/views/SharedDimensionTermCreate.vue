@@ -16,7 +16,6 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { namespace } from 'vuex-class'
 import { RuntimeOperation } from 'alcaeus'
 import clownface, { GraphPointer } from 'clownface'
 import type { Shape } from '@rdfine/shacl'
@@ -25,15 +24,14 @@ import SidePane from '@/components/SidePane.vue'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
-import { SharedDimension } from '@/store/types'
-
-const sharedDimensionNS = namespace('sharedDimension')
+import * as storeNs from '../store/namespace'
+import { SharedDimension } from '../store/types'
 
 @Component({
   components: { SidePane, HydraOperationForm },
 })
 export default class extends Vue {
-  @sharedDimensionNS.State('dimension') dimension!: SharedDimension
+  @storeNs.sharedDimension.State('dimension') dimension!: SharedDimension
 
   resource: GraphPointer | null = Object.freeze(clownface({ dataset: dataset() }).namedNode(''));
   error: ErrorDetails | null = null;

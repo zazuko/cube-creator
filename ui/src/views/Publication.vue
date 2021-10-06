@@ -39,25 +39,6 @@
               <ExternalTerm :resource="job.publishedTo" />
             </b-tag>
           </div>
-
-          <template #actions>
-            <!-- Support for legacy job.query -->
-            <a v-if="job.query" :href="job.query" target="_blank" rel="noopener" class="button is-small">
-              <span>Open in LINDAS</span>
-              <b-icon icon="chevron-right" />
-            </a>
-            <a
-              v-for="workExample in job.workExamples"
-              :key="workExample.id.value"
-              :href="workExample.url.value"
-              target="_blank"
-              rel="noopener"
-              class="button is-small"
-            >
-              <span>{{ workExampleLabel(workExample) }}</span>
-              <b-icon icon="chevron-right" />
-            </a>
-          </template>
         </job-item>
       </div>
       <p v-else class="has-text-grey">
@@ -70,7 +51,6 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { namespace } from 'vuex-class'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import JobForm from '@/components/JobForm.vue'
 import JobItem from '@/components/JobItem.vue'
@@ -78,17 +58,15 @@ import ExternalTerm from '@/components/ExternalTerm.vue'
 import { JobCollection, PublishJob, UnlistJob } from '@cube-creator/model'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { CreativeWork } from '@rdfine/schema'
-
-const appNS = namespace('app')
-const projectNS = namespace('project')
+import * as storeNs from '../store/namespace'
 
 @Component({
   components: { ExternalTerm, LoadingBlock, JobForm, JobItem },
 })
 export default class PublicationView extends Vue {
-  @appNS.State('language') language!: string[]
-  @projectNS.State('jobCollection') jobCollection!: JobCollection | null;
-  @projectNS.Getter('publicationJobs') jobs!: (PublishJob | UnlistJob)[]
+  @storeNs.app.State('language') language!: string[]
+  @storeNs.project.State('jobCollection') jobCollection!: JobCollection | null;
+  @storeNs.project.Getter('publicationJobs') jobs!: (PublishJob | UnlistJob)[]
 
   workExampleLabel (workExample: CreativeWork): string {
     return workExample.pointer.out(schema.name, { language: this.language }).value || 'Example'

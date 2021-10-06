@@ -50,21 +50,19 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { namespace } from 'vuex-class'
 import { Job, JobCollection, Project } from '@cube-creator/model'
 import PageContent from '@/components/PageContent.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import TransformJobButton from '@/components/TransformJobButton.vue'
-
-const projectNS = namespace('project')
+import * as storeNs from '../store/namespace'
 
 @Component({
   components: { PageContent, LoadingBlock, TransformJobButton },
 })
 export default class CubeProjectView extends Vue {
-  @projectNS.State('project') project!: Project | null;
-  @projectNS.State('jobCollection') jobCollection!: JobCollection | null;
-  @projectNS.Getter('transformJobs') transformJobs!: Job[];
+  @storeNs.project.State('project') project!: Project | null;
+  @storeNs.project.State('jobCollection') jobCollection!: JobCollection | null;
+  @storeNs.project.Getter('transformJobs') transformJobs!: Job[];
 
   poller: number | null = null
 

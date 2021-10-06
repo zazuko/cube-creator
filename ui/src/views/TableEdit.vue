@@ -16,7 +16,6 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import { namespace } from 'vuex-class'
 import { GraphPointer } from 'clownface'
 import { RuntimeOperation } from 'alcaeus'
 import { Shape } from '@rdfine/shacl'
@@ -26,14 +25,13 @@ import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 import { Table } from '@cube-creator/model'
 import { cc } from '@cube-creator/core/namespace'
-
-const projectNS = namespace('project')
+import * as storeNs from '../store/namespace'
 
 @Component({
   components: { SidePane, HydraOperationForm },
 })
 export default class TableCreateView extends Vue {
-  @projectNS.Getter('findTable') findTable!: (id: string) => Table | null
+  @storeNs.project.Getter('findTable') findTable!: (id: string) => Table | null
 
   resource: GraphPointer | null = null
   shape: Shape | null = null

@@ -57,7 +57,6 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { namespace } from 'vuex-class'
 import { RuntimeOperation } from 'alcaeus'
 import clownface, { AnyPointer } from 'clownface'
 import { rdf, sh } from '@tpluscode/rdf-ns-builders'
@@ -75,8 +74,7 @@ import { ErrorDetails } from '@/api/errors'
 import { Link } from '@cube-creator/model/lib/Link'
 import { api } from '@/api'
 import { Shape } from '@rdfine/shacl'
-
-const projectNS = namespace('project')
+import * as storeNs from '../store/namespace'
 
 interface FormData {
   targetProperty: Term | null
@@ -102,10 +100,10 @@ export default class extends Vue {
 
   shape: Shape | null = null
 
-  @projectNS.Getter('findTable') findTable!: (id: string) => Table
-  @projectNS.Getter('getTable') getTable!: (id: Term) => Table
-  @projectNS.Getter('getSource') getSource!: (id: Term) => CsvSource
-  @projectNS.Getter('tables') tables!: Table[]
+  @storeNs.project.Getter('findTable') findTable!: (id: string) => Table
+  @storeNs.project.Getter('getTable') getTable!: (id: Term) => Table
+  @storeNs.project.Getter('getSource') getSource!: (id: Term) => CsvSource
+  @storeNs.project.Getter('tables') tables!: Table[]
 
   data: FormData = {
     targetProperty: null,

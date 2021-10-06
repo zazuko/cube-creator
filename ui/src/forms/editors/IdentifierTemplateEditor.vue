@@ -21,11 +21,9 @@ import { CsvSource } from '@cube-creator/model'
 import { Term } from 'rdf-js'
 import { Prop, Component, Vue, Watch } from 'vue-property-decorator'
 import { Store } from 'vuex'
-import { namespace } from 'vuex-class'
-import { RootState } from '@/store/types'
-import store from '@/store'
-
-const projectNS = namespace('project')
+import { RootState } from '../../store/types'
+import store from '../../store'
+import * as storeNs from '../../store/namespace'
 
 @Component
 export default class extends Vue {
@@ -36,7 +34,7 @@ export default class extends Vue {
   @Prop() sourceId?: Term
   @Prop({ default: true }) autoPrefill!: boolean // TODO: Should only be true on table creation
 
-  @projectNS.Getter('getSource') getSource!: (id: Term) => CsvSource
+  @storeNs.project.Getter('getSource') getSource!: (id: Term) => CsvSource
 
   wasModified = !!this.value
   wasValidated = false

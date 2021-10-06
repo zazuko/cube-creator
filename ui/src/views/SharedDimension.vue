@@ -93,7 +93,6 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import { namespace } from 'vuex-class'
 import HydraOperationButton from '@/components/HydraOperationButton.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import PageContent from '@/components/PageContent.vue'
@@ -101,9 +100,8 @@ import SharedDimensionTags from '@/components/SharedDimensionTags.vue'
 import TermDisplay from '@/components/TermDisplay.vue'
 import TermWithLanguage from '@/components/TermWithLanguage.vue'
 import DownloadButton from '@/components/DownloadButton.vue'
-import { SharedDimension, SharedDimensionTerm } from '@/store/types'
-
-const sharedDimensionNS = namespace('sharedDimension')
+import * as storeNs from '../store/namespace'
+import { SharedDimension, SharedDimensionTerm } from '../store/types'
 
 @Component({
   components: {
@@ -117,8 +115,8 @@ const sharedDimensionNS = namespace('sharedDimension')
   },
 })
 export default class extends Vue {
-  @sharedDimensionNS.State('dimension') dimension!: SharedDimension | null
-  @sharedDimensionNS.State('terms') terms!: SharedDimensionTerm[] | null
+  @storeNs.sharedDimension.State('dimension') dimension!: SharedDimension | null
+  @storeNs.sharedDimension.State('terms') terms!: SharedDimensionTerm[] | null
 
   mounted (): void {
     const id = this.$route.params.id

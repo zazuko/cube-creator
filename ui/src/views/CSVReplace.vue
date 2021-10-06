@@ -31,7 +31,6 @@
 import RdfResourceImpl from '@tpluscode/rdfine'
 import { RuntimeOperation } from 'alcaeus'
 import { Component, Vue } from 'vue-property-decorator'
-import { namespace } from 'vuex-class'
 import { GraphPointer } from 'clownface'
 
 import { CsvMapping, CsvSource } from '@cube-creator/model'
@@ -39,15 +38,14 @@ import { CsvMapping, CsvSource } from '@cube-creator/model'
 import { api } from '@/api'
 import CsvUploadForm from '@/components/CsvUploadForm.vue'
 import SidePane from '@/components/SidePane.vue'
-
-const projectNS = namespace('project')
+import * as storeNs from '../store/namespace'
 
 @Component({
   components: { CsvUploadForm, SidePane },
 })
 export default class CSVReplaceView extends Vue {
-  @projectNS.State('csvMapping') mapping!: CsvMapping
-  @projectNS.Getter('findSource') findSource!: (id: string) => CsvSource
+  @storeNs.project.State('csvMapping') mapping!: CsvMapping
+  @storeNs.project.Getter('findSource') findSource!: (id: string) => CsvSource
 
   error: string | null = null
   isLoading = false

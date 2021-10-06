@@ -13,7 +13,7 @@
     <b-dropdown v-if="transformJobs.length > 0" position="is-bottom-left" class="control">
       <b-tooltip label="Previous jobs" slot="trigger" position="is-left">
         <button class="button is-small">
-          <job-icon :job="transformJobs[0]" />
+          <job-status :job="transformJobs[0]" />
         </button>
       </b-tooltip>
       <b-dropdown-item :focusable="false" custom paddingless>
@@ -31,10 +31,10 @@ import { RdfResource, RuntimeOperation } from 'alcaeus'
 import clownface from 'clownface'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import JobItem from './JobItem.vue'
-import JobIcon from './JobIcon.vue'
+import JobStatus from './JobStatus.vue'
 
 @Component({
-  components: { JobItem, JobIcon },
+  components: { JobItem, JobStatus },
 })
 export default class TransformJobButton extends Vue {
   @Prop({ required: true }) jobCollection!: JobCollection
