@@ -1,5 +1,12 @@
 # @cube-creator/core-api
 
+## 1.4.4
+
+### Patch Changes
+
+- 8a907d47: Deleting project was impossible if some resources were missing (fixes #660)
+- b10b03a9: Projects with dimension mappings would fail to transform after changing organization or cube identifier (fixes #870, fixes #879)
+
 ## 1.4.3
 
 ### Patch Changes
