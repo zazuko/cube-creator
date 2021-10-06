@@ -182,11 +182,4 @@ describe('domain/column-mapping/delete', () => {
     expect(observationTable.out(cc.columnMapping).terms).to.have.length(columnMappingsCount - 1)
     expect(dimensionMetadataCollection.node($rdf.namedNode('myDimension')).out().values).to.have.length(dimensionMetadataCount)
   })
-
-  it('throw if column mapping does not exist', async () => {
-    const resource = $rdf.namedNode('columnMapping-foo')
-    const promise = deleteColumnMapping({ resource, store, tableQueries, columnMappingQueries })
-
-    await expect(promise).to.have.rejected
-  })
 })
