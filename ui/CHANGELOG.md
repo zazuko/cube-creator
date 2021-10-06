@@ -1,5 +1,11 @@
 # @cube-creator/ui
 
+## 1.5.3
+
+### Patch Changes
+
+- c0044cbe: Add simple details page for jobs
+
 ## 1.5.2
 
 ### Patch Changes

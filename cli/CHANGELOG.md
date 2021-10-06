@@ -1,5 +1,11 @@
 # @cube-creator/cli
 
+## 1.6.2
+
+### Patch Changes
+
+- 1717918b: Improve datatype validation message
+
 ## 1.6.1
 
 ### Patch Changes
