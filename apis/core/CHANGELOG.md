@@ -1,5 +1,11 @@
 # @cube-creator/core-api
 
+## 1.4.3
+
+### Patch Changes
+
+- 68f9b917: Drop legacy cube statuses
+
 ## 1.4.2
 
 ### Patch Changes
