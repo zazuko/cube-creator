@@ -1,10 +1,8 @@
 import dotenv from 'dotenv'
 import path from 'path'
-import debug from 'debug'
 import { setupAuthentication } from '../../lib/auth'
 import { Hydra } from 'alcaeus/node'
-
-export const logger = debug('tests')
+import { logger } from './logger'
 
 export function setupEnv() {
   dotenv.config({

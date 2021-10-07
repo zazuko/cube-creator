@@ -8,14 +8,14 @@
 
 <#setGraph>
   a                  :Step ;
-  code:implementedBy [ a         code:EcmaScript ;
-                       code:link <node:barnard59-base#setGraph> ] ;
+  code:implementedBy [ a         code:EcmaScriptModule ;
+                       code:link <node:barnard59-rdf/setGraph.js#default> ] ;
   code:arguments     ( "graph"^^:VariableName ) .
 
 _:upload
   a                  :Step ;
-  code:implementedBy [ a         code:EcmaScript ;
-                       code:link <node:barnard59-graph-store#put> ] ;
+  code:implementedBy [ a         code:EcmaScriptModule ;
+                       code:link <node:barnard59-graph-store/put.js#default> ] ;
   code:arguments     [ code:name  "endpoint" ;
                        code:value "graph-store-endpoint"^^:VariableName ] ;
   code:arguments     [ code:name  "user" ;

@@ -4,3 +4,4 @@ node_modules/
 dist/
 *.Dockerfile
 minio/
+cli/output/

@@ -6,8 +6,8 @@
   a :Step ;
   code:implementedBy
     [
-      code:link <node:barnard59-base#map> ;
-      a code:EcmaScript ;
+      code:link <node:barnard59-base/map.js#default> ;
+      a code:EcmaScriptModule ;
     ] ;
   code:arguments
     (

@@ -10,8 +10,9 @@ import { Link } from './lib/Link'
 import { initializer } from './lib/initializer'
 import { CsvMapping } from './CsvMapping'
 import { childResource } from './lib/resourceIdentifiers'
+import { DatasetCore } from 'rdf-js'
 
-export interface Table extends RdfResource {
+export interface Table<D extends DatasetCore = DatasetCore> extends RdfResource<D> {
   csvw: Link<Csvw.Table>
   csvSource?: Link<CsvSource>
   name: string

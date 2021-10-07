@@ -10,6 +10,7 @@ import { Dataset, PublishJob } from '@cube-creator/model'
 import StreamClient from 'sparql-http-client/StreamClient'
 import { Draft } from '@cube-creator/model/Cube'
 import { loadDataset } from './metadata'
+import { tracer } from './otel/tracer'
 
 export const getObservationSetId = ({ dataset }: { dataset: DatasetCore }) => {
   const cubeId = [...dataset.match(null, cc.cube)][0].object.value
@@ -25,7 +26,7 @@ export function getCubeId({ ptr }: { ptr: GraphPointer }) {
   return ptr.out(cc.cube).term || ''
 }
 
-export function expirePreviousVersions(this: Pick<Context, 'variables' | 'log'>) {
+export function expirePreviousVersions(this: Pick<Context, 'variables' | 'logger'>) {
   const timestamp = this.variables.get('timestamp')
   const baseCube = $rdf.namedNode(this.variables.get('namespace'))
   const client = new StreamClient({
@@ -62,20 +63,35 @@ export function expirePreviousVersions(this: Pick<Context, 'variables' | 'log'>)
     .execute(client.query)
 }
 
-export async function injectRevision(this: Pick<Context, 'variables' | 'log'>, jobUri?: string) {
+export async function injectRevision(this: Pick<Context, 'variables' | 'logger'>, jobUri?: string) {
   let cubeNamespace = this.variables.get('namespace')
   const revision = this.variables.get('revision')
   const versionedDimensions = this.variables.get('versionedDimensions')
-  let dataset: Dataset | undefined
-  if (jobUri) {
-    ({ dataset } = await loadDataset(jobUri, this.variables.get('apiClient')))
+
+  const attributes = {
+    cubeNamespace,
+    revision,
+    jobUri,
   }
 
-  this.log.info(`Cube revision ${revision}`)
+  const dataset = await tracer.startActiveSpan('injectRevision#setup', { attributes }, async span => {
+    try {
+      let dataset: Dataset | undefined
+      if (jobUri) {
+        ({ dataset } = await loadDataset(jobUri, this.variables.get('apiClient')))
+      }
 
-  if (cubeNamespace.endsWith('/')) {
-    cubeNamespace = cubeNamespace.slice(0, -1)
-  }
+      this.logger.info(`Cube revision ${revision}`)
+
+      if (cubeNamespace.endsWith('/')) {
+        cubeNamespace = cubeNamespace.slice(0, -1)
+      }
+
+      return dataset
+    } finally {
+      span.end()
+    }
+  })
 
   function rebase<T extends Term>(term: T, rev = revision): T {
     if (term.termType === 'NamedNode' && term.value.startsWith(cubeNamespace)) {

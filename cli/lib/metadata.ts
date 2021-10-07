@@ -10,6 +10,7 @@ import type { Context } from 'barnard59-core/lib/Pipeline'
 import { loadDimensionMapping } from './output-mapper'
 import TermMap from '@rdfjs/term-map'
 import { Published } from '@cube-creator/model/Cube'
+import { tracer } from './otel/tracer'
 
 export async function loadDataset(jobUri: string, Hydra: HydraClient) {
   const jobResource = await Hydra.loadResource<PublishJob>(jobUri)
@@ -46,13 +47,28 @@ export async function injectMetadata(this: Context, jobUri: string) {
   const baseCube = $rdf.namedNode(this.variables.get('namespace'))
   const revision = $rdf.literal(this.variables.get('revision').toString(), xsd.integer)
   const cubeIdentifier = this.variables.get('cubeIdentifier')
-  const { dataset, maintainer } = await loadDataset(jobUri, Hydra)
-  const datasetTriples = dataset.pointer.dataset.match(null, null, null, dataset.id)
   const timestamp = this.variables.get('timestamp')
   const versionedDimensions = this.variables.get('versionedDimensions')
   const job = this.variables.get('publish-job')
 
+  const attributes = {
+    baseCube: baseCube.value,
+    revision: revision.value,
+    cubeIdentifier,
+    timestamp: timestamp.value,
+  }
+  const { dataset, maintainer } = await tracer.startActiveSpan('injectMetadata#setup', { attributes }, async span => {
+    try {
+      return await loadDataset(jobUri, Hydra)
+    } finally {
+      span.end()
+    }
+  })
+  const datasetTriples = dataset.pointer.dataset.match(null, null, null, dataset.id)
+
   const propertyShapes = new TermMap<QuadSubject, QuadObject>()
+
+  const span = tracer.startSpan('injectMetadata#stream', { attributes })
 
   return obj(async function (quad: Quad, _, callback) {
     const visited = new TermSet()
@@ -68,72 +84,79 @@ export async function injectMetadata(this: Context, jobUri: string) {
 
     // Cube Metadata
     if (rdf.type.equals(quad.predicate) && quad.object.equals(cube.Cube)) {
-      this.push($rdf.quad(quad.subject, schema.version, revision))
-      this.push($rdf.quad(quad.subject, schema.dateModified, timestamp))
-      this.push($rdf.quad(quad.subject, dcterms.modified, timestamp))
-      this.push($rdf.quad(quad.subject, dcterms.identifier, $rdf.literal(cubeIdentifier)))
-      this.push($rdf.quad(baseCube, schema.hasPart, quad.subject))
-      this.push($rdf.quad(baseCube, rdf.type, schema.CreativeWork))
+      tracer.startActiveSpan('injectMetadata#forCube', { attributes: { cube: quad.subject.value } }, span => {
+        this.push($rdf.quad(quad.subject, schema.version, revision))
+        this.push($rdf.quad(quad.subject, schema.dateModified, timestamp))
+        this.push($rdf.quad(quad.subject, dcterms.modified, timestamp))
+        this.push($rdf.quad(quad.subject, dcterms.identifier, $rdf.literal(cubeIdentifier)))
+        this.push($rdf.quad(baseCube, schema.hasPart, quad.subject))
+        this.push($rdf.quad(baseCube, rdf.type, schema.CreativeWork))
 
-      // Set LINDAS query interface and sparql endpoint
-      this.push($rdf.quad(quad.subject, dcat.accessURL, maintainer.accessURL))
-      this.push($rdf.quad(quad.subject, _void.sparqlEndpoint, maintainer.sparqlEndpoint))
+        // Set LINDAS query interface and sparql endpoint
+        this.push($rdf.quad(quad.subject, dcat.accessURL, maintainer.accessURL))
+        this.push($rdf.quad(quad.subject, _void.sparqlEndpoint, maintainer.sparqlEndpoint))
 
-      if (revision.value === '1') {
-        this.push($rdf.quad(quad.subject, schema.datePublished, timestamp))
-      }
+        if (revision.value === '1') {
+          this.push($rdf.quad(quad.subject, schema.datePublished, timestamp))
+        }
 
-      // add </.well-known/void> link to cubes with published status
-      if (job.status?.equals(Published) && maintainer.dataset) {
-        this.push($rdf.quad(maintainer.dataset, schema.dataset, quad.subject))
-      }
+        // add </.well-known/void> link to cubes with published status
+        if (job.status?.equals(Published) && maintainer.dataset) {
+          this.push($rdf.quad(maintainer.dataset, schema.dataset, quad.subject))
+        }
 
-      // Copy workExamples from job
-      const predicatesToCopy = [rdf.type, schema.name, schema.url, schema.encodingFormat]
-      job.workExamples.forEach(jobWorkExample => {
-        const workExample = $rdf.blankNode()
-        this.push($rdf.quad(quad.subject, schema.workExample, workExample))
-        predicatesToCopy.forEach(predicate => {
-          jobWorkExample.pointer.out(predicate).forEach(object => {
-            this.push($rdf.quad(workExample, predicate, object.term as NamedNode | Literal))
+        // Copy workExamples from job
+        const predicatesToCopy = [rdf.type, schema.name, schema.url, schema.encodingFormat]
+        job.workExamples.forEach(jobWorkExample => {
+          const workExample = $rdf.blankNode()
+          this.push($rdf.quad(quad.subject, schema.workExample, workExample))
+          predicatesToCopy.forEach(predicate => {
+            jobWorkExample.pointer.out(predicate).forEach(object => {
+              this.push($rdf.quad(workExample, predicate, object.term as NamedNode | Literal))
+            })
           })
-        })
-      });
+        });
 
-      [...datasetTriples.match(dataset.id)]
-        .filter(q => !q.predicate.equals(schema.hasPart) && !q.predicate.equals(cc.dimensionMetadata))
-        .forEach(metadata => {
-          this.push($rdf.triple(quad.subject, metadata.predicate, metadata.object))
-          visited.add(quad.subject)
-          copyChildren(metadata.object)
-        })
+        [...datasetTriples.match(dataset.id)]
+          .filter(q => !q.predicate.equals(schema.hasPart) && !q.predicate.equals(cc.dimensionMetadata))
+          .forEach(metadata => {
+            this.push($rdf.triple(quad.subject, metadata.predicate, metadata.object))
+            visited.add(quad.subject)
+            copyChildren(metadata.object)
+          })
+
+        span.end()
+      })
     }
 
     // Dimension Metadata
     if (quad.predicate.equals(sh.path)) {
-      const propertyShape = quad.subject
-      const dimensions = [...datasetTriples.match(null, schema.about, quad.object)]
+      await tracer.startActiveSpan('injectMetadata#forCube', { attributes: { dimension: quad.object.value } }, async span => {
+        const propertyShape = quad.subject
+        const dimensions = [...datasetTriples.match(null, schema.about, quad.object)]
 
-      propertyShapes.set(propertyShape, quad.object)
+        propertyShapes.set(propertyShape, quad.object)
 
-      for (const dim of dimensions) {
-        const metadata = [...datasetTriples.match(dim.subject)]
-          .filter(c => !c.predicate.equals(schema.about))
+        for (const dim of dimensions) {
+          const metadata = [...datasetTriples.match(dim.subject)]
+            .filter(c => !c.predicate.equals(schema.about))
 
-        for (const meta of metadata) {
-          this.push($rdf.triple(propertyShape, meta.predicate, meta.object))
-          visited.add(propertyShape)
-          copyChildren(meta.object)
+          for (const meta of metadata) {
+            this.push($rdf.triple(propertyShape, meta.predicate, meta.object))
+            visited.add(propertyShape)
+            copyChildren(meta.object)
 
-          if (meta.predicate.equals(cc.dimensionMapping)) {
-            const mapping = await loadDimensionMapping(meta.object.value, Hydra)
+            if (meta.predicate.equals(cc.dimensionMapping)) {
+              const mapping = await loadDimensionMapping(meta.object.value, Hydra)
 
-            if (mapping?.has(cc.sharedDimension).term) {
-              this.push($rdf.triple(propertyShape, rdf.type, cube.SharedDimension))
+              if (mapping?.has(cc.sharedDimension).term) {
+                this.push($rdf.triple(propertyShape, rdf.type, cube.SharedDimension))
+              }
             }
           }
         }
-      }
+        span.end()
+      })
     }
 
     if (quad.predicate.equals(cube.observedBy)) {
@@ -150,6 +173,8 @@ export async function injectMetadata(this: Context, jobUri: string) {
       }
     }
 
+    span.addEvent('added property versions')
+
     callback()
-  })
+  }).on('end', span.end.bind(span)).on('error', span.end.bind(span))
 }

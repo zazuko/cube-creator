@@ -4,16 +4,10 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 
 <#Main> a :Pipeline ;
-  :steps [ :stepList ( <#loadMetadata> <#doTransform> <#validate> <#streamOutputStep> ) ] .
+  :steps [ :stepList ( <#loadMetadata> <#doTransform> <#validate> <#StreamOutput> ) ] .
 
 <#StreamOutput>
   a :Pipeline, :WritableObjectMode .
-
-<#streamOutputStep>
-  a                  :Step ;
-  code:implementedBy [ code:link <file:../lib/pipeline#asStep> ;
-                       a         code:EcmaScript ] ;
-  code:arguments     ( <#StreamOutput> ) .
 
 # ------------------------------
 #
@@ -48,13 +42,9 @@
 
 <#doTransform>
   a                  :Step ;
-  code:implementedBy [ code:link <node:barnard59-core#forEach> ;
-                       a         code:EcmaScript ] ;
-  code:arguments     ( <#SelectAndRunTransformation>
-                       """(p, { csvwResource, isObservationTable }) => {
-                            p.variables.set('csvw', csvwResource)
-                            p.variables.set('isObservationTable', isObservationTable)
-                           }"""^^code:EcmaScript ) .
+  code:implementedBy [ code:link <node:barnard59-base/forEach.js#default> ;
+                       a         code:EcmaScriptModule ] ;
+  code:arguments     ( <#SelectAndRunTransformation> "transformed" ) .
 
 
 # ------------------------------
@@ -66,7 +56,7 @@
 <#TransformObservationCsv>
   a      :Pipeline, :ReadableObjectMode ;
   :steps [ :stepList (
-                       <#loadCsvStep>
+                       <#LoadCsv>
                        <#parse>
                        <#substituteUndefined>
                        <#filterObservationTable>
@@ -82,7 +72,7 @@
 <#TransformCsv>
   a      :Pipeline, :ReadableObjectMode ;
   :steps [ :stepList (
-                       <#loadCsvStep>
+                       <#LoadCsv>
                        <#parse>
                        <#filterNonObservationTable>
                        <#setGraph>
@@ -91,22 +81,16 @@
 <#LoadCsv>
   a :Pipeline, :ReadableObjectMode .
 
-<#loadCsvStep>
-  a                  :Step ;
-  code:implementedBy [ code:link <file:../lib/pipeline#asStep> ;
-                       a         code:EcmaScript ] ;
-  code:arguments     ( <#LoadCsv> ) .
-
 <#parse>
   a                  :Step ;
-  code:implementedBy [ code:link <node:barnard59-formats#csvw.parse> ;
-                       a         code:EcmaScript ] ;
+  code:implementedBy [ code:link <node:barnard59-formats/csvw.js#parse> ;
+                       a         code:EcmaScriptModule ] ;
   code:arguments     ( <#parseMetadata> ) .
 
 <#substituteUndefined>
   a                  :Step ;
-  code:implementedBy [ code:link <node:barnard59-base#map> ;
-                       a         code:EcmaScript ] ;
+  code:implementedBy [ code:link <node:barnard59-base/map.js#default> ;
+                       a         code:EcmaScriptModule ] ;
   code:arguments     ( [ code:link <file:../lib/output-mapper#substituteUndefined> ;
                          a         code:EcmaScript ] ) .
 
@@ -117,8 +101,7 @@
 <#getCsvwGraph>
   a                  :Step ;
   code:implementedBy [ code:link <file:../lib/csv#getCsvwTriples> ;
-                       a         code:EcmaScript ] ;
-  code:arguments     ( "csvw"^^:VariableName ) .
+                       a         code:EcmaScript ] .
 
 <#mapDimensions>
   a :Step ;
@@ -127,15 +110,15 @@
 
 <#filterNonObservationTable>
   a                  :Step ;
-  code:implementedBy [ a         code:EcmaScript ;
-                       code:link <node:barnard59-base#filter> ] ;
+  code:implementedBy [ a         code:EcmaScriptModule ;
+                       code:link <node:barnard59-base/filter.js#default> ] ;
   code:arguments     ( [ code:link <file:../lib/output-filter#keepCsvwDescribes> ;
                          a         code:EcmaScript ] ) .
 
 <#filterObservationTable>
   a                  :Step ;
-  code:implementedBy [ a         code:EcmaScript ;
-                       code:link <node:barnard59-base#filter> ] ;
+  code:implementedBy [ a         code:EcmaScriptModule ;
+                       code:link <node:barnard59-base/filter.js#default> ] ;
   code:arguments     ( [ code:link <file:../lib/output-filter#excludeAllCsvw> ;
                          a         code:EcmaScript ] ) .
 
@@ -145,7 +128,7 @@
                      ] .
 
 <#toObservation> a :Step;
-  code:implementedBy [ a code:EcmaScript;
+  code:implementedBy [ a code:EcmaScriptModule;
                        code:link <node:barnard59-rdf/cube.js#toObservation>
                      ] ;
   code:arguments [
@@ -177,13 +160,13 @@
                  ] .
 
 <#flatten> a :Step;
-  code:implementedBy [ a code:EcmaScript;
-                       code:link <node:barnard59-base#flatten>;
+  code:implementedBy [ a code:EcmaScriptModule;
+                       code:link <node:barnard59-base/flatten.js#default>;
                      ] .
 
 <#filterCubeLinks>
   a                  :Step ;
-  code:implementedBy [ a         code:EcmaScript ;
-  code:link <node:barnard59-base#filter> ] ;
+  code:implementedBy [ a         code:EcmaScriptModule ;
+  code:link <node:barnard59-base/filter.js#default> ] ;
   code:arguments     ( [ code:link <file:../lib/output-filter#removeCubeLinks> ;
                          a         code:EcmaScript ] ) .

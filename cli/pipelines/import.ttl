@@ -6,15 +6,15 @@
         :steps
           [
             :stepList
-              ( <#concatStreams> <#validate> <#streamOutputStep> ) ;
+              ( <#concatStreams> <#validate> <#StreamOutput> ) ;
           ] .
 
 <#concatStreams>
   a :Step ;
   code:implementedBy
     [
-      a code:EcmaScript ;
-      code:link <node:barnard59-base#concat.object>
+      a code:EcmaScriptModule ;
+      code:link <node:barnard59-base/concat.js#object>
     ] ;
   code:arguments
     (
@@ -38,14 +38,6 @@
 
 <#StreamOutput>
   a :Pipeline, :WritableObjectMode .
-
-<#streamOutputStep>
-  a :Step ;
-  code:implementedBy [
-                       code:link <file:../lib/pipeline#asStep> ;
-                       a code:EcmaScript
-                     ] ;
-  code:arguments ( <#StreamOutput> ) .
 
 <#loadObservations>
   a :Step ;
@@ -131,12 +123,12 @@
 
 <#setMetadataCollectionGraph>
   a                  :Step ;
-  code:implementedBy [ a         code:EcmaScript ;
-                       code:link <node:barnard59-base#setGraph> ] ;
+  code:implementedBy [ a         code:EcmaScriptModule ;
+                       code:link <node:barnard59-rdf/setGraph.js#default> ] ;
   code:arguments     ( "metadataResource"^^:VariableName ) .
 
 <#setDatasetGraph>
   a                  :Step ;
-  code:implementedBy [ a         code:EcmaScript ;
-                       code:link <node:barnard59-base#setGraph> ] ;
+  code:implementedBy [ a         code:EcmaScriptModule ;
+                       code:link <node:barnard59-rdf/setGraph.js#default> ] ;
   code:arguments     ( "datasetResource"^^:VariableName ) .

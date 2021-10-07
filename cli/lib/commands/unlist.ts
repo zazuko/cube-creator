@@ -3,7 +3,7 @@ import { CsvProject, ImportProject, UnlistJob } from '@cube-creator/model'
 import '../variables'
 import { isCsvProject } from '@cube-creator/model/Project'
 import * as runner from './runner'
-import { log } from '../log'
+import { logger } from '../log'
 
 interface UnlistRunOptions extends runner.RunOptions {
   publishStore?: {
@@ -31,14 +31,14 @@ export default runner.create<UnlistRunOptions>({
 
     variable.set('target-graph', job.publishGraph.value)
     if (process.env.PUBLISH_GRAPH_OVERRIDE) {
-      log('Overriding target graph from PUBLISH_GRAPH_OVERRIDE')
+      logger.info('Overriding target graph from PUBLISH_GRAPH_OVERRIDE')
       variable.set('target-graph', process.env.PUBLISH_GRAPH_OVERRIDE)
     }
-    log(`Unlisting from graph <${variable.get('target-graph')}>`)
+    logger.info(`Unlisting from graph <${variable.get('target-graph')}>`)
 
     variable.set('namespace', namespace)
     variable.set('cubeIdentifier', cubeIdentifier)
-    log(`Unlisting cube <${cubeIdentifier}>`)
+    logger.info(`Unlisting cube <${cubeIdentifier}>`)
   },
 })
 

@@ -10,14 +10,14 @@
 
 <#setGraph>
   a                  :Step ;
-  code:implementedBy [ a         code:EcmaScript ;
-                       code:link <node:barnard59-base#setGraph> ] ;
+  code:implementedBy [ a         code:EcmaScriptModule ;
+                       code:link <node:barnard59-rdf/setGraph.js#default> ] ;
   code:arguments     ( "graph"^^:VariableName ) .
 
 _:serialize
   a                  :Step ;
-  code:implementedBy [ code:link <node:barnard59-formats#ntriples.serialize> ;
-                       a         code:EcmaScript ] .
+  code:implementedBy [ code:link <node:barnard59-formats/ntriples.js#serialize> ;
+                       a         code:EcmaScriptModule ] .
 
 _:save
   a                  :Step ;

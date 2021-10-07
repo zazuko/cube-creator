@@ -7,15 +7,15 @@
         :steps
           [
             :stepList
-              ( <#concatStreams> <#setGraph> <#streamOutputStep> ) ;
+              ( <#concatStreams> <#setGraph> <#countOutputQuads> <#StreamOutput> ) ;
           ] .
 
 <#concatStreams>
   a :Step ;
   code:implementedBy
     [
-      a code:EcmaScript ;
-      code:link <node:barnard59-base#concat.object>
+      a code:EcmaScriptModule ;
+      code:link <node:barnard59-base/concat.js#object>
     ] ;
   code:arguments
     (
@@ -26,19 +26,38 @@
 
 <#PublishedLatestCube>
   a :Pipeline, :ReadableObjectMode ;
-  :steps [ :stepList ( <#loadGraphStep> <#injectCubeRevision> <#injectMetadata> <#filter> <#uniqueBnodes> ) ]
+  :steps [ :stepList ( <#loadCube>
+                       <#countInputQuads>
+                       <#injectCubeRevision>
+                       <#injectMetadata>
+                       <#uniqueBnodes>
+                     ) ]
+.
+
+<#countInputQuads>
+  a :Step ;
+  code:implementedBy
+    [
+      a code:EcmaScript ;
+      code:link <file:../lib/counters#quads>
+    ] ;
+  code:arguments ( "in" ) ;
+.
+
+<#countOutputQuads>
+  a :Step ;
+  code:implementedBy
+    [
+      a code:EcmaScript ;
+      code:link <file:../lib/counters#quads>
+    ] ;
+  code:arguments ( "out" ) ;
 .
 
 <#ExpirePreviousVersions>
   a :Pipeline, :ReadableObjectMode ;
   :steps [ :stepList ( <#expirePreviousVersions> ) ] ;
 .
-
-<#loadGraphStep>
-  a                  :Step ;
-  code:implementedBy [ code:link <file:../lib/pipeline#asStep> ;
-                       a         code:EcmaScript ] ;
-  code:arguments     ( <#loadCube> ) .
 
 <#loadCube>
   a      :Pipeline, :ReadableObjectMode;
@@ -52,7 +71,7 @@ _:get
   code:arguments     [ code:name  "jobUri" ;
                        code:value "jobUri"^^:VariableName ] ;
   code:arguments     [ code:name  "endpoint" ;
-                       code:value "graph-store-endpoint"^^:VariableName ] ;
+                       code:value "graph-query-endpoint"^^:VariableName ] ;
   code:arguments     [ code:name  "user" ;
                        code:value "graph-store-user"^^:VariableName ] ;
   code:arguments     [ code:name  "password" ;
@@ -76,43 +95,27 @@ _:get
                        a         code:EcmaScript ] ;
   code:arguments     ( "jobUri"^^:VariableName ) .
 
-<#filter>
-  a                  :Step ;
-  code:implementedBy [ a         code:EcmaScript ;
-  code:link <node:barnard59-base#filter> ] ;
-  code:arguments     ( [ code:link <file:../lib/output-filter#fromPublished> ;
-  a         code:EcmaScript ] ) .
-
 <#uniqueBnodes>
   a :Step ;
-  code:implementedBy [ a code:EcmaScript ; code:link <node:barnard59-base#map> ] ;
+  code:implementedBy [ a code:EcmaScriptModule ; code:link <node:barnard59-base/map.js#default> ] ;
   code:arguments     ( [ code:link <file:../lib/output-filter#ensureUniqueBnodes> ;
                          a         code:EcmaScript ] ) ;
 .
 
 <#StreamOutput>
-  a :Pipeline, :WritableObjectMode .
-
-<#streamOutputStep>
-  a                  :Step ;
-  code:implementedBy [ code:link <file:../lib/pipeline#asStep> ;
-                       a         code:EcmaScript ] ;
-  code:arguments     ( <#StreamOutput> ) .
-
-<#StreamOutput>
-  a      :Pipeline ;
+  a :Pipeline, :WritableObjectMode ;
   :steps [ :stepList ( _:setGraph _:upload ) ] ;.
 
 _:setGraph
   a                  :Step ;
-  code:implementedBy [ a         code:EcmaScript ;
-                       code:link <node:barnard59-base#setGraph> ] ;
+  code:implementedBy [ a         code:EcmaScriptModule ;
+                       code:link <node:barnard59-rdf/setGraph.js#default> ] ;
   code:arguments     ( "target-graph"^^:VariableName ) .
 
 _:upload
   a                  :Step ;
-  code:implementedBy [ a         code:EcmaScript ;
-                       code:link <node:barnard59-graph-store#post> ] ;
+  code:implementedBy [ a         code:EcmaScriptModule ;
+                       code:link <node:barnard59-graph-store/post.js#default> ] ;
   code:arguments     [ code:name  "endpoint" ;
                        code:value "publish-graph-store-endpoint"^^:VariableName ] ;
   code:arguments     [ code:name  "user" ;
@@ -124,6 +127,6 @@ _:upload
 
 <#setGraph>
   a                  :Step ;
-  code:implementedBy [ a         code:EcmaScript ;
-                       code:link <node:barnard59-base#setGraph> ] ;
+  code:implementedBy [ a         code:EcmaScriptModule ;
+                       code:link <node:barnard59-rdf/setGraph.js#default> ] ;
   code:arguments     ( "graph"^^:VariableName ) .

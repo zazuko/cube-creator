@@ -17,3 +17,14 @@ services:
     env_file:
       - cli/.env
       - cli/.test.env
+  collector:
+    image: otel/opentelemetry-collector:0.26.0
+    command: >-
+      --config=/collector.yaml
+
+    ports:
+      - "8889:8889"
+      - "55681:55681"
+
+    volumes:
+      - "./collector.yaml:/collector.yaml:ro"

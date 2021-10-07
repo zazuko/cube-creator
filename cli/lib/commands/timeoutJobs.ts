@@ -8,7 +8,7 @@ import { parse, toSeconds } from 'iso8601-duration'
 import { toRdf } from 'rdf-literal'
 import { updateJobStatus } from '../job'
 import { setupAuthentication } from '../auth'
-import { log } from '../log'
+import { logger } from '../log'
 
 interface TimeoutJobs {
   duration: string
@@ -21,8 +21,6 @@ export async function timeoutJobs({
   now = Date.now,
   updateJob = updateJobStatus,
 }: TimeoutJobs): Promise<void> {
-  log.enabled = true
-
   const client = new ParsingClient({
     endpointUrl: process.env.GRAPH_QUERY_ENDPOINT!,
     user: process.env.GRAPH_STORE_USER,
@@ -32,7 +30,7 @@ export async function timeoutJobs({
   const timeout = toSeconds(parse(duration))
   const startDate = new Date(now() - (timeout * 1000))
 
-  log('Will expire jobs active since before %s', startDate.toISOString())
+  logger.info('Will expire jobs active since before %s', startDate.toISOString())
 
   const overtimeJobs = await SELECT`?job`
     .WHERE`
@@ -50,7 +48,7 @@ export async function timeoutJobs({
 
   const apiClient = Alcaeus.create()
   apiClient.resources.factory.addMixin(...Object.values(Models))
-  setupAuthentication({}, log, apiClient)
+  setupAuthentication({}, logger, apiClient)
 
   for (const { job } of overtimeJobs) {
     await updateJob({
@@ -61,6 +59,6 @@ export async function timeoutJobs({
       executionUrl: undefined,
       error: 'Job exceeded maximum running time',
     })
-    log('Updated job %s', job.value)
+    logger.info('Updated job %s', job.value)
   }
 }

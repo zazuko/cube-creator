@@ -2,7 +2,7 @@ import { ImportJob } from '@cube-creator/model/ImportJob'
 import * as Models from '@cube-creator/model'
 import { HydraClient } from 'alcaeus/alcaeus'
 import { create } from './runner'
-import { log } from '../log'
+import { logger } from '../log'
 
 async function getJob(jobUri: string, Hydra: HydraClient): Promise<ImportJob> {
   const jobResource = await Hydra.loadResource<ImportJob>(jobUri)
@@ -26,7 +26,7 @@ export default create({
 
     const { dataset, dimensionMetadata, sourceCube, sourceGraph, sourceEndpoint, cubeGraph: { value: cubeGraph } } = await getJob(jobUri, Hydra)
 
-    log('Importing cube %O', {
+    logger.info('Importing cube %O', {
       sourceCube, sourceGraph, sourceEndpoint, cubeGraph, dimensionMetadata: dimensionMetadata.id, dataset,
     })
 
