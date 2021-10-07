@@ -70,7 +70,7 @@ export function serializeTableCollection (collection: TableCollection): TableCol
   }) as TableCollection
 }
 
-export function serializeTable (table: Table): Table {
+export function serializeTable (table: Table): Omit<Table, 'parsedTemplate'> {
   return {
     ...serializeResource(table),
     actions: {
@@ -89,7 +89,7 @@ export function serializeTable (table: Table): Table {
   }
 }
 
-export function serializeColumnMapping (columnMapping: ColumnMapping): ReferenceColumnMapping | LiteralColumnMapping {
+export function serializeColumnMapping (columnMapping: ColumnMapping): Omit<ReferenceColumnMapping, 'resetIdentifierMappings'> | LiteralColumnMapping {
   return columnMapping.types.has(cc.LiteralColumnMapping)
     ? serializeLiteralColumnMapping(columnMapping as LiteralColumnMapping)
     : serializeReferenceColumnMapping(columnMapping as ReferenceColumnMapping)
@@ -108,7 +108,7 @@ export function serializeLiteralColumnMapping (columnMapping: LiteralColumnMappi
   })
 }
 
-export function serializeReferenceColumnMapping (columnMapping: ReferenceColumnMapping): ReferenceColumnMapping {
+export function serializeReferenceColumnMapping (columnMapping: ReferenceColumnMapping): Omit<ReferenceColumnMapping, 'resetIdentifierMappings'> {
   return Object.freeze({
     ...serializeResource(columnMapping),
     targetProperty: columnMapping.targetProperty,
@@ -123,7 +123,7 @@ export function serializeReferenceColumnMapping (columnMapping: ReferenceColumnM
 export function serializeIdentifierMapping (identifierMapping: IdentifierMapping): IdentifierMapping {
   return Object.freeze({
     ...serializeResource(identifierMapping),
-    sourceColumn: serializeLink<CsvColumn>(identifierMapping.sourceColumn),
+    sourceColumn: identifierMapping.sourceColumn ? serializeLink<CsvColumn>(identifierMapping.sourceColumn) : undefined,
     referencedColumn: serializeLink<CsvColumn>(identifierMapping.referencedColumn),
   })
 }

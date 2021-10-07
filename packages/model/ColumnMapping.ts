@@ -23,12 +23,13 @@ export interface LiteralColumnMapping extends ColumnMapping {
 
 export interface IdentifierMapping extends RdfResource {
   referencedColumn: Link<CsvColumn>
-  sourceColumn: Link<CsvColumn>
+  sourceColumn: Link<CsvColumn> | undefined
 }
 
 export interface ReferenceColumnMapping extends ColumnMapping {
   referencedTable: Link<Table>
   identifierMapping: IdentifierMapping[]
+  resetIdentifierMappings(referencedTable: NamedNode[]): void
 }
 
 export function ColumnMappingMixin<Base extends Constructor>(Resource: Base): Mixin {
@@ -100,6 +101,16 @@ export function ReferenceColumnMappingMixin<Base extends Constructor>(Resource: 
 
     @property()
     dimensionType?: Term
+
+    resetIdentifierMappings(referencedColumns: NamedNode[]) {
+      this.identifierMapping.forEach(mapping => {
+        mapping.pointer.deleteOut()
+      })
+
+      this.identifierMapping = referencedColumns.map(referencedColumn => createIdentifierMapping(this.pointer.blankNode(), {
+        referencedColumn,
+      }))
+    }
   }
 
   return Impl
@@ -136,6 +147,6 @@ export const createReference = initializer<ReferenceColumnMapping, ReferenceRequ
   types: [cc.ColumnMapping, cc.ReferenceColumnMapping],
 })
 
-type IdentifierMappingRequiredProperties = 'sourceColumn' | 'referencedColumn'
+type IdentifierMappingRequiredProperties = 'referencedColumn'
 
 export const createIdentifierMapping = initializer<IdentifierMapping, IdentifierMappingRequiredProperties>(IdentifierMappingMixin, {})

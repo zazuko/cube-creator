@@ -11,6 +11,7 @@ import { initializer } from './lib/initializer'
 import { CsvMapping } from './CsvMapping'
 import { childResource } from './lib/resourceIdentifiers'
 import { DatasetCore } from 'rdf-js'
+import { parse, ParsedTemplate } from './lib/uriTemplateParser'
 
 export interface Table<D extends DatasetCore = DatasetCore> extends RdfResource<D> {
   csvw: Link<Csvw.Table>
@@ -20,6 +21,7 @@ export interface Table<D extends DatasetCore = DatasetCore> extends RdfResource<
   identifierTemplate: string
   color: string
   isObservationTable: boolean
+  parsedTemplate: ParsedTemplate
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -50,6 +52,14 @@ export function TableMixin<Base extends Constructor>(base: Base): Mixin {
 
     get isObservationTable(): boolean {
       return this.types.has(cc.ObservationTable)
+    }
+
+    get parsedTemplate() {
+      if (!this.identifierTemplate) {
+        throw new Error('Table has no identifier template')
+      }
+
+      return parse(this.identifierTemplate)
     }
   }
 

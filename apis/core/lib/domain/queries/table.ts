@@ -1,6 +1,6 @@
 import { NamedNode, Term } from 'rdf-js'
 import { SELECT } from '@tpluscode/sparql-builder'
-
+import { Table } from '@cube-creator/model'
 import { parsingClient } from '../../query-client'
 import { cc } from '@cube-creator/core/namespace'
 import { ResourceIdentifier } from '@tpluscode/rdfine'
@@ -41,6 +41,26 @@ export async function * getLinkedTablesForSource(csvSource: ResourceIdentifier, 
     const table = result.table
     if (table.termType === 'NamedNode') {
       yield table
+    }
+  }
+}
+
+export async function * getTableReferences(referencedTable: Table, client = parsingClient) {
+  const results = await SELECT
+    .DISTINCT`?columnMapping`
+    .WHERE`
+      GRAPH ?columnMapping
+      {
+        ?columnMapping a ${cc.ReferenceColumnMapping} ;
+             ${cc.referencedTable} ${referencedTable.id} .
+      }
+      `
+    .execute(client.query)
+
+  for (const result of results) {
+    const { columnMapping } = result
+    if (columnMapping.termType === 'NamedNode') {
+      yield columnMapping
     }
   }
 }

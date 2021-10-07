@@ -49,7 +49,6 @@
     "hydra-box": "zazuko/hydra-box#subpath-api-link",
     "hydra-box-middleware-shacl": "1.0.0",
     "is-stream": "^2",
-    "is-uri": "^1.2.0",
     "jwks-rsa": "^1.9.0",
     "merge2": "^1.4.1",
     "middleware-async": "^1.2.7",
@@ -63,7 +62,6 @@
     "sparql-http-client": "^2.2.2",
     "string-to-stream": "^3.0.1",
     "through2": "^4.0.2",
-    "uri-template": "^1.0.1",
     "url-slugify": "^1.0.6"
   },
   "devDependencies": {

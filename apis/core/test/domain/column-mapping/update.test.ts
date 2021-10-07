@@ -130,6 +130,7 @@ describe('domain/column-mapping/update', () => {
       getLinkedTablesForSource,
       getTablesForMapping,
       getTableForColumnMapping,
+      getTableReferences: sinon.stub(),
     }
 
     sinon.stub(orgQueries, 'findOrganization').resolves({

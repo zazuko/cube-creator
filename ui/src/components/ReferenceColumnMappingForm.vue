@@ -120,7 +120,7 @@ export default class extends Vue {
         targetProperty: this.columnMapping.targetProperty,
         referencedTable,
         identifierMapping: this.columnMapping.identifierMapping.map((identifierMapping) => ({
-          sourceColumnId: identifierMapping.sourceColumn.id.value,
+          sourceColumnId: identifierMapping.sourceColumn?.id.value,
           referencedColumn: identifierMapping.referencedColumn,
         })),
         dimensionType: this.columnMapping.dimensionType,
