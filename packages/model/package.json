@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "@types/clownface": "^1",
+    "@types/is-uri": "^1",
     "@types/rdf-js": "^4.0.0"
   }
 }

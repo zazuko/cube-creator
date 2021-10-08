@@ -2541,6 +2541,13 @@
     "@types/set-link" "*"
     rdf-js "^4.0.2"
 
+"@types/is-uri@^1":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@types/is-uri/-/is-uri-1.0.0.tgz#92ef954ca47883425971be9d2052abb41f43cdfc"
+  integrity sha512-gFL5B1vZfStWXH5TNIqGDiJI9ReDvS3ce+IBrqoT9IKfOIk4YexTd5f6/lMgFXoT+gKsEFxls6HLj4ZaWCEVcQ==
+  dependencies:
+    "@types/parse-uri" "*"
+
 "@types/istanbul-lib-coverage@^2.0.1":
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/@types/istanbul-lib-coverage/-/istanbul-lib-coverage-2.0.3.tgz#4ba8ddb720221f432e443bd5f9117fd22cfd4762"
@@ -2649,6 +2656,11 @@
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@types/parse-json/-/parse-json-4.0.0.tgz#2f8bb441434d163b35fb8ffdccd7138927ffb8c0"
   integrity sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==
+
+"@types/parse-uri@*":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@types/parse-uri/-/parse-uri-1.0.0.tgz#afb76c3ee2f03e01da612a463ce4bdb4fb13e139"
+  integrity sha512-JX89Mjz9InFw+YKJYj9nRFxUwx+OUvrK6hkMDLoTwUsQ2DD+OmD05hK0bR1/dEfVqui/EJ3SPEuAq+xWB4LHwA==
 
 "@types/q@^1.5.1":
   version "1.5.4"
