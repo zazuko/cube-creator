@@ -125,6 +125,15 @@ const projectProperties = turtle`
         ${sh.maxCount} 1 ;
         ${sh.order} 40 ;
       ];
+      ${sh.property} [
+        ${sh.name} "Cube identifier" ;
+        ${sh.description} "Needed only when it is different from exported project's identifier" ;
+        ${sh.path} ${dcterms.identifier} ;
+        ${sh.pattern} ${cubeIdPattern} ;
+        ${sh.minLength} 1 ;
+        ${sh.maxCount} 1 ;
+        ${sh.order} 50 ;
+      ];
     ]
   ) ;`
 
