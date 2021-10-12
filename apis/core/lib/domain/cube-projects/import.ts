@@ -13,6 +13,8 @@ import { BadRequest } from 'http-errors'
 import { Transform } from 'stream'
 import { obj } from 'through2'
 import TermSet from '@rdfjs/term-set'
+import { Organization } from '@rdfine/schema'
+import QuadExt from 'rdf-ext/lib/Quad'
 
 interface ImportProject {
   projectsCollection: GraphPointer<NamedNode>
@@ -56,6 +58,20 @@ export function adjustTerms(project: Project): Transform {
   })
 }
 
+function alignCubeNamespace(before: string, after: string) {
+  function rewrite<T extends Term>(term: T): T {
+    if (term.termType === 'NamedNode' && term.value.startsWith(before)) {
+      return $rdf.namedNode(term.value.replace(before, after)) as any
+    }
+
+    return term
+  }
+
+  return ({ subject, predicate, object, graph }: QuadExt): QuadExt => {
+    return $rdf.quad(rewrite(subject), rewrite(predicate), rewrite(object), graph)
+  }
+}
+
 function setCsvSourceErrors(dataset: DatasetCore) {
   // errors will notify users that CSVs need to be uploaded
   clownface({ dataset })
@@ -92,7 +108,7 @@ export async function importProject({
     label,
   })
 
-  const importedDataset = $rdf.dataset()
+  let importedDataset = $rdf.dataset()
   for (const file of resource.out(cc.export).toArray()) {
     const next = files[file.value]
     if (!next) {
@@ -103,13 +119,14 @@ export async function importProject({
   }
 
   const importedProject = clownface({ dataset: importedDataset, graph: project.id }).node(project.id)
-  const cubeIdentifier = importedProject.out(dcterms.identifier).value
+  const cubeIdentifier = resource.out(dcterms.identifier).value || importedProject.out(dcterms.identifier).value
   if (!cubeIdentifier) {
     throw new BadRequest('Missing cube identifier name in imported data')
   }
   if (await exists(cubeIdentifier, maintainer)) {
     throw new DomainError('Another project is already using same identifier')
   }
+
   const sourceKind = importedProject.out(cc.projectSourceKind).term
   if (!sourceKind || sourceKind.termType !== 'NamedNode' || !sourceKinds.has(sourceKind)) {
     throw new BadRequest('Missing or invalid cc:projectSourceKind name in imported data')
@@ -119,12 +136,30 @@ export async function importProject({
   setCsvSourceErrors(importedDataset)
 
   // ensure no duplicates for properties
-  importedProject.deleteOut([
-    dcterms.creator,
-    schema.maintainer,
-    rdfs.label,
-    cc.latestPublishedRevision,
-  ])
+  importedProject
+    .deleteOut([
+      dcterms.creator,
+      schema.maintainer,
+      rdfs.label,
+      cc.latestPublishedRevision,
+      dcterms.identifier,
+    ])
+    .addOut(dcterms.identifier, cubeIdentifier)
+
+  if (project.sourceKind.equals(cc['projectSourceKind/CSV'])) {
+    const originalCubeId = clownface({ dataset: importedDataset })
+      .has(rdf.type, schema.Dataset)
+      .out(schema.hasPart)
+      .term
+
+    if (!originalCubeId) {
+      throw new BadRequest('Cube dataset resource not found in imported data')
+    }
+
+    const orgProfile = await store.getResource<Organization>(maintainer)
+    const cubeId = orgProfile.createIdentifier({ cubeIdentifier })
+    importedDataset = importedDataset.map(alignCubeNamespace(originalCubeId.value, cubeId.value + '/'))
+  }
 
   return {
     project,

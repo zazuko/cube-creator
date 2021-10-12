@@ -9,7 +9,7 @@ import { dcterms, rdf, rdfs, schema } from '@tpluscode/rdf-ns-builders/strict'
 import { ex } from '@cube-creator/testing/lib/namespace'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import { fromPointer } from '@cube-creator/model/Project'
-import { cc } from '@cube-creator/core/namespace'
+import { cc, cube } from '@cube-creator/core/namespace'
 import namespace from '@rdfjs/namespace'
 import * as sinon from 'sinon'
 import * as projectQueries from '../../../lib/domain/cube-projects/queries'
@@ -32,8 +32,12 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/import', () => {
       resource = blankNode()
         .addOut(rdfs.label, 'UBD Imported')
         .addOut(schema.maintainer, ex.Bafu)
+      const organization = namedNode(ex.Bafu)
+        .addOut(rdf.type, schema.Organization)
+        .addOut(cc.namespace, $rdf.namedNode('https://test.ld.admin.ch/org/'))
       store = new TestResourceStore([
         projectsCollection,
+        organization,
       ])
     })
 
@@ -190,6 +194,10 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/import', () => {
           .namedNode(project)
           .addOut(dcterms.identifier, 'UBD')
           .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
+        clownface({ dataset, graph: $rdf.namedNode(`${project}dataset`) })
+          .namedNode(`${project}dataset`)
+          .addOut(rdf.type, schema.Dataset)
+          .addOut(schema.hasPart, $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/'))
 
         return dataset.toStream()
       }
@@ -227,6 +235,61 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/import', () => {
       })
     })
 
+    it('adjusts all cube-derived URIs to match organization and cube identifier', async () => {
+      // given
+      const exported = (project: string) => {
+        const dataset = $rdf.dataset()
+
+        clownface({ dataset, graph: $rdf.namedNode(project) })
+          .namedNode(project)
+          .addOut(dcterms.identifier, 'UBD')
+          .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
+          .addOut(cc.csvMapping, $rdf.namedNode(`${project}mapping`))
+        clownface({ dataset, graph: $rdf.namedNode(`${project}dataset`) })
+          .namedNode(`${project}dataset`)
+          .addOut(rdf.type, schema.Dataset)
+          .addOut(schema.hasPart, $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/'))
+          .namedNode('https://environment.ld.admin.ch/foen/ubd/28/')
+          .addOut(rdf.type, cube.Cube)
+        clownface({ dataset, graph: $rdf.namedNode(`${project}dimensions-metadata`) })
+          .namedNode(`${project}dimensions-metadata/dimension-year`)
+          .addOut(schema.about, $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/dimension/year'))
+
+        return dataset.toStream()
+      }
+      resource
+        .addOut(cc.export, 'ubd.trig')
+        .addOut(dcterms.identifier, 'cube/id')
+
+      // when
+      const { project, importedDataset } = await testImportProject({
+        files: {
+          'ubd.trig': exported,
+        },
+      })
+
+      // then
+      const ns = namespace(project.id.value)
+      const data = clownface({ dataset: importedDataset })
+      expect(
+        data.namedNode(ns('/dimensions-metadata/dimension-year')).out(schema.about).term,
+      ).to.deep.equal($rdf.namedNode('https://test.ld.admin.ch/org/cube/id/dimension/year'))
+      expect(
+        data.namedNode(ns('/dataset')).out(schema.hasPart).term,
+      ).to.deep.equal($rdf.namedNode('https://test.ld.admin.ch/org/cube/id/'))
+      expect(
+        data.namedNode('https://test.ld.admin.ch/org/cube/id/').out(rdf.type).term,
+      ).to.deep.equal(cube.Cube)
+      expect(data.node(project.id)).to.matchShape({
+        property: {
+          path: dcterms.identifier,
+          hasValue: 'cube/id',
+          minCount: 1,
+          maxCount: 1,
+        },
+      })
+    })
+
     it('removes properties which are created as part of project', async () => {
       // given
       const exported = (project: string) => {
@@ -240,6 +303,10 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/import', () => {
           .addOut(schema.maintainer, ex.Bar)
           .addOut(rdfs.label, 'UBD29')
           .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
+        clownface({ dataset, graph: $rdf.namedNode(`${project}dataset`) })
+          .namedNode(`${project}dataset`)
+          .addOut(rdf.type, schema.Dataset)
+          .addOut(schema.hasPart, $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/'))
 
         return dataset.toStream()
       }
@@ -280,6 +347,10 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/import', () => {
         clownface({ dataset, graph: csvSource })
           .namedNode(csvSource)
           .addOut(rdf.type, cc.CSVSource)
+        clownface({ dataset, graph: $rdf.namedNode(`${project}dataset`) })
+          .namedNode(`${project}dataset`)
+          .addOut(rdf.type, schema.Dataset)
+          .addOut(schema.hasPart, $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/'))
 
         return dataset.toStream()
       }
