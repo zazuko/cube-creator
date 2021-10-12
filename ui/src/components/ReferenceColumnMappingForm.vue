@@ -80,7 +80,7 @@ interface FormData {
   targetProperty: Term | null
   referencedTable: Table | null
   identifierMapping: null | {
-    sourceColumnId: string | null
+    sourceColumnId: string | null | undefined
     referencedColumn: Link<CsvColumn>
   }[]
   dimensionType?: Term | null

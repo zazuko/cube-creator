@@ -13,6 +13,7 @@ ADD ./ui/package.json ./ui/
 ADD ./packages/core/package.json ./packages/core/
 ADD ./packages/model/package.json ./packages/model/
 ADD ./packages/testing/package.json ./packages/testing/
+ADD ./typings ./
 
 # for every new package foo add:
 # ADD ./packages/foo/package.json ./packages/foo/
