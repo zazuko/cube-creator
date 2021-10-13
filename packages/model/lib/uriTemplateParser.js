@@ -1,18 +1,9 @@
-import { parse as _parse, Template } from 'uri-template'
-import isUri from 'is-uri'
+/* eslint-disable @typescript-eslint/no-var-requires */
+const uriTemplate = require('uri-template')
+const isUri = require('is-uri')
 
-export interface ParsedTemplate {
-  prefix: string
-  columnNames: string[]
-  toString(): string
-  renameColumnVariable(from: string, to: string): boolean
-  toAbsoluteUrl (baseUri: string): string
-}
-
-class ParsedTemplateWrapper implements ParsedTemplate {
-  private __template: Template
-
-  constructor(template: Template) {
+class ParsedTemplateWrapper {
+  constructor(template) {
     this.__template = template
   }
 
@@ -28,7 +19,7 @@ class ParsedTemplateWrapper implements ParsedTemplate {
     return this.__template.toString()
   }
 
-  renameColumnVariable(from: string, to: string) {
+  renameColumnVariable(from, to) {
     const expression = this.__template.expressions.find(expr => expr.params[0].name === from)
     if (!expression) {
       return false
@@ -38,7 +29,7 @@ class ParsedTemplateWrapper implements ParsedTemplate {
     return true
   }
 
-  toAbsoluteUrl(baseUri: string) {
+  toAbsoluteUrl(baseUri) {
     if (isUri(this.prefix)) {
       return this.toString()
     }
@@ -51,10 +42,10 @@ class ParsedTemplateWrapper implements ParsedTemplate {
   }
 }
 
-export function parse(template: string): ParsedTemplate {
+export function parse(template) {
   const escaped = template.replace(/{([^}]+)}/g, (_, name) => `{${escape(name)}}`)
 
-  const parsed = _parse(escaped)
+  const parsed = uriTemplate.parse(escaped)
   parsed.expressions.forEach(expression => {
     expression.params.forEach(p => {
       // TODO: required until grncdr/uri-template#19 is fixed
