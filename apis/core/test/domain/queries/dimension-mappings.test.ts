@@ -10,7 +10,7 @@ import clownface from 'clownface'
 import TermMap from '@rdfjs/term-map'
 import { replaceValueWithDefinedTerms, getUnmappedValues } from '../../../lib/domain/queries/dimension-mappings'
 
-describe('lib/domain/queries/dimension-mappings @SPARQL', function () {
+describe('@cube-creator/core-api/lib/domain/queries/dimension-mappings @SPARQL', function () {
   this.timeout(20000)
 
   const dimensionMapping = $rdf.namedNode('https://cube-creator.lndo.site/cube-project/ubd/dimension-mapping/pollutant')

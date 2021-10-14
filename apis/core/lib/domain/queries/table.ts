@@ -45,6 +45,9 @@ export async function * getLinkedTablesForSource(csvSource: ResourceIdentifier, 
   }
 }
 
+/**
+ * Returns column mappings which reference the given table
+ */
 export async function * getTableReferences(referencedTable: Table, client = parsingClient) {
   const results = await SELECT
     .DISTINCT`?columnMapping`
