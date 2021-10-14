@@ -5,6 +5,7 @@ import type { Context } from 'barnard59-core/lib/Pipeline'
 import { customAlphabet } from 'nanoid'
 import dict from 'nanoid-dictionary'
 import $rdf from 'rdf-ext'
+import prefixes from '@zazuko/rdf-vocabularies/prefixes'
 
 const nanoid = customAlphabet(dict.alphanumeric, 15)
 
@@ -47,6 +48,14 @@ function rewriteBlankNode<T extends Term>(term: T, uuid: string): T | BlankNode 
   }
 
   return $rdf.blankNode(`${uuid}${term.value}`)
+}
+
+function isHydraTerm(term: Term): boolean {
+  return term.termType === 'NamedNode' && term.value.startsWith(prefixes.hydra)
+}
+
+export function removeHydraTriples({ subject, predicate, object }: Quad): boolean {
+  return !(isHydraTerm(subject) || isHydraTerm(predicate) || isHydraTerm(object))
 }
 
 export function ensureUniqueBnodes(this: Context, quad: Quad): Quad {

@@ -36,6 +36,7 @@
     "@tpluscode/rdf-string": "^0.2.24",
     "@tpluscode/rdfine": "^0.5.19",
     "@tpluscode/sparql-builder": "^0.3.15",
+    "@zazuko/rdf-vocabularies": ">=2021",
     "alcaeus": "^1.0.1",
     "aws-sdk": "^2.559.0",
     "barnard59": "^1.1.0",

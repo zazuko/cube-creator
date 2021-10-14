@@ -2,6 +2,7 @@ import env from '@cube-creator/core/env'
 import { before, describe, it } from 'mocha'
 import { expect } from 'chai'
 import $rdf from 'rdf-ext'
+import { prefixes } from '@zazuko/rdf-vocabularies'
 import { ASK, CONSTRUCT, DELETE, SELECT, WITH } from '@tpluscode/sparql-builder'
 import { csvw, dcat, dcterms, qudt, rdf, schema, sh, vcard, xsd, _void } from '@tpluscode/rdf-ns-builders'
 import { setupEnv } from '../../support/env'
@@ -66,6 +67,31 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
     cubePointer = clownface({ dataset })
   }
 
+  async function removesHydraTerms() {
+    const project = $rdf.namedNode('https://cube-creator.lndo.site/cube-project/ubd')
+    const anyHydra = await ASK`
+        graph ${project} {
+          ${project} ${schema.maintainer} ?org .
+        }
+
+        graph ?org {
+          ?org ${cc.publishGraph} ?expectedGraph .
+        }
+
+        graph ?expectedGraph {
+          ?s ?p ?o .
+        }
+
+        FILTER (
+          strstarts(str(?s), "${prefixes.hydra}") ||
+          strstarts(str(?p), "${prefixes.hydra}") ||
+          strstarts(str(?o), "${prefixes.hydra}")
+        )
+      `.execute(ccClients.parsingClient.query)
+
+    expect(anyHydra).to.be.false
+  }
+
   describe('publishing published', () => {
     before(resetData)
     before(function makeCubePublished() {
@@ -78,6 +104,8 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
       `).execute(ccClients.parsingClient.query)
     })
     before(runJob)
+
+    it('removes hydra terms', removesHydraTerms)
 
     it('adds a link to void dataset', async () => {
       const hasVoidLink = await ASK`<https://environment.ld.admin.ch/.well-known/void> ${schema.dataset} ${targetCube()}`
@@ -110,6 +138,8 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
   describe('publishing draft', () => {
     before(resetData)
     before(runJob)
+
+    it('removes hydra terms', removesHydraTerms)
 
     it('does not remove previously published triples', () => {
       const prevCube = cubePointer.namedNode(ns.baseCube('1'))

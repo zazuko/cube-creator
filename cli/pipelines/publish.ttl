@@ -30,6 +30,7 @@
                        <#countInputQuads>
                        <#injectCubeRevision>
                        <#injectMetadata>
+                       <#removeHydraTriples>
                        <#uniqueBnodes>
                      ) ]
 .
@@ -100,6 +101,13 @@ _:get
   code:implementedBy [ a code:EcmaScriptModule ; code:link <node:barnard59-base/map.js#default> ] ;
   code:arguments     ( [ code:link <file:../lib/output-filter#ensureUniqueBnodes> ;
                          a         code:EcmaScript ] ) ;
+.
+
+<#removeHydraTriples>
+  a :Step ;
+  code:implementedBy [ a code:EcmaScriptModule ; code:link <node:barnard59-base/filter.js#default> ] ;
+  code:arguments     ( [ code:link <file:../lib/output-filter#removeHydraTriples> ;
+                           a         code:EcmaScript ] ) ;
 .
 
 <#StreamOutput>
