@@ -518,9 +518,12 @@ graph <cube-project/ubd/csv-mapping/table-observation/column-mapping-2> {
     cc:targetProperty "station" ;
     cc:referencedTable <cube-project/ubd/csv-mapping/table-station> ;
     cc:identifierMapping [
-      cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/station> ;
       cc:referencedColumn <cube-project/ubd/csv-source/stations/column/station-id> ;
     ] ;
+    schema:error
+      [
+        schema:description "Identifier mapping is incomplete" ;
+      ] ;
   .
 }
 
@@ -600,6 +603,10 @@ graph <cube-project/ubd/csv-mapping/table-canton> {
     schema:color "#BBBBBB" ;
     cc:identifierTemplate "canton/{canton}" ;
     cc:columnMapping <cube-project/ubd/csv-mapping/table-canton/column-mapping-1> ;
+    schema:error
+      [
+        schema:description "Source table not found" ;
+      ]
   .
 }
 

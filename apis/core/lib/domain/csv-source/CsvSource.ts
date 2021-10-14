@@ -15,7 +15,7 @@ interface CreateOrUpdateColumn {
 }
 
 interface ApiCsvSource {
-  errors: string[]
+  errorMessages: string[]
 
   setUploadedFile(kind: NamedNode, key: string | undefined, contentUrl: NamedNode | undefined): void
   /**
@@ -34,7 +34,7 @@ declare module '@cube-creator/model' {
 export default function Mixin<Base extends Constructor<Omit<CsvSource, keyof ApiCsvSource>>>(Resource: Base) {
   class Impl extends Resource implements ApiCsvSource {
     @property.literal({ path: schema.error, values: 'array' })
-    errors!: string[]
+    errorMessages!: string[]
 
     setUploadedFile(sourceKind: NamedNode, key: string | undefined, contentUrl: NamedNode | undefined): void {
       if (this.associatedMedia) {

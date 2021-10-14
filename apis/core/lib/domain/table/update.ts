@@ -64,6 +64,7 @@ export async function updateTable({
     for await (const columnMappingId of getTableReferences(table)) {
       const columnMapping = await store.getResource<ReferenceColumnMapping>(columnMappingId)
       columnMapping.resetIdentifierMappings(columns)
+      columnMapping.setErrors()
     }
   }
 

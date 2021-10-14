@@ -154,45 +154,71 @@ describe('domain/table/update', () => {
     })
   })
 
-  it('updates reference columns when identifier template changes', async () => {
-    // given
-    const resource = clownface({ dataset: $rdf.dataset() })
-      .namedNode('myTable')
-      .addOut(schema.name, 'the other name')
-      .addOut(schema.color, '#bababa')
-      .addOut(cc.identifierTemplate, '{id2}')
-      .addOut(cc.isObservationTable, false)
-    columnMapping
-      .addOut(rdf.type, cc.ReferenceColumnMapping)
-      .addOut(cc.identifierMapping, mapping => {
-        mapping.addOut(cc.sourceColumn, $rdf.namedNode('id'))
-        mapping.addOut(cc.referencedColumn, $rdf.namedNode('id'))
+  describe('when identifier template changes', () => {
+    let table: GraphPointer
+
+    beforeEach(async () => {
+      // given
+      const resource = clownface({ dataset: $rdf.dataset() })
+        .namedNode('myTable')
+        .addOut(schema.name, 'the other name')
+        .addOut(schema.color, '#bababa')
+        .addOut(cc.identifierTemplate, '{id2}')
+        .addOut(cc.isObservationTable, false)
+      columnMapping
+        .addOut(rdf.type, cc.ReferenceColumnMapping)
+        .addOut(cc.identifierMapping, mapping => {
+          mapping.addOut(cc.sourceColumn, $rdf.namedNode('id'))
+          mapping.addOut(cc.referencedColumn, $rdf.namedNode('id'))
+        })
+      sinon.stub(tableQueries, 'getTableReferences').callsFake(async function * () {
+        yield columnMapping.term
       })
-    sinon.stub(tableQueries, 'getTableReferences').callsFake(async function * () {
-      yield columnMapping.term
+
+      // when
+      table = await updateTable({ resource, store, columnMappingQueries })
     })
 
-    // when
-    const table = await updateTable({ resource, store, columnMappingQueries })
+    it('sets new template', () => {
+      expect(table.out(cc.identifierTemplate).value).to.eq('{id2}')
+    })
 
-    // then
-    expect(table.out(cc.identifierTemplate).value).to.eq('{id2}')
-    const mapping = await store.get(columnMapping.term)
-    expect(mapping).to.matchShape({
-      property: {
-        path: cc.identifierMapping,
-        node: {
-          property: [{
-            path: cc.sourceColumn,
-            maxCount: 0,
-          }, {
-            path: cc.referencedColumn,
-            hasValue: $rdf.namedNode('id2'),
-            minCount: 1,
-            maxCount: 1,
-          }],
+    it('updates reference columns', async () => {
+      // then
+      const mapping = await store.get(columnMapping.term)
+      expect(mapping).to.matchShape({
+        property: {
+          path: cc.identifierMapping,
+          node: {
+            property: [{
+              path: cc.sourceColumn,
+              maxCount: 0,
+            }, {
+              path: cc.referencedColumn,
+              hasValue: $rdf.namedNode('id2'),
+              minCount: 1,
+              maxCount: 1,
+            }],
+          },
         },
-      },
+      })
+    })
+
+    it('sets column mapping error', async () => {
+      // then
+      const mapping = await store.get(columnMapping.term)
+      expect(mapping).to.matchShape({
+        property: {
+          path: schema.error,
+          minCount: 1,
+          node: {
+            property: [{
+              path: schema.description,
+              minCount: 1,
+            }],
+          },
+        },
+      })
     })
   })
 

@@ -37,6 +37,10 @@
         </div>
       </div>
     </div>
+    <b-message v-if="errors.length" type="is-danger" class="content">
+      <p>There are problems in the table:</p>
+      <pre v-for="error in errors" :key="error.id.value">{{ error.description }}</pre>
+    </b-message>
     <div class="panel-block">
       <span>Identifier template:</span>
       <code class="identifier-template">{{ table.identifierTemplate || 'auto' }}</code>
@@ -94,6 +98,7 @@
 <script lang="ts">
 import { Prop, Component, Vue } from 'vue-property-decorator'
 import { Term } from 'rdf-js'
+import { ResourceIdentifier } from '@tpluscode/rdfine'
 import { ColumnMapping, Table } from '@cube-creator/model'
 import HydraOperationButton from './HydraOperationButton.vue'
 import PropertyDisplay from './PropertyDisplay.vue'
@@ -106,6 +111,19 @@ export default class MapperTable extends Vue {
   @Prop() readonly table!: Table;
 
   @storeNs.project.Getter('getTable') getTable!: (uri: Term) => Table
+
+  get errors (): Array<{ id: ResourceIdentifier, description?: string }> {
+    const columnErrors = this.table.columnMappings
+      .flatMap(cm => (cm.errors || []).map(({ id, description }) => ({
+        id,
+        description: `Property ${cm.targetProperty?.value}: ${description}`
+      })))
+
+    return [
+      ...(this.table.errors || []),
+      ...columnErrors,
+    ]
+  }
 
   getTableColor (tableId: Term): string {
     try {

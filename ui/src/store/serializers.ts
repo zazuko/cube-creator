@@ -46,7 +46,7 @@ export function serializeSource (source: CsvSource): CsvSource {
       download: source.actions.download,
     },
     name: source.name,
-    errors: source.errors,
+    errorMessages: source.errorMessages,
     columns: source.columns.map(serializeColumn),
     dialect: source.dialect,
     csvMapping: source.csvMapping,
@@ -70,7 +70,7 @@ export function serializeTableCollection (collection: TableCollection): TableCol
   }) as TableCollection
 }
 
-export function serializeTable (table: Table): Omit<Table, 'parsedTemplate'> {
+export function serializeTable (table: Table): Table {
   return {
     ...serializeResource(table),
     actions: {
@@ -86,10 +86,11 @@ export function serializeTable (table: Table): Omit<Table, 'parsedTemplate'> {
     columnMappings: table.columnMappings.map(serializeColumnMapping),
     csvMapping: table.csvMapping,
     csvw: table.csvw,
+    parsedTemplate: table.parsedTemplate,
   }
 }
 
-export function serializeColumnMapping (columnMapping: ColumnMapping): Omit<ReferenceColumnMapping, 'resetIdentifierMappings'> | LiteralColumnMapping {
+export function serializeColumnMapping (columnMapping: ColumnMapping): ReferenceColumnMapping | LiteralColumnMapping {
   return columnMapping.types.has(cc.LiteralColumnMapping)
     ? serializeLiteralColumnMapping(columnMapping as LiteralColumnMapping)
     : serializeReferenceColumnMapping(columnMapping as ReferenceColumnMapping)
@@ -108,7 +109,7 @@ export function serializeLiteralColumnMapping (columnMapping: LiteralColumnMappi
   })
 }
 
-export function serializeReferenceColumnMapping (columnMapping: ReferenceColumnMapping): Omit<ReferenceColumnMapping, 'resetIdentifierMappings'> {
+export function serializeReferenceColumnMapping (columnMapping: ReferenceColumnMapping): ReferenceColumnMapping {
   return Object.freeze({
     ...serializeResource(columnMapping),
     targetProperty: columnMapping.targetProperty,
@@ -233,6 +234,7 @@ export function serializeResource (resource: RdfResource): RdfResource {
     clientPath: resource.clientPath,
     actions: serializeActions(resource.actions),
     pointer: Object.freeze(resource.pointer),
+    errors: resource.errors,
   } as RdfResource
 }
 
