@@ -1,5 +1,13 @@
 # @cube-creator/cli
 
+## 1.6.3
+
+### Patch Changes
+
+- fbd91be5: Remove `hydra:` terms from published cube output
+- 2977eb71: Reduce superfluous data processed by publish pipeline to prevent ECONNRESET from destination server (re #756, fixes #735)
+- dab5bcb2: Set up Open Telemetry
+
 ## 1.6.2
 
 ### Patch Changes
