@@ -44,7 +44,7 @@ const getMetadata = once(async (config: AuthConfig) => {
   return (await response.json()) as Metadata
 })
 
-const getToken = async function (config: AuthConfig, log: Logger) {
+const getToken = async function (config: AuthConfig) {
   const metadata = await getMetadata(config)
 
   const params: Record<string, string> = {
@@ -68,8 +68,6 @@ const getToken = async function (config: AuthConfig, log: Logger) {
   if ('error' in newToken) {
     throw new Error(newToken.error_description || newToken.error)
   }
-
-  log.debug('Renewed access token', newToken)
 
   const expiration = Date.now() + newToken.expires_in * 1000
   return {
@@ -100,7 +98,7 @@ export function setupAuthentication(config: Partial<AuthConfig>, log: Logger, Hy
 
   Hydra.defaultHeaders = async () => {
     if (!token || !isValid(token)) {
-      token = await getToken({ ...defaultAuthConfig(log), ...config }, log)
+      token = await getToken({ ...defaultAuthConfig(log), ...config })
     }
 
     return {
