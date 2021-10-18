@@ -1,5 +1,11 @@
 # @cube-creator/model
 
+## 0.1.22
+
+### Patch Changes
+
+- 2ac2dcd9: When table identifier changes, reference columns kept outdated mappings (fixes #862)
+
 ## 0.1.21
 
 ### Patch Changes

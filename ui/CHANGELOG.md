@@ -1,5 +1,13 @@
 # @cube-creator/ui
 
+## 1.5.4
+
+### Patch Changes
+
+- 2ac2dcd9: When table identifier changes, reference columns kept outdated mappings (fixes #862)
+- Updated dependencies [2ac2dcd9]
+  - @cube-creator/model@0.1.22
+
 ## 1.5.3
 
 ### Patch Changes
