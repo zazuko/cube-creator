@@ -13,6 +13,7 @@ import type * as ColumnMappingQueries from '../../../lib/domain/queries/column-m
 import '../../../lib/domain'
 import { updateTable } from '../../../lib/domain/table/update'
 import * as orgQueries from '../../../lib/domain/organization/query'
+import * as tableQueries from '../../../lib/domain/queries/table'
 import * as Organization from '@cube-creator/model/Organization'
 import { namedNode } from '@cube-creator/testing/clownface'
 import * as Project from '@cube-creator/model/Project'
@@ -22,6 +23,7 @@ describe('domain/table/update', () => {
   let columnMappingQueries: typeof ColumnMappingQueries
   let dimensionIsUsedByOtherMapping: sinon.SinonStub
   let dimensionMetadata: GraphPointer<NamedNode, DatasetExt>
+  let columnMapping: GraphPointer<NamedNode, DatasetExt>
 
   beforeEach(() => {
     sinon.restore()
@@ -42,11 +44,14 @@ describe('domain/table/update', () => {
     const csvSource = clownface({ dataset: $rdf.dataset() })
       .namedNode('foo')
       .addOut(rdf.type, cc.CSVSource)
-      .addOut(csvw.column, $rdf.namedNode('my-column'), (column) => {
-        column.addOut(schema.name, $rdf.literal('My Column'))
+      .addOut(csvw.column, $rdf.namedNode('id'), (column) => {
+        column.addOut(schema.name, $rdf.literal('id'))
+      })
+      .addOut(csvw.column, $rdf.namedNode('id2'), (column) => {
+        column.addOut(schema.name, $rdf.literal('id2'))
       })
 
-    const columnMapping = clownface({ dataset: $rdf.dataset() })
+    columnMapping = clownface({ dataset: $rdf.dataset() })
       .node($rdf.namedNode('columnMapping'))
       .addOut(rdf.type, cc.ColumnMapping)
       .addOut(rdf.type, hydra.Resource)
@@ -122,7 +127,7 @@ describe('domain/table/update', () => {
       .namedNode('myTable')
       .addOut(schema.name, 'the other name')
       .addOut(schema.color, '#bababa')
-      .addOut(cc.identifierTemplate, '{id2}')
+      .addOut(cc.identifierTemplate, '{id}')
       .addOut(cc.isObservationTable, false)
 
     // when
@@ -142,10 +147,78 @@ describe('domain/table/update', () => {
         maxCount: 1,
       }, {
         path: cc.identifierTemplate,
-        hasValue: '{id2}',
+        hasValue: '{id}',
         minCount: 1,
         maxCount: 1,
       }],
+    })
+  })
+
+  describe('when identifier template changes', () => {
+    let table: GraphPointer
+
+    beforeEach(async () => {
+      // given
+      const resource = clownface({ dataset: $rdf.dataset() })
+        .namedNode('myTable')
+        .addOut(schema.name, 'the other name')
+        .addOut(schema.color, '#bababa')
+        .addOut(cc.identifierTemplate, '{id2}')
+        .addOut(cc.isObservationTable, false)
+      columnMapping
+        .addOut(rdf.type, cc.ReferenceColumnMapping)
+        .addOut(cc.identifierMapping, mapping => {
+          mapping.addOut(cc.sourceColumn, $rdf.namedNode('id'))
+          mapping.addOut(cc.referencedColumn, $rdf.namedNode('id'))
+        })
+      sinon.stub(tableQueries, 'getTableReferences').callsFake(async function * () {
+        yield columnMapping.term
+      })
+
+      // when
+      table = await updateTable({ resource, store, columnMappingQueries })
+    })
+
+    it('sets new template', () => {
+      expect(table.out(cc.identifierTemplate).value).to.eq('{id2}')
+    })
+
+    it('updates reference columns', async () => {
+      // then
+      const mapping = await store.get(columnMapping.term)
+      expect(mapping).to.matchShape({
+        property: {
+          path: cc.identifierMapping,
+          node: {
+            property: [{
+              path: cc.sourceColumn,
+              maxCount: 0,
+            }, {
+              path: cc.referencedColumn,
+              hasValue: $rdf.namedNode('id2'),
+              minCount: 1,
+              maxCount: 1,
+            }],
+          },
+        },
+      })
+    })
+
+    it('sets column mapping error', async () => {
+      // then
+      const mapping = await store.get(columnMapping.term)
+      expect(mapping).to.matchShape({
+        property: {
+          path: schema.error,
+          minCount: 1,
+          node: {
+            property: [{
+              path: schema.description,
+              minCount: 1,
+            }],
+          },
+        },
+      })
     })
   })
 
@@ -155,7 +228,7 @@ describe('domain/table/update', () => {
       .namedNode('myTable')
       .addOut(schema.name, 'the other name')
       .addOut(schema.color, '#bababa')
-      .addOut(cc.identifierTemplate, '{id2}')
+      .addOut(cc.identifierTemplate, '{id}')
       .addOut(cc.isObservationTable, true)
 
     // when

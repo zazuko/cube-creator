@@ -18,7 +18,7 @@ import { MediaObjectMixin } from './MediaObject'
 export interface CsvSource extends RdfResource {
   associatedMedia: Schema.MediaObject
   name: string
-  errors: string[]
+  errorMessages: string[]
   dialect: Csvw.Dialect
   csvMapping: Link<CsvMapping>
   columns: CsvColumn[]
@@ -38,7 +38,7 @@ export function CsvSourceMixin<Base extends Constructor>(base: Base): Mixin {
     name!: string
 
     @property.literal({ path: schema.error, values: 'array' })
-    errors!: string[]
+    errorMessages!: string[]
 
     @property.resource({ path: csvw.dialect, as: [DialectMixin], initial: () => blankNode() })
     dialect!: Csvw.Dialect

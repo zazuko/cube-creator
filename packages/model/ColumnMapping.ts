@@ -1,5 +1,4 @@
-import { Initializer, RdfResource } from '@tpluscode/rdfine/RdfResource'
-import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
+import { Initializer, RdfResource, RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import { CsvColumn } from './CsvColumn'
 import { Table } from './Table'
 import { DatasetCore, NamedNode, Term } from 'rdf-js'
@@ -23,7 +22,7 @@ export interface LiteralColumnMapping extends ColumnMapping {
 
 export interface IdentifierMapping extends RdfResource {
   referencedColumn: Link<CsvColumn>
-  sourceColumn: Link<CsvColumn>
+  sourceColumn: Link<CsvColumn> | undefined
 }
 
 export interface ReferenceColumnMapping extends ColumnMapping {
@@ -31,7 +30,7 @@ export interface ReferenceColumnMapping extends ColumnMapping {
   identifierMapping: IdentifierMapping[]
 }
 
-export function ColumnMappingMixin<Base extends Constructor>(Resource: Base): Mixin {
+export function ColumnMappingMixin<Base extends Constructor>(Resource: Base): Constructor<Partial<ColumnMapping> & RdfResourceCore> & Base {
   @namespace(cc)
   class Impl extends Resource implements Partial<ColumnMapping> {
     @property()
@@ -46,7 +45,7 @@ export function ColumnMappingMixin<Base extends Constructor>(Resource: Base): Mi
 
 ColumnMappingMixin.appliesTo = cc.ColumnMapping
 
-export function LiteralColumnMappingMixin<Base extends Constructor>(Resource: Base): Mixin {
+export function LiteralColumnMappingMixin<Base extends Constructor>(Resource: Base): Constructor<Partial<LiteralColumnMapping> & RdfResourceCore> & Base {
   @namespace(cc)
   class Impl extends Resource implements Partial<LiteralColumnMapping> {
     @property()
@@ -73,7 +72,7 @@ export function LiteralColumnMappingMixin<Base extends Constructor>(Resource: Ba
 
 LiteralColumnMappingMixin.appliesTo = cc.LiteralColumnMapping
 
-export function IdentifierMappingMixin<Base extends Constructor>(Resource: Base): Mixin {
+export function IdentifierMappingMixin<Base extends Constructor>(Resource: Base): Constructor<Partial<IdentifierMapping> & RdfResourceCore> & Base {
   @namespace(cc)
   class Impl extends Resource implements Partial<IdentifierMapping> {
     @property.resource()
@@ -86,7 +85,7 @@ export function IdentifierMappingMixin<Base extends Constructor>(Resource: Base)
   return Impl
 }
 
-export function ReferenceColumnMappingMixin<Base extends Constructor>(Resource: Base): Mixin {
+export function ReferenceColumnMappingMixin<Base extends Constructor>(Resource: Base): Constructor<Partial<ReferenceColumnMapping> & RdfResourceCore> & Base {
   @namespace(cc)
   class Impl extends Resource implements Partial<ReferenceColumnMapping> {
     @property()
@@ -136,6 +135,6 @@ export const createReference = initializer<ReferenceColumnMapping, ReferenceRequ
   types: [cc.ColumnMapping, cc.ReferenceColumnMapping],
 })
 
-type IdentifierMappingRequiredProperties = 'sourceColumn' | 'referencedColumn'
+type IdentifierMappingRequiredProperties = 'referencedColumn'
 
 export const createIdentifierMapping = initializer<IdentifierMapping, IdentifierMappingRequiredProperties>(IdentifierMappingMixin, {})

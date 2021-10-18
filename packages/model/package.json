@@ -11,10 +11,13 @@
     "@rdfine/schema": "^0.6.3",
     "@tpluscode/rdf-ns-builders": "^1.0.0",
     "@tpluscode/rdfine": "^0.5.19",
-    "alcaeus": "^1.0.1"
+    "alcaeus": "^1.0.1",
+    "is-uri": "^1.2.0",
+    "uri-template": "^1.0.1"
   },
   "devDependencies": {
     "@types/clownface": "^1",
+    "@types/is-uri": "^1",
     "@types/rdf-js": "^4.0.0"
   }
 }

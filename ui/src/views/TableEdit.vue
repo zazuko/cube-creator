@@ -69,7 +69,8 @@ export default class TableCreateView extends Vue {
     this.isSubmitting = true
 
     try {
-      const table = await this.$store.dispatch('api/invokeSaveOperation', {
+      const { identifierTemplate } = this.table!
+      const table: Table = await this.$store.dispatch('api/invokeSaveOperation', {
         operation: this.operation,
         resource,
       })
@@ -80,6 +81,10 @@ export default class TableCreateView extends Vue {
         message: `Table ${table.name} was successfully created`,
         type: 'is-success',
       })
+
+      if (table.identifierTemplate !== identifierTemplate) {
+        this.$store.dispatch('project/fetchCSVMapping')
+      }
 
       this.$router.push({ name: 'CSVMapping' })
     } catch (e) {

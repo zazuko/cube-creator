@@ -14,7 +14,6 @@ import $rdf from 'rdf-ext'
 import RdfResource from '@tpluscode/rdfine'
 import { Initializer } from '@tpluscode/rdfine/RdfResource'
 import type { Organization } from '@rdfine/schema'
-import { parse } from './uriTemplateParser'
 import { cc } from '@cube-creator/core/namespace'
 import { ResourceStore } from '../ResourceStore'
 import { warning } from '../log'
@@ -80,9 +79,9 @@ async function mappedReferenceColumn({ cubeIdentifier, organization, columnMappi
   const columnNameMap = await identifierMappings.reduce<Promise<Map<string, string>>>(async (mapP, mapping) => {
     const map = await mapP
 
-    const sourceColumn = source.columns.find(({ id }) => id.equals(mapping.sourceColumn.id))
+    const sourceColumn = source.columns.find(({ id }) => id.equals(mapping.sourceColumn?.id))
     if (!sourceColumn) {
-      warning(`Column ${mapping.sourceColumn.id} not found`)
+      warning(`Column ${mapping.sourceColumn?.id} not found`)
       return map
     }
 
@@ -101,7 +100,7 @@ async function mappedReferenceColumn({ cubeIdentifier, organization, columnMappi
   }, Promise.resolve(new Map<string, string>()))
 
   if (typeof referencedTable.identifierTemplate === 'string') {
-    const uriTemplate = parse(referencedTable.identifierTemplate)
+    const uriTemplate = referencedTable.parsedTemplate
     columnNameMap.forEach((to, from) => {
       if (!uriTemplate.renameColumnVariable(from, to)) {
         warning('Column name %s was not found in template for table <%s>', to, referencedTable.id)

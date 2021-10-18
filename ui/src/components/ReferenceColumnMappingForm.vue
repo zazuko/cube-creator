@@ -80,7 +80,7 @@ interface FormData {
   targetProperty: Term | null
   referencedTable: Table | null
   identifierMapping: null | {
-    sourceColumnId: string | null
+    sourceColumnId: string | null | undefined
     referencedColumn: Link<CsvColumn>
   }[]
   dimensionType?: Term | null
@@ -120,7 +120,7 @@ export default class extends Vue {
         targetProperty: this.columnMapping.targetProperty,
         referencedTable,
         identifierMapping: this.columnMapping.identifierMapping.map((identifierMapping) => ({
-          sourceColumnId: identifierMapping.sourceColumn.id.value,
+          sourceColumnId: identifierMapping.sourceColumn?.id.value,
           referencedColumn: identifierMapping.referencedColumn,
         })),
         dimensionType: this.columnMapping.dimensionType,

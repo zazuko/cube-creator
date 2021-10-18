@@ -46,7 +46,7 @@ export function serializeSource (source: CsvSource): CsvSource {
       download: source.actions.download,
     },
     name: source.name,
-    errors: source.errors,
+    errorMessages: source.errorMessages,
     columns: source.columns.map(serializeColumn),
     dialect: source.dialect,
     csvMapping: source.csvMapping,
@@ -86,6 +86,7 @@ export function serializeTable (table: Table): Table {
     columnMappings: table.columnMappings.map(serializeColumnMapping),
     csvMapping: table.csvMapping,
     csvw: table.csvw,
+    parsedTemplate: table.parsedTemplate,
   }
 }
 
@@ -123,7 +124,7 @@ export function serializeReferenceColumnMapping (columnMapping: ReferenceColumnM
 export function serializeIdentifierMapping (identifierMapping: IdentifierMapping): IdentifierMapping {
   return Object.freeze({
     ...serializeResource(identifierMapping),
-    sourceColumn: serializeLink<CsvColumn>(identifierMapping.sourceColumn),
+    sourceColumn: identifierMapping.sourceColumn ? serializeLink<CsvColumn>(identifierMapping.sourceColumn) : undefined,
     referencedColumn: serializeLink<CsvColumn>(identifierMapping.referencedColumn),
   })
 }
@@ -233,6 +234,7 @@ export function serializeResource (resource: RdfResource): RdfResource {
     clientPath: resource.clientPath,
     actions: serializeActions(resource.actions),
     pointer: Object.freeze(resource.pointer),
+    errors: resource.errors,
   } as RdfResource
 }
 

@@ -6,7 +6,7 @@ import ParsingClient from 'sparql-http-client/ParsingClient'
 import * as sinon from 'sinon'
 import { expect } from 'chai'
 
-describe('domain/queries/resources-types', () => {
+describe('@cube-creator/core-api/lib/domain/queries/resources-types', () => {
   let sparql: ParsingClient.ParsingClient
 
   beforeEach(() => {

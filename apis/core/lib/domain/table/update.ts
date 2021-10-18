@@ -1,4 +1,10 @@
-import { ColumnMapping, DimensionMetadataCollection, CsvProject, Table } from '@cube-creator/model'
+import {
+  ColumnMapping,
+  DimensionMetadataCollection,
+  CsvProject,
+  Table,
+  ReferenceColumnMapping,
+} from '@cube-creator/model'
 import type { Organization } from '@rdfine/schema'
 import { schema, xsd } from '@tpluscode/rdf-ns-builders'
 import $rdf from 'rdf-ext'
@@ -8,6 +14,7 @@ import { getDimensionMetaDataCollection } from '../queries/dimension-metadata'
 import { cc } from '@cube-creator/core/namespace'
 import * as ColumnMappingQueries from '../queries/column-mapping'
 import { findOrganization } from '../organization/query'
+import { getTableReferences } from '../queries/table'
 
 const trueTerm = $rdf.literal('true', xsd.boolean)
 
@@ -40,7 +47,26 @@ export async function updateTable({
   if (!identifierTemplate?.value) {
     throw new Error('cc.identifierTemplate missing from the payload')
   }
-  table.identifierTemplate = identifierTemplate.value
+
+  if (identifierTemplate.value !== table.identifierTemplate) {
+    table.identifierTemplate = identifierTemplate.value
+    const csvSource = await store.getResource(table.csvSource)
+
+    const columns = table.parsedTemplate.columnNames
+      .map(columnName => {
+        const column = csvSource.columns.find(({ name }) => columnName === name)
+        if (column?.id.termType !== 'NamedNode') {
+          throw new Error(`Unexpected column identifier ${column?.id}`)
+        }
+
+        return column.id
+      })
+    for await (const columnMappingId of getTableReferences(table)) {
+      const columnMapping = await store.getResource<ReferenceColumnMapping>(columnMappingId)
+      columnMapping.resetIdentifierMappings(columns)
+      columnMapping.setErrors()
+    }
+  }
 
   const { projectId, organizationId } = await findOrganization({ table })
   const organization = await store.getResource<Organization>(organizationId)
