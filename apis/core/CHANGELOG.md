@@ -1,5 +1,15 @@
 # @cube-creator/core-api
 
+## 1.5.0
+
+### Minor Changes
+
+- ee9e7717: Option to change the identifier of imported project (fixes #878)
+
+### Patch Changes
+
+- ee9e7717: Import: Ensure that all cube-related URIs are correct if a different organization profile is selected when importing
+
 ## 1.4.4
 
 ### Patch Changes
