@@ -13,7 +13,12 @@ declare module '@tpluscode/rdfine/RdfResource' {
 export function BaseResourceMixin<Base extends Constructor>(base: Base): Constructor<Partial<RdfResource> & RdfResourceCore> & Base {
   @namespace(cc)
   class Impl extends base implements Partial<RdfResource> {
-    @property.resource({ path: schema.error, values: 'array', as: [Schema.ThingMixin] })
+    @property.resource({
+      path: schema.error,
+      values: 'array',
+      as: [Schema.ThingMixin],
+      filter: term => term.termType === 'NamedNode' || term.termType === 'BlankNode',
+    })
     errors!: Schema.Thing[]
   }
 
