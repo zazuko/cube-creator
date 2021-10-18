@@ -93,7 +93,7 @@ ${shape('dimension/metadata')} {
       ${sh.datatype} ${rdf.langString} ;
       ${sh.languageIn} ( ${supportedLanguages} ) ;
       ${sh.uniqueLang} true ;
-      ${sh.defaultValue} ""@en ;
+      ${sh.maxCount} ${supportedLanguages.length};
       ${sh.minLength} 1 ;
       ${sh.order} 10 ;
     ] , [
@@ -102,7 +102,7 @@ ${shape('dimension/metadata')} {
       ${sh.datatype} ${rdf.langString} ;
       ${sh.languageIn} ( ${supportedLanguages} ) ;
       ${sh.uniqueLang} true ;
-      ${sh.defaultValue} ""@en ;
+      ${sh.maxCount} ${supportedLanguages.length};
       ${sh.minLength} 1 ;
       ${dash.singleLine} false ;
       ${sh.order} 15 ;
