@@ -1,5 +1,14 @@
 # @cube-creator/core-api
 
+## 1.5.2
+
+### Patch Changes
+
+- c0338c9c: Literal `schema:error` would fail on resource getter (re #897)
+- 0c974e2f: In some scenarios not all form translations were saved when adding metadata (fixes #893)
+- Updated dependencies [c0338c9c]
+  - @cube-creator/model@0.1.23
+
 ## 1.5.1
 
 ### Patch Changes
