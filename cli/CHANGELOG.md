@@ -1,5 +1,13 @@
 # @cube-creator/cli
 
+## 1.6.5
+
+### Patch Changes
+
+- d68ca97a: Do not log JWT tokens in pipeline output (closes #891)
+- Updated dependencies [c0338c9c]
+  - @cube-creator/model@0.1.23
+
 ## 1.6.4
 
 ### Patch Changes

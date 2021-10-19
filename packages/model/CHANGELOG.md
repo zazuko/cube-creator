@@ -1,5 +1,11 @@
 # @cube-creator/model
 
+## 0.1.23
+
+### Patch Changes
+
+- c0338c9c: Literal `schema:error` would fail on resource getter (re #897)
+
 ## 0.1.22
 
 ### Patch Changes
