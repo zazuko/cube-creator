@@ -5,9 +5,11 @@ import $rdf from 'rdf-ext'
 import { StreamClient } from 'sparql-http-client/StreamClient'
 import StreamQuery from 'sparql-http-client/StreamQuery'
 import StreamStore from 'sparql-http-client/StreamStore'
-import ResourceStore from '../lib/ResourceStore'
+import ResourceStore, { SparqlStoreFacade } from '../lib/ResourceStore'
 import { ex } from '@cube-creator/testing/lib/namespace'
-import { hydra, rdf, rdfs, schema } from '@tpluscode/rdf-ns-builders'
+import { as, hydra, rdf, rdfs, schema } from '@tpluscode/rdf-ns-builders'
+import { ASK, DELETE, INSERT } from '@tpluscode/sparql-builder'
+import { ccClients } from '@cube-creator/testing/lib'
 import { manages } from '../lib/resources/hydraManages'
 
 describe('ResourceStore', () => {
@@ -268,6 +270,131 @@ describe('ResourceStore', () => {
 
       // then
       expect(query.update.firstCall.args[0]).to.matchSnapshot(this)
+    })
+  })
+})
+
+describe('ResourceStore @SPARQL', () => {
+  const testResource = ex.TestResource
+  let store: ResourceStore
+
+  beforeEach(async () => {
+    store = new ResourceStore(new SparqlStoreFacade(ccClients.streamClient, () => ex.User))
+    await DELETE`
+      graph ?resource { ?rs ?rp ?ro }
+      graph ?activity { ?as ?ap ?ao }
+    `.WHERE`
+      BIND ( ${ex.TestResource} as ?resource )
+
+      OPTIONAL {
+        graph ?resource { ?rs ?rp ?ro }
+      }
+
+      OPTIONAL {
+        graph ?activity {
+          ?activity ${as.object} ?resource .
+
+          ?as ?ap ?ao .
+        }
+      }
+    `.execute(ccClients.streamClient.query)
+  })
+
+  describe('created', () => {
+    beforeEach(async () => {
+      const ptr = store.create(testResource)
+      ptr.addOut(rdf.type, schema.Person)
+      await store.save()
+    })
+
+    it('inserts a as:Create resource', async () => {
+      const activityCreated = ASK`GRAPH ?activity {
+        ?activity a ${as.Create} ;
+                  ${as.actor} ${ex.User} ;
+                  ${as.object} ${testResource} ;
+                  ${as.startTime} ?time ;
+                  ${as.endTime} ?time ;
+        .
+      }`.execute(ccClients.streamClient.query)
+
+      await expect(activityCreated).to.eventually.be.true
+    })
+
+    it('stores changed resource', async () => {
+      const resourceCreated = ASK`
+        ${testResource} a ${schema.Person} .
+      `.FROM(testResource).execute(ccClients.streamClient.query)
+
+      await expect(resourceCreated).to.eventually.be.true
+    })
+  })
+
+  describe('updated', () => {
+    beforeEach(async () => {
+      await INSERT.DATA`
+        graph ${testResource} {
+          ${testResource} a ${schema.Person} ; ${schema.name} "john"
+        }
+      `.execute(ccClients.streamClient.query)
+
+      const ptr = await store.get(testResource)
+      ptr.addOut(schema.name, 'John')
+      await store.save()
+    })
+
+    it('inserts a as:Update resource', async () => {
+      const activityCreated = ASK`GRAPH ?activity {
+        ?activity a ${as.Update} ;
+                  ${as.actor} ${ex.User} ;
+                  ${as.object} ${testResource} ;
+                  ${as.startTime} ?time ;
+                  ${as.endTime} ?time ;
+        .
+      }`.execute(ccClients.streamClient.query)
+
+      await expect(activityCreated).to.eventually.be.true
+    })
+
+    it('stores changed resource', async () => {
+      const resourceCreated = ASK`
+        ${testResource} a ${schema.Person}; ${schema.name} "John" .
+      `.FROM(testResource).execute(ccClients.streamClient.query)
+
+      await expect(resourceCreated).to.eventually.be.true
+    })
+  })
+
+  describe('delete', () => {
+    beforeEach(async () => {
+      await INSERT.DATA`
+        graph ${testResource} {
+          ${testResource} a ${schema.Person}
+        }
+      `.execute(ccClients.streamClient.query)
+
+      store.delete(testResource)
+      await store.save()
+    })
+
+    it('removes resource data', async () => {
+      const resourceExists = ASK`
+        ?s ?p ?o
+      `.FROM(testResource).execute(ccClients.streamClient.query)
+
+      await expect(resourceExists).to.eventually.be.false
+    })
+
+    it('inserts a as:Delete resource', async () => {
+      const activityCreated = ASK`GRAPH ?activity {
+        ?activity a ${as.Delete} ;
+                  ${as.actor} ${ex.User} ;
+                  ${as.object} ${testResource} ;
+                  ${as.startTime} ?time ;
+                  ${as.endTime} ?time ;
+        .
+      }`.execute(ccClients.streamClient.query)
+
+      await expect(activityCreated).to.eventually.be.true
     })
   })
 })

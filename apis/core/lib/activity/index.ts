@@ -1,0 +1,7 @@
+import $rdf from 'rdf-ext'
+import env from '@cube-creator/core/env'
+import { nanoid } from 'nanoid'
+
+export function newId() {
+  return $rdf.namedNode(`${env.API_CORE_BASE}activity/${nanoid()}`)
+}

@@ -6,12 +6,13 @@ import DatasetExt from 'rdf-ext/lib/Dataset'
 import { ChangelogDataset } from './ChangelogDataset'
 import { CONSTRUCT, INSERT } from '@tpluscode/sparql-builder'
 import TermMap from '@rdfjs/term-map'
-import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
+import { as, hydra, rdf } from '@tpluscode/rdf-ns-builders'
 import { warn } from '@hydrofoil/labyrinth/lib/logger'
-import { sparql } from '@tpluscode/rdf-string'
+import { sparql, SparqlTemplateResult } from '@tpluscode/rdf-string'
 import TermSet from '@rdfjs/term-set'
-import RdfResource, { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
+import RdfResource, { RdfResourceCore, ResourceIdentifier } from '@tpluscode/rdfine/RdfResource'
 import { Link } from '@cube-creator/model/lib/Link'
+import * as Activity from './activity/index'
 
 interface ResourceCreationOptions {
   implicitlyDereferencable?: boolean
@@ -55,17 +56,17 @@ export interface ResourceStore {
 
 interface TripleStoreFacade {
   loadResource(term: NamedNode): Promise<GraphPointer<NamedNode, ChangelogDataset> | undefined>
-  writeChanges(resources: Map<Term, GraphPointer<NamedNode, ChangelogDataset>>, deletedResources: Iterable<NamedNode>): Promise<void>
+  writeChanges(resources: Map<Term, GraphPointer<NamedNode, ChangelogDataset>>, deletedResources: Iterable<NamedNode>, actor?: ResourceIdentifier): Promise<void>
 }
 
 function toTriple({ subject, predicate, object }: Quad) {
   return $rdf.quad(subject, predicate, object)
 }
 
-class SparqlStoreFacade implements TripleStoreFacade {
+export class SparqlStoreFacade implements TripleStoreFacade {
   private readonly __client: StreamClient
 
-  constructor(client: StreamClient) {
+  constructor(client: StreamClient, private getUser?: () => NamedNode | undefined) {
     this.__client = client
   }
 
@@ -83,19 +84,14 @@ class SparqlStoreFacade implements TripleStoreFacade {
     return resource
   }
 
-  deleteQuery(terms: Iterable<NamedNode>) {
-    let deleteQuery = sparql``
-    for (const id of terms) {
-      deleteQuery = sparql`${deleteQuery}DROP SILENT GRAPH ${id};\n`
-    }
-
-    return deleteQuery
-  }
-
   async writeChanges(resources: Map<NamedNode, GraphPointer<NamedNode, ChangelogDataset>>, deletedResources: Iterable<NamedNode>): Promise<void> {
+    const now = new Date()
+    const actor = this.getUser?.()
+
     const graphsToDelete = new TermSet([...deletedResources])
     let shouldUpdate = graphsToDelete.size > 0
-    let insertData = INSERT.DATA``
+    const commands: SparqlTemplateResult[] = [...deletedResources]
+      .flatMap(id => [...SparqlStoreFacade.deleteResourceCommands(id, now, actor)])
 
     for (const [id, pointer] of resources.entries()) {
       if (!pointer.dataset.changes.added.size && !pointer.dataset.changes.deleted.size) {
@@ -103,21 +99,65 @@ class SparqlStoreFacade implements TripleStoreFacade {
       }
       shouldUpdate = true
 
-      if (pointer.dataset.size === 0) {
-        graphsToDelete.add(id)
-      } else {
-        graphsToDelete.add(id)
-        insertData = insertData.DATA`GRAPH ${id} {
-          ${[...pointer.dataset].map(toTriple)}
-        }`
+      const queries = pointer.dataset.size === 0
+        ? SparqlStoreFacade.deleteResourceCommands(id, now, actor)
+        : SparqlStoreFacade.insertResourceCommands(pointer, now, actor)
+
+      for (const query of queries) {
+        commands.push(query)
       }
     }
 
     if (shouldUpdate) {
-      const deleteGraphs = this.deleteQuery(graphsToDelete)
-      const query = sparql`${deleteGraphs}\n${insertData}`
+      const query = commands.reduce((combined, current) => sparql`${combined}\n\n${current};`, sparql``)
       await this.__client.query.update(query.toString())
     }
+  }
+
+  private static dropGraphCommand(id: NamedNode) {
+    return sparql`DROP SILENT GRAPH ${id}`
+  }
+
+  private static * deleteResourceCommands(id: NamedNode, now: Date, actor: NamedNode | undefined) {
+    const activity = Activity.newId()
+
+    yield SparqlStoreFacade.dropGraphCommand(id)
+
+    yield INSERT.DATA`
+      GRAPH ${activity} {
+        ${activity} a ${as.Delete} ;
+        ${as.startTime} ${now} ;
+        ${as.endTime} ${now} ;
+        ${as.object} ${id} ;
+        ${actor ? sparql`${as.actor} ${actor}` : ''}
+      }`._getTemplateResult()
+  }
+
+  private static * insertResourceCommands(pointer: GraphPointer<NamedNode>, now: Date, actor: ResourceIdentifier | undefined) {
+    const activity = Activity.newId()
+
+    yield INSERT`
+      GRAPH ${activity} {
+        ${activity} a ?type ;
+        ${as.startTime} ?now ;
+        ${as.endTime} ?now ;
+        ${as.object} ?object ;
+        ${actor ? sparql`${as.actor} ${actor}` : ''}
+      }`.WHERE`
+        BIND ( ${now} as ?now )
+        BIND ( ${pointer.term} as ?object )
+        BIND (
+          IF(EXISTS { GRAPH ?object { ?object ?p ?o } }, ${as.Update}, ${as.Create}) as ?type
+        )
+      `._getTemplateResult()
+
+    yield SparqlStoreFacade.dropGraphCommand(pointer.term)
+
+    yield INSERT.DATA`
+      GRAPH ${pointer.term} {
+        ${[...pointer.dataset].map(toTriple)}
+      }
+    `._getTemplateResult()
   }
 }
 
