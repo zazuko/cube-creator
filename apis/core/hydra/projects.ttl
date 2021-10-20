@@ -20,7 +20,9 @@ cc:CubeProject
     [ hydra:property
           cc:csvMapping ] ,
     [ hydra:property
-          cc:export ] ;
+          cc:export ],
+    [ hydra:property
+          cc:projectDetails ] ;
   hydra:supportedOperation
     [
       a
@@ -141,6 +143,20 @@ cc:export
         [
           a code:EcmaScript ;
           code:link <file:handlers/cube-projects#getExport> ;
+        ] ;
+    ] ;
+.
+
+cc:projectDetails
+  a rdf:Property, hydra:Link ;
+  hydra:supportedOperation
+    [
+      a hydra:Operation ;
+      hydra:method "GET" ;
+      code:implementedBy
+        [
+          a code:EcmaScript ;
+          code:link <file:handlers/cube-projects#getDetails> ;
         ] ;
     ] ;
 .

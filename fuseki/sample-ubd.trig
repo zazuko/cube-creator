@@ -34,6 +34,7 @@ graph <cube-project/ubd> {
     cc:jobCollection <cube-project/ubd/jobs> ;
     cc:projectSourceKind <https://cube-creator.zazuko.com/vocab#projectSourceKind/CSV> ;
     cc:export <cube-project/ubd/export> ;
+    cc:projectDetails <cube-project/ubd/details> ;
   .
   <user> schema:name "User Name"
 }

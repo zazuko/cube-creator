@@ -7,6 +7,7 @@ import { createProject } from '../domain/cube-projects/create'
 import { updateProject } from '../domain/cube-projects/update'
 import { deleteProject } from '../domain/cube-projects/delete'
 import { getExportedProject } from '../domain/cube-projects/export'
+import { getProjectDetails } from '../domain/cube-projects/details'
 import * as triggers from '../pipeline/trigger'
 import { GraphPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'
@@ -109,4 +110,13 @@ export const getExport = protectedResource(cors({ exposedHeaders: 'content-dispo
     },
   })
   quadStream.pipe(res)
+}))
+
+export const getDetails = protectedResource(asyncMiddleware(async (req, res) => {
+  const quadStream = await getProjectDetails({
+    project: req.hydra.resource.term,
+    resource: req.hydra.term,
+  })
+
+  return res.quadStream(quadStream)
 }))
