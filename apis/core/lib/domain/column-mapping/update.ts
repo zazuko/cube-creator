@@ -129,7 +129,7 @@ async function updateColumnMapping<T extends ColumnMapping>({
 
       const dimension = dimensionMetaDataCollection.find({ cubeIdentifier, organization, targetProperty: columnMapping.targetProperty })
       if (!dimension) {
-        throw new NotFoundError(dimension)
+        throw new Error(`Mapping for property ${columnMapping.targetProperty.value} not found`)
       }
 
       dimension.about = organization.createIdentifier({
