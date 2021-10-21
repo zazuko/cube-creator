@@ -149,7 +149,6 @@
     [
       sh:path schema:identifier ;
       sh:datatype xsd:string ;
-      sh:pattern "^[a-z0-9-]+$" ;
     ],
     [
       sh:path schema:inDefinedTermSet ;
