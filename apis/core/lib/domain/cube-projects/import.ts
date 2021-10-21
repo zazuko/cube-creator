@@ -158,7 +158,7 @@ export async function importProject({
 
     const orgProfile = await store.getResource<Organization>(maintainer)
     const cubeId = orgProfile.createIdentifier({ cubeIdentifier })
-    importedDataset = importedDataset.map(alignCubeNamespace(originalCubeId.value, cubeId.value + '/'))
+    importedDataset = importedDataset.map(alignCubeNamespace(originalCubeId.value, cubeId.value))
   }
 
   return {
