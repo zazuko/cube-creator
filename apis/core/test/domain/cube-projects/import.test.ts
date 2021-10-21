@@ -71,7 +71,7 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/import', () => {
       await expect(promise).eventually.rejectedWith(BadRequest, /^Missing cube identifier/)
     })
 
-    it('throws identifier is already used', async () => {
+    it('throws when identifier is already used', async () => {
       // given
       const exported = (project: string) => {
         const dataset = $rdf.dataset()
@@ -197,7 +197,7 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/import', () => {
         clownface({ dataset, graph: $rdf.namedNode(`${project}dataset`) })
           .namedNode(`${project}dataset`)
           .addOut(rdf.type, schema.Dataset)
-          .addOut(schema.hasPart, $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/'))
+          .addOut(schema.hasPart, $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28'))
 
         return dataset.toStream()
       }
@@ -248,8 +248,8 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/import', () => {
         clownface({ dataset, graph: $rdf.namedNode(`${project}dataset`) })
           .namedNode(`${project}dataset`)
           .addOut(rdf.type, schema.Dataset)
-          .addOut(schema.hasPart, $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/'))
-          .namedNode('https://environment.ld.admin.ch/foen/ubd/28/')
+          .addOut(schema.hasPart, $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28'))
+          .namedNode('https://environment.ld.admin.ch/foen/ubd/28')
           .addOut(rdf.type, cube.Cube)
         clownface({ dataset, graph: $rdf.namedNode(`${project}dimensions-metadata`) })
           .namedNode(`${project}dimensions-metadata/dimension-year`)
@@ -276,9 +276,9 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/import', () => {
       ).to.deep.equal($rdf.namedNode('https://test.ld.admin.ch/org/cube/id/dimension/year'))
       expect(
         data.namedNode(ns('/dataset')).out(schema.hasPart).term,
-      ).to.deep.equal($rdf.namedNode('https://test.ld.admin.ch/org/cube/id/'))
+      ).to.deep.equal($rdf.namedNode('https://test.ld.admin.ch/org/cube/id'))
       expect(
-        data.namedNode('https://test.ld.admin.ch/org/cube/id/').out(rdf.type).term,
+        data.namedNode('https://test.ld.admin.ch/org/cube/id').out(rdf.type).term,
       ).to.deep.equal(cube.Cube)
       expect(data.node(project.id)).to.matchShape({
         property: {
@@ -306,7 +306,7 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/import', () => {
         clownface({ dataset, graph: $rdf.namedNode(`${project}dataset`) })
           .namedNode(`${project}dataset`)
           .addOut(rdf.type, schema.Dataset)
-          .addOut(schema.hasPart, $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/'))
+          .addOut(schema.hasPart, $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28'))
 
         return dataset.toStream()
       }
@@ -350,7 +350,7 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/import', () => {
         clownface({ dataset, graph: $rdf.namedNode(`${project}dataset`) })
           .namedNode(`${project}dataset`)
           .addOut(rdf.type, schema.Dataset)
-          .addOut(schema.hasPart, $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/'))
+          .addOut(schema.hasPart, $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28'))
 
         return dataset.toStream()
       }
