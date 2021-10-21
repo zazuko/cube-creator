@@ -174,10 +174,12 @@ export async function getExportedDimension({ resource, store, client = streamCli
 
       OPTIONAL {
         ?shape ${sh.targetNode} ?term .
+        filter( isBlank(?shape) )
         ?shape ${sh.property} ?shapeProp .
       }
       OPTIONAL {
         ?setShape ${sh.targetNode} ${dimension.term} .
+        filter( isBlank(?setShape) )
         ?setShape ${sh.property} ?setShapeProp .
       }
     `.execute(client.query)
@@ -201,8 +203,11 @@ export async function getExportedDimension({ resource, store, client = streamCli
     callback()
   })
 
+  const materialized = await $rdf.dataset()
+    .import(quads.pipe(filterProperties()).pipe(transformToQuads).pipe(urnToBlanks()))
+
   return {
     dimension,
-    data: quads.pipe(filterProperties()).pipe(transformToQuads).pipe(urnToBlanks()),
+    data: materialized.toStream(),
   }
 }
