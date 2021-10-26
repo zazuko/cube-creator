@@ -85,7 +85,7 @@ export class SparqlStoreFacade implements TripleStoreFacade {
   }
 
   async writeChanges(resources: Map<NamedNode, GraphPointer<NamedNode, ChangelogDataset>>, deletedResources: Iterable<NamedNode>): Promise<void> {
-    const now = new Date()
+    const now = Activity.now()
     const actor = this.getUser?.()
 
     const graphsToDelete = new TermSet([...deletedResources])

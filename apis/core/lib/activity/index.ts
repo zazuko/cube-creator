@@ -5,3 +5,7 @@ import { nanoid } from 'nanoid'
 export function newId() {
   return $rdf.namedNode(`${env.API_CORE_BASE}activity/${nanoid()}`)
 }
+
+export function now() {
+  return new Date()
+}

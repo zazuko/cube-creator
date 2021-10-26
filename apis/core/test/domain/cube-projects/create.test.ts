@@ -268,6 +268,22 @@ describe('domain/cube-projects/create', () => {
       expect(project.export).to.be.ok
     })
 
+    it('initializes project details link', async () => {
+      // given
+      const resource = clownface({ dataset: $rdf.dataset() })
+        .namedNode('')
+        .addOut(rdfs.label, 'Foo bar project')
+        .addOut(schema.maintainer, organization.id)
+        .addOut(dcterms.identifier, 'ubd/28')
+        .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
+
+      // when
+      const { project } = await createProject({ resource, store, projectsCollection, user, userName })
+
+      // then
+      expect(project.details).to.be.ok
+    })
+
     it('initializes project links to child resources dataset and cube graph', async () => {
       // given
       const resource = clownface({ dataset: $rdf.dataset() })

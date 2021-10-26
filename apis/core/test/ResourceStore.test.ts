@@ -1,4 +1,4 @@
-import { describe, it, beforeEach } from 'mocha'
+import { describe, it, beforeEach, before, after } from 'mocha'
 import { expect } from 'chai'
 import sinon from 'sinon'
 import $rdf from 'rdf-ext'
@@ -11,6 +11,7 @@ import { as, hydra, rdf, rdfs, schema } from '@tpluscode/rdf-ns-builders'
 import { ASK, DELETE, INSERT } from '@tpluscode/sparql-builder'
 import { ccClients } from '@cube-creator/testing/lib'
 import { manages } from '../lib/resources/hydraManages'
+import * as Activity from '../lib/activity'
 
 describe('ResourceStore', () => {
   let client: StreamClient
@@ -24,6 +25,17 @@ describe('ResourceStore', () => {
       query,
       store: store as any,
     }
+  })
+
+  before(() => {
+    sinon.stub(Activity, 'now')
+      .returns(new Date(Date.parse('2021-10-26T08:00:00.000Z')))
+    sinon.stub(Activity, 'newId')
+      .returns($rdf.namedNode('https://cube-creator.lndo.site/activity/test-activity'))
+  })
+
+  after(() => {
+    sinon.restore()
   })
 
   describe('get', () => {
