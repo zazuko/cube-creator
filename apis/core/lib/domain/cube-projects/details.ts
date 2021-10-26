@@ -1,30 +1,25 @@
-import { Variable, Literal, NamedNode, Stream } from 'rdf-js'
+import { Variable, Literal, NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
-import { Readable } from 'stream'
-import StreamClient from 'sparql-http-client'
 import { CONSTRUCT, sparql } from '@tpluscode/sparql-builder'
-import { SparqlQueryExecutable } from '@tpluscode/sparql-builder/lib'
+import { SparqlGraphQueryExecutable, SparqlQuery, SparqlQueryExecutable } from '@tpluscode/sparql-builder/lib'
 import { schema } from '@tpluscode/rdf-ns-builders/strict'
-import { streamClient } from '../../query-client'
 import * as DetailParts from './details/index'
-
-interface GetProjectDetails{
-  project: NamedNode
-  resource: NamedNode
-  client?: StreamClient
-}
 
 export interface ProjectDetailPart {
   (project: NamedNode, variable: Variable): [SparqlQueryExecutable, ...[Literal, ...Literal[]]]
 }
 
+interface GetProjectDetails{
+  project: NamedNode
+  resource: NamedNode
+  parts?: ProjectDetailPart[]
+}
+
 export function getProjectDetails({
   project,
   resource,
-  client = streamClient,
-}: GetProjectDetails): Promise<Stream & Readable> {
-  const parts = Object.values(DetailParts)
-
+  parts = Object.values(DetailParts),
+}: GetProjectDetails): SparqlGraphQueryExecutable & SparqlQuery {
   const { graph, patterns } = parts.reduce(({ patterns, graph }, buildPart, index) => {
     const variable = $rdf.variable(`part${index + 1}`)
 
@@ -36,6 +31,7 @@ export function getProjectDetails({
       ?details ${schema.hasPart} [
         ${schema.name} ${labels} ;
         ${schema.value} ${variable} ;
+        ${schema.about} ${project} ;
       ] .`,
       patterns: sparql`${patterns}
 
@@ -48,5 +44,5 @@ export function getProjectDetails({
     patterns: sparql`BIND ( ${resource} as ?details )`,
   })
 
-  return CONSTRUCT`${graph}`.WHERE`${patterns}`.execute(client.query)
+  return CONSTRUCT`${graph}`.WHERE`${patterns}`
 }

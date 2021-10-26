@@ -17,6 +17,7 @@ import * as ns from '@tpluscode/rdf-ns-builders'
 import cors from 'cors'
 import { isMultipart } from '@cube-creator/express/multipart'
 import { postImportedProject } from './cube-projects/import'
+import { streamClient } from '../query-client'
 
 const trigger = (triggers as Record<string, (job: GraphPointer<NamedNode>, params?: GraphPointer) => void>)[env.PIPELINE_TYPE]
 
@@ -116,7 +117,7 @@ export const getDetails = protectedResource(asyncMiddleware(async (req, res) => 
   const quadStream = await getProjectDetails({
     project: req.hydra.resource.term,
     resource: req.hydra.term,
-  })
+  }).execute(streamClient.query)
 
   return res.quadStream(quadStream)
 }))
