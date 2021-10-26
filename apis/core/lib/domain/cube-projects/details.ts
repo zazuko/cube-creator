@@ -35,7 +35,7 @@ export function getProjectDetails({
       ] .`,
       patterns: sparql`${patterns}
 
-      {
+      OPTIONAL {
         ${subselect}
       }`,
     }

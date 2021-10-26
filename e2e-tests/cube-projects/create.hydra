@@ -41,7 +41,9 @@ With Class api:EntryPoint {
                 Expect Property schema:maintainer
                 Expect Property dcterms:identifier
                 Expect Property cc:export
-                Expect Link cc:projectDetails
+                Expect Link cc:projectDetails {
+                    Expect Property schema:hasPart
+                }
 
                 // Project dataset
                 Expect Link cc:dataset {

@@ -31,7 +31,7 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/details', () => {
 
     // then
     const subselects = construct.where
-      ?.filter((pattern): pattern is GroupPattern => pattern.type === 'group')
+      ?.filter((pattern): pattern is GroupPattern => pattern.type === 'optional')
       .flatMap(group => group.patterns.filter(pattern => pattern.type === 'query'))
     expect(subselects).to.have.length(2)
   })
