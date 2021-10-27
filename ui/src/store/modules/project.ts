@@ -339,7 +339,6 @@ const mutations: MutationTree<ProjectState> = {
 
   reset (state) {
     Object.assign(state, getInitialState())
-    console.log(state)
   },
 }
 
