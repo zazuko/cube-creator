@@ -2,18 +2,26 @@ import { ActionTree, MutationTree, GetterTree } from 'vuex'
 import { api } from '@/api'
 import { RootState } from '../types'
 import * as ns from '@cube-creator/core/namespace'
-import { ProjectsCollection } from '@cube-creator/model'
-import { serializeProjectsCollection } from '../serializers'
+import { Project, ProjectsCollection } from '@cube-creator/model'
+import { serializeProjectDetails, serializeProjectsCollection } from '../serializers'
+import { RdfResource } from 'alcaeus'
 
 export interface ProjectsState {
   collection: null | ProjectsCollection
+  details: Record<string, RdfResource>
 }
 
 const initialState = {
   collection: null,
+  details: {},
 }
 
 const getters: GetterTree<ProjectsState, RootState> = {
+  getProjectDetails (state) {
+    return (project: Project): RdfResource | null => {
+      return state.details[project.id.value] ?? null
+    }
+  }
 }
 
 const actions: ActionTree<ProjectsState, RootState> = {
@@ -26,11 +34,26 @@ const actions: ActionTree<ProjectsState, RootState> = {
     const collection = await api.fetchResource(collectionURI.value)
     context.commit('storeCollection', collection)
   },
+
+  async fetchProjectDetails (context, project) {
+    const details = await api.fetchResource(project.details.id.value)
+
+    context.commit('storeProjectDetails', { project, details })
+
+    return details
+  },
 }
 
 const mutations: MutationTree<ProjectsState> = {
   storeCollection (state, collection) {
     state.collection = collection ? serializeProjectsCollection(collection) : null
+  },
+
+  storeProjectDetails (state, { project, details }) {
+    state.details = {
+      ...state.details,
+      [project.id.value]: serializeProjectDetails(details),
+    }
   },
 }
 

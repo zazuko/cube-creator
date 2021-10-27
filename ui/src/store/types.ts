@@ -10,6 +10,7 @@ import { SharedDimensionState } from './modules/sharedDimension'
 import { GraphPointer } from 'clownface'
 import { ResourceIdentifier } from 'alcaeus'
 import { TypeCollection } from '@tpluscode/rdfine/lib/TypeCollection'
+import { Project } from '@cube-creator/model'
 
 export interface RootState {
   app: AppState
@@ -41,4 +42,14 @@ export interface SharedDimensionTerm extends Resource {
   identifiers: string[]
   validThrough?: Date
   canonical: Term | undefined
+}
+
+export interface ProjectDetailPart {
+  id: ResourceIdentifier
+  name: string | undefined
+  value: Term | undefined
+}
+
+export interface ProjectDetails extends Resource {
+  parts: ProjectDetailPart[]
 }

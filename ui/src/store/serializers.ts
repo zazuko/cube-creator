@@ -17,9 +17,9 @@ import {
 import { IdentifierMapping, LiteralColumnMapping, ReferenceColumnMapping } from '@cube-creator/model/ColumnMapping'
 import { Link } from '@cube-creator/model/lib/Link'
 import { dcterms, oa, rdf, rdfs, schema } from '@tpluscode/rdf-ns-builders'
-import { RdfResource } from '@tpluscode/rdfine/RdfResource'
+import { RdfResource, ResourceIdentifier } from '@tpluscode/rdfine/RdfResource'
 import { Collection } from 'alcaeus'
-import { SharedDimension, SharedDimensionTerm } from './types'
+import { ProjectDetails, SharedDimension, SharedDimensionTerm } from './types'
 
 export const displayLanguage = ['en', 'de', 'fr', '']
 
@@ -28,6 +28,17 @@ export function serializeProjectsCollection (collection: ProjectsCollection): Pr
     ...serializeResource(collection),
     member: collection.member,
   }) as ProjectsCollection
+}
+
+export function serializeProjectDetails (details: RdfResource): ProjectDetails {
+  return Object.freeze({
+    ...serializeResource(details),
+    parts: details.pointer.out(schema.hasPart).map(part => ({
+      id: part.term as ResourceIdentifier,
+      name: part.out(schema.name).value,
+      value: part.out(schema.value).term,
+    })),
+  })
 }
 
 export function serializeSourcesCollection (collection: SourcesCollection): SourcesCollection {
