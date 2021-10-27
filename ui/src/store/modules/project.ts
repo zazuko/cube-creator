@@ -47,7 +47,7 @@ export interface ProjectState {
   selectedLanguage: string
 }
 
-const initialState = {
+const getInitialState = () => ({
   createIdentifier: null,
   project: null,
   csvMapping: null,
@@ -59,7 +59,7 @@ const initialState = {
   dimensionMetadataCollection: null,
   jobCollection: null,
   selectedLanguage: 'en',
-}
+})
 
 const getters: GetterTree<ProjectState, RootState> = {
   sources (state) {
@@ -146,6 +146,10 @@ const actions: ActionTree<ProjectState, RootState> = {
     context.dispatch('fetchJobCollection')
 
     return project
+  },
+
+  reset (context) {
+    context.commit('reset')
   },
 
   async fetchCSVMapping (context) {
@@ -331,12 +335,17 @@ const mutations: MutationTree<ProjectState> = {
 
   storeSelectedLanguage (state, language) {
     state.selectedLanguage = language
-  }
+  },
+
+  reset (state) {
+    Object.assign(state, getInitialState())
+    console.log(state)
+  },
 }
 
 export default {
   namespaced: true,
-  state: initialState,
+  state: getInitialState(),
   getters,
   actions,
   mutations,
