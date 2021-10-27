@@ -24,15 +24,17 @@ export function getProjectDetails({
     const variable = $rdf.variable(`part${index + 1}`)
 
     const [subselect, ...labels] = buildPart(project, variable)
+    const part = $rdf.namedNode(`urn:part:${index + 1}`)
 
     return {
       graph: sparql`${graph}
 
-      ?details ${schema.hasPart} [
+      ?details ${schema.hasPart} ${part} .
+      ${part}
         ${schema.name} ${labels} ;
         ${schema.value} ${variable} ;
         ${schema.about} ${project} ;
-      ] .`,
+      .`,
       patterns: sparql`${patterns}
 
       OPTIONAL {
