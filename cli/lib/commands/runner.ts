@@ -108,9 +108,8 @@ export function create<TOptions extends RunOptions>({ pipelineSources, prepare }
     bufferDebug(run.pipeline, jobUri, { interval: 100 })
 
     await updateJobStatus({
-      jobUri,
       modified: new Date(),
-      executionUrl: variables.get('executionUrl'),
+      variables,
       status: schema.ActiveActionStatus,
       apiClient,
     })
@@ -118,8 +117,7 @@ export function create<TOptions extends RunOptions>({ pipelineSources, prepare }
     async function jobFailed(error: Error) {
       await updateJobStatus({
         modified: timestamp,
-        jobUri: run.pipeline.context.variables.get('jobUri'),
-        executionUrl: run.pipeline.context.variables.get('executionUrl'),
+        variables: run.pipeline.context.variables,
         status: schema.FailedActionStatus,
         error,
         apiClient,
@@ -134,8 +132,7 @@ export function create<TOptions extends RunOptions>({ pipelineSources, prepare }
       .then(() =>
         updateJobStatus({
           modified: timestamp,
-          jobUri: run.pipeline.context.variables.get('jobUri'),
-          executionUrl: run.pipeline.context.variables.get('executionUrl'),
+          variables: run.pipeline.context.variables,
           status: schema.CompletedActionStatus,
           apiClient,
         }))

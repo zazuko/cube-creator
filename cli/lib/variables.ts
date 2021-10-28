@@ -32,5 +32,6 @@ declare module 'barnard59-core' {
     metadataResource: string
     datasetResource: string
     transformed: { csvwResource: Csvw.Table<DatasetExt> ; isObservationTable: boolean }
+    lastTransformed: { csv?: string; row?: number }
   }
 }

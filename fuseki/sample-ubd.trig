@@ -683,6 +683,7 @@ graph <cube-project/ubd/jobs> {
 graph <cube-project/ubd/csv-mapping/jobs/test-job> {
   <cube-project/ubd/csv-mapping/jobs/test-job>
     a hydra:Resource, cc:Job, cc:TransformJob ;
+    cc:project <cube-project/ubd> ;
     cc:tables <cube-project/ubd/csv-mapping/tables> ;
     cc:dimensionMetadata <cube-project/ubd/dimensions-metadata> ;
     schema:name "cli-test" ;
@@ -693,10 +694,33 @@ graph <cube-project/ubd/csv-mapping/jobs/test-job> {
   .
 }
 
+<cube-project/ubd/csv-mapping/jobs/failed-job> void:inDataset <ubd-example> .
+graph <cube-project/ubd/csv-mapping/jobs/failed-job> {
+  <cube-project/ubd/csv-mapping/jobs/failed-job>
+    a hydra:Resource, cc:Job, cc:TransformJob ;
+    cc:project <cube-project/ubd> ;
+    cc:tables <cube-project/ubd/csv-mapping/tables> ;
+    cc:dimensionMetadata <cube-project/ubd/dimensions-metadata> ;
+    schema:name "failed job" ;
+    cc:cubeGraph <cube-project/ubd/cube-data> ;
+    dcterms:created "2020-10-29T11:01:54"^^xsd:dateTime ;
+    rdfs:seeAlso <https://github.com/zazuko/cube-creator/actions/runs/345020887> ;
+    schema:actionStatus schema:FailedActionStatus ;
+    schema:error
+      [
+        a schema:Thing ;
+        schema:name "Tast error" ;
+        schema:disambiguatingDescription "Failed to process for 1234" ;
+        schema:description "The error stack trace" ;
+      ] ;
+  .
+}
+
 <cube-project/ubd/csv-mapping/jobs/hung-job> void:inDataset <ubd-example> .
 graph <cube-project/ubd/csv-mapping/jobs/hung-job> {
   <cube-project/ubd/csv-mapping/jobs/hung-job>
     a hydra:Resource, cc:Job, cc:TransformJob ;
+    cc:project <cube-project/ubd> ;
     cc:tables <cube-project/ubd/csv-mapping/tables> ;
     cc:dimensionMetadata <cube-project/ubd/dimensions-metadata> ;
     schema:name "hung job" ;
@@ -712,6 +736,7 @@ graph <cube-project/ubd/csv-mapping/jobs/active-job> {
   <cube-project/ubd/csv-mapping/jobs/active-job>
     a hydra:Resource, cc:Job, cc:TransformJob ;
     cc:tables <cube-project/ubd/csv-mapping/tables> ;
+    cc:project <cube-project/ubd> ;
     cc:dimensionMetadata <cube-project/ubd/dimensions-metadata> ;
     schema:name "active job job" ;
     cc:cubeGraph <cube-project/ubd/cube-data> ;
@@ -728,6 +753,7 @@ graph <cube-project/ubd/csv-mapping/jobs/broken-job> {
     cc:tables <cube-project/ubd/csv-mapping/no-tables> ;
     cc:dimensionMetadata <cube-project/ubd/dimensions-metadata> ;
     schema:name "cli-test" ;
+    cc:project <cube-project/ubd> ;
   .
 }
 

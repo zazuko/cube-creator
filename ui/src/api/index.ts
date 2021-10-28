@@ -5,6 +5,7 @@ import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import { hydra, sh } from '@tpluscode/rdf-ns-builders'
 import { ShapeBundle } from '@rdfine/shacl/bundles'
 import type { Shape } from '@rdfine/shacl'
+import { ThingMixin } from '@rdfine/schema'
 import { Store } from 'vuex'
 import store from '@/store'
 import { RootState } from '@/store/types'
@@ -36,6 +37,7 @@ Hydra.resources.factory.addMixin(TableMixin)
 Hydra.resources.factory.addMixin(JobCollectionMixin)
 Hydra.resources.factory.addMixin(OperationMixin)
 Hydra.resources.factory.addMixin(...ShapeBundle)
+Hydra.resources.factory.addMixin(ThingMixin)
 
 // Inject the access token in all requests if present
 Hydra.defaultHeaders = ({ uri }) => prepareHeaders(uri, store)

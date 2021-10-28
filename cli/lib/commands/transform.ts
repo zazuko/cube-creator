@@ -12,6 +12,8 @@ export default runner.create<TransformRunOptions>({
     return ['main', 'from-api', `to-${to}`, 'validate']
   },
   prepare(_, variable) {
+    variable.set('lastTransformed', {})
+
     const Hydra = variable.get('apiClient')
 
     Hydra.resources.factory.addMixin(...Object.values(Csvw))
