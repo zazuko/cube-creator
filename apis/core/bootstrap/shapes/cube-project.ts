@@ -13,6 +13,7 @@ const generatedProperties = [
   cc.latestPublishedRevision,
   cc.csvMapping,
   cc.export,
+  cc.projectDetails,
 ]
 
 const projectProperties = turtle`

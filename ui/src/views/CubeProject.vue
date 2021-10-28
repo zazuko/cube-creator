@@ -84,6 +84,7 @@ export default class CubeProjectView extends Vue {
 
   beforeDestroy (): void {
     this.stopPolling()
+    this.$store.dispatch('project/reset')
   }
 
   async pollJobs (): Promise<void> {

@@ -1,3 +1,4 @@
+PREFIX as: <https://www.w3.org/ns/activitystreams#>
 base <https://cube-creator.lndo.site/>
 prefix schema: <http://schema.org/>
 prefix dcterms: <http://purl.org/dc/terms/>
@@ -34,6 +35,7 @@ graph <cube-project/ubd> {
     cc:jobCollection <cube-project/ubd/jobs> ;
     cc:projectSourceKind <https://cube-creator.zazuko.com/vocab#projectSourceKind/CSV> ;
     cc:export <cube-project/ubd/export> ;
+    cc:projectDetails <cube-project/ubd/details> ;
   .
   <user> schema:name "User Name"
 }
@@ -778,5 +780,41 @@ graph <cube-project/ubd/csv-mapping/jobs/finished-publish-job> {
     cc:revision 1 ;
     schema:creativeWorkStatus <https://ld.admin.ch/vocabulary/CreativeWorkStatus/Draft> ;
     schema:workExample <https://ld.admin.ch/application/visualize> ;
+  .
+}
+
+<activity/project-created> void:inDataset <ubd-example> .
+graph <activity/project-created> {
+  <activity/project-created>
+    a as:Create ;
+    as:object <cube-project/ubd> ;
+    as:startTime "2020-08-30T12:01:00"^^xsd:dateTime ;
+  .
+}
+
+<activity/mapping-deleted> void:inDataset <ubd-example> .
+graph <activity/mapping-deleted> {
+  <activity/mapping-deleted>
+    a as:Delete ;
+    as:object <cube-project/ubd/dimension-mapping/deleted> ;
+    as:startTime "2020-10-11T12:01:00"^^xsd:dateTime ;
+  .
+}
+
+<activity/project-updated> void:inDataset <ubd-example> .
+graph <activity/project-updated> {
+  <activity/project-update>
+    a as:Update ;
+    as:object <cube-project/ubd> ;
+    as:startTime "2020-09-30T12:01:00"^^xsd:dateTime ;
+  .
+}
+
+<activity/publish-job-created> void:inDataset <ubd-example> .
+graph <activity/publish-job-created> {
+  <activity/publish-job-created>
+    a as:Create ;
+    as:object <cube-project/ubd/csv-mapping/jobs/finished-publish-job> ;
+    as:startTime "2020-10-30T12:01:00"^^xsd:dateTime ;
   .
 }

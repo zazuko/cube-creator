@@ -62,11 +62,15 @@ export default class extends Vue {
   }
 
   async loadCubeResource (): Promise<GraphPointer | null> {
+    if (!this.project) {
+      return null
+    }
+
     if (this.node.termType !== 'NamedNode') {
       return null
     }
 
-    const cubeGraph = this.project?.cubeGraph
+    const cubeGraph = this.project.cubeGraph
     if (!cubeGraph) throw new Error('Project does not have a cubeGraph')
 
     const dataUrl = new URL(cubeGraph.value)

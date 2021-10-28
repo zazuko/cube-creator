@@ -1,6 +1,6 @@
 import express from 'express'
 import once from 'once'
-import ResourceStoreImpl from '../ResourceStore'
+import ResourceStoreImpl, { SparqlStoreFacade } from '../ResourceStore'
 import { streamClient } from '../query-client'
 
 declare module 'express-serve-static-core' {
@@ -11,7 +11,7 @@ declare module 'express-serve-static-core' {
 
 export function resourceStore(req: express.Request, res: unknown, next: express.NextFunction) {
   req.resourceStore = once(() => {
-    return new ResourceStoreImpl(streamClient)
+    return new ResourceStoreImpl(new SparqlStoreFacade(streamClient, () => req.user?.id))
   })
 
   next()

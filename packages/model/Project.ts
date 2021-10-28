@@ -26,6 +26,7 @@ export interface Project extends RdfResource {
   publishedRevision: number
   sourceKind: NamedNode
   export: Link
+  details: Link
 }
 
 export interface CsvProject extends Project {
@@ -88,6 +89,9 @@ export function ProjectMixin<Base extends Constructor>(base: Base): Mixin {
 
     @property.resource({ path: cc.export, initial: childResource('export') })
     export!: Link
+
+    @property.resource({ path: cc.projectDetails, initial: childResource('details') })
+    details!: Link
   }
 
   return Impl
