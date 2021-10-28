@@ -35,18 +35,16 @@ async function loadTransformJob(jobUri: string, log: Logger, variables: Params['
 }
 
 interface JobStatusUpdate {
+  jobUri: string
+  executionUrl: string | undefined
   status: Schema.ActionStatusType
   modified: Date
   error?: Error | string
   apiClient: HydraClient
-  variables: VariableMap
+  lastTransformed?: { csv?: string; row?: number }
 }
 
-export async function updateJobStatus({ variables, status, error, modified, apiClient }: JobStatusUpdate) {
-  const jobUri = variables.get('jobUri')
-  const executionUrl = variables.get('executionUrl')
-  const lastTransformed = variables.get('lastTransformed')
-
+export async function updateJobStatus({ jobUri, executionUrl, lastTransformed, status, error, modified, apiClient }: JobStatusUpdate) {
   try {
     const { representation } = await apiClient.loadResource<Job | TransformJob>(jobUri)
     const job = representation?.root
