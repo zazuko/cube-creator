@@ -8,6 +8,9 @@
       <p class="has-text-grey-dark">
         Triggered at {{ job.created | format-date }}
       </p>
+      <p v-if="job.error && job.error.disambiguatingDescription" class="has-background-danger-light">
+        {{ job.error.disambiguatingDescription }}
+      </p>
     </header>
     <div class="is-flex gap-1">
       <b-tag v-if="job.revision">
@@ -42,8 +45,8 @@
         <b-icon icon="book" />
         <span>View full log</span>
       </a>
-      <pre v-show="error" class="has-background-danger-light">
-        {{ error }}
+      <pre v-if="error" v-show="error" class="has-background-danger-light">
+        {{ error.description }}
       </pre>
     </div>
   </div>
@@ -52,7 +55,7 @@
 
 <script lang="ts">
 import { Job } from '@cube-creator/model'
-import { CreativeWork } from '@rdfine/schema'
+import type { CreativeWork, Thing } from '@rdfine/schema'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { Component, Vue } from 'vue-property-decorator'
 import ExternalTerm from '@/components/ExternalTerm.vue'
@@ -80,8 +83,8 @@ export default class JobView extends Vue {
     return this.job?.link?.id.value
   }
 
-  get error (): string | undefined {
-    return this.job?.error?.pointer.out(schema.description).value
+  get error (): Thing | undefined {
+    return this.job?.error
   }
 }
 </script>

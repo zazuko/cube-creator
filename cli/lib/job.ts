@@ -35,17 +35,20 @@ async function loadTransformJob(jobUri: string, log: Logger, variables: Params['
 }
 
 interface JobStatusUpdate {
-  jobUri: string
-  executionUrl: string | undefined
   status: Schema.ActionStatusType
   modified: Date
   error?: Error | string
   apiClient: HydraClient
+  variables: VariableMap
 }
 
-export async function updateJobStatus({ jobUri, executionUrl, status, error, modified, apiClient }: JobStatusUpdate) {
+export async function updateJobStatus({ variables, status, error, modified, apiClient }: JobStatusUpdate) {
+  const jobUri = variables.get('jobUri')
+  const executionUrl = variables.get('executionUrl')
+  const lastTransformed = variables.get('lastTransformed')
+
   try {
-    const { representation } = await apiClient.loadResource<Job>(jobUri)
+    const { representation } = await apiClient.loadResource<Job | TransformJob>(jobUri)
     const job = representation?.root
     if (!job) {
       logger.error('Could not load job to update')
@@ -69,11 +72,15 @@ export async function updateJobStatus({ jobUri, executionUrl, status, error, mod
     if (error) {
       const name = error instanceof Error ? error.name : error
       const description = error instanceof Error ? error.stack : ''
+      const disambiguatingDescription = lastTransformed?.csv
+        ? `Last transformed row ${lastTransformed.row} of '${lastTransformed.csv}'`
+        : ''
 
       job.error = {
         types: [schema.Thing],
         name,
         description,
+        disambiguatingDescription,
       } as any
     }
 

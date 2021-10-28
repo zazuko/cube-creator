@@ -58,6 +58,7 @@
   :steps [ :stepList (
                        <#LoadCsv>
                        <#parse>
+                       <#inspectCsvw>
                        <#substituteUndefined>
                        <#filterObservationTable>
                        <#mapDimensions>
@@ -74,6 +75,7 @@
   :steps [ :stepList (
                        <#LoadCsv>
                        <#parse>
+                       <#inspectCsvw>
                        <#filterNonObservationTable>
                        <#setGraph>
                      ) ] .
@@ -86,6 +88,15 @@
   code:implementedBy [ code:link <node:barnard59-formats/csvw.js#parse> ;
                        a         code:EcmaScriptModule ] ;
   code:arguments     ( <#parseMetadata> ) .
+
+<#inspectCsvw>
+  a :Step ;
+  code:implementedBy
+    [
+      code:link <file:../lib/counters#observeCsvwMetadata> ;
+      a code:EcmaScript
+    ] ;
+.
 
 <#substituteUndefined>
   a                  :Step ;

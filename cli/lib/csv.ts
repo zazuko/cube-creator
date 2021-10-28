@@ -10,6 +10,7 @@ export function openFromCsvw(this: Context) {
   const csvStream = new PassThrough()
   const Hydra = this.variables.get('apiClient')
   const csvw = this.variables.get('transformed').csvwResource
+  const lastTransformed = this.variables.get('lastTransformed')
 
   Promise.resolve().then(async () => {
     const { response, representation } = await Hydra.loadResource<CsvSource>(csvw.url!)
@@ -31,7 +32,10 @@ export function openFromCsvw(this: Context) {
       return
     }
 
-    (csvResponse.body as any).pipe(csvStream)
+    lastTransformed.csv = representation.root.name
+    lastTransformed.row = 0
+
+    ;(csvResponse.body as any).pipe(csvStream)
   })
 
   return readable(csvStream)
