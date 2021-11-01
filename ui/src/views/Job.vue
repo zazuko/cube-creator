@@ -45,7 +45,7 @@
         <b-icon icon="book" />
         <span>View full log</span>
       </a>
-      <pre v-if="error" v-show="error" class="has-background-danger-light">
+      <pre v-if="error" class="has-background-danger-light">
         {{ error.description }}
       </pre>
     </div>
