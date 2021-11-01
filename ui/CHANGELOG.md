@@ -1,5 +1,15 @@
 # @cube-creator/ui
 
+## 1.6.0
+
+### Minor Changes
+
+- 1bcb2035: CSV transformation: track the last processed row and display if job failed
+
+### Patch Changes
+
+- 858f5ff2: Add button to show project details in projects list
+
 ## 1.5.5
 
 ### Patch Changes

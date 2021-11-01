@@ -1,5 +1,11 @@
 # @cube-creator/cli
 
+## 1.7.0
+
+### Minor Changes
+
+- 1bcb2035: CSV transformation: track the last processed row and display if job failed
+
 ## 1.6.5
 
 ### Patch Changes

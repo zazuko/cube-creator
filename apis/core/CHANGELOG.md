@@ -1,5 +1,21 @@
 # @cube-creator/core-api
 
+## 1.6.0
+
+### Minor Changes
+
+- 922698f6: Keep activity log of all resource changes
+- 531971fc: Add endpoint with project details
+
+### Patch Changes
+
+- 3f2f0f23: Project import would add an unwanted trailing slash to cube URI (fixes #910)
+- 5c24f6c1: More informative error when update of dimension mapping fails
+- Updated dependencies [cf174afb]
+- Updated dependencies [6268e069]
+- Updated dependencies [86396403]
+  - @cube-creator/shared-dimensions-api@2.3.1
+
 ## 1.5.2
 
 ### Patch Changes

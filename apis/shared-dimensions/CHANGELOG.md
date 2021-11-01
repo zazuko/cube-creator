@@ -1,5 +1,13 @@
 # @cube-creator/shared-dimensions-api
 
+## 2.3.1
+
+### Patch Changes
+
+- cf174afb: Shared Dimension could not have been imported (fixes #871)
+- 6268e069: Minimize the exported trig of a Shared Dimension (re #912)
+- 86396403: Shared term identifiers would fail validation on import (re #912)
+
 ## 2.3.0
 
 ### Minor Changes
