@@ -39,9 +39,6 @@ async function main() {
 
   app.enable('trust proxy')
 
-  app.use(Sentry.Handlers.requestHandler())
-  app.use(Sentry.Handlers.tracingHandler())
-
   app.use(cors({
     origin: '*',
     credentials: true,
@@ -61,6 +58,10 @@ async function main() {
       next()
     }
   })
+
+  app.use(Sentry.Handlers.requestHandler())
+  app.use(Sentry.Handlers.tracingHandler())
+
   app.use(await authentication())
   app.use(resource)
 
