@@ -19,10 +19,16 @@ import { expectsDisambiguate, preferHydraCollection } from './lib/middleware/ope
 import { errorMappers } from '@cube-creator/api-errors'
 import './lib/domain'
 import upload from './lib/upload'
+import Loader from './lib/Loader'
 
 const apiPath = path.resolve(__dirname, 'hydra')
 const codePath = path.resolve(__dirname, 'lib')
 const baseUri = env.API_CORE_BASE
+const endpointUrl = env.STORE_QUERY_ENDPOINT
+const updateUrl = env.STORE_UPDATE_ENDPOINT
+const storeUrl = env.STORE_GRAPH_ENDPOINT
+const user = env.maybe.STORE_ENDPOINTS_USERNAME
+const password = env.maybe.STORE_ENDPOINTS_PASSWORD
 
 async function main() {
   log('Starting Core API. Environment %s', env.production ? 'production' : 'development')
@@ -75,11 +81,11 @@ async function main() {
     codePath,
     baseUri,
     sparql: {
-      endpointUrl: env.STORE_QUERY_ENDPOINT,
-      updateUrl: env.STORE_UPDATE_ENDPOINT,
-      storeUrl: env.STORE_GRAPH_ENDPOINT,
-      user: env.maybe.STORE_ENDPOINTS_USERNAME,
-      password: env.maybe.STORE_ENDPOINTS_PASSWORD,
+      endpointUrl,
+      updateUrl,
+      storeUrl,
+      user,
+      password,
     },
     middleware: {
       operations: [
@@ -87,6 +93,11 @@ async function main() {
         expectsDisambiguate,
       ],
     },
+    loader: new Loader({
+      endpointUrl,
+      user,
+      password,
+    }),
   }))
 
   app.use(Sentry.Handlers.errorHandler())
