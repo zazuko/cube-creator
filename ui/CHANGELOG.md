@@ -1,5 +1,12 @@
 # @cube-creator/ui
 
+## 1.6.1
+
+### Patch Changes
+
+- 5301528a: Sort projects alphabetically (closes #888)
+- 22fedcf7: Display only the user's projects by default (close #925)
+
 ## 1.6.0
 
 ### Minor Changes
