@@ -26,7 +26,7 @@ export const displayLanguage = ['en', 'de', 'fr', '']
 export function serializeProjectsCollection (collection: ProjectsCollection): ProjectsCollection {
   return Object.freeze({
     ...serializeResource(collection),
-    member: collection.member,
+    member: collection.member.sort((a, b) => a.label.localeCompare(b.label)),
   }) as ProjectsCollection
 }
 
