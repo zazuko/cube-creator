@@ -17,7 +17,7 @@
     </div>
     <div v-if="projectsCollection">
       <div class="panel-tabs">
-        <router-link :to="{ query: { creator: 'me' } }" exact-active-class="is-active">
+        <router-link :to="{ query: { creator: 'me' } }" exact-active-class="is-active" v-if="user">
           Mine
         </router-link>
         <router-link :to="{ query: { creator: 'all' } }" exact-active-class="is-active">
@@ -56,13 +56,13 @@ import * as storeNs from '../store/namespace'
 })
 export default class CubeProjectsView extends Vue {
   @storeNs.projects.State('collection') projectsCollection!: ProjectsCollection | null;
-  @storeNs.auth.Getter('oidcUser') user!: any;
+  @storeNs.auth.Getter('oidcUser') user?: any;
 
   async mounted (): Promise<void> {
     await this.$store.dispatch('projects/fetchCollection')
 
     // Default to filter "my" projects
-    if (!this.$route.query.creator) {
+    if (!this.$route.query.creator && this.user) {
       this.$router.replace({ query: { creator: 'me' } })
     }
   }
