@@ -34,8 +34,11 @@
             {{ part.name }}
           </th>
           <td>
-            <external-term v-if="part.value" :resource="part.value" />
-            <span v-else>-</span>
+            <span v-for="(value, index) in part.values" :key="index">
+              <external-term :resource="value" />
+              <span v-if="index !== part.values.length - 1">, </span>
+            </span>
+            <span v-if="part.values.length === 0">-</span>
           </td>
         </tr>
       </table>

@@ -36,7 +36,7 @@ export function serializeProjectDetails (details: RdfResource): ProjectDetails {
     parts: details.pointer.out(schema.hasPart).map(part => ({
       id: part.term as ResourceIdentifier,
       name: part.out(schema.name).value,
-      value: part.out(schema.value).term,
+      values: part.out(schema.value).terms,
     })),
   })
 }
