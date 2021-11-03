@@ -29,10 +29,11 @@ interface GetSharedTerms {
   sharedDimension: Term
   freetextQuery: string | undefined
   limit?: number
+  offset?: number
   validThrough?: Date
 }
 
-export function getSharedTerms({ sharedDimension, freetextQuery, validThrough, limit = 10 }: GetSharedTerms) {
+export function getSharedTerms({ sharedDimension, freetextQuery, validThrough, limit = 10, offset = 0 }: GetSharedTerms) {
   const term = $rdf.variable('term')
   const name = $rdf.variable('name')
 
@@ -64,7 +65,7 @@ export function getSharedTerms({ sharedDimension, freetextQuery, validThrough, l
     `
     .WHERE`
       {
-        ${select.LIMIT(limit).ORDER().BY(name)}
+        ${select.LIMIT(limit).OFFSET(offset).ORDER().BY(name)}
       }
 
       ${term} ?p ?o .

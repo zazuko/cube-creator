@@ -63,7 +63,7 @@ export default class extends Vue {
         resource,
       })
 
-      this.$store.commit('sharedDimension/storeTerm', term)
+      this.$store.dispatch('sharedDimension/addTerm', term)
 
       this.$buefy.toast.open({
         message: 'Shared dimension term successfully created',

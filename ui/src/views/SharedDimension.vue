@@ -14,8 +14,8 @@
           <download-button :resource="dimension.export" size="is-small" type="is-white" />
         </div>
       </div>
-      <table class="table is-narrow is-bordered is-striped is-fullwidth" v-if="terms">
-        <thead>
+      <table class="table is-narrow is-bordered is-striped is-fullwidth">
+        <thead class="has-background-light">
           <tr>
             <th>
               URI
@@ -39,7 +39,35 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="term in terms" :key="term.clientPath">
+          <tr v-if="terms.isLoading">
+            <td :colspan="tableWidth" class="p-0">
+              <loading-block class="has-background-light is-size-2" :style="`height: calc(38px * ${this.pageSize});`" />
+            </td>
+          </tr>
+          <tr v-else-if="terms.error">
+            <td :colspan="tableWidth">
+              <b-message type="is-danger">
+                {{ terms.error }}
+              </b-message>
+            </td>
+          </tr>
+          <tr v-else-if="terms.data.length === 0 && page === 1">
+            <td :colspan="tableWidth">
+              Nothing in this dimension yet.
+              <span v-if="dimension.actions.create">
+                Do you want to
+                <router-link :to="{ name: 'SharedDimensionTermCreate' }">
+                  add a term
+                </router-link>?
+              </span>
+            </td>
+          </tr>
+          <tr v-else-if="terms.data.length === 0">
+            <td :colspan="tableWidth">
+              You reached the end of terms
+            </td>
+          </tr>
+          <tr v-else v-for="term in terms.data" :key="term.clientPath" :class="{ 'has-background-success-light': term.newlyCreated }">
             <td class="has-text-sm">
               <term-display :term="term.canonical || term.id" />
             </td>
@@ -70,20 +98,40 @@
               </div>
             </td>
           </tr>
-          <tr v-if="terms.length === 0">
-            <td colspan="3">
-              Nothing in this dimension yet.
-              <span v-if="dimension.actions.create">
-                Do you want to
-                <router-link :to="{ name: 'SharedDimensionTermCreate' }">
-                  add a term
-                </router-link>?
-              </span>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td :colspan="tableWidth" class="has-background-light">
+              <div class="is-flex gap-4">
+                <div class="is-flex is-align-items-center gap-1">
+                  <span class="pr-1">Page {{ page }}</span>
+                  <b-tooltip label="Previous page">
+                    <b-button
+                      icon-left="chevron-left"
+                      @click="prevPage"
+                      :disabled="!terms.data || page === 1"
+                    />
+                  </b-tooltip>
+                  <b-tooltip label="Next page">
+                    <b-button
+                      icon-left="chevron-right"
+                      @click="nextPage"
+                      :disabled="!terms.data || terms.data.length === 0"
+                    />
+                  </b-tooltip>
+                </div>
+                <b-tooltip label="Page size">
+                  <b-select :value="pageSize" @input="changePageSize" title="Page size">
+                    <option v-for="pageSizeOption in pageSizes" :key="pageSizeOption" :native-value="pageSizeOption">
+                      {{ pageSizeOption }}
+                    </option>
+                  </b-select>
+                </b-tooltip>
+              </div>
             </td>
           </tr>
-        </tbody>
+        </tfoot>
       </table>
-      <loading-block v-else />
 
       <router-view />
     </div>
@@ -117,6 +165,14 @@ import { SharedDimension, SharedDimensionTerm } from '../store/types'
 export default class extends Vue {
   @storeNs.sharedDimension.State('dimension') dimension!: SharedDimension | null
   @storeNs.sharedDimension.State('terms') terms!: SharedDimensionTerm[] | null
+  @storeNs.sharedDimension.State('page') page!: number
+  @storeNs.sharedDimension.State('pageSize') pageSize!: number
+  @storeNs.sharedDimension.Action('nextPage') nextPage!: () => any
+  @storeNs.sharedDimension.Action('prevPage') prevPage!: () => any
+  @storeNs.sharedDimension.Action('changePageSize') changePageSize!: () => any
+
+  pageSizes = [10, 20, 50, 100]
+  tableWidth = 4
 
   mounted (): void {
     const id = this.$route.params.id
