@@ -51,7 +51,6 @@ export default class extends Vue {
 }
 
 function formatLiteral (term: Literal): string {
-  console.log(term.datatype)
   if (xsd.dateTime.equals(term.datatype)) {
     return new Date(term.value).toLocaleString()
   }
