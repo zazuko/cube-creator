@@ -125,7 +125,7 @@ ${shapeId} {
     ] ;
     ${sh.property} [
       ${sh.name} "License" ;
-      ${sh.path} ${dcterms.license} ;
+      ${sh.path} ${dcterms.rights} ;
       ${sh.minCount} 0 ;
       ${sh.nodeKind} ${sh.IRI} ;
       ${sh.class} ${dcterms.LicenseDocument} ;
