@@ -30,7 +30,7 @@ const aboutQuery = sparql`construct {
   ?c ${hydra.member} ?about .
   ?about ${rdfs.label} ?name ; ?p ?o .
 } WHERE {
-  BIND ( iri('http://app.cube-creator.lndo.site/themes') as ?c )
+  BIND ( iri('http://app.cube-creator.lndo.site/about') as ?c )
 
     ?termSet a ${schema.DefinedTermSet};
       ${schema.isPartOf} <https://ld.admin.ch/application/cube-creator>.
@@ -46,7 +46,7 @@ const licenseQuery = sparql`construct {
   ?c ${hydra.member} ?license .
   ?license ${rdfs.label} ?name ; ?p ?o .
 } WHERE {
-  BIND ( iri('http://app.cube-creator.lndo.site/themes') as ?c )
+  BIND ( iri('http://app.cube-creator.lndo.site/licenses') as ?c )
 
     ?license a ${schema.DefinedTerm}, ${dcterms.LicenseDocument} ;
       ${schema.alternateName} ?name ;
