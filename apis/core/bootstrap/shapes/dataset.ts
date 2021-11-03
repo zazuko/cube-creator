@@ -264,6 +264,14 @@ ${shapeId} {
       ${sh.order} 120 ;
       ${sh.description} "A public website describing the dataset.";
     ] ;
+    ${sh.property} [
+      ${sh.name} "Opendata.swiss Legal basis" ;
+      ${sh.path} ${dcterms.license} ;
+      ${sh.minCount} 0 ;
+      ${sh.nodeKind} ${sh.IRI} ;
+      ${sh.order} 130 ;
+      ${sh.description} "A website describing the legal basis to publish this data";
+    ] ;
    ${sh.property} [
       ${sh.name} "Creation Date" ;
       ${sh.description} "Date when dataset has been assembled. It defaults to when project is created" ;
