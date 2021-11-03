@@ -15,7 +15,7 @@ import { buildCsvw } from '../../lib/csvw-builder'
 import '../../lib/domain'
 import { TestResourceStore } from '../support/TestResourceStore'
 import { findColumn } from './support'
-import { schema, xsd } from '@tpluscode/rdf-ns-builders'
+import { schema, xsd, qudt } from '@tpluscode/rdf-ns-builders/strict'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import * as sinon from 'sinon'
 import * as orgQueries from '../../lib/domain/organization/query'
@@ -288,23 +288,26 @@ describe('lib/csvw-builder', () => {
     })
     stationSource.columns = [
       CsvColumn.fromPointer(stationSource.pointer.namedNode('column-station-id'), { name: 'ID' }),
+      CsvColumn.fromPointer(stationSource.pointer.namedNode('column-station-name'), { name: 'NAME' }),
     ]
     resources.push(stationSource.pointer as any)
     const stationTable = Table.create(graph.namedNode('table-station'), {
       name: 'test station table',
-      identifierTemplate: 'Station/{ID}',
+      identifierTemplate: 'Station/{ID}/{NAME}',
       csvMapping,
       csvSource: stationSource,
     })
     resources.push(stationTable.pointer as any)
     csvSource.columns = [
-      CsvColumn.fromPointer(csvSource.pointer.namedNode('column-station'), { name: 'STATION' }),
+      CsvColumn.fromPointer(csvSource.pointer.namedNode('ref-station'), { name: 'STATION' }),
+      CsvColumn.fromPointer(csvSource.pointer.namedNode('ref-station-name'), { name: 'STATION-NAME' }),
     ]
     const columnMapping = ColumnMapping.referenceFromPointer(clownface({ dataset: $rdf.dataset() }).namedNode('station-mapping'), {
       targetProperty: $rdf.namedNode('station'),
       referencedTable: stationTable,
       identifierMapping: [
-        { sourceColumn: $rdf.namedNode('column-station'), referencedColumn: $rdf.namedNode('column-station-id') },
+        { sourceColumn: $rdf.namedNode('ref-station'), referencedColumn: $rdf.namedNode('column-station-id') },
+        { sourceColumn: $rdf.namedNode('ref-station-name'), referencedColumn: $rdf.namedNode('column-station-name') },
       ],
     })
     resources.push(columnMapping.pointer as any)
@@ -315,7 +318,8 @@ describe('lib/csvw-builder', () => {
 
     // then
     const csvwColumn = findColumn(csvw, $rdf.namedNode('station'))
-    expect(csvwColumn?.valueUrl).to.eq('http://example.com/test-cube/Station/{STATION}')
+    expect(csvwColumn?.valueUrl).to.eq('http://example.com/test-cube/Station/{STATION}/{STATION-NAME}')
+    expect(csvwColumn?.pointer.out(qudt.pattern).value).to.eq('^http://example.com/test-cube/Station/.+/.+$')
   })
 
   it('adds a cc:cube virtual column to output of observation table', async () => {

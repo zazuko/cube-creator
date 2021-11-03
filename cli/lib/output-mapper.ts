@@ -4,13 +4,14 @@ import { HydraClient } from 'alcaeus/alcaeus'
 import type { Context } from 'barnard59-core/lib/Pipeline'
 import { DatasetCore, Quad, Term } from 'rdf-js'
 import { Dictionary } from '@rdfine/prov'
-import { prov, schema } from '@tpluscode/rdf-ns-builders'
+import { prov, schema, qudt } from '@tpluscode/rdf-ns-builders/strict'
 import { cc, cube } from '@cube-creator/core/namespace'
 import TermMap from '@rdfjs/term-map'
 import { MultiPointer } from 'clownface'
 import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import { HydraResponse } from 'alcaeus'
 import { DefaultCsvwLiteral } from '@cube-creator/core/mapping'
+import through2 from 'through2'
 import { importDynamic } from './module'
 
 const undef = $rdf.literal('', cube.Undefined)
@@ -134,4 +135,35 @@ export function substituteUndefined(quad: Quad): Quad {
   }
 
   return quad
+}
+
+export function substituteUndefinedReferences(this: Context) {
+  const { csvwResource } = this.variables.get('transformed')
+
+  const patterns = new TermMap(csvwResource.tableSchema?.column
+    .filter(column => column.propertyUrl)
+    .map(column => {
+      const pattern = column.pointer.out(qudt.pattern).value
+
+      return [
+        $rdf.namedNode(column.propertyUrl!),
+        pattern ? new RegExp(pattern) : null,
+      ]
+    }))
+
+  return through2.obj(function (quad: Quad, _, next) {
+    const valuePattern = patterns.get(quad.predicate)
+    if (valuePattern && !valuePattern.test(quad.object.value)) {
+      this.push($rdf.quad(
+        quad.subject,
+        quad.predicate,
+        cube.Undefined,
+        quad.graph,
+      ))
+      return next()
+    }
+
+    this.push(quad)
+    return next()
+  })
 }

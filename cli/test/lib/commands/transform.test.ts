@@ -6,7 +6,7 @@ import clownface from 'clownface'
 import { ASK, DESCRIBE, SELECT } from '@tpluscode/sparql-builder'
 import namespace from '@rdfjs/namespace'
 import { Hydra } from 'alcaeus/node'
-import { csvw, rdf, rdfs, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
+import { csvw, rdf, rdfs, schema, sh, unit, xsd } from '@tpluscode/rdf-ns-builders/strict'
 import runner from '../../../lib/commands/transform'
 import { setupEnv } from '../../support/env'
 import { ccClients } from '@cube-creator/testing/lib'
@@ -72,6 +72,36 @@ describe('@cube-creator/cli/lib/commands/transform', function () {
         }, {
           path: $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/station'),
           hasValue: $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/station/blBAS'),
+          minCount: 1,
+          maxCount: 1,
+        }, {
+          path: $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/canton'),
+          hasValue: cube.Undefined,
+          minCount: 1,
+          maxCount: 1,
+        }, {
+          path: rdfs.comment,
+          hasValue: $rdf.literal('', cube.Undefined),
+          minCount: 1,
+          maxCount: 1,
+        }, {
+          path: $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/aggregation'),
+          hasValue: 'annualmean',
+          minCount: 1,
+          maxCount: 1,
+        }, {
+          path: $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/dimension/limitvalue'),
+          hasValue: 30,
+          minCount: 1,
+          maxCount: 1,
+        }, {
+          path: $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/pollutant'),
+          hasValue: 'so2',
+          minCount: 1,
+          maxCount: 1,
+        }, {
+          path: $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/unit'),
+          hasValue: unit['MicroGM-PER-M3'],
           minCount: 1,
           maxCount: 1,
         }],
