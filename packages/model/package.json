@@ -18,6 +18,8 @@
   "devDependencies": {
     "@types/clownface": "^1",
     "@types/is-uri": "^1",
-    "@types/rdf-js": "^4.0.0"
+    "@types/rdf-js": "^4.0.0",
+    "chai": "^4.3.4",
+    "mocha": "^9.0.3"
   }
 }
