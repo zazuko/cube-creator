@@ -40,6 +40,12 @@ class ParsedTemplateWrapper {
 
     return baseUri + this.toString()
   }
+
+  toRegex(baseUri) {
+    const absolute = this.toAbsoluteUrl(baseUri)
+
+    return '^' + absolute.replace(/{[^/]+}/g, '.+') + '$'
+  }
 }
 
 export function parse(template) {

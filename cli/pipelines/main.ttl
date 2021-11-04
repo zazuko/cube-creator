@@ -60,6 +60,7 @@
                        <#parse>
                        <#inspectCsvw>
                        <#substituteUndefined>
+                       <#substituteUndefinedReferences>
                        <#filterObservationTable>
                        <#mapDimensions>
                        <#toDataset>
@@ -77,6 +78,7 @@
                        <#parse>
                        <#inspectCsvw>
                        <#filterNonObservationTable>
+                       <#substituteUndefinedReferences>
                        <#setGraph>
                      ) ] .
 
@@ -104,6 +106,11 @@
                        a         code:EcmaScriptModule ] ;
   code:arguments     ( [ code:link <file:../lib/output-mapper#substituteUndefined> ;
                          a         code:EcmaScript ] ) .
+
+<#substituteUndefinedReferences>
+  a                  :Step ;
+  code:implementedBy [ code:link <file:../lib/output-mapper#substituteUndefinedReferences> ;
+                         a         code:EcmaScript ] .
 
 <#parseMetadata>
   a      :Pipeline, :ReadableObjectMode ;

@@ -20,6 +20,7 @@ import { warning } from '../log'
 import { Term } from 'rdf-js'
 import { findOrganization } from '../domain/organization/query'
 import { DefaultCsvwLiteral } from '@cube-creator/core/mapping'
+import { qudt } from '@tpluscode/rdf-ns-builders/strict'
 
 RdfResource.factory.addMixin(
   ...Object.values(Csvw),
@@ -107,9 +108,10 @@ async function mappedReferenceColumn({ cubeIdentifier, organization, columnMappi
       }
     })
 
-    csvwColumn.valueUrl = uriTemplate.toAbsoluteUrl(organization.createIdentifier({
-      cubeIdentifier,
-    }).value)
+    const valueBase = organization.createIdentifier({ cubeIdentifier }).value
+    csvwColumn.valueUrl = uriTemplate.toAbsoluteUrl(valueBase)
+
+    csvwColumn[qudt.pattern.value] = uriTemplate.toRegex(valueBase)
   }
 
   return csvwColumn
