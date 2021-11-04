@@ -70,10 +70,15 @@ export const getTerms = asyncMiddleware(async (req, res, next) => {
     return next(new httpError.NotFound())
   }
 
+  const pageSize = Number(query.out(hydra.limit).value || 10)
+  const page = Number(query.out(hydra.pageIndex).value || 1)
+  const offset = (page - 1) * pageSize
   const queryParams = {
     sharedDimension: rewriteTerm(term),
     freetextQuery: query.has(hydra.freetextQuery).out(hydra.freetextQuery).value,
     validThrough: query.has(md.onlyValidTerms, query.literal(true)).terms.length ? new Date() : undefined,
+    limit: pageSize,
+    offset,
   }
 
   const collection = await getCollection({

@@ -41,6 +41,7 @@ export interface SharedDimensionTerm extends Resource {
   identifiers: string[]
   validThrough?: Date
   canonical: Term | undefined
+  newlyCreated?: boolean
 }
 
 export interface ProjectDetailPart {
