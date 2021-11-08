@@ -5,6 +5,7 @@ import { sparql, turtle } from '@tpluscode/rdf-string'
 import $rdf from 'rdf-ext'
 import { lindasQuery } from '../lib/query'
 import { Draft, Published } from '@cube-creator/model/Cube'
+import env from '@cube-creator/core/env'
 
 const shapeId = shape('dataset/edit-metadata')
 const temporalFromTo = $rdf.namedNode(shapeId.value + '#temporalFromTo')
@@ -15,7 +16,7 @@ const themesQuery = sparql`construct {
   ?c ${hydra.member} ?theme .
   ?theme ${rdfs.label} ?name ; ?p ?o .
 } WHERE {
-  BIND ( iri('http://app.cube-creator.lndo.site/themes') as ?c )
+  BIND ( iri('${env.API_CORE_BASE}themes') as ?c )
 
   graph   <https://lindas.admin.ch/sfa/opendataswiss> {
     ?theme a ${schema.DefinedTerm} ;
@@ -30,7 +31,7 @@ const aboutQuery = sparql`construct {
   ?c ${hydra.member} ?about .
   ?about ${rdfs.label} ?name ; ?p ?o .
 } WHERE {
-  BIND ( iri('http://app.cube-creator.lndo.site/themes') as ?c )
+  BIND ( iri('${env.API_CORE_BASE}about') as ?c )
 
     ?termSet a ${schema.DefinedTermSet};
       ${schema.isPartOf} <https://ld.admin.ch/application/cube-creator>.
@@ -46,7 +47,7 @@ const licenseQuery = sparql`construct {
   ?c ${hydra.member} ?license .
   ?license ${rdfs.label} ?name ; ?p ?o .
 } WHERE {
-  BIND ( iri('http://app.cube-creator.lndo.site/themes') as ?c )
+  BIND ( iri('${env.API_CORE_BASE}licenses') as ?c )
 
     ?license a ${schema.DefinedTerm}, ${dcterms.LicenseDocument} ;
       ${schema.alternateName} ?name ;
@@ -59,7 +60,7 @@ const orgQuery = sparql`construct {
   ?c ${hydra.member} ?org .
   ?org ${rdfs.label} ?name ; ?p ?o .
 } WHERE {
-  BIND ( iri('http://app.cube-creator.lndo.site/org') as ?c )
+  BIND ( iri('${env.API_CORE_BASE}org') as ?c )
 
   graph   <https://lindas.admin.ch/sfa/opendataswiss> {
     ?org a ${schema.Organization} ;
@@ -125,7 +126,7 @@ ${shapeId} {
     ] ;
     ${sh.property} [
       ${sh.name} "License" ;
-      ${sh.path} ${dcterms.license} ;
+      ${sh.path} ${dcterms.rights} ;
       ${sh.minCount} 0 ;
       ${sh.nodeKind} ${sh.IRI} ;
       ${sh.class} ${dcterms.LicenseDocument} ;
@@ -263,6 +264,14 @@ ${shapeId} {
       ${sh.minLength} 1 ;
       ${sh.order} 120 ;
       ${sh.description} "A public website describing the dataset.";
+    ] ;
+    ${sh.property} [
+      ${sh.name} "Opendata.swiss Legal basis" ;
+      ${sh.path} ${dcterms.license} ;
+      ${sh.minCount} 0 ;
+      ${sh.nodeKind} ${sh.IRI} ;
+      ${sh.order} 130 ;
+      ${sh.description} "A website describing the legal basis to publish this data";
     ] ;
    ${sh.property} [
       ${sh.name} "Creation Date" ;
