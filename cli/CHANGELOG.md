@@ -1,5 +1,11 @@
 # @cube-creator/cli
 
+## 1.7.1
+
+### Patch Changes
+
+- 2a2cb74d: Reference columns would produce incorrect URLs when referenced columns were empty (fixes #789)
+
 ## 1.7.0
 
 ### Minor Changes

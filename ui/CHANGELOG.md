@@ -1,5 +1,13 @@
 # @cube-creator/ui
 
+## 1.6.2
+
+### Patch Changes
+
+- 424009b9: Add pagination to shared dimension terms (close #936)
+- 504a0140: Change "pending job" icon to a blinking icon
+- e295dc45: Fix multi-valued project details parts not shown (fix #933)
+
 ## 1.6.1
 
 ### Patch Changes
