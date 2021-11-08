@@ -71,7 +71,7 @@ export default class CubeProjectView extends Vue {
     await this.$store.dispatch('project/fetchProject', id)
 
     // Poll jobs
-    this.poller = window.setInterval(this.pollJobs, 3000)
+    this.poller = window.setInterval(this.pollJobs, 5000)
 
     if (this.$route.name === 'CubeProject') {
       if (this.hasCSVMapping) {
