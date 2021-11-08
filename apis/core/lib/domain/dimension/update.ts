@@ -56,6 +56,20 @@ export async function update({
     dimension.mappings = undefined
   }
 
+  if (!metadata.hasPart.some(dim => dim.isMeasureDimension)) {
+    if (!metadata.errors?.some(error => error.identifierLiteral === 'MissingMeasureDimension')) {
+      metadata.pointer.addOut(schema.error, error => error
+        .addOut(schema.identifier, 'MissingMeasureDimension')
+        .addOut(schema.description, 'No Measure dimension defined'))
+    }
+  } else {
+    metadata.pointer
+      .out(schema.error)
+      .has(schema.identifier, 'MissingMeasureDimension')
+      .deleteOut()
+      .deleteIn()
+  }
+
   const dataset = $rdf.dataset([...extractSubgraph(metadata.pointer.node(dimensionMetadata.term))])
   return clownface({ dataset }).node(dimensionMetadata.term)
 }

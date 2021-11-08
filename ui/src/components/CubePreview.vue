@@ -40,12 +40,12 @@
             No dimensions defined
           </th>
         </tr>
-        <tr v-if="warningMessage">
+        <tr v-for="error in errors" :key="error.id.value">
           <td :colspan="tableWidth" class="p-0">
             <div class="message is-warning">
               <p class="message-body px-2 py-1 is-flex">
                 <b-icon icon="exclamation-triangle" class="mr-1" />
-                <span>{{ warningMessage }}</span>
+                <span>{{ error.description }}</span>
               </p>
             </div>
           </td>
@@ -125,8 +125,9 @@ import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import clownface from 'clownface'
 import { Collection } from 'alcaeus'
 import { hydra, qudt } from '@tpluscode/rdf-ns-builders'
+import * as Schema from '@rdfine/schema'
 import * as $rdf from '@rdf-esm/dataset'
-import type { Cube, Dataset, DimensionMetadata } from '@cube-creator/model'
+import type { Cube, Dataset, DimensionMetadata, DimensionMetadataCollection } from '@cube-creator/model'
 import { supportedLanguages } from '@cube-creator/core/languages'
 import { api } from '@/api'
 import Remote, { RemoteData } from '@/remote'
@@ -148,6 +149,7 @@ import CubePreviewValue from './CubePreviewValue.vue'
 export default class extends Vue {
   @Prop({ required: true }) cubeMetadata!: Dataset
   @Prop({ required: true }) dimensions!: DimensionMetadata[]
+  @Prop({ required: true }) dimensionMetadataCollection!: DimensionMetadataCollection
   @Prop({ required: true }) selectedLanguage!: string
 
   languages = supportedLanguages.map(({ value }) => value)
@@ -181,12 +183,11 @@ export default class extends Vue {
     return ''
   }
 
-  get warningMessage (): string | null {
-    if (this.dimensions.length > 0 && !this.dimensions.some(({ isMeasureDimension }) => isMeasureDimension)) {
-      return 'No Measure dimension defined'
-    }
-
-    return null
+  get errors (): Schema.Thing[] {
+    return [
+      ...this.cubeMetadata.errors!,
+      ...this.dimensionMetadataCollection.errors!,
+    ]
   }
 
   async refreshData (): Promise<void> {

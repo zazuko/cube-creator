@@ -88,7 +88,9 @@ type MetaDataProperty =
   'publishOnOpendata' |
   'publishOnVisualize'
 
-type CubeCreatorTerms = CubeCreatorClass | CubeCreatorProperty | OtherTerms | MetaDataProperty
+type Errors = 'MissingMeasureDimensionError'
+
+type CubeCreatorTerms = CubeCreatorClass | CubeCreatorProperty | OtherTerms | MetaDataProperty | Errors
 
 type SharedDimensionsTerms =
   'SharedDimension' |
