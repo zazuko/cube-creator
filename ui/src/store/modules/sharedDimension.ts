@@ -12,12 +12,12 @@ export interface SharedDimensionState {
   pageSize: number
 }
 
-const initialState = {
+const getInitialState = () => ({
   dimension: null,
   terms: Remote.notLoaded(),
   page: 1,
   pageSize: 10,
-}
+})
 
 const getters: GetterTree<SharedDimensionState, RootState> = {}
 
@@ -93,6 +93,10 @@ const actions: ActionTree<SharedDimensionState, RootState> = {
   removeTerm (context, term) {
     context.commit('removeTerm', term)
   },
+
+  reset (context) {
+    context.commit('reset')
+  },
 }
 
 const mutations: MutationTree<SharedDimensionState> = {
@@ -137,11 +141,15 @@ const mutations: MutationTree<SharedDimensionState> = {
   storePageSize (state, pageSize) {
     state.pageSize = pageSize
   },
+
+  reset (state) {
+    Object.assign(state, getInitialState())
+  },
 }
 
 export default {
   namespaced: true,
-  state: initialState,
+  state: getInitialState(),
   getters,
   actions,
   mutations,

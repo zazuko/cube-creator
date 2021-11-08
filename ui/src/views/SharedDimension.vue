@@ -179,6 +179,10 @@ export default class extends Vue {
     this.$store.dispatch('sharedDimension/fetchDimension', id)
   }
 
+  beforeDestroy (): void {
+    this.$store.dispatch('sharedDimension/reset')
+  }
+
   deleteDimension (dimension: SharedDimension): void {
     this.$buefy.dialog.confirm({
       title: dimension.actions.delete?.title,
