@@ -32,7 +32,7 @@ export default class JobStatus extends Vue {
   get iconColorClass (): string {
     return {
       [schema.CompletedActionStatus.value]: 'has-text-success',
-      [schema.PotentialActionStatus.value]: 'has-text-grey-light',
+      [schema.PotentialActionStatus.value]: 'has-text-grey-light blink',
       [schema.ActiveActionStatus.value]: 'has-text-info blink',
       [schema.FailedActionStatus.value]: 'has-text-danger',
     }[this.statusString] ?? 'has-text-dark'
