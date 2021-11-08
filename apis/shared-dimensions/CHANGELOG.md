@@ -1,5 +1,11 @@
 # @cube-creator/shared-dimensions-api
 
+## 2.3.2
+
+### Patch Changes
+
+- 424009b9: Add pagination to shared dimension terms (close #936)
+
 ## 2.3.1
 
 ### Patch Changes

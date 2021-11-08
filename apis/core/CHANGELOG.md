@@ -1,5 +1,16 @@
 # @cube-creator/core-api
 
+## 1.6.1
+
+### Patch Changes
+
+- aeb18c66: Resource updates sometimes time out (fixes #943)
+- 9a5668f9: Use dcterms:license to define dataset legal basis and switch to dcterms:rights to define copyright license
+- fa79d387: Performance boost for some requests (project details, metadata, export)
+- 2a2cb74d: Reference columns would produce incorrect URLs when referenced columns were empty (fixes #789)
+- Updated dependencies [424009b9]
+  - @cube-creator/shared-dimensions-api@2.3.2
+
 ## 1.6.0
 
 ### Minor Changes
