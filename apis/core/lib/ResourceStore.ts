@@ -147,7 +147,7 @@ export class SparqlStoreFacade implements TripleStoreFacade {
         BIND ( ${now} as ?now )
         BIND ( ${pointer.term} as ?object )
         BIND (
-          IF(EXISTS { GRAPH ?object { ?object ?p ?o } }, ${as.Update}, ${as.Create}) as ?type
+          IF(EXISTS { GRAPH ${pointer.term} { ${pointer.term} ?p ?o } }, ${as.Update}, ${as.Create}) as ?type
         )
       `._getTemplateResult()
 
