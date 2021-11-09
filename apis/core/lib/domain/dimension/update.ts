@@ -3,6 +3,7 @@ import { NamedNode, Quad } from 'rdf-js'
 import TermSet from '@rdfjs/term-set'
 import $rdf from 'rdf-ext'
 import { DimensionMetadataCollection, Project } from '@cube-creator/model'
+import { createNoMeasureDimensionError, Error } from '@cube-creator/model/DimensionMetadata'
 import { prov, rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { ResourceStore } from '../../ResourceStore'
 import * as id from '../identifiers'
@@ -57,15 +58,16 @@ export async function update({
   }
 
   if (!metadata.hasPart.some(dim => dim.isMeasureDimension)) {
-    if (!metadata.errors?.some(error => error.identifierLiteral === 'MissingMeasureDimension')) {
-      metadata.pointer.addOut(schema.error, error => error
-        .addOut(schema.identifier, 'MissingMeasureDimension')
-        .addOut(schema.description, 'No Measure dimension defined'))
+    if (!metadata.errors?.some(error => error.identifierLiteral === Error.MissingMeasureDimension)) {
+      metadata.errors = <any>[
+        ...metadata.errors!,
+        createNoMeasureDimensionError,
+      ]
     }
   } else {
     metadata.pointer
       .out(schema.error)
-      .has(schema.identifier, 'MissingMeasureDimension')
+      .has(schema.identifier, Error.MissingMeasureDimension)
       .deleteOut()
       .deleteIn()
   }
