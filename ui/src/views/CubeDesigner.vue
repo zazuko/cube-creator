@@ -3,6 +3,7 @@
     <CubePreview
       :cube-metadata="cubeMetadata"
       :dimensions="dimensions"
+      :dimension-metadata-collection="dimensionMetadataCollection"
       :selected-language="selectedLanguage"
       @selectLanguage="selectLanguage"
       @refreshDimensions="refreshDimensions"

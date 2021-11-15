@@ -72,8 +72,8 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/export @SPARQL', () =>
           expect(dimensionMetadata).to.matchShape({
             property: [{
               path: schema.hasPart,
-              minCount: 5,
-              maxCount: 5,
+              minCount: 6,
+              maxCount: 6,
               node: {
                 property: [{
                   path: schema.about,

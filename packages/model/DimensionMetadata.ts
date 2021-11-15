@@ -3,8 +3,10 @@ import { Constructor, namespace, property, RdfResource } from '@tpluscode/rdfine
 import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import { Literal, NamedNode, Term } from 'rdf-js'
 import { qudt, schema } from '@tpluscode/rdf-ns-builders'
+import * as Thing from '@rdfine/schema/lib/Thing'
 import { cc, cube, meta } from '@cube-creator/core/namespace'
 import { initializer } from './lib/initializer'
+import './BaseResource'
 
 export interface DimensionMetadata extends RdfResource {
   about: NamedNode
@@ -65,8 +67,18 @@ export function DimensionMetadataCollectionMixin<Base extends Constructor>(Resou
 
 DimensionMetadataCollectionMixin.appliesTo = cc.DimensionMetadataCollection
 
+export const Error = {
+  MissingMeasureDimension: 'MissingMeasureDimension',
+} as const
+
+export const createNoMeasureDimensionError = Thing.fromPointer({
+  identifierLiteral: Error.MissingMeasureDimension,
+  description: 'No Measure dimension defined',
+})
+
 export const createCollection = initializer<DimensionMetadataCollection>(DimensionMetadataCollectionMixin, {
   types: [cc.DimensionMetadataCollection],
+  [schema.error.value]: [createNoMeasureDimensionError],
 })
 
 type RequiredProperties = 'about'
