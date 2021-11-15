@@ -108,6 +108,7 @@ ${shape('dimension/metadata')} {
       ${sh.order} 15 ;
     ] , [
       ${sh.name} "Dimension type" ;
+      ${sh.description} "The type is preselected to match the same selection made in the CSV Mapping tab (when applicable)" ;
       ${sh.path} ${rdf.type} ;
       ${sh.in} (
         ${cube.MeasureDimension}
