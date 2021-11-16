@@ -1,5 +1,12 @@
 # @cube-creator/core-api
 
+## 1.6.2
+
+### Patch Changes
+
+- db33304e: Large `sh:in` lists in Cube shapes caused memory issues and API crashes (re #958 #959)
+- 39d7d621: Display Cube Designer errors sourced from dataset and metadata resources
+
 ## 1.6.1
 
 ### Patch Changes
