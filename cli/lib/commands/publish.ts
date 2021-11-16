@@ -1,5 +1,5 @@
 import { HydraClient } from 'alcaeus/alcaeus'
-import { CsvProject, ImportProject, PublishJob } from '@cube-creator/model'
+import { CsvProject, Dataset, ImportProject, PublishJob } from '@cube-creator/model'
 import '../variables'
 import { isCsvProject } from '@cube-creator/model/Project'
 import TermSet from '@rdfjs/term-set'
@@ -62,10 +62,9 @@ async function getJob(jobUri: string, Hydra: HydraClient): Promise<{
     throw new Error(`Did not find representation of project ${job.project}. Server responded ${projectResource.response?.xhr.status}`)
   }
 
-  if (!project.dataset.load) {
-    throw new Error(`Can not load dataset ${project.dataset}`)
-  }
-  const datasetResource = await project.dataset.load()
+  const datasetResource = await Hydra.loadResource<Dataset>(project.dataset.id as any, {
+    Prefer: 'include-in-lists',
+  })
   if (!datasetResource.representation?.root?.hasPart[0]) {
     throw new Error(`Can not determine target graph for job ${jobUri}`)
   }

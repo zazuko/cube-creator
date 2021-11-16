@@ -1,5 +1,6 @@
 import asyncMiddleware from 'middleware-async'
 import clownface from 'clownface'
+import parsePreferHeader from 'parse-prefer-header'
 import $rdf from 'rdf-ext'
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
 import { loadLinkedResources } from '@hydrofoil/labyrinth/lib/query/eagerLinks'
@@ -32,8 +33,10 @@ export const put = protectedResource(
 )
 
 export const get = protectedResource(asyncMiddleware(async (req, res) => {
+  const { includeInLists } = parsePreferHeader(req.header('Prefer'))
+
   const dataset = await req.hydra.resource.clownface()
-  const shapeStream = await loadCubeShapes(req.hydra.resource.term, clients)
+  const shapeStreams = [...await loadCubeShapes(req.hydra.resource.term, !includeInLists, clients)]
   const outStream = new PassThrough({
     objectMode: true,
   })
@@ -45,7 +48,7 @@ export const get = protectedResource(asyncMiddleware(async (req, res) => {
   const linkedResources = await loadLinkedResources(dataset, types.out(query.include).toArray(), req.labyrinth.sparql)
   const observationsTemplateStream = await observationTemplate(dataset.term)
 
-  merge(dataset.dataset.toStream(), shapeStream, linkedResources.toStream(), observationsTemplateStream, { objectMode: true })
+  merge([dataset.dataset.toStream(), ...shapeStreams, linkedResources.toStream(), observationsTemplateStream], { objectMode: true })
     .pipe(outStream)
 
   return res.quadStream(outStream)

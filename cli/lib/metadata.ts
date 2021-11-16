@@ -3,7 +3,7 @@ import { Literal, NamedNode, Quad, Quad_Object as QuadObject, Quad_Subject as Qu
 import $rdf from 'rdf-ext'
 import { dcat, dcterms, rdf, schema, sh, xsd, _void } from '@tpluscode/rdf-ns-builders'
 import { cc, cube } from '@cube-creator/core/namespace'
-import { Project, PublishJob } from '@cube-creator/model'
+import { Dataset, Project, PublishJob } from '@cube-creator/model'
 import { HydraClient } from 'alcaeus/alcaeus'
 import TermSet from '@rdfjs/term-set'
 import type { Context } from 'barnard59-core/lib/Pipeline'
@@ -24,11 +24,10 @@ export async function loadDataset(jobUri: string, Hydra: HydraClient) {
   if (!project) {
     throw new Error(`Did not find representation of project ${job.project}. Server responded ${projectResource.response?.xhr.status}`)
   }
-  if (!project.dataset.load) {
-    throw new Error(`Dataset ${project.dataset} can not be loaded`)
-  }
 
-  const datasetResource = await project.dataset?.load()
+  const datasetResource = await Hydra.loadResource<Dataset>(project.dataset.id as any, {
+    Prefer: 'include-in-lists',
+  })
   const dataset = datasetResource.representation?.root
   if (!dataset) {
     throw new Error(`Dataset ${project.dataset} not loaded`)
