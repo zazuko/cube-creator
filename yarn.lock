@@ -2657,6 +2657,11 @@
   resolved "https://registry.yarnpkg.com/@types/parse-json/-/parse-json-4.0.0.tgz#2f8bb441434d163b35fb8ffdccd7138927ffb8c0"
   integrity sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==
 
+"@types/parse-prefer-header@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@types/parse-prefer-header/-/parse-prefer-header-1.0.1.tgz#8ccd3e935484310c791336fd6c001a4de77335bf"
+  integrity sha512-oCHqtlcIWl28cmnhIEdZD/P2uKnXCGjJUTcfawjIn3NTvtp9A2yctlcaRzOKpytDqEOhJOfjzQHuENaxX6QMNg==
+
 "@types/parse-uri@*":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@types/parse-uri/-/parse-uri-1.0.0.tgz#afb76c3ee2f03e01da612a463ce4bdb4fb13e139"
@@ -9779,6 +9784,11 @@ lodash._stringtopath@~4.8.0:
   dependencies:
     lodash._basetostring "~4.12.0"
 
+lodash.camelcase@^4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/lodash.camelcase/-/lodash.camelcase-4.3.0.tgz#b28aa6288a2b9fc651035c7711f65ab6190331a6"
+  integrity sha1-soqmKIorn8ZRA1x3EfZathkDMaY=
+
 lodash.clonedeep@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.clonedeep/-/lodash.clonedeep-4.5.0.tgz#e23f3f9c4f8fbdde872529c1071857a086e5ccef"
@@ -11296,6 +11306,13 @@ parse-link-header@^1.0.1:
   integrity sha1-vt/g0hGK64S+deewJUGeyKYRQKc=
   dependencies:
     xtend "~4.0.1"
+
+parse-prefer-header@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/parse-prefer-header/-/parse-prefer-header-1.0.0.tgz#75aeb73766bb6531dde063ee023876ead49648f7"
+  integrity sha1-da63N2a7ZTHd4GPuAjh26tSWSPc=
+  dependencies:
+    lodash.camelcase "^4.3.0"
 
 parse-uri@~1.0.0:
   version "1.0.3"

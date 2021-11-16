@@ -1,4 +1,4 @@
-import { CONSTRUCT, SELECT } from '@tpluscode/sparql-builder'
+import { CONSTRUCT, SELECT, sparql } from '@tpluscode/sparql-builder'
 import StreamClient from 'sparql-http-client/StreamClient'
 import * as ns from '@cube-creator/core/namespace'
 import { NamedNode, Stream, Term } from 'rdf-js'
@@ -28,7 +28,9 @@ async function selectIdentifiers(datasetId: Term, parsingClient: ParsingClient):
   return result as any
 }
 
-function constructPropertyShapes(shape: NamedNode, cubeData: NamedNode, streamClient: StreamClient) {
+function constructPropertyShapes(shape: NamedNode, cubeData: NamedNode, excludeInLists: boolean, streamClient: StreamClient) {
+  const deepPaths = excludeInLists ? sparql`(!${sh.in})*` : sparql`(<>|!<>)*`
+
   return CONSTRUCT`?s ?p ?o. ${shape} ?sp ?so .`
     .FROM(cubeData)
     .WHERE`
@@ -36,23 +38,22 @@ function constructPropertyShapes(shape: NamedNode, cubeData: NamedNode, streamCl
       ${shape} ${sh.property} ?property .
 
       ?property ${sh.path} ?path .
-      ?property (<>|!<>)* ?s .
+      ?property ${deepPaths} ?s .
       ?s ?p ?o
     `
     .execute(streamClient.query)
 }
 
-export async function loadCubeShapes(datasetId: Term, { parsingClient, streamClient }: { parsingClient: ParsingClient; streamClient: StreamClient }): Promise<Stream & Readable> {
-  const graph = clownface({ dataset: $rdf.dataset() })
-
+export async function loadCubeShapes(datasetId: Term, excludeInLists: boolean, { parsingClient, streamClient }: { parsingClient: ParsingClient; streamClient: StreamClient }): Promise<Array<Stream & Readable>> {
   const identifiers = await selectIdentifiers(datasetId, parsingClient)
   if (identifiers) {
     const { cube, cubeData, project, shape } = identifiers
-    graph.node(project).addOut(ns.cc.cubeGraph, cubeData)
-    graph.node(cube).addOut(ns.cube.observationConstraint, shape)
+    const graph = clownface({ dataset: $rdf.dataset() })
+      .node(project).addOut(ns.cc.cubeGraph, cubeData)
+      .node(cube).addOut(ns.cube.observationConstraint, shape)
 
-    await graph.dataset.import(await constructPropertyShapes(shape, cubeData, streamClient))
+    return [graph.dataset.toStream(), await constructPropertyShapes(shape, cubeData, excludeInLists, streamClient)]
   }
 
-  return graph.dataset.toStream()
+  return []
 }
