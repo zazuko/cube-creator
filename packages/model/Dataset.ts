@@ -18,6 +18,10 @@ export interface Dataset extends RdfResource {
   published: Date
 }
 
+export const Error = {
+  MissingObservationValues: 'MissingObservationValues',
+} as const
+
 export function DatasetMixin<Base extends Constructor>(Resource: Base): Mixin {
   class Impl extends Resource implements Partial<Dataset> {
     @property.resource({ path: schema.hasPart, values: 'array', implicitTypes: [cube.Cube] })
