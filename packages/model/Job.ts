@@ -45,6 +45,10 @@ export function isPublishJob(job: Job): job is PublishJob {
   return job.types.has(cc.PublishJob)
 }
 
+export function isTransformJob(job: Job): job is TransformJob {
+  return job.types.has(cc.TransformJob)
+}
+
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface JobCollection extends Collection<Job> {
 
