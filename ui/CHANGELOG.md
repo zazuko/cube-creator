@@ -1,5 +1,11 @@
 # @cube-creator/ui
 
+## 1.6.3
+
+### Patch Changes
+
+- 39d7d621: Display Cube Designer errors sourced from dataset and metadata resources
+
 ## 1.6.2
 
 ### Patch Changes

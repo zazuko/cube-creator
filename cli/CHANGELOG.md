@@ -1,5 +1,11 @@
 # @cube-creator/cli
 
+## 1.7.2
+
+### Patch Changes
+
+- db33304e: Large `sh:in` lists in Cube shapes caused memory issues and API crashes (re #958 #959)
+
 ## 1.7.1
 
 ### Patch Changes
