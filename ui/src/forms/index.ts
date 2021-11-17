@@ -1,6 +1,6 @@
 import { renderer, components, editors } from '@hydrofoil/shaperone-wc/configure'
-import { html } from 'lit-element'
-import { repeat } from 'lit-html/directives/repeat'
+import { html } from 'lit'
+import { repeat } from 'lit/directives/repeat.js'
 import { PropertyTemplate, ObjectTemplate, FocusNodeTemplate } from '@hydrofoil/shaperone-wc/templates'
 import { instancesSelector } from '@hydrofoil/shaperone-hydra/components'
 import { ShaperoneForm } from '@hydrofoil/shaperone-wc/ShaperoneForm'

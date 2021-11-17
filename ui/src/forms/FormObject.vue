@@ -13,7 +13,7 @@
 <script lang="ts">
 import { Prop, Component, Vue } from 'vue-property-decorator'
 import { PropertyObjectState, PropertyState } from '@hydrofoil/shaperone-core/models/forms'
-import { TemplateResult } from 'lit-element'
+import { TemplateResult } from 'lit'
 import RenderWcTemplate from './RenderWcTemplate.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 
