@@ -62,7 +62,7 @@ export default class extends Vue {
 
   get suggestions (): string[] {
     return this.textValue
-      ? this.rdfProperties.filter((p) => p.startsWith(this.textValue))
+      ? this.rdfProperties.filter((p) => p.includes(this.textValue))
       : []
   }
 
