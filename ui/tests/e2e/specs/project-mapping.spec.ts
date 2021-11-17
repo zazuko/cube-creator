@@ -77,8 +77,9 @@ describe('CSV mapping flow', () => {
     cy.get('form').submit()
 
     cy.contains('Table My observations was successfully created').should('be.visible')
-    cy.contains('.mapper-table', 'My observations').should('be.visible')
-    cy.get('[data-icon=eye]').should('be.visible')
+    cy.contains('.mapper-table', 'My observations')
+      .should('be.visible')
+      .should('contain.text', 'Cube:')
   })
 
   it('Adds a literal column mapping to a table', () => {
@@ -130,8 +131,9 @@ describe('CSV mapping flow', () => {
     cy.get('form').submit()
 
     cy.contains('Table My secondary table was successfully created').should('be.visible')
-    cy.contains('.mapper-table', 'My secondary table').should('be.visible')
-      .find('[data-icon=eye]').should('not.be.visible')
+    cy.contains('.mapper-table', 'My secondary table')
+      .should('be.visible')
+      .should('contain.text', 'Concept:')
   })
 
   it('Adds a reference column mapping to a table', () => {

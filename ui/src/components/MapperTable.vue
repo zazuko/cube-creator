@@ -4,12 +4,7 @@
       <div class="level">
         <div class="level-left">
           <div class="level-item">
-            {{ table.name }}
-          </div>
-          <div class="level-item" v-if="table.isObservationTable">
-            <b-tooltip label="Observation table">
-              <b-icon icon="eye" />
-            </b-tooltip>
+            <span class="has-text-weight-normal">{{ prefix }}&nbsp;</span>{{ table.name }}
           </div>
         </div>
         <div class="level-right">
@@ -123,6 +118,12 @@ export default class MapperTable extends Vue {
       ...(this.table.errors || []),
       ...columnErrors,
     ]
+  }
+
+  get prefix (): string {
+    return this.table.isObservationTable
+      ? 'Cube:'
+      : 'Concept:'
   }
 
   getTableColor (tableId: Term): string {
