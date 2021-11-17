@@ -1,5 +1,6 @@
-import { dash, dcterms, hydra, qudt, rdf, rdfs, schema, sh, time, xsd } from '@tpluscode/rdf-ns-builders'
+import { dash, dcterms, hydra, qudt, rdf, rdfs, schema, sh, time, xsd } from '@tpluscode/rdf-ns-builders/strict'
 import { supportedLanguages } from '@cube-creator/core/languages'
+import { datatypes } from '@cube-creator/core/datatypes'
 import type { Initializer } from '@tpluscode/rdfine/RdfResource'
 import type { NodeShape, PropertyShape } from '@rdfine/shacl'
 import $rdf from 'rdf-ext'
@@ -142,6 +143,65 @@ const properties: Initializer<PropertyShape>[] = [{
           ],
         }],
       },
+    }],
+  },
+}, {
+  name: 'Term properties',
+  description: 'Additional properties for Shared Terms',
+  path: schema.additionalProperty,
+  order: 40,
+  nodeKind: sh.BlankNodeOrIRI,
+  node: {
+    [sh1.xoneDiscriminator.value]: md.dynamicPropertyType,
+    property: [{
+      name: 'Predicate',
+      path: rdf.predicate,
+      minCount: 1,
+      maxCount: 1,
+      nodeKind: sh.IRI,
+      [dash.editor.value]: editor.PropertyEditor,
+      order: 10,
+    }, {
+      name: 'Value type',
+      path: md.dynamicPropertyType,
+      minCount: 1,
+      maxCount: 1,
+      in: [
+        'Literal',
+        'Shared Term',
+      ],
+      order: 20,
+    }],
+    xone: [{
+      property: [{
+        path: md.dynamicPropertyType,
+        hasValue: 'Literal',
+        [dash.hidden.value]: true,
+      }, {
+        name: 'Data type',
+        path: sh.datatype,
+        in: datatypes.map(([id, labels]) => ({
+          id,
+          [rdfs.label.value]: labels,
+        })),
+        maxCount: 1,
+        nodeKind: sh.IRI,
+        order: 30,
+      }],
+    }, {
+      property: [{
+        path: md.dynamicPropertyType,
+        hasValue: 'Shared Term',
+        [dash.hidden.value]: true,
+      }, {
+        name: 'Shared dimension',
+        path: sh.class,
+        [dash.editor.value]: dash.AutoCompleteEditor,
+        [hydra.collection.value]: $rdf.namedNode('/dimension/_term-sets'),
+        nodeKind: sh.IRI,
+        maxCount: 1,
+        order: 30,
+      }],
     }],
   },
 }]

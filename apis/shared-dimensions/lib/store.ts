@@ -1,7 +1,7 @@
 import { ASK, CONSTRUCT, DELETE, INSERT, WITH } from '@tpluscode/sparql-builder'
 import { sparql } from '@tpluscode/rdf-string'
 import clownface, { GraphPointer } from 'clownface'
-import { NamedNode, Term } from 'rdf-js'
+import { BlankNode, NamedNode, Term } from 'rdf-js'
 import ParsingClient from 'sparql-http-client/ParsingClient'
 import { rdf, sh } from '@tpluscode/rdf-ns-builders'
 import TermSet from '@rdfjs/term-set'
@@ -70,6 +70,10 @@ export function getQuery(id: NamedNode, graph: NamedNode) {
     .WHERE`${resourceQueryPatterns(id, true)}`
 }
 
+function isResource(arg: Term): arg is NamedNode | BlankNode {
+  return arg.termType === 'BlankNode' || arg.termType === 'NamedNode'
+}
+
 export default class Store implements SharedDimensionsStore {
   constructor(private client: ParsingClient, public graph: NamedNode) {
   }
@@ -118,17 +122,17 @@ export default class Store implements SharedDimensionsStore {
 
     shape.addOut(sh.targetNode, resource.term)
     const visitedPredicates = new TermSet()
-    for (const quad of resource.dataset.match(resource.term)) {
-      if (visitedPredicates.has(quad.predicate)) {
+    for (const { predicate, object } of resource.dataset.match(resource.term)) {
+      if (!isResource(object) && visitedPredicates.has(predicate)) {
         continue
       }
 
-      visitedPredicates.add(quad.predicate)
+      visitedPredicates.add(predicate)
       shape.addOut(sh.property, $rdf.namedNode(`urn:shape:${nanoid()}`), property => {
-        property.addOut(sh.path, quad.predicate)
+        property.addOut(sh.path, predicate)
 
-        if (quad.object.termType === 'NamedNode' || quad.object.termType === 'BlankNode') {
-          const childShape = this.extractShape(resource.node(quad.object), dataset, visited)
+        if (isResource(object)) {
+          const childShape = this.extractShape(resource.node(object), dataset, visited)
 
           if (childShape.out().terms.length) {
             property.addOut(sh.node, childShape)

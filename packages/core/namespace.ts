@@ -100,7 +100,8 @@ type SharedDimensionsTerms =
   'terms' |
   'onlyValidTerms' |
   'export' |
-  'createAs'
+  'createAs' |
+  'dynamicPropertyType'
 
 type MetaTerms =
   'SharedDimension' |

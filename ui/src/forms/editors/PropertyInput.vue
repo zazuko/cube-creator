@@ -33,7 +33,7 @@ export default class extends Vue {
     // Do nothing
   }
 
-  @storeNs.project.State((state) => state.createIdentifier) createIdentifier!: CreateIdentifier
+  @storeNs.project.State((state) => state.createIdentifier) createIdentifier?: CreateIdentifier
   @storeNs.app.State('commonRDFProperties') rdfProperties!: string[]
 
   get textValue (): string {
@@ -54,7 +54,7 @@ export default class extends Vue {
     }
 
     if (this.value.termType === 'Literal') {
-      return this.createIdentifier(this.value)
+      return this.createIdentifier?.(this.value) || ''
     } else {
       return this.value.value
     }
