@@ -1,3 +1,5 @@
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX qb: <http://purl.org/linked-data/cube#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix sh: <http://www.w3.org/ns/shacl#>
 prefix hydra: <http://www.w3.org/ns/hydra/core#>
@@ -77,14 +79,54 @@ graph <https://lindas.admin.ch/cube/dimension> {
     schema:name "Technologies"@en ;
     schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
     sh:property [] ;
+    schema:additionalProperty _:additionalProperyOrder, _:additionalProperyColor ;
   .
+
+  _:additionalProperyOrder
+    hydra:required false ;
+    sh:datatype xsd:int ;
+    rdf:predicate qb:order ;
+    rdfs:label "Order" ;
+    md:dynamicPropertyType "Literal" ;
+  .
+
+  [
+    sh:targetNode _:additionalProperyOrder ;
+    sh:property
+      [ sh:path hydra:required ] ,
+      [ sh:path sh:datatype ] ,
+      [ sh:path rdf:predicate ] ,
+      [ sh:path rdfs:label ] ,
+      [ sh:path md:dynamicPropertyType ]
+    ;
+  ] .
+
+  _:additionalProperyColor
+    hydra:required true ;
+    sh:class <http://example.com/dimension/colors> ;
+    rdf:predicate schema:color ;
+    rdfs:label "Color" ;
+    md:dynamicPropertyType "Shared Term" ;
+  .
+
+  [
+    sh:targetNode _:additionalProperyColor ;
+    sh:property
+      [ sh:path hydra:required ] ,
+      [ sh:path sh:class ] ,
+      [ sh:path rdf:predicate ] ,
+      [ sh:path rdfs:label ] ,
+      [ sh:path md:dynamicPropertyType ]
+    ;
+  ] .
 
   [
     sh:targetNode <technologies> ;
     sh:property
       [ sh:path schema:name ],
       [ sh:path rdf:type ],
-      [ sh:path schema:validFrom ] ;
+      [ sh:path schema:validFrom ] ,
+      [ sh:path schema:additionalProperty ] ;
   ] .
 
   <technologies/rdf>

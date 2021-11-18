@@ -13,6 +13,7 @@ import { shape } from '../namespace'
 import * as dimensionTerm from './shared-dimension-term'
 import { loadDynamicTermProperties } from './dynamic-properties'
 import { Request } from 'express'
+import parsePreferHeader from 'parse-prefer-header'
 
 RdfResource.factory.addMixin(...NodeShapeBundle)
 RdfResource.factory.addMixin(...PropertyShapeBundle)
@@ -27,7 +28,8 @@ function entry(id: NamedNode, init: () => Initializer<NodeShape>): [NamedNode, S
     const pointer = clownface({ dataset: $rdf.dataset() }).namedNode(id)
     fromPointer(pointer, init())
 
-    for await (const quad of loadDynamicTermProperties(req, pointer)) {
+    const { target, targetClass } = parsePreferHeader(req.header('Prefer'))
+    for (const quad of await loadDynamicTermProperties({ target, targetClass }, pointer)) {
       pointer.dataset.add(quad)
     }
 

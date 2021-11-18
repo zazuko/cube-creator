@@ -2643,7 +2643,7 @@
   resolved "https://registry.yarnpkg.com/@types/parse-json/-/parse-json-4.0.0.tgz#2f8bb441434d163b35fb8ffdccd7138927ffb8c0"
   integrity sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==
 
-"@types/parse-prefer-header@^1.0.1":
+"@types/parse-prefer-header@^1.0.0", "@types/parse-prefer-header@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@types/parse-prefer-header/-/parse-prefer-header-1.0.1.tgz#8ccd3e935484310c791336fd6c001a4de77335bf"
   integrity sha512-oCHqtlcIWl28cmnhIEdZD/P2uKnXCGjJUTcfawjIn3NTvtp9A2yctlcaRzOKpytDqEOhJOfjzQHuENaxX6QMNg==

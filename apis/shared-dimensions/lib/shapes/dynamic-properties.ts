@@ -1,49 +1,21 @@
-import { Request } from 'express'
 import { dash, hydra, rdf, rdfs, schema, sh } from '@tpluscode/rdf-ns-builders/strict'
 import { md } from '@cube-creator/core/namespace'
-import parsePreferHeader from 'parse-prefer-header'
-import { NamedNode, Quad } from 'rdf-js'
-import { CONSTRUCT, sparql } from '@tpluscode/sparql-builder'
+import { DatasetCore, NamedNode, Quad } from 'rdf-js'
+import { CONSTRUCT } from '@tpluscode/sparql-builder'
 import $rdf from 'rdf-ext'
-import { SparqlTemplateResult } from '@tpluscode/rdf-string'
-import { ParsingClient } from 'sparql-http-client/ParsingClient'
-import { GraphPointer } from 'clownface'
+import clownface, { GraphPointer } from 'clownface'
 import { toRdf } from 'rdf-literal'
 import env from '../env'
 import { parsingClient } from '../sparql'
 import { rewriteTerm } from '../rewrite'
 
-interface DynamicPropertiesForTerm {
-  shape: GraphPointer
-  target: NamedNode
-  client: ParsingClient
+export interface DynamicPropertiesQuery {
+  (targetClass: NamedNode): Promise<Quad[]>
 }
 
-interface DynamicPropertiesForTermSet {
-  shape: GraphPointer
-  targetClass: NamedNode
-  client: ParsingClient
-}
-
-type LoadDynamicProperties = DynamicPropertiesForTerm | DynamicPropertiesForTermSet
-
-async function dynamicPropertiesQuery({ shape, client, ...targets }: LoadDynamicProperties) {
-  let additionalPropertyPatterns: SparqlTemplateResult
-  if ('target' in targets) {
-    additionalPropertyPatterns = sparql`
-      ${targets.target} ${schema.inDefinedTermSet} ?sharedDimension .
-      ?sharedDimension a ${md.SharedDimension} ;
-                       ${schema.additionalProperty} ?property .
-    `
-  } else {
-    additionalPropertyPatterns = sparql`
-      ${targets.targetClass} a ${md.SharedDimension} ;
-                             ${schema.additionalProperty} ?property .
-    `
-  }
-
+const dynamicPropertiesFromStore: DynamicPropertiesQuery = async function (targetClass) {
   return CONSTRUCT`
-    ${shape.term} ${sh.property} [
+    [] ${sh.property} [
       ${sh.name} ?name ;
       ${sh.maxCount} 1 ;
       ${sh.minCount} ?minCount ;
@@ -55,7 +27,8 @@ async function dynamicPropertiesQuery({ shape, client, ...targets }: LoadDynamic
   `
     .FROM($rdf.namedNode(env.MANAGED_DIMENSIONS_GRAPH))
     .WHERE`
-      ${additionalPropertyPatterns}
+      ${targetClass} a ${md.SharedDimension} ;
+                     ${schema.additionalProperty} ?property .
 
       ?property ${rdf.predicate} ?predicate ;
                 ${rdfs.label} ?name ;
@@ -74,31 +47,27 @@ async function dynamicPropertiesQuery({ shape, client, ...targets }: LoadDynamic
         ?property ${sh.datatype} ?dt
       }
     `
-    .execute(client.query)
+    .execute(parsingClient.query)
 }
 
-export async function * loadDynamicTermProperties(req: Request, shape: GraphPointer) {
-  const { target, targetClass } = parsePreferHeader(req.header('Prefer'))
-  let dynamicProperties: Quad[] = []
-  if (typeof target === 'string') {
-    dynamicProperties = await dynamicPropertiesQuery({
-      shape,
-      client: parsingClient,
-      target: rewriteTerm($rdf.namedNode(target)),
-    })
-  } else if (typeof targetClass === 'string') {
-    dynamicProperties = await dynamicPropertiesQuery({
-      shape,
-      client: parsingClient,
-      targetClass: rewriteTerm($rdf.namedNode(targetClass)),
-    })
+export async function loadDynamicTermProperties(targetClass: string | unknown, shape: GraphPointer<NamedNode>, dynamicPropertiesQuery = dynamicPropertiesFromStore): Promise<DatasetCore> {
+  const dataset = $rdf.dataset()
+  if (typeof targetClass === 'string') {
+    dataset.addAll(await dynamicPropertiesQuery(rewriteTerm($rdf.namedNode(targetClass))))
   }
 
   let order = 100
-  for (const quad of dynamicProperties) {
-    if (quad.predicate.equals(sh.path)) {
-      yield $rdf.quad(quad.subject, sh.order, toRdf(order++))
-    }
-    yield quad
+  const propsOrdered = clownface({ dataset }).has(sh.path).toArray()
+    .sort((left, right) => {
+      const leftName = left.out(rdfs.label, { language: ['en', '*'] }).value || ''
+      const rightName = right.out(rdfs.label, { language: ['en', '*'] }).value || ''
+      return leftName.localeCompare(rightName)
+    })
+
+  for (const prop of propsOrdered) {
+    dataset.add($rdf.quad(shape.term, sh.property, prop.term))
+    dataset.add($rdf.quad(prop.term, sh.order, toRdf(order++)))
   }
+
+  return dataset
 }

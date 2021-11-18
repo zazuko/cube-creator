@@ -77,7 +77,7 @@ export default class extends Vue {
       const term = await this.$store.dispatch('api/invokeSaveOperation', {
         operation: this.operation,
         resource,
-        headers: { Prefer: `target=${this.resource?.term.value}` },
+        headers: { Prefer: `target-class=${this.dimension.id.value}` },
       })
 
       this.$store.dispatch('sharedDimension/updateTerm', term)

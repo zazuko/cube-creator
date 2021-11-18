@@ -28,7 +28,7 @@ export const put = protectedResource(shaclValidate, asyncMiddleware(async (req, 
   const hydraExpects = req.hydra.operation.out(hydra.expects).term
   let shape: GraphPointer | undefined
   if (hydraExpects?.termType === 'NamedNode') {
-    shape = shapes.get(hydraExpects)?.()
+    shape = await shapes.get(hydraExpects)?.(req)
   }
 
   const dimension = await update({
