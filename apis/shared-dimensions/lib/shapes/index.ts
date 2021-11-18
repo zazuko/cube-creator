@@ -11,19 +11,26 @@ import { ResourceBundle } from '@rdfine/rdfs/bundles'
 import { fromPointer } from '@rdfine/shacl/lib/NodeShape'
 import { shape } from '../namespace'
 import * as dimensionTerm from './shared-dimension-term'
+import { loadDynamicTermProperties } from './dynamic-properties'
+import { Request } from 'express'
 
 RdfResource.factory.addMixin(...NodeShapeBundle)
 RdfResource.factory.addMixin(...PropertyShapeBundle)
 RdfResource.factory.addMixin(...ResourceBundle)
 
 interface ShapeFactory {
-  (): GraphPointer<NamedNode>
+  (req: Request): Promise<GraphPointer<NamedNode>>
 }
 
 function entry(id: NamedNode, init: () => Initializer<NodeShape>): [NamedNode, ShapeFactory] {
-  function factory() {
+  async function factory(req: Request) {
     const pointer = clownface({ dataset: $rdf.dataset() }).namedNode(id)
     fromPointer(pointer, init())
+
+    for await (const quad of loadDynamicTermProperties(req, pointer)) {
+      pointer.dataset.add(quad)
+    }
+
     return pointer
   }
 

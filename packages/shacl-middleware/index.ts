@@ -9,7 +9,7 @@ import { ProblemDocument } from 'http-problem-details'
 import ValidationReport from 'rdf-validate-shacl/src/validation-report'
 
 interface ShaclMiddlewareOptions {
-  loadResource(id: NamedNode): Promise<GraphPointer<NamedNode> | null>
+  loadResource(id: NamedNode, req: Request): Promise<GraphPointer<NamedNode> | null>
   loadResourcesTypes(ids: Term[]): Promise<Quad[]>
   getTargetNode?(req: Request, res: Response): NamedNode | undefined
   parseResource?(req: Request): Promise<GraphPointer<NamedNode>>
@@ -58,7 +58,7 @@ export const shaclMiddleware = ({ getTargetNode, loadResource, loadResourcesType
   await Promise.all(req.hydra.operation.out(hydra.expects).map(async (expects) => {
     if (expects.term.termType !== 'NamedNode') return
 
-    const pointer = await loadResource(expects.term)
+    const pointer = await loadResource(expects.term, req)
     if (pointer?.has(rdf.type, [sh.NodeShape]).values.length) {
       await shapes.addAll([...pointer.dataset])
 

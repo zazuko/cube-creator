@@ -154,6 +154,12 @@ const properties: Initializer<PropertyShape>[] = [{
   node: {
     [sh1.xoneDiscriminator.value]: md.dynamicPropertyType,
     property: [{
+      name: 'Name',
+      path: rdfs.label,
+      minCount: 1,
+      maxCount: 1,
+      order: 5,
+    }, {
       name: 'Predicate',
       path: rdf.predicate,
       minCount: 1,
@@ -171,6 +177,14 @@ const properties: Initializer<PropertyShape>[] = [{
         'Shared Term',
       ],
       order: 20,
+    }, {
+      name: 'Required',
+      path: hydra.required,
+      minCount: 1,
+      maxCount: 1,
+      datatype: xsd.boolean,
+      defaultValue: false,
+      order: 15,
     }],
     xone: [{
       property: [{
@@ -184,6 +198,7 @@ const properties: Initializer<PropertyShape>[] = [{
           id,
           [rdfs.label.value]: labels,
         })),
+        minCount: 1,
         maxCount: 1,
         nodeKind: sh.IRI,
         order: 30,
@@ -199,6 +214,7 @@ const properties: Initializer<PropertyShape>[] = [{
         [dash.editor.value]: dash.AutoCompleteEditor,
         [hydra.collection.value]: $rdf.namedNode('/dimension/_term-sets'),
         nodeKind: sh.IRI,
+        minCount: 1,
         maxCount: 1,
         order: 30,
       }],

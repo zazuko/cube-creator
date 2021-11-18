@@ -19,6 +19,7 @@ import * as Models from '@cube-creator/model'
 import { findNodes } from 'clownface-shacl-path'
 import { FileLiteral } from '@/forms/FileLiteral'
 import { GraphPointer } from 'clownface'
+import { Term } from 'rdf-js'
 
 const rootURL = window.APP_CONFIG.apiCoreBase
 const segmentSeparator = '!!' // used to replace slash in URI to prevent escaping
@@ -72,12 +73,20 @@ export const api = {
     return resource
   },
 
-  async fetchOperationShape (operation: RuntimeOperation): Promise<Shape | null> {
+  async fetchOperationShape (operation: RuntimeOperation, { target, targetClass }: { target?: Term; targetClass?: Term } = {}): Promise<Shape | null> {
     const expects: RdfResource | undefined = operation.expects
       .find(expects => 'load' in expects && expects.types.has(sh.Shape))
 
+    const headers: HeadersInit = {}
+    if (target) {
+      headers.Prefer = `target=${target.value}`
+    }
+    if (targetClass) {
+      headers.Prefer = `target-class=${targetClass.value}`
+    }
+
     if (expects && expects.load) {
-      const { representation } = await expects.load<Shape>()
+      const { representation } = await expects.load<Shape>(headers)
       if (representation && representation.root) {
         return representation.root
       }
@@ -124,7 +133,7 @@ export const api = {
     }
   },
 
-  async invokeSaveOperation<T extends RdfResource = RdfResource> (operation: RuntimeOperation | null, data: RdfResource, headers: Record<string, string> = {}): Promise<T> {
+  async invokeSaveOperation<T extends RdfResource = RdfResource> (operation: RuntimeOperation | null, data: RdfResource, headers: HeadersInit = {}): Promise<T> {
     if (!operation) throw new Error('Operation does not exist')
 
     const { body, contentHeaders } = this.prepareOperationBody(data, operation)
