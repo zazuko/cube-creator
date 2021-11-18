@@ -12,6 +12,7 @@ import { setupEnv } from '../../support/env'
 import { ccClients } from '@cube-creator/testing/lib'
 import { insertTestProject } from '@cube-creator/testing/lib/seedData'
 import { cc, cube } from '@cube-creator/core/namespace'
+import { toRdf } from 'rdf-literal'
 
 describe('@cube-creator/cli/lib/commands/transform', function () {
   this.timeout(360 * 1000)
@@ -28,6 +29,7 @@ describe('@cube-creator/cli/lib/commands/transform', function () {
     const expectedGraph = $rdf.namedNode(`${env.API_CORE_BASE}cube-project/ubd/cube-data`)
     const cubeBase = 'https://environment.ld.admin.ch/foen/ubd/28/'
     const cubeNs = namespace(cubeBase)
+    const cubeShape = cubeNs('shape/')
 
     before(async () => {
       // when
@@ -43,6 +45,38 @@ describe('@cube-creator/cli/lib/commands/transform', function () {
       const shape = await ASK`?shape a ${sh.NodeShape}`.FROM(expectedGraph).execute(ccClients.streamClient.query)
 
       expect(shape).to.be.true
+    })
+
+    it('adds dimension size and no sh:in to large dimension', async () => {
+      const [{ size }] = await SELECT`?size`
+        .WHERE`
+          ${cubeShape} ${sh.property} ?property .
+          ?property ${sh.path} ${cubeNs.station} .
+          ?property ${cube.dimensionSize} ?size .
+          optional {
+            ?property ${sh.in} ?in
+          }
+          filter(!bound(?in))
+        `
+        .FROM(expectedGraph)
+        .execute(ccClients.parsingClient.query)
+
+      expect(size).to.deep.eq(toRdf(215))
+    })
+
+    it('adds dimension size alongside sh:in to smaller dimension', async () => {
+      const [{ size }] = await SELECT`?size`
+        .WHERE`
+          ${cubeShape} ${sh.property} ?property .
+          ?property ${sh.path} ${cubeNs.unit} .
+          ?property ${cube.dimensionSize} ?size .
+          ?property ${sh.in} ?in
+          filter(!bound(?in))
+        `
+        .FROM(expectedGraph)
+        .execute(ccClients.parsingClient.query)
+
+      expect(size).to.deep.eq(toRdf(11))
     })
 
     it('produces observations', async () => {
@@ -128,14 +162,14 @@ describe('@cube-creator/cli/lib/commands/transform', function () {
     })
 
     it('does not output cc:cube as dimension property', async () => {
-      const hasCubeProperty = await ASK`<https://environment.ld.admin.ch/foen/ubd/28/shape/> ${sh.property}/${sh.path} ${cc.cube} .`
+      const hasCubeProperty = await ASK`${cubeShape} ${sh.property}/${sh.path} ${cc.cube} .`
         .FROM($rdf.namedNode(`${env.API_CORE_BASE}cube-project/ubd/cube-data`))
         .execute(ccClients.streamClient.query)
       expect(hasCubeProperty).to.eq(false)
     })
 
     it('does not output csvw:describes as dimension property', async () => {
-      const hasDescribesProperty = await ASK`<https://environment.ld.admin.ch/foen/ubd/28/shape/> ${sh.property}/${sh.path} ${csvw.describes} .`
+      const hasDescribesProperty = await ASK`${cubeShape} ${sh.property}/${sh.path} ${csvw.describes} .`
         .FROM($rdf.namedNode(`${env.API_CORE_BASE}cube-project/ubd/cube-data`))
         .execute(ccClients.streamClient.query)
 

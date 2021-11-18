@@ -23,10 +23,11 @@ const datatypeParsers = (datatype) => {
 }
 
 class Dimension {
-  constructor({ predicate, object }) {
+  constructor({ predicate, object }, { inListThreshold }) {
     this.predicate = predicate
     this.termType = object.termType
     this.datatypes = new TermSet()
+    this.inListThreshold = inListThreshold
 
     if (object.datatype) {
       this.datatypes.add(object.datatype)
@@ -93,7 +94,11 @@ class Dimension {
     }
 
     if (this.in) {
-      ptr.addList(ns.sh.in, [...this.in.values()])
+      if (this.in.size < this.inListThreshold) {
+        ptr.addList(ns.sh.in, [...this.in.values()])
+      }
+
+      ptr.addOut(cube.dimensionSize, this.in.size)
     }
 
     if (this.min) {
