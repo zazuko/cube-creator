@@ -158,30 +158,6 @@ describe('@cube-creator/shared-dimensions-api/lib/shapes/dynamic-properties', ()
     expect(dynamicProperties.has(sh.path, rdfs.label).out(sh.order).value).to.eq('102')
   })
 
-  it('asserts properties on shape resource', async () => {
-    // given
-    const dataset = $rdf.dataset()
-    clownface({ dataset })
-      .blankNode()
-      .addOut(sh.path, hydra.last)
-      .addOut(rdfs.label, 'Last property')
-      .blankNode()
-      .addOut(sh.path, rdfs.label)
-      .addOut(rdfs.label, 'Middle property')
-      .blankNode()
-      .addOut(sh.path, hydra.first)
-      .addOut(rdfs.label, 'First property')
-    dynamicPropertiesQuery.resolves(dataset.toArray())
-
-    // when
-    const dynamicProperties = clownface({
-      dataset: $rdf.dataset([...await loadDynamicTermProperties('http://target.node', shape, dynamicPropertiesQuery)]),
-    })
-
-    // then
-    expect(dynamicProperties.node(shape as any).out(sh.property).terms.length).to.eq(3)
-  })
-
   it('calls query for correct target class when Prefer header is given', async () => {
     // given
     const prefer = 'https://cube-creator.lndo.site/target-class'
