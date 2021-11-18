@@ -33,7 +33,7 @@ function defaultShape({ term }) {
 }
 
 class ToCubeShape extends Transform {
-  constructor({ cube, excludeValuesOf, inListThreshold = 100 } = {}) {
+  constructor({ cube, excludeValuesOf, inListThreshold } = {}) {
     super({ objectMode: true })
 
     this.options = {
@@ -86,8 +86,8 @@ class ToCubeShape extends Transform {
   }
 }
 
-function toCubeShape({ cube, excludeValuesOf } = {}) {
-  return new ToCubeShape({ cube, excludeValuesOf })
+function toCubeShape({ cube, excludeValuesOf, inListThreshold = 100 } = {}) {
+  return new ToCubeShape({ cube, excludeValuesOf, inListThreshold })
 }
 
 module.exports = toCubeShape
