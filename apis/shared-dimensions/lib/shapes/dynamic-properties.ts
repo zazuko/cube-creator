@@ -10,20 +10,20 @@ import { parsingClient } from '../sparql'
 import { rewriteTerm } from '../rewrite'
 
 export interface DynamicPropertiesQuery {
-  (targetClass: NamedNode): Promise<Quad[]>
+  (targetClass: NamedNode, shape: NamedNode): Promise<Quad[]>
 }
 
-const dynamicPropertiesFromStore: DynamicPropertiesQuery = async function (targetClass) {
+const dynamicPropertiesFromStore: DynamicPropertiesQuery = async function (targetClass, shape) {
   return CONSTRUCT`
-    [] ${sh.property} [
-      ${sh.name} ?name ;
+    ${shape} ${sh.property} ?shProperty .
+    ?shProperty ${sh.name} ?name ;
       ${sh.maxCount} 1 ;
       ${sh.minCount} ?minCount ;
       ${sh.path} ?predicate ;
       ${hydra.collection} ?collection ;
       ${dash.editor} ?editor ;
       ${sh.datatype} ?dt ;
-    ]
+    .
   `
     .FROM($rdf.namedNode(env.MANAGED_DIMENSIONS_GRAPH))
     .WHERE`
@@ -35,6 +35,7 @@ const dynamicPropertiesFromStore: DynamicPropertiesQuery = async function (targe
                 ${hydra.required} ?required ;
       .
 
+      BIND(IRI(CONCAT("urn:property:", str(?property))) as ?shProperty)
       BIND( IF(?required, 1, 0) as ?minCount )
 
       optional {
@@ -53,7 +54,7 @@ const dynamicPropertiesFromStore: DynamicPropertiesQuery = async function (targe
 export async function loadDynamicTermProperties(targetClass: string | unknown, shape: GraphPointer<NamedNode>, dynamicPropertiesQuery = dynamicPropertiesFromStore): Promise<DatasetCore> {
   const dataset = $rdf.dataset()
   if (typeof targetClass === 'string') {
-    dataset.addAll(await dynamicPropertiesQuery(rewriteTerm($rdf.namedNode(targetClass))))
+    dataset.addAll(await dynamicPropertiesQuery(rewriteTerm($rdf.namedNode(targetClass)), shape.term))
   }
 
   let order = 100
@@ -65,7 +66,6 @@ export async function loadDynamicTermProperties(targetClass: string | unknown, s
     })
 
   for (const prop of propsOrdered) {
-    dataset.add($rdf.quad(shape.term, sh.property, prop.term))
     dataset.add($rdf.quad(prop.term, sh.order, toRdf(order++)))
   }
 
