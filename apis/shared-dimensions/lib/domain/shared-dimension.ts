@@ -9,10 +9,11 @@ import { DomainError } from '@cube-creator/api-errors'
 import env from '../env'
 import { SharedDimensionsStore } from '../store'
 import httpError from 'http-errors'
-import { DESCRIBE } from '@tpluscode/sparql-builder'
+import { CONSTRUCT, sparql } from '@tpluscode/sparql-builder'
 import { streamClient } from '../sparql'
 import { StreamClient } from 'sparql-http-client/StreamClient'
 import TermMap from '@rdfjs/term-map'
+import { resourceQueryPatterns } from '../resource'
 
 export { importDimension } from './shared-dimension/import'
 
@@ -165,23 +166,15 @@ function urnToBlanks() {
 export async function getExportedDimension({ resource, store, client = streamClient }: GetExportedDimension): Promise<ExportedDimension> {
   const dimension = await store.load(resource)
 
-  const quads = await DESCRIBE`${dimension.term} ?term ?shape ?setShape ?shapeProp ?setShapeProp`
+  const dimensionAndTerms = sparql`?term ${schema.inDefinedTermSet}* ${dimension.term} .`
+
+  const quads = await CONSTRUCT`
+    ?term ?rootProp ?rootObject .
+    ?child ?childProp ?childObject .
+  `
     .FROM(store.graph)
     .WHERE`
-      ${dimension.term} a ${md.SharedDimension} .
-
-      ?term ${schema.inDefinedTermSet} ${dimension.term} .
-
-      OPTIONAL {
-        ?shape ${sh.targetNode} ?term .
-        filter( isBlank(?shape) )
-        ?shape ${sh.property} ?shapeProp .
-      }
-      OPTIONAL {
-        ?setShape ${sh.targetNode} ${dimension.term} .
-        filter( isBlank(?setShape) )
-        ?setShape ${sh.property} ?setShapeProp .
-      }
+      ${resourceQueryPatterns(dimensionAndTerms, false)}
     `.execute(client.query)
 
   const baseUriPattern = new RegExp(`^${env.MANAGED_DIMENSIONS_BASE}`)

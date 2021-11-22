@@ -17,6 +17,7 @@ import env from '../../env'
 import { SharedDimensionsStore } from '../../store'
 import { streamClient } from '../../sparql'
 import { removeBnodes } from '../../rewrite'
+import { extractShape } from '../../resource'
 
 interface ImportedDimension {
   termSet: GraphPointer
@@ -59,9 +60,10 @@ export async function importDimension({
     throw new BadRequest(`Missing data for file ${importedDimension}`)
   }
 
+  const graph = $rdf.namedNode(env.MANAGED_DIMENSIONS_GRAPH)
   const importStream = exportedData(env.MANAGED_DIMENSIONS_BASE)
     .pipe(through2.obj(function ({ subject, predicate, object }: Quad, _, next) {
-      this.push($rdf.quad(subject, predicate, object, $rdf.namedNode(env.MANAGED_DIMENSIONS_GRAPH)))
+      this.push($rdf.quad(subject, predicate, object, graph))
       next()
     }))
   const termSet = clownface({ dataset: await $rdf.dataset().import(importStream) })
@@ -81,8 +83,15 @@ export async function importDimension({
     throw new httpError.Conflict(`Shared Dimension '${identifier}' already exists`)
   }
 
-  const { dataset } = removeBnodes(termSet)
-  await INSERT.DATA`${dataset}`.execute(client.query)
+  const withoutBnodes = removeBnodes(termSet)
+
+  const shapesGraph = clownface({ dataset: withoutBnodes.dataset, graph })
+  extractShape(withoutBnodes, shapesGraph)
+  for (const term of withoutBnodes.in(schema.inDefinedTermSet).toArray()) {
+    extractShape(term, shapesGraph)
+  }
+
+  await INSERT.DATA`${withoutBnodes.dataset}`.execute(client.query)
 
   return {
     termSet: await store.load(termSet.term),
