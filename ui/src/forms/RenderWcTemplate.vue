@@ -4,8 +4,8 @@
 
 <script lang="ts">
 import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
-import type { TemplateResult } from 'lit-element'
-import { render } from 'lit-html'
+import type { TemplateResult } from 'lit'
+import { render } from 'lit'
 
 @Component
 export default class RenderWc extends Vue {
@@ -21,7 +21,7 @@ export default class RenderWc extends Vue {
   }
 
   renderTemplate (): void {
-    render(this.templateResult, this.$el)
+    render(this.templateResult, this.$el as any)
   }
 }
 </script>

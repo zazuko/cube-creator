@@ -6,10 +6,10 @@ import env from '../env'
 type CreateMiddleware = Pick<Parameters<typeof shaclMiddleware>[0], 'parseResource'>
 
 const createMiddleware = ({ parseResource }: CreateMiddleware = {}) => shaclMiddleware({
-  async loadResource(id) {
+  async loadResource(id, req) {
     const mappedId = $rdf.namedNode(id.value.replace(env.MANAGED_DIMENSIONS_API_BASE, env.MANAGED_DIMENSIONS_BASE))
 
-    return shapes.get(mappedId)?.() || null
+    return shapes.get(mappedId)?.(req) || null
   },
   async loadResourcesTypes() {
     return []

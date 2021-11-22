@@ -1,3 +1,5 @@
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX qb: <http://purl.org/linked-data/cube#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix sh: <http://www.w3.org/ns/shacl#>
 prefix hydra: <http://www.w3.org/ns/hydra/core#>
@@ -77,7 +79,46 @@ graph <https://lindas.admin.ch/cube/dimension> {
     schema:name "Technologies"@en ;
     schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
     sh:property <urn:technologies:defaultMetadata> ;
+    schema:additionalProperty <urn:additionalPropery:Order>, <urn:additionalPropery:Color> ;
   .
+
+  <urn:additionalPropery:Order>
+    hydra:required false ;
+    sh:datatype xsd:int ;
+    rdf:predicate qb:order ;
+    rdfs:label "Order" ;
+    md:dynamicPropertyType "Literal" ;
+  .
+
+  <urn:shape:additionalProperyOrder>
+    sh:targetNode <urn:additionalPropery:Order> ;
+    sh:property
+      [ sh:path hydra:required ] ,
+      [ sh:path sh:datatype ] ,
+      [ sh:path rdf:predicate ] ,
+      [ sh:path rdfs:label ] ,
+      [ sh:path md:dynamicPropertyType ]
+    ;
+   .
+
+  <urn:additionalPropery:Color>
+    hydra:required true ;
+    sh:class <http://example.com/dimension/colors> ;
+    rdf:predicate schema:color ;
+    rdfs:label "Color" ;
+    md:dynamicPropertyType "Shared Term" ;
+  .
+
+  <urn:shape:additionalProperyColor>
+    sh:targetNode <urn:additionalPropery:Color> ;
+    sh:property
+      [ sh:path hydra:required ] ,
+      [ sh:path sh:class ] ,
+      [ sh:path rdf:predicate ] ,
+      [ sh:path rdfs:label ] ,
+      [ sh:path md:dynamicPropertyType ]
+    ;
+   .
 
   [
     sh:targetNode <technologies> ;
@@ -85,7 +126,9 @@ graph <https://lindas.admin.ch/cube/dimension> {
       [ sh:path schema:name ],
       [ sh:path rdf:type ],
       [ sh:path schema:validFrom ] ,
-      [ sh:path sh:property ] ;
+      [ sh:path sh:property ] ,
+      [ sh:path schema:additionalProperty ; sh:node <urn:shape:additionalProperyColor> ] ,
+      [ sh:path schema:additionalProperty ; sh:node <urn:shape:additionalProperyOrder> ] ;
   ] .
 
   <technologies/rdf>

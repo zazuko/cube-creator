@@ -28,10 +28,10 @@ const actions: ActionTree<APIState, RootState> = {
     return entrypoint
   },
 
-  async invokeSaveOperation (context, { operation, resource }: {operation: RuntimeOperation; resource: RdfResource | GraphPointer<ResourceIdentifier>}) {
+  async invokeSaveOperation (context, { operation, resource, headers }: {operation: RuntimeOperation; resource: RdfResource | GraphPointer<ResourceIdentifier>; headers?: HeadersInit}) {
     const data = 'toJSON' in resource ? resource : RdfResourceImpl.factory.createEntity(resource) as RdfResource
 
-    return api.invokeSaveOperation(operation, data)
+    return api.invokeSaveOperation(operation, data, headers)
   },
 
   async invokeDeleteOperation (context, { operation, successMessage, callbackAction, callbackParams = {} }): Promise<void> {

@@ -7,6 +7,7 @@ import { expect } from 'chai'
 import Store, { SharedDimensionsStore } from '../lib/store'
 import $rdf from 'rdf-ext'
 import { ex } from '@cube-creator/testing/lib/namespace'
+import { Term } from 'rdf-js'
 
 const { parsingClient } = mdClients
 
@@ -92,10 +93,10 @@ describe('@cube-creator/shared-dimensions-api/lib/store @SPARQL', () => {
         expect(await testQuery.execute(parsingClient.query)).to.be.false
       })
 
-      it('produces only one Property Shape for property with multiple objects', async () => {
+      it('produces only one Property Shape for property with multiple literal objects', async () => {
         // given
         const resource = namedNode('http://test.resource/john')
-          .addOut(schema.identifier, ['Foo', 'Bar', 'Baz'])
+          .addOut(schema.identifier, ['Foo', 'Bar', 'Baz', $rdf.blankNode()])
 
         // when
         await store.save(resource)
@@ -111,7 +112,39 @@ describe('@cube-creator/shared-dimensions-api/lib/store @SPARQL', () => {
         `
           .FROM(graph)
           .execute(parsingClient.query)
-        expect(count.value).to.eq('1')
+        expect(count.value).to.eq('2')
+      })
+
+      it('produces a separate Property Shape for every resource object', async () => {
+        // given
+        const mike = $rdf.namedNode('http://test.resource/mike')
+        const sam = $rdf.namedNode('http://test.resource/sam')
+        const resource = namedNode('http://test.resource/john')
+          .addOut(schema.children, mike, mike => mike.addOut(schema.name, 'Mike'))
+          .addOut(schema.children, sam, sam => sam.addOut(schema.name, 'Sam').addOut(schema.age, 20))
+
+        // when
+        await store.save(resource)
+
+        // then
+        const hasChildProp = (child: Term, childProp: Term) => ASK`
+          [
+            ${sh.targetNode} ${resource.term} ;
+            ${sh.property} [
+              ${sh.path} ${schema.children} ;
+              ${sh.node} [
+                ${sh.targetNode} ${child} ;
+                ${sh.property} ${childProp} ;
+              ] ;
+            ] ;
+          ] .
+        `
+          .FROM(graph)
+          .execute(parsingClient.query)
+        expect(hasChildProp(mike, schema.name)).to.eventually.be.true
+        expect(hasChildProp(mike, schema.age)).to.eventually.be.false
+        expect(hasChildProp(sam, schema.name)).to.eventually.be.true
+        expect(hasChildProp(sam, schema.age)).to.eventually.be.true
       })
     })
   })

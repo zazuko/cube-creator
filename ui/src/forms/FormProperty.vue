@@ -23,7 +23,7 @@
 <script lang="ts">
 import { Prop, Component, Vue } from 'vue-property-decorator'
 import { PropertyObjectState, PropertyState } from '@hydrofoil/shaperone-core/models/forms'
-import { TemplateResult } from 'lit-element'
+import { TemplateResult } from 'lit'
 // Makes the hidden property visible to typescript
 import VueMarkdown from 'vue-markdown/src/VueMarkdown'
 import RenderWcTemplate from './RenderWcTemplate.vue'

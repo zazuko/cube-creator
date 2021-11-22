@@ -13,7 +13,7 @@
     "@cube-creator/shared-dimensions-api": "2.3.2",
     "@hydrofoil/labyrinth": "^0.4.1",
     "@rdfine/csvw": "^0.6.3",
-    "@rdfine/hydra": "^0.7.0",
+    "@rdfine/hydra": "^0.8.0",
     "@rdfine/prov": "^0.1.1",
     "@rdfine/schema": "^0.6.3",
     "@rdfjs/express-handler": "^1.2.1",

@@ -1,4 +1,6 @@
-import { describe, it, before, beforeEach } from 'mocha'
+import { describe, it, beforeEach } from 'mocha'
+import { Request } from 'express'
+import sinon from 'sinon'
 import { blankNode, namedNode } from '@cube-creator/testing/clownface'
 import { dcterms, hydra, qudt, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { md, meta } from '@cube-creator/core/namespace'
@@ -11,10 +13,19 @@ import * as ns from '../../../lib/namespace'
 
 describe('@cube-creator/shared-dimensions-api/lib/shapes', () => {
   let shape: GraphPointer<NamedNode>
+  let req: Request
+  let header: sinon.SinonStub
+
+  beforeEach(() => {
+    header = sinon.stub()
+    req = {
+      header,
+    } as any
+  })
 
   describe('shared-dimensions-create', () => {
-    before(() => {
-      shape = shapes.get(ns.shape['shape/shared-dimension-create'])!()
+    beforeEach(async () => {
+      shape = await shapes.get(ns.shape['shape/shared-dimension-create'])!(req)
     })
 
     describe('New dimension', () => {
@@ -50,8 +61,8 @@ describe('@cube-creator/shared-dimensions-api/lib/shapes', () => {
   })
 
   describe('shared-dimensions-update', () => {
-    before(() => {
-      shape = shapes.get(ns.shape['shape/shared-dimension-update'])!()
+    beforeEach(async () => {
+      shape = await shapes.get(ns.shape['shape/shared-dimension-update'])!(req)
     })
 
     it('allows dcterms:identifier', () => {
@@ -73,8 +84,8 @@ describe('@cube-creator/shared-dimensions-api/lib/shapes', () => {
   })
 
   describe('shared-dimension-term-create', () => {
-    before(() => {
-      shape = shapes.get(ns.shape['shape/shared-dimension-term-create'])!()
+    beforeEach(async () => {
+      shape = await shapes.get(ns.shape['shape/shared-dimension-term-create'])!(req)
     })
 
     it('is valid when a term has only names', () => {
@@ -100,8 +111,8 @@ describe('@cube-creator/shared-dimensions-api/lib/shapes', () => {
   })
 
   describe('shared-dimension-term-update', () => {
-    before(() => {
-      shape = shapes.get(ns.shape['shape/shared-dimension-term-update'])!()
+    beforeEach(async () => {
+      shape = await shapes.get(ns.shape['shape/shared-dimension-term-update'])!(req)
     })
 
     let term: GraphPointer

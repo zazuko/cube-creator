@@ -3,10 +3,11 @@ import { NotFoundError } from '@cube-creator/api-errors'
 import shapes from '../shapes'
 
 export const get = asyncMiddleware(async (req, res, next) => {
-  const shape = shapes.get(req.hydra.resource.term)
-  if (!shape) {
+  const load = shapes.get(req.hydra.resource.term)
+  if (!load) {
     return next(new NotFoundError(req.hydra.resource.term))
   }
 
-  await res.dataset(shape().dataset)
+  const shape = await load(req)
+  await res.dataset(shape.dataset)
 })

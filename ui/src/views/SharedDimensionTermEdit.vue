@@ -61,7 +61,9 @@ export default class extends Vue {
     this.operation = term.actions.replace ?? null
 
     if (this.operation) {
-      this.shape = await api.fetchOperationShape(this.operation)
+      this.shape = await api.fetchOperationShape(this.operation, {
+        targetClass: this.dimension.id,
+      })
     }
   }
 
@@ -77,6 +79,7 @@ export default class extends Vue {
       const term = await this.$store.dispatch('api/invokeSaveOperation', {
         operation: this.operation,
         resource,
+        headers: { Prefer: `target-class=${this.dimension.id.value}` },
       })
 
       this.$store.dispatch('sharedDimension/updateTerm', term)

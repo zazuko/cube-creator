@@ -6,12 +6,11 @@
     "@cube-creator/core": "0.3.3",
     "@rdf-esm/data-model": "^0.5.3",
     "@rdfine/csvw": "^0.6.3",
-    "@rdfine/hydra": "^0.7.0",
+    "@rdfine/hydra": "^0.8.0",
     "@rdfine/rdfs": "^0.6.3",
     "@rdfine/schema": "^0.6.3",
     "@tpluscode/rdf-ns-builders": "^1.0.0",
     "@tpluscode/rdfine": "^0.5.19",
-    "alcaeus": "^1.0.1",
     "is-uri": "^1.2.0",
     "uri-template": "^1.0.1"
   },
@@ -19,6 +18,7 @@
     "@types/clownface": "^1",
     "@types/is-uri": "^1",
     "@types/rdf-js": "^4.0.0",
+    "alcaeus": "^2",
     "chai": "^4.3.4",
     "mocha": "^9.0.3"
   }
