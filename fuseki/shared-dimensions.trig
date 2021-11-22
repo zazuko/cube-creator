@@ -78,7 +78,7 @@ graph <https://lindas.admin.ch/cube/dimension> {
     a schema:DefinedTermSet, meta:SharedDimension, hydra:Resource, md:SharedDimension ;
     schema:name "Technologies"@en ;
     schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
-    sh:property [] ;
+    sh:property <urn:technologies:defaultMetadata> ;
     schema:additionalProperty <urn:additionalPropery:Order>, <urn:additionalPropery:Color> ;
   .
 
@@ -126,6 +126,7 @@ graph <https://lindas.admin.ch/cube/dimension> {
       [ sh:path schema:name ],
       [ sh:path rdf:type ],
       [ sh:path schema:validFrom ] ,
+      [ sh:path sh:property ] ,
       [ sh:path schema:additionalProperty ; sh:node <urn:shape:additionalProperyColor> ] ,
       [ sh:path schema:additionalProperty ; sh:node <urn:shape:additionalProperyOrder> ] ;
   ] .

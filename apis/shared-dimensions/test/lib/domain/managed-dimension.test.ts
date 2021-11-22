@@ -227,16 +227,6 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () =
       expect(termSet.in(schema.inDefinedTermSet).terms).to.have.length(3)
     })
 
-    it('exports shapes for set and terms', () => {
-      const graph = clownface({ dataset })
-      const termSet = graph.node(termSetId)
-      const terms = termSet.in(schema.inDefinedTermSet)
-      const haveShape = graph.node([termSet, ...terms.toArray()])
-
-      // then
-      expect(haveShape.in(sh.targetNode).terms).to.have.length(4)
-    })
-
     it('exports dimension properties', () => {
       const dimension = clownface({ dataset }).node(termSetId)
 
@@ -287,7 +277,7 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () =
       const report = await validateTermSet(termSet)
 
       // then
-      const messages = report.results.flatMap(({ message }) => message.map(({ value }) => value))
+      const messages = report.results.flatMap(({ path, message }) => `${path?.value}: ${message.map(({ value }) => value)}`)
       expect(report.conforms).to.eq(true, messages.join('\n'))
     })
   })

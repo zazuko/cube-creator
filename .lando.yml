@@ -44,6 +44,17 @@ services:
         interval: 5s
         timeout: 3s
         retries: 3
+  trifid:
+    type: compose
+    app_mount: false
+    ssl: true
+    services:
+      image: zazuko/trifid
+      command: tini -- /app/server.js --config=/config-sparql.json --sparql-endpoint-url=http://admin:password@db.cube-creator.lndo.site/cube-creator
+      ports:
+        - 8080:8080
+      environment:
+        DEBUG: "trifid*"
   s3:
     type: compose
     ssl: true
@@ -99,6 +110,8 @@ services:
 proxy:
   store:
     - db.cube-creator.lndo.site:3030
+  trifid:
+    - trifid.cube-creator.lndo.site:8080
   core:
     - cube-creator.lndo.site:45670
   ui:
