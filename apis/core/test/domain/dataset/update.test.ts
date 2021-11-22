@@ -5,7 +5,7 @@ import $rdf from 'rdf-ext'
 import { NamedNode } from 'rdf-js'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import { dcat, dcterms, hydra, rdf, schema, sh, vcard, _void, xsd } from '@tpluscode/rdf-ns-builders'
-import { cc, cube, lindas } from '@cube-creator/core/namespace'
+import { cc, cube } from '@cube-creator/core/namespace'
 import { ex } from '@cube-creator/testing/lib/namespace'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import { update } from '../../../lib/domain/dataset/update'
@@ -162,7 +162,7 @@ describe('domain/dataset/update', () => {
     expect(result.out(cc.dimensionMetadata).terms).to.not.deep.contain.members([ex.Bar])
   })
 
-  it('populates lindas contact point from dcat contact point', async () => {
+  it('populates schema contact point from dcat contact point', async () => {
     // given
     const updatedResource = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('dataset') })
       .addOut(dcterms.title, 'title')
@@ -179,13 +179,13 @@ describe('domain/dataset/update', () => {
     // then
     expect(result).to.matchShape({
       property: [{
-        path: lindas.contactPoint,
+        path: schema.contactPoint,
         maxCount: 1,
         minCount: 1,
         node: {
           property: [{
             path: rdf.type,
-            hasValue: schema.Person,
+            hasValue: schema.ContactPoint,
             minCount: 1,
             maxCount: 1,
           }, {

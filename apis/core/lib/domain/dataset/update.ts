@@ -1,4 +1,4 @@
-import { cc, lindas } from '@cube-creator/core/namespace'
+import { cc } from '@cube-creator/core/namespace'
 import { dcat, hydra, rdf, schema, vcard, _void } from '@tpluscode/rdf-ns-builders'
 import { GraphPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'
@@ -36,19 +36,19 @@ export async function update({
   datasetResource.deleteOut(schema.hasPart).addOut(schema.hasPart, hasPart.terms)
   datasetResource.deleteOut(cc.dimensionMetadata).addOut(cc.dimensionMetadata, dimensionMetadata.terms)
 
-  // Set LINDAS-specific contact point
+  // Set schema.org contact point
   datasetResource.out(dcat.contactPoint).forEach(contact => {
-    datasetResource.addOut(lindas.contactPoint, lindasContact => {
-      lindasContact.addOut(rdf.type, schema.Person)
+    datasetResource.addOut(schema.contactPoint, schemaContact => {
+      schemaContact.addOut(rdf.type, schema.ContactPoint)
 
       const name = contact.out(vcard.fn).term
       if (name) {
-        lindasContact.addOut(schema.name, name)
+        schemaContact.addOut(schema.name, name)
       }
 
       const email = contact.out(vcard.hasEmail).term
       if (email) {
-        lindasContact.addOut(schema.email, email)
+        schemaContact.addOut(schema.email, email)
       }
     })
   })
