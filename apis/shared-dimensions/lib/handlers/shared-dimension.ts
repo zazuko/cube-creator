@@ -64,6 +64,7 @@ export const getExport = protectedResource(cors({ exposedHeaders: 'content-dispo
       schema: ns.schema().value,
       sh: ns.sh().value,
       rdf: ns.rdf().value,
+      rdfs: ns.rdfs().value,
       xsd: ns.xsd().value,
       hydra: ns.hydra().value,
     },

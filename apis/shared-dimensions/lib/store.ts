@@ -4,12 +4,11 @@ import clownface, { GraphPointer } from 'clownface'
 import { NamedNode, Term } from 'rdf-js'
 import ParsingClient from 'sparql-http-client/ParsingClient'
 import { rdf, sh } from '@tpluscode/rdf-ns-builders'
-import TermSet from '@rdfjs/term-set'
 import $rdf from 'rdf-ext'
-import { nanoid } from 'nanoid'
 import { parsingClient } from './sparql'
 import env from './env'
 import { removeBnodes } from './rewrite'
+import { extractShape, resourceQueryPatterns } from './resource'
 
 export interface SharedDimensionsStore {
   graph: NamedNode
@@ -17,30 +16,6 @@ export interface SharedDimensionsStore {
   save(resource: GraphPointer<NamedNode>): Promise<void>
   delete(id: NamedNode): Promise<void>
   exists(id: NamedNode, type: NamedNode): Promise<boolean>
-}
-
-function resourceQueryPatterns(id: NamedNode, strict: boolean) {
-  let rootPropPatterns = sparql`${id} ?rootProp ?rootObject .`
-  if (!strict) {
-    rootPropPatterns = sparql`OPTIONAL { ${rootPropPatterns} }`
-  }
-
-  return sparql`
-    ?rootShape ${sh.targetNode} ${id} .
-    MINUS {
-      # Exclude shapes which are children of property shapes
-      ?propertyShape ${sh.node} ?rootShape .
-    }
-
-    OPTIONAL { ?rootShape ${sh.property}/${sh.path} ?rootProp . }
-    ${rootPropPatterns}
-
-    OPTIONAL {
-      ?rootShape (${sh.property}/${sh.node})+ ?childPropShape .
-      ?childPropShape ${sh.targetNode} ?child .
-      ?childPropShape ${sh.property}/${sh.path} ?childProp .
-      ?child ?childProp ?childObject .
-    }`
 }
 
 function deleteQuery(id: NamedNode, graph: NamedNode) {
@@ -86,8 +61,7 @@ export default class Store implements SharedDimensionsStore {
   save(resource: GraphPointer<NamedNode>): Promise<void> {
     const withoutBlanks = removeBnodes(resource)
 
-    const shape = this.extractShape(withoutBlanks)
-    shape.addOut(sh.targetNode, withoutBlanks)
+    const shape = extractShape(withoutBlanks)
 
     const insert = INSERT.DATA`GRAPH ${this.graph} {
       ${withoutBlanks.dataset}
@@ -103,41 +77,6 @@ export default class Store implements SharedDimensionsStore {
       ${id} ${rdf.type} ${type} .
       ?shape ${sh.targetNode} ${id} .
     `.FROM(this.graph).execute(this.client.query)
-  }
-
-  extractShape(resource: GraphPointer, dataset = $rdf.dataset(), visited = new TermSet()): GraphPointer {
-    const shape = clownface({ dataset }).namedNode(`urn:shape:${nanoid()}`)
-    if (visited.has(resource.term)) {
-      return shape
-    }
-
-    visited.add(resource.term)
-    if (!resource.out().terms.length) {
-      return shape
-    }
-
-    shape.addOut(sh.targetNode, resource.term)
-    const visitedPredicates = new TermSet()
-    for (const quad of resource.dataset.match(resource.term)) {
-      if (visitedPredicates.has(quad.predicate)) {
-        continue
-      }
-
-      visitedPredicates.add(quad.predicate)
-      shape.addOut(sh.property, $rdf.namedNode(`urn:shape:${nanoid()}`), property => {
-        property.addOut(sh.path, quad.predicate)
-
-        if (quad.object.termType === 'NamedNode' || quad.object.termType === 'BlankNode') {
-          const childShape = this.extractShape(resource.node(quad.object), dataset, visited)
-
-          if (childShape.out().terms.length) {
-            property.addOut(sh.node, childShape)
-          }
-        }
-      })
-    }
-
-    return shape
   }
 }
 
