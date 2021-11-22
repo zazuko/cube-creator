@@ -5,9 +5,7 @@ env_file:
 services:
   core:
     type: node:custom
-    build:
-      - npm i -g nodemon
-    command: nodemon -w packages -w apis --verbose --ext ts,ttl,js,trig --ignore **/*.test.ts --ignore **/*.spec-graphs.ts --exec node --inspect=0.0.0.0:45671 -r ts-node/register --inspect apis/core/index.ts
+    command: npx nodemon -w packages -w apis --verbose --ext ts,ttl,js,trig --ignore **/*.test.ts --ignore **/*.spec-graphs.ts --exec node --inspect=0.0.0.0:45671 -r ts-node/register --inspect apis/core/index.ts
     ssl: true
     overrides:
       image: node:14
