@@ -121,5 +121,4 @@ export const md = namespace<SharedDimensionsTerms>('https://cube-creator.zazuko.
 export const editor = namespace(cc.dash.value)
 export const freq = namespace(prefixes.freq)
 export const sh1 = namespace('https://forms.hypermedia.app/shaperone#')
-export const lindas = namespace('https://schema.ld.admin.ch/')
 export const hex = namespace('https://w3id.org/hydra/extension#')
