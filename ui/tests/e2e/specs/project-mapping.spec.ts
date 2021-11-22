@@ -2,7 +2,7 @@
 
 describe('CSV mapping flow', () => {
   it('Visits the app root url', () => {
-    cy.visit('/app')
+    cy.visit('/')
     cy.contains('a', 'Cube Creator')
   })
 
