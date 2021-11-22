@@ -61,7 +61,9 @@ export default class extends Vue {
     this.operation = term.actions.replace ?? null
 
     if (this.operation) {
-      this.shape = await api.fetchOperationShape(this.operation, { target: term.id })
+      this.shape = await api.fetchOperationShape(this.operation, {
+        targetClass: this.dimension.id,
+      })
     }
   }
 

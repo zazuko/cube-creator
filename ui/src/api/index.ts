@@ -73,14 +73,11 @@ export const api = {
     return resource
   },
 
-  async fetchOperationShape (operation: RuntimeOperation, { target, targetClass }: { target?: Term; targetClass?: Term } = {}): Promise<Shape | null> {
+  async fetchOperationShape (operation: RuntimeOperation, { targetClass }: { targetClass?: Term } = {}): Promise<Shape | null> {
     const expects: RdfResource | undefined = operation.expects
       .find(expects => 'load' in expects && expects.types.has(sh.Shape))
 
     const headers: HeadersInit = {}
-    if (target) {
-      headers.Prefer = `target=${target.value}`
-    }
     if (targetClass) {
       headers.Prefer = `target-class=${targetClass.value}`
     }

@@ -28,8 +28,8 @@ function entry(id: NamedNode, init: () => Initializer<NodeShape>): [NamedNode, S
     const pointer = clownface({ dataset: $rdf.dataset() }).namedNode(id)
     fromPointer(pointer, init())
 
-    const { target, targetClass } = parsePreferHeader(req.header('Prefer'))
-    for (const quad of await loadDynamicTermProperties({ target, targetClass }, pointer)) {
+    const { targetClass } = parsePreferHeader(req.header('Prefer'))
+    for (const quad of await loadDynamicTermProperties(targetClass, pointer)) {
       pointer.dataset.add(quad)
     }
 
