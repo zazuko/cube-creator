@@ -126,6 +126,7 @@ import { CsvSource, Table, TableCollection, CsvColumn, ColumnMapping } from '@cu
 import MapperTable from './MapperTable.vue'
 import HydraOperationButton from './HydraOperationButton.vue'
 import { api } from '@/api'
+import * as storeNs from '../store/namespace'
 
 @Component({
   components: {
@@ -138,6 +139,8 @@ export default class CsvSourceMapping extends Vue {
   @Prop() readonly source!: CsvSource;
   @Prop() readonly tables!: Table[];
   @Prop() readonly tableCollection!: TableCollection;
+
+  @storeNs.project.Getter('getSourceTables') getSourceTables!: (source: CsvSource) => Table[]
 
   selectedColumnsMap = this.prepareSelectedColumnsMap()
 
@@ -158,9 +161,7 @@ export default class CsvSourceMapping extends Vue {
   }
 
   get sourceTables (): Table[] {
-    return this.tables
-      .filter(({ csvSource }) => csvSource?.id.equals(this.source.id))
-      .sort(({ isObservationTable: o1 }, { isObservationTable: o2 }) => (o1 === o2) ? 0 : (o1 ? -1 : 1))
+    return this.getSourceTables(this.source)
   }
 
   get createTableQueryParams (): Record<string, string | string[]> {
