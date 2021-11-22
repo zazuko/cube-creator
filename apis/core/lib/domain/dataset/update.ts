@@ -37,6 +37,7 @@ export async function update({
   datasetResource.deleteOut(cc.dimensionMetadata).addOut(cc.dimensionMetadata, dimensionMetadata.terms)
 
   // Set schema.org contact point
+  datasetResource.deleteOut(schema.contactPoint)
   datasetResource.out(dcat.contactPoint).forEach(contact => {
     datasetResource.addOut(schema.contactPoint, schemaContact => {
       schemaContact.addOut(rdf.type, schema.ContactPoint)
