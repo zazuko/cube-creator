@@ -79,10 +79,10 @@ graph <https://lindas.admin.ch/cube/dimension> {
     schema:name "Technologies"@en ;
     schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
     sh:property [] ;
-    schema:additionalProperty _:additionalProperyOrder, _:additionalProperyColor ;
+    schema:additionalProperty <urn:additionalPropery:Order>, <urn:additionalPropery:Color> ;
   .
 
-  _:additionalProperyOrder
+  <urn:additionalPropery:Order>
     hydra:required false ;
     sh:datatype xsd:int ;
     rdf:predicate qb:order ;
@@ -90,8 +90,8 @@ graph <https://lindas.admin.ch/cube/dimension> {
     md:dynamicPropertyType "Literal" ;
   .
 
-  [
-    sh:targetNode _:additionalProperyOrder ;
+  <urn:shape:additionalProperyOrder>
+    sh:targetNode <urn:additionalPropery:Order> ;
     sh:property
       [ sh:path hydra:required ] ,
       [ sh:path sh:datatype ] ,
@@ -99,9 +99,9 @@ graph <https://lindas.admin.ch/cube/dimension> {
       [ sh:path rdfs:label ] ,
       [ sh:path md:dynamicPropertyType ]
     ;
-  ] .
+   .
 
-  _:additionalProperyColor
+  <urn:additionalPropery:Color>
     hydra:required true ;
     sh:class <http://example.com/dimension/colors> ;
     rdf:predicate schema:color ;
@@ -109,8 +109,8 @@ graph <https://lindas.admin.ch/cube/dimension> {
     md:dynamicPropertyType "Shared Term" ;
   .
 
-  [
-    sh:targetNode _:additionalProperyColor ;
+  <urn:shape:additionalProperyColor>
+    sh:targetNode <urn:additionalPropery:Color> ;
     sh:property
       [ sh:path hydra:required ] ,
       [ sh:path sh:class ] ,
@@ -118,7 +118,7 @@ graph <https://lindas.admin.ch/cube/dimension> {
       [ sh:path rdfs:label ] ,
       [ sh:path md:dynamicPropertyType ]
     ;
-  ] .
+   .
 
   [
     sh:targetNode <technologies> ;
@@ -126,7 +126,8 @@ graph <https://lindas.admin.ch/cube/dimension> {
       [ sh:path schema:name ],
       [ sh:path rdf:type ],
       [ sh:path schema:validFrom ] ,
-      [ sh:path schema:additionalProperty ] ;
+      [ sh:path schema:additionalProperty ; sh:node <urn:shape:additionalProperyColor> ] ,
+      [ sh:path schema:additionalProperty ; sh:node <urn:shape:additionalProperyOrder> ] ;
   ] .
 
   <technologies/rdf>
