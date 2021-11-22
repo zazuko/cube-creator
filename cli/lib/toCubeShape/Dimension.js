@@ -97,8 +97,6 @@ class Dimension {
       if (this.in.size < this.inListThreshold) {
         ptr.addList(ns.sh.in, [...this.in.values()])
       }
-
-      ptr.addOut(cube.dimensionSize, this.in.size)
     }
 
     if (this.min) {

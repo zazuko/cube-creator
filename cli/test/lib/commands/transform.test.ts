@@ -12,7 +12,6 @@ import { setupEnv } from '../../support/env'
 import { ccClients } from '@cube-creator/testing/lib'
 import { insertTestProject } from '@cube-creator/testing/lib/seedData'
 import { cc, cube } from '@cube-creator/core/namespace'
-import { toRdf } from 'rdf-literal'
 
 describe('@cube-creator/cli/lib/commands/transform', function () {
   this.timeout(360 * 1000)
@@ -47,36 +46,28 @@ describe('@cube-creator/cli/lib/commands/transform', function () {
       expect(shape).to.be.true
     })
 
-    it('adds dimension size and no sh:in to large dimension', async () => {
-      const [{ size }] = await SELECT`?size`
-        .WHERE`
+    it('adds no sh:in to large dimension', async () => {
+      const hasInList = ASK`
           ${cubeShape} ${sh.property} ?property .
           ?property ${sh.path} ${cubeNs.station} .
-          ?property ${cube.dimensionSize} ?size .
-          optional {
-            ?property ${sh.in} ?in
-          }
-          filter(!bound(?in))
+          ?property ${sh.in} ?in
         `
         .FROM(expectedGraph)
         .execute(ccClients.parsingClient.query)
 
-      expect(size).to.deep.eq(toRdf(215))
+      await expect(hasInList).to.eventually.be.false
     })
 
-    it('adds dimension size alongside sh:in to smaller dimension', async () => {
-      const [{ size }] = await SELECT`?size`
-        .WHERE`
+    it('does not add sh:in for dimension of literals', async () => {
+      const hasInList = ASK`
           ${cubeShape} ${sh.property} ?property .
-          ?property ${sh.path} ${cubeNs.unit} .
-          ?property ${cube.dimensionSize} ?size .
+          ?property ${sh.path} ${cubeNs('dimension/limitvalue')} .
           ?property ${sh.in} ?in
-          filter(!bound(?in))
         `
         .FROM(expectedGraph)
         .execute(ccClients.parsingClient.query)
 
-      expect(size).to.deep.eq(toRdf(11))
+      expect(hasInList).eventually.be.false
     })
 
     it('produces observations', async () => {
