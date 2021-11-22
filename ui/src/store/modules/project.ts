@@ -62,12 +62,21 @@ const getInitialState = () => ({
 })
 
 const getters: GetterTree<ProjectState, RootState> = {
-  sources (state) {
+  sources (state, getters) {
     return Object.values(state.sources)
+      .map(source => {
+        const tables: Table[] = getters.getSourceTables(source)
+        const hasObservationTable = tables.some(table => table.isObservationTable)
+
+        return { source, hasObservationTable }
+      })
+      .sort(({ hasObservationTable: o1 }, { hasObservationTable: o2 }) => (o1 === o2) ? 0 : (o1 ? -1 : 1))
+      .map(({ source }) => source)
   },
 
   tables (state) {
     return Object.values(state.tables)
+      .sort(({ isObservationTable: o1 }, { isObservationTable: o2 }) => (o1 === o2) ? 0 : (o1 ? -1 : 1))
   },
 
   dimensions (state) {
@@ -85,6 +94,11 @@ const getters: GetterTree<ProjectState, RootState> = {
       if (!source) throw new Error(`Source not found: ${uri.value}`)
       return source
     }
+  },
+
+  getSourceTables (state, getters) {
+    return (source: CsvSource): Table[] =>
+      getters.tables.filter((table: Table) => source.id.equals(table.csvSource?.id))
   },
 
   findTable (_state, getters) {
