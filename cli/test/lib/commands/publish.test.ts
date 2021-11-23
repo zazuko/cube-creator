@@ -12,7 +12,7 @@ import { cc, cube } from '@cube-creator/core/namespace'
 import clownface, { AnyPointer } from 'clownface'
 import runner from '../../../lib/commands/publish'
 import namespace, { NamespaceBuilder } from '@rdfjs/namespace'
-import { NamedNode } from 'rdf-js'
+import { NamedNode, Term } from 'rdf-js'
 import { Published } from '../../../../packages/model/Cube'
 
 describe('@cube-creator/cli/lib/commands/publish', function () {
@@ -340,6 +340,12 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
             ])
         })
       expect(cube).to.matchShape(shape)
+    })
+
+    it('emits cube:observedBy value from publishing profile', async () => {
+      const observedBy = cubePointer.has(cube.observedBy).out(cube.observedBy).terms
+
+      expect(observedBy).to.containAll<Term>(observer => observer.equals($rdf.namedNode('https://ld.admin.ch/office/VII.1.7')))
     })
 
     it('dimension meta data has been copied', async function () {
