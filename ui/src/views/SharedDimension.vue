@@ -18,9 +18,6 @@
         <thead class="has-background-light">
           <tr>
             <th>
-              URI
-            </th>
-            <th>
               Name
             </th>
             <th>
@@ -68,9 +65,6 @@
             </td>
           </tr>
           <tr v-else v-for="term in terms.data" :key="term.clientPath" :class="{ 'has-background-success-light': term.newlyCreated }">
-            <td class="has-text-sm">
-              <term-display :term="term.canonical || term.id" />
-            </td>
             <td>
               <p v-for="(name, index) in term.name" :key="index">
                 <term-display :key="name.value" :term="name" :show-language="true" />
@@ -89,6 +83,7 @@
                   </b-tag>
                 </div>
                 <div>
+                  <shared-dimension-term-link :term="term" />
                   <hydra-operation-button
                     :operation="term.actions.replace"
                     :to="{ name: 'SharedDimensionTermEdit', params: { termId: term.clientPath } }"
@@ -145,6 +140,7 @@ import HydraOperationButton from '@/components/HydraOperationButton.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import PageContent from '@/components/PageContent.vue'
 import SharedDimensionTags from '@/components/SharedDimensionTags.vue'
+import SharedDimensionTermLink from '@/components/SharedDimensionTermLink.vue'
 import TermDisplay from '@/components/TermDisplay.vue'
 import TermWithLanguage from '@/components/TermWithLanguage.vue'
 import DownloadButton from '@/components/DownloadButton.vue'
@@ -157,6 +153,7 @@ import { SharedDimension, SharedDimensionTerm } from '../store/types'
     LoadingBlock,
     PageContent,
     SharedDimensionTags,
+    SharedDimensionTermLink,
     TermDisplay,
     TermWithLanguage,
     DownloadButton
@@ -172,7 +169,7 @@ export default class extends Vue {
   @storeNs.sharedDimension.Action('changePageSize') changePageSize!: () => any
 
   pageSizes = [10, 20, 50, 100]
-  tableWidth = 4
+  tableWidth = 3
 
   mounted (): void {
     const id = this.$route.params.id
