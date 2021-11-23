@@ -33,7 +33,7 @@ function defaultShape({ term }) {
 }
 
 class ToCubeShape extends Transform {
-  constructor({ cube, excludeValuesOf } = {}) {
+  constructor({ cube, excludeValuesOf, inListThreshold } = {}) {
     super({ objectMode: true })
 
     this.options = {
@@ -41,6 +41,7 @@ class ToCubeShape extends Transform {
       cube: cube || defaultCube,
       shape: defaultShape,
       excludeValuesOf: new TermSet(excludeValuesOf ? excludeValuesOf.map(v => rdf.namedNode(v)) : []),
+      inListThreshold,
     }
   }
 
@@ -69,7 +70,7 @@ class ToCubeShape extends Transform {
 
     for (const quad of context.dataset.match(context.ptr.term)) {
       if (!this.options.excludeValuesOf.has(quad.predicate)) {
-        context.cube.update(quad)
+        context.cube.update(quad, { inListThreshold: this.options.inListThreshold })
       }
     }
 
@@ -85,8 +86,8 @@ class ToCubeShape extends Transform {
   }
 }
 
-function toCubeShape({ cube, excludeValuesOf } = {}) {
-  return new ToCubeShape({ cube, excludeValuesOf })
+function toCubeShape({ cube, excludeValuesOf, inListThreshold = 100 } = {}) {
+  return new ToCubeShape({ cube, excludeValuesOf, inListThreshold })
 }
 
 module.exports = toCubeShape

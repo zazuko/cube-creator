@@ -13,11 +13,11 @@ class Cube {
     this.dimensions = new TermMap()
   }
 
-  dimension({ predicate, object }) {
+  dimension({ predicate, object }, { inListThreshold }) {
     let dimension = this.dimensions.get(predicate)
 
     if (!dimension) {
-      dimension = new Dimension({ predicate, object })
+      dimension = new Dimension({ predicate, object }, { inListThreshold })
 
       this.dimensions.set(predicate, dimension)
     }
@@ -25,8 +25,8 @@ class Cube {
     return dimension
   }
 
-  update({ predicate, object }) {
-    this.dimension({ predicate, object }).update({ predicate, object })
+  update({ predicate, object }, { inListThreshold }) {
+    this.dimension({ predicate, object }, { inListThreshold }).update({ predicate, object })
   }
 
   toDataset() {

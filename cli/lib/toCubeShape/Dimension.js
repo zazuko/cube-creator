@@ -1,4 +1,3 @@
-const { cube } = require('@cube-creator/core/namespace')
 const clownface = require('clownface')
 const rdf = require('rdf-ext')
 const TermSet = require('@rdfjs/term-set')
@@ -23,10 +22,11 @@ const datatypeParsers = (datatype) => {
 }
 
 class Dimension {
-  constructor({ predicate, object }) {
+  constructor({ predicate, object }, { inListThreshold }) {
     this.predicate = predicate
     this.termType = object.termType
     this.datatypes = new TermSet()
+    this.inListThreshold = inListThreshold
 
     if (object.datatype) {
       this.datatypes.add(object.datatype)
@@ -41,7 +41,7 @@ class Dimension {
       this.minValue = value
       this.max = object
       this.maxValue = value
-    } else if (!object.datatype || !cube.Undefined.equals(object.datatype)) {
+    } else {
       this.in = new TermSet()
     }
   }
@@ -92,7 +92,7 @@ class Dimension {
       ptr.addOut(ns.sh.datatype, datatypes[0])
     }
 
-    if (this.in) {
+    if (!this.min && !this.max && this.in?.size < this.inListThreshold) {
       ptr.addList(ns.sh.in, [...this.in.values()])
     }
 
