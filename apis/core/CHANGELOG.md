@@ -1,5 +1,23 @@
 # @cube-creator/core-api
 
+## 1.7.0
+
+### Minor Changes
+
+- d16d7f15: Show Cube Designer warning when observations have missing values (`cube:Undefined`) (closes #948)
+
+### Patch Changes
+
+- ece39d6b: Use schema:contactPoint instead of lindas:contactPoint
+- d98449ac: Use cube's "publishing organization" for cube:observedBy
+- Updated dependencies [d36febf6]
+- Updated dependencies [649f353c]
+- Updated dependencies [d36febf6]
+- Updated dependencies [d93fad65]
+- Updated dependencies [32afda97]
+  - @cube-creator/shared-dimensions-api@2.4.0
+  - hydra-box-middleware-shacl@1.1.0
+
 ## 1.6.2
 
 ### Patch Changes

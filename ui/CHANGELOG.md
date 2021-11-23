@@ -1,5 +1,18 @@
 # @cube-creator/ui
 
+## 1.7.0
+
+### Minor Changes
+
+- d36febf6: Add dynamic properties to Shared Dimension Terms (closes #939)
+
+### Patch Changes
+
+- 60fc39e9: Show CSV sources mapped to observation table first on screen (closes #963)
+- 211c1c15: Make it clearer which mapper table is the "Cube" and which are "Concepts" (closes #962)
+- 79e43d00: Replace shared term URI column with a button/link to the term (closes #964)
+- 33e7e556: Datatype dropdown would only search from beginning (required typing of prefix)
+
 ## 1.6.3
 
 ### Patch Changes
