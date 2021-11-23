@@ -5,6 +5,7 @@ import type { Initializer } from '@tpluscode/rdfine/RdfResource'
 import type { NodeShape, PropertyShape } from '@rdfine/shacl'
 import $rdf from 'rdf-ext'
 import { editor, md, meta, sh1 } from '@cube-creator/core/namespace'
+import { fromPointer as nodeShape } from '@rdfine/shacl/lib/NodeShape'
 
 const properties: Initializer<PropertyShape>[] = [{
   name: 'Name',
@@ -186,7 +187,13 @@ const properties: Initializer<PropertyShape>[] = [{
       defaultValue: false,
       order: 15,
     }],
-    xone: [{
+    xone: [nodeShape({
+      closed: true,
+      ignoredProperties: [
+        hydra.required,
+        rdf.predicate,
+        rdfs.label,
+      ],
       property: [{
         path: md.dynamicPropertyType,
         hasValue: 'Literal',
@@ -203,7 +210,13 @@ const properties: Initializer<PropertyShape>[] = [{
         nodeKind: sh.IRI,
         order: 30,
       }],
-    }, {
+    }), nodeShape({
+      closed: true,
+      ignoredProperties: [
+        hydra.required,
+        rdf.predicate,
+        rdfs.label,
+      ],
       property: [{
         path: md.dynamicPropertyType,
         hasValue: 'Shared Term',
@@ -218,7 +231,7 @@ const properties: Initializer<PropertyShape>[] = [{
         maxCount: 1,
         order: 30,
       }],
-    }],
+    })],
   },
 }]
 
