@@ -1,6 +1,6 @@
 {
   "name": "@cube-creator/shared-dimensions-api",
-  "version": "2.3.2",
+  "version": "2.4.0",
   "private": true,
   "dependencies": {
     "@cube-creator/api-errors": "0.0.4",
@@ -27,7 +27,7 @@
     "express-conditional-middleware": "^2.1.1",
     "http-errors": "^1.8.0",
     "http-status": "^1.5.0",
-    "hydra-box-middleware-shacl": "1.0.0",
+    "hydra-box-middleware-shacl": "1.1.0",
     "middleware-async": "^1.2.7",
     "nanoid": "^3.1.23",
     "once": "^1.4.0",

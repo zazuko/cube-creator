@@ -1,5 +1,16 @@
 # @cube-creator/cli
 
+## 1.8.0
+
+### Minor Changes
+
+- fbab0935: Do not produce overly large RDF lists in Cube's constraint shape (fixes #966)
+
+### Patch Changes
+
+- dbb9eea1: Publishing: Take `cube:observedBy` value from publishing profile
+- d98449ac: Use cube's "publishing organization" for cube:observedBy
+
 ## 1.7.2
 
 ### Patch Changes

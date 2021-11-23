@@ -1,5 +1,19 @@
 # @cube-creator/shared-dimensions-api
 
+## 2.4.0
+
+### Minor Changes
+
+- d36febf6: Add dynamic properties to Shared Dimension Terms (closes #939)
+- 32afda97: Defining custom properties for shared dimension terms (closes #939)
+
+### Patch Changes
+
+- 649f353c: It was possible to save a dynamic property with both datatype and class selected
+- d93fad65: Simplifies the Shared Dimension export to not include the SHACL shapes and resolve the `Every term and term set must have a shape` error on import
+- Updated dependencies [d36febf6]
+  - hydra-box-middleware-shacl@1.1.0
+
 ## 2.3.2
 
 ### Patch Changes
