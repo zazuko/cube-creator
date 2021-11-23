@@ -192,6 +192,16 @@ md:SharedDimensionTerm
   a hydra:Class ;
   hydra:supportedOperation
     [
+      a hydra:SupportedOperation ;
+      hydra:method "GET" ;
+      hydra:title "Get term" ;
+      code:implementedBy
+        [
+          a code:EcmaScript ;
+          code:link <file:handlers/shared-dimension-term#get> ;
+        ] ;
+    ],
+    [
       a hydra:SupportedOperation, schema:ReplaceAction ;
       hydra:method "PUT" ;
       hydra:title "Edit term" ;

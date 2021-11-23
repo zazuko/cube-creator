@@ -1,9 +1,10 @@
 <template>
   <side-pane :title="title" @close="onCancel">
-    <b-field label="URI" v-if="resource">
-      <span class="form-input">
-        {{ resource.term.value }}
-      </span>
+    <b-field label="URI" v-if="termUri">
+      <a class="form-input" :href="termUri" target="_blank" rel="noopener noreferer">
+        <span>{{ termUri }}</span>
+        <b-icon icon="external-link-alt" />
+      </a>
     </b-field>
     <hydra-operation-form-with-raw
       v-if="operation"
@@ -29,7 +30,8 @@ import HydraOperationFormWithRaw from '@/components/HydraOperationFormWithRaw.vu
 import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 import * as storeNs from '../store/namespace'
-import { SharedDimension } from '../store/types'
+import { serializeSharedDimensionTerm } from '../store/serializers'
+import { SharedDimension, SharedDimensionTerm } from '../store/types'
 
 @Component({
   components: { SidePane, HydraOperationFormWithRaw },
@@ -38,6 +40,7 @@ export default class extends Vue {
   @storeNs.sharedDimension.State('dimension') dimension!: SharedDimension
 
   operation: RuntimeOperation | null = null
+  term: SharedDimensionTerm | null = null
   resource: GraphPointer | null = null
   error: ErrorDetails | null = null
   isSubmitting = false
@@ -57,6 +60,7 @@ export default class extends Vue {
     const termId = this.$route.params.termId
     const term = await api.fetchResource(termId)
 
+    this.term = serializeSharedDimensionTerm(term)
     this.resource = Object.freeze(term.pointer)
     this.operation = term.actions.replace ?? null
 
@@ -69,6 +73,10 @@ export default class extends Vue {
 
   get title (): string {
     return this.operation?.title ?? ''
+  }
+
+  get termUri (): string | null {
+    return this.term?.canonical?.value || this.term?.id?.value || null
   }
 
   async onSubmit (resource: GraphPointer): Promise<void> {
