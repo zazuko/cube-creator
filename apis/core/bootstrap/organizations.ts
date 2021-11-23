@@ -5,7 +5,7 @@ import { cc } from '@cube-creator/core/namespace'
 export const organizations = turtle`
 <organizations> {
   <organizations> a ${hydra.Collection} ;
-    ${hydra.title} "Organization profiles" ;
+    ${hydra.title} "Publishing profiles" ;
     ${hydra.manages} [
       ${hydra.property} ${rdf.type} ;
       ${hydra.object} ${schema.Organization}
