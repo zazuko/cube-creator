@@ -64,7 +64,6 @@ export async function injectMetadata(this: Context, jobUri: string) {
     }
   })
   const datasetTriples = dataset.pointer.dataset.match(null, null, null, dataset.id)
-
   const propertyShapes = new TermMap<QuadSubject, QuadObject>()
 
   const span = tracer.startSpan('injectMetadata#stream', { attributes })
@@ -159,7 +158,12 @@ export async function injectMetadata(this: Context, jobUri: string) {
     }
 
     if (quad.predicate.equals(cube.observedBy)) {
-      this.push($rdf.quad(quad.subject, cube.observedBy, maintainer.id))
+      const creatorTerms = maintainer.pointer.out(cube.observedBy).terms
+      for (const creator of creatorTerms) {
+        if (creator.termType === 'NamedNode') {
+          this.push($rdf.quad(quad.subject, cube.observedBy, creator))
+        }
+      }
     } else {
       this.push(quad)
     }

@@ -279,6 +279,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
           minCount: 1,
         }, {
           path: cube.observedBy,
+          hasValue: $rdf.namedNode('http://example.com/organization-id'),
           minCount: 1,
         }, {
           path: ns.baseCube('dimension/year'),
@@ -341,10 +342,10 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
       expect(cube).to.matchShape(shape)
     })
 
-    it('emits organization as cube:observedBy value', async () => {
+    it('emits cube:observedBy value from publishing profile', async () => {
       const observedBy = cubePointer.has(cube.observedBy).out(cube.observedBy).terms
 
-      expect(observedBy).to.containAll<Term>(observer => observer.equals($rdf.namedNode(`${env.API_CORE_BASE}organization/bafu`)))
+      expect(observedBy).to.containAll<Term>(observer => observer.equals($rdf.namedNode('https://ld.admin.ch/office/VII.1.7')))
     })
 
     it('dimension meta data has been copied', async function () {

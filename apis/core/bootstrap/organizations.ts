@@ -1,11 +1,11 @@
 import { turtle } from '@tpluscode/rdf-string'
 import { dcat, hydra, rdf, rdfs, schema, _void } from '@tpluscode/rdf-ns-builders'
-import { cc } from '@cube-creator/core/namespace'
+import { cc, cube } from '@cube-creator/core/namespace'
 
 export const organizations = turtle`
 <organizations> {
   <organizations> a ${hydra.Collection} ;
-    ${hydra.title} "Organizations" ;
+    ${hydra.title} "Publishing profiles" ;
     ${hydra.manages} [
       ${hydra.property} ${rdf.type} ;
       ${hydra.object} ${schema.Organization}
@@ -24,6 +24,7 @@ export const organizations = turtle`
     ${rdfs.label} "Federal Office for the Environment"@en ;
     ${dcat.accessURL} <https://environment.ld.admin.ch/query> ;
     ${_void.sparqlEndpoint} <https://environment.ld.admin.ch/sparql> ;
+    ${cube.observedBy} <https://ld.admin.ch/office/VII.1.7> ;
   .
 }
 
@@ -39,6 +40,7 @@ export const organizations = turtle`
     ${rdfs.label} "Swiss Federal Archives"@en ;
     ${dcat.accessURL} <https://culture.ld.admin.ch/query> ;
     ${_void.sparqlEndpoint} <https://culture.ld.admin.ch/sparql> ;
+    ${cube.observedBy} <https://ld.admin.ch/office/II.1.4> ;
   .
 }
 
@@ -54,6 +56,7 @@ export const organizations = turtle`
     ${rdfs.label} "Swiss Federal Office of Energy"@en ;
     ${dcat.accessURL} <https://energy.ld.admin.ch/query> ;
     ${_void.sparqlEndpoint} <https://energy.ld.admin.ch/sparql> ;
+    ${cube.observedBy} <https://ld.admin.ch/office/VII.1.4> ;
   .
 }
 `
