@@ -6,6 +6,15 @@ import { shaclValidate } from '../middleware/shacl'
 import { rewrite } from '../rewrite'
 import { oa } from '@tpluscode/rdf-ns-builders'
 
+export const get = protectedResource(asyncMiddleware(async (req, res) => {
+  const term = rewrite(await req.resource())
+  const pointer = await store().load(term.term)
+
+  pointer.addOut(oa.canonical, pointer)
+
+  return res.dataset(pointer.dataset)
+}))
+
 export const put = protectedResource(shaclValidate, asyncMiddleware(async (req, res) => {
   const pointer = await updateTerm({
     store: store(),
