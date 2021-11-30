@@ -5,7 +5,7 @@ export const datatypes: [NamedNode, string[]][] = [
   // Most used datatypes, in alphabetical order of the label
   [xsd.string, ['string']],
   [xsd.boolean, ['boolean']],
-  [xsd.int, ['int']],
+  [xsd.integer, ['integer']],
   [xsd.decimal, ['decimal']],
   [xsd.time, ['time']],
   [xsd.date, ['date']],
