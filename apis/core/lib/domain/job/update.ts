@@ -5,7 +5,7 @@ import { isPublishJob, isTransformJob } from '@cube-creator/model/Job'
 import RdfResource from '@tpluscode/rdfine'
 import { ResourceStore } from '../../ResourceStore'
 import { schema } from '@tpluscode/rdf-ns-builders'
-import { insertMissingDimensionsError } from './transformJob'
+import { insertDimensionCardinalityError, insertMissingDimensionsError } from '../errors'
 import { error } from '../../log'
 
 interface JobUpdateParams {
@@ -32,7 +32,10 @@ export async function update({ resource, store }: JobUpdateParams): Promise<Grap
           dataset.setPublishedDate(job.modified)
         }
       } else if (isTransformJob(job)) {
-        await insertMissingDimensionsError(job).catch(error)
+        await Promise.all([
+          insertMissingDimensionsError(job).catch(error),
+          insertDimensionCardinalityError(job).catch(error),
+        ])
       }
     }
   }

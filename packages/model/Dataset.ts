@@ -20,6 +20,7 @@ export interface Dataset extends RdfResource {
 
 export const Error = {
   MissingObservationValues: 'MissingObservationValues',
+  MultipleDimensionValues: 'MultipleDimensionValues',
 } as const
 
 export function DatasetMixin<Base extends Constructor>(Resource: Base): Mixin {
