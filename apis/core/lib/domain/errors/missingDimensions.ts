@@ -34,15 +34,15 @@ export async function insertMissingDimensionsError(job: TransformJob, client = s
     graph ?dataset { ?s ?p ?o }
   `.INSERT`
     graph ?dataset {
-      ?dataset schema:error ?error .
+      ?dataset ${schema.error} ?error .
       ?error
-          schema:identifier "${Error.MissingObservationValues}" ;
-          schema:description "There are observation values missing for some dimensions" ;
-          schema:additionalProperty ?errorDim .
+          ${schema.identifier} "${Error.MissingObservationValues}" ;
+          ${schema.description} "There are observation values missing for some dimensions" ;
+          ${schema.additionalProperty} ?errorDim .
       ?errorDim
-          schema:name "Dimension" ;
-          schema:identifier ?dim ;
-          schema:value ?totalUndefined ;
+          ${schema.name} "Dimension" ;
+          ${schema.identifier} ?dim ;
+          ${schema.value} ?totalUndefined ;
       .
     }
   `.WHERE`
