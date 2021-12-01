@@ -1,9 +1,11 @@
 <template>
   <li class="mb-2">
     <strong>{{ propertyLabel(result.path) }}</strong>:&nbsp;
-    <span v-if="result.message.length === 1">{{ result.message[0] }}</span>
+    <span v-if="usefullMessages.length === 1">
+      {{ usefullMessages[0] }}
+    </span>
     <ul v-else>
-      <li v-for="(message, messageIndex) in result.message" :key="messageIndex">
+      <li v-for="(message, messageIndex) in usefullMessages" :key="messageIndex">
         {{ message }}
       </li>
     </ul>
@@ -42,6 +44,10 @@ export default class HydraOperationErrorResult extends Vue {
       .value
 
     return label || shrunkProperty
+  }
+
+  get usefullMessages (): string[] {
+    return this.result.message.filter((message: string) => !message.startsWith('Value does not have shape'))
   }
 }
 </script>
