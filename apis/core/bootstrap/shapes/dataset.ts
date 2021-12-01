@@ -300,7 +300,6 @@ ${shapeId} {
   .
 
   ${temporalFromTo} a ${sh.NodeShape} ;
-    ${sh.targetClass} ${dcterms.PeriodOfTime} ;
     ${rdfs.label} "Data converage" ;
     ${sh.property} [
       ${sh.name} "Start date" ;
@@ -321,7 +320,6 @@ ${shapeId} {
   .
 
   ${vcardOrganization} a ${sh.NodeShape} ;
-  ${sh.targetClass} ${vcard.Organization} ;
   ${rdfs.label} "Organization" ;
   ${sh.property} [
     ${sh.name} "Name" ;
