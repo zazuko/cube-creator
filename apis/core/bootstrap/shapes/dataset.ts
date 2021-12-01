@@ -320,22 +320,22 @@ ${shapeId} {
   .
 
   ${vcardOrganization} a ${sh.NodeShape} ;
-  ${rdfs.label} "Organization" ;
-  ${sh.property} [
-    ${sh.name} "Name" ;
-    ${sh.path} ${vcard.fn} ;
-    ${sh.minCount} 1 ;
-    ${sh.maxCount} 1 ;
-    ${sh.order} 10 ;
+    ${rdfs.label} "Organization" ;
+    ${sh.property} [
+      ${sh.name} "Name" ;
+      ${sh.path} ${vcard.fn} ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+      ${sh.order} 10 ;
+      ] ;
+    ${sh.property} [
+      ${sh.name} "Email " ;
+      ${sh.path} ${vcard.hasEmail} ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+      ${sh.order} 20 ;
     ] ;
-  ${sh.property} [
-    ${sh.name} "Email " ;
-    ${sh.path} ${vcard.hasEmail} ;
-    ${sh.minCount} 1 ;
-    ${sh.maxCount} 1 ;
-    ${sh.order} 20 ;
-  ] ;
-.
+  .
 
 
 <https://ld.admin.ch/application/visualize> a skos:Concept ;
