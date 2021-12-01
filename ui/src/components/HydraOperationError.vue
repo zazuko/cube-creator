@@ -4,15 +4,12 @@
       {{ error.detail }}
     </p>
     <ul v-if="error.report">
-      <li v-for="(reportError, reportIndex) in error.report" :key="reportIndex" class="mb-2">
-        <strong>{{ propertyLabel(reportError.path) }}</strong>:&nbsp;
-        <span v-if="reportError.message.length === 1">{{ reportError.message[0] }}</span>
-        <ul v-else>
-          <li v-for="(message, messageIndex) in reportError.message" :key="messageIndex">
-            {{ message }}
-          </li>
-        </ul>
-      </li>
+      <hydra-operation-error-result
+        v-for="(result, resultIndex) in error.report"
+        :key="resultIndex"
+        :result="result"
+        :shape="shape"
+      />
     </ul>
   </b-message>
 </template>
@@ -20,28 +17,14 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import type { Shape } from '@rdfine/shacl'
-import $rdf from '@rdf-esm/data-model'
 import { ErrorDetails } from '@/api/errors'
-import { sh } from '@tpluscode/rdf-ns-builders'
+import HydraOperationErrorResult from './HydraOperationErrorResult.vue'
 
-@Component
+@Component({
+  components: { HydraOperationErrorResult },
+})
 export default class extends Vue {
   @Prop({ default: null }) error!: ErrorDetails | null
   @Prop({ default: null }) shape!: Shape | null
-
-  propertyLabel (uri: string | undefined): string {
-    if (!uri) return ''
-
-    const shrunkProperty = uri.split('#').slice(-1)[0]
-
-    if (!this.shape) return shrunkProperty
-
-    const label = this.shape.pointer.any()
-      .has(sh.path, $rdf.namedNode(uri))
-      .out(sh.name, { language: ['en', ''] })
-      .value
-
-    return label || shrunkProperty
-  }
 }
 </script>
