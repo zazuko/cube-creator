@@ -34,7 +34,7 @@ function isDataset(shapeLike: any): shapeLike is DatasetCore {
 }
 
 function toJSON(result: Validate.ValidationResult) {
-  const { focusNode, resultMessage, resultPath, resultSeverity } = RdfResourceImpl.factory.createEntity<ValidationResult>(result.cf).toJSON()
+  const { focusNode, resultMessage, resultPath, resultSeverity } = RdfResourceImpl.factory.createEntity<ValidationResult>(result.pointer).toJSON()
 
   return {
     focusNode,
