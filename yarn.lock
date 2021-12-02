@@ -2724,10 +2724,10 @@
   dependencies:
     rdf-js "^4.0.2"
 
-"@types/rdf-validate-shacl@^0.2.0":
-  version "0.2.4"
-  resolved "https://registry.yarnpkg.com/@types/rdf-validate-shacl/-/rdf-validate-shacl-0.2.4.tgz#6892a706b39fd9a9ba4146fe559ef58d9b22ee36"
-  integrity sha512-S6Xtumwf6XGS26RCBJMeKtCYo0MvxoNG07xYdkc4RPyaq6xP9BWDN4uhB4WNxz/zcgMlNq0gz7CkMCjsxiGZ5g==
+"@types/rdf-validate-shacl@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@types/rdf-validate-shacl/-/rdf-validate-shacl-0.4.0.tgz#f584a5804827fad89764c7d09b34fae8173a00c9"
+  integrity sha512-Smc+clWKyywoeUHwoZnlJe9FjBXZHroV38FYzYKL6tx4M/pzgIKRxo3OKKU6o5jwscVzfVeFzhwgkgwnoYHEAg==
   dependencies:
     "@types/clownface" "*"
     rdf-js "^4.0.2"

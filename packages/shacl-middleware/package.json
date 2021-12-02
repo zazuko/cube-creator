@@ -21,7 +21,7 @@
     "@rdfjs/term-map": "^1.0.0",
     "@tpluscode/rdf-string": "^0.2.21",
     "@types/rdf-js": "^4",
-    "@types/rdf-validate-shacl": "^0.2.0",
+    "@types/rdf-validate-shacl": "^0.4.0",
     "mocha": "^9.0.0",
     "supertest": "^4.0.2"
   }
