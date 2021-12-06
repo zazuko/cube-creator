@@ -26,7 +26,7 @@ export async function update({
   const csvSource = await store.getResource<CsvSource>(resource.term)
 
   csvSource.name = changed.name
-  if (csvSource.setDialect(changed.dialect) && csvSource.associatedMedia.identifierLiteral) {
+  if (csvSource.setDialect(changed.dialect) && csvSource.associatedMedia?.identifierLiteral) {
     csvSource.pointer.deleteOut(schema.error)
     csvSource.columns = []
 
@@ -37,6 +37,10 @@ export async function update({
 }
 
 export async function createOrUpdateColumns(csvSource: CsvSource, getStorage: GetMediaStorage): Promise<void> {
+  if (!csvSource.associatedMedia) {
+    return
+  }
+
   try {
     const storage = getStorage(csvSource.associatedMedia)
     const fileStream = await storage.getStream(csvSource.associatedMedia)

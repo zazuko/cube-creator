@@ -34,9 +34,10 @@ export async function deleteSource({
   }
 
   // Delete S3 resource
-  const storage = getStorage(csvSource.associatedMedia)
-  await storage.delete(csvSource.associatedMedia)
-
+  if (csvSource.associatedMedia) {
+    const storage = getStorage(csvSource.associatedMedia)
+    await storage.delete(csvSource.associatedMedia)
+  }
   // Delete links from in csv-mapping
   const csvMapping = csvSource.csvMapping.id
   if (csvMapping) {
