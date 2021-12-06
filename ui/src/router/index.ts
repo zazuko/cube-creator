@@ -25,6 +25,7 @@ import CubeMetadataEdit from '@/views/CubeMetadataEdit.vue'
 import DimensionEdit from '@/views/DimensionEdit.vue'
 import DimensionMapping from '@/views/DimensionMapping.vue'
 import ResourcePreview from '@/views/ResourcePreview.vue'
+import Materialize from '@/views/Materialize.vue'
 import Publication from '@/views/Publication.vue'
 import PageNotFound from '@/views/PageNotFound.vue'
 import Logout from '@/views/Logout.vue'
@@ -113,6 +114,11 @@ const routes: Array<RouteConfig> = [
                 component: ColumnMappingCreate,
               },
             ],
+          },
+          {
+            path: 'materialize',
+            name: 'Materialize',
+            component: Materialize,
           },
           {
             path: 'metadata',
