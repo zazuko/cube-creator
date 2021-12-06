@@ -16,7 +16,7 @@ import { blankNode } from '@rdf-esm/data-model'
 import { MediaObjectMixin } from './MediaObject'
 
 export interface CsvSource extends RdfResource {
-  associatedMedia: Schema.MediaObject
+  associatedMedia: Schema.MediaObject | undefined
   name: string
   errorMessages: string[]
   dialect: Csvw.Dialect

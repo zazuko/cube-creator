@@ -52,6 +52,20 @@ export async function getExportedProject({ resource, store, client = streamClien
       ?g != ${project.id} || ?p NOT ${IN(dcterms.creator, schema.maintainer, cc.latestPublishedRevision, rdfs.label)}
     )
 
+    # Exclude source's link to S3
+    MINUS {
+      GRAPH ?g {
+        ?s a ${cc.CSVSource} .
+        ?o ^${schema.associatedMedia} ?s .
+      }
+    }
+    MINUS {
+      GRAPH ?g { ?s ?p ?o }
+      FILTER (
+        EXISTS { GRAPH ?g { [] ${schema.associatedMedia} ?s } }
+      )
+    }
+
     FILTER (
       # Exclude project creator
       ?g != ${project.id} || ( ?g = ${project.id} && ?s = ${project.id} )
