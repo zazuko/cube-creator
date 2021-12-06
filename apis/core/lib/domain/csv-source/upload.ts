@@ -44,23 +44,25 @@ export async function createCSVSource({
 
   try {
     const media = csvSource.associatedMedia
-    const storage = getStorage(media)
-    const fileStream = await storage.getStream(media)
-    const head = await loadFileHeadString(fileStream, 500)
-    const { dialect, header, rows } = await sniffParse(head)
-    const sampleCol = sampleValues(header, rows)
+    if (media) {
+      const storage = getStorage(media)
+      const fileStream = await storage.getStream(media)
+      const head = await loadFileHeadString(fileStream, 500)
+      const { dialect, header, rows } = await sniffParse(head)
+      const sampleCol = sampleValues(header, rows)
 
-    csvSource.setDialect({
-      quoteChar: dialect.quote,
-      delimiter: dialect.delimiter,
-      header: true,
-      headerRowCount: header.length,
-    })
+      csvSource.setDialect({
+        quoteChar: dialect.quote,
+        delimiter: dialect.delimiter,
+        header: true,
+        headerRowCount: header.length,
+      })
 
-    for (let index = 0; index < header.length; index++) {
-      const name = header[index]
-      const column = csvSource.appendOrUpdateColumn({ name, order: index })
-      column.samples = sampleCol[index]
+      for (let index = 0; index < header.length; index++) {
+        const name = header[index]
+        const column = csvSource.appendOrUpdateColumn({ name, order: index })
+        column.samples = sampleCol[index]
+      }
     }
   } catch (err) {
     error(err)

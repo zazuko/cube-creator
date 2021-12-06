@@ -19,7 +19,7 @@ export function openFromCsvw(this: Context) {
       return
     }
 
-    if (!representation.root.associatedMedia.contentUrl) {
+    if (!representation.root.associatedMedia?.contentUrl) {
       csvStream.emit('error', new Error('Failed to load CSV. Missing link from source'))
       return
     }
