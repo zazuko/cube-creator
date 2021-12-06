@@ -12,8 +12,8 @@ const commonProperties = turtle`
     ${sh.order} 20 ;
   ] ;
   ${sh.property} [
-    ${sh.name} "Observation table?" ;
-    ${sh.description} "The observation table defines the structure of the cube" ;
+    ${sh.name} "Cube table?" ;
+    ${sh.description} "The cube table defines the structure of the cube" ;
     ${sh.path} ${cc.isObservationTable} ;
     ${sh.datatype} ${xsd.boolean} ;
     ${sh.minCount} 1 ;

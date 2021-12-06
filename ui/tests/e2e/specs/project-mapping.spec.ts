@@ -57,7 +57,7 @@ describe('CSV mapping flow', () => {
     cy.contains('(22.45, 23.45)').should('be.visible')
   })
 
-  it('Creates an observation table from a selection of columns', () => {
+  it('Creates a cube table from a selection of columns', () => {
     cy.contains('column1').click()
     cy.contains('column3').click()
 
@@ -67,7 +67,7 @@ describe('CSV mapping flow', () => {
       .find('input')
       .type('My observations')
 
-    cy.contains('.label', 'Observation')
+    cy.contains('.label', 'Cube table')
       .click()
 
     cy.get('form').submit()

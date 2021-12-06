@@ -107,7 +107,7 @@
         <ol>
           <li>Select columns that will be dimensions of your cube on the CSV file (left column)</li>
           <li>Click "Create table from selected columns"</li>
-          <li>Select the type "Observation table" in the form. The Observation table represents the structure of your cube.</li>
+          <li>Select the type "Cube table" in the form. The Cube table represents the structure of your cube.</li>
           <li>After submitting the form, you should already be able to see a first version of your cube in the "Cube Preview" (bottom of the screen).</li>
         </ol>
       </div>
