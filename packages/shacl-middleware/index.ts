@@ -76,6 +76,15 @@ export const shaclMiddleware = ({ getTargetNode, loadResource, loadResourcesType
     return next()
   }
 
+  if (resource.dataset.match(targetNode).size === 0 && shapes.match(null, sh.property).size > 0) {
+    const response = new ProblemDocument({
+      status: 400,
+      title: 'Request validation error',
+      detail: 'Missing target node in request body',
+    })
+    return res.status(400).send(response)
+  }
+
   // Load data from linked instances to be able to validate their type
   const classProperties = clownface({ dataset: shapes })
     .out(sh.property)
