@@ -112,6 +112,19 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/export @SPARQL', () =>
       // then
       expect(project.out(schema.maintainer).terms).to.have.length(0)
     })
+
+    it('does not export csv S3 links', () => {
+      // given
+      const sources = clownface({ dataset })
+        .has(rdf.type, cc.CSVSource)
+      const medias = clownface({ dataset })
+        .has(schema.associatedMedia)
+
+      // then
+      expect(sources.terms).not.to.be.empty
+      expect(sources.out(schema.associatedMedia).terms).to.be.empty
+      expect(medias.terms).to.be.empty
+    })
   })
 
   describe('cc:Job', () => {

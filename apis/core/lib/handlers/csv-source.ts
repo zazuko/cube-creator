@@ -10,9 +10,9 @@ import { deleteSource } from '../domain/csv-source/delete'
 import { update } from '../domain/csv-source/update'
 import { replaceFile } from '../domain/csv-source/replace'
 import { getMediaStorage } from '../storage'
-import { GraphPointer } from 'clownface'
+import { AnyPointer, GraphPointer } from 'clownface'
 import { schema } from '@tpluscode/rdf-ns-builders'
-import { NamedNode } from 'rdf-js'
+import { ResourceIdentifier } from '@tpluscode/rdfine/RdfResource'
 
 export const post = labyrinth.protectedResource(
   shaclValidate,
@@ -107,12 +107,20 @@ export const replace = labyrinth.protectedResource(
   }),
 )
 
-function getPresignedLink(csvSource: GraphPointer): string {
-  const mediaPointer = csvSource.out(schema.associatedMedia) as GraphPointer<NamedNode>
-  const media = mediaObjectFromPointer(mediaPointer)
-  const storage = getMediaStorage(media)
+function isGraphPointer(ptr: AnyPointer): ptr is GraphPointer<ResourceIdentifier> {
+  return ptr.term?.termType === 'NamedNode' || ptr.term?.termType === 'BlankNode'
+}
 
-  return storage.getDownloadLink(media)
+function getPresignedLink(csvSource: GraphPointer): string {
+  const mediaPointer = csvSource.out(schema.associatedMedia)
+  if (isGraphPointer(mediaPointer)) {
+    const media = mediaObjectFromPointer(mediaPointer)
+    const storage = getMediaStorage(media)
+
+    return storage.getDownloadLink(media)
+  }
+
+  return ''
 }
 
 function setPresignedLink(csvSource: GraphPointer): void {

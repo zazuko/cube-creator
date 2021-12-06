@@ -37,8 +37,10 @@ export async function replaceFile({
     await validateNewFile(csvSource, newMedia, newStorage)
 
     // Delete old file
-    const oldStorage = getStorage(csvSource.associatedMedia)
-    oldStorage.delete(csvSource.associatedMedia)
+    if (csvSource.associatedMedia) {
+      const oldStorage = getStorage(csvSource.associatedMedia)
+      await oldStorage.delete(csvSource.associatedMedia)
+    }
 
     const sourceKind = newMedia.sourceKind
     const key = newMedia.identifierLiteral
@@ -49,7 +51,7 @@ export async function replaceFile({
 
     return csvSource.pointer
   } catch (e) {
-    newStorage.delete(newMedia)
+    await newStorage.delete(newMedia)
     throw e
   }
 }
