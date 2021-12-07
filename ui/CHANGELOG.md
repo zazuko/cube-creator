@@ -1,5 +1,13 @@
 # @cube-creator/ui
 
+## 1.7.1
+
+### Patch Changes
+
+- bb6469bf: Fix displayed Shared Dimension Term URI in edit form
+- d69ecf72: Rename "Observation table" to "Cube table" in more places in the UI
+- 362e5e18: Display nested validation results
+
 ## 1.7.0
 
 ### Minor Changes

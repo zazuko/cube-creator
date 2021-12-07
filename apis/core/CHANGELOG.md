@@ -1,5 +1,22 @@
 # @cube-creator/core-api
 
+## 1.8.0
+
+### Minor Changes
+
+- 80057116: Show a warning when there are observations with multiple dimension values. This usually indicates that the observation identifiers are not unique (closes #949)
+
+### Patch Changes
+
+- d9db7ae0: Once saved, numbers would fail validation on subsequent edits (fixes #982)
+- 0e41e837: Use new visualize link URL (closes #997)
+- c13f5ffc: Inform on Cube Designer that dimension kind has default value (re #920)
+- b336a7af: Provide nested validation results (Closes #947)
+- 723fde83: When projects were imported in same environment, newly uploaded CSVs would remove the originals exported project. (fixes #861)
+- Updated dependencies [d9db7ae0]
+- Updated dependencies [bb6469bf]
+  - @cube-creator/shared-dimensions-api@2.4.1
+
 ## 1.7.0
 
 ### Minor Changes
