@@ -35,7 +35,7 @@ import { RuntimeOperation } from 'alcaeus/Resources/Operation'
   components: { ExternalTerm, LoadingBlock, JobForm, JobItem },
 })
 export default class PublicationView extends Vue {
-  @storeNs.project.State('hasCSVMapping') hasCSVMapping!: boolean;
+  @storeNs.project.Getter('hasCSVMapping') hasCSVMapping!: boolean;
   @storeNs.project.State('jobCollection') jobCollection!: JobCollection;
   @storeNs.project.Getter('transformJobs') jobs!: (TransformJob | ImportJob)[]
 
