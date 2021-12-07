@@ -1,5 +1,13 @@
 # @cube-creator/ui
 
+## 1.7.2
+
+### Patch Changes
+
+- e31d7363: Fix nested errors display
+- e476bfa5: Replace "Transform" button with step/tab
+- e41f2ce9: Fix button saying "Import" on CSV Mapping projects
+
 ## 1.7.1
 
 ### Patch Changes
