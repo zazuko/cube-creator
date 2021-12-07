@@ -34,10 +34,12 @@ export function validationReportResponse(res: Response, validationReport: Valida
   detail = 'The request payload does not conform to the SHACL description of this endpoint.',
   type = 'http://tempuri.org/BadRequest',
 }: ValidationResponseOptions = {}): void {
-  const responseReport = validationReport.results.map((r) => ({
-    message: r.message.map((message) => message.value),
-    path: r.path?.value,
-  }))
+  const serializeResult = (result: any) => ({
+    message: result.message.map((message: Term) => message.value),
+    path: result.path?.value,
+    detail: result.detail.map(serializeResult),
+  })
+  const responseReport = validationReport.results.map(serializeResult)
   const response = new ProblemDocument({
     status: 400,
     title,
@@ -72,6 +74,15 @@ export const shaclMiddleware = ({ getTargetNode, loadResource, loadResourcesType
 
   if (shapes.size === 0) {
     return next()
+  }
+
+  if (resource.dataset.match(targetNode).size === 0 && shapes.match(null, sh.property).size > 0) {
+    const response = new ProblemDocument({
+      status: 400,
+      title: 'Request validation error',
+      detail: 'Missing target node in request body',
+    })
+    return res.status(400).send(response)
   }
 
   // Load data from linked instances to be able to validate their type
