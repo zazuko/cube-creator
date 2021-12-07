@@ -19,25 +19,23 @@
             <a :href="href" @click="navigate">1. CSV Mapping</a>
           </li>
         </router-link>
+        <router-link :to="{ name: 'Materialize' }" v-slot="{ href, isActive, navigate }" custom>
+          <li :class="{ 'is-active': isActive }">
+            <a :href="href" @click="navigate">2. {{ materializeLabel }}</a>
+          </li>
+        </router-link>
         <router-link :to="{ name: 'CubeDesigner' }" v-slot="{ href, isActive, navigate }" custom>
           <li :class="{ 'is-active': isActive }">
-            <a :href="href" @click="navigate">2. Cube Designer</a>
+            <a :href="href" @click="navigate">3. Cube Designer</a>
           </li>
         </router-link>
         <router-link :to="{ name: 'Publication' }" v-slot="{ href, isActive, navigate }" custom>
           <li :class="{ 'is-active': isActive }">
             <a :href="href" @click="navigate">
-              3. Publication
+              4. Publication
             </a>
           </li>
         </router-link>
-        <li class="tab-right pr-4" v-if="jobCollection">
-          <transform-job-button
-            :has-csv-mapping="hasCSVMapping"
-            :job-collection="jobCollection"
-            :transform-jobs="transformJobs"
-          />
-        </li>
       </ul>
     </div>
 
@@ -53,14 +51,14 @@ import { Component, Vue } from 'vue-property-decorator'
 import { Job, JobCollection, Project } from '@cube-creator/model'
 import PageContent from '@/components/PageContent.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
-import TransformJobButton from '@/components/TransformJobButton.vue'
 import * as storeNs from '../store/namespace'
 
 @Component({
-  components: { PageContent, LoadingBlock, TransformJobButton },
+  components: { PageContent, LoadingBlock },
 })
 export default class CubeProjectView extends Vue {
   @storeNs.project.State('project') project!: Project | null;
+  @storeNs.project.Getter('hasCSVMapping') hasCSVMapping!: boolean;
   @storeNs.project.State('jobCollection') jobCollection!: JobCollection | null;
   @storeNs.project.Getter('transformJobs') transformJobs!: Job[];
 
@@ -77,7 +75,7 @@ export default class CubeProjectView extends Vue {
       if (this.hasCSVMapping) {
         this.$router.push({ name: 'CSVMapping' })
       } else {
-        this.$router.push({ name: 'CubeDesigner' })
+        this.$router.push({ name: 'Materialize' })
       }
     }
   }
@@ -102,8 +100,10 @@ export default class CubeProjectView extends Vue {
     }
   }
 
-  get hasCSVMapping (): boolean {
-    return !!this.project?.csvMapping
+  get materializeLabel (): string {
+    return this.hasCSVMapping
+      ? 'Transformation'
+      : 'Import'
   }
 }
 </script>

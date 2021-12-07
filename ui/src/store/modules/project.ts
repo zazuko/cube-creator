@@ -62,6 +62,10 @@ const getInitialState = () => ({
 })
 
 const getters: GetterTree<ProjectState, RootState> = {
+  hasCSVMapping (state) {
+    return !!state.project?.csvMapping
+  },
+
   sources (state, getters) {
     return Object.values(state.sources)
       .map(source => {

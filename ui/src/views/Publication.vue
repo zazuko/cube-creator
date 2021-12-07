@@ -20,7 +20,7 @@
       </div>
     </div>
 
-    <div class="jobs content">
+    <div class="mt-6">
       <div class="is-flex is-align-items-center mb-3">
         <h3 class="title is-5 mb-0">
           Previous publications
@@ -56,8 +56,6 @@ import JobForm from '@/components/JobForm.vue'
 import JobItem from '@/components/JobItem.vue'
 import ExternalTerm from '@/components/ExternalTerm.vue'
 import { JobCollection, PublishJob, UnlistJob } from '@cube-creator/model'
-import { schema } from '@tpluscode/rdf-ns-builders'
-import { CreativeWork } from '@rdfine/schema'
 import * as storeNs from '../store/namespace'
 
 @Component({
@@ -67,15 +65,5 @@ export default class PublicationView extends Vue {
   @storeNs.app.State('language') language!: string[]
   @storeNs.project.State('jobCollection') jobCollection!: JobCollection | null;
   @storeNs.project.Getter('publicationJobs') jobs!: (PublishJob | UnlistJob)[]
-
-  workExampleLabel (workExample: CreativeWork): string {
-    return workExample.pointer.out(schema.name, { language: this.language }).value || 'Example'
-  }
 }
 </script>
-
-<style>
-.jobs {
-  margin-top: 2.5rem;
-}
-</style>
