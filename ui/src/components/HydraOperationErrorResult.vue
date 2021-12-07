@@ -4,7 +4,7 @@
     <span v-if="usefullMessages.length === 1">
       {{ usefullMessages[0] }}
     </span>
-    <ul v-else>
+    <ul v-else class="mb-2">
       <li v-for="(message, messageIndex) in usefullMessages" :key="messageIndex">
         {{ message }}
       </li>
@@ -26,7 +26,10 @@ import type { Shape } from '@rdfine/shacl'
 import $rdf from '@rdf-esm/data-model'
 import { sh } from '@tpluscode/rdf-ns-builders'
 
-@Component
+@Component({
+  // Define `name` to allow recursive call
+  name: 'hydra-operation-error-result',
+})
 export default class HydraOperationErrorResult extends Vue {
   @Prop({ default: null }) result!: any
   @Prop({ default: null }) shape!: Shape | null
