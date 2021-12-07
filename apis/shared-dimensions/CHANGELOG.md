@@ -1,5 +1,12 @@
 # @cube-creator/shared-dimensions-api
 
+## 2.4.1
+
+### Patch Changes
+
+- d9db7ae0: Once saved, numbers would fail validation on subsequent edits (fixes #982)
+- bb6469bf: Add Shared Dimension term canonical URI when retrieving single term
+
 ## 2.4.0
 
 ### Minor Changes
