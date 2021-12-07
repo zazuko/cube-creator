@@ -1,4 +1,4 @@
-import { cc, meta, shape, sh1, cube, md } from '@cube-creator/core/namespace'
+import { cc, meta, shape, sh1, cube, md, relation } from '@cube-creator/core/namespace'
 import { supportedLanguages } from '@cube-creator/core/languages'
 import { sparql, turtle } from '@tpluscode/rdf-string'
 import { lindasQuery } from '../lib/query'
@@ -184,6 +184,37 @@ ${shape('dimension/metadata')} {
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
       ${dash.hidden} true ;
+    ] , [
+      ${sh.name} "Relation to another dimension" ;
+      ${sh.path} ${meta.dimensionRelation} ;
+      ${sh.nodeKind} ${sh.BlankNode} ;
+      ${sh.order} 50 ;
+      ${sh.node} [
+        ${sh.property} [
+          ${sh.name} "Type" ;
+          ${sh.path} ${rdf.type} ;
+          ${sh.minCount} 1 ;
+          ${sh.maxCount} 1 ;
+          ${sh.nodeKind} ${sh.IRI} ;
+          ${sh.in} (
+            ${relation.StandardError}
+            ${relation.StandardError1SD}
+            ${relation.StandardError2SD}
+            ${relation.StandardError3SD}
+            ${relation.StandarDeviation}
+          ) ;
+          ${dash.editor} ${dash.EnumSelectEditor} ;
+          ${sh.order} 10 ;
+        ] , [
+          ${sh.name} "Target dimension" ;
+          ${sh.path} ${meta.relatesTo} ;
+          ${sh.nodeKind} ${sh.IRI} ;
+          ${sh.minCount} 1 ;
+          ${sh.maxCount} 1 ;
+          ${dash.editor} ${dash.EnumSelectEditor} ;
+          ${sh.order} 20 ;
+        ] ;
+      ] ;
     ] ,
     ${validateDataKindShape}
   .
@@ -225,6 +256,36 @@ ${shape('dimension/metadata')} {
   .
   ${time.unitSecond}
     ${rdfs.label} "Second"@en ;
+  .
+
+  ${relation.StandardError} a ${meta.DimensionRelation} ;
+    ${schema.name} "Standard Error"@en ;
+    ${schema.description} "The standard error is the standard deviation of its sampling distribution or an estimate of that standard deviation."@en ;
+    ${schema.about} <http://www.wikidata.org/entity/Q12483> ;
+    ${schema.sameAs} <http://www.wikidata.org/entity/Q620994> ;
+  .
+
+  ${relation.StandardError1SD} a ${meta.DimensionRelation} ;
+    ${rdfs.subClassOf} ${relation.StandardError} ;
+    ${schema.name} "Standard Error with one Standard Deviation."@en ;
+    ${schema.alternateName} "SE" ;
+  .
+
+  ${relation.StandardError2SD} a ${meta.DimensionRelation} ;
+    ${schema.name} "Standard Error with two Standard Deviation."@en ;
+    ${schema.alternateName} "2SE" ;
+  .
+
+  ${relation.StandardError3SD} a ${meta.DimensionRelation} ;
+    ${schema.name} "Standard Error with three Standard Deviation."@en ;
+    ${schema.alternateName} "3SE" ;
+  .
+
+  ${relation.StandarDeviation} a ${meta.DimensionRelation} ;
+    ${schema.name} "Standard Deviation"@en ;
+    ${schema.description} "Dispersion of the values of a random variable around its expected value."@en ;
+    ${schema.about} <http://www.wikidata.org/entity/Q12483> ;
+    ${schema.sameAs} <http://www.wikidata.org/entity/Q159375> ;
   .
 }
 `
