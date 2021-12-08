@@ -67,7 +67,6 @@ graph <cube-project/ubd/dataset> {
   .
 
   <https://environment.ld.admin.ch/foen/ubd/28>
-    a cube:Cube ;
     schema:dateCreated "2015-08-06"^^xsd:date;
     dcterms:creator <user> ;
   .

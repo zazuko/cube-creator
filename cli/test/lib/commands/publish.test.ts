@@ -18,8 +18,9 @@ import { Published } from '../../../../packages/model/Cube'
 describe('@cube-creator/cli/lib/commands/publish', function () {
   this.timeout(200000)
 
+  const baseCubeId = 'https://environment.ld.admin.ch/foen/ubd/28'
   const ns = {
-    baseCube: namespace('https://environment.ld.admin.ch/foen/ubd/28/'),
+    baseCube: namespace(baseCubeId + '/'),
   }
 
   const executionUrl = 'http://example.com/publishing-test'
@@ -57,7 +58,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
         `
       .execute(ccClients.parsingClient.query)
 
-    targetCube = namespace(ns.baseCube('3/').value)
+    targetCube = namespace(ns.baseCube('3').value)
 
     const dataset = await $rdf.dataset().import(await CONSTRUCT`?s ?p ?o`
       .FROM(expectedGraph as NamedNode)
@@ -155,7 +156,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
     })
 
     it('adds relation to parent cube', () => {
-      expect(cubePointer.namedNode(ns.baseCube())).matchShape({
+      expect(cubePointer.namedNode(baseCubeId)).matchShape({
         property: [{
           path: rdf.type,
           hasValue: schema.CreativeWork,
@@ -272,7 +273,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
     })
 
     it('observation data has been copied', async function () {
-      expect(cubePointer.namedNode(targetCube('observation/blBAS-2002-annualmean'))).to.matchShape({
+      expect(cubePointer.namedNode(targetCube('/observation/blBAS-2002-annualmean'))).to.matchShape({
         property: [{
           path: rdf.type,
           hasValue: cube.Observation,
@@ -349,9 +350,9 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
     })
 
     it('dimension meta data has been copied', async function () {
-      expect(cubePointer.has(rdf.type, sh.NodeShape).term).to.deep.eq(targetCube('shape/'))
+      expect(cubePointer.has(rdf.type, sh.NodeShape).term).to.deep.eq(targetCube('/shape/'))
       expect(cubePointer.has(rdf.type, sh.NodeShape).terms.length).to.eq(1)
-      expect(cubePointer.namedNode(targetCube('shape/'))).to.matchShape({
+      expect(cubePointer.namedNode(targetCube('/shape/'))).to.matchShape({
         property: {
           path: rdf.type,
           hasValue: cube.Constraint,
@@ -359,7 +360,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
         },
       })
 
-      const props = cubePointer.namedNode(targetCube('shape/')).out(sh.property)
+      const props = cubePointer.namedNode(targetCube('/shape/')).out(sh.property)
       const yearPropShape = props.has(sh.path, ns.baseCube('dimension/year'))
       expect(yearPropShape).to.matchShape({
         property: {
@@ -417,14 +418,19 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
     })
 
     it("adds cube:SharedDimension to mapped dimension's metadata", async () => {
-      const props = cubePointer.namedNode(targetCube('shape/')).out(sh.property)
-      const pollutantPropShape = props.has(sh.path, ns.baseCube('pollutant'))
+      const hasShareDimensionType = ASK`
+        ?shape a ${cube.Constraint} .
+        ?shape ${sh.property} [
+          ${sh.path} ${ns.baseCube('pollutant')} ;
+          a ${cube.SharedDimension} ;
+        ] .
+      `.FROM($rdf.namedNode('https://lindas.admin.ch/foen/cube')).execute(ccClients.streamClient.query)
 
-      expect(pollutantPropShape.has(rdf.type, cube.SharedDimension).terms).to.have.length(1)
+      expect(hasShareDimensionType).to.eventually.be.true
     })
 
     it('does not add cube:SharedDimension to unmapped nominal dimension', async () => {
-      const props = cubePointer.namedNode(targetCube('shape/')).out(sh.property)
+      const props = cubePointer.namedNode(targetCube('/shape/')).out(sh.property)
       const stationPropShape = props.has(sh.path, ns.baseCube('station'))
 
       expect(stationPropShape.has(rdf.type, cube.SharedDimension).terms).to.have.length(0)
@@ -432,7 +438,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
 
     it('adds schema:sameAs to concepts linked to observation dimensions', async () => {
       const sameAsAdded = await ASK`
-        ${targetCube('station/blBAS')} ${schema.sameAs} ${ns.baseCube('station/blBAS')}
+        ${targetCube('/station/blBAS')} ${schema.sameAs} ${ns.baseCube('station/blBAS')}
       `.FROM($rdf.namedNode('https://lindas.admin.ch/foen/cube')).execute(ccClients.streamClient.query)
 
       expect(sameAsAdded).to.be.true
@@ -448,7 +454,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
 
     it('does not add schema:sameAs to objects of non-dimension properties`', async () => {
       const sameAsAdded = await ASK`
-        ${targetCube('maintainer/blBAS')} ${schema.sameAs} ?any
+        ${targetCube('/maintainer/blBAS')} ${schema.sameAs} ?any
       `.FROM($rdf.namedNode('https://lindas.admin.ch/foen/cube')).execute(ccClients.streamClient.query)
 
       expect(sameAsAdded).to.be.false

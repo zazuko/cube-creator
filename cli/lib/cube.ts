@@ -1,14 +1,16 @@
 import $rdf from 'rdf-ext'
 import { DatasetCore, Quad, Term } from 'rdf-js'
 import { cc } from '@cube-creator/core/namespace'
-import { GraphPointer } from 'clownface'
+import clownface, { GraphPointer } from 'clownface'
 import type { Context } from 'barnard59-core/lib/Pipeline'
 import { obj } from 'through2'
 import { CONSTRUCT, sparql } from '@tpluscode/sparql-builder'
-import { schema, sh } from '@tpluscode/rdf-ns-builders'
+import { schema, sh } from '@tpluscode/rdf-ns-builders/strict'
 import { Dataset, PublishJob } from '@cube-creator/model'
 import StreamClient from 'sparql-http-client/StreamClient'
 import { Draft } from '@cube-creator/model/Cube'
+import TermSet from '@rdfjs/term-set'
+import { toRdf } from 'rdf-literal'
 import { loadDataset } from './metadata'
 import { tracer } from './otel/tracer'
 
@@ -66,7 +68,8 @@ export function expirePreviousVersions(this: Pick<Context, 'variables' | 'logger
 export async function injectRevision(this: Pick<Context, 'variables' | 'logger'>, jobUri?: string) {
   let cubeNamespace = this.variables.get('namespace')
   const revision = this.variables.get('revision')
-  const versionedDimensions = this.variables.get('versionedDimensions')
+  const metadata = this.variables.get('metadata')
+  const versionedDimensions = new TermSet()
 
   const attributes = {
     cubeNamespace,
@@ -111,24 +114,31 @@ export async function injectRevision(this: Pick<Context, 'variables' | 'logger'>
 
   return obj(function ({ subject, predicate, object, graph }: Quad, _, callback) {
     const rebasedSub = rebase(subject)
+    const rebasedObject = rebase(object)
 
-    // do not inject revision into dimension URI used in Constraint Shape
-    if (predicate.equals(sh.path)) {
-      this.push($rdf.quad(rebasedSub, predicate, object, graph))
-    } else {
-      const rebasedObject = rebase(object)
+    this.push($rdf.quad(rebasedSub, predicate, rebasedObject, graph))
 
-      this.push($rdf.quad(rebasedSub, predicate, rebasedObject, graph))
+    if (rebasedObject.termType === 'NamedNode' && !rebasedObject.equals(object) && isObservationDimension(predicate)) {
+      // see https://github.com/zazuko/cube-creator/issues/658
+      this.push($rdf.quad(rebasedObject, schema.sameAs, object, graph))
 
-      if (rebasedObject.termType === 'NamedNode' && !rebasedObject.equals(object) && isObservationDimension(predicate)) {
-        // see https://github.com/zazuko/cube-creator/issues/658
-        this.push($rdf.quad(rebasedObject, schema.sameAs, object, graph))
-
-        // see https://github.com/visualize-admin/visualization-tool/pull/75
-        versionedDimensions.add(predicate)
-      }
+      // see https://github.com/visualize-admin/visualization-tool/pull/75
+      versionedDimensions.add(predicate)
     }
 
-    callback()
+    return callback()
+  }, function (done) {
+    const metadataPointer = clownface({
+      dataset: metadata,
+    })
+
+    metadataPointer
+      .node([...versionedDimensions])
+      .in(sh.path)
+      .forEach(propShape => {
+        this.push($rdf.quad(propShape.term, schema.version, toRdf(revision)))
+      })
+
+    done()
   })
 }

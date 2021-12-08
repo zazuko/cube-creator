@@ -1,4 +1,4 @@
-import { Literal, NamedNode, Term } from 'rdf-js'
+import { Literal, NamedNode } from 'rdf-js'
 import { HydraClient } from 'alcaeus/alcaeus'
 import * as Csvw from '@rdfine/csvw'
 import DatasetExt from 'rdf-ext/lib/Dataset'
@@ -25,7 +25,8 @@ declare module 'barnard59-core' {
     timestamp: Literal
     graph: string
     bnodeUuid: string
-    versionedDimensions: Set<Term>
+    metadata: DatasetExt
+    shapesPath: string
     sourceCube: NamedNode
     sourceEndpoint: NamedNode
     sourceGraph: NamedNode | undefined
