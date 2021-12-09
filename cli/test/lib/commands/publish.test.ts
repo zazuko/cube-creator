@@ -279,7 +279,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
           minCount: 1,
         }, {
           path: cube.observedBy,
-          hasValue: $rdf.namedNode('http://example.com/organization-id'),
+          hasValue: $rdf.namedNode('https://ld.admin.ch/office/VII.1.7'),
           minCount: 1,
         }, {
           path: ns.baseCube('dimension/year'),
@@ -288,7 +288,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
           maxCount: 1,
         }, {
           path: ns.baseCube('dimension/value'),
-          hasValue: $rdf.literal('6.1', xsd.float),
+          hasValue: $rdf.literal('6.1', xsd.decimal),
           minCount: 1,
           maxCount: 1,
         }, {
