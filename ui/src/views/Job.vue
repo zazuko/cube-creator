@@ -11,6 +11,9 @@
       <p v-if="job.error && job.error.disambiguatingDescription" class="has-background-danger-light">
         {{ job.error.disambiguatingDescription }}
       </p>
+      <p v-for="comment in job.comments" :key="comment" class="has-background-warning-light">
+        {{ comment }}
+      </p>
     </header>
     <div class="is-flex gap-1">
       <b-tag v-if="job.revision">

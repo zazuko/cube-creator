@@ -13,6 +13,10 @@ class Cube {
     this.dimensions = new TermMap()
   }
 
+  get messages() {
+    return [...this.dimensions.values()].flatMap(({ messages }) => messages)
+  }
+
   dimension({ predicate, object }, { inListThreshold }) {
     let dimension = this.dimensions.get(predicate)
 

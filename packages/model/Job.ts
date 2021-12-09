@@ -17,6 +17,7 @@ export interface Job extends Action, Rdfs.Resource, RdfResource {
   modified: Date
   link?: RdfResource
   name: string
+  comments: string[]
 }
 
 export interface TransformJob extends Job {
@@ -67,6 +68,9 @@ export function JobMixin<Base extends Constructor<RdfResource>>(base: Base): Mix
 
     @property.resource({ path: rdfs.seeAlso })
     link?: RdfResource
+
+    @property.literal({ path: rdfs.comment, values: 'array' })
+    comments!: string[]
   }
 
   return Impl

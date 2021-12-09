@@ -80,6 +80,9 @@ class ToCubeShape extends Transform {
   _flush(callback) {
     for (const cube of this.options.cubes.values()) {
       this.push(cube.toDataset())
+      for (const message of cube.messages) {
+        this.emit('message', message)
+      }
     }
 
     callback()
@@ -87,7 +90,9 @@ class ToCubeShape extends Transform {
 }
 
 function toCubeShape({ cube, excludeValuesOf, inListThreshold = 100 } = {}) {
-  return new ToCubeShape({ cube, excludeValuesOf, inListThreshold })
+  const toCubeShape = new ToCubeShape({ cube, excludeValuesOf, inListThreshold })
+  toCubeShape.on('message', message => this.variables.get('messages').push(message))
+  return toCubeShape
 }
 
 module.exports = toCubeShape

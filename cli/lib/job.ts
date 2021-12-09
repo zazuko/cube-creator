@@ -2,7 +2,7 @@ import stream from 'readable-stream'
 import { HydraClient } from 'alcaeus/alcaeus'
 import { Job, Table, TransformJob } from '@cube-creator/model'
 import type * as Schema from '@rdfine/schema'
-import { schema } from '@tpluscode/rdf-ns-builders'
+import { schema } from '@tpluscode/rdf-ns-builders/strict'
 import type { Logger } from 'winston'
 import type { Context, VariableMap } from 'barnard59-core'
 import $rdf from 'rdf-ext'
@@ -42,9 +42,10 @@ interface JobStatusUpdate {
   error?: Error | string
   apiClient: HydraClient
   lastTransformed?: { csv?: string; row?: number }
+  messages?: string[]
 }
 
-export async function updateJobStatus({ jobUri, executionUrl, lastTransformed, status, error, modified, apiClient }: JobStatusUpdate) {
+export async function updateJobStatus({ jobUri, executionUrl, lastTransformed, status, error, modified, apiClient, messages = [] }: JobStatusUpdate) {
   try {
     const { representation } = await apiClient.loadResource<Job | TransformJob>(jobUri)
     const job = representation?.root
@@ -64,6 +65,7 @@ export async function updateJobStatus({ jobUri, executionUrl, lastTransformed, s
 
     job.modified = modified
     job.actionStatus = status
+    job.comments = messages
     if (executionUrl) {
       job.seeAlso = $rdf.namedNode(executionUrl) as any
     }
