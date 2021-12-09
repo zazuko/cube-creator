@@ -13,7 +13,7 @@ import runner from '../../../lib/commands/unlist'
 import namespace from '@rdfjs/namespace'
 import { NamedNode } from 'rdf-js'
 
-describe.only('@cube-creator/cli/lib/commands/unlist', function () {
+describe('@cube-creator/cli/lib/commands/unlist', function () {
   this.timeout(200000)
 
   const ns = {
