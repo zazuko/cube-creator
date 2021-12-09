@@ -6,10 +6,19 @@ import { SELECT } from '@tpluscode/sparql-builder'
 import $rdf from 'rdf-ext'
 import TermSet from '@rdfjs/term-set'
 import TermMap from '@rdfjs/term-map'
+import { as } from '@tpluscode/rdf-ns-builders/strict'
+import { IN } from '@tpluscode/sparql-builder/expressions'
 
 interface CreateResourceGetters {
   (term: NamedNode): Pick<Resource, 'dataset' | 'quadStream'>
 }
+
+/**
+ * Lists properties which should not be considered as supported links
+ *
+ * It would be better to find those directly from the hydra ApiDocumentation but it's not reachable in this context
+ */
+const excludedProperties = [as.object]
 
 export default class Loader extends SparqlQueryLoader {
   async forPropertyOperation(term: NamedNode): Promise<PropertyResource[]> {
@@ -19,7 +28,9 @@ export default class Loader extends SparqlQueryLoader {
     const links = await SELECT`?parent ?link`
       .WHERE`
         graph ?parent {
-          ?parent ?link ${term}
+          ?parent ?link ${term} .
+
+          FILTER (?link NOT ${IN(...excludedProperties)})
         }
       `.execute(client.query)
 
