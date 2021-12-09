@@ -50,62 +50,15 @@ interface Params {
   password: string
 }
 
-export async function loadCubeMetadata(this: Context, { jobUri, endpoint, user, password }: Params) {
-  const Hydra = this.variables.get('apiClient')
-  const baseCube = $rdf.namedNode(this.variables.get('namespace'))
-  const revision = toRdf(this.variables.get('revision'))
-  const cubeIdentifier = this.variables.get('cubeIdentifier')
-  const timestamp = this.variables.get('timestamp')
-  const job = this.variables.get('publish-job')
-  const project = await loadProject(jobUri, this)
+interface QueryParams {
+  project: Project
+  revision: Literal
+  cubeIdentifier: string
+}
 
-  const attributes = {
-    baseCube: baseCube.value,
-    revision: revision.value,
-    cubeIdentifier,
-    timestamp: timestamp.value,
-  }
-  const { dataset, maintainer } = await tracer.startActiveSpan('injectMetadata#setup', { attributes }, async span => {
-    try {
-      return await loadDataset(jobUri, Hydra)
-    } finally {
-      span.end()
-    }
-  })
-
-  const span = tracer.startSpan('injectMetadata#stream', { attributes })
-
-  const stream = await CONSTRUCT`
-    ?s1 ?p ?o1 .
-    ?cubeVersion
-      a ${cube.Cube} ;
-      ${schema.version} ${revision} ;
-      ${schema.dateModified} ${timestamp} ;
-      ${dcterms.modified} ${timestamp} ;
-      ${dcterms.identifier} ${$rdf.literal(cubeIdentifier)} ;
-      # Set LINDAS query interface and sparql endpoint
-      ${dcat.accessURL} ${maintainer.accessURL} ;
-      ${_void.sparqlEndpoint} ${maintainer.sparqlEndpoint} ;
-
-      ${revision.value === '1' ? sparql`${schema.datePublished} ${timestamp}` : ''}
-    .
-    ?cube a ${schema.CreativeWork} ; ${schema.hasPart} ?cubeVersion .
-
-    ${(job.status?.equals(Published) && maintainer.dataset)
-    ? sparql`
-      # add </.well-known/void> link to cubes with published status
-      ${maintainer.dataset} ${schema.dataset} ?cubeVersion .`
-    : ''}
-
-    ?cubeVersion ?cubeMetaP ?cubeMetaO .
-    ?deepMetaS ?deepMetaP ?deepMetaO .
-    ?propShape ?dimensionP ?dimensionO .
-
-    ?dimensionMetaDeepS ?dimensionMetaDeepP ?dimensionMetaDeepO .
-    ?propShape a ?SharedDimension .
-  `
-    .WHERE`
-      graph ${project.cubeGraph} {
+function sourceCubeAndShape({ project, revision, cubeIdentifier }: QueryParams) {
+  return sparql`
+    graph ${project.cubeGraph} {
         ?cube a ${cube.Cube} ;
               !(${cube.observation}|${cube.observationSet})* ?s .
         ?s ?p ?o .
@@ -129,62 +82,157 @@ export async function loadCubeMetadata(this: Context, { jobUri, endpoint, user, 
           [] ${rdf.first} ?s .
         })
     }
+  `
+}
 
+function cubeMetadata({ project, revision }: QueryParams) {
+  return sparql`
+  graph ${project.cubeGraph} {
+    ?cube a ${cube.Cube} .
+        BIND(IRI(CONCAT(STR(?cube), "/${revision}")) as ?cubeVersion)
+  }
+
+  graph ${project.dataset.id} {
+    ${project.dataset.id} ?cubeProp ?cubeMeta .
+
+    MINUS {
+        ${project.dataset.id} ${schema.hasPart}|${cc.dimensionMetadata} ?cubeMeta
+    }
+
+    optional {
+      ?cubeMeta !<>* ?deepMetaS .
+      ?deepMetaS ?deepMetaP ?deepMetaO .
+    }
+  }
+  `
+}
+
+function propertyMetadata({ project }: QueryParams) {
+  return sparql`
+    graph ${project.cubeGraph} {
+      ?propShape ${sh.path} ?path .
+    }
+
+    graph ${project.dataset.id} {
+      ${project.dataset.id} ${cc.dimensionMetadata} ?dimensionMetadata .
+    }
+
+    graph ?dimensionMetadata {
+      ?dimensionMetadata ${schema.hasPart} ?dimension .
+      ?dimension ${schema.about} ?path ; ?dimensionP ?dimensionO ;
+        !<>+ ?dimensionMetaDeepS .
+      optional {
+        ?dimensionMetaDeepS ?dimensionMetaDeepP ?dimensionMetaDeepO .
+      }
+      FILTER (
+        ?dimensionP NOT IN (${cc.dimensionMapping}, ${schema.about})
+      )
+    }
+  `
+}
+
+function annotateSharedDimensions({ project }: QueryParams) {
+  return sparql`
+    graph ${project.cubeGraph} {
+      ?sharedDimension ${sh.path} ?path .
+    }
+
+    graph ${project.dataset.id} {
+      ${project.dataset.id} ${cc.dimensionMetadata} ?dimensionMetadata .
+    }
+
+    graph ?dimensionMetadata {
+      ?dimensionMetadata ${schema.hasPart} ?dimension .
+      ?dimension ${schema.about} ?path ;
+        ${cc.dimensionMapping} ?dimensionMapping .
+    }
+
+    graph ?dimensionMapping {
+      ?dimensionMapping ${cc.sharedDimension} ?any
+    }
+
+    BIND(${cube.SharedDimension} as ?SharedDimension)
+  `
+}
+
+export async function loadCubeMetadata(this: Context, { jobUri, endpoint, user, password }: Params) {
+  const Hydra = this.variables.get('apiClient')
+  const baseCube = $rdf.namedNode(this.variables.get('namespace'))
+  const revision = toRdf(this.variables.get('revision'))
+  const cubeIdentifier = this.variables.get('cubeIdentifier')
+  const timestamp = this.variables.get('timestamp')
+  const job = this.variables.get('publish-job')
+  const project = await loadProject(jobUri, this)
+
+  const attributes = {
+    baseCube: baseCube.value,
+    revision: revision.value,
+    cubeIdentifier,
+    timestamp: timestamp.value,
+  }
+  const { maintainer } = await tracer.startActiveSpan('injectMetadata#setup', { attributes }, async span => {
+    try {
+      return await loadDataset(jobUri, Hydra)
+    } finally {
+      span.end()
+    }
+  })
+
+  const span = tracer.startSpan('injectMetadata#stream', { attributes })
+
+  const queryParams = {
+    project,
+    cubeIdentifier,
+    revision,
+  }
+
+  const stream = await CONSTRUCT`
+    ?s1 ?p ?o1 .
+    ?cubeVersion
+      a ${cube.Cube} ;
+      ${schema.version} ${revision} ;
+      ${schema.dateModified} ${timestamp} ;
+      ${dcterms.modified} ${timestamp} ;
+      ${dcterms.identifier} ${$rdf.literal(cubeIdentifier)} ;
+      # Set LINDAS query interface and sparql endpoint
+      ${dcat.accessURL} ${maintainer.accessURL} ;
+      ${_void.sparqlEndpoint} ${maintainer.sparqlEndpoint} ;
+
+      ${revision.value === '1' ? sparql`${schema.datePublished} ${timestamp}` : ''}
+    .
+    ?cube a ${schema.CreativeWork} ; ${schema.hasPart} ?cubeVersion .
+
+    ${(job.status?.equals(Published) && maintainer.dataset)
+    ? sparql`
+      # add </.well-known/void> link to cubes with published status
+      ${maintainer.dataset} ${schema.dataset} ?cubeVersion .`
+    : ''}
+
+    ?cubeVersion ?cubeMetaP ?cubeMetaO ; ?cubeProp ?cubeMeta.
+    ?deepMetaS ?deepMetaP ?deepMetaO .
+    ?propShape ?dimensionP ?dimensionO .
+
+    ?dimensionMetaDeepS ?dimensionMetaDeepP ?dimensionMetaDeepO .
+    ?propShape a ?SharedDimension .
+  `
+    .WHERE`
+    {
+      ${sourceCubeAndShape(queryParams)}
+    }
+    UNION
     {
       # cube metadata
-      graph ${dataset.id} {
-        ${dataset.id} !(${schema.hasPart}|${cc.dimensionMetadata})+ ?cubeMeta ;
-          ${cc.dimensionMetadata} ?dimensionMetadata .
-        ?userCubeMeta !<>+ ?deepMetaS ; ?cubeMetaP ?cubeMetaO .
-        ?deepMetaS ?deepMetaP ?deepMetaO .
-      }
+      ${cubeMetadata(queryParams)}
     }
-    union
+    UNION
     {
       # property metadata
-      graph ${project.cubeGraph} {
-        ?s ${sh.path} ?o .
-        BIND (?s as ?propShape)
-      }
-
-      optional {
-        graph ${dataset.id} {
-          ${dataset.id} ${cc.dimensionMetadata} ?dimensionMetadata .
-        }
-
-        graph ?dimensionMetadata {
-          ?dimensionMetadata ${schema.hasPart} ?dimension .
-          ?dimension ${schema.about} ?o ; ?dimensionP ?dimensionO ;
-            !<>+ ?dimensionMetaDeepS .
-          optional {
-            ?dimensionMetaDeepS ?dimensionMetaDeepP ?dimensionMetaDeepO .
-          }
-          FILTER (
-            ?dimensionP NOT IN (${cc.dimensionMapping}, ${schema.about})
-          )
-        }
-      }
-      optional {
-        # 6216a06: Add type cube:SharedDimension to mapped dimensions
-        # https://github.com/zazuko/cube-creator/blob/f7dbadff15c706789a58e003551a2c4d1e07efb0/cli/CHANGELOG.md#patch-changes-20
-        BIND(?propShape as ?sharedDimension)
-
-        graph ${dataset.id} {
-          ${dataset.id} ${cc.dimensionMetadata} ?dimensionMetadata .
-        }
-
-        graph ?dimensionMetadata {
-          ?dimensionMetadata ${schema.hasPart} ?dimension .
-          ?dimension ${schema.about} ?o ;
-            ${cc.dimensionMapping} ?dimensionMapping .
-        }
-
-        graph ?dimensionMapping {
-          ?dimensionMapping ${cc.sharedDimension} ?any
-        }
-
-        BIND(${cube.SharedDimension} as ?SharedDimension)
-      }
+      ${propertyMetadata(queryParams)}
+    }
+    UNION {
+      # 6216a06: Add type cube:SharedDimension to mapped dimensions
+      # https://github.com/zazuko/cube-creator/blob/f7dbadff15c706789a58e003551a2c4d1e07efb0/cli/CHANGELOG.md#patch-changes-20
+      ${annotateSharedDimensions(queryParams)}
     }
     `.execute(new StreamClient({
     endpointUrl: endpoint,
