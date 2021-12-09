@@ -88,6 +88,7 @@ export function create<TOptions extends RunOptions>({ pipelineSources, prepare }
     variables.set('graph-store-endpoint', graphStore?.endpoint || process.env.GRAPH_STORE_ENDPOINT)
     variables.set('graph-store-user', graphStore?.user || process.env.GRAPH_STORE_USER)
     variables.set('graph-store-password', graphStore?.password || process.env.GRAPH_STORE_PASSWORD)
+    variables.set('messages', [])
 
     const timestamp = new Date()
     variables.set('timestamp', $rdf.literal(timestamp.toISOString(), xsd.dateTime))
@@ -139,6 +140,7 @@ export function create<TOptions extends RunOptions>({ pipelineSources, prepare }
           executionUrl: run.pipeline.context.variables.get('executionUrl'),
           status: schema.CompletedActionStatus,
           apiClient,
+          messages: run.pipeline.context.variables.get('messages'),
         }))
       .catch(jobFailed)
   }

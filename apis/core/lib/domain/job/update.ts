@@ -18,6 +18,7 @@ export async function update({ resource, store }: JobUpdateParams): Promise<Grap
   const job = await store.getResource<Job>(resource.term)
 
   job.modified = changes.modified
+  job.comments = changes.comments
 
   if (changes.actionStatus) {
     job.actionStatus = changes.actionStatus

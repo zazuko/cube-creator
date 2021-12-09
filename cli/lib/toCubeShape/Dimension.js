@@ -27,6 +27,7 @@ class Dimension {
     this.termType = object.termType
     this.datatypes = new TermSet()
     this.inListThreshold = inListThreshold
+    this.messages = []
 
     if (object.datatype) {
       this.datatypes.add(object.datatype)
@@ -92,8 +93,12 @@ class Dimension {
       ptr.addOut(ns.sh.datatype, datatypes[0])
     }
 
-    if (!this.min && !this.max && this.in?.size < this.inListThreshold) {
-      ptr.addList(ns.sh.in, [...this.in.values()])
+    if (!this.min && !this.max && this.in) {
+      if (this.in.size < this.inListThreshold) {
+        ptr.addList(ns.sh.in, [...this.in.values()])
+      } else {
+        this.messages.push(`Truncated dimension <${this.predicate.value}> which contains ${this.in.size} unique values`)
+      }
     }
 
     if (this.min) {
