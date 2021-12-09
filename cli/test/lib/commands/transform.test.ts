@@ -91,7 +91,7 @@ describe('@cube-creator/cli/lib/commands/transform', function () {
           maxCount: 1,
         }, {
           path: $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/dimension/value'),
-          hasValue: $rdf.literal('4.7', xsd.float),
+          hasValue: $rdf.literal('4.7', xsd.decimal),
           minCount: 1,
           maxCount: 1,
         }, {
