@@ -30,12 +30,15 @@ import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 import { conciseBoundedDescription } from '@/graph'
 import * as storeNs from '../store/namespace'
+import { rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
+import { meta } from '@cube-creator/core/namespace'
 
 @Component({
   components: { SidePane, HydraOperationFormWithRaw, TermDisplay },
 })
 export default class extends Vue {
   @storeNs.project.State('cubeMetadata') cubeMetadata!: Dataset | null
+  @storeNs.project.Getter('dimensions') dimensions!: DimensionMetadata[]
   @storeNs.project.Getter('findDimension') findDimension!: (id: string) => DimensionMetadata
 
   resource: GraphPointer | null = null;
@@ -45,7 +48,33 @@ export default class extends Vue {
 
   async mounted (): Promise<void> {
     if (this.operation) {
-      this.shape = await api.fetchOperationShape(this.operation)
+      const shape = await api.fetchOperationShape(this.operation)
+
+      if (!shape) throw new Error('Shape not found')
+
+      // Manually build the dimensions list because `addList` causes a blank
+      // node clash
+      const dimensionsList = shape.pointer.blankNode('_dimensions-0')
+      let position: GraphPointer<any> = dimensionsList
+      this.dimensions.forEach((d, index) => {
+        position
+          .addOut(rdf.first, d.about, dimPtr => {
+            dimPtr.addOut(schema.name, d.name)
+          })
+          .addOut(rdf.rest, position.blankNode(`_dimensions-${index + 1}`))
+
+        position = position.out(rdf.rest)
+      })
+      position.in(rdf.rest).deleteOut(rdf.rest).addOut(rdf.rest, rdf.nil)
+
+      shape.pointer
+        .out(sh.property).has(sh.path, meta.dimensionRelation)
+        .out(sh.node)
+        .out(sh.property).has(sh.path, meta.relatesTo)
+        // .addList(sh.in, this.dimensions.map(({ about }) => about))
+        .addOut(sh.in, dimensionsList)
+
+      this.shape = shape
     }
 
     this.resource = conciseBoundedDescription(this.dimension.pointer)

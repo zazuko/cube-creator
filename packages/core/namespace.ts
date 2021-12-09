@@ -105,17 +105,22 @@ type SharedDimensionsTerms =
 
 type MetaTerms =
   'SharedDimension' |
-  'dataKind'
+  'dataKind' |
+  'DimensionRelation' |
+  'dimensionRelation' |
+  'relatesTo'
 
 prefixes.freq = 'http://purl.org/cld/freq/'
 prefixes.cube = 'https://cube.link/'
 prefixes.view = 'https://cube.link/view/'
 prefixes.meta = 'https://cube.link/meta/'
+prefixes.relation = 'https://cube.link/relation/'
 
 export const query = namespace('http://hypermedia.app/query#')
 export const cube = namespace(prefixes.cube)
 export const meta = namespace<MetaTerms>(prefixes.meta)
 export const view = namespace(prefixes.view)
+export const relation = namespace(prefixes.relation)
 export const hydraBox = namespace('http://hydra-box.org/schema/')
 export const cc = namespace<CubeCreatorTerms>('https://cube-creator.zazuko.com/vocab#')
 export const md = namespace<SharedDimensionsTerms>('https://cube-creator.zazuko.com/shared-dimensions/vocab#')
