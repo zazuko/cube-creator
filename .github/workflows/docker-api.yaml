@@ -59,6 +59,5 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: zazuko
           SENTRY_PROJECT: cube-creator-api
-          SENTRY_URL: https://sentry.zazuko.com/
         with:
           version_prefix: cube-creator-api@
