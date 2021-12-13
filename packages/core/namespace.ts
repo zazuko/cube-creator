@@ -110,7 +110,6 @@ type MetaTerms =
   'dimensionRelation' |
   'relatesTo'
 
-prefixes.freq = 'http://purl.org/cld/freq/'
 prefixes.cube = 'https://cube.link/'
 prefixes.view = 'https://cube.link/view/'
 prefixes.meta = 'https://cube.link/meta/'
@@ -125,6 +124,5 @@ export const hydraBox = namespace('http://hydra-box.org/schema/')
 export const cc = namespace<CubeCreatorTerms>('https://cube-creator.zazuko.com/vocab#')
 export const md = namespace<SharedDimensionsTerms>('https://cube-creator.zazuko.com/shared-dimensions/vocab#')
 export const editor = namespace(cc.dash.value)
-export const freq = namespace(prefixes.freq)
 export const sh1 = namespace('https://forms.hypermedia.app/shaperone#')
 export const hex = namespace('https://w3id.org/hydra/extension#')
