@@ -13,6 +13,10 @@ interface Params {
   password: string
 }
 
+/**
+ * Opens a SPARQL stream reading the cube, excluding the Cube Constraint subgraph,
+ * which will be processed alongside the rest of cube metadata
+ */
 export async function loadCube(this: Pipeline.Context, { jobUri, endpoint, user, password }: Params): Promise<Stream> {
   const project = await loadProject(jobUri, this)
 
