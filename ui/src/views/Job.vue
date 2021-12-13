@@ -12,7 +12,7 @@
         {{ job.error.disambiguatingDescription }}
       </p>
       <p v-for="comment in job.comments" :key="comment" class="has-background-warning-light">
-        {{ comment }}
+        <vue-markdown :source="comment" />
       </p>
     </header>
     <div class="is-flex gap-1">
@@ -61,13 +61,14 @@ import { Job } from '@cube-creator/model'
 import type { CreativeWork, Thing } from '@rdfine/schema'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { Component, Vue } from 'vue-property-decorator'
+import VueMarkdown from 'vue-markdown/src/VueMarkdown'
 import ExternalTerm from '@/components/ExternalTerm.vue'
 import JobStatus from '../components/JobStatus.vue'
 import LoadingBlock from '../components/LoadingBlock.vue'
 import * as storeNs from '../store/namespace'
 
 @Component({
-  components: { ExternalTerm, JobStatus, LoadingBlock },
+  components: { ExternalTerm, JobStatus, LoadingBlock, VueMarkdown },
 })
 export default class JobView extends Vue {
   @storeNs.app.State('language') language!: string[]
