@@ -61,3 +61,4 @@ jobs:
           SENTRY_PROJECT: cube-creator-cli
         with:
           version_prefix: cube-creator-cli@
+          ignore_empty: true
