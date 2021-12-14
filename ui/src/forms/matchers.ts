@@ -52,3 +52,15 @@ export const fileUpload: MultiEditor = {
     return 0
   }
 }
+
+// todo: should return null or be removed altogether after https://github.com/hypermedia-app/shaperone/issues/156
+export const tagsWithLanguage: MultiEditor = {
+  term: ns.editor.TagsWithLanguageEditor,
+  match (shape) {
+    if (shape.editor?.equals(ns.editor.TagsWithLanguageEditor)) {
+      return 100
+    }
+
+    return 0
+  }
+}
