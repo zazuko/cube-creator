@@ -303,10 +303,9 @@ export const tagsWithLanguage: Lazy<MultiEditorComponent> = {
   async lazyRender () {
     await import('./TagsWithLanguageEditor.vue').then(createCustomElement('tags-with-language-editor'))
 
-    return ({ renderer, property }, { update }) => {
+    return ({ property }, { update }) => {
       return html`<tags-with-language-editor
         .property="${property}"
-        .renderer="${renderer}"
         .update="${update}"
       ></tags-with-language-editor>`
     }
