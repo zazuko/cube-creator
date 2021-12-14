@@ -52,8 +52,8 @@ export async function createCSVSource({
       const sampleCol = sampleValues(header, rows)
 
       csvSource.setDialect({
-        quoteChar: dialect.quote,
-        delimiter: dialect.delimiter,
+        quoteChar: dialect.quote || undefined,
+        delimiter: dialect.delimiter || undefined,
         header: true,
         headerRowCount: header.length,
       })
