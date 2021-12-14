@@ -252,7 +252,7 @@ ${shapeId} {
       ${sh.languageIn} ( ${supportedLanguages} ) ;
       ${sh.minLength} 1 ;
       ${sh.order} 110 ;
-      ${sh.description} "Additional keywords to classify datasets along ad-hoc categories. Enter each keyword in a separate entry.";
+      ${sh.description} "Additional keywords to classify datasets along ad-hoc categories.";
       ${dash.editor} ${editor.TagsWithLanguageEditor} ;
     ] ;
     ${sh.property} [
