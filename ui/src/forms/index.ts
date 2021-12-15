@@ -1,7 +1,7 @@
 import { renderer, components, editors } from '@hydrofoil/shaperone-wc/configure'
 import { html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
-import { PropertyTemplate, ObjectTemplate, FocusNodeTemplate } from '@hydrofoil/shaperone-wc/templates'
+import { PropertyTemplate, ObjectTemplate, FocusNodeTemplate, GroupTemplate } from '@hydrofoil/shaperone-wc/templates'
 import { instancesSelector } from '@hydrofoil/shaperone-hydra/components'
 import { ShaperoneForm } from '@hydrofoil/shaperone-wc/ShaperoneForm'
 import * as Editors from './editors'
@@ -13,11 +13,37 @@ import * as decorators from '@/forms/decorators'
 import * as dictionaryEditor from './templates/dictionaryEditor'
 import * as dynamicXone from './templates/dynamicXone'
 
-export const focusNode: FocusNodeTemplate = (renderer, { focusNode }) => html`
-  <div class="fieldset" part="focus-node">
+export const focusNode: FocusNodeTemplate = (renderer, { focusNode }) => {
+  const tabs = () => html`
+    <div class="tabs is-boxed is-highlighted">
+      <ul>
+        ${repeat(focusNode.groups, group => html`
+          <li class="${group.selected ? 'is-active' : ''}">
+            <a href="#" class="tab-link" @click="${() => renderer.actions.selectGroup(group.group)}">
+              ${group.group?.label ?? '-'}
+            </a>
+          </li>
+        `)}
+      </ul>
+    </div>
+  `
+  const showTabs = focusNode.groups.length > 1
+
+  return html`
+    ${showTabs ? tabs() : ''}
     ${repeat(focusNode.groups, group => renderer.renderGroup({ group }))}
+  `
+}
+
+export const group: GroupTemplate = (renderer, { properties }) => {
+  const activeClass = renderer.group.selected ? '' : 'is-hidden'
+
+  return html`
+  <div class="${activeClass}">
+    ${repeat(properties, property => renderer.renderProperty({ property }))}
   </div>
-`
+  `
+}
 
 const property: PropertyTemplate = (renderer, { property }) => {
   return html`<form-property
@@ -49,6 +75,7 @@ renderer.setTemplates({
   focusNode: dynamicXone.focusNode(dictionaryEditor.focusNode(focusNode)),
   property: dictionaryEditor.property(property),
   object,
+  group,
 })
 components.pushComponents(Editors)
 components.decorate({
