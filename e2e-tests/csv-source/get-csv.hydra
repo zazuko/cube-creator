@@ -48,8 +48,8 @@ With Class cc:CubeProject {
                     prefix cc: <https://cube-creator.zazuko.com/vocab#>
 
                     <> cc:sourceKind cc:MediaLocal ;
-                       schema:name "test1.csv" ;
-                       schema:identifier "test-data/upload-test-cube/test1.csv" ;
+                       schema:name "test.csv" ;
+                       schema:identifier "test-data/get-test-cube/test.csv" ;
                     ```
                 } => { }
             }

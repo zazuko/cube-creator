@@ -56,7 +56,6 @@ With Class cc:CubeProject {
                     Expect Type <https://cube-creator.zazuko.com/vocab#CSVSource>
                     Expect Property <http://schema.org/associatedMedia>
                     Expect Property csvw:dialect {
-                        Expect Property csvw:quoteChar
                         Expect Property csvw:delimiter
                         Expect Property csvw:header
                         Expect Property csvw:headerRowCount
