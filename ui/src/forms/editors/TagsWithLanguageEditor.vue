@@ -14,9 +14,6 @@
         </option>
       </b-select>
     </b-field>
-    <div v-if="tags.length === 0">
-      Nothing to display
-    </div>
     <b-tooltip label="Add value">
       <b-button icon-left="plus" @click="addLanguage" type="is-white" />
     </b-tooltip>
