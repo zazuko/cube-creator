@@ -3,6 +3,10 @@ import { NodeShape, PropertyShape } from '@rdfine/shacl'
 import { dash, dcterms, rdf, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import { supportedLanguages } from '@cube-creator/core/languages'
 import { md } from '@cube-creator/core/namespace'
+import $rdf from 'rdf-ext'
+import { fromPointer as propertyGroup } from '@rdfine/shacl/lib/PropertyGroup'
+
+const defaultGroup = $rdf.namedNode('#default-group')
 
 const commonProperties: Initializer<PropertyShape>[] = [{
   name: 'Name',
@@ -11,11 +15,15 @@ const commonProperties: Initializer<PropertyShape>[] = [{
   uniqueLang: true,
   order: 10,
   minCount: 1,
+  group: propertyGroup(defaultGroup, {
+    label: 'Term',
+  }),
 }, {
   name: 'Identifiers',
   path: schema.identifier,
   datatype: xsd.string,
   order: 20,
+  group: defaultGroup,
 }, {
   name: 'Valid from',
   description: 'Leave empty to inherit date from the dimension',
@@ -23,6 +31,7 @@ const commonProperties: Initializer<PropertyShape>[] = [{
   datatype: xsd.dateTime,
   maxCount: 1,
   order: 30,
+  group: defaultGroup,
 }, {
   name: 'Valid through',
   description: 'Use this to deprecate a term',
@@ -30,6 +39,7 @@ const commonProperties: Initializer<PropertyShape>[] = [{
   datatype: xsd.dateTime,
   maxCount: 1,
   order: 40,
+  group: defaultGroup,
 }]
 
 export const create = (): Initializer<NodeShape> => ({
@@ -44,6 +54,7 @@ export const create = (): Initializer<NodeShape> => ({
       pattern: '^[a-z0-9-]+$',
       minCount: 1,
       maxCount: 1,
+      group: defaultGroup,
     }],
 })
 
@@ -54,12 +65,14 @@ export const update = (): Initializer<NodeShape> => ({
       path: rdf.type,
       hasValue: [schema.DefinedTerm, md.SharedDimensionTerm],
       [dash.hidden.value]: true,
+      group: defaultGroup,
     },
     {
       path: schema.inDefinedTermSet,
       minCount: 1,
       maxCount: 1,
       [dash.hidden.value]: true,
+      group: defaultGroup,
     },
   ],
 })
