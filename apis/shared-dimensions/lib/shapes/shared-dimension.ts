@@ -8,6 +8,8 @@ import { editor, md, meta, sh1 } from '@cube-creator/core/namespace'
 import { fromPointer as nodeShape } from '@rdfine/shacl/lib/NodeShape'
 import { fromPointer as propertyGroup } from '@rdfine/shacl/lib/PropertyGroup'
 
+const defaultGroup = $rdf.namedNode('#default-group')
+
 const properties: Initializer<PropertyShape>[] = [{
   name: 'Name',
   path: schema.name,
@@ -16,6 +18,9 @@ const properties: Initializer<PropertyShape>[] = [{
   maxCount: 4,
   languageIn: supportedLanguages,
   order: 10,
+  group: propertyGroup(defaultGroup, {
+    label: 'Dimension',
+  }),
 }, {
   name: 'Valid from',
   path: schema.validFrom,
@@ -23,12 +28,14 @@ const properties: Initializer<PropertyShape>[] = [{
   datatype: xsd.dateTime,
   defaultValue: $rdf.literal(new Date().toISOString(), xsd.dateTime),
   order: 20,
+  group: defaultGroup,
 }, {
   name: 'Valid to',
   path: schema.validThrough,
   maxCount: 1,
   datatype: xsd.dateTime,
   order: 25,
+  group: defaultGroup,
 }, {
   name: 'Default metadata',
   description: "Metadata copied to cube's metadata when this dimension is selected",
@@ -38,6 +45,7 @@ const properties: Initializer<PropertyShape>[] = [{
   nodeKind: sh.BlankNodeOrIRI,
   defaultValue: $rdf.blankNode(),
   order: 30,
+  group: defaultGroup,
   node: {
     property: [{
       name: 'Name',
@@ -153,7 +161,7 @@ const properties: Initializer<PropertyShape>[] = [{
   path: schema.additionalProperty,
   order: 40,
   nodeKind: sh.BlankNodeOrIRI,
-  group: propertyGroup($rdf.namedNode('urn:group:dynamic-props'), {
+  group: propertyGroup({
     label: 'Term properties',
   }),
   node: {
@@ -247,6 +255,7 @@ export const create = (): Initializer<NodeShape> => ({
     maxCount: 1,
     in: ['New dimension', 'Import'],
     defaultValue: 'New dimension',
+    group: defaultGroup,
   },
   xone: [{
     closed: true,
@@ -258,6 +267,7 @@ export const create = (): Initializer<NodeShape> => ({
       path: md.createAs,
       hasValue: 'Import',
       [dash.hidden.value]: true,
+      group: defaultGroup,
     }, {
       name: 'Exported dimension',
       path: md.export,
@@ -265,6 +275,7 @@ export const create = (): Initializer<NodeShape> => ({
       maxCount: 1,
       order: 5,
       [dash.editor.value]: editor.FileUpload,
+      group: defaultGroup,
     }],
   }, {
     closed: true,
@@ -272,6 +283,7 @@ export const create = (): Initializer<NodeShape> => ({
       path: md.createAs,
       hasValue: 'New dimension',
       [dash.hidden.value]: true,
+      group: defaultGroup,
     }, {
       name: 'Identifier',
       description: 'A lowercase, alphanumeric value which identifies a shared dimension',
@@ -280,6 +292,7 @@ export const create = (): Initializer<NodeShape> => ({
       pattern: '^[a-z0-9-]+$',
       minCount: 1,
       maxCount: 1,
+      group: defaultGroup,
     }, ...properties],
   }],
 })
@@ -296,6 +309,7 @@ export const update = (): Initializer<NodeShape> => ({
       path: rdf.type,
       hasValue: [hydra.Resource, schema.DefinedTermSet, meta.SharedDimension, md.SharedDimension],
       [dash.hidden.value]: true,
+      group: defaultGroup,
     },
   ],
 })
