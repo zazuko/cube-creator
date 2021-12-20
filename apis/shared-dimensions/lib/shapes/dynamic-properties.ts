@@ -23,7 +23,9 @@ const dynamicPropertiesFromStore: DynamicPropertiesQuery = async function (targe
       ${hydra.collection} ?collection ;
       ${dash.editor} ?editor ;
       ${sh.datatype} ?dt ;
+      ${sh.group} <urn:group:dynamic-props> ;
     .
+    <urn:group:dynamic-props> ${rdfs.label} "Dynamic properties" ;
   `
     .FROM($rdf.namedNode(env.MANAGED_DIMENSIONS_GRAPH))
     .WHERE`

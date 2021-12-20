@@ -6,6 +6,7 @@ import type { NodeShape, PropertyShape } from '@rdfine/shacl'
 import $rdf from 'rdf-ext'
 import { editor, md, meta, sh1 } from '@cube-creator/core/namespace'
 import { fromPointer as nodeShape } from '@rdfine/shacl/lib/NodeShape'
+import { fromPointer as propertyGroup } from '@rdfine/shacl/lib/PropertyGroup'
 
 const properties: Initializer<PropertyShape>[] = [{
   name: 'Name',
@@ -152,6 +153,9 @@ const properties: Initializer<PropertyShape>[] = [{
   path: schema.additionalProperty,
   order: 40,
   nodeKind: sh.BlankNodeOrIRI,
+  group: propertyGroup($rdf.namedNode('urn:group:dynamic-props'), {
+    label: 'Term properties',
+  }),
   node: {
     [sh1.xoneDiscriminator.value]: md.dynamicPropertyType,
     property: [{
