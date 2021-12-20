@@ -35,3 +35,9 @@ $panel-radius: 0;
 .panel-block > .level-right {
     flex-grow: 1;
 }
+
+.tabs.is-highlighted li.is-active a {
+    background-color: $tabs-toggle-link-active-background-color;
+    border-color: $tabs-toggle-link-active-border-color;
+    color: $tabs-toggle-link-active-color;
+}
