@@ -1,4 +1,4 @@
-import { shape } from '@cube-creator/core/namespace'
+import { shape, editor } from '@cube-creator/core/namespace'
 import { supportedLanguages } from '@cube-creator/core/languages'
 import { hydra, rdfs, sh, dcat, dcterms, xsd, rdf, vcard, schema, _void, dash, skos } from '@tpluscode/rdf-ns-builders'
 import { sparql, turtle } from '@tpluscode/rdf-string'
@@ -252,7 +252,8 @@ ${shapeId} {
       ${sh.languageIn} ( ${supportedLanguages} ) ;
       ${sh.minLength} 1 ;
       ${sh.order} 110 ;
-      ${sh.description} "Additional keywords to classify datasets along ad-hoc categories. Enter each keyword in a separate entry.";
+      ${sh.description} "Additional keywords to classify datasets along ad-hoc categories.";
+      ${dash.editor} ${editor.TagsWithLanguageEditor} ;
     ] ;
     ${sh.property} [
       ${sh.name} "Opendata.swiss Landing page" ;

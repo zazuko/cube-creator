@@ -3,7 +3,6 @@ import {
   EnumSelectEditor, enumSelect as enumSelectCore,
   InstancesSelectEditor, instancesSelect as instancesSelectCore, Item
 } from '@hydrofoil/shaperone-core/components'
-import { SingleEditorRenderParams } from '@hydrofoil/shaperone-core/models/components'
 import * as ns from '@cube-creator/core/namespace'
 import { dash, hydra, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import $rdf from '@rdfjs/dataset'
@@ -295,6 +294,20 @@ export const dictionaryTable: Lazy<MultiEditorComponent<DictionaryTable>> = {
         .objects="${objects}"
         .renderer="${renderer}"
       ></dictionary-table-editor>`
+    }
+  }
+}
+
+export const tagsWithLanguage: Lazy<MultiEditorComponent> = {
+  editor: ns.editor.TagsWithLanguageEditor,
+  async lazyRender () {
+    await import('./TagsWithLanguageEditor.vue').then(createCustomElement('tags-with-language-editor'))
+
+    return ({ property }, { update }) => {
+      return html`<tags-with-language-editor
+        .property="${property}"
+        .update="${update}"
+      ></tags-with-language-editor>`
     }
   }
 }
