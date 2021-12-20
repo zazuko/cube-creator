@@ -103,7 +103,6 @@ ${shapeUpdateId} {
       ${sh.name} "Delimiter" ;
       ${sh.path} ${csvw.delimiter} ;
       ${sh.datatype} ${xsd.string} ;
-      ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
       ${sh.minLength} 1 ;
       ${sh.order} 10 ;
@@ -112,7 +111,6 @@ ${shapeUpdateId} {
       ${sh.name} "Quote char" ;
       ${sh.path} ${csvw.quoteChar} ;
       ${sh.datatype} ${xsd.string} ;
-      ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
       ${sh.minLength} 1 ;
       ${sh.order} 20 ;
