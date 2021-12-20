@@ -59,7 +59,10 @@ export default class extends Vue {
   }
 
   addLanguage (): void {
-    this.tags.push(['', []])
+    const usedLanguages = new Set(this.tags.map(([language]) => language))
+    const nextLanguage = this.languages.filter((language) => !usedLanguages.has(language))[0] || ''
+
+    this.tags.push([nextLanguage, []])
   }
 
   addTag (languageIndex: number, language: string, tagValue: string): void {
