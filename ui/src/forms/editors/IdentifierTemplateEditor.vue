@@ -11,7 +11,6 @@
       :custom-formatter="formatProposition"
       placeholder="e.g. MyTable/{column_id}"
       :disabled="!source"
-      keep-first
     />
   </b-field>
 </template>
@@ -82,7 +81,10 @@ export default class extends Vue {
   }
 
   onSelect (value: string, event: Event): void {
-    event.preventDefault()
+    if (event) {
+      event.preventDefault()
+    }
+
     const inputElement = this.getInputElement()
     inputElement && inputElement.focus()
   }
