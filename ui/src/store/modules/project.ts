@@ -274,6 +274,16 @@ const actions: ActionTree<ProjectState, RootState> = {
 
     context.commit('storeDimensionMetadataCollection', null)
 
+    return context.dispatch('refreshDimensionMetadataCollection')
+  },
+
+  async refreshDimensionMetadataCollection (context) {
+    const cubeMetadata = context.state.cubeMetadata
+
+    if (!cubeMetadata) {
+      throw new Error('CubeMetadata not loaded')
+    }
+
     const collection = await api.fetchResource<DimensionMetadataCollection>(cubeMetadata.dimensionMetadata.id.value)
     context.commit('storeDimensionMetadataCollection', collection)
 
