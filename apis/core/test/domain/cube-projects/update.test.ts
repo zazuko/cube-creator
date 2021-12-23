@@ -25,6 +25,7 @@ describe('domain/cube-projects/update', () => {
   const userName = 'User Name'
   const projectsCollection = clownface({ dataset: $rdf.dataset() }).namedNode('projects')
   let projectExists: sinon.SinonStub
+  let previouslyPublished: sinon.SinonStub
 
   const bafu = fromPointer(clownface({ dataset: $rdf.dataset() }).namedNode('bafu'), {
     namespace: $rdf.namedNode('http://bafu.namespace/'),
@@ -43,6 +44,7 @@ describe('domain/cube-projects/update', () => {
       bar,
     ])
     projectExists = sinon.stub(projectQueries, 'exists').resolves(false)
+    previouslyPublished = sinon.stub(projectQueries, 'previouslyPublished').resolves(false)
     sinon.stub(orgQueries, 'cubeNamespaceAllowed').resolves(true)
   })
 
@@ -174,6 +176,46 @@ describe('domain/cube-projects/update', () => {
             hasValue: $rdf.namedNode('http://bar.namespace/cube/year'),
           },
         })
+      })
+    })
+
+    describe('when project has already been published', () => {
+      beforeEach(() => {
+        previouslyPublished.resolves(true)
+      })
+
+      it('throws when maintainer changes', async () => {
+        // then
+        const resource = projectPointer(project.term)
+        resource
+          .deleteOut(schema.maintainer)
+          .addOut(schema.maintainer, bar.id)
+
+        // when
+        const update = updateProject({
+          resource,
+          store,
+        })
+
+        // then
+        await expect(update).to.have.rejected
+      })
+
+      it('throws when id changes', async () => {
+        // then
+        const resource = projectPointer(project.term)
+        resource
+          .deleteOut(dcterms.identifier)
+          .addOut(dcterms.identifier, 'new/cube')
+
+        // when
+        const update = updateProject({
+          resource,
+          store,
+        })
+
+        // then
+        await expect(update).to.have.rejected
       })
     })
 
@@ -434,6 +476,29 @@ describe('domain/cube-projects/update', () => {
             },
           },
         })
+      })
+    })
+
+    describe('when project has already been published', () => {
+      beforeEach(() => {
+        previouslyPublished.resolves(true)
+      })
+
+      it('throws when id changes', async () => {
+        // then
+        const resource = projectPointer(project.term)
+        resource
+          .deleteOut(cc['CubeProject/sourceCube'])
+          .addOut(cc['CubeProject/sourceCube'], $rdf.namedNode('http://external.cube/new'))
+
+        // when
+        const update = updateProject({
+          resource,
+          store,
+        })
+
+        // then
+        await expect(update).to.have.rejected
       })
     })
   })
