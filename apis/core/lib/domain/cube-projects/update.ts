@@ -7,7 +7,7 @@ import { dcterms, rdfs, schema } from '@tpluscode/rdf-ns-builders'
 import { CsvProject, ImportProject, Project } from '@cube-creator/model'
 import type { Organization } from '@rdfine/schema'
 import type { Dictionary } from '@rdfine/prov'
-import { exists } from './queries'
+import { exists, previouslyPublished } from './queries'
 import { isCsvProject } from '@cube-creator/model/Project'
 import { cubeNamespaceAllowed } from '../organization/query'
 
@@ -47,6 +47,10 @@ export async function updateProject({
     })
 
     if (identifier.after !== identifier.before) {
+      if (await previouslyPublished(project)) {
+        throw new DomainError('Cannot change cube identifier once a project has been published')
+      }
+
       if (await exists(identifier.after, maintainer.after)) {
         throw new DomainError('Another project is already using same identifier')
       }
@@ -61,6 +65,10 @@ export async function updateProject({
   }
 
   if (!previousCube.equals(currentCube) || !maintainer.after.equals(maintainer.before)) {
+    if (await previouslyPublished(project)) {
+      throw new DomainError('Cannot change cube identifier once a project has been published')
+    }
+
     if (await exists(currentCube, maintainer.after)) {
       throw new DomainError('Another project already produces a cube with that URI')
     }
