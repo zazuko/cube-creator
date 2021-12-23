@@ -3,7 +3,7 @@ import { dcterms, schema } from '@tpluscode/rdf-ns-builders'
 import $rdf from 'rdf-ext'
 import { NamedNode, Term } from 'rdf-js'
 import { cc } from '@cube-creator/core/namespace'
-import { DimensionMetadataCollection } from '@cube-creator/model'
+import { DimensionMetadataCollection, Project } from '@cube-creator/model'
 import { parsingClient } from '../../query-client'
 import { sparql, SparqlTemplateResult } from '@tpluscode/rdf-string'
 
@@ -73,4 +73,13 @@ export function exists(cubeIdentifierOrUri: string | NamedNode, maintainer: Term
   const union = rest.reduce((current, pattern) => sparql`${current} union { ${pattern} }`, sparql`{ ${first} }`)
 
   return ASK`${union}`.execute(client.query)
+}
+
+export async function previouslyPublished(project: Project, client = parsingClient): Promise<boolean> {
+  return ASK`graph ?job {
+    ?job a ${cc.PublishJob} ;
+         ${schema.actionStatus} ${schema.CompletedActionStatus} ;
+         ${cc.project} ${project.id} ;
+    .
+  }`.execute(client.query)
 }
