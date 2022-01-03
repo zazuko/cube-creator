@@ -1,5 +1,11 @@
 # @cube-creator/cli
 
+## 1.9.0
+
+### Minor Changes
+
+- 057b114e: Job details will inform about large dimensions which had their `sh:in` removed (closes #983)
+
 ## 1.8.0
 
 ### Minor Changes

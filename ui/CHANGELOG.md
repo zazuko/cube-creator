@@ -1,5 +1,20 @@
 # @cube-creator/ui
 
+## 1.8.0
+
+### Minor Changes
+
+- 057b114e: Job details will inform about large dimensions which had their `sh:in` removed (closes #983)
+
+### Patch Changes
+
+- 8dde2a0d: Avoid full Cube Preview refresh when editing dimension metadata (closes #1017)
+- 4ce3c203: Fix identifier template input creating broken templates (closes #991)
+- 5da66edd: Add support for `sh:group` to group properties in separate tabs in forms (closes #1026)
+- e0f0cd44: Improve dataset keywords input field (closes #924)
+- 229e61a8: Add a way to define relations between dimensions (fixes #1000)
+- 9aa45315: Make CSV delimiter and quote char optional (fixes #968)
+
 ## 1.7.2
 
 ### Patch Changes

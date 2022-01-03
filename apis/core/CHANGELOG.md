@@ -1,5 +1,22 @@
 # @cube-creator/core-api
 
+## 1.9.0
+
+### Minor Changes
+
+- fe649f90: Prevent changing of identifiers of published projects (closes #909)
+- 057b114e: Job details will inform about large dimensions which had their `sh:in` removed (closes #983)
+
+### Patch Changes
+
+- 5cd11bce: Security: updated [jwks-rsa](https://npm.im/jwks-rsa)
+- 4f8325ec: Use EU frequencies instead of Dublin Core (fixes #1003)
+- e2f45762: Performance: Optimize queries loading resources
+- 229e61a8: Add a way to define relations between dimensions (fixes #1000)
+- 9aa45315: Make CSV delimiter and quote char optional (fixes #968)
+- Updated dependencies [1734d838]
+  - @cube-creator/shared-dimensions-api@2.4.2
+
 ## 1.8.0
 
 ### Minor Changes
