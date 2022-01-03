@@ -2,21 +2,15 @@
   <div v-if="mapping && sourcesCollection && tableCollection" class="is-relative">
     <div class="columns">
       <div class="column">
-        <div class="level">
-          <div class="level-left">
-            <div class="level-item">
-              <h3 class="title is-6">
-                Input CSVs
-              </h3>
-            </div>
-            <div class="level-item">
-              <hydra-operation-button
-                :operation="sourcesCollection.actions.create"
-                :to="{ name: 'CSVUpload' }"
-                data-testid="upload-source"
-              />
-            </div>
-          </div>
+        <div class="is-flex is-align-items-center gap-1">
+          <h3 class="title is-6 mb-0">
+            Input CSVs
+          </h3>
+          <hydra-operation-button
+            :operation="sourcesCollection.actions.create"
+            :to="{ name: 'CSVUpload' }"
+            data-testid="upload-source"
+          />
         </div>
       </div>
       <div class="column is-1">
@@ -25,23 +19,17 @@
         </p>
       </div>
       <div class="column">
-        <h3 class="title is-6">
-          <div class="level">
-            <div class="level-left">
-              <div class="level-item">
-                Output tables
-              </div>
-              <div class="level-item">
-                <hydra-operation-button
-                  :operation="tableCollection.actions.create"
-                  :to="{ name: 'TableCreate' }"
-                  :disabled="sources.length === 0"
-                  data-testid="create-table"
-                />
-              </div>
-            </div>
-          </div>
-        </h3>
+        <div class="is-flex is-align-items-center gap-1">
+          <h3 class="title is-6 mb-0">
+            Output tables
+          </h3>
+          <hydra-operation-button
+            :operation="tableCollection.actions.create"
+            :to="{ name: 'TableCreate' }"
+            :disabled="sources.length === 0"
+            data-testid="create-table"
+          />
+        </div>
       </div>
     </div>
 
