@@ -1,8 +1,8 @@
 <template>
   <div class="source-mapping columns">
-    <div class="column">
+    <div class="column is-6">
       <div class="source panel">
-        <div class="panel-heading is-flex is-align-items-center is-justify-content-space-between">
+        <div class="panel-heading is-flex is-align-items-center is-justify-content-space-between is-flex-wrap-wrap">
           <h4 class="has-text-weight-bold">
             {{ source.name }}
           </h4>
@@ -93,7 +93,7 @@
       </div>
     </div>
     <div class="column is-1" />
-    <div class="column">
+    <div class="column is-5">
       <mapper-table
         v-for="table in sourceTables"
         :key="table.id.value"

@@ -1,7 +1,7 @@
 <template>
-  <div v-if="mapping && sourcesCollection && tableCollection" class="is-relative">
+  <div v-if="mapping && sourcesCollection && tableCollection" class="is-relative layout">
     <div class="columns">
-      <div class="column">
+      <div class="column is-6">
         <div class="is-flex is-align-items-center gap-1">
           <h3 class="title is-6 mb-0">
             Input CSVs
@@ -18,7 +18,7 @@
           <b-icon icon="arrow-right" size="is-small" />
         </p>
       </div>
-      <div class="column">
+      <div class="column is-5">
         <div class="is-flex is-align-items-center gap-1">
           <h3 class="title is-6 mb-0">
             Output tables
@@ -140,6 +140,10 @@ export default class CSVMappingView extends Vue {
 </script>
 
 <style scoped>
+.layout {
+  max-width: 180rem;
+}
+
 .arrows {
   pointer-events: none;
   position: absolute;
