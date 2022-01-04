@@ -179,12 +179,6 @@ ${shape('dimension/metadata')} {
       ${sh.maxCount} 1 ;
       ${sh.order} 40 ;
     ] , [
-      ${sh.path} ${schema.about} ;
-      ${sh.nodeKind} ${sh.IRI} ;
-      ${sh.minCount} 1 ;
-      ${sh.maxCount} 1 ;
-      ${dash.hidden} true ;
-    ] , [
       ${sh.name} "Relation to another dimension" ;
       ${sh.path} ${meta.dimensionRelation} ;
       ${sh.nodeKind} ${sh.BlankNode} ;
@@ -215,6 +209,21 @@ ${shape('dimension/metadata')} {
           ${sh.order} 20 ;
         ] ;
       ] ;
+    ] ,
+    [
+      ${sh.name} "Order" ;
+      ${sh.description} "Numerical value defining the display order of this dimension compared to other dimensions." ;
+      ${sh.path} ${sh.order} ;
+      ${sh.datatype} ${xsd.integer} ;
+      ${sh.minCount} 0 ;
+      ${sh.maxCount} 1 ;
+      ${sh.order} 60 ;
+    ] , [
+      ${sh.path} ${schema.about} ;
+      ${sh.nodeKind} ${sh.IRI} ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+      ${dash.hidden} true ;
     ] ,
     ${validateDataKindShape}
   .
