@@ -20,6 +20,7 @@ import { errorMappers } from '@cube-creator/api-errors'
 import './lib/domain'
 import upload from './lib/upload'
 import Loader from './lib/Loader'
+import * as s3 from './lib/storage/s3'
 
 const apiPath = path.resolve(__dirname, 'hydra')
 const codePath = path.resolve(__dirname, 'lib')
@@ -104,6 +105,8 @@ async function main() {
   app.use(problemJson({ errorMappers, captureNotFound: true }))
 
   await bootstrap(env.STORE_GRAPH_ENDPOINT, baseUri)
+
+  s3.setup()
 
   if (!env.production) {
     const key = fs.readFileSync('/certs/cert.key')
