@@ -6,7 +6,7 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import AwsS3Multipart from '@uppy/aws-s3-multipart'
-import Uppy, { UppyFile } from '@uppy/core'
+import { Uppy, UppyFile } from '@uppy/core'
 import { Dashboard as UppyDashboard } from '@uppy/vue'
 import { prepareHeaders } from '@/api'
 import LoadingBlock from './LoadingBlock.vue'
@@ -33,7 +33,7 @@ export default class extends Vue {
   @Prop() fileMeta: any
   @Prop({ default: true }) allowMultiple!: boolean
 
-  uppy: Uppy.Uppy<Uppy.StrictTypes> | null = null
+  uppy: Uppy | null = null
   uppyDashboardOptions = {
     proudlyDisplayPoweredByUppy: false,
     showLinkToFileUploadResult: false,
@@ -42,7 +42,7 @@ export default class extends Vue {
   }
 
   mounted (): void {
-    const uppy = Uppy<Uppy.StrictTypes>({
+    const uppy = new Uppy({
       restrictions: {
         allowedFileTypes: ['.csv'],
         maxNumberOfFiles: this.allowMultiple ? null : 1,
