@@ -4,4 +4,4 @@
 "@cube-creator/ui": patch
 ---
 
-Add `sh:order` property on dimensions to manually define their ordering
+Add `sh:order` property on dimensions to manually define their ordering (closes #987)
