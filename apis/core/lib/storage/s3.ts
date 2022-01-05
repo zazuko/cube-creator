@@ -7,6 +7,7 @@ import { log } from '../log'
 import type { MediaStorage } from './types'
 
 const logError = log.extend('s3').extend('error')
+const logWarning = log.extend('s3').extend('warning')
 
 const s3 = new aws.S3({
   endpoint: env.AWS_S3_ENDPOINT,
@@ -85,4 +86,29 @@ function getKey(media: MediaObject): string {
   if (!key) throw new Error('Missing media identifier')
 
   return key
+}
+
+export async function setup(): Promise<any> {
+  const params = {
+    ...defaultS3Options,
+    CORSConfiguration: {
+      CORSRules: [
+        {
+          AllowedOrigins: [env.UI_BASE],
+          AllowedMethods: ['GET', 'PUT', 'POST'],
+          MaxAgeSeconds: 3000,
+          ExposeHeaders: ['ETag'],
+          AllowedHeaders: ['Authorization', 'x-amz-date', 'x-amz-content-sha256', 'content-type'],
+        },
+        {
+          AllowedOrigins: ['*'],
+          AllowedMethods: ['GET'],
+          MaxAgeSeconds: 3000,
+        },
+      ],
+    },
+  }
+
+  return s3.putBucketCors(params).promise()
+    .catch(error => { logWarning('Could not apply S3 CORS:', error) })
 }
