@@ -9,6 +9,7 @@ import { fromPointer as nodeShape } from '@rdfine/shacl/lib/NodeShape'
 import { fromPointer as propertyGroup } from '@rdfine/shacl/lib/PropertyGroup'
 
 const defaultGroup = $rdf.namedNode('#default-group')
+const datatypeUri = [xsd.anyURI, ['URI']]
 
 const properties: Initializer<PropertyShape>[] = [{
   name: 'Name',
@@ -221,7 +222,7 @@ const properties: Initializer<PropertyShape>[] = [{
       }, {
         name: 'Data type',
         path: sh.datatype,
-        in: datatypes.map(([id, labels]) => ({
+        in: [...datatypes, datatypeUri].map(([id, labels]) => ({
           id,
           [rdfs.label.value]: labels,
         })),

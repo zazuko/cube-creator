@@ -23,6 +23,7 @@ const dynamicPropertiesFromStore: DynamicPropertiesQuery = async function (targe
       ${hydra.collection} ?collection ;
       ${dash.editor} ?editor ;
       ${sh.datatype} ?dt ;
+      ${sh.nodeKind} ?nodeKind ;
       ${sh.group} <urn:group:dynamic-props> ;
     .
     <urn:group:dynamic-props> ${rdfs.label} "Dynamic properties" ;
@@ -49,7 +50,12 @@ const dynamicPropertiesFromStore: DynamicPropertiesQuery = async function (targe
         BIND (IRI(CONCAT("${env.MANAGED_DIMENSIONS_BASE}", "dimension/_terms?dimension=", ENCODE_FOR_URI(STR(?termSet)))) as ?collection)
       }
       optional {
-        ?property ${sh.datatype} ?dt
+        ?property ${sh.datatype} ?dt .
+        FILTER (?dt != ${xsd.anyURI})
+      }
+      optional {
+        ?property ${sh.datatype} ${xsd.anyURI} .
+        BIND (${sh.IRI} as ?nodeKind)
       }
       optional {
         ?property ${schema.multipleValues} ?multipleValues .
