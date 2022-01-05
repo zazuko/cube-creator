@@ -170,6 +170,7 @@ export function serializeDimensionMetadata (dimension: DimensionMetadata): Dimen
       : undefined,
     isKeyDimension: dimension.isKeyDimension,
     isMeasureDimension: dimension.isMeasureDimension,
+    order: dimension.order,
   })
 }
 
