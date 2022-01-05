@@ -17,7 +17,7 @@ const dynamicPropertiesFromStore: DynamicPropertiesQuery = async function (targe
   return CONSTRUCT`
     ${shape} ${sh.property} ?shProperty .
     ?shProperty ${sh.name} ?name ;
-      ${sh.maxCount} 1 ;
+      ${sh.maxCount} ?maxCount ;
       ${sh.minCount} ?minCount ;
       ${sh.path} ?predicate ;
       ${hydra.collection} ?collection ;
@@ -29,6 +29,8 @@ const dynamicPropertiesFromStore: DynamicPropertiesQuery = async function (targe
   `
     .FROM($rdf.namedNode(env.MANAGED_DIMENSIONS_GRAPH))
     .WHERE`
+      VALUES ?UNDEF { UNDEF }
+
       ${targetClass} a ${md.SharedDimension} ;
                      ${schema.additionalProperty} ?property .
 
@@ -49,6 +51,10 @@ const dynamicPropertiesFromStore: DynamicPropertiesQuery = async function (targe
       optional {
         ?property ${sh.datatype} ?dt
       }
+      optional {
+        ?property ${schema.multipleValues} ?multipleValues .
+      }
+      BIND (IF(!BOUND(?multipleValues), 1, ?UNDEF) as ?maxCount)
     `
     .execute(parsingClient.query)
 }

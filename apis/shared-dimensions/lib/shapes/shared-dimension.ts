@@ -198,6 +198,14 @@ const properties: Initializer<PropertyShape>[] = [{
       datatype: xsd.boolean,
       defaultValue: false,
       order: 15,
+    }, {
+      name: 'Allow multiple',
+      path: schema.multipleValues,
+      minCount: 1,
+      maxCount: 1,
+      datatype: xsd.boolean,
+      defaultValue: false,
+      order: 15,
     }],
     xone: [nodeShape({
       closed: true,

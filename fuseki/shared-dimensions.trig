@@ -105,6 +105,7 @@ graph <https://lindas.admin.ch/cube/dimension> {
     hydra:required true ;
     sh:class <http://example.com/dimension/colors> ;
     rdf:predicate schema:color ;
+    schema:multipleValues true ;
     rdfs:label "Color" ;
     md:dynamicPropertyType "Shared Term" ;
   .
@@ -116,7 +117,8 @@ graph <https://lindas.admin.ch/cube/dimension> {
       [ sh:path sh:class ] ,
       [ sh:path rdf:predicate ] ,
       [ sh:path rdfs:label ] ,
-      [ sh:path md:dynamicPropertyType ]
+      [ sh:path md:dynamicPropertyType ] ,
+      [ sh:path schema:multipleValues ]
     ;
    .
 
