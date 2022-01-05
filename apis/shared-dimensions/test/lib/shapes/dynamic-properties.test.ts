@@ -123,6 +123,19 @@ describe('@cube-creator/shared-dimensions-api/lib/shapes/dynamic-properties @SPA
       }],
     })
   })
+
+  it('populates sh:languageIn as list from queried values', async () => {
+    // when
+    const dynamicProperties = clownface({
+      dataset: $rdf.dataset([
+        ...await loadDynamicTermProperties(targetClass, shape),
+      ]),
+    })
+
+    // then
+    const colorProp = dynamicProperties.has(sh.path, rdfs.comment).out(sh.languageIn).list()!
+    expect([...colorProp].map(p => p.value)).to.contain.all.members(['fr', 'de', 'en'])
+  })
 })
 
 describe('@cube-creator/shared-dimensions-api/lib/shapes/dynamic-properties', () => {

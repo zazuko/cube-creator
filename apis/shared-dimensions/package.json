@@ -20,7 +20,7 @@
     "@tpluscode/rdfine": "^0.5.25",
     "@tpluscode/sparql-builder": "^0.3.15",
     "camouflage-rewrite": "^1.2.0",
-    "clownface": "^1.2.0",
+    "clownface": "^1.4.0",
     "cors": "^2.8.5",
     "debug": "^4.3.1",
     "express": "^4.17.1",
