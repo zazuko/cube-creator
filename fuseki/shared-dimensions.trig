@@ -103,7 +103,7 @@ graph <https://lindas.admin.ch/cube/dimension> {
 
   <urn:additionalPropery:Order>
     hydra:required false ;
-    sh:datatype xsd:int ;
+    sh:datatype xsd:integer ;
     rdf:predicate qb:order ;
     rdfs:label "Order" ;
     md:dynamicPropertyType "Literal" ;

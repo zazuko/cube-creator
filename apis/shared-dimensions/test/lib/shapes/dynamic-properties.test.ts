@@ -72,7 +72,7 @@ describe('@cube-creator/shared-dimensions-api/lib/shapes/dynamic-properties @SPA
         maxCount: 1,
       }, {
         path: sh.datatype,
-        hasValue: xsd.int,
+        hasValue: xsd.integer,
         minCount: 1,
         maxCount: 1,
       }, {
