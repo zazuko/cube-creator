@@ -9,7 +9,8 @@ export const radioButtons: SingleEditor = {
     if (choices.length === 0) {
       return 0
     }
-    if (choices.length > 5) {
+    const valuesLength = choices.flatMap(term => [...term.value]).length
+    if (choices.length > 5 || valuesLength > 30) {
       return null
     }
 
