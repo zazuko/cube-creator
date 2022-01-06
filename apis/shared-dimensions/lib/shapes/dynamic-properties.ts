@@ -77,7 +77,7 @@ function buildShaclLists(pointer: AnyPointer) {
   const props = pointer.has(sh.languageIn)
 
   for (const prop of props.toArray()) {
-    const languages = prop.out(sh.languageIn) as any
+    const languages = prop.out(sh.languageIn)
     if (languages.isList()) {
       continue
     }

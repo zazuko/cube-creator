@@ -41,6 +41,7 @@
   "devDependencies": {
     "@cube-creator/testing": "^0.1.19",
     "@types/camouflage-rewrite": "^1.2.0",
+    "@types/clownface": "^1.2.6",
     "@types/parse-prefer-header": "^1.0.0",
     "@types/sinon": "^10.0.0",
     "chai": "^4.2.0",
