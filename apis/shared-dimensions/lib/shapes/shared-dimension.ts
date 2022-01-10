@@ -16,6 +16,7 @@ const commonProperties = [
   hydra.required,
   rdf.predicate,
   rdfs.label,
+  schema.multipleValues,
 ]
 
 const properties: Initializer<PropertyShape>[] = [{
