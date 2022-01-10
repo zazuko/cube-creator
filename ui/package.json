@@ -1,6 +1,6 @@
 {
   "name": "@cube-creator/ui",
-  "version": "1.7.2",
+  "version": "1.8.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -31,9 +31,9 @@
     "@tinyhttp/content-disposition": "^2.0.0",
     "@tpluscode/rdf-ns-builders": "^1.0.0",
     "@tpluscode/rdfine": "^0.5.19",
-    "@uppy/aws-s3-multipart": "^1.8.18",
-    "@uppy/core": "^1.19.2",
-    "@uppy/vue": "^0.2.5",
+    "@uppy/aws-s3-multipart": "^2.2.0",
+    "@uppy/core": "^2.1.4",
+    "@uppy/vue": "^0.4.5",
     "@zazuko/rdf-vocabularies": "^2021.3.17",
     "alcaeus": "^2.1",
     "buefy": "^0.9.5",
@@ -52,7 +52,7 @@
     "vue-markdown": "^2.2.4",
     "vue-property-decorator": "^9.0.2",
     "vue-router": "^3.4.7",
-    "vue-select": "^3.11.2",
+    "vue-select": "^3.16.0",
     "vuex": "^3.4.0",
     "vuex-class": "^0.3.2",
     "vuex-oidc": "^3.10.1"

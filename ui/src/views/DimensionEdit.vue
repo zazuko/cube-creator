@@ -106,7 +106,7 @@ export default class extends Vue {
         resource,
       })
 
-      this.$store.dispatch('project/fetchDimensionMetadataCollection')
+      this.$store.dispatch('project/refreshDimensionMetadataCollection')
 
       this.$buefy.toast.open({
         message: 'Dimension metadata was saved',

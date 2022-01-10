@@ -46,6 +46,7 @@ type ENV_VARS =
   | 'PUBLIC_QUERY_ENDPOINT'
   | 'TRIFID_UI'
   | 'VISUALIZE_UI'
+  | 'UI_BASE'
 
 type KnownVariables<T extends string> = {
   /* eslint-disable-next-line no-unused-vars */

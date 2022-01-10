@@ -1,5 +1,11 @@
 # @cube-creator/shared-dimensions-api
 
+## 2.4.2
+
+### Patch Changes
+
+- 1734d838: Move dimension dynamic properties to separate tabs
+
 ## 2.4.1
 
 ### Patch Changes

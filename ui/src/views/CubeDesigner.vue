@@ -40,7 +40,7 @@ export default class CubeDesignerView extends Vue {
   }
 
   refreshDimensions (): void {
-    this.$store.dispatch('project/fetchDimensionMetadataCollection')
+    this.$store.dispatch('project/refreshDimensionMetadataCollection')
   }
 }
 </script>

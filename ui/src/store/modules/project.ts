@@ -84,7 +84,16 @@ const getters: GetterTree<ProjectState, RootState> = {
   },
 
   dimensions (state) {
-    return state.dimensionMetadataCollection?.hasPart || []
+    const dimensions = state.dimensionMetadataCollection?.hasPart || []
+
+    // Sort dimensions with the following priority:
+    //   sh:order / measure dimension / key dimension / property (alphabetically)
+    return dimensions.sort((dim1, dim2) => (
+      ((dim1.order ?? Infinity) - (dim2.order ?? Infinity))) ||
+      ((dim1.isMeasureDimension ? 1 : Infinity) - (dim2.isMeasureDimension ? 1 : Infinity)) ||
+      ((dim1.isKeyDimension ? 1 : Infinity) - (dim2.isKeyDimension ? 1 : Infinity)) ||
+      dim1.about.value.localeCompare(dim2.about.value)
+    )
   },
 
   findSource (_state, getters) {
@@ -273,6 +282,16 @@ const actions: ActionTree<ProjectState, RootState> = {
     }
 
     context.commit('storeDimensionMetadataCollection', null)
+
+    return context.dispatch('refreshDimensionMetadataCollection')
+  },
+
+  async refreshDimensionMetadataCollection (context) {
+    const cubeMetadata = context.state.cubeMetadata
+
+    if (!cubeMetadata) {
+      throw new Error('CubeMetadata not loaded')
+    }
 
     const collection = await api.fetchResource<DimensionMetadataCollection>(cubeMetadata.dimensionMetadata.id.value)
     context.commit('storeDimensionMetadataCollection', collection)
