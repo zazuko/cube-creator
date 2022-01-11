@@ -8,6 +8,7 @@ import * as runner from './runner'
 import { logger } from '../log'
 
 interface PublishRunOptions extends runner.RunOptions {
+  to: 'filesystem' | 'graph-store'
   publishStore?: {
     endpoint: string
     user: string
@@ -16,8 +17,9 @@ interface PublishRunOptions extends runner.RunOptions {
 }
 
 export default runner.create<PublishRunOptions>({
-  pipelineSources() {
-    return ['publish']
+  pipelineSources(command) {
+    const { to } = command
+    return ['publish', `publish-to-${to}`]
   },
   async prepare(options, variable) {
     const { publishStore, job: jobUri } = options
