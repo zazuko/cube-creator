@@ -44,7 +44,7 @@
     "barnard59-formats": "^1.1.0",
     "barnard59-graph-store": "^1.0.0",
     "barnard59-rdf": "^1.0.0",
-    "barnard59-validate-shacl": "^0.3.5",
+    "barnard59-validate-shacl": "^0.3.6",
     "body-parser": "^1.19.0",
     "clownface": "^1",
     "commander": "^4.1.1",
