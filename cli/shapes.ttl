@@ -1,0 +1,21 @@
+PREFIX schema: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX cube: <https://cube.link/>
+PREFIX sh: <http://www.w3.org/ns/shacl#>
+
+<>
+  a sh:NodeShape ;
+  sh:targetClass cube:Cube ;
+  sh:property
+    [
+      sh:path [ sh:inversePath schema:hasPart ] ;
+      sh:node
+        [
+          sh:property
+            [
+              sh:path rdf:type ;
+              sh:hasValue schema:CreativeWork ;
+            ]
+        ]
+    ] ;
+.

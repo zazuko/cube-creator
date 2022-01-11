@@ -1,16 +1,18 @@
 import { obj } from 'through2'
-import { Literal, NamedNode, Quad, Quad_Object as QuadObject, Quad_Subject as QuadSubject } from 'rdf-js'
+import { Literal, NamedNode, Quad } from 'rdf-js'
 import $rdf from 'rdf-ext'
-import { dcat, dcterms, rdf, schema, sh, xsd, _void } from '@tpluscode/rdf-ns-builders'
+import { dcat, dcterms, rdf, schema, sh, _void } from '@tpluscode/rdf-ns-builders'
 import { cc, cube } from '@cube-creator/core/namespace'
 import { Dataset, Project, PublishJob } from '@cube-creator/model'
 import { HydraClient } from 'alcaeus/alcaeus'
-import TermSet from '@rdfjs/term-set'
 import type { Context } from 'barnard59-core/lib/Pipeline'
-import { loadDimensionMapping } from './output-mapper'
-import TermMap from '@rdfjs/term-map'
 import { Published } from '@cube-creator/model/Cube'
+import { CONSTRUCT, sparql } from '@tpluscode/sparql-builder'
+import StreamClient from 'sparql-http-client/StreamClient'
+import { Readable } from 'readable-stream'
+import { toRdf } from 'rdf-literal'
 import { tracer } from './otel/tracer'
+import { loadProject } from './project'
 
 export async function loadDataset(jobUri: string, Hydra: HydraClient) {
   const jobResource = await Hydra.loadResource<PublishJob>(jobUri)
@@ -41,14 +43,126 @@ export async function loadDataset(jobUri: string, Hydra: HydraClient) {
   return { dataset, maintainer }
 }
 
-export async function injectMetadata(this: Context, jobUri: string) {
+interface Params {
+  jobUri: string
+  endpoint: string
+  user: string
+  password: string
+}
+
+interface QueryParams {
+  project: Project
+  revision: Literal
+  cubeIdentifier: string
+}
+
+function sourceCubeAndShape({ project, revision, cubeIdentifier }: QueryParams) {
+  return sparql`
+    graph ${project.cubeGraph} {
+        ?cube a ${cube.Cube} ;
+              !(${cube.observation}|${cube.observationSet})* ?s .
+        ?s ?p ?o .
+
+        # add cube version to identifiers
+        BIND(IRI(CONCAT(STR(?cube), "/${revision}")) as ?cubeVersion)
+        BIND(IF(
+          isiri(?s),
+          IRI(REPLACE(STR(?s), "${cubeIdentifier}", "${cubeIdentifier}/${revision.value}")),
+          ?s
+        ) as ?s1)
+
+        BIND(IF(
+          isiri(?o) && ?p != ${sh.path}, # do not inject revision into dimension URI used in Constraint Shape
+          IRI(REPLACE(STR(?o), "${cubeIdentifier}", "${cubeIdentifier}/${revision.value}")),
+          ?o
+        ) as ?o1)
+
+        # exclude properties of sh:in values (concept dimensions)
+        FILTER (NOT EXISTS {
+          [] ${rdf.first} ?s .
+        })
+    }
+  `
+}
+
+function cubeMetadata({ project, revision }: QueryParams) {
+  return sparql`
+  graph ${project.cubeGraph} {
+    ?cube a ${cube.Cube} .
+        BIND(IRI(CONCAT(STR(?cube), "/${revision}")) as ?cubeVersion)
+  }
+
+  graph ${project.dataset.id} {
+    ${project.dataset.id} ?cubeProp ?cubeMeta .
+
+    MINUS {
+        ${project.dataset.id} ${schema.hasPart}|${cc.dimensionMetadata} ?cubeMeta
+    }
+
+    optional {
+      ?cubeMeta !<>* ?deepMetaS .
+      ?deepMetaS ?deepMetaP ?deepMetaO .
+    }
+  }
+  `
+}
+
+function propertyMetadata({ project }: QueryParams) {
+  return sparql`
+    graph ${project.cubeGraph} {
+      ?propShape ${sh.path} ?path .
+    }
+
+    graph ${project.dataset.id} {
+      ${project.dataset.id} ${cc.dimensionMetadata} ?dimensionMetadata .
+    }
+
+    graph ?dimensionMetadata {
+      ?dimensionMetadata ${schema.hasPart} ?dimension .
+      ?dimension ${schema.about} ?path ; ?dimensionP ?dimensionO ;
+        !<>+ ?dimensionMetaDeepS .
+      optional {
+        ?dimensionMetaDeepS ?dimensionMetaDeepP ?dimensionMetaDeepO .
+      }
+      FILTER (
+        ?dimensionP NOT IN (${cc.dimensionMapping}, ${schema.about})
+      )
+    }
+  `
+}
+
+function annotateSharedDimensions({ project }: QueryParams) {
+  return sparql`
+    graph ${project.cubeGraph} {
+      ?sharedDimension ${sh.path} ?path .
+    }
+
+    graph ${project.dataset.id} {
+      ${project.dataset.id} ${cc.dimensionMetadata} ?dimensionMetadata .
+    }
+
+    graph ?dimensionMetadata {
+      ?dimensionMetadata ${schema.hasPart} ?dimension .
+      ?dimension ${schema.about} ?path ;
+        ${cc.dimensionMapping} ?dimensionMapping .
+    }
+
+    graph ?dimensionMapping {
+      ?dimensionMapping ${cc.sharedDimension} ?any
+    }
+
+    BIND(${cube.SharedDimension} as ?SharedDimension)
+  `
+}
+
+export async function loadCubeMetadata(this: Context, { jobUri, endpoint, user, password }: Params) {
   const Hydra = this.variables.get('apiClient')
   const baseCube = $rdf.namedNode(this.variables.get('namespace'))
-  const revision = $rdf.literal(this.variables.get('revision').toString(), xsd.integer)
+  const revision = toRdf(this.variables.get('revision'))
   const cubeIdentifier = this.variables.get('cubeIdentifier')
   const timestamp = this.variables.get('timestamp')
-  const versionedDimensions = this.variables.get('versionedDimensions')
   const job = this.variables.get('publish-job')
+  const project = await loadProject(jobUri, this)
 
   const attributes = {
     baseCube: baseCube.value,
@@ -56,107 +170,108 @@ export async function injectMetadata(this: Context, jobUri: string) {
     cubeIdentifier,
     timestamp: timestamp.value,
   }
-  const { dataset, maintainer } = await tracer.startActiveSpan('injectMetadata#setup', { attributes }, async span => {
+  const { maintainer } = await tracer.startActiveSpan('injectMetadata#setup', { attributes }, async span => {
     try {
       return await loadDataset(jobUri, Hydra)
     } finally {
       span.end()
     }
   })
-  const datasetTriples = dataset.pointer.dataset.match(null, null, null, dataset.id)
-  const propertyShapes = new TermMap<QuadSubject, QuadObject>()
 
   const span = tracer.startSpan('injectMetadata#stream', { attributes })
 
-  return obj(async function (quad: Quad, _, callback) {
-    const visited = new TermSet()
-    const copyChildren = (subject: QuadObject) => {
-      if (subject && subject.termType !== 'Literal' && !visited.has(subject)) {
-        [...datasetTriples.match(subject)].forEach(item => {
-          this.push($rdf.triple(subject, item.predicate, item.object))
-          visited.add(subject)
-          copyChildren(item.object)
-        })
-      }
+  const queryParams = {
+    project,
+    cubeIdentifier,
+    revision,
+  }
+
+  const stream = await CONSTRUCT`
+    ?s1 ?p ?o1 .
+    ?cubeVersion
+      a ${cube.Cube} ;
+      ${schema.version} ${revision} ;
+      ${schema.dateModified} ${timestamp} ;
+      ${dcterms.modified} ${timestamp} ;
+      ${dcterms.identifier} ${$rdf.literal(cubeIdentifier)} ;
+      # Set LINDAS query interface and sparql endpoint
+      ${dcat.accessURL} ${maintainer.accessURL} ;
+      ${_void.sparqlEndpoint} ${maintainer.sparqlEndpoint} ;
+
+      ${revision.value === '1' ? sparql`${schema.datePublished} ${timestamp}` : ''}
+    .
+    ?cube a ${schema.CreativeWork} ; ${schema.hasPart} ?cubeVersion .
+
+    ${(job.status?.equals(Published) && maintainer.dataset)
+    ? sparql`
+      # add </.well-known/void> link to cubes with published status
+      ${maintainer.dataset} ${schema.dataset} ?cubeVersion .`
+    : ''}
+
+    ?cubeVersion ?cubeMetaP ?cubeMetaO ; ?cubeProp ?cubeMeta.
+    ?deepMetaS ?deepMetaP ?deepMetaO .
+    ?propShape ?dimensionP ?dimensionO .
+
+    ?dimensionMetaDeepS ?dimensionMetaDeepP ?dimensionMetaDeepO .
+    ?propShape a ?SharedDimension .
+  `
+    .WHERE`
+    {
+      ${sourceCubeAndShape(queryParams)}
     }
+    UNION
+    {
+      # cube metadata
+      ${cubeMetadata(queryParams)}
+    }
+    UNION
+    {
+      # property metadata
+      ${propertyMetadata(queryParams)}
+    }
+    UNION {
+      # 6216a06: Add type cube:SharedDimension to mapped dimensions
+      # https://github.com/zazuko/cube-creator/blob/f7dbadff15c706789a58e003551a2c4d1e07efb0/cli/CHANGELOG.md#patch-changes-20
+      ${annotateSharedDimensions(queryParams)}
+    }
+    `.execute(new StreamClient({
+    endpointUrl: endpoint,
+    user,
+    password,
+  }).query)
 
-    // Cube Metadata
-    if (rdf.type.equals(quad.predicate) && quad.object.equals(cube.Cube)) {
-      tracer.startActiveSpan('injectMetadata#forCube', { attributes: { cube: quad.subject.value } }, span => {
-        this.push($rdf.quad(quad.subject, schema.version, revision))
-        this.push($rdf.quad(quad.subject, schema.dateModified, timestamp))
-        this.push($rdf.quad(quad.subject, dcterms.modified, timestamp))
-        this.push($rdf.quad(quad.subject, dcterms.identifier, $rdf.literal(cubeIdentifier)))
-        this.push($rdf.quad(baseCube, schema.hasPart, quad.subject))
-        this.push($rdf.quad(baseCube, rdf.type, schema.CreativeWork))
+  stream.on('end', span.end.bind(span)).on('error', span.end.bind(span))
 
-        // Set LINDAS query interface and sparql endpoint
-        this.push($rdf.quad(quad.subject, dcat.accessURL, maintainer.accessURL))
-        this.push($rdf.quad(quad.subject, _void.sparqlEndpoint, maintainer.sparqlEndpoint))
+  const metadata = await this.variables.get('metadata').import(stream)
 
-        if (revision.value === '1') {
-          this.push($rdf.quad(quad.subject, schema.datePublished, timestamp))
-        }
+  const [{ subject: cubeId }] = metadata.match(null, rdf.type, cube.Cube).toArray()
 
-        // add </.well-known/void> link to cubes with published status
-        if (job.status?.equals(Published) && maintainer.dataset) {
-          this.push($rdf.quad(maintainer.dataset, schema.dataset, quad.subject))
-        }
-
-        // Copy workExamples from job
-        const predicatesToCopy = [rdf.type, schema.name, schema.url, schema.encodingFormat]
-        job.workExamples.forEach(jobWorkExample => {
-          const workExample = $rdf.blankNode()
-          this.push($rdf.quad(quad.subject, schema.workExample, workExample))
-          predicatesToCopy.forEach(predicate => {
-            jobWorkExample.pointer.out(predicate).forEach(object => {
-              this.push($rdf.quad(workExample, predicate, object.term as NamedNode | Literal))
-            })
-          })
-        });
-
-        [...datasetTriples.match(dataset.id)]
-          .filter(q => !q.predicate.equals(schema.hasPart) && !q.predicate.equals(cc.dimensionMetadata))
-          .forEach(metadata => {
-            this.push($rdf.triple(quad.subject, metadata.predicate, metadata.object))
-            visited.add(quad.subject)
-            copyChildren(metadata.object)
-          })
-
-        span.end()
+  const predicatesToCopy = [rdf.type, schema.name, schema.url, schema.encodingFormat]
+  job.workExamples.forEach(jobWorkExample => {
+    const workExample = $rdf.blankNode()
+    metadata.add($rdf.quad(cubeId, schema.workExample, workExample))
+    predicatesToCopy.forEach(predicate => {
+      jobWorkExample.pointer.out(predicate).forEach(object => {
+        metadata.add($rdf.quad(workExample, predicate, object.term as NamedNode | Literal))
       })
-    }
+    })
+  })
 
-    // Dimension Metadata
-    if (quad.predicate.equals(sh.path)) {
-      await tracer.startActiveSpan('injectMetadata#forCube', { attributes: { dimension: quad.object.value } }, async span => {
-        const propertyShape = quad.subject
-        const dimensions = [...datasetTriples.match(null, schema.about, quad.object)]
+  return new Readable({
+    objectMode: true,
+    read() {
+      this.push(metadata)
+      this.push(null)
+    },
+  })
+}
 
-        propertyShapes.set(propertyShape, quad.object)
+export async function injectObservedBy(this: Context, jobUri: string) {
+  const Hydra = this.variables.get('apiClient')
 
-        for (const dim of dimensions) {
-          const metadata = [...datasetTriples.match(dim.subject)]
-            .filter(c => !c.predicate.equals(schema.about))
+  const { maintainer } = await loadDataset(jobUri, Hydra)
 
-          for (const meta of metadata) {
-            this.push($rdf.triple(propertyShape, meta.predicate, meta.object))
-            visited.add(propertyShape)
-            copyChildren(meta.object)
-
-            if (meta.predicate.equals(cc.dimensionMapping)) {
-              const mapping = await loadDimensionMapping(meta.object.value, Hydra)
-
-              if (mapping?.has(cc.sharedDimension).term) {
-                this.push($rdf.triple(propertyShape, rdf.type, cube.SharedDimension))
-              }
-            }
-          }
-        }
-        span.end()
-      })
-    }
-
+  return obj(function (quad: Quad, _, callback) {
     if (quad.predicate.equals(cube.observedBy)) {
       const creatorTerms = maintainer.pointer.out(cube.observedBy).terms
       for (const creator of creatorTerms) {
@@ -169,15 +284,5 @@ export async function injectMetadata(this: Context, jobUri: string) {
     }
 
     callback()
-  }, function (callback) {
-    for (const [propertyShape, dimension] of propertyShapes) {
-      if (versionedDimensions.has(dimension)) {
-        this.push($rdf.quad(propertyShape, schema.version, revision))
-      }
-    }
-
-    span.addEvent('added property versions')
-
-    callback()
-  }).on('end', span.end.bind(span)).on('error', span.end.bind(span))
+  })
 }

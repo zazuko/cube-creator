@@ -7,7 +7,14 @@
         :steps
           [
             :stepList
-              ( <#concatStreams> <#setGraph> <#countOutputQuads> <#StreamOutput> ) ;
+              (
+                <#concatStreams>
+                <#removeHydraTriples>
+                <#uniqueBnodes>
+                <#setGraph>
+                <#countOutputQuads>
+                <#StreamOutput>
+              ) ;
           ] .
 
 <#concatStreams>
@@ -19,9 +26,22 @@
     ] ;
   code:arguments
     (
+      <#cubeMetadata>
       <#PublishedLatestCube>
       <#ExpirePreviousVersions>
     )
+.
+
+<#cubeMetadata>
+  a :Pipeline, :ReadableObjectMode ;
+  :steps
+    [
+      :stepList (
+                  <#loadCubeMetadata>
+                  <#shaclValidate>
+                  <#flatten>
+                ) ;
+    ] ;
 .
 
 <#PublishedLatestCube>
@@ -29,11 +49,53 @@
   :steps [ :stepList ( <#loadCube>
                        <#countInputQuads>
                        <#injectCubeRevision>
-                       <#injectMetadata>
-                       <#removeHydraTriples>
-                       <#uniqueBnodes>
+                       <#injectObservedBy>
                      ) ]
 .
+<#shaclValidate> a :Step ;
+  code:implementedBy
+    [
+      a code:EcmaScriptModule ;
+      code:link <node:barnard59-validate-shacl/validate.js#shacl>
+    ] ;
+  code:arguments
+    (
+      <#loadShapes>
+    ) ;
+.
+
+<#loadShapes>
+  a :Pipeline, :ReadableObjectMode ;
+  :steps
+    [
+      :stepList
+        (
+          [
+            a :Step ;
+            code:implementedBy
+              [
+                code:link <node:fs#createReadStream> ;
+                a code:EcmaScriptModule ;
+              ] ;
+            code:arguments ( "shapesPath"^^:VariableName )
+          ]
+          [
+            a :Step ;
+            code:implementedBy
+              [
+                code:link <node:barnard59-formats/n3.js#parse> ;
+                a code:EcmaScriptModule ;
+              ] ;
+          ]
+        )
+    ] .
+
+<#flatten> a :Step ;
+  code:implementedBy
+    [
+      a code:EcmaScriptModule ;
+      code:link <node:barnard59-base/flatten.js#default> ;
+    ] .
 
 <#countInputQuads>
   a :Step ;
@@ -78,6 +140,14 @@ _:get
   code:arguments     [ code:name  "password" ;
                        code:value "graph-store-password"^^:VariableName ] .
 
+<#injectObservedBy>
+  a :Step ;
+  code:implementedBy [ code:link <file:../lib/metadata#injectObservedBy> ;
+                         a code:EcmaScript
+                     ] ;
+  code:arguments     ( "jobUri"^^:VariableName ) ;
+.
+
 <#injectCubeRevision>
   a :Step ;
   code:implementedBy [ code:link <file:../lib/cube#injectRevision> ;
@@ -90,11 +160,30 @@ _:get
                        a         code:EcmaScript ] ;
   code:arguments     ( "jobUri"^^:VariableName ) .
 
-<#injectMetadata>
+<#loadCubeMetadata>
   a                  :Step ;
-  code:implementedBy [ code:link <file:../lib/metadata#injectMetadata> ;
+  code:implementedBy [ code:link <file:../lib/metadata#loadCubeMetadata> ;
                        a         code:EcmaScript ] ;
-  code:arguments     ( "jobUri"^^:VariableName ) .
+  code:arguments
+    [
+      code:name "jobUri" ;
+      code:value "jobUri"^^:VariableName
+    ] ;
+  code:arguments
+    [
+      code:name "endpoint" ;
+      code:value "graph-query-endpoint"^^:VariableName
+    ] ;
+  code:arguments
+    [
+      code:name "user" ;
+      code:value "graph-store-user"^^:VariableName
+    ] ;
+  code:arguments
+    [
+      code:name "password" ;
+      code:value "graph-store-password"^^:VariableName
+    ] .
 
 <#uniqueBnodes>
   a :Step ;

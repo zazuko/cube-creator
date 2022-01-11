@@ -1,8 +1,9 @@
+import path from 'path'
 import { HydraClient } from 'alcaeus/alcaeus'
 import { CsvProject, Dataset, ImportProject, PublishJob } from '@cube-creator/model'
 import '../variables'
 import { isCsvProject } from '@cube-creator/model/Project'
-import TermSet from '@rdfjs/term-set'
+import $rdf from 'rdf-ext'
 import * as runner from './runner'
 import { logger } from '../log'
 
@@ -29,7 +30,9 @@ export default runner.create<PublishRunOptions>({
     variable.set('publish-graph-query-endpoint', publishStore?.endpoint || process.env.PUBLISH_GRAPH_QUERY_ENDPOINT)
     variable.set('publish-graph-store-user', publishStore?.user || process.env.PUBLISH_GRAPH_STORE_USER)
     variable.set('publish-graph-store-password', publishStore?.password || process.env.PUBLISH_GRAPH_STORE_PASSWORD)
-    variable.set('versionedDimensions', new TermSet())
+    variable.set('metadata', $rdf.dataset())
+    // this should be possible as relative path in pipeline ttl but does not work
+    variable.set('shapesPath', path.resolve(__dirname, '../../shapes.ttl'))
 
     variable.set('target-graph', job.publishGraph.value)
     if (process.env.PUBLISH_GRAPH_OVERRIDE) {
