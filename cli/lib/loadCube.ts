@@ -15,7 +15,7 @@ interface Params {
   password: string
 }
 
-const LIMIT = 1000000
+const LIMIT = parseInt(process.env.CUBE_QUERY_LIMIT || '0', 10) || 1000000
 
 /**
  * Opens a SPARQL stream reading the cube, excluding the Cube Constraint subgraph,
