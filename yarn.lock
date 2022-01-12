@@ -1878,6 +1878,18 @@
     "@tpluscode/rdf-ns-builders" "^1.0.0"
     "@tpluscode/rdfine" "^0.5.34"
 
+"@rdfine/shacl@^0.8.5":
+  version "0.8.5"
+  resolved "https://registry.yarnpkg.com/@rdfine/shacl/-/shacl-0.8.5.tgz#0725baa58d5efaf9976f3c9ead7385ff6b632cd7"
+  integrity sha512-cPualV/LdvjlUvndkJRkU5bg8kw6hKsgTZutWxDxat96NpmAPm5B8OVcUhyU/WTOHA1TK2pzDXczqurPWuBrhA==
+  dependencies:
+    "@rdf-esm/data-model" "^0.5.3"
+    "@rdfine/owl" "^0.4.8"
+    "@rdfine/rdf" "^0.5.6"
+    "@rdfine/rdfs" "^0.6.9"
+    "@tpluscode/rdf-ns-builders" "^1.0.0"
+    "@tpluscode/rdfine" "^0.5.35"
+
 "@rdfjs-elements/editor-base@^0.4.0":
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/@rdfjs-elements/editor-base/-/editor-base-0.4.0.tgz#cc33970fa9bb35c61c5f7611d18b6a13d12b47d2"
@@ -2362,6 +2374,19 @@
     "@rdf-esm/term-map" "^0.5.0"
     "@rdf-esm/term-set" "^0.5.0"
     "@rdfjs/types" "*"
+    "@tpluscode/rdf-ns-builders" "^1.0.0"
+    clownface "^1"
+    once "^1.4.0"
+
+"@tpluscode/rdfine@^0.5.35":
+  version "0.5.36"
+  resolved "https://registry.yarnpkg.com/@tpluscode/rdfine/-/rdfine-0.5.36.tgz#3e469b958cd239935a3034cfd791f3510b22be9f"
+  integrity sha512-K5ARDRDAwbCg3bwKpOyqDH31vpHdHB48ePFOSOQf1a0eoeta/pw39xtpeq0vrdu8y/s5FJr9lI/s0XzfHaxsvQ==
+  dependencies:
+    "@rdf-esm/data-model" "^0.5.3"
+    "@rdf-esm/namespace" "^0.5.2"
+    "@rdf-esm/term-map" "^0.5.0"
+    "@rdf-esm/term-set" "^0.5.0"
     "@tpluscode/rdf-ns-builders" "^1.0.0"
     clownface "^1"
     once "^1.4.0"

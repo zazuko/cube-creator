@@ -4,7 +4,7 @@ import { ResponseWrapper } from 'alcaeus/ResponseWrapper'
 import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import { hydra, sh } from '@tpluscode/rdf-ns-builders'
 import { ShapeBundle } from '@rdfine/shacl/bundles'
-import type { Shape } from '@rdfine/shacl'
+import { Shape, ValidationReportMixin, ValidationResultMixin } from '@rdfine/shacl'
 import { ThingMixin } from '@rdfine/schema'
 import { Store } from 'vuex'
 import store from '@/store'
@@ -39,6 +39,8 @@ Hydra.resources.factory.addMixin(JobCollectionMixin)
 Hydra.resources.factory.addMixin(OperationMixin)
 Hydra.resources.factory.addMixin(...ShapeBundle)
 Hydra.resources.factory.addMixin(ThingMixin)
+Hydra.resources.factory.addMixin(ValidationReportMixin)
+Hydra.resources.factory.addMixin(ValidationResultMixin)
 
 // Inject the access token in all requests if present
 Hydra.defaultHeaders = ({ uri }) => prepareHeaders(uri, store)

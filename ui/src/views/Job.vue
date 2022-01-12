@@ -48,9 +48,12 @@
         <b-icon icon="book" />
         <span>View full log</span>
       </a>
-      <pre v-if="error" class="has-background-danger-light">
-        {{ error.description }}
+      <pre v-if="job.error && job.error.description" class="has-background-danger-light">
+        {{ job.error.description }}
       </pre>
+      <b-message v-if="job.error && job.error.validationReport" type="is-danger" title="Validation error" :closable="false">
+        <validation-report-display :report="job.error.validationReport" />
+      </b-message>
     </div>
   </div>
   <loading-block v-else />
@@ -58,17 +61,18 @@
 
 <script lang="ts">
 import { Job } from '@cube-creator/model'
-import type { CreativeWork, Thing } from '@rdfine/schema'
+import type { CreativeWork } from '@rdfine/schema'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { Component, Vue } from 'vue-property-decorator'
 import VueMarkdown from 'vue-markdown/src/VueMarkdown'
 import ExternalTerm from '@/components/ExternalTerm.vue'
 import JobStatus from '../components/JobStatus.vue'
 import LoadingBlock from '../components/LoadingBlock.vue'
+import ValidationReportDisplay from '../components/ValidationReportDisplay.vue'
 import * as storeNs from '../store/namespace'
 
 @Component({
-  components: { ExternalTerm, JobStatus, LoadingBlock, VueMarkdown },
+  components: { ExternalTerm, JobStatus, LoadingBlock, ValidationReportDisplay, VueMarkdown },
 })
 export default class JobView extends Vue {
   @storeNs.app.State('language') language!: string[]
@@ -85,10 +89,6 @@ export default class JobView extends Vue {
 
   get link (): string | undefined {
     return this.job?.link?.id.value
-  }
-
-  get error (): Thing | undefined {
-    return this.job?.error
   }
 }
 </script>

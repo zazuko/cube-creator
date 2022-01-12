@@ -9,6 +9,7 @@
     "@rdfine/hydra": "^0.8.0",
     "@rdfine/rdfs": "^0.6.3",
     "@rdfine/schema": "^0.6.3",
+    "@rdfine/shacl": "^0.8.5",
     "@tpluscode/rdf-ns-builders": "^1.0.0",
     "@tpluscode/rdfine": "^0.5.19",
     "is-uri": "^1.2.0",
