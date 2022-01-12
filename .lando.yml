@@ -64,7 +64,7 @@ services:
         - ./minio:/data/
   pipeline:
     type: node:custom
-    command: npx nodemon -w packages --verbose --ext ts,ttl,js,trig --ignore **/*.spec.ts --ignore **/*.spec-graphs.ts --exec node --inspect=0.0.0.0:45681 -r ts-node/register --inspect cli/server.ts
+    command: npx nodemon -w packages -w cli --verbose --ext ts,ttl,js,trig --ignore **/*.spec.ts --ignore **/*.spec-graphs.ts --exec node --inspect=0.0.0.0:45681 -r ts-node/register --inspect cli/server.ts
     port: 80
     overrides:
       image: node:14
