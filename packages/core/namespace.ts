@@ -76,7 +76,8 @@ type CubeCreatorProperty =
   'CubeProject/sourceEndpoint' |
   'CubeProject/sourceGraph' |
   'export' |
-  'projectDetails'
+  'projectDetails' |
+  'validationReport'
 
 type OtherTerms =
   'dash' |

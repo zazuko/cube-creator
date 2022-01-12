@@ -7,6 +7,11 @@ import type { Logger } from 'winston'
 import type { Context, VariableMap } from 'barnard59-core'
 import $rdf from 'rdf-ext'
 import { logger } from './log'
+import { cc } from '@cube-creator/core/namespace'
+import TermMap from '@rdfjs/term-map'
+import { GraphPointer } from 'clownface'
+import { Term } from 'rdf-js'
+import type ValidationReport from 'rdf-validate-shacl/src/validation-report'
 
 interface Params {
   jobUri: string
@@ -82,6 +87,12 @@ export async function updateJobStatus({ jobUri, executionUrl, lastTransformed, s
         description,
         disambiguatingDescription,
       } as any
+
+      const validationReport = error?.report as ValidationReport | undefined
+      if (validationReport && job.error) {
+        const mergedReport = mergeDatasetIn(job.error.pointer, validationReport.pointer)
+        job.error?.pointer.addOut(cc.validationReport, mergedReport.term)
+      }
     }
 
     logger.info(`Updating job status to ${status.value}`)
@@ -91,6 +102,31 @@ export async function updateJobStatus({ jobUri, executionUrl, lastTransformed, s
   } catch (e) {
     logger.error(`Failed to update job status: ${e.message}`)
   }
+}
+
+function mergeDatasetIn(target: GraphPointer, toMerge: GraphPointer): GraphPointer {
+  const blanks = new TermMap()
+
+  const rewriteBlank = (term: Term): any => {
+    if (term.termType === 'BlankNode') {
+      if (!blanks.has(term)) {
+        blanks.set(term, target.blankNode().term)
+      }
+
+      return blanks.get(term)
+    } else {
+      return term
+    }
+  }
+
+  const targetGraph = [...target.dataset.match(target.term)][0].graph
+  for (const { subject, predicate, object } of toMerge.dataset) {
+    const quad = $rdf.quad(rewriteBlank(subject), predicate, rewriteBlank(object), targetGraph)
+    target.dataset.add(quad)
+  }
+
+  const newReportTerm = blanks.get(toMerge.term)
+  return target.node(newReportTerm)
 }
 
 async function loadTables(job: TransformJob, log: Logger): Promise<Table[]> {
