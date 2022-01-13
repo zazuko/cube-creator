@@ -6,7 +6,6 @@ on:
       - "**"
     tags:
       - "cube-creator-app/v*.*.*"
-  pull_request:
 
 jobs:
   build:
