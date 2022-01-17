@@ -29,6 +29,7 @@ WORKDIR /app
 
 ADD package.json yarn.lock ./
 ADD ./cli/package.json ./cli/
+ADD ./cli/shapes.ttl ./cli/
 ADD ./cli/lib/toCubeShape ./cli/lib/toCubeShape/
 ADD ./cli/pipelines ./cli/pipelines/
 ADD ./packages/core/package.json ./packages/core/
