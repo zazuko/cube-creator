@@ -1,11 +1,10 @@
-import fetch from 'node-fetch'
-import { createReadStream } from 'fs'
+import { spawnSync } from 'child_process'
 import type { VariableMap } from 'barnard59-core'
 import { tracer } from '../otel/tracer'
 import { logger } from '../log'
 
 export function uploadCube(variables: VariableMap) {
-  return tracer.startActiveSpan('cube upload', async span => {
+  return tracer.startActiveSpan('cube upload', span => {
     try {
       const endpoint = variables.get('publish-graph-store-endpoint')
       const cubeFile = variables.get('targetFile')
@@ -13,14 +12,19 @@ export function uploadCube(variables: VariableMap) {
       const password = variables.get('publish-graph-store-password')
 
       logger.info('Uploading cube to database')
-      await fetch(endpoint, {
-        method: 'POST',
-        body: createReadStream(cubeFile),
-        headers: {
-          'content-type': 'application/n-quads',
-          Authorization: 'Basic ' + Buffer.from(`${username}:${password}`).toString('base64'),
-        },
-      })
+      const exit = spawnSync('curl', [
+        endpoint,
+        '-X', 'POST',
+        '-u', `${username}:${password}`,
+        '-T',
+        cubeFile,
+        '-H', 'content-type:application/n-quads',
+      ],
+      { stdio: [process.stdin, process.stdout, process.stderr] })
+
+      if (exit.status) {
+        throw new Error('Upload failed')
+      }
     } finally {
       span.end()
     }
