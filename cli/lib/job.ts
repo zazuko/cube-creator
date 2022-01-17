@@ -88,7 +88,7 @@ export async function updateJobStatus({ jobUri, executionUrl, lastTransformed, s
         disambiguatingDescription,
       } as any
 
-      const validationReport = error?.report as ValidationReport | undefined
+      const validationReport = (error as any)?.report as ValidationReport | undefined
       if (validationReport && job.error) {
         const mergedReport = mergeDatasetIn(job.error.pointer, validationReport.pointer)
         job.error?.pointer.addOut(cc.validationReport, mergedReport.term)
