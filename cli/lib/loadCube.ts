@@ -1,12 +1,10 @@
 import type * as Pipeline from 'barnard59-core/lib/Pipeline'
 import { Stream, PassThrough } from 'stream'
-import { CONSTRUCT, SELECT, sparql } from '@tpluscode/sparql-builder'
+import { CONSTRUCT, sparql } from '@tpluscode/sparql-builder'
 import StreamClient from 'sparql-http-client/StreamClient'
-import ParsingClient from 'sparql-http-client/ParsingClient'
 import { csvw } from '@tpluscode/rdf-ns-builders'
 import { cube } from '@cube-creator/core/namespace'
 import { loadProject } from './project'
-import { fromRdf } from 'rdf-literal'
 
 interface Params {
   jobUri: string
@@ -24,13 +22,11 @@ const LIMIT = parseInt(process.env.CUBE_QUERY_LIMIT || '0', 10) || 1000000
 export async function loadCube(this: Pipeline.Context, { jobUri, endpoint, user, password }: Params): Promise<Stream> {
   const project = await loadProject(jobUri, this)
 
-  const clientConfig = {
+  const client = new StreamClient({
     endpointUrl: endpoint,
     user,
     password,
-  }
-  const client = new StreamClient(clientConfig)
-  const parsingClient = new ParsingClient(clientConfig)
+  })
 
   const patterns = sparql`
     ?s ?p ?o .
@@ -38,39 +34,32 @@ export async function loadCube(this: Pipeline.Context, { jobUri, endpoint, user,
 
     filter (?p != ${csvw.describes})`
 
-  const [{ count }] = await SELECT`(COUNT(*) as ?count)`
-    .FROM(project.cubeGraph)
-    .WHERE`${patterns}`
-    .execute(parsingClient.query) as any
-
-  const total = fromRdf(count)
-  const queries: ReturnType<typeof CONSTRUCT>[] = []
   let offset = 0
-  while (offset < total) {
-    queries.push(await CONSTRUCT`?s ?p ?o`
-      .FROM(project.cubeGraph)
-      .WHERE`${patterns}`
-      .LIMIT(LIMIT)
-      .OFFSET(offset))
-
-    offset += LIMIT
-  }
 
   const combined = new PassThrough({
     objectMode: true,
   })
   const next = async () => {
-    const current = await queries.shift()?.execute(client.query)
-    if (current) {
-      this.logger.info('Fetching next cube chunk')
-      current.pipe(combined, {
-        end: false,
-      })
-      current.on('error', e => combined.destroy(e))
-      current.on('end', next)
-    } else {
-      combined.end()
-    }
+    const query = CONSTRUCT`?s ?p ?o`
+      .FROM(project.cubeGraph)
+      .WHERE`${patterns}`
+      .LIMIT(LIMIT)
+      .OFFSET(offset)
+    offset += LIMIT
+
+    let received = false
+    const current = await query.execute(client.query)
+    this.logger.info(`Fetching next cube chunk (OFFSET=${offset})`)
+    current.pipe(combined, {
+      end: false,
+    })
+    current.once('data', () => {
+      received = true
+    })
+    current.on('error', e => combined.destroy(e))
+    current.on('end', () => {
+      received ? next() : combined.end()
+    })
   }
 
   next()
