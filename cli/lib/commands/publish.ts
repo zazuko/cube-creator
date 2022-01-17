@@ -29,7 +29,7 @@ export default runner.create<PublishRunOptions>({
 
     const { job, namespace, cubeIdentifier } = await getJob(jobUri, Hydra)
 
-    if (options.to === 'filesystem') {
+    if (options.to === 'filesystem' && !variable.has('targetFile')) {
       variable.set('targetFile', tempy.file())
     }
 
