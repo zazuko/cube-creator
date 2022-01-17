@@ -49,7 +49,7 @@ export const local = trigger(job => {
 export const gitlab = trigger(job => {
   const form = new URLSearchParams({
     token: env.PIPELINE_TOKEN,
-    ref: env.maybe.GITLAB_RUNNER_BRANCH || 'master',
+    ref: 'master',
     'variables[ENV]': env.PIPELINE_ENV,
   })
 
