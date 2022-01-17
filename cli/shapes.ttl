@@ -2,20 +2,138 @@ PREFIX schema: <http://schema.org/>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX cube: <https://cube.link/>
 PREFIX sh: <http://www.w3.org/ns/shacl#>
+PREFIX qudt: <http://qudt.org/schema/qudt/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
 
-<>
+<CubeShape>
   a sh:NodeShape ;
   sh:targetClass cube:Cube ;
-  sh:property
-    [
-      sh:path [ sh:inversePath schema:hasPart ] ;
-      sh:node
-        [
-          sh:property
-            [
-              sh:path rdf:type ;
-              sh:hasValue schema:CreativeWork ;
-            ]
-        ]
+  sh:property [
+    sh:path [ sh:inversePath schema:hasPart ] ;
+    sh:node [
+      sh:property [
+        sh:path rdf:type ;
+        sh:hasValue schema:CreativeWork ;
+      ] ;
     ] ;
+  ] , [
+    sh:path cube:observationSet ;
+    sh:minCount 1 ;
+    sh:message "cube:Cube needs at least one cube:ObservationSet" ;
+  ] , [
+    sh:path cube:observationConstraint ;
+    sh:node <ObservationConstraintShape> ;
+    sh:message "cube:Cube must point to a valid cube:Constraint" ;
+  ] ;
+.
+
+<DataSetShape>
+  a sh:NodeShape ;
+  sh:targetClass schema:Dataset ;
+  sh:property [
+    sh:path schema:name ;
+    sh:minCount 1 ;
+    sh:datatype rdf:langString ;
+    sh:message "schema:Dataset needs a schema:name" ;
+  ] , [
+    sh:path schema:description ;
+    sh:minCount 1 ;
+    sh:datatype rdf:langString ;
+    sh:message "schema:Dataset needs a schema:description" ;
+    sh:severity sh:Warning ;
+  ] , [
+    sh:path dcterms:identifier ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "schema:Dataset needs a schema:identifier" ;
+  ] ;
+.
+
+<ObservationConstraintShape>
+  a sh:NodeShape ;
+  sh:property [
+    # we assume at least 3 dimensions, otherwise we would have an empty list of dimensions
+    # one for cube:observedBy, one for rdf:type and at least one cube dimension
+    sh:path sh:property ;
+    sh:minCount 3 ;
+    sh:message "cube:Constraint needs at least {$minCount} sh:properties" ;
+  ] , [
+    sh:path sh:property ;
+    sh:node <ObservationConstraintProperty> ;
+  ] , [
+    sh:path sh:closed ;
+    sh:hasValue true ;
+  ] ;
+.
+
+<ObservationConstraintProperty> a sh:NodeShape;
+  sh:property [
+    sh:path qudt:scaleType ;
+    sh:in ( qudt:IntervalScale qudt:NominalScale qudt:EnumerationScale qudt:RatioScale qudt:OrdinalScale) ;
+    sh:message "If qudt:scale is used it needs to be within" ;
+  ] , [
+    sh:path sh:path ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:message "a sh:path is needed on a property" ;
+  ] , [
+    sh:path sh:minInclusive ;
+    sh:datatype xsd:integer ;
+    sh:message "sh:minInclusive needs to be an integer" ;
+  ] , [
+    sh:path sh:in ;
+    sh:node <listnode> ;
+    sh:message "sh:in needs to be a list" ;
+  ] , [
+    sh:path sh:maxInclusive ;
+    sh:datatype xsd:integer ;
+    sh:message "sh:maxInclusive needs to be an integer" ;
+  ] ;
+  sh:or (
+    [
+      sh:path schema:name ;
+      sh:minCount 1 ;
+      sh:datatype xsd:string ;
+      sh:message "needs a schema:name" ;
+    ]
+    [
+      sh:path schema:name ;
+      sh:minCount 1 ;
+      sh:datatype rdf:langString ;
+      sh:message "needs a schema:name" ;
+    ]
+    [
+      sh:path sh:path ;
+      sh:in (rdf:type cube:observedBy) ;
+    ]
+  ) ;
+  sh:or (
+    [
+      sh:path sh:datatype ;
+      sh:minCount 1 ;
+      sh:message "needs a sh:datatype or sh:nodeKind" ;
+    ]
+    [
+      sh:path sh:nodeKind ;
+      sh:minCount 1 ;
+      sh:message "needs a sh:datatype or sh:nodeKind" ;
+    ]
+  ) ;
+.
+
+# Testing proper rdf:list construction
+<listnode> a sh:NodeShape ;
+  sh:property [
+    sh:path rdf:first ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] , [
+    sh:path rdf:rest ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:message "a rdf:List can only have one rdf:rest node, multiples nodes need to be linked" ;
+    #sh:node <restnode>;
+  ] ;
 .
