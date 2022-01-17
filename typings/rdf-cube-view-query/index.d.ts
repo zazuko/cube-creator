@@ -23,6 +23,7 @@ declare module 'rdf-cube-view-query/lib/query/ViewQuery' {
       view: GraphPointer
       build(): void
       query: any
+      countQuery: any
     }
   }
 
@@ -49,7 +50,10 @@ declare module 'rdf-cube-view-query/lib/View' {
       dimensions: Dimension[]
       dimension(arg: { cubeDimension: string | Term | GraphPointer | undefined }): Dimension | null
       observations(): Promise<Observation[]>
+      observationCount(): Promise<number>
       observationsQuery(): ViewQuery
+      limit(limit: number): View
+      offset(offset: number): View
     }
   }
 
