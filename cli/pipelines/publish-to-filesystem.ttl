@@ -3,10 +3,7 @@
 @prefix code: <https://code.described.at/> .
 
 <#StreamOutput>
-  :steps     [ :stepList ( _:serialize _:save ) ] ;
-  :variables [ :variable [ a      :Variable ;
-                           :name  "targetFile" ;
-                           :value "./output/cube.nq" ] ] .
+  :steps     [ :stepList ( _:serialize _:save ) ] .
 
 _:serialize
   a                  :Step ;
