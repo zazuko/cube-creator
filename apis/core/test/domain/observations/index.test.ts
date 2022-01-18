@@ -35,6 +35,9 @@ describe('lib/domain/observations', () => {
       async observations() {
         return observations
       },
+      async observationCount() {
+        return observations.length
+      },
     } as any)
   })
 
