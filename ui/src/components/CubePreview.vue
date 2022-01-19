@@ -134,6 +134,7 @@ import { Collection } from 'alcaeus'
 import { hydra, qudt } from '@tpluscode/rdf-ns-builders'
 import * as Schema from '@rdfine/schema'
 import * as $rdf from '@rdf-esm/dataset'
+import { debounce } from 'debounce'
 import type { Cube, Dataset, DimensionMetadata, DimensionMetadataCollection } from '@cube-creator/model'
 import { supportedLanguages } from '@cube-creator/core/languages'
 import { api } from '@/api'
@@ -143,6 +144,8 @@ import TermWithLanguage from './TermWithLanguage.vue'
 import LoadingBlock from './LoadingBlock.vue'
 import CubePreviewDimension from './CubePreviewDimension.vue'
 import CubePreviewValue from './CubePreviewValue.vue'
+
+const debounceRefreshDelay = 500
 
 @Component({
   components: {
@@ -165,6 +168,11 @@ export default class extends Vue {
   pageSizes = [10, 20, 50, 100]
   observations: RemoteData<unknown[]> = Remote.loading()
   totalItems: number | null = null
+  debouncedFetchCubeData!: () => Promise<void>
+
+  created (): void {
+    this.debouncedFetchCubeData = debounce(this.fetchCubeData.bind(this), debounceRefreshDelay)
+  }
 
   get cube (): Cube | null {
     return this.cubeMetadata.hasPart[0] ?? null
@@ -227,6 +235,10 @@ export default class extends Vue {
 
   @Watch('pageSize')
   @Watch('page')
+  onPageChange (): void {
+    this.debouncedFetchCubeData()
+  }
+
   async fetchCubeData (): Promise<void> {
     this.observations = Remote.loading()
 
