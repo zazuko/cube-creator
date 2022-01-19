@@ -66,6 +66,10 @@ const getters: GetterTree<ProjectState, RootState> = {
     return !!state.project?.csvMapping
   },
 
+  materializeLabel (state, getters) {
+    return getters.hasCSVMapping ? 'transformation' : 'import'
+  },
+
   sources (state, getters) {
     return Object.values(state.sources)
       .map(source => {

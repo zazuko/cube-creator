@@ -21,7 +21,7 @@
         </router-link>
         <router-link :to="{ name: 'Materialize' }" v-slot="{ href, isActive, navigate }" custom>
           <li :class="{ 'is-active': isActive }">
-            <a :href="href" @click="navigate">2. {{ materializeLabel }}</a>
+            <a :href="href" @click="navigate" class="is-capitalized">2. {{ materializeLabel }}</a>
           </li>
         </router-link>
         <router-link :to="{ name: 'CubeDesigner' }" v-slot="{ href, isActive, navigate }" custom>
@@ -59,6 +59,7 @@ import * as storeNs from '../store/namespace'
 export default class CubeProjectView extends Vue {
   @storeNs.project.State('project') project!: Project | null;
   @storeNs.project.Getter('hasCSVMapping') hasCSVMapping!: boolean;
+  @storeNs.project.Getter('materializeLabel') materializeLabel!: string;
   @storeNs.project.State('jobCollection') jobCollection!: JobCollection | null;
   @storeNs.project.Getter('transformJobs') transformJobs!: Job[];
 
@@ -98,12 +99,6 @@ export default class CubeProjectView extends Vue {
     if (this.poller) {
       clearInterval(this.poller)
     }
-  }
-
-  get materializeLabel (): string {
-    return this.hasCSVMapping
-      ? 'Transformation'
-      : 'Import'
   }
 }
 </script>
