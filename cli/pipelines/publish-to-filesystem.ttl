@@ -1,0 +1,17 @@
+@base <urn:pipeline:cube-creator> .
+@prefix :     <https://pipeline.described.at/> .
+@prefix code: <https://code.described.at/> .
+
+<#StreamOutput>
+  :steps     [ :stepList ( _:serialize _:save ) ] .
+
+_:serialize
+  a                  :Step ;
+  code:implementedBy [ code:link <node:barnard59-formats/ntriples.js#serialize> ;
+                       a         code:EcmaScriptModule ] .
+
+_:save
+  a                  :Step ;
+  code:implementedBy [ code:link <node:fs#createWriteStream> ;
+                       a         code:EcmaScript ] ;
+  code:arguments     ( "targetFile"^^:VariableName ) .

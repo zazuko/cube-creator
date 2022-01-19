@@ -36,6 +36,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
   async function runJob() {
     // when
     await runner({
+      to: 'graph-store',
       debug: true,
       job: job.value,
       executionUrl,

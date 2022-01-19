@@ -6,7 +6,7 @@
   "scripts": {
     "postinstall": "mkdir -p output; touch .env",
     "transform": "dotenv -e ./.env -e ./.test.env -e ../.local.env -- sh -c 'ts-node index.ts transform --job \"$TRANSFORM_JOB\" --debug --to filesystem'",
-    "publish": "dotenv -e ./.env -e ./.test.env -e ../.local.env -- sh -c 'ts-node index.ts publish --job \"$PUBLISH_JOB\" --debug'",
+    "publish": "dotenv -e ./.env -e ./.test.env -e ../.local.env -- sh -c 'ts-node index.ts publish --job \"$PUBLISH_JOB\" --debug --to filesystem --variable targetFile=./output/cube.nq'",
     "expire-timedout": "dotenv -e ./.env -e ./.test.env -- sh -c 'ts-node index.ts timeout-jobs'",
     "build": "tsc"
   },
@@ -70,6 +70,7 @@
     "readable-stream": "^3.6.0",
     "sparql-http-client": "^2.4.0",
     "string-to-stream": "^3.0.1",
+    "tempy": "^1",
     "through2": "^4.0.2",
     "through2-reduce": "1.1.1",
     "winston": "^3.3.3"
@@ -77,7 +78,6 @@
   "devDependencies": {
     "@cube-creator/testing": "^0.1.19",
     "@tpluscode/rdf-ns-builders": "^1.0.0",
-    "@tpluscode/rdf-string": "^0.2.21",
     "@tpluscode/sparql-builder": "^0.3.15",
     "@types/barnard59": "^1.0.1",
     "@types/barnard59-base": "^1.0.1",

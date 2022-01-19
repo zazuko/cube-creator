@@ -1,4 +1,5 @@
 import path from 'path'
+import tempy from 'tempy'
 import { HydraClient } from 'alcaeus/alcaeus'
 import { CsvProject, Dataset, ImportProject, PublishJob } from '@cube-creator/model'
 import '../variables'
@@ -6,8 +7,10 @@ import { isCsvProject } from '@cube-creator/model/Project'
 import $rdf from 'rdf-ext'
 import * as runner from './runner'
 import { logger } from '../log'
+import { uploadCube } from '../publish/upload'
 
 interface PublishRunOptions extends runner.RunOptions {
+  to: 'filesystem' | 'graph-store'
   publishStore?: {
     endpoint: string
     user: string
@@ -16,14 +19,19 @@ interface PublishRunOptions extends runner.RunOptions {
 }
 
 export default runner.create<PublishRunOptions>({
-  pipelineSources() {
-    return ['publish']
+  pipelineSources(command) {
+    const { to } = command
+    return ['publish', `publish-to-${to}`]
   },
   async prepare(options, variable) {
     const { publishStore, job: jobUri } = options
     const Hydra = variable.get('apiClient')
 
     const { job, namespace, cubeIdentifier } = await getJob(jobUri, Hydra)
+
+    if (options.to === 'filesystem' && !variable.has('targetFile')) {
+      variable.set('targetFile', tempy.file())
+    }
 
     variable.set('publish-job', job)
     variable.set('publish-graph-store-endpoint', publishStore?.endpoint || process.env.PUBLISH_GRAPH_STORE_ENDPOINT)
@@ -45,6 +53,11 @@ export default runner.create<PublishRunOptions>({
     variable.set('namespace', namespace)
     variable.set('cubeIdentifier', cubeIdentifier)
     logger.info(`Publishing cube <${cubeIdentifier}>`)
+  },
+  async after(options, variables) {
+    if (options.to === 'filesystem') {
+      await uploadCube(variables)
+    }
   },
 })
 

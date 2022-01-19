@@ -47,6 +47,7 @@ async function main() {
   program
     .command('publish')
     .description('Publish cube to store')
+    .requiredOption('--to <targetName>', "(required) Target to write triples (built-in: 'filesystem', 'graph-store')")
     .requiredOption('--job <job>', '(required) URL of a Cube Creator publish job')
     .option('--execution-url <executionUrl>', 'Link to job execution')
     .option('-v, --variable <name=value>', 'Pipeline variables', parseVariables, new Map())

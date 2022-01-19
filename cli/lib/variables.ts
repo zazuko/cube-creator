@@ -19,6 +19,7 @@ declare module 'barnard59-core' {
     'publish-job': PublishJob
     'unlist-job': UnlistJob
     'target-graph': string
+    targetFile: string
     revision: number
     namespace: string
     cubeIdentifier: string

@@ -48,7 +48,7 @@ async function main() {
     }
 
     if (publishJob) {
-      command.publish({ job: publishJob, debug: true }).catch((e) => log(e))
+      command.publish({ to: 'graph-store', job: publishJob, debug: true }).catch((e) => log(e))
     }
 
     if (unlistJob) {
