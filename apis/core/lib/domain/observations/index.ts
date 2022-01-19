@@ -53,12 +53,13 @@ export async function getObservations({
   }
 
   const observations = await view.observations()
+  const totalItems = await view.observationCount()
 
   const collection = createHydraCollection({
     observations,
     templateParams,
     template,
-    totalItems: 0, // TODO: query for the total number of observations
+    totalItems,
     pageSize,
   })
 
