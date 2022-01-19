@@ -7,4 +7,5 @@ export const Metadata = dataset([
   quad(ns.editor.DictionaryTableEditor, rdf.type, dash.MultiEditor),
   quad(ns.editor.FileUpload, rdf.type, dash.MultiEditor),
   quad(ns.editor.TagsWithLanguageEditor, rdf.type, dash.MultiEditor),
+  quad(ns.editor.CheckboxListEditor, rdf.type, dash.MultiEditor),
 ])

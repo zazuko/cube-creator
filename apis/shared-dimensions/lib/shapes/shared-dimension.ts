@@ -274,7 +274,7 @@ const properties: Initializer<PropertyShape>[] = [{
         }), resource(iso6391.en, {
           label: 'English',
         })],
-        minCount: 1,
+        [dash.editor.value]: editor.CheckboxListEditor,
         order: 30,
       }],
     })],
