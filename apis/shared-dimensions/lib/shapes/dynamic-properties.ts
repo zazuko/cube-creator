@@ -68,7 +68,7 @@ const dynamicPropertiesFromStore: DynamicPropertiesQuery = async function (targe
       optional {
         ?property ${schema.multipleValues} ?multipleValues .
       }
-      BIND (IF(!BOUND(?multipleValues), 1, ?UNDEF) as ?maxCount)
+      BIND (IF(!BOUND(?multipleValues) || ?multipleValues = false, 1, ?UNDEF) as ?maxCount)
     `
     .execute(parsingClient.query)
 }
