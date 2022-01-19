@@ -27,7 +27,7 @@
         </h3>
       </div>
       <div v-if="jobs.length > 0" class="panel container-narrow">
-        <job-item v-for="job in jobs" :key="job.clientPath" :job="job" class="panel-block">
+        <job-item v-for="job in jobs" :key="job.clientPath" :job="job" detail-view="PublicationJob" class="panel-block">
           <div class="is-flex-grow-1 is-flex gap-1">
             <b-tag v-if="job.revision">
               Version {{ job.revision }}
