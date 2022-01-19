@@ -70,10 +70,10 @@ export default class CubeProjectsView extends Vue {
   get projects (): Project[] {
     const projects = this.projectsCollection?.member ?? []
 
-    if (this.$route.query.creator === 'me') {
-      return projects.filter(({ creator }) => creator.name === this.user.name)
-    } else {
+    if (this.$route.query.creator === 'all' || !this.user) {
       return projects
+    } else {
+      return projects.filter(({ creator }) => creator.name === this.user.name)
     }
   }
 }
