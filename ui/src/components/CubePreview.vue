@@ -64,7 +64,7 @@
             </b-message>
           </td>
         </tr>
-        <tr v-else-if="observations.data.length === 0">
+        <tr v-else-if="observations.data && observations.data.length === 0">
           <td :colspan="tableWidth">
             <p class="has-text-grey has-text-centered">
               No observations available. Did you already run a transformation?
@@ -84,34 +84,41 @@
       <tfoot>
         <tr>
           <td :colspan="tableWidth" class="has-background-light">
-            <div class="is-flex gap-4">
+            <div class="is-flex is-justify-content-space-between gap-4">
               <div class="is-flex is-align-items-center gap-1">
-                <span class="pr-1">Page {{ page }}</span>
                 <b-tooltip label="Previous page">
                   <b-button
                     icon-left="chevron-left"
                     @click="page = page - 1"
-                    :disabled="!observations.data || page === 1"
+                    :disabled="!hasPreviousPage"
                   />
                 </b-tooltip>
                 <b-tooltip label="Next page">
                   <b-button
                     icon-left="chevron-right"
                     @click="page = page + 1"
-                    :disabled="!observations.data || observations.data.length === 0"
+                    :disabled="!hasNextPage"
                   />
                 </b-tooltip>
+                <span class="ml-4">Page</span>
+                <b-input v-model.number="page" type="number" class="is-inline-block w-20" />
+                <span class="">of {{ totalPages }}</span>
+                <span class="ml-4">
+                  ({{ totalItems }} observations)
+                </span>
               </div>
-              <b-tooltip label="Page size">
-                <b-select v-model="pageSize" title="Page size">
-                  <option v-for="pageSizeOption in pageSizes" :key="pageSizeOption" :native-value="pageSizeOption">
-                    {{ pageSizeOption }}
-                  </option>
-                </b-select>
-              </b-tooltip>
-              <b-tooltip label="Refresh data">
-                <b-button icon-left="sync" @click="refreshData" />
-              </b-tooltip>
+              <div class="is-flex gap-2">
+                <b-tooltip label="Page size">
+                  <b-select v-model="pageSize" title="Page size">
+                    <option v-for="pageSizeOption in pageSizes" :key="pageSizeOption" :native-value="pageSizeOption">
+                      {{ pageSizeOption }}
+                    </option>
+                  </b-select>
+                </b-tooltip>
+                <b-tooltip label="Refresh data">
+                  <b-button icon-left="sync" @click="refreshData" />
+                </b-tooltip>
+              </div>
             </div>
           </td>
         </tr>
@@ -127,6 +134,7 @@ import { Collection } from 'alcaeus'
 import { hydra, qudt } from '@tpluscode/rdf-ns-builders'
 import * as Schema from '@rdfine/schema'
 import * as $rdf from '@rdf-esm/dataset'
+import { debounce } from 'debounce'
 import type { Cube, Dataset, DimensionMetadata, DimensionMetadataCollection } from '@cube-creator/model'
 import { supportedLanguages } from '@cube-creator/core/languages'
 import { api } from '@/api'
@@ -136,6 +144,8 @@ import TermWithLanguage from './TermWithLanguage.vue'
 import LoadingBlock from './LoadingBlock.vue'
 import CubePreviewDimension from './CubePreviewDimension.vue'
 import CubePreviewValue from './CubePreviewValue.vue'
+
+const debounceRefreshDelay = 500
 
 @Component({
   components: {
@@ -157,6 +167,12 @@ export default class extends Vue {
   page = 1
   pageSizes = [10, 20, 50, 100]
   observations: RemoteData<unknown[]> = Remote.loading()
+  totalItems: number | null = null
+  debouncedFetchCubeData!: () => Promise<void>
+
+  created (): void {
+    this.debouncedFetchCubeData = debounce(this.fetchCubeData.bind(this), debounceRefreshDelay)
+  }
 
   get cube (): Cube | null {
     return this.cubeMetadata.hasPart[0] ?? null
@@ -190,6 +206,20 @@ export default class extends Vue {
     ]
   }
 
+  get totalPages (): number | null {
+    if (!this.totalItems) return null
+
+    return Math.ceil(this.totalItems / this.pageSize)
+  }
+
+  get hasPreviousPage (): boolean {
+    return this.page > 1
+  }
+
+  get hasNextPage (): boolean {
+    return this.page < (this.totalPages ?? 0)
+  }
+
   async refreshData (): Promise<void> {
     if (this.dimensions.length === 0) {
       this.$emit('refreshDimensions')
@@ -205,6 +235,10 @@ export default class extends Vue {
 
   @Watch('pageSize')
   @Watch('page')
+  onPageChange (): void {
+    this.debouncedFetchCubeData()
+  }
+
   async fetchCubeData (): Promise<void> {
     this.observations = Remote.loading()
 
@@ -217,6 +251,7 @@ export default class extends Vue {
       // Fake wait to make it clear that something is happening
       await sleep(200)
       this.observations = Remote.loaded([])
+      this.totalItems = 0
       return
     }
 
@@ -229,6 +264,7 @@ export default class extends Vue {
 
     try {
       const collection = await api.fetchResource<Collection>(uri)
+      this.totalItems = collection.totalItems ?? 0
       this.observations = Remote.loaded(collection.member)
     } catch (e) {
       this.observations = Remote.error(e.toString())

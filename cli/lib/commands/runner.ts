@@ -45,13 +45,18 @@ interface Create<TOptions> {
    * Set any additional pipeline variables here
    */
   prepare?(options: TOptions, variable: VariableMap): Promise<void> | void
+
+  /**
+   * Optional hook called after the pipeline has finished
+   */
+  after?(options: TOptions, variables: VariableMap): Promise<void> | void
 }
 
 async function fileToDataset(filename: string) {
   return $rdf.dataset().import(fromFile(filename))
 }
 
-export function create<TOptions extends RunOptions>({ pipelineSources, prepare }: Create<TOptions>) {
+export function create<TOptions extends RunOptions>({ pipelineSources, prepare, after }: Create<TOptions>) {
   const basePath = path.resolve(__dirname, '../../')
 
   return async function (command: TOptions) {
@@ -133,15 +138,18 @@ export function create<TOptions extends RunOptions>({ pipelineSources, prepare }
     process.once('unhandledRejection' as any, jobFailed)
 
     return run.finished
-      .then(() =>
-        updateJobStatus({
+      .then(async () => {
+        await after?.(command, variables)
+
+        await updateJobStatus({
           modified: timestamp,
           jobUri: run.pipeline.context.variables.get('jobUri'),
           executionUrl: run.pipeline.context.variables.get('executionUrl'),
           status: schema.CompletedActionStatus,
           apiClient,
           messages: run.pipeline.context.variables.get('messages'),
-        }))
+        })
+      })
       .catch(jobFailed)
   }
 }

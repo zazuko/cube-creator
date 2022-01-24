@@ -1,5 +1,5 @@
 <template>
-  <router-link class="is-flex gap-3" :to="{ name: 'Job', params: { jobId: job.clientPath } }" title="Details">
+  <router-link class="is-flex gap-3" :to="{ name: detailView, params: { jobId: job.clientPath } }" title="Details">
     <job-status :job="job" />
     <div class="is-flex-grow-1 is-flex is-align-items-center gap-4">
       <div>
@@ -22,5 +22,6 @@ import JobStatus from './JobStatus.vue'
 })
 export default class extends Vue {
   @Prop() job!: Job
+  @Prop({ default: 'Job' }) detailView!: string
 }
 </script>

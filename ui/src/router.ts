@@ -26,7 +26,9 @@ import DimensionEdit from '@/views/DimensionEdit.vue'
 import DimensionMapping from '@/views/DimensionMapping.vue'
 import ResourcePreview from '@/views/ResourcePreview.vue'
 import Materialize from '@/views/Materialize.vue'
+import MaterializeJobs from '@/views/MaterializeJobs.vue'
 import Publication from '@/views/Publication.vue'
+import PublicationJobs from '@/views/PublicationJobs.vue'
 import PageNotFound from '@/views/PageNotFound.vue'
 import Logout from '@/views/Logout.vue'
 import NotAuthorized from '@/views/NotAuthorized.vue'
@@ -121,6 +123,18 @@ const routes: Array<RouteConfig> = [
             component: Materialize,
           },
           {
+            path: 'materialize/jobs',
+            name: 'MaterializeJobs',
+            component: MaterializeJobs,
+            children: [
+              {
+                path: ':jobId',
+                name: 'MaterializeJob',
+                component: Job,
+              },
+            ],
+          },
+          {
             path: 'metadata',
             name: 'CubeDesigner',
             component: CubeDesigner,
@@ -153,9 +167,16 @@ const routes: Array<RouteConfig> = [
             component: Publication,
           },
           {
-            path: 'job/:jobId',
-            name: 'Job',
-            component: Job,
+            path: 'publication/jobs',
+            name: 'PublicationJobs',
+            component: PublicationJobs,
+            children: [
+              {
+                path: ':jobId',
+                name: 'PublicationJob',
+                component: Job,
+              },
+            ],
           },
         ],
       },

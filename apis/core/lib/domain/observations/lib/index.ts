@@ -40,16 +40,14 @@ export function populateFilters(view: View, filters: AnyPointer): void {
 
 export function createView(cube: Cube, pageSize: number, offset: number): View {
   const view = CubeQuery.View.fromCube(cube)
+    .offset(offset)
+    .limit(pageSize)
 
-  view.ptr.addOut(ns.view.projection, projection => {
-    const order = projection.blankNode()
-      .addOut(ns.view.dimension, view.dimensions[0].ptr)
-      .addOut(ns.view.direction, ns.view.Ascending)
+  const order = view.ptr.blankNode()
+    .addOut(ns.view.dimension, view.dimensions[0].ptr)
+    .addOut(ns.view.direction, ns.view.Ascending)
 
-    projection.addList(ns.view.orderBy, order)
-    projection.addOut(ns.view.limit, pageSize)
-    projection.addOut(ns.view.offset, offset)
-  })
+  view.ptr.out(ns.view.projection).addList(ns.view.orderBy, order)
 
   return view
 }

@@ -11,7 +11,13 @@
         </h3>
       </div>
       <div v-if="jobs.length > 0" class="panel container-narrow">
-        <job-item v-for="job in jobs" :key="job.clientPath" :job="job" class="panel-block" />
+        <job-item
+          v-for="job in jobs"
+          :key="job.clientPath"
+          :job="job"
+          detail-view="MaterializeJob"
+          class="panel-block"
+        />
       </div>
       <p v-else class="has-text-grey">
         No jobs yet
