@@ -36,12 +36,12 @@ PREFIX dcterms: <http://purl.org/dc/terms/>
     sh:minCount 1 ;
     sh:datatype rdf:langString ;
     sh:message "schema:Dataset needs a schema:name" ;
-  ] , [
-    sh:path schema:description ;
-    sh:minCount 1 ;
-    sh:datatype rdf:langString ;
-    sh:message "schema:Dataset needs a schema:description" ;
-    sh:severity sh:Warning ;
+  # ] , [
+  #   sh:path schema:description ;
+  #   sh:minCount 1 ;
+  #   sh:datatype rdf:langString ;
+  #   sh:message "schema:Dataset needs a schema:description" ;
+  #   sh:severity sh:Warning ;
   ] , [
     sh:path dcterms:identifier ;
     sh:minCount 1 ;
@@ -79,48 +79,40 @@ PREFIX dcterms: <http://purl.org/dc/terms/>
     sh:maxCount 1 ;
     sh:message "a sh:path is needed on a property" ;
   ] , [
-    sh:path sh:minInclusive ;
-    sh:datatype xsd:integer ;
-    sh:message "sh:minInclusive needs to be an integer" ;
-  ] , [
     sh:path sh:in ;
     sh:node <listnode> ;
     sh:message "sh:in needs to be a list" ;
   ] , [
-    sh:path sh:maxInclusive ;
-    sh:datatype xsd:integer ;
-    sh:message "sh:maxInclusive needs to be an integer" ;
+    sh:message "needs a schema:name" ;
+    sh:or (
+      [
+        sh:path schema:name ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+      ]
+      [
+        sh:path schema:name ;
+        sh:minCount 1 ;
+        sh:datatype rdf:langString ;
+      ]
+      [
+        sh:path sh:path ;
+        sh:in (rdf:type cube:observedBy) ;
+      ]
+    ) ;
+  ] , [
+    sh:message "needs a sh:datatype or sh:nodeKind" ;
+    sh:or (
+      [
+        sh:path sh:datatype ;
+        sh:minCount 1 ;
+      ]
+      [
+        sh:path sh:nodeKind ;
+        sh:minCount 1 ;
+      ]
+    ) ;
   ] ;
-  sh:or (
-    [
-      sh:path schema:name ;
-      sh:minCount 1 ;
-      sh:datatype xsd:string ;
-      sh:message "needs a schema:name" ;
-    ]
-    [
-      sh:path schema:name ;
-      sh:minCount 1 ;
-      sh:datatype rdf:langString ;
-      sh:message "needs a schema:name" ;
-    ]
-    [
-      sh:path sh:path ;
-      sh:in (rdf:type cube:observedBy) ;
-    ]
-  ) ;
-  sh:or (
-    [
-      sh:path sh:datatype ;
-      sh:minCount 1 ;
-      sh:message "needs a sh:datatype or sh:nodeKind" ;
-    ]
-    [
-      sh:path sh:nodeKind ;
-      sh:minCount 1 ;
-      sh:message "needs a sh:datatype or sh:nodeKind" ;
-    ]
-  ) ;
 .
 
 # Testing proper rdf:list construction
