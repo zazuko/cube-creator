@@ -52,8 +52,10 @@ export async function getObservations({
     populateFilters(view, filters)
   }
 
-  const observations = await view.observations()
-  const totalItems = await view.observationCount()
+  // Since we have no filters and are always querying all dimensions,
+  // we can always omit the `distinct`, which should make the query faster
+  const observations = await view.observations({ disableDistinct: true })
+  const totalItems = await view.observationCount({ disableDistinct: true })
 
   const collection = createHydraCollection({
     observations,
