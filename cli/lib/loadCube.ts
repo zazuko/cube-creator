@@ -7,6 +7,7 @@ import tempy from 'tempy'
 import { spawnSync } from 'child_process'
 import fromFile from 'rdf-utils-fs/fromFile'
 import { loadProject } from './project'
+import { tracer } from './otel/tracer'
 
 interface Params {
   jobUri: string
@@ -41,15 +42,18 @@ export async function loadCube(this: Pipeline.Context, { jobUri, endpoint, user,
 
     const params = new URLSearchParams({ query }).toString()
 
-    spawnSync('curl', [
-      endpoint,
-      '-X', 'POST',
-      '-u', `${user}:${password}`,
-      '--data', params,
-      '-H', 'Accept:text/turtle',
-      '-o', tempFile,
-    ],
-    { stdio: [process.stdin, process.stdout, process.stderr] })
+    tracer.startActiveSpan('download cube data', span => {
+      spawnSync('curl', [
+        endpoint,
+        '-X', 'POST',
+        '-u', `${user}:${password}`,
+        '--data', params,
+        '-H', 'Accept:text/turtle',
+        '-o', tempFile,
+      ],
+      { stdio: [process.stdin, process.stdout, process.stderr] })
+      span.end()
+    })
 
     this.logger.info('Reading cube data to temp file')
     const localQuads: any = fromFile(tempFile)
