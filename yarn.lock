@@ -2408,10 +2408,10 @@
   resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.2.21.tgz#9f35a5643129df132cf3b5c1ec64046ea1af0650"
   integrity sha512-yd+9qKmJxm496BOV9CMNaey8TWsikaZOwMRwPHQIjcOJM9oV+fi9ZMNw3JsVnbEEbo2gRTDnGEBv8pjyn67hNg==
 
-"@types/clownface@*", "@types/clownface@^1", "@types/clownface@^1.0.3":
-  version "1.2.5"
-  resolved "https://registry.yarnpkg.com/@types/clownface/-/clownface-1.2.5.tgz#5c1098ae8232b8018f14dde4259283c0e64cfca6"
-  integrity sha512-5IQHgyqWZz1Jv8cEb8sVC/Da2N+UTBJiQPLQiurOzOVbyxD95aB59o1MEGr9hJ9HLYFR8EAKiIeYP4vfAsaXtw==
+"@types/clownface@*", "@types/clownface@^1", "@types/clownface@^1.0.3", "@types/clownface@^1.2.6":
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/@types/clownface/-/clownface-1.2.6.tgz#506d88d7b5be1387b131fc19c83d1c5f899d3fdb"
+  integrity sha512-AAHs2y+BOjnUV8ffyo0be1JMYqfn2Li/pboBNVTF+Y8S69faw/+JTKATPFho6lgCMP3ZV3BMBWOoCyZ8C8TJaA==
   dependencies:
     rdf-js "^4.0.2"
 

@@ -1,7 +1,8 @@
-import { describe, beforeEach, it } from 'mocha'
+import { describe, before, beforeEach, it } from 'mocha'
 import sinon from 'sinon'
 import clownface, { GraphPointer } from 'clownface'
 import { namedNode } from '@cube-creator/testing/clownface'
+import { insertTestDimensions } from '@cube-creator/testing/lib/seedData'
 import { NamedNode, Quad } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import { hydra, qb, rdfs, schema, sh, xsd } from '@tpluscode/rdf-ns-builders/strict'
@@ -13,6 +14,10 @@ describe('@cube-creator/shared-dimensions-api/lib/shapes/dynamic-properties @SPA
   let shape: GraphPointer<NamedNode>
 
   const targetClass = 'https://ld.admin.ch/cube/dimension/technologies'
+
+  before(async () => {
+    await insertTestDimensions()
+  })
 
   beforeEach(() => {
     shape = namedNode('')
@@ -67,7 +72,7 @@ describe('@cube-creator/shared-dimensions-api/lib/shapes/dynamic-properties @SPA
         maxCount: 1,
       }, {
         path: sh.datatype,
-        hasValue: xsd.int,
+        hasValue: xsd.integer,
         minCount: 1,
         maxCount: 1,
       }, {
@@ -114,11 +119,22 @@ describe('@cube-creator/shared-dimensions-api/lib/shapes/dynamic-properties @SPA
         maxCount: 1,
       }, {
         path: sh.maxCount,
-        hasValue: 1,
-        minCount: 1,
-        maxCount: 1,
+        maxCount: 0,
       }],
     })
+  })
+
+  it('populates sh:languageIn as list from queried values', async () => {
+    // when
+    const dynamicProperties = clownface({
+      dataset: $rdf.dataset([
+        ...await loadDynamicTermProperties(targetClass, shape),
+      ]),
+    })
+
+    // then
+    const colorProp = dynamicProperties.has(sh.path, rdfs.comment).out(sh.languageIn).list()!
+    expect([...colorProp].map(p => p.value)).to.contain.all.members(['fr', 'de', 'en'])
   })
 })
 

@@ -4,7 +4,7 @@ import {
   InstancesSelectEditor, instancesSelect as instancesSelectCore, Item
 } from '@hydrofoil/shaperone-core/components'
 import * as ns from '@cube-creator/core/namespace'
-import { dash, hydra, schema, xsd } from '@tpluscode/rdf-ns-builders'
+import { dash, hydra, rdfs, schema, xsd } from '@tpluscode/rdf-ns-builders/strict'
 import $rdf from '@rdfjs/dataset'
 import { GraphPointer } from 'clownface'
 import { FocusNode } from '@hydrofoil/shaperone-core'
@@ -319,6 +319,21 @@ export const fileUpload: Lazy<SingleEditorComponent> = {
 
     return (arg, { update }) => {
       return html`<file-upload-editor .update="${update}"></file-upload-editor>`
+    }
+  }
+}
+
+export const checkboxList: Lazy<MultiEditorComponent> = {
+  editor: ns.editor.CheckboxListEditor,
+  async lazyRender () {
+    await import('./CheckboxListEditor.vue').then(createCustomElement('checkbox-list'))
+
+    return ({ property, form }, { update }) => {
+      const values = property.objects.map(obj => obj.object?.term).filter(Boolean)
+      const choices = property.shape.in.map(term => [term, property.shape.pointer.node(term).out(rdfs.label, { language: '*' })])
+      return html`<checkbox-list .value="${values}"
+                                 .choices="${choices}"
+                                 .update="${update}"></checkbox-list>`
     }
   }
 }

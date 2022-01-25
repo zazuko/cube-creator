@@ -4,11 +4,20 @@ import { datatypes } from '@cube-creator/core/datatypes'
 import type { Initializer } from '@tpluscode/rdfine/RdfResource'
 import type { NodeShape, PropertyShape } from '@rdfine/shacl'
 import $rdf from 'rdf-ext'
-import { editor, md, meta, sh1 } from '@cube-creator/core/namespace'
+import { editor, iso6391, md, meta, sh1 } from '@cube-creator/core/namespace'
 import { fromPointer as nodeShape } from '@rdfine/shacl/lib/NodeShape'
 import { fromPointer as propertyGroup } from '@rdfine/shacl/lib/PropertyGroup'
+import { fromPointer as resource } from '@rdfine/rdfs/lib/Resource'
 
 const defaultGroup = $rdf.namedNode('#default-group')
+const datatypeUri = [xsd.anyURI, ['URI']]
+
+const commonProperties = [
+  hydra.required,
+  rdf.predicate,
+  rdfs.label,
+  schema.multipleValues,
+]
 
 const properties: Initializer<PropertyShape>[] = [{
   name: 'Name',
@@ -188,6 +197,7 @@ const properties: Initializer<PropertyShape>[] = [{
       in: [
         'Literal',
         'Shared Term',
+        'Lang String',
       ],
       order: 20,
     }, {
@@ -198,14 +208,18 @@ const properties: Initializer<PropertyShape>[] = [{
       datatype: xsd.boolean,
       defaultValue: false,
       order: 15,
+    }, {
+      name: 'Allow multiple',
+      path: schema.multipleValues,
+      minCount: 1,
+      maxCount: 1,
+      datatype: xsd.boolean,
+      defaultValue: false,
+      order: 15,
     }],
     xone: [nodeShape({
       closed: true,
-      ignoredProperties: [
-        hydra.required,
-        rdf.predicate,
-        rdfs.label,
-      ],
+      ignoredProperties: commonProperties,
       property: [{
         path: md.dynamicPropertyType,
         hasValue: 'Literal',
@@ -213,7 +227,7 @@ const properties: Initializer<PropertyShape>[] = [{
       }, {
         name: 'Data type',
         path: sh.datatype,
-        in: datatypes.map(([id, labels]) => ({
+        in: [...datatypes, datatypeUri].map(([id, labels]) => ({
           id,
           [rdfs.label.value]: labels,
         })),
@@ -224,11 +238,7 @@ const properties: Initializer<PropertyShape>[] = [{
       }],
     }), nodeShape({
       closed: true,
-      ignoredProperties: [
-        hydra.required,
-        rdf.predicate,
-        rdfs.label,
-      ],
+      ignoredProperties: commonProperties,
       property: [{
         path: md.dynamicPropertyType,
         hasValue: 'Shared Term',
@@ -241,6 +251,30 @@ const properties: Initializer<PropertyShape>[] = [{
         nodeKind: sh.IRI,
         minCount: 1,
         maxCount: 1,
+        order: 30,
+      }],
+    }), nodeShape({
+      closed: true,
+      ignoredProperties: commonProperties,
+      property: [{
+        path: md.dynamicPropertyType,
+        hasValue: 'Lang String',
+        [dash.hidden.value]: true,
+      }, {
+        name: 'Languages',
+        path: sh.languageIn,
+        in: [resource(iso6391.de, {
+          label: 'German',
+        }), resource(iso6391.fr, {
+          label: 'French',
+        }), resource(iso6391.it, {
+          label: 'Italian',
+        }), resource(iso6391.rm, {
+          label: 'Romansh',
+        }), resource(iso6391.en, {
+          label: 'English',
+        })],
+        [dash.editor.value]: editor.CheckboxListEditor,
         order: 30,
       }],
     })],
