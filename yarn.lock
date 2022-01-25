@@ -2470,10 +2470,10 @@
   resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.2.21.tgz#9f35a5643129df132cf3b5c1ec64046ea1af0650"
   integrity sha512-yd+9qKmJxm496BOV9CMNaey8TWsikaZOwMRwPHQIjcOJM9oV+fi9ZMNw3JsVnbEEbo2gRTDnGEBv8pjyn67hNg==
 
-"@types/clownface@*", "@types/clownface@^1", "@types/clownface@^1.0.3":
-  version "1.2.5"
-  resolved "https://registry.yarnpkg.com/@types/clownface/-/clownface-1.2.5.tgz#5c1098ae8232b8018f14dde4259283c0e64cfca6"
-  integrity sha512-5IQHgyqWZz1Jv8cEb8sVC/Da2N+UTBJiQPLQiurOzOVbyxD95aB59o1MEGr9hJ9HLYFR8EAKiIeYP4vfAsaXtw==
+"@types/clownface@*", "@types/clownface@^1", "@types/clownface@^1.0.3", "@types/clownface@^1.2.6":
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/@types/clownface/-/clownface-1.2.6.tgz#506d88d7b5be1387b131fc19c83d1c5f899d3fdb"
+  integrity sha512-AAHs2y+BOjnUV8ffyo0be1JMYqfn2Li/pboBNVTF+Y8S69faw/+JTKATPFho6lgCMP3ZV3BMBWOoCyZ8C8TJaA==
   dependencies:
     rdf-js "^4.0.2"
 
@@ -12365,10 +12365,10 @@ rdf-canonize@^3.0.0:
   dependencies:
     setimmediate "^1.0.5"
 
-rdf-cube-view-query@^1:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/rdf-cube-view-query/-/rdf-cube-view-query-1.7.0.tgz#9016f7b41a29e809a8220c5ea06334d4c5f03e0c"
-  integrity sha512-2wWX/wahSbu8TEOfLkKa4fcrHZt2sVY70shhpWBIzWAzRhHg+Jby25u9LAHhs0XomDwcZfOnviq0rYZ6ZOb/ig==
+rdf-cube-view-query@^1.8.2:
+  version "1.8.2"
+  resolved "https://registry.yarnpkg.com/rdf-cube-view-query/-/rdf-cube-view-query-1.8.2.tgz#b779baecd0af44b9ba9d0b243e66cab6a1df459e"
+  integrity sha512-q7sJ/XG6uT5bsG7MA21o+iNhdnZadJ4nMQNOtNGFDP0L6PEMvG1NYYFgl5+ZUnXN2/N4bF2oCDDGt2XV5KDdnw==
   dependencies:
     "@rdfjs/namespace" "^1.1.0"
     "@rdfjs/term-map" "^1.0.0"

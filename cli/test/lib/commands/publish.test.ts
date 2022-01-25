@@ -245,12 +245,12 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
           path: dcat.accessURL,
           minCount: 1,
           maxCount: 1,
-          hasValue: $rdf.namedNode('https://environment.ld.admin.ch/query'),
+          hasValue: $rdf.namedNode('https://environment.ld.admin.ch/sparql'),
         }, {
           path: _void.sparqlEndpoint,
           minCount: 1,
           maxCount: 1,
-          hasValue: $rdf.namedNode('https://environment.ld.admin.ch/sparql'),
+          hasValue: $rdf.namedNode('https://environment.ld.admin.ch/query'),
         }],
       })
     })

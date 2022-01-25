@@ -65,3 +65,15 @@ export const tagsWithLanguage: MultiEditor = {
     return 0
   }
 }
+
+// todo: should return null or be removed altogether after https://github.com/hypermedia-app/shaperone/issues/156
+export const checkboxList: MultiEditor = {
+  term: ns.editor.CheckboxListEditor,
+  match (shape) {
+    if (shape.editor?.equals(ns.editor.CheckboxListEditor)) {
+      return 100
+    }
+
+    return 0
+  }
+}

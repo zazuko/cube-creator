@@ -26,6 +26,22 @@ const themesQuery = sparql`construct {
   }
 }`
 
+const euThemesQuery = sparql`construct {
+  ?c a ${hydra.Collection} .
+  ?c ${hydra.member} ?theme .
+  ?theme ${rdfs.label} ?name .
+} WHERE {
+  BIND ( iri('${env.API_CORE_BASE}eu-themes') as ?c )
+
+  graph <https://lindas.admin.ch/ontologies> {
+    ?theme a <http://publications.europa.eu/ontology/euvoc#DataTheme> ;
+      ${skos.prefLabel} ?name ;
+      ${skos.inScheme} <http://publications.europa.eu/resource/authority/data-theme> .
+
+    filter (lang(?name) in ("en", "de", "rm", "fr", "it" ))
+  }
+}`
+
 const aboutQuery = sparql`construct {
   ?c a ${hydra.Collection} .
   ?c ${hydra.member} ?about .
@@ -244,6 +260,16 @@ ${shapeId} {
       ${sh.nodeKind} ${sh.IRI} ;
       ${sh.class} ${schema.DefinedTerm} ;
       ${hydra.collection} ${lindasQuery(themesQuery)} ;
+    ] ;
+    ${sh.property} [
+      ${sh.name} "EU Data Theme Category" ;
+      ${sh.path} <https://schema.ld.admin.ch/euDataTheme> ;
+      ${sh.minLength} 1 ;
+      ${sh.order} 105 ;
+      ${sh.description} "The Data Theme Category for the classification in the European Data Catalogs.";
+      ${sh.nodeKind} ${sh.IRI} ;
+      ${sh.class} <http://publications.europa.eu/ontology/euvoc#DataTheme> ;
+      ${hydra.collection} ${lindasQuery(euThemesQuery)} ;
     ] ;
     ${sh.property} [
       ${sh.name} "Opendata.swiss Keywords" ;

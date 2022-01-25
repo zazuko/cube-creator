@@ -127,3 +127,4 @@ export const md = namespace<SharedDimensionsTerms>('https://cube-creator.zazuko.
 export const editor = namespace(cc.dash.value)
 export const sh1 = namespace('https://forms.hypermedia.app/shaperone#')
 export const hex = namespace('https://w3id.org/hydra/extension#')
+export const iso6391 = namespace('http://lexvo.org/id/iso639-1/')
