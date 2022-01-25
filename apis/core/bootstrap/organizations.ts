@@ -22,8 +22,8 @@ export const organizations = turtle`
     ${rdfs.label} "Office fédéral de l'environnement"@fr ;
     ${rdfs.label} "Ufficio federale dell'ambiente"@it ;
     ${rdfs.label} "Federal Office for the Environment"@en ;
-    ${dcat.accessURL} <https://environment.ld.admin.ch/query> ;
-    ${_void.sparqlEndpoint} <https://environment.ld.admin.ch/sparql> ;
+    ${dcat.accessURL} <https://environment.ld.admin.ch/sparql> ;
+    ${_void.sparqlEndpoint} <https://environment.ld.admin.ch/query> ;
     ${cube.observedBy} <https://ld.admin.ch/office/VII.1.7> ;
   .
 }
@@ -38,8 +38,8 @@ export const organizations = turtle`
     ${rdfs.label} "Archives fédérales suisses"@fr ;
     ${rdfs.label} "Archivio federale svizzero"@it ;
     ${rdfs.label} "Swiss Federal Archives"@en ;
-    ${dcat.accessURL} <https://culture.ld.admin.ch/query> ;
-    ${_void.sparqlEndpoint} <https://culture.ld.admin.ch/sparql> ;
+    ${dcat.accessURL} <https://culture.ld.admin.ch/sparql> ;
+    ${_void.sparqlEndpoint} <https://culture.ld.admin.ch/query> ;
     ${cube.observedBy} <https://ld.admin.ch/office/II.1.4> ;
   .
 }
@@ -54,8 +54,8 @@ export const organizations = turtle`
     ${rdfs.label} "Office fédéral de l'énergie"@fr ;
     ${rdfs.label} "Ufficio federale dell'energia"@it ;
     ${rdfs.label} "Swiss Federal Office of Energy"@en ;
-    ${dcat.accessURL} <https://energy.ld.admin.ch/query> ;
-    ${_void.sparqlEndpoint} <https://energy.ld.admin.ch/sparql> ;
+    ${dcat.accessURL} <https://energy.ld.admin.ch/sparql> ;
+    ${_void.sparqlEndpoint} <https://energy.ld.admin.ch/query> ;
     ${cube.observedBy} <https://ld.admin.ch/office/VII.1.4> ;
   .
 }
