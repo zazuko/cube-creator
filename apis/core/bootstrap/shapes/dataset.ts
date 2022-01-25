@@ -29,15 +29,16 @@ const themesQuery = sparql`construct {
 const euThemesQuery = sparql`construct {
   ?c a ${hydra.Collection} .
   ?c ${hydra.member} ?theme .
-  ?theme ${rdfs.label} ?name ; ?p ?o .
+  ?theme ${rdfs.label} ?name .
 } WHERE {
   BIND ( iri('${env.API_CORE_BASE}eu-themes') as ?c )
 
   graph <https://lindas.admin.ch/ontologies> {
     ?theme a <http://publications.europa.eu/ontology/euvoc#DataTheme> ;
       ${skos.prefLabel} ?name ;
-      ${skos.inScheme} <http://publications.europa.eu/resource/authority/data-theme> ;
-      ?p ?o .
+      ${skos.inScheme} <http://publications.europa.eu/resource/authority/data-theme> .
+
+    filter (lang(?name) in ("en", "de", "rm", "fr", "it" ))
   }
 }`
 
