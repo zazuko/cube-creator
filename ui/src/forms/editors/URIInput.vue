@@ -10,7 +10,6 @@ import { NamedNode } from 'rdf-js'
 import * as $rdf from '@rdf-esm/data-model'
 import { api } from '@/api'
 import { rdfs, schema, skos } from '@tpluscode/rdf-ns-builders/strict'
-import { debounce } from 'debounce'
 import { supportedLanguages } from '@cube-creator/core/languages'
 
 const language = supportedLanguages.map(({ value }) => value)
