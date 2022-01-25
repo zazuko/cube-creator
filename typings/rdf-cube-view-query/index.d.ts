@@ -49,9 +49,9 @@ declare module 'rdf-cube-view-query/lib/View' {
     interface View extends Node.Node {
       dimensions: Dimension[]
       dimension(arg: { cubeDimension: string | Term | GraphPointer | undefined }): Dimension | null
-      observations(): Promise<Observation[]>
-      observationCount(): Promise<number>
-      observationsQuery(): ViewQuery
+      observations(options?: { disableDistinct: boolean }): Promise<Observation[]>
+      observationCount(options?: { disableDistinct: boolean }): Promise<number>
+      observationsQuery(options?: { disableDistinct: boolean }): ViewQuery
       limit(limit: number): View
       offset(offset: number): View
     }
