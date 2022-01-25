@@ -34,7 +34,14 @@ PREFIX dcterms: <http://purl.org/dc/terms/>
   sh:property [
     sh:path schema:name ;
     sh:minCount 1 ;
-    sh:datatype rdf:langString ;
+    sh:or (
+      [
+        sh:datatype rdf:langString ;
+      ]
+      [
+        sh:datatype xsd:string ;
+      ]
+    ) ;
     sh:message "schema:Dataset needs a schema:name" ;
   # ] , [
   #   sh:path schema:description ;
