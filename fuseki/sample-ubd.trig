@@ -58,7 +58,8 @@ graph <cube-project/ubd/dataset> {
     a void:Dataset, hydra:Resource, schema:Dataset, dcat:Dataset ;
     schema:hasPart <https://environment.ld.admin.ch/foen/ubd/28> ;
     cc:dimensionMetadata <cube-project/ubd/dimensions-metadata> ;
-    dcterms:title 'UBD28' ;
+    dcterms:title "UBD28" ;
+    schema:name "UBD28" ;
     dcat:contactPoint [ vcard:fn 'Test Name' ;
                         vcard:hasEmail 'test@mail.ch' ] ;
     schema:workExample <https://ld.admin.ch/application/visualize> ;
@@ -104,22 +105,26 @@ graph <cube-project/ubd/dimensions-metadata> {
     schema:about <https://environment.ld.admin.ch/foen/ubd/28/station> ;
     qudt:scaleType qudt:NominalScale ;
     cc:dimensionMapping <cube-project/ubd/dimension-mapping/station> ;
+    schema:name "Station"@en ;
   .
 
   <cube-project/ubd/dimensions-metadata/aggregation>
     schema:about <https://environment.ld.admin.ch/foen/ubd/28/aggregation> ;
+    schema:name "Aggregation"@en ;
   .
 
   <cube-project/ubd/dimensions-metadata/pollutant>
     schema:about <https://environment.ld.admin.ch/foen/ubd/28/pollutant> ;
     qudt:scaleType qudt:NominalScale ;
     cc:dimensionMapping <cube-project/ubd/dimension-mapping/pollutant> ;
+    schema:name "Pollutant"@en ;
   .
 
   <cube-project/ubd/dimensions-metadata/unit>
     schema:about <https://environment.ld.admin.ch/foen/ubd/28/unit> ;
     qudt:scaleType qudt:NominalScale ;
     cc:dimensionMapping <cube-project/ubd/dimension-mapping/unit> ;
+    schema:name "Unit"@en ;
   .
 }
 
