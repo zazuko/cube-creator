@@ -59,7 +59,7 @@ graph <cube-project/ubd/dataset> {
     schema:hasPart <https://environment.ld.admin.ch/foen/ubd/28> ;
     cc:dimensionMetadata <cube-project/ubd/dimensions-metadata> ;
     dcterms:title "UBD28" ;
-    schema:name "UBD28" ;
+    schema:name "UBD28"@en ;
     dcat:contactPoint [ vcard:fn 'Test Name' ;
                         vcard:hasEmail 'test@mail.ch' ] ;
     schema:workExample <https://ld.admin.ch/application/visualize> ;
