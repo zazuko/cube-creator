@@ -12483,20 +12483,7 @@ rdf-parser-csvw-xlsx@^0.1.0:
     readable-stream "^3.6.0"
     xlsx "^0.17.4"
 
-rdf-parser-csvw@^0.14.4:
-  version "0.14.4"
-  resolved "https://registry.yarnpkg.com/rdf-parser-csvw/-/rdf-parser-csvw-0.14.4.tgz#40b232d913cc28f0b2a4ad4b7c6cd7f3352f811d"
-  integrity sha512-u/GQo69vAHhIb9+3jOZVR550NG1+Y8NHl6MCEfo2uQ5Ul2UT0KsClznFU8V0PmfRpWkcMv+f02UyWjcOsvkvhg==
-  dependencies:
-    "@rdfjs/data-model" "^1.1.2"
-    commander "^3.0.1"
-    csv-parse "^4.4.5"
-    lodash "^4.17.15"
-    luxon "^1.17.3"
-    readable-stream "^3.4.0"
-    uri-templates "^0.2.0"
-
-rdf-parser-csvw@^0.15.0:
+rdf-parser-csvw@^0.15, rdf-parser-csvw@^0.15.0:
   version "0.15.2"
   resolved "https://registry.yarnpkg.com/rdf-parser-csvw/-/rdf-parser-csvw-0.15.2.tgz#7182ea66fe9c8ce4f2cfe98175ec42058a03e50c"
   integrity sha512-pF5OAWh3Y0UHrRWCy/CVsmsl31F6KuNbjkgSA/SM2BpfW3LSvQhpIx8TnfNzKIwPLLk+w0esDDS5QwWODT/ZEQ==

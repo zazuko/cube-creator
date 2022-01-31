@@ -63,7 +63,7 @@
     "once": "^1.4.0",
     "rdf-ext": "^1.3.0",
     "rdf-literal": "^1.3.0",
-    "rdf-parser-csvw": "^0.14.4",
+    "rdf-parser-csvw": "^0.15",
     "rdf-stream-to-dataset-stream": "^1.0.0",
     "rdf-utils-fs": "^2.1.0",
     "rdf-validate-datatype": "^0.1.3",
