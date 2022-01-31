@@ -99,10 +99,16 @@ export default class extends Vue {
 <style>
 .term-pair {
   display: flex;
-  justify-content: stretch;
 }
 
 .term-pair > * {
+  flex-grow: 1;
+
+  display: flex;
+  justify-content: stretch;
+}
+
+.term-pair > * > * {
   width: 50%;
 }
 
