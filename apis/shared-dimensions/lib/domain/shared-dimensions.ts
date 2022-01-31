@@ -45,9 +45,7 @@ export function getSharedTerms({ sharedDimension, freetextQuery, validThrough, l
     `
 
   if (freetextQuery) {
-    select = select.WHERE`FILTER (
-      REGEX(${name}, "^${freetextQuery}", "i")
-    )`
+    select = textSearch(select, term, schema.name, freetextQuery)
   }
 
   if (validThrough) {
@@ -70,4 +68,32 @@ export function getSharedTerms({ sharedDimension, freetextQuery, validThrough, l
 
       ${term} ?p ?o .
     `
+}
+
+type SelectQuery = ReturnType<typeof SELECT>
+
+function textSearch(query: SelectQuery, subject: Term, predicate: Term, textQuery: string): SelectQuery {
+  switch (env.maybe.MANAGED_DIMENSIONS_STORE_ENGINE) {
+    case 'stardog': {
+      const variable = $rdf.variable('_s')
+      return query.WHERE`
+        service fts:textMatch {
+          [] fts:query '${textQuery + '*'}';
+             fts:result ${variable} ;
+        }
+        ${subject} ${predicate} ${variable} .
+      `
+    }
+    case 'fuseki': {
+      return query.WHERE`
+        ${subject} <http://jena.apache.org/text#query> (${predicate} '${textQuery}') ;
+      `
+    }
+    default: {
+      const variable = $rdf.variable('_s')
+      return query.WHERE`
+        ${subject} ${predicate} ${variable} .
+        FILTER (REGEX(${variable}, "^${textQuery}", "i"))`
+    }
+  }
 }
