@@ -11,13 +11,14 @@
         :to="{ name: 'DimensionEdit', params: { dimensionId: dimension.clientPath } }"
       />
       <div v-if="dimension.mappings">
-        <b-tooltip label="Link to shared dimension">
+        <b-tooltip :label="linkToSharedDimensionLabel">
           <b-button
             tag="router-link"
             :to="{ name: 'DimensionMapping', params: { dimensionId: dimension.clientPath } }"
             icon-left="link"
             size="is-small"
             type="is-text"
+            :class="{ 'has-text-primary': dimension.sharedDimension }"
           />
         </b-tooltip>
       </div>
@@ -27,9 +28,6 @@
       <data-kind-icon :data-kind="dimension.dataKind" />
       <b-tooltip v-show="description" :label="description">
         <b-icon icon="comment-alt" pack="far" type="is-primary" />
-      </b-tooltip>
-      <b-tooltip v-if="dimension.sharedDimension" :label="`Linked to ${dimension.sharedDimension.label}`">
-        <b-icon icon="link" type="is-primary" />
       </b-tooltip>
     </div>
   </div>
@@ -56,6 +54,18 @@ export default class CubePreviewDimension extends Vue {
     const description = this.dimension.description.find(({ language }) => language === this.selectedLanguage)
 
     return description?.value ?? ''
+  }
+
+  get linkToSharedDimensionLabel (): string {
+    const dimension: any = this.dimension
+
+    if (dimension.sharedDimension) {
+      return `Linked to ${dimension.sharedDimension.label} (click to edit)`
+    } else if (dimension.mappings) {
+      return 'Link to shared dimension'
+    } else {
+      return ''
+    }
   }
 }
 </script>
