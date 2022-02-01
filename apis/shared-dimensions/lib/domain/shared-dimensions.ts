@@ -85,8 +85,13 @@ function textSearch(query: SelectQuery, subject: Term, predicate: Term, textQuer
       `
     }
     case 'fuseki': {
+      const variable = $rdf.variable('_s')
       return query.WHERE`
-        ${subject} <http://jena.apache.org/text#query> (${predicate} '${textQuery}') ;
+        ${subject} <http://jena.apache.org/text#query> (${predicate} '${textQuery + '*'}') .
+
+        # Second filtering to make sure the word starts with the given query
+        ${subject} ${predicate} ${variable} .
+        FILTER (REGEX(${variable}, "^${textQuery}", "i"))
       `
     }
     default: {
