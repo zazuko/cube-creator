@@ -8,7 +8,7 @@ import { ParsingClient } from 'sparql-http-client/ParsingClient'
 import { StreamClient } from 'sparql-http-client/StreamClient'
 import once from 'once'
 import { PassThrough } from 'stream'
-import { getQuery } from './store'
+import { resourceQuery } from './store'
 
 interface LoaderOptions {
   graph: NamedNode
@@ -37,7 +37,10 @@ export default class Loader implements HydraBox.ResourceLoader {
       return $rdf.quad(term, rdf.type, type)
     }))
 
-    const fullDataset = () => getQuery(term, this.options.graph).execute(this.options.stream.query)
+    const fullDataset = async () => {
+      const query = await resourceQuery(term, this.options.graph, this.options.sparql)
+      return query.execute(this.options.stream.query)
+    }
 
     return [{
       term,

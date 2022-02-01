@@ -1,13 +1,14 @@
 import { describe, it, before, beforeEach } from 'mocha'
 import { namedNode } from '@cube-creator/testing/clownface'
 import { mdClients } from '@cube-creator/testing/lib'
-import { foaf, schema, sh } from '@tpluscode/rdf-ns-builders'
+import { foaf, schema, sh, rdfs } from '@tpluscode/rdf-ns-builders'
 import { ASK, INSERT, SELECT } from '@tpluscode/sparql-builder'
 import { expect } from 'chai'
 import Store, { SharedDimensionsStore } from '../lib/store'
 import $rdf from 'rdf-ext'
 import { ex } from '@cube-creator/testing/lib/namespace'
 import { Term } from 'rdf-js'
+import { insertTestDimensions } from '@cube-creator/testing/lib/seedData'
 
 const { parsingClient } = mdClients
 
@@ -15,8 +16,9 @@ describe('@cube-creator/shared-dimensions-api/lib/store @SPARQL', () => {
   const graph = $rdf.namedNode('http://test.graph/store')
   let store: SharedDimensionsStore
 
-  before(() => {
+  before(async () => {
     store = new Store(parsingClient, graph)
+    await insertTestDimensions()
   })
 
   beforeEach(async () => {
@@ -223,21 +225,20 @@ describe('@cube-creator/shared-dimensions-api/lib/store @SPARQL', () => {
       await INSERT.DATA`
         graph ${graph} {
           ${ex.toDelete}
-            ${schema.knows} _:friend .
-          _:friend ${schema.age} 20 .
+            ${schema.knows} ${ex.friend} .
+          ${ex.friend} ${schema.age} 20 .
 
           ${ex.rootShape}
             ${sh.targetNode} ${ex.toDelete} ;
-            ${sh.property} [
-              ${sh.path} ${schema.knows} ;
-              ${sh.node} [
-                ${sh.targetNode} _:friend ;
-                ${sh.property} [
-                  ${sh.path} ${schema.age}
-                ] ;
-              ] ;
-            ] ;
-          .
+            ${sh.property} ${ex.knowsShape} .
+          ${ex.knowsShape}
+             ${sh.path} ${schema.knows} ;
+             ${sh.node} ${ex.friendShape} .
+          ${ex.friendShape}
+            ${sh.targetNode} ${ex.friend} ;
+            ${sh.property} ${ex.ageShape} .
+          ${ex.ageShape}
+            ${sh.path} ${schema.age} .
         }`.execute(parsingClient.query)
 
       // when
@@ -245,6 +246,29 @@ describe('@cube-creator/shared-dimensions-api/lib/store @SPARQL', () => {
 
       // then
       await expect(SELECT`*`.FROM(graph).WHERE`?s ?p ?o`.execute(parsingClient.query)).to.eventually.have.length(0)
+    })
+  })
+
+  describe('get', () => {
+    it('retrieves resource from deep shape', async () => {
+      // given
+      store = new Store(parsingClient, $rdf.namedNode('https://lindas.admin.ch/cube/dimension'))
+
+      // when
+      const dimension = await store.load($rdf.namedNode('https://ld.admin.ch/cube/dimension/technologies'))
+
+      // then
+      expect(dimension).to.matchShape({
+        property: {
+          path: schema.additionalProperty,
+          node: {
+            property: {
+              path: rdfs.label,
+              minCount: 1,
+            },
+          },
+        },
+      })
     })
   })
 })
