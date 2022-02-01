@@ -26,7 +26,7 @@ export default class Store implements SharedDimensionsStore {
 
   async load(term: NamedNode) {
     const query = await resourceQuery(term, this.graph, this.client)
-    const quads = await query.execute(this.client.query)
+    const quads = await query.execute(this.client.query, { operation: 'postUrlencoded' })
     return clownface({ dataset: $rdf.dataset(quads), term })
   }
 
