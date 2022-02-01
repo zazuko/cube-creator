@@ -181,7 +181,7 @@ export async function getExportedDimension({ resource, store, client = streamCli
     .FROM(store.graph)
     .WHERE`
       ${patterns}
-    `.execute(client.query)
+    `.execute(client.query, { operation: 'postUrlencoded' })
 
   const baseUriPattern = new RegExp(`^${env.MANAGED_DIMENSIONS_BASE}`)
   function removeBase<T extends Term>(term: T): T {
