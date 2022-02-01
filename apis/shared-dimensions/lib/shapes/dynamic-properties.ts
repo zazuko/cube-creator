@@ -32,8 +32,6 @@ const dynamicPropertiesFromStore: DynamicPropertiesQuery = async function (targe
   `
     .FROM($rdf.namedNode(env.MANAGED_DIMENSIONS_GRAPH))
     .WHERE`
-      VALUES ?UNDEF { UNDEF }
-
       ${targetClass} a ${md.SharedDimension} ;
                      ${schema.additionalProperty} ?property .
 
