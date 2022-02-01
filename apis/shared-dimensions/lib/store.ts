@@ -1,4 +1,4 @@
-import { ASK, CONSTRUCT, DELETE, INSERT, WITH } from '@tpluscode/sparql-builder'
+import { ASK, INSERT } from '@tpluscode/sparql-builder'
 import { sparql } from '@tpluscode/rdf-string'
 import clownface, { GraphPointer } from 'clownface'
 import { NamedNode, Term } from 'rdf-js'
@@ -8,7 +8,9 @@ import $rdf from 'rdf-ext'
 import { parsingClient } from './sparql'
 import env from './env'
 import { removeBnodes } from './rewrite'
-import { extractShape, resourceQueryPatterns } from './resource'
+import { extractShape, deleteShapesQuery, deleteQuery, resourceQuery } from './resource'
+
+export { resourceQuery } from './resource'
 
 export interface SharedDimensionsStore {
   graph: NamedNode
@@ -18,58 +20,45 @@ export interface SharedDimensionsStore {
   exists(id: NamedNode, type: NamedNode): Promise<boolean>
 }
 
-function deleteQuery(id: NamedNode, graph: NamedNode) {
-  return WITH(graph, DELETE`
-      ${id} ?rootProp ?rootObject .
-      ${id} ${sh.node} ?rootShape .
-
-      ?child ?childProp ?childObject .
-      ?s ?p ?o .
-    `
-    .WHERE`
-      ${resourceQueryPatterns(id, false)}
-
-      OPTIONAL {
-        ?rootShape (!${sh.targetNode})* ?s .
-        ?s ?p ?o
-      }
-    `)
-}
-
-export function getQuery(id: NamedNode, graph: NamedNode) {
-  return CONSTRUCT`
-    ${id} ?rootProp ?rootObject .
-    ?child ?childProp ?childObject .
-  `
-    .FROM(graph)
-    .WHERE`${resourceQueryPatterns(id, true)}`
-}
-
 export default class Store implements SharedDimensionsStore {
   constructor(private client: ParsingClient, public graph: NamedNode) {
   }
 
   async load(term: NamedNode) {
-    const quads = await getQuery(term, this.graph).execute(this.client.query)
+    const query = await resourceQuery(term, this.graph, this.client)
+    const quads = await query.execute(this.client.query)
     return clownface({ dataset: $rdf.dataset(quads), term })
   }
 
-  delete(id: NamedNode) {
-    return deleteQuery(id, this.graph).execute(this.client.query)
+  async delete(id: NamedNode) {
+    const deleteRepresentation = await deleteQuery(id, this.graph, this.client)
+    const pruneShapes = deleteShapesQuery(id, this.graph)
+
+    const query = sparql`${deleteRepresentation};\n${pruneShapes}`
+    await this.client.query.update(query.toString())
   }
 
-  save(resource: GraphPointer<NamedNode>): Promise<void> {
+  async save(resource: GraphPointer<NamedNode>): Promise<void> {
     const withoutBlanks = removeBnodes(resource)
 
     const shape = extractShape(withoutBlanks)
+
+    const pruneShapes = deleteShapesQuery(withoutBlanks.term, this.graph)
 
     const insert = INSERT.DATA`GRAPH ${this.graph} {
       ${withoutBlanks.dataset}
       ${shape.dataset}
     }`
-    const query = sparql`${deleteQuery(withoutBlanks.term, this.graph)};\n${insert}`
+    const deleteRepresentation = await deleteQuery(withoutBlanks.term, this.graph, this.client)
+    const query = sparql`
+    # Delete previous resource triples
+    ${deleteRepresentation};
+    # Remove resource shapes
+    ${pruneShapes};
+    # Insert new shape and resource
+    ${insert}`
 
-    return this.client.query.update(query.toString())
+    await this.client.query.update(query.toString())
   }
 
   exists(id: NamedNode, type: NamedNode) {
