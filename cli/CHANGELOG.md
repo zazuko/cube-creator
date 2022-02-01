@@ -1,5 +1,18 @@
 # @cube-creator/cli
 
+## 1.10.0
+
+### Minor Changes
+
+- 6423b317: Add SHACL validation of cube metadata to publishing pipeline
+- a5f0e388: Option to write published cube to file (closes #756)
+
+### Patch Changes
+
+- a17b7d44: Fetch entire cube to file first when publishing (re #756)
+- Updated dependencies [2389351f]
+  - @cube-creator/model@0.1.24
+
 ## 1.9.0
 
 ### Minor Changes
