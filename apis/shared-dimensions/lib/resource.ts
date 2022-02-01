@@ -44,20 +44,22 @@ function variableSequence() {
   }
 }
 
-export function getPatternsFromShape(shapes: AnyPointer, nextVariable = variableSequence()): SparqlTemplateResult[] {
+export function getPatternsFromShape(shapes: AnyPointer, nextVariable = variableSequence(), seen: TermSet = new TermSet()): SparqlTemplateResult[] {
   return shapes.toArray().flatMap(shape => {
     const node = shape.out(sh.targetNode).term
-    if (!node) {
+    if (!node || seen.has(node)) {
       return []
     }
 
+    seen.add(node)
     const property = shape.out(sh.property)
     const childShapes = property.out(sh.node).toArray()
 
-    const ownPatterns = property.out(sh.path).map(path => {
-      return sparql`${node} ${path.term} ${nextVariable()} .`
+    const uniqueProperties = new TermSet(property.out(sh.path).terms)
+    const ownPatterns = [...uniqueProperties].map(path => {
+      return sparql`${node} ${path} ${nextVariable()} .`
     })
-    const childPatterns = childShapes.flatMap(child => getPatternsFromShape(child, nextVariable))
+    const childPatterns = childShapes.flatMap(child => getPatternsFromShape(child, nextVariable, seen))
 
     return [
       ...ownPatterns,
