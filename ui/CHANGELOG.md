@@ -1,5 +1,18 @@
 # @cube-creator/ui
 
+## 1.8.1
+
+### Patch Changes
+
+- 91bc8c77: Radio buttons on forms were sometimes wider than the side panel
+- 4e51afd2: Improve button/icon to link to shared dimension
+- 8aa8eff4: Forms: dereference and show label for URI property values (closes #1024)
+- 2389351f: Add `sh:order` property on dimensions to manually define their ordering (closes #987)
+- 8307fa40: Small UI improvements
+- 02a82fa7: Improve Cube Preview pagination based on total number of observations
+- Updated dependencies [2389351f]
+  - @cube-creator/model@0.1.24
+
 ## 1.8.0
 
 ### Minor Changes

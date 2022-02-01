@@ -1,5 +1,21 @@
 # @cube-creator/core-api
 
+## 1.9.1
+
+### Patch Changes
+
+- 7dd95684: Apply S3 bucket CORS on app start (closes #797)
+- 3099a573: Add Dataset EU Theme Category (closes #1005)
+- 7cc573cf: Provide total number of observations
+- 2389351f: Add `sh:order` property on dimensions to manually define their ordering (closes #987)
+- 3009112b: Updated SPARQL endpoint links in organization profiles
+- Updated dependencies [796eec17]
+- Updated dependencies [2389351f]
+- Updated dependencies [615cee07]
+- Updated dependencies [d5fb5838]
+  - @cube-creator/shared-dimensions-api@2.5.0
+  - @cube-creator/model@0.1.24
+
 ## 1.9.0
 
 ### Minor Changes

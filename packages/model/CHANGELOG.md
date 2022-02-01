@@ -1,5 +1,11 @@
 # @cube-creator/model
 
+## 0.1.24
+
+### Patch Changes
+
+- 2389351f: Add `sh:order` property on dimensions to manually define their ordering (closes #987)
+
 ## 0.1.23
 
 ### Patch Changes
