@@ -493,13 +493,6 @@ graph <cube-project/ubd/csv-source/ubd> {
     cc:csvColumnSample "DEF" ;
     cc:csvColumnSample "GHI" ;
   .
-
-  <cube-project/ubd/csv-source/ubd/column/canton>
-    a csvw:Column ;
-    schema:name "canton" ;
-    dtype:order 11 ;
-    cc:csvColumnSample "ZH" ;
-  .
 }
 
 <cube-project/ubd/csv-mapping/tables> void:inDataset <ubd-example> .
