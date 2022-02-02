@@ -363,6 +363,7 @@ graph <cube-project/ubd/csv-source/ubd> {
     csvw:column <cube-project/ubd/csv-source/ubd/column/pollutant> ;
     csvw:column <cube-project/ubd/csv-source/ubd/column/station-name-de> ;
     csvw:column <cube-project/ubd/csv-source/ubd/column/station-name-fr> ;
+    csvw:column <cube-project/ubd/csv-source/ubd/column/canton> ;
   .
 
   <cube-project/ubd/csv-source/ubd/dialect>
@@ -443,7 +444,7 @@ graph <cube-project/ubd/csv-source/ubd> {
   <cube-project/ubd/csv-source/ubd/column/station-name-fr>
     a csvw:Column ;
     schema:name "STATION_NAME_FR" ;
-    dtype:order 1 ;
+    dtype:order 9 ;
     cc:csvColumnSample "ABC" ;
     cc:csvColumnSample "DEF" ;
     cc:csvColumnSample "GHI" ;
@@ -452,10 +453,17 @@ graph <cube-project/ubd/csv-source/ubd> {
   <cube-project/ubd/csv-source/ubd/column/station-name-de>
     a csvw:Column ;
     schema:name "STATION_NAME_DE" ;
-    dtype:order 2 ;
+    dtype:order 10 ;
     cc:csvColumnSample "ABK" ;
     cc:csvColumnSample "DEF" ;
     cc:csvColumnSample "GHI" ;
+  .
+
+  <cube-project/ubd/csv-source/ubd/column/canton>
+    a csvw:Column ;
+    schema:name "canton" ;
+    dtype:order 11 ;
+    cc:csvColumnSample "ZH" ;
   .
 }
 
