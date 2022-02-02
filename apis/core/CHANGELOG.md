@@ -1,5 +1,15 @@
 # @cube-creator/core-api
 
+## 1.9.2
+
+### Patch Changes
+
+- 9983dcce: Fix transformation failing after changing the property of a CSV column mapping (fixes #1052)
+- Updated dependencies [3d9464b3]
+- Updated dependencies [f492fb44]
+- Updated dependencies [044c46be]
+  - @cube-creator/shared-dimensions-api@2.5.1
+
 ## 1.9.1
 
 ### Patch Changes

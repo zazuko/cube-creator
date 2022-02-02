@@ -1,5 +1,13 @@
 # @cube-creator/shared-dimensions-api
 
+## 2.5.1
+
+### Patch Changes
+
+- 3d9464b3: The shared dimension API would query the store ineffectively, ultimately preventing the server from starting
+- f492fb44: Editing shared dimensions was not working
+- 044c46be: Optimize full-text query when mapping shared dimension terms (closes #1050)
+
 ## 2.5.0
 
 ### Minor Changes
