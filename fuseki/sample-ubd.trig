@@ -524,7 +524,7 @@ graph <cube-project/ubd/csv-mapping/table-observation/column-mapping-2> {
     cc:targetProperty "station" ;
     cc:referencedTable <cube-project/ubd/csv-mapping/table-station> ;
     cc:identifierMapping [
-      cc:referencedColumn <cube-project/ubd/csv-source/stations/column/station-id> ;
+      cc:referencedColumn <cube-project/ubd/csv-source/ubd/column/station-id> ;
     ] ;
     schema:error
       [
@@ -585,7 +585,7 @@ graph <cube-project/ubd/csv-mapping/table-observation/column-mapping-7> {
     cc:identifierMapping
       [
         cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/canton> ;
-        cc:referencedColumn <cube-project/ubd/csv-source/stations/column/canton> ;
+        cc:referencedColumn <cube-project/ubd/csv-source/ubd/column/canton> ;
       ] ;
   .
 }

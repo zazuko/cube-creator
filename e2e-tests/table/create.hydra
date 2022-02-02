@@ -27,10 +27,10 @@ With Class cc:TableCollection {
             <>
                 schema:color "#EF9A9A" ;
                 schema:name "Test Table" ;
-                csvw:column <https://cube-creator.lndo.site/cube-project/ubd/csv-source/stations/column/station-name-de>,
-                    <https://cube-creator.lndo.site/cube-project/ubd/csv-source/stations/column/station-name-fr>,
-                    <https://cube-creator.lndo.site/cube-project/ubd/csv-source/stations/column/station-id> ;
-                cc:csvSource <https://cube-creator.lndo.site/cube-project/ubd/csv-source/stations> ;
+                csvw:column <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/station-name-de>,
+                    <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/station-name-fr>,
+                    <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/station> ;
+                cc:csvSource <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd> ;
                 cc:identifierTemplate "id-template" ;
                 cc:isObservationTable false .
             ```
@@ -49,10 +49,10 @@ With Class cc:TableCollection {
             <>
                 schema:color "#EF9A9A" ;
                 schema:name "Test Table" ;
-                csvw:column <https://cube-creator.lndo.site/cube-project/ubd/csv-source/stations/column/station-name-de>,
-                    <https://cube-creator.lndo.site/cube-project/ubd/csv-source/stations/column/station-name-fr>,
-                    <https://cube-creator.lndo.site/cube-project/ubd/csv-source/stations/column/station-id> ;
-                cc:csvSource <https://cube-creator.lndo.site/cube-project/ubd/csv-source/stations> ;
+                csvw:column <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/station-name-de>,
+                    <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/station-name-fr>,
+                    <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/station> ;
+                cc:csvSource <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd> ;
                 cc:identifierTemplate "" ;
                 cc:isObservationTable false .
             ```

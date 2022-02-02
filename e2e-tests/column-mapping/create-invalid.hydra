@@ -33,5 +33,24 @@ With Class api:Table {
         } => {
             Expect Status 400
         }
+
+        Invoke {
+            Content-Type "text/turtle"
+
+            ```
+            prefix cc: <https://cube-creator.zazuko.com/vocab#>
+            prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+            prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+
+            <>  a cc:LiteralColumnMapping ;
+                cc:sourceColumn <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/year> ;
+                cc:targetProperty "dimension/year" ;
+                cc:datatype xsd:date ;
+                cc:language "en" ;
+                cc:defaultValue "2000-01-01" .
+            ```
+        } => {
+            Expect Status 400
+        }
     }
 }

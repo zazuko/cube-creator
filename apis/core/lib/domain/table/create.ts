@@ -48,7 +48,7 @@ export async function createTable({
       const column = columns
         .find(({ id }) => id.equals(columnId))
       if (!column) {
-        throw new Error(`Column ${columnId} not found`)
+        throw new Error(`Column ${columnId.value} not found`)
       }
       return column
     })
