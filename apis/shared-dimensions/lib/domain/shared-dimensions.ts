@@ -1,10 +1,12 @@
-import { CONSTRUCT, SELECT } from '@tpluscode/sparql-builder'
+import { CONSTRUCT, SELECT, sparql } from '@tpluscode/sparql-builder'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { md, meta } from '@cube-creator/core/namespace'
 import { Term } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import { toRdf } from 'rdf-literal'
 import env from '../env'
+import { TemplateResult } from '@tpluscode/rdf-string/lib/TemplateResult'
+import { SparqlExecuteOptions } from '@tpluscode/sparql-builder/lib'
 
 export function getSharedDimensions() {
   return CONSTRUCT`
@@ -45,7 +47,7 @@ export function getSharedTerms({ sharedDimension, freetextQuery, validThrough, l
     `
 
   if (freetextQuery) {
-    select = textSearch(select, term, schema.name, freetextQuery)
+    select = select.WHERE`${textSearch(term, schema.name, freetextQuery)}`
   }
 
   if (validThrough) {
@@ -70,13 +72,11 @@ export function getSharedTerms({ sharedDimension, freetextQuery, validThrough, l
     `
 }
 
-type SelectQuery = ReturnType<typeof SELECT>
-
-function textSearch(query: SelectQuery, subject: Term, predicate: Term, textQuery: string): SelectQuery {
+function textSearch(subject: Term, predicate: Term, textQuery: string): TemplateResult<SparqlExecuteOptions> {
   switch (env.maybe.MANAGED_DIMENSIONS_STORE_ENGINE) {
     case 'stardog': {
       const variable = $rdf.variable('_s')
-      return query.WHERE`
+      return sparql`
         service fts:textMatch {
           [] fts:query '${textQuery + '*'}';
              fts:result ${variable} ;
@@ -86,7 +86,7 @@ function textSearch(query: SelectQuery, subject: Term, predicate: Term, textQuer
     }
     case 'fuseki': {
       const variable = $rdf.variable('_s')
-      return query.WHERE`
+      return sparql`
         ${subject} <http://jena.apache.org/text#query> (${predicate} '${textQuery + '*'}') .
 
         # Second filtering to make sure the word starts with the given query
@@ -96,9 +96,10 @@ function textSearch(query: SelectQuery, subject: Term, predicate: Term, textQuer
     }
     default: {
       const variable = $rdf.variable('_s')
-      return query.WHERE`
+      return sparql`
         ${subject} ${predicate} ${variable} .
-        FILTER (REGEX(${variable}, "^${textQuery}", "i"))`
+        FILTER (REGEX(${variable}, "^${textQuery}", "i"))
+      `
     }
   }
 }
