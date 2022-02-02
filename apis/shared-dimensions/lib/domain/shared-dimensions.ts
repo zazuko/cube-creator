@@ -5,8 +5,6 @@ import { Term } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import { toRdf } from 'rdf-literal'
 import env from '../env'
-import { TemplateResult } from '@tpluscode/rdf-string/lib/TemplateResult'
-import { SparqlExecuteOptions } from '@tpluscode/sparql-builder/lib'
 
 export function getSharedDimensions() {
   return CONSTRUCT`
@@ -72,7 +70,7 @@ export function getSharedTerms({ sharedDimension, freetextQuery, validThrough, l
     `
 }
 
-function textSearch(subject: Term, predicate: Term, textQuery: string): TemplateResult<SparqlExecuteOptions> {
+function textSearch(subject: Term, predicate: Term, textQuery: string) {
   switch (env.maybe.MANAGED_DIMENSIONS_STORE_ENGINE) {
     case 'stardog': {
       const variable = $rdf.variable('_s')
