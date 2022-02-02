@@ -8,12 +8,6 @@
       <p class="has-text-grey-dark">
         Triggered at {{ job.created | format-date }}
       </p>
-      <p v-if="job.error && job.error.disambiguatingDescription" class="has-background-danger-light">
-        {{ job.error.disambiguatingDescription }}
-      </p>
-      <p v-for="comment in job.comments" :key="comment" class="has-background-warning-light">
-        <vue-markdown :source="comment" />
-      </p>
     </header>
     <div class="is-flex gap-1">
       <b-tag v-if="job.revision">
@@ -44,6 +38,12 @@
       </a>
     </div>
     <div>
+      <b-message v-if="job.error && job.error.disambiguatingDescription" type="is-danger" class="mb-2">
+        {{ job.error.disambiguatingDescription }}
+      </b-message>
+      <b-message v-for="comment in job.comments" :key="comment" type="is-warning" class="mb-2">
+        <vue-markdown :source="comment" />
+      </b-message>
       <a :disabled="!link" :href="link" target="_blank" rel="noopener noreferer" class="button is-small mb-1">
         <b-icon icon="book" />
         <span>View full log</span>
