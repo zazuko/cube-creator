@@ -27,10 +27,9 @@ With Class cc:TableCollection {
             <>
                 schema:color "#EF9A9A" ;
                 schema:name "Test Table" ;
-                csvw:column <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/station-name-de>,
-                    <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/station-name-fr>,
-                    <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/station> ;
-                cc:csvSource <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd> ;
+                csvw:column <https://cube-creator.lndo.site/cube-project/ubd/csv-source/canton/column/id>,
+                    <https://cube-creator.lndo.site/cube-project/ubd/csv-source/canton/column/name_de>;
+                cc:csvSource <https://cube-creator.lndo.site/cube-project/ubd/csv-source/canton> ;
                 cc:identifierTemplate "id-template" ;
                 cc:isObservationTable false .
             ```
@@ -49,10 +48,9 @@ With Class cc:TableCollection {
             <>
                 schema:color "#EF9A9A" ;
                 schema:name "Test Table" ;
-                csvw:column <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/station-name-de>,
-                    <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/station-name-fr>,
-                    <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/station> ;
-                cc:csvSource <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd> ;
+                csvw:column <https://cube-creator.lndo.site/cube-project/ubd/csv-source/canton/column/id>,
+                    <https://cube-creator.lndo.site/cube-project/ubd/csv-source/canton/column/name_de>;
+                cc:csvSource <https://cube-creator.lndo.site/cube-project/ubd/csv-source/canton> ;
                 cc:identifierTemplate "" ;
                 cc:isObservationTable false .
             ```

@@ -343,6 +343,41 @@ graph <cube-project/ubd/csv-mapping/sources> {
   .
 }
 
+<cube-project/ubd/csv-source/canton> void:inDataset <ubd-example> .
+graph <cube-project/ubd/csv-source/canton> {
+  <cube-project/ubd/csv-source/canton>
+    a cc:CSVSource, hydra:Resource ;
+    schema:associatedMedia  [ a  schema:MediaObject ;
+                                schema:identifier "test-data/ubd28/canton.csv";
+                            ] ;
+    schema:name "canton.csv" ;
+    cc:csvMapping <cube-project/ubd/csv-mapping> ;
+    csvw:dialect <cube-project/ubd/csv-source/canton/dialect> ;
+    csvw:column <cube-project/ubd/csv-source/canton/column/id> ;
+    csvw:column <cube-project/ubd/csv-source/canton/column/name_de> ;
+  .
+
+  <cube-project/ubd/csv-source/canton/dialect>
+    csvw:quoteChar "\"" ;
+    csvw:delimiter ";" ;
+    csvw:header    true ;
+  .
+
+  <cube-project/ubd/csv-source/canton/column/id>
+    a csvw:Column ;
+    schema:name "id" ;
+    dtype:order 0 ;
+    cc:csvColumnSample "ZH" ;
+  .
+
+  <cube-project/ubd/csv-source/canton/column/name_de>
+    a csvw:Column ;
+    schema:name "name_de" ;
+    dtype:order 1 ;
+    cc:csvColumnSample "Zürich" ;
+  .
+}
+
 <cube-project/ubd/csv-source/ubd> void:inDataset <ubd-example> .
 graph <cube-project/ubd/csv-source/ubd> {
   <cube-project/ubd/csv-source/ubd>
