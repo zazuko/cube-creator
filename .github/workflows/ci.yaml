@@ -70,9 +70,12 @@ jobs:
 
       - name: Hydra e2e tests
         run: docker-compose -f docker-compose.yml -f docker-compose.posix.yml run e2e-tests
-      - name: logs on fail
+      - name: core logs on fail
         if: ${{ failure() }}
         run: lando logs -s core
+      - name: pipeline logs on fail
+        if: ${{ failure() }}
+        run: lando logs -s pipeline
 
       - name: UI e2e tests
         run: yarn workspace @cube-creator/ui test:e2e --url https://app.cube-creator.lndo.site --headless
