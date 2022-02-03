@@ -10,10 +10,16 @@ export function uploadCube(variables: VariableMap) {
       const cubeFile = variables.get('targetFile')
       const username = variables.get('publish-graph-store-user')
       const password = variables.get('publish-graph-store-password')
+      const graph = variables.get('target-graph')
+
+      const queryString = new URLSearchParams({
+        graph,
+      })
 
       logger.info('Uploading cube to database')
       const exit = spawnSync('curl', [
         endpoint,
+        '-G', '-d', queryString.toString(),
         '-X', 'POST',
         '-u', `${username}:${password}`,
         '-T',
