@@ -24,8 +24,8 @@ export async function loadCube(this: Pipeline.Context, { jobUri, endpoint, user,
   const project = await loadProject(jobUri, this)
 
   const patterns = sparql`
-    ?s ?p ?o .
     ?cube a ${cube.Cube} ; !${cube.observationConstraint}* ?s .
+    ?s ?p ?o .
 
     filter (?p != ${csvw.describes})`
 
