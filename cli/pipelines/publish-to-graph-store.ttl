@@ -4,7 +4,7 @@
 
 <#StreamOutput>
   a :Pipeline, :WritableObjectMode ;
-  :steps [ :stepList ( _:upload ) ] ;.
+  :steps [ :stepList ( <#setGraph> _:upload ) ] ;.
 
 _:upload
   a                  :Step ;
@@ -18,3 +18,9 @@ _:upload
                          code:value "publish-graph-store-password"^^:VariableName ] ;
   code:arguments     [ code:name  "maxQuadsPerRequest" ;
                          code:value "Infinity"^^code:EcmaScript ] .
+
+<#setGraph>
+    a                  :Step ;
+    code:implementedBy [ a         code:EcmaScriptModule ;
+                             code:link <node:barnard59-rdf/setGraph.js#default> ] ;
+    code:arguments     ( "target-graph"^^:VariableName ) .

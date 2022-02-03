@@ -11,7 +11,6 @@
                 <#concatStreams>
                 <#removeHydraTriples>
                 <#uniqueBnodes>
-                <#setGraph>
                 <#countOutputQuads>
                 <#StreamOutput>
               ) ;
@@ -202,9 +201,3 @@ _:get
 <#StreamOutput>
   a :Pipeline, :WritableObjectMode ;
 .
-
-<#setGraph>
-  a                  :Step ;
-  code:implementedBy [ a         code:EcmaScriptModule ;
-                       code:link <node:barnard59-rdf/setGraph.js#default> ] ;
-  code:arguments     ( "target-graph"^^:VariableName ) .
