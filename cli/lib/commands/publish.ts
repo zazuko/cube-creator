@@ -11,6 +11,7 @@ import { uploadCube } from '../publish/upload'
 
 interface PublishRunOptions extends runner.RunOptions {
   to: 'filesystem' | 'graph-store'
+  upload?: boolean
   publishStore?: {
     endpoint: string
     user: string
@@ -56,6 +57,10 @@ export default runner.create<PublishRunOptions>({
   },
   async after(options, variables) {
     if (options.to === 'filesystem') {
+      if (!options.upload) {
+        logger.info('Skipping upload to store')
+        return
+      }
       await uploadCube(variables)
     }
   },
