@@ -52,6 +52,7 @@ async function main() {
     .option('--execution-url <executionUrl>', 'Link to job execution')
     .option('-v, --variable <name=value>', 'Pipeline variables', parseVariables, new Map())
     .option('--debug', 'Print diagnostic information to standard output')
+    .option('--no-upload', 'When used together with --to filesystem, will prevent writing to store')
     .option('--auth-param <name=value>', 'Additional variables to pass to the token endpoint', parseVariables, new Map())
     .action(capture('Publish', ({ job }) => ({ job }), publish))
 
