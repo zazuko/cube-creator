@@ -5,6 +5,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 PREFIX qudt: <http://qudt.org/schema/qudt/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX dcterms: <http://purl.org/dc/terms/>
+base <https://cube-creator.zazuko.com/shape#>
 
 <CubeShape>
   a sh:NodeShape ;
