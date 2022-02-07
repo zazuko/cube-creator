@@ -26,7 +26,7 @@ With Class cc:LiteralColumnMapping {
 
       <cube-project/ubd/csv-mapping/table-station/column-mapping-1>
         a cc:ColumnMapping, cc:LiteralColumnMapping ;
-        cc:sourceColumn <cube-project/ubd/csv-source/stations/column/station-id> ;
+        cc:sourceColumn <cube-project/ubd/csv-source/ubd/column/station> ;
         cc:targetProperty schema:identifier ;
         cc:datatype xsd:integer ;
         cc:language "en" ;
@@ -35,7 +35,7 @@ With Class cc:LiteralColumnMapping {
     } => {
       Expect Status 200
       Expect Property cc:sourceColumn {
-          Expect Id <https://cube-creator.lndo.site/cube-project/ubd/csv-source/stations/column/station-id>
+          Expect Id <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/station>
       }
       Expect Property cc:datatype {
           Expect Id xsd:integer

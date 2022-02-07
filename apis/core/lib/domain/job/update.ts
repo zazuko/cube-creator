@@ -1,7 +1,7 @@
 import { NamedNode } from 'rdf-js'
 import { GraphPointer } from 'clownface'
 import { Job, JobMixin, ImportProject, Dataset, CsvProject } from '@cube-creator/model'
-import { isPublishJob, isTransformJob } from '@cube-creator/model/Job'
+import { isPublishJob, isTransformJob, JobErrorMixin } from '@cube-creator/model/Job'
 import RdfResource from '@tpluscode/rdfine'
 import { ResourceStore } from '../../ResourceStore'
 import { schema } from '@tpluscode/rdf-ns-builders'
@@ -46,10 +46,12 @@ export async function update({ resource, store }: JobUpdateParams): Promise<Grap
   }
 
   if (changes.error) {
-    job.error = {
-      ...changes.error.toJSON(),
-      types: [schema.Thing],
-    } as any
+    job.error = RdfResource.factory.createEntity(job.pointer.blankNode(), [JobErrorMixin], {
+      initializer: {
+        ...changes.error.toJSON(),
+        types: [schema.Thing],
+      },
+    }) as any
   } else {
     job.error?.pointer.deleteOut()
     job.error = undefined

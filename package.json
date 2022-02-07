@@ -58,5 +58,8 @@
       "apis/*/types",
       "cli/test"
     ]
+  },
+  "resolutions": {
+    "jsonld": "~1"
   }
 }

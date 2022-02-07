@@ -58,9 +58,8 @@
       code:link <node:barnard59-validate-shacl/validate.js#shacl>
     ] ;
   code:arguments
-    (
-      <#loadShapes>
-    ) ;
+    [ code:name "shape" ; code:value <#loadShapes> ] ,
+    [ code:name "maxErrors" ; code:value 100 ] ;
 .
 
 <#loadShapes>

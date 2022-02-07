@@ -3,7 +3,8 @@ import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import type { Collection } from '@rdfine/hydra'
 import type * as Rdfs from '@rdfine/rdfs'
 import { ResourceMixin } from '@rdfine/rdfs'
-import { Action, ActionMixin, CreativeWork, CreativeWorkMixin } from '@rdfine/schema'
+import { Action, ActionMixin, CreativeWork, CreativeWorkMixin, Thing, ThingMixin } from '@rdfine/schema'
+import { ValidationReport, ValidationReportMixin } from '@rdfine/shacl'
 import { cc } from '@cube-creator/core/namespace'
 import { TableCollection } from './Table'
 import { Link } from './lib/Link'
@@ -12,12 +13,17 @@ import { schema, dcterms, rdfs, rdf } from '@tpluscode/rdf-ns-builders'
 import { initializer } from './lib/initializer'
 import { DimensionMetadataCollection } from './DimensionMetadata'
 
+export interface JobError extends Thing {
+  validationReport?: ValidationReport
+}
+
 export interface Job extends Action, Rdfs.Resource, RdfResource {
   created: Date
   modified: Date
   link?: RdfResource
   name: string
   comments: string[]
+  error: JobError | undefined
 }
 
 export interface TransformJob extends Job {
@@ -55,6 +61,15 @@ export interface JobCollection extends Collection<Job> {
 
 }
 
+export function JobErrorMixin<Base extends Constructor<RdfResource>>(base: Base): Mixin {
+  class Impl extends ResourceMixin(ThingMixin(base)) implements Partial<JobError> {
+    @property.resource({ path: cc.validationReport, as: [ValidationReportMixin] })
+    validationReport?: ValidationReport
+  }
+
+  return Impl
+}
+
 export function JobMixin<Base extends Constructor<RdfResource>>(base: Base): Mixin {
   class Impl extends ResourceMixin(ActionMixin(base)) implements Partial<Job> {
     @property.literal({ path: dcterms.created, type: Date, initial: () => new Date() })
@@ -71,6 +86,9 @@ export function JobMixin<Base extends Constructor<RdfResource>>(base: Base): Mix
 
     @property.literal({ path: rdfs.comment, values: 'array' })
     comments!: string[]
+
+    @property.resource({ path: schema.error, as: [JobErrorMixin] })
+    error?: JobError
   }
 
   return Impl

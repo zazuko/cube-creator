@@ -30,7 +30,7 @@ With Class cc:ReferenceColumnMapping {
         cc:referencedTable <https://cube-creator.lndo.site/cube-project/ubd/csv-mapping/table-station> ;
         cc:identifierMapping [
             cc:sourceColumn <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/year> ;
-            cc:referencedColumn <https://cube-creator.lndo.site/cube-project/ubd/csv-source/stations/column/station-id> ;
+            cc:referencedColumn <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/station> ;
         ] ;
       .
       ```
@@ -45,7 +45,7 @@ With Class cc:ReferenceColumnMapping {
           Expect Id <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/year>
         }
         Expect Property cc:referencedColumn {
-          Expect Id <https://cube-creator.lndo.site/cube-project/ubd/csv-source/stations/column/station-id>
+          Expect Id <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/station>
         }
       }
     }
