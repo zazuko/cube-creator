@@ -50,9 +50,9 @@ describe('lib/cube', () => {
 
   describe('injectRevision', () => {
     const cases = [
-      ['no/slash', 'no/slash', 'no/slash/5/'],
+      ['no/slash', 'no/slash', 'no/slash/5'],
       ['no/slash', 'no/slash/', 'no/slash/5/'],
-      ['no/slash/', 'no/slash', 'no/slash/5/'],
+      ['no/slash/', 'no/slash', 'no/slash/5'],
       ['no/slash/', 'no/slash/', 'no/slash/5/'],
       ['no/slash', 'no/slash/foo', 'no/slash/5/foo'],
       ['no/slash', 'no/slash/foo/', 'no/slash/5/foo/'],
