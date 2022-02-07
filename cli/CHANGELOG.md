@@ -1,5 +1,11 @@
 # @cube-creator/cli
 
+## 1.10.1
+
+### Patch Changes
+
+- 2dd38d9f: Publishing would write data to default graph and not correct named graph
+
 ## 1.10.0
 
 ### Minor Changes
