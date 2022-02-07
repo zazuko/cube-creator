@@ -18,6 +18,7 @@ import { Published } from '../../../../packages/model/Cube'
 describe('@cube-creator/cli/lib/commands/publish', function () {
   this.timeout(200000)
 
+  const targetGraph = $rdf.namedNode('https://lindas.admin.ch/foen/cube')
   const baseCubeId = 'https://environment.ld.admin.ch/foen/ubd/28'
   const ns = {
     baseCube: namespace(baseCubeId + '/'),
@@ -109,9 +110,17 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
 
     it('removes hydra terms', removesHydraTerms)
 
+    it('does not publish a cube with trailing slash', async () => {
+      const trailingSlashCubeExists = await ASK`${ns.baseCube('3/')} ?p ?o`
+        .FROM(targetGraph)
+        .execute(ccClients.streamClient.query)
+
+      expect(trailingSlashCubeExists).to.be.false
+    })
+
     it('adds a link to void dataset', async () => {
       const hasVoidLink = await ASK`<https://environment.ld.admin.ch/.well-known/void> ${schema.dataset} ${targetCube()}`
-        .FROM($rdf.namedNode('https://lindas.admin.ch/foen/cube'))
+        .FROM(targetGraph)
         .execute(ccClients.streamClient.query)
 
       expect(hasVoidLink).to.be.true
@@ -390,7 +399,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
 
     it('removes all csvw triples', async () => {
       const distinctCsvwProps = await SELECT.DISTINCT`(count(distinct ?p) as ?count)`
-        .FROM($rdf.namedNode('https://lindas.admin.ch/foen/cube'))
+        .FROM(targetGraph)
         .WHERE`
           ?s ?p ?o .
           filter (regex(str(?p), str(${csvw()})))
@@ -406,13 +415,13 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
         ?observation ?dimension ?value .
 
         FILTER ( REGEX (str(?dimension), str(${targetCube()}) ) )
-      `.FROM($rdf.namedNode('https://lindas.admin.ch/foen/cube')).execute(ccClients.streamClient.query)
+      `.FROM(targetGraph).execute(ccClients.streamClient.query)
       const anyShapePropertyHasRevision = await ASK`
         ?shape a ${cube.Constraint} .
         ?shape ${sh.property}/${sh.path} ?dimension .
 
         FILTER ( REGEX (str(?dimension), str(${targetCube()}) ) )
-      `.FROM($rdf.namedNode('https://lindas.admin.ch/foen/cube')).execute(ccClients.streamClient.query)
+      `.FROM(targetGraph).execute(ccClients.streamClient.query)
 
       expect(anyObservationPredicateHasRevision).to.be.false
       expect(anyShapePropertyHasRevision).to.be.false
@@ -425,7 +434,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
           ${sh.path} ${ns.baseCube('pollutant')} ;
           a ${cube.SharedDimension} ;
         ] .
-      `.FROM($rdf.namedNode('https://lindas.admin.ch/foen/cube')).execute(ccClients.streamClient.query)
+      `.FROM(targetGraph).execute(ccClients.streamClient.query)
 
       expect(hasShareDimensionType).to.eventually.be.true
     })
@@ -440,7 +449,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
     it('adds schema:sameAs to concepts linked to observation dimensions', async () => {
       const sameAsAdded = await ASK`
         ${targetCube('/station/blBAS')} ${schema.sameAs} ${ns.baseCube('station/blBAS')}
-      `.FROM($rdf.namedNode('https://lindas.admin.ch/foen/cube')).execute(ccClients.streamClient.query)
+      `.FROM(targetGraph).execute(ccClients.streamClient.query)
 
       expect(sameAsAdded).to.be.true
     })
@@ -448,7 +457,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
     it('does not add schema:sameAs to concepts outside cube namespace', async () => {
       const sameAsAdded = await ASK`
         <http://www.wikidata.org/entity/Q2025> ${schema.sameAs} ?any
-      `.FROM($rdf.namedNode('https://lindas.admin.ch/foen/cube')).execute(ccClients.streamClient.query)
+      `.FROM(targetGraph).execute(ccClients.streamClient.query)
 
       expect(sameAsAdded).to.be.false
     })
@@ -456,7 +465,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
     it('does not add schema:sameAs to objects of non-dimension properties`', async () => {
       const sameAsAdded = await ASK`
         ${targetCube('/maintainer/blBAS')} ${schema.sameAs} ?any
-      `.FROM($rdf.namedNode('https://lindas.admin.ch/foen/cube')).execute(ccClients.streamClient.query)
+      `.FROM(targetGraph).execute(ccClients.streamClient.query)
 
       expect(sameAsAdded).to.be.false
     })
@@ -468,7 +477,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
           ?shape ${sh.property} ?property .
           ?property ${sh.path} ?dimension ; ${schema.version} ?version
         `
-        .FROM($rdf.namedNode('https://lindas.admin.ch/foen/cube'))
+        .FROM(targetGraph)
         .execute(ccClients.parsingClient.query)
 
       expect(results).to.have.length(2)
@@ -481,7 +490,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
 
     it('does not add link to void dataset', async () => {
       const hasVoidLink = await ASK`?void ${schema.dataset} ${targetCube()}`
-        .FROM($rdf.namedNode('https://lindas.admin.ch/foen/cube'))
+        .FROM(targetGraph)
         .execute(ccClients.streamClient.query)
 
       expect(hasVoidLink).to.be.false
