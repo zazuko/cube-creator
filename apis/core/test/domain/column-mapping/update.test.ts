@@ -3,7 +3,7 @@ import { expect } from 'chai'
 import * as sinon from 'sinon'
 import clownface, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
-import { csvw, hydra, rdf, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
+import { csvw, hydra, prov, rdf, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import * as DimensionMetadataQueries from '../../../lib/domain/queries/dimension-metadata'
@@ -25,6 +25,7 @@ describe('domain/column-mapping/update', () => {
   let tableQueries: typeof TableQueries
   let getTableForColumnMapping: sinon.SinonStub
   let dimensionMetadata: GraphPointer<NamedNode, DatasetExt>
+  let dimensionMappings: GraphPointer<NamedNode, DatasetExt>
   let columnMapping: GraphPointer<NamedNode, DatasetExt>
   let columnMappingObservation: GraphPointer<NamedNode, DatasetExt>
   let observationTable: GraphPointer<NamedNode, DatasetExt>
@@ -93,11 +94,20 @@ describe('domain/column-mapping/update', () => {
       .addOut(cc.columnMapping, columnMappingObservation)
       .addOut(cc.columnMapping, otherColumnMappingObservation)
 
+    const dimensionProperty = $rdf.namedNode('test')
+
+    dimensionMappings = clownface({ dataset: $rdf.dataset() })
+      .namedNode('dimension-mappings')
+      .addOut(rdf.type, prov.Dictionary)
+      .addOut(schema.about, dimensionProperty)
+
     dimensionMetadata = clownface({ dataset: $rdf.dataset() })
       .namedNode('myDimensionMetadata')
       .addOut(rdf.type, cc.DimensionMetadataCollection)
       .addOut(schema.hasPart, $rdf.namedNode('myDimension'), dim => {
-        dim.addOut(schema.about, $rdf.namedNode('test'))
+        dim
+          .addOut(schema.about, dimensionProperty)
+          .addOut(cc.dimensionMapping, dimensionMappings)
       })
 
     const organization = Organization.fromPointer(namedNode('org'), {
@@ -114,6 +124,7 @@ describe('domain/column-mapping/update', () => {
       csvMapping,
       csvSource,
       dimensionMetadata,
+      dimensionMappings,
       columnMapping,
       otherColumnMapping,
       columnMappingObservation,
@@ -281,6 +292,14 @@ describe('domain/column-mapping/update', () => {
     expect(columnMapping.out(cc.targetProperty).value).to.eq('test2')
     const myDimension = dimensionMetadata.node($rdf.namedNode('myDimension'))
     expect(myDimension).to.matchShape({
+      property: {
+        path: schema.about,
+        minCount: 1,
+        maxCount: 1,
+        hasValue: $rdf.namedNode('test2'),
+      },
+    })
+    expect(dimensionMappings).to.matchShape({
       property: {
         path: schema.about,
         minCount: 1,

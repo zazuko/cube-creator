@@ -19,6 +19,7 @@ import * as id from '../identifiers'
 import { createIdentifierMapping } from '@cube-creator/model/ColumnMapping'
 import { findOrganization } from '../organization/query'
 import type { Organization } from '@rdfine/schema'
+import { Dictionary } from '@rdfine/prov'
 
 interface UpdateColumnMappingCommand {
   resource: GraphPointer
@@ -136,6 +137,11 @@ async function updateColumnMapping<T extends ColumnMapping>({
         cubeIdentifier,
         termName: targetProperty,
       })
+
+      if (dimension.mappings) {
+        const mappings = await store.getResource<Dictionary>(dimension.mappings)
+        mappings.about = dimension.about
+      }
     }
 
     columnMapping.targetProperty = targetProperty

@@ -5,35 +5,96 @@ import clownface, { AnyPointer, GraphPointer } from 'clownface'
 import { nanoid } from 'nanoid'
 import TermSet from '@rdfjs/term-set'
 import $rdf from 'rdf-ext'
+import { CONSTRUCT, DELETE, SELECT, WITH } from '@tpluscode/sparql-builder'
+import ParsingClient from 'sparql-http-client/ParsingClient'
 
-export function resourceQueryPatterns(resourceOrPattern: NamedNode | SparqlTemplateResult, strict: boolean) {
-  let rootPropPatterns = sparql`?term ?rootProp ?rootObject .`
-  if (!strict) {
-    rootPropPatterns = sparql`OPTIONAL { ${rootPropPatterns} }`
-  }
-
+export function resourceShapePatterns(resourceOrPattern: NamedNode | SparqlTemplateResult, all = false) {
   const termPattern = 'termType' in resourceOrPattern
     ? sparql`BIND( ${resourceOrPattern} as ?term )`
     : resourceOrPattern
 
-  return sparql`
-    ${termPattern}
+  let selectRoot = SELECT`?rootShape`
+    .WHERE`
+      ${termPattern}
+      ?rootShape ${sh.targetNode} ?term .
+      MINUS {
+        # Exclude shapes which are children of property shapes
+        ?propertyShape ${sh.node} ?rootShape .
+      }
+    `
 
-    ?rootShape ${sh.targetNode} ?term .
-    MINUS {
-      # Exclude shapes which are children of property shapes
-      ?propertyShape ${sh.node} ?rootShape .
+  if (!all) {
+    selectRoot = selectRoot.LIMIT(1)
+  }
+
+  return sparql`
+    {
+      ${selectRoot}
     }
 
-    OPTIONAL { ?rootShape ${sh.property}/${sh.path} ?rootProp . }
-    ${rootPropPatterns}
+    ?rootShape (!${sh.targetNode})* ?s .
+    ?s ?p ?o .
+  `
+}
 
-    OPTIONAL {
-      ?rootShape (${sh.property}/${sh.node})+ ?childPropShape .
-      ?childPropShape ${sh.targetNode} ?child .
-      ?childPropShape ${sh.property}/${sh.path} ?childProp .
-      ?child ?childProp ?childObject .
-    }`
+function variableSequence() {
+  let N = 1
+  return () => {
+    return $rdf.variable(`value${N++}`)
+  }
+}
+
+export function getPatternsFromShape(shapes: AnyPointer, nextVariable = variableSequence(), seen: TermSet = new TermSet()): SparqlTemplateResult[] {
+  return shapes.toArray().flatMap(shape => {
+    const node = shape.out(sh.targetNode).term
+    if (!node || seen.has(node)) {
+      return []
+    }
+
+    seen.add(node)
+    const property = shape.out(sh.property)
+    const childShapes = property.out(sh.node).toArray()
+
+    const uniqueProperties = new TermSet(property.out(sh.path).terms)
+    const ownPatterns = [...uniqueProperties].map(path => {
+      return sparql`${node} ${path} ${nextVariable()} .`
+    })
+    const childPatterns = childShapes.flatMap(child => getPatternsFromShape(child, nextVariable, seen))
+
+    return [
+      ...ownPatterns,
+      ...childPatterns,
+    ]
+  })
+}
+
+async function getShape(id: NamedNode, graph: NamedNode, client: ParsingClient) {
+  const dataset = $rdf.dataset(await CONSTRUCT`?s ?p ?o`
+    .FROM(graph)
+    .WHERE`${resourceShapePatterns(id)}`
+    .execute(client.query))
+  return clownface({ dataset }).has(sh.targetNode, id)
+}
+
+export async function deleteQuery(id: NamedNode, graph: NamedNode, client: ParsingClient) {
+  const shape = await getShape(id, graph, client)
+  const patterns = getPatternsFromShape(shape)
+
+  return WITH(graph, DELETE`${patterns}`.WHERE`${patterns}`)
+}
+
+export async function resourceQuery(id: NamedNode, graph: NamedNode, client: ParsingClient) {
+  const shape = await getShape(id, graph, client)
+
+  const patterns = getPatternsFromShape(shape)
+
+  return CONSTRUCT`${patterns}`
+    .FROM(graph)
+    .WHERE`${patterns}`
+}
+
+export function deleteShapesQuery(id: NamedNode, graph: NamedNode) {
+  return WITH(graph, DELETE`?s ?p ?o`.WHERE`${resourceShapePatterns(id, true)}`)
 }
 
 function isResource(arg: Term): arg is NamedNode | BlankNode {

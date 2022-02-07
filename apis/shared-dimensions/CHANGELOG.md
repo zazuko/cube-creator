@@ -1,5 +1,21 @@
 # @cube-creator/shared-dimensions-api
 
+## 2.5.1
+
+### Patch Changes
+
+- 3d9464b3: The shared dimension API would query the store ineffectively, ultimately preventing the server from starting
+- f492fb44: Editing shared dimensions was not working
+- 044c46be: Optimize full-text query when mapping shared dimension terms (closes #1050)
+
+## 2.5.0
+
+### Minor Changes
+
+- 796eec17: Add flag to allow multiple values of dynamic property (re #1024)
+- 615cee07: Add URI type to dynamic property (re #1024)
+- d5fb5838: Add "lang string" type of dynamic property (re #1024)
+
 ## 2.4.2
 
 ### Patch Changes

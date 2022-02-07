@@ -13,7 +13,7 @@ import { CONSTRUCT, sparql } from '@tpluscode/sparql-builder'
 import { streamClient } from '../sparql'
 import { StreamClient } from 'sparql-http-client/StreamClient'
 import TermMap from '@rdfjs/term-map'
-import { resourceQueryPatterns } from '../resource'
+import { getPatternsFromShape, resourceShapePatterns } from '../resource'
 
 export { importDimension } from './shared-dimension/import'
 
@@ -168,14 +168,20 @@ export async function getExportedDimension({ resource, store, client = streamCli
 
   const dimensionAndTerms = sparql`?term ${schema.inDefinedTermSet}* ${dimension.term} .`
 
-  const quads = await CONSTRUCT`
-    ?term ?rootProp ?rootObject .
-    ?child ?childProp ?childObject .
-  `
+  const dataset = await $rdf.dataset().import(await CONSTRUCT`?s ?p ?o`
+    .FROM(store.graph)
+    .WHERE`${resourceShapePatterns(dimensionAndTerms, true)}`
+    .execute(client.query))
+  const shapes = clownface({ dataset })
+    .has(sh.targetNode)
+    .filter(shape => !shape.in(sh.node).terms.length) // exclude nested shapes
+  const patterns = getPatternsFromShape(shapes)
+
+  const quads = await CONSTRUCT`${patterns}`
     .FROM(store.graph)
     .WHERE`
-      ${resourceQueryPatterns(dimensionAndTerms, false)}
-    `.execute(client.query)
+      ${patterns}
+    `.execute(client.query, { operation: 'postUrlencoded' })
 
   const baseUriPattern = new RegExp(`^${env.MANAGED_DIMENSIONS_BASE}`)
   function removeBase<T extends Term>(term: T): T {
