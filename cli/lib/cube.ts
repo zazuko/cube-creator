@@ -98,7 +98,7 @@ export async function injectRevision(this: Pick<Context, 'variables' | 'logger'>
 
   function rebase<T extends Term>(term: T, rev = revision): T {
     if (term.termType === 'NamedNode' && term.value.startsWith(cubeNamespace)) {
-      return $rdf.namedNode(term.value.replace(new RegExp(`^${cubeNamespace}/?`), `${cubeNamespace}/${rev}/`)) as any
+      return $rdf.namedNode(term.value.replace(new RegExp(`^${cubeNamespace}(/?.*)$`), `${cubeNamespace}/${rev}$1`)) as any
     }
 
     return term
