@@ -101,7 +101,13 @@
                   />
                 </b-tooltip>
                 <span class="ml-4">Page</span>
-                <b-input v-model.number="page" type="number" class="is-inline-block w-20" />
+                <b-input
+                  v-model.number="page"
+                  type="number"
+                  min="1"
+                  :max="totalPages"
+                  class="is-inline-block w-20"
+                />
                 <span class="">of {{ totalPages }}</span>
                 <span class="ml-4">
                   ({{ totalItems }} observations)
@@ -240,6 +246,10 @@ export default class extends Vue {
   }
 
   async fetchCubeData (): Promise<void> {
+    if (this.page <= 0) {
+      return
+    }
+
     this.observations = Remote.loading()
 
     if (!this.cube) {
