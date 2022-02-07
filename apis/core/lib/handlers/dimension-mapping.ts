@@ -9,6 +9,7 @@ import clownface from 'clownface'
 import { shaclValidate } from '../middleware/shacl'
 import { update } from '../domain/dimension-mapping/update'
 import { getUnmappedValues } from '../domain/queries/dimension-mappings'
+import { prov, rdfs } from '@tpluscode/rdf-ns-builders'
 
 function rewrite<T extends Term>(term: T, from: string, to: string): T {
   if (term.termType === 'NamedNode') {
@@ -67,6 +68,11 @@ export const prepareEntries: Enrichment = async (req, pointer) => {
 
   const dictionary = fromPointer(pointer)
   const unmappedValues = await getUnmappedValues(dictionary.id, dictionary.about)
+
+  const entities = dictionary.pointer.out(prov.hadDictionaryMember).out(prov.pairEntity).terms
+  entities.forEach(entity => {
+    dictionary.pointer.node(entity).addOut(rdfs.label, 'test')
+  })
 
   dictionary.addMissingEntries(unmappedValues)
 }

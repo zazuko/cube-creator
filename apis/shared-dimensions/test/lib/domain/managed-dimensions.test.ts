@@ -33,7 +33,7 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimensions @SPAR
     it('returns terms for a given dimension', async () => {
       // given
       const search = {
-        sharedDimension,
+        sharedDimensions: [sharedDimension],
         freetextQuery: undefined,
       }
 
@@ -64,7 +64,7 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimensions @SPAR
     it('returns top N terms', async () => {
       // given
       const search = {
-        sharedDimension,
+        sharedDimensions: [sharedDimension],
         freetextQuery: undefined,
         limit: 1,
       }
@@ -81,7 +81,7 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimensions @SPAR
     it('returns terms filtered by input, case-insensitive', async () => {
       // given
       const search = {
-        sharedDimension,
+        sharedDimensions: [sharedDimension],
         freetextQuery: 'r',
       }
       // when
@@ -97,7 +97,7 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimensions @SPAR
     it('returns terms only valid terms', async () => {
       // given
       const search = {
-        sharedDimension,
+        sharedDimensions: [sharedDimension],
         freetextQuery: undefined,
         validThrough: new Date(Date.parse('2021-04-15')),
       }

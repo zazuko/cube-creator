@@ -22,16 +22,14 @@ export async function update({
   const dimensionMappings = await store.getResource<Dictionary>(resource)
   const newMappings = fromPointer(mappings)
 
-  const sharedDimension = newMappings.sharedDimension
+  const sharedDimensions = newMappings.sharedDimensions
   const dimension = newMappings.about
 
   if (!dimension || !dimension.equals(dimensionMappings.about)) {
     throw new error.BadRequest('Unexpected value of schema:about')
   }
 
-  if (!sharedDimension || !sharedDimension.equals(dimensionMappings.sharedDimension)) {
-    dimensionMappings.changeSharedDimension(sharedDimension)
-  }
+  dimensionMappings.changeSharedDimensions(sharedDimensions)
 
   dimensionMappings.onlyValidTerms = newMappings.onlyValidTerms
 
