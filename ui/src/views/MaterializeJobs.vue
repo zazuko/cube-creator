@@ -5,7 +5,7 @@
         Back to {{ materializeLabel }}
       </b-button>
     </div>
-    <div class="box">
+    <div class="box container-narrow">
       <router-view />
     </div>
   </div>
