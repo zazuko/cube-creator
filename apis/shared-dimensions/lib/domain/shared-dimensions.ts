@@ -1,6 +1,7 @@
 import { CONSTRUCT, SELECT, sparql } from '@tpluscode/sparql-builder'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { md, meta } from '@cube-creator/core/namespace'
+import namespace from '@rdfjs/namespace'
 import { Term } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import { toRdf } from 'rdf-literal'
@@ -73,11 +74,12 @@ export function getSharedTerms({ sharedDimension, freetextQuery, validThrough, l
 function textSearch(subject: Term, predicate: Term, textQuery: string) {
   switch (env.maybe.MANAGED_DIMENSIONS_STORE_ENGINE) {
     case 'stardog': {
+      const fts = namespace('tag:stardog:api:search:')
       const variable = $rdf.variable('_s')
       return sparql`
-        service fts:textMatch {
-          [] fts:query '${textQuery + '*'}';
-             fts:result ${variable} ;
+        service ${fts.textMatch} {
+          [] ${fts.query} '${textQuery + '*'}';
+             ${fts.result} ${variable} ;
         }
         ${subject} ${predicate} ${variable} .
       `
