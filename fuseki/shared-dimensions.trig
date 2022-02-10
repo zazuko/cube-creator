@@ -51,6 +51,14 @@ graph <http://example.com/dimension/countries> {
     schema:name "Switzerland"@en, "Die Schweiz"@de, "Suisse"@fr, "Svizzera"@it ;
     schema:inDefinedTermSet <http://example.com/dimension/countries> ;
   .
+
+  <http://example.com/dimension/countries/Poland>
+    a schema:DefinedTerm ;
+    schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
+    schema:identifier "PL" ;
+    schema:name "Poland"@en, "Polen"@de, "Pologne"@fr, "Polonia"@it ;
+    schema:inDefinedTermSet <http://example.com/dimension/countries> ;
+  .
 }
 
 <http://example.com/dimension/colors> void:inDataset <shared-dimensions> .

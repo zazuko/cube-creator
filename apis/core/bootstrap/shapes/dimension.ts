@@ -269,7 +269,6 @@ ${shape('dimension/metadata')} {
       ${sh.name} "Root" ;
       ${sh.path} ${meta.hierarchyRoot} ;
       ${sh.minCount} 1 ;
-      ${sh.maxCount} 1 ;
       ${sh.nodeKind} ${sh.IRI} ;
       ${dash.editor} ${dash.AutoCompleteEditor} ;
       ${sh.order} 10 ;
