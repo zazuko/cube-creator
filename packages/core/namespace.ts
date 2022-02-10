@@ -109,7 +109,8 @@ type MetaTerms =
   'dataKind' |
   'DimensionRelation' |
   'dimensionRelation' |
-  'relatesTo'
+  'relatesTo' |
+  'hasHierarchy'
 
 prefixes.cube = 'https://cube.link/'
 prefixes.view = 'https://cube.link/view/'

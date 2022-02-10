@@ -46,6 +46,7 @@ const validateDataKindShape = turtle`[
   ${sh.path} ${meta.dataKind} ;
   ${dash.hidden} true ;
   ${sh.maxCount} 1 ;
+  ${sh.group} ${shape('dimension/metadata#coreGroup')} ;
   ${sh.node} [
     ${sh.xone} (
     [
@@ -95,7 +96,8 @@ ${shape('dimension/metadata')} {
       ${sh.uniqueLang} true ;
       ${sh.maxCount} ${supportedLanguages.length};
       ${sh.minLength} 1 ;
-      ${sh.order} 10 ;
+      ${sh.order} 5 ;
+      ${sh.group} ${shape('dimension/metadata#coreGroup')} ;
     ] , [
       ${sh.name} "Description" ;
       ${sh.path} ${schema.description} ;
@@ -105,7 +107,8 @@ ${shape('dimension/metadata')} {
       ${sh.maxCount} ${supportedLanguages.length};
       ${sh.minLength} 1 ;
       ${dash.singleLine} false ;
-      ${sh.order} 15 ;
+      ${sh.order} 10 ;
+      ${sh.group} ${shape('dimension/metadata#coreGroup')} ;
     ] , [
       ${sh.name} "Dimension type" ;
       ${sh.description} "The type is preselected to match the same selection made in the CSV Mapping tab (when applicable)" ;
@@ -116,6 +119,7 @@ ${shape('dimension/metadata')} {
       ) ;
       ${sh.maxCount} 1 ;
       ${sh.order} 15 ;
+      ${sh.group} ${shape('dimension/metadata#coreGroup')} ;
     ], [
       ${sh.name} "Scale of measure" ;
       ${sh.path} ${qudt.scaleType} ;
@@ -127,6 +131,7 @@ ${shape('dimension/metadata')} {
       ) ;
       ${sh.maxCount} 1 ;
       ${sh.order} 20 ;
+      ${sh.group} ${shape('dimension/metadata#coreGroup')} ;
     ] , [
       ${sh.name} "Unit" ;
       ${sh.path} ${qudt.unit} ;
@@ -136,11 +141,13 @@ ${shape('dimension/metadata')} {
       ${sh.class} ${qudt.Unit} ;
       ${hydra.collection} ${lindasQuery(unitsQuery)} ;
       ${dash.editor} ${dash.AutoCompleteEditor} ;
+      ${sh.group} ${shape('dimension/metadata#coreGroup')} ;
     ] , [
       ${sh.name} "Data kind" ;
       ${sh.path} ${meta.dataKind} ;
       ${sh.maxCount} 1 ;
       ${sh.nodeKind} ${sh.BlankNode} ;
+      ${sh.group} ${shape('dimension/metadata#coreGroup')} ;
       ${sh.node} [
         ${sh.property} [
           ${sh.name} "Choose type" ;
@@ -183,6 +190,7 @@ ${shape('dimension/metadata')} {
       ${sh.path} ${meta.dimensionRelation} ;
       ${sh.nodeKind} ${sh.BlankNode} ;
       ${sh.order} 50 ;
+      ${sh.group} ${shape('dimension/metadata#coreGroup')} ;
       ${sh.node} [
         ${sh.property} [
           ${sh.name} "Type" ;
@@ -218,14 +226,35 @@ ${shape('dimension/metadata')} {
       ${sh.minCount} 0 ;
       ${sh.maxCount} 1 ;
       ${sh.order} 60 ;
+      ${sh.group} ${shape('dimension/metadata#coreGroup')} ;
     ] , [
       ${sh.path} ${schema.about} ;
       ${sh.nodeKind} ${sh.IRI} ;
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
       ${dash.hidden} true ;
+      ${sh.group} ${shape('dimension/metadata#coreGroup')} ;
+    ] , [
+      ${sh.name} "Parent terms" ;
+      ${sh.description} "Built a path of shared term properties to this dimension's values" ;
+      ${sh.path} ${meta.hasHierarchy} ;
+      ${sh.nodeKind} ${sh.BlankNode} ;
+      ${sh.node} ${shape('dimension/metadata#HierarchyShape')} ;
+      ${sh.maxCount} 1 ;
+      ${sh.group} ${shape('dimension/metadata#hierarchyGroup')} ;
     ] ,
     ${validateDataKindShape}
+  .
+
+  ${shape('dimension/metadata#HierarchyShape')}
+    ${sh.property} [
+      ${sh.name} "Name" ;
+      ${sh.path} ${schema.name} ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+      ${sh.datatype} ${xsd.string} ;
+      ${sh.order} 1 ;
+    ] ;
   .
 
   ${cube.MeasureDimension} ${rdfs.label} "Measure dimension"@en .
@@ -296,6 +325,13 @@ ${shape('dimension/metadata')} {
     ${schema.about} <http://www.wikidata.org/entity/Q12483> ;
     ${schema.sameAs} <http://www.wikidata.org/entity/Q159375> ;
   .
+
+  ${shape('dimension/metadata#coreGroup')}
+    ${rdfs.label} "Metadata" ;
+    ${sh.order} 1 .
+  ${shape('dimension/metadata#hierarchyGroup')}
+    ${rdfs.label} "Hierarchy" ;
+    ${sh.order} 2 .
 }
 `
 

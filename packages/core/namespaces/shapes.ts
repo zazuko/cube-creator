@@ -17,6 +17,9 @@ type ShapeTerms =
   'column-mapping/literal' |
   'column-mapping/reference' |
   'dimension/metadata' |
+  'dimension/metadata#coreGroup' |
+  'dimension/metadata#hierarchyGroup' |
+  'dimension/metadata#HierarchyShape' |
   'dimension/shared-mapping' |
   'csv-source/s3Bucket'
 
