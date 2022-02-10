@@ -9,6 +9,8 @@ import { placeholderEntity } from '../../lib/domain/dimension-mapping/DimensionM
 
 const sou = namespace('http://qudt.org/vocab/sou/')
 
+const sharedDimensionCollection = $rdf.namedNode('dimension/_term-sets')
+
 const unitsQuery = sparql`
 CONSTRUCT
   {
@@ -254,6 +256,36 @@ ${shape('dimension/metadata')} {
       ${sh.maxCount} 1 ;
       ${sh.datatype} ${xsd.string} ;
       ${sh.order} 1 ;
+    ] , [
+      ${sh.name} "Root dimension" ;
+      ${sh.path} ${cc.sharedDimension} ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+      ${sh.nodeKind} ${sh.IRI} ;
+      ${dash.editor} ${dash.InstancesSelectEditor} ;
+      ${hydra.collection} ${sharedDimensionCollection} ;
+      ${sh.order} 5 ;
+    ] , [
+      ${sh.name} "Root" ;
+      ${sh.path} ${meta.hierarchyRoot} ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+      ${sh.nodeKind} ${sh.IRI} ;
+      ${dash.editor} ${dash.AutoCompleteEditor} ;
+      ${sh.order} 10 ;
+      ${hydra.search} [
+        ${hydra.variableRepresentation} ${hydra.ExplicitRepresentation} ;
+        ${hydra.template} "dimension/_terms?dimension={dimension}{&q}" ;
+        ${hydra.mapping} [
+          ${hydra.variable} "dimension" ;
+          ${hydra.property} ${cc.sharedDimension} ;
+          ${hydra.required} true ;
+        ] , [
+          ${hydra.variable} "q" ;
+          ${hydra.property} ${hydra.freetextQuery} ;
+          ${sh.minLength} 0 ;
+        ];
+      ]
     ] ;
   .
 
@@ -334,8 +366,6 @@ ${shape('dimension/metadata')} {
     ${sh.order} 2 .
 }
 `
-
-const sharedDimensionCollection = $rdf.namedNode('dimension/_term-sets')
 
 export const SharedDimensionMappingShape = turtle`
 ${shape('dimension/shared-mapping')} {

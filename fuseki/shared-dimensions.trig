@@ -12,6 +12,21 @@ base <https://ld.admin.ch/cube/dimension/>
 
 <shared-dimensions> a void:Dataset .
 
+<http://example.com/dimension/cantons> void:inDataset <shared-dimensions> .
+graph <http://example.com/dimension/cantons> {
+  <http://example.com/dimension/cantons>
+    a schema:DefinedTermSet, meta:SharedDimension ;
+    schema:name "Cantons"@en ;
+  .
+
+  <http://example.com/dimension/canton/ZH>
+    a schema:DefinedTerm ;
+    schema:identifier "ZH" ;
+    schema:containedInPlace <http://example.com/dimension/countries/Switzerland> ;
+    schema:name "Zurich"@en ;
+    schema:inDefinedTermSet <http://example.com/dimension/cantons> ;
+}
+
 <http://example.com/dimension/chemicals> void:inDataset <shared-dimensions> .
 graph <http://example.com/dimension/chemicals> {
   <http://example.com/dimension/chemicals>

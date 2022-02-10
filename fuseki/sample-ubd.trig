@@ -109,6 +109,9 @@ graph <cube-project/ubd/dimensions-metadata> {
     schema:name "Station"@en ;
     meta:hasHierarchy [
       schema:name "CH - Canton - Station" ;
+      # TODO: this should be in meta namespace?
+      cc:sharedDimension <http://example.com/dimension/countries> ;
+      meta:hierarchyRoot <http://example.com/dimension/countries/Switzerland> ;
     ] ;
   .
 
