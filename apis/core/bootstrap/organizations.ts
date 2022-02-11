@@ -59,4 +59,20 @@ export const organizations = turtle`
     ${cube.observedBy} <https://ld.admin.ch/office/VII.1.4> ;
   .
 }
+
+<organization/fch> {
+  <organization/fch>
+    a ${schema.Organization} ;
+    ${cc.publishGraph}  <https://lindas.admin.ch/fch/cube> ;
+    ${cc.namespace} <https://politics.ld.admin.ch/fch/> ;
+    ${schema.dataset} <https://politics.ld.admin.ch/.well-known/void> ;
+    ${rdfs.label} "Federal Chancellery"@en ;
+    ${rdfs.label} "Bundeskanzlei"@de ;
+    ${rdfs.label} "Cancelleria federale"@it ;
+    ${rdfs.label} "Chancellerie fédérale"@fr ;
+    ${dcat.accessURL} <https://politics.ld.admin.ch/sparql> ;
+    ${_void.sparqlEndpoint} <https://politics.ld.admin.ch/query> ;
+    ${cube.observedBy} <https://ld.admin.ch/FCh> ;
+  .
+}
 `
