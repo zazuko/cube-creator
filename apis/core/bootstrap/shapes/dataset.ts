@@ -92,7 +92,7 @@ const frequencyQuery = sparql`construct {
 } WHERE {
   BIND ( iri('${env.API_CORE_BASE}freq') as ?c )
 
-  graph <https://lindas.admin.ch/territorial> {
+  graph <https://lindas.admin.ch/ontologies> {
     ?freq a <http://publications.europa.eu/ontology/euvoc#Frequency> ;
       ${skos.prefLabel} ?name ;
       ?p ?o .
