@@ -1,6 +1,6 @@
 {
   "name": "@cube-creator/core",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "private": true,
   "dependencies": {
     "@rdf-esm/data-model": "^0.5.4",

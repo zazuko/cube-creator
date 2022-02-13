@@ -1,5 +1,11 @@
 # @cube-creator/core
 
+## 0.3.4
+
+### Patch Changes
+
+- b01ca6d7: Store SHACL validation error for publication jobs and display it in the UI
+
 ## 0.3.3
 
 ### Patch Changes
