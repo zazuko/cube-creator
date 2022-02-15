@@ -1,5 +1,15 @@
 # @cube-creator/ui
 
+## 1.8.2
+
+### Patch Changes
+
+- 4495ccda: Do not request observations if page <= 0
+- b01ca6d7: Store SHACL validation error for publication jobs and display it in the UI
+- Updated dependencies [b01ca6d7]
+  - @cube-creator/core@0.3.4
+  - @cube-creator/model@0.1.25
+
 ## 1.8.1
 
 ### Patch Changes

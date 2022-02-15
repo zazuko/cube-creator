@@ -1,5 +1,14 @@
 # @cube-creator/shared-dimensions-api
 
+## 2.5.2
+
+### Patch Changes
+
+- f3303abf: Fix missing prefix in Stardog-specific query (fixes #1050)
+- Updated dependencies [b01ca6d7]
+  - @cube-creator/core@0.3.4
+  - @cube-creator/api-errors@0.0.5
+
 ## 2.5.1
 
 ### Patch Changes
