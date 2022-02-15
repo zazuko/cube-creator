@@ -1,5 +1,12 @@
 # @cube-creator/core-api
 
+## 1.9.4
+
+### Patch Changes
+
+- Updated dependencies [3c4ca273]
+  - @cube-creator/model@0.1.26
+
 ## 1.9.3
 
 ### Patch Changes

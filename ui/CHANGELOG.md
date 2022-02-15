@@ -1,5 +1,12 @@
 # @cube-creator/ui
 
+## 1.8.3
+
+### Patch Changes
+
+- Updated dependencies [3c4ca273]
+  - @cube-creator/model@0.1.26
+
 ## 1.8.2
 
 ### Patch Changes

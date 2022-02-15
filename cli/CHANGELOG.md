@@ -1,5 +1,12 @@
 # @cube-creator/cli
 
+## 1.10.3
+
+### Patch Changes
+
+- Updated dependencies [3c4ca273]
+  - @cube-creator/model@0.1.26
+
 ## 1.10.2
 
 ### Patch Changes
