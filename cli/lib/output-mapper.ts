@@ -12,7 +12,7 @@ import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import { HydraResponse } from 'alcaeus'
 import { DefaultCsvwLiteral } from '@cube-creator/core/mapping'
 import through2 from 'through2'
-import { importDynamic } from './module'
+import { rdf } from '@tpluscode/rdf-ns-builders'
 
 const undef = $rdf.literal('', cube.Undefined)
 
@@ -61,6 +61,22 @@ export async function loadDimensionMapping(mappingUri: string, Hydra: HydraClien
   return mappingResource.representation.root?.pointer
 }
 
+// FlatMap pipeline step
+function flatMap(func: (chunk: any) => Promise<any[]>) {
+  return through2.obj(function (quad, _encoding, callback) {
+    Promise.resolve()
+      .then(() => {
+        return func(quad)
+      }).then(quads => {
+        for (const quad of quads) {
+          this.push(quad)
+        }
+
+        callback()
+      }).catch(callback)
+  })
+}
+
 export async function mapDimensions(this: Pick<Context, 'variables'>) {
   const mappingCache = new TermMap<Term, MultiPointer | null>()
   const jobUri = this.variables.get('jobUri')
@@ -104,23 +120,51 @@ export async function mapDimensions(this: Pick<Context, 'variables'>) {
     return value
   }
 
-  const { default: map } = await importDynamic('barnard59-base/map.js')
+  // We store non-observation quads in memory and inject them into the stream
+  // after all the observation-specific steps
+  const nonObservationQuads = $rdf.dataset()
+  this.variables.set('nonObservationQuads', nonObservationQuads)
 
-  return map(async (quad: Quad) => {
+  const handleQuad = async (quad: Quad) => {
     const { subject, predicate, object, graph } = quad
     const mappingTerm = getDimensionMapping(predicate)
     if (mappingTerm?.value) {
       if (object.equals(undef)) {
-        return $rdf.quad(subject, predicate, cube.Undefined, graph)
+        return [$rdf.quad(subject, predicate, cube.Undefined, graph)]
       }
 
       const mappedValue = await getMappedValue(mappingTerm.value, object)
       if (mappedValue?.termType === 'NamedNode') {
-        return $rdf.quad(subject, predicate, mappedValue, graph)
+        const predicateOriginal = $rdf.namedNode(predicate.value + '#original')
+
+        nonObservationQuads.add($rdf.quad(predicateOriginal, rdf.type, cc.OriginalValuePredicate, graph))
+        nonObservationQuads.add($rdf.quad(predicateOriginal, schema.about, predicate, graph))
+
+        return [
+          $rdf.quad(subject, predicate, mappedValue, graph),
+          $rdf.quad(subject, predicateOriginal, object, graph),
+        ]
       }
     }
 
-    return quad
+    return [quad]
+  }
+
+  return flatMap(handleQuad)
+}
+
+export function injectNonObservationQuads(this: Pick<Context, 'variables'>) {
+  const nonObservationQuads = this.variables.get('nonObservationQuads')
+
+  return through2.obj(function (quad, _encoding, callback) {
+    this.push(quad)
+    callback()
+  }, function (done) {
+    for (const quad of nonObservationQuads) {
+      this.push(quad)
+    }
+
+    done()
   })
 }
 

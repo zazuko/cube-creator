@@ -32,9 +32,10 @@ describe('lib/output-mapper', function () {
     it('mapped value is replaced', async () => {
       // given
 
+      const obsId = $rdf.namedNode('observation')
       const quads = $rdf.dataset([
         $rdf.quad(
-          $rdf.namedNode('observation'),
+          obsId,
           predicate,
           $rdf.literal('co'),
           cube.Cube),
@@ -45,10 +46,30 @@ describe('lib/output-mapper', function () {
       const mapped = await $rdf.dataset().import(quads.pipe(map))
 
       // then
-      const quad = mapped.toArray()[0]
-      expect(quad.subject.value).to.deep.eq('observation')
-      expect(quad.predicate.value).to.deep.eq(predicate.value)
-      expect(quad.object.value).to.deep.eq('http://www.wikidata.org/entity/Q2025')
+      const match = mapped.match(obsId, predicate, $rdf.namedNode('http://www.wikidata.org/entity/Q2025'))
+      expect(match.size).to.equal(1)
+    })
+
+    it('original value is kept around', async () => {
+      // given
+
+      const obsId = $rdf.namedNode('observation')
+      const quads = $rdf.dataset([
+        $rdf.quad(
+          obsId,
+          predicate,
+          $rdf.literal('co'),
+          cube.Cube),
+      ]).toStream()
+
+      // when
+      const map = await mapDimensions.call(context)
+      const mapped = await $rdf.dataset().import(quads.pipe(map))
+
+      // then
+      const match = mapped.match(obsId, null, $rdf.literal('co'))
+      expect(match.size).to.equal(1)
+      expect([...match][0].predicate.value).to.not.eq(predicate.value)
     })
 
     it('unmapped value with entry does not change', async () => {
