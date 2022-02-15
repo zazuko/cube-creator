@@ -1,5 +1,11 @@
 # @cube-creator/model
 
+## 0.1.26
+
+### Patch Changes
+
+- 3c4ca273: Do not crash when table has no identifier template
+
 ## 0.1.25
 
 ### Patch Changes
