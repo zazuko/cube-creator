@@ -1,3 +1,4 @@
+PREFIX gn: <http://www.geonames.org/ontology#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX qb: <http://purl.org/linked-data/cube#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -23,6 +24,7 @@ graph <http://example.com/dimension/cantons> {
     a schema:DefinedTerm ;
     schema:identifier "ZH" ;
     schema:containedInPlace <http://example.com/dimension/countries/Switzerland> ;
+    gn:parentFeature <http://example.com/dimension/countries/Switzerland> ;
     schema:name "Zurich"@en ;
     schema:inDefinedTermSet <http://example.com/dimension/cantons> ;
 }

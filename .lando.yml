@@ -27,6 +27,7 @@ services:
     ssl: true
   store:
     type: compose
+    ssl: true
     services:
       image: blankdots/jena-fuseki:fuseki3.13.1
       command: /docker-entrypoint.sh /jena-fuseki/start-fuseki.sh

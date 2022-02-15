@@ -111,7 +111,8 @@ type MetaTerms =
   'dimensionRelation' |
   'relatesTo' |
   'hasHierarchy' |
-  'hierarchyRoot'
+  'hierarchyRoot' |
+  'nextInHierarchy'
 
 prefixes.cube = 'https://cube.link/'
 prefixes.view = 'https://cube.link/view/'

@@ -4,13 +4,15 @@ import {
   InstancesSelectEditor, instancesSelect as instancesSelectCore, Item
 } from '@hydrofoil/shaperone-core/components'
 import * as ns from '@cube-creator/core/namespace'
-import { dash, hydra, rdfs, schema, xsd } from '@tpluscode/rdf-ns-builders/strict'
-import $rdf from '@rdfjs/dataset'
-import { GraphPointer } from 'clownface'
+import { dash, dcterms, hydra, rdfs, schema, sd, sh, xsd } from '@tpluscode/rdf-ns-builders/strict'
+import $rdf from 'rdf-ext'
+import clownface, { GraphPointer } from 'clownface'
 import { FocusNode } from '@hydrofoil/shaperone-core'
+import StreamClient from 'sparql-http-client'
 import { createCustomElement } from '../custom-element'
 import '@rdfine/dash/extensions/sh/PropertyShape'
 import { Literal } from 'rdf-js'
+import { buildQuery } from './HierarchyPathEditor/query'
 
 export const textField: Lazy<SingleEditorComponent> = {
   editor: dash.TextFieldEditor,
@@ -334,6 +336,43 @@ export const checkboxList: Lazy<MultiEditorComponent> = {
       return html`<checkbox-list .value="${values}"
                                  .choices="${choices}"
                                  .update="${update}"></checkbox-list>`
+    }
+  }
+}
+
+export const hierarchyPath: Lazy<InstancesSelectEditor> = {
+  ...instanceSelect,
+  editor: ns.editor.HierarchyPathEditor,
+  shouldLoad ({ focusNode, value: { componentState: { propertiesQuery } } }) {
+    // run query only when it's different from previous
+    const query = buildQuery(focusNode)
+    return !!query && query !== propertiesQuery
+  },
+  async loadChoices ({ property, focusNode, updateComponentState }) {
+    const endpointUrl = property.shape.get(dcterms.source).get(sd.endpoint).id.value
+    const client = new StreamClient({
+      endpointUrl
+    })
+
+    // build query based on current hierarchy selection
+    const propertiesQuery = buildQuery(focusNode)
+    // memoize the query
+    updateComponentState({ propertiesQuery })
+
+    const stream = await client.query.construct(propertiesQuery)
+
+    const dataset = await $rdf.dataset().import(stream)
+
+    // find in results resources with labels. these are the properties
+    return clownface({ dataset }).has(rdfs.label).toArray()
+  },
+  async lazyRender () {
+    await import('./HierarchyPathEditor.vue').then(createCustomElement('hierarchy-path'))
+
+    return ({ value, updateComponentState }, { update }) => {
+      return html`<hierarchy-path .update="${update}"
+                                  .value="${value.object}"
+                                  .properties="${value.componentState.instances}"></hierarchy-path>`
     }
   }
 }

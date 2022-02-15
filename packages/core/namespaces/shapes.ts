@@ -20,6 +20,7 @@ type ShapeTerms =
   'dimension/metadata#coreGroup' |
   'dimension/metadata#hierarchyGroup' |
   'dimension/metadata#HierarchyShape' |
+  'dimension/metadata#PathShape' |
   'dimension/shared-mapping' |
   'csv-source/s3Bucket'
 

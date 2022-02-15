@@ -1,4 +1,4 @@
-import { cc, meta, shape, sh1, cube, md, relation } from '@cube-creator/core/namespace'
+import { cc, meta, shape, sh1, cube, md, relation, editor } from '@cube-creator/core/namespace'
 import { supportedLanguages } from '@cube-creator/core/languages'
 import { sparql, turtle } from '@tpluscode/rdf-string'
 import { lindasQuery } from '../lib/query'
@@ -6,6 +6,8 @@ import { dash, hydra, prov, rdf, rdfs, schema, sh, qudt, time, xsd } from '@tplu
 import namespace from '@rdfjs/namespace'
 import $rdf from 'rdf-ext'
 import { placeholderEntity } from '../../lib/domain/dimension-mapping/DimensionMapping'
+import { dcterms, sd } from '@tpluscode/rdf-ns-builders/strict'
+import env from '@cube-creator/core/env'
 
 const sou = namespace('http://qudt.org/vocab/sou/')
 
@@ -285,8 +287,35 @@ ${shape('dimension/metadata')} {
           ${sh.minLength} 0 ;
         ];
       ]
+    ] , [
+      ${sh.name} "Property" ;
+      ${sh.path} ${sh.path} ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+      ${dash.editor} ${editor.HierarchyPathEditor} ;
+      ${sh.node} ${shape('dimension/metadata#PathShape')} ;
+      ${dcterms.source} [
+        ${sd.endpoint} <${env.PUBLIC_QUERY_ENDPOINT}>
+      ];
+      ${sh.order} 15 ;
     ] ;
   .
+
+  ${shape('dimension/metadata#PathShape')}
+    ${sh.xone} (
+      [
+        ${sh.nodeKind} ${sh.IRI} ;
+      ]
+      [
+        ${sh.nodeKind} ${sh.BlankNode} ;
+        ${sh.property} [
+          ${sh.path} ${sh.inversePath} ;
+          ${sh.nodeKind} ${sh.IRI} ;
+          ${sh.minCount} 1 ;
+          ${sh.maxCount} 1 ;
+        ] ;
+      ]
+    ) .
 
   ${cube.MeasureDimension} ${rdfs.label} "Measure dimension"@en .
   ${cube.KeyDimension} ${rdfs.label} "Key dimension"@en .
