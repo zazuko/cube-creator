@@ -55,11 +55,7 @@ export function TableMixin<Base extends Constructor>(base: Base): Mixin {
     }
 
     get parsedTemplate() {
-      if (!this.identifierTemplate) {
-        throw new Error('Table has no identifier template')
-      }
-
-      return parse(this.identifierTemplate)
+      return parse(this.identifierTemplate ?? '')
     }
   }
 
