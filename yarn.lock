@@ -2003,9 +2003,9 @@
     "@rdfjs/term-set" "^1.1.0"
 
 "@rdfjs/express-handler@^1.2.0", "@rdfjs/express-handler@^1.2.1":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@rdfjs/express-handler/-/express-handler-1.2.1.tgz#e0182697d87cf211fc75d10534c4c3812296d266"
-  integrity sha512-prJN6H7l7qjVa5j4iBBD1M54yfykvO1DEwXcNSuiuUfJHkDBWlTEyPkx7HUKv6jB53JA/Lfa89fcDqTgI2K1Ng==
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/@rdfjs/express-handler/-/express-handler-1.2.2.tgz#edafc250636e55940485268c259cacc1f3b67988"
+  integrity sha512-4BeUtp4XF5I9fnKc1tiN0syr5YFNH1773GKhbb3ZHzdfrPq/hjbp+nmqVgvatq5LSKImdWve8I0rVsXioPuzfg==
   dependencies:
     "@rdfjs/dataset" "^1.0.1"
     "@rdfjs/formats-common" "^2.0.0"
@@ -10804,9 +10804,9 @@ mz@^2.4.0:
     thenify-all "^1.0.0"
 
 n3@^1.3.5:
-  version "1.12.2"
-  resolved "https://registry.yarnpkg.com/n3/-/n3-1.12.2.tgz#3214c895b202ff57ebcaeb3e086c80649209158d"
-  integrity sha512-vY1HBEraMPWQFLEK6sn67DeGMqTuwXnlEYpZ8gTVukKQSz2f44d+t+ZcmwEt8c99FlVAbpmMb/435Q8t0OC+7w==
+  version "1.13.0"
+  resolved "https://registry.yarnpkg.com/n3/-/n3-1.13.0.tgz#aaa37ef40c8adf83f543ae468b8bbd813e422d97"
+  integrity sha512-GMB4ypBfnuf6mmwbtyN6Whc8TfuVDedxc4n+3wsacQH/h0+RjaEobGMhlWrFLDsqVbT94XA6+q9yysMO5SadKA==
   dependencies:
     queue-microtask "^1.1.2"
     readable-stream "^3.6.0"
@@ -12438,7 +12438,7 @@ raw-body@2.4.2:
     iconv-lite "0.4.24"
     unpipe "1.0.0"
 
-rdf-canonize@^1.0.2, rdf-canonize@^1.0.3:
+rdf-canonize@^1.0.2:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/rdf-canonize/-/rdf-canonize-1.2.0.tgz#9872b2cc6ed92a9969e834f9f042addaf0d4f7f9"
   integrity sha512-MQdcRDz4+82nUrEb3hNQangBDpmep15uMmnWclGi/1KS0bNVc8oHpoNI0PFLHZsvwgwRzH31bO1JAScqUAstvw==
@@ -12475,11 +12475,11 @@ rdf-data-factory@^1.0.4, rdf-data-factory@^1.1.0:
     "@rdfjs/types" "*"
 
 rdf-dataset-ext@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/rdf-dataset-ext/-/rdf-dataset-ext-1.0.0.tgz#efddc7242baeec8e37a4a41a40b777c09b1ae873"
-  integrity sha512-TrcHIoNyLVUQAi5oqcpcqDNyM/S6JB4d7cu8CqoY+d5xKVioHOHW3VtPpaedHWY8bVB+pEu5u5lIfSnc/C8nLQ==
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/rdf-dataset-ext/-/rdf-dataset-ext-1.0.1.tgz#9df48566e57748f321e19c9ec713811badbd7ca5"
+  integrity sha512-I08/j+w0zqNRmFXbFhqxexmKsdS9nGDno/cG/OaF5sLxkDNrhyP82OxWx35ZPrjd4FG8T+TsGaxZFZkVIS85eA==
   dependencies:
-    rdf-canonize "^1.0.3"
+    rdf-canonize "^3.0.0"
     readable-stream "^3.4.0"
 
 rdf-dataset-indexed@^0.4.0:
