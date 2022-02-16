@@ -135,7 +135,7 @@ export async function mapDimensions(this: Pick<Context, 'variables'>) {
 
       const mappedValue = await getMappedValue(mappingTerm.value, object)
       if (mappedValue?.termType === 'NamedNode') {
-        const predicateOriginal = $rdf.namedNode(predicate.value + '#original')
+        const predicateOriginal = $rdf.namedNode(predicate.value + '#_original')
 
         nonObservationQuads.add($rdf.quad(predicateOriginal, rdf.type, cc.OriginalValuePredicate, graph))
         nonObservationQuads.add($rdf.quad(predicateOriginal, schema.about, predicate, graph))

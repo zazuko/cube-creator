@@ -10,6 +10,7 @@
               (
                 <#concatStreams>
                 <#removeHydraTriples>
+                <#removeMappingsOriginalValues>
                 <#uniqueBnodes>
                 <#countOutputQuads>
                 <#StreamOutput>
@@ -194,6 +195,13 @@ _:get
   a :Step ;
   code:implementedBy [ a code:EcmaScriptModule ; code:link <node:barnard59-base/filter.js#default> ] ;
   code:arguments     ( [ code:link <file:../lib/output-filter#removeHydraTriples> ;
+                           a         code:EcmaScript ] ) ;
+.
+
+<#removeMappingsOriginalValues>
+  a :Step ;
+  code:implementedBy [ a code:EcmaScriptModule ; code:link <node:barnard59-base/filter.js#default> ] ;
+  code:arguments     ( [ code:link <file:../lib/output-filter#removeMappingsOriginalValues> ;
                            a         code:EcmaScript ] ) ;
 .
 

@@ -58,6 +58,14 @@ export function removeHydraTriples({ subject, predicate, object }: Quad): boolea
   return !(isHydraTerm(subject) || isHydraTerm(predicate) || isHydraTerm(object))
 }
 
+function isOriginalValueTerm(term: Term): boolean {
+  return term.termType === 'NamedNode' && term.value.endsWith('#_original')
+}
+
+export function removeMappingsOriginalValues({ subject, predicate, object }: Quad): boolean {
+  return !(isOriginalValueTerm(subject) || isOriginalValueTerm(predicate) || isOriginalValueTerm(object))
+}
+
 export function ensureUniqueBnodes(this: Context, quad: Quad): Quad {
   const uuid = this.variables.get('bnodeUuid') ||
     this.variables.set('bnodeUuid', nanoid()).get('bnodeUuid')
