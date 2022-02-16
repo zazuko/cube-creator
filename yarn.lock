@@ -2388,9 +2388,9 @@
     fs-extra "^10.0.0"
 
 "@tpluscode/rdf-string@^0.2.16", "@tpluscode/rdf-string@^0.2.18", "@tpluscode/rdf-string@^0.2.21", "@tpluscode/rdf-string@^0.2.23", "@tpluscode/rdf-string@^0.2.24":
-  version "0.2.24"
-  resolved "https://registry.yarnpkg.com/@tpluscode/rdf-string/-/rdf-string-0.2.24.tgz#9d9fcafca2b2cfdf2bf0e515f9136feb8e221c7a"
-  integrity sha512-eD8vpspwDP1Y+Pxp+ohFVCALd7OyT91m4KzjTJjtGT1kONXyM+6ygKm5EDsicScsyS64rlWOD8uAJJazoi65xg==
+  version "0.2.25"
+  resolved "https://registry.yarnpkg.com/@tpluscode/rdf-string/-/rdf-string-0.2.25.tgz#287672fdf2181c19d7394aa07ea4a6565a45a099"
+  integrity sha512-oggYq6sh7HvAEeW6r1+wE5qziPI2YQ4UfcgFBXx5JmesLJ2Jlhh//lm8A851bfIMc+JiV14a078HuSftDK07OQ==
   dependencies:
     "@rdf-esm/data-model" "^0.5.3"
     "@rdf-esm/term-map" "^0.5.0"
