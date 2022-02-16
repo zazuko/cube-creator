@@ -8,7 +8,7 @@ import $rdf from 'rdf-ext'
 import { parsers } from '@rdf-esm/formats-common'
 import toStream from 'string-to-stream'
 import clownface from 'clownface'
-import { rdf, rdfs, schema, sh } from '@tpluscode/rdf-ns-builders/strict'
+import { gn, rdf, rdfs, schema, sh } from '@tpluscode/rdf-ns-builders/strict'
 import { buildQuery } from '../../../../src/forms/editors/HierarchyPathEditor/query'
 
 describe('@cube-creator/ui/forms/editors/HierarchyPathEditor/query @SPARQL', () => {
@@ -37,6 +37,9 @@ describe('@cube-creator/ui/forms/editors/HierarchyPathEditor/query @SPARQL', () 
       await testData`
         <CH> a ${ex.Country} ; ${schema.containedInPlace} <Europe> .
 
+        <https://sws.geonames.org/2658434>
+          a ${gn.Feature} ; ${gn.parentFeature} <Europe> .
+
         <ZH> a ${ex.Canton} ; ${schema.containedInPlace} <CH> .
 
         <Affoltern> a ${ex.District} ;
@@ -64,6 +67,31 @@ describe('@cube-creator/ui/forms/editors/HierarchyPathEditor/query @SPARQL', () 
       // then
       const result = clownface({ dataset })
       expect(result.node(rdf.type).out(rdfs.label).terms).to.have.length.gt(0)
+    })
+
+    it('filters by resources at level by sh:targetClass', async () => {
+      // given
+      const hierarchy = await parse`
+        <>
+          ${meta.hierarchyRoot} <Europe> ;
+          ${meta.nextInHierarchy} <firstLevel> ;
+        .
+
+        <firstLevel> ${sh.targetClass} ${gn.Feature} ; ${sh.path} [] .
+      `
+      const query = buildQuery(hierarchy.namedNode('firstLevel'))
+
+      // when
+      const dataset = $rdf.dataset(await mdClients.parsingClient.query.construct(query))
+
+      // then
+      const properties = clownface({ dataset })
+        .has(rdfs.label)
+        .terms
+      expect(properties).to.have.length(1)
+      expect(properties).to.deep.contain.members([
+        gn.parentFeature
+      ])
     })
 
     it('returns inverse properties for first level', async () => {

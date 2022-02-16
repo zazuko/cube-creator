@@ -59,6 +59,11 @@ function getHierarchyPatterns (focusNode: MultiPointer) {
       }
     }
 
+    const targetClass = currentLevel.out(sh.targetClass).term
+    if (targetClass) {
+      nextPattern = sparql`${nextPattern}\n${subject} a ${targetClass} .`
+    }
+
     patterns = sparql`${nextPattern}\n${patterns}`
 
     currentLevel = currentLevel.in(meta.nextInHierarchy)
