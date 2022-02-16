@@ -13,7 +13,7 @@
   "dependencies": {
     "@cube-creator/core": "0.3.4",
     "@cube-creator/model": "0.1.26",
-    "@fortawesome/fontawesome-svg-core": "^1.2.32",
+    "@fortawesome/fontawesome-svg-core": "~1.2.32",
     "@fortawesome/free-regular-svg-icons": "^5.15.1",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@fortawesome/vue-fontawesome": "^2.0.0",
