@@ -29,7 +29,7 @@ function parent (level: number): Variable {
 
 function getHierarchyPatterns (focusNode: MultiPointer) {
   let currentLevel = focusNode
-  const root = focusNode.out(meta.hierarchyRoot).term
+  let root: Term | undefined
   let patterns = sparql``
   let subject = variable('this')
   let level = 1
@@ -52,6 +52,7 @@ function getHierarchyPatterns (focusNode: MultiPointer) {
       patterns = sparql`${parent(level)} ${property} ${subject} .\n${patterns}`
     }
 
+    root = currentLevel.out(meta.hierarchyRoot).term
     currentLevel = currentLevel.in(meta.nextInHierarchy)
     subject = parent(level)
     level++

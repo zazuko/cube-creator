@@ -35,9 +35,16 @@ describe('@cube-creator/ui/forms/editors/HierarchyPathEditor/query @SPARQL', () 
   describe('buildQuery', () => {
     before(async () => {
       await testData`
-        <CH> a ${ex.Country} .
+        <CH> a ${ex.Country} ; ${schema.containedInPlace} <Europe> .
 
         <ZH> a ${ex.Canton} ; ${schema.containedInPlace} <CH> .
+
+        <Affoltern> a ${ex.District} ;
+          ${schema.containedInPlace} <ZH> ;
+          ${schema.containsPlace} <Bonstetten> ;
+        .
+
+        <Bonstetten> a ${ex.Municipality} .
       `
     })
 
@@ -74,6 +81,40 @@ describe('@cube-creator/ui/forms/editors/HierarchyPathEditor/query @SPARQL', () 
       // then
       const result = clownface({ dataset })
       expect(result.node(schema.containedInPlace).out(rdfs.label).terms).to.have.length.gt(0)
+    })
+
+    it('returns inverse properties for deep level', async () => {
+      // given
+      const hierarchy = await parse`
+        <>
+          ${meta.hierarchyRoot} <Europe> ;
+          ${schema.name} "From continent to Station" ;
+          ${sh.path} [
+            ${sh.inversePath} ${schema.containedInPlace} ;
+          ] ;
+          ${meta.nextInHierarchy} [
+            ${schema.name} "Canton" ;
+            ${sh.path} [
+              ${sh.inversePath} ${schema.containedInPlace} ;
+            ] ;
+            ${meta.nextInHierarchy} [
+              ${schema.name} "District" ;
+              ${sh.path} [
+                ${sh.inversePath} ${schema.containedInPlace} ;
+              ] ;
+              ${meta.nextInHierarchy} <municipalityLevel>
+            ] ;
+          ] ;
+        .
+      `
+      const query = buildQuery(hierarchy.namedNode('municipalityLevel'))
+
+      // when
+      const dataset = $rdf.dataset(await mdClients.parsingClient.query.construct(query))
+
+      // then
+      const result = clownface({ dataset })
+      expect(result.node(schema.containsPlace).out(rdfs.label).terms).to.have.length.gt(0)
     })
   })
 })
