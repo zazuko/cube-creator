@@ -3,37 +3,10 @@ import { rdfs } from '@tpluscode/rdf-ns-builders'
 import { GraphPointer, MultiPointer } from 'clownface'
 import { meta } from '@cube-creator/core/namespace'
 import { sh } from '@tpluscode/rdf-ns-builders/strict'
-import { Term } from 'rdf-js'
+import { Term, Variable } from 'rdf-js'
+import { variable } from '@rdf-esm/data-model'
 
-interface HierarchyPath {
-  inverse: boolean
-  property: MultiPointer
-}
-
-function propertiesQuery (root: Term, paths: HierarchyPath[]) {
-  const [thisLevel, ...rest] = paths
-  let patterns
-  if (rest.length) {
-    const path = rest.reduceRight<SparqlTemplateResult | string>((previous, { property, inverse }) => {
-      const next = sparql`${inverse ? '^' : ''}${property.term}`
-      if (!previous) {
-        return next
-      }
-
-      return sparql`${previous}/${next}`
-    }, '')
-
-    const propertyPattern = thisLevel.inverse
-      ? sparql`?parent ?property ?this .`
-      : sparql`?this ?parent ?property .`
-
-    patterns = sparql`${root} ${path} ?parent .\n${propertyPattern}`
-  } else {
-    patterns = thisLevel.inverse
-      ? sparql`?this ?property ${root} .`
-      : sparql`${root} ?property ?this .`
-  }
-
+function propertiesQuery (root: Term, patterns: SparqlTemplateResult) {
   return CONSTRUCT`?property ${rdfs.label} ?label`
     .WHERE`
       {
@@ -50,55 +23,56 @@ function propertiesQuery (root: Term, paths: HierarchyPath[]) {
     .build()
 }
 
-function getProperty (value: MultiPointer | undefined): HierarchyPath | null {
-  if (!value) {
-    return null
-  }
-
-  const inverse = value.out(sh.inversePath).terms.length > 0
-  const property = inverse
-    ? value?.out(sh.inversePath).toArray().shift()
-    : value
-
-  if (!property) {
-    return null
-  }
-
-  return { property, inverse }
+function parent (level: number): Variable {
+  return variable(`parent${level}`)
 }
 
-function getPathAndRoot (focusNode: MultiPointer) {
+function getHierarchyPatterns (focusNode: MultiPointer) {
   let currentLevel = focusNode
-  let root = focusNode.out(meta.hierarchyRoot).term
-  const properties: HierarchyPath[] = []
+  const root = focusNode.out(meta.hierarchyRoot).term
+  let patterns = sparql``
+  let subject = variable('this')
+  let level = 1
 
   // walk up meta:nextInHierarchy and collect all paths
-  while (!root && currentLevel.in(meta.nextInHierarchy).term) {
-    const pathAtLevel = getProperty(currentLevel.out(sh.path))
-    if (!pathAtLevel) {
-      return {}
+  while (currentLevel.term) {
+    const path = currentLevel.out(sh.path)
+    const inverse = path.term?.termType === 'BlankNode'
+    let property: Term | undefined = variable('property')
+    if (level > 1) {
+      property = inverse ? path.out(sh.inversePath).term : path.term
+      if (!property) {
+        break
+      }
     }
 
-    properties.push(pathAtLevel)
+    if (inverse) {
+      patterns = sparql`${subject} ${property} ${parent(level)} .\n${patterns}`
+    } else {
+      patterns = sparql`${parent(level)} ${property} ${subject} .\n${patterns}`
+    }
+
     currentLevel = currentLevel.in(meta.nextInHierarchy)
-    root = currentLevel.out(meta.hierarchyRoot).term
+    subject = parent(level)
+    level++
   }
 
-  const lastPath = getProperty(currentLevel.out(sh.path))
-
-  if (!root || !lastPath) {
+  if (!root) {
     return {}
   }
 
-  properties.push(lastPath)
+  patterns = sparql`
+    BIND ( ${root} as ${subject} )
+    ${patterns}
+  `
 
-  return { root, properties }
+  return { root, patterns }
 }
 
 export function buildQuery (focusNode: GraphPointer) {
-  const { root, properties } = getPathAndRoot(focusNode)
-  if (root && properties) {
-    return propertiesQuery(root, properties)
+  const { root, patterns } = getHierarchyPatterns(focusNode)
+  if (root && patterns) {
+    return propertiesQuery(root, patterns)
   }
   return ''
 }
