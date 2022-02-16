@@ -113,9 +113,13 @@ graph <cube-project/ubd/dimensions-metadata> {
         # TODO: this should be in meta namespace?
         cc:sharedDimension <http://example.com/dimension/countries> ;
         meta:hierarchyRoot <http://example.com/dimension/countries/Switzerland> ;
-        sh:path
+        meta:nextInHierarchy
           [
-            sh:inversePath schema:containedInPlace
+            schema:name "Canton" ;
+            sh:path
+              [
+                sh:inversePath schema:containedInPlace
+              ] ;
           ] ;
   ] ;
   .

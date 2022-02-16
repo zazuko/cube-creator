@@ -48,14 +48,15 @@ describe('@cube-creator/ui/forms/editors/HierarchyPathEditor/query @SPARQL', () 
       `
     })
 
-    it('returns properties for root level', async () => {
+    it('returns properties for first level', async () => {
       // given
       const hierarchy = await parse`
         <>
           ${meta.hierarchyRoot} <CH> ;
+          ${meta.nextInHierarchy} <firstLevel> ;
         .
       `
-      const query = buildQuery(hierarchy.namedNode(''))
+      const query = buildQuery(hierarchy.namedNode('firstLevel'))
 
       // when
       const dataset = $rdf.dataset(await mdClients.parsingClient.query.construct(query))
@@ -65,15 +66,17 @@ describe('@cube-creator/ui/forms/editors/HierarchyPathEditor/query @SPARQL', () 
       expect(result.node(rdf.type).out(rdfs.label).terms).to.have.length.gt(0)
     })
 
-    it('returns inverse properties for root level', async () => {
+    it('returns inverse properties for first level', async () => {
       // given
       const hierarchy = await parse`
         <>
           ${meta.hierarchyRoot} <CH> ;
-          ${sh.path} [] ;
+          ${meta.nextInHierarchy} <firstLevel> ;
         .
+
+        <firstLevel> ${sh.path} [] .
       `
-      const query = buildQuery(hierarchy.namedNode(''))
+      const query = buildQuery(hierarchy.namedNode('firstLevel'))
 
       // when
       const dataset = $rdf.dataset(await mdClients.parsingClient.query.construct(query))
@@ -89,22 +92,24 @@ describe('@cube-creator/ui/forms/editors/HierarchyPathEditor/query @SPARQL', () 
         <>
           ${meta.hierarchyRoot} <Europe> ;
           ${schema.name} "From continent to Station" ;
-          ${sh.path} [
-            ${sh.inversePath} ${schema.containedInPlace} ;
-          ] ;
           ${meta.nextInHierarchy} [
-            ${schema.name} "Canton" ;
             ${sh.path} [
               ${sh.inversePath} ${schema.containedInPlace} ;
             ] ;
             ${meta.nextInHierarchy} [
-              ${schema.name} "District" ;
+              ${schema.name} "Canton" ;
               ${sh.path} [
                 ${sh.inversePath} ${schema.containedInPlace} ;
               ] ;
-              ${meta.nextInHierarchy} <municipalityLevel>
+              ${meta.nextInHierarchy} [
+                ${schema.name} "District" ;
+                ${sh.path} [
+                  ${sh.inversePath} ${schema.containedInPlace} ;
+                ] ;
+                ${meta.nextInHierarchy} <municipalityLevel>
+              ] ;
             ] ;
-          ] ;
+          ]
         .
       `
       const query = buildQuery(hierarchy.namedNode('municipalityLevel'))
@@ -115,6 +120,38 @@ describe('@cube-creator/ui/forms/editors/HierarchyPathEditor/query @SPARQL', () 
       // then
       const result = clownface({ dataset })
       expect(result.node(schema.containsPlace).out(rdfs.label).terms).to.have.length.gt(0)
+    })
+
+    it('returns empty string if an intermediate path is invalid', async () => {
+      // given
+      const hierarchy = await parse`
+        <>
+          ${meta.hierarchyRoot} <Europe> ;
+          ${schema.name} "From continent to Station" ;
+          ${meta.nextInHierarchy} [
+            ${sh.path} [
+              ${sh.inversePath} ${schema.containedInPlace} ;
+            ] ;
+            ${meta.nextInHierarchy} [
+              ${schema.name} "Canton" ;
+              ${sh.path} [
+              ] ;
+              ${meta.nextInHierarchy} [
+                ${schema.name} "District" ;
+                ${sh.path} [
+                  ${sh.inversePath} ${schema.containedInPlace} ;
+                ] ;
+                ${meta.nextInHierarchy} <municipalityLevel>
+              ] ;
+            ] ;
+          ]
+        .
+      `
+      // when
+      const query = buildQuery(hierarchy.namedNode('municipalityLevel'))
+
+      // then
+      expect(query).to.be.empty
     })
   })
 })

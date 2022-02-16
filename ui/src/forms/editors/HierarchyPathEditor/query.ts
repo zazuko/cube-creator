@@ -37,6 +37,11 @@ function getHierarchyPatterns (focusNode: MultiPointer) {
 
   // walk up meta:nextInHierarchy and collect all paths
   while (currentLevel.term) {
+    root = currentLevel.out(meta.hierarchyRoot).term
+    if (root) {
+      break
+    }
+
     let nextPattern: SparqlTemplateResult
     const path = currentLevel.out(sh.path)
     if (level === 1) {
@@ -47,12 +52,15 @@ function getHierarchyPatterns (focusNode: MultiPointer) {
         nextPattern = sparql`${parent(level)} ?property ${subject} .`
       }
     } else {
-      nextPattern = sparql`${parent(level)} ${toSparql(path)} ${subject} .`
+      try {
+        nextPattern = sparql`${parent(level)} ${toSparql(path)} ${subject} .`
+      } catch {
+        break
+      }
     }
 
     patterns = sparql`${nextPattern}\n${patterns}`
 
-    root = currentLevel.out(meta.hierarchyRoot).term
     currentLevel = currentLevel.in(meta.nextInHierarchy)
     subject = parent(level)
     level++
