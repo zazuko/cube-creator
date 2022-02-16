@@ -5,9 +5,8 @@ import $rdf from 'rdf-ext'
 import { hydra, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import * as ns from '@cube-creator/core/namespace'
 import { CONSTRUCT, SELECT } from '@tpluscode/sparql-builder'
-import { NamedNode, Term } from 'rdf-js'
+import { DatasetCore, NamedNode, Term } from 'rdf-js'
 import StreamClient from 'sparql-http-client/StreamClient'
-import type DatasetIndexed from 'rdf-dataset-indexed/dataset'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 
 interface DimensionQuery {
@@ -62,7 +61,7 @@ interface AddMetadata {
   id: any
   metadataCollection: GraphPointer
   dimension: Term
-  existingCollection: AnyPointer<AnyContext, DatasetIndexed>
+  existingCollection: AnyPointer<AnyContext, DatasetCore>
   importedDimensionMetadata: DatasetExt
 }
 
@@ -73,7 +72,7 @@ function addMetadata({ id, metadataCollection, dimension, existingCollection, im
     dm.addOut(schema.about, dimension)
     const existingMetadata = existingCollection.has(schema.about, dimension)
     if (existingMetadata.term) {
-      existingCollection.dataset.match(existingMetadata.term, null, null, metadataCollection.term)
+      [...existingCollection.dataset.match(existingMetadata.term, null, null, metadataCollection.term)]
         .forEach(({ predicate, object }) => {
           dm.addOut(predicate, object, ptr => {
             if (object.termType === 'BlankNode') {
