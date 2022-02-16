@@ -1904,13 +1904,13 @@
     "@tpluscode/rdfine" "^0.5.34"
 
 "@rdfine/schema@^0.6.3":
-  version "0.6.9"
-  resolved "https://registry.yarnpkg.com/@rdfine/schema/-/schema-0.6.9.tgz#2639ac1e5c595c92826b1099e9164ed780c86872"
-  integrity sha512-yiVnIhTBBTi9imGkG1/m4sb4ZcmI/QXzeoPfJJHsGBxqXAmMRNpq8/Luqxfb67UC0gq88GaZ/cMI+SHpx4OWrg==
+  version "0.6.10"
+  resolved "https://registry.yarnpkg.com/@rdfine/schema/-/schema-0.6.10.tgz#cffc2f5d7e56224d8101c2d559cbdb7b8df8617b"
+  integrity sha512-c4N5mI+0PZG2tAnl74wqihskOFIc/rnXfdQpsxSyRSyvejMD6bgLODIQ5w0ZQ9aesWhade83wd2lbLLtfxM/YA==
   dependencies:
     "@rdf-esm/data-model" "^0.5.3"
     "@tpluscode/rdf-ns-builders" "^1.0.0"
-    "@tpluscode/rdfine" "^0.5.34"
+    "@tpluscode/rdfine" "^0.5.35"
 
 "@rdfine/shacl@^0.8", "@rdfine/shacl@^0.8.2", "@rdfine/shacl@^0.8.4", "@rdfine/shacl@^0.8.5":
   version "0.8.6"
