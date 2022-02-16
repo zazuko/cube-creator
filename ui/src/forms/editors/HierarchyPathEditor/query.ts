@@ -5,6 +5,7 @@ import { meta } from '@cube-creator/core/namespace'
 import { sh } from '@tpluscode/rdf-ns-builders/strict'
 import { Term, Variable } from 'rdf-js'
 import { variable } from '@rdf-esm/data-model'
+import { toSparql } from 'clownface-shacl-path'
 
 function propertiesQuery (root: Term, patterns: SparqlTemplateResult) {
   return CONSTRUCT`?property ${rdfs.label} ?label`
@@ -36,21 +37,20 @@ function getHierarchyPatterns (focusNode: MultiPointer) {
 
   // walk up meta:nextInHierarchy and collect all paths
   while (currentLevel.term) {
+    let nextPattern: SparqlTemplateResult
     const path = currentLevel.out(sh.path)
-    const inverse = path.term?.termType === 'BlankNode'
-    let property: Term | undefined = variable('property')
-    if (level > 1) {
-      property = inverse ? path.out(sh.inversePath).term : path.term
-      if (!property) {
-        break
+    if (level === 1) {
+      const inverse = path.term?.termType === 'BlankNode'
+      if (inverse) {
+        nextPattern = sparql`${subject} ?property ${parent(level)} .`
+      } else {
+        nextPattern = sparql`${parent(level)} ?property ${subject} .`
       }
+    } else {
+      nextPattern = sparql`${parent(level)} ${toSparql(path)} ${subject} .`
     }
 
-    if (inverse) {
-      patterns = sparql`${subject} ${property} ${parent(level)} .\n${patterns}`
-    } else {
-      patterns = sparql`${parent(level)} ${property} ${subject} .\n${patterns}`
-    }
+    patterns = sparql`${nextPattern}\n${patterns}`
 
     root = currentLevel.out(meta.hierarchyRoot).term
     currentLevel = currentLevel.in(meta.nextInHierarchy)
