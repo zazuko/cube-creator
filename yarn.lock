@@ -1402,10 +1402,10 @@
     rdf-loaders-registry "^0.2.0"
     sparql-http-client "^2.2.2"
 
-"@hydrofoil/shaperone-core@^0.8.2", "@hydrofoil/shaperone-core@^0.8.3", "@hydrofoil/shaperone-core@^0.8.4":
-  version "0.8.4"
-  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-core/-/shaperone-core-0.8.4.tgz#898f91c1a441f9bb69557555524fda0ab633d795"
-  integrity sha512-3NfT+nvuojIrxiN1WUiRcwxpCA0WtJ8ufZo3xX7NiD8Xkvnn6Qe7bM7Zt+Ka0FMF10duVJS+8sHFywRbi3tcPQ==
+"@hydrofoil/shaperone-core@^0.8.2", "@hydrofoil/shaperone-core@^0.8.3", "@hydrofoil/shaperone-core@^0.8.5":
+  version "0.8.5"
+  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-core/-/shaperone-core-0.8.5.tgz#30a63423d21b5047c5c0033d70f82c4a96185a25"
+  integrity sha512-+kdyBavjsKj2UIEeTdrnqDecZB0Yl+ygDWA5lwg5cZKxgD1lnK5/cDKgc3fGwBi3oshdzLhepTcbLXKN1fKeqA==
   dependencies:
     "@captaincodeman/rdx" "^1.0.0-rc.8"
     "@rdf-esm/data-model" "^0.5.3"

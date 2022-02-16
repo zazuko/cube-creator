@@ -369,7 +369,7 @@ export const hierarchyPath: Lazy<InstancesSelectEditor> = {
   async lazyRender () {
     await import('./HierarchyPathEditor.vue').then(createCustomElement('hierarchy-path'))
 
-    return ({ value, updateComponentState }, { update }) => {
+    return ({ value }, { update }) => {
       return html`<hierarchy-path .update="${update}"
                                   .value="${value.object}"
                                   .properties="${value.componentState.instances}"></hierarchy-path>`

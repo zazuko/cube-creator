@@ -21,6 +21,7 @@ type ShapeTerms =
   'dimension/metadata#hierarchyGroup' |
   'dimension/metadata#HierarchyShape' |
   'dimension/metadata#PathShape' |
+  'dimension/metadata#NextInHierarchyShape' |
   'dimension/shared-mapping' |
   'csv-source/s3Bucket'
 

@@ -29,6 +29,28 @@ graph <http://example.com/dimension/cantons> {
     schema:inDefinedTermSet <http://example.com/dimension/cantons> ;
 }
 
+<http://example.com/dimension/districts> void:inDataset <shared-dimensions> .
+graph <http://example.com/dimension/districts> {
+  <http://example.com/dimension/districts>
+    a schema:DefinedTermSet, meta:SharedDimension ;
+    schema:name "Districts"@en ;
+  .
+
+  <http://example.com/dimension/district/ZH>
+    a schema:DefinedTerm ;
+    schema:identifier "ZH-ZH" ;
+    schema:containedInPlace <http://example.com/dimension/canton/ZH> ;
+    schema:name "city of Zürich"@en ;
+    schema:inDefinedTermSet <http://example.com/dimension/districts> .
+
+  <http://example.com/dimension/district/ZH-Affoltern>
+    a schema:DefinedTerm ;
+    schema:identifier "ZH-Affoltern" ;
+    schema:containedInPlace <http://example.com/dimension/canton/ZH> ;
+    schema:name "Affoltern"@en ;
+    schema:inDefinedTermSet <http://example.com/dimension/districts> .
+}
+
 <http://example.com/dimension/chemicals> void:inDataset <shared-dimensions> .
 graph <http://example.com/dimension/chemicals> {
   <http://example.com/dimension/chemicals>

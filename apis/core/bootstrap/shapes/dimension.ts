@@ -298,8 +298,43 @@ ${shape('dimension/metadata')} {
         ${sd.endpoint} <${env.PUBLIC_QUERY_ENDPOINT}>
       ];
       ${sh.order} 15 ;
+    ] , [
+      ${sh.name} "Next level" ;
+      ${sh.path} ${meta.nextInHierarchy} ;
+      ${sh.order} 20 ;
+      ${dash.editor} ${dash.DetailsEditor} ;
+      ${sh.nodeKind} ${sh.BlankNode} ;
+      ${sh.node} ${shape('dimension/metadata#NextInHierarchyShape')} ;
     ] ;
   .
+
+  ${shape('dimension/metadata#NextInHierarchyShape')}
+    ${sh.property} [
+      ${sh.name} "Name" ;
+      ${sh.path} ${schema.name} ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+      ${sh.datatype} ${xsd.string} ;
+      ${sh.order} 10 ;
+    ] , [
+      ${sh.name} "Property" ;
+      ${sh.path} ${sh.path} ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+      ${dash.editor} ${editor.HierarchyPathEditor} ;
+      ${sh.node} ${shape('dimension/metadata#PathShape')} ;
+      ${dcterms.source} [
+        ${sd.endpoint} <${env.PUBLIC_QUERY_ENDPOINT}>
+      ];
+      ${sh.order} 15 ;
+    ] , [
+      ${sh.name} "Next level" ;
+      ${sh.path} ${meta.nextInHierarchy} ;
+      ${sh.order} 20 ;
+      ${dash.editor} ${dash.DetailsEditor} ;
+      ${sh.nodeKind} ${sh.BlankNode} ;
+      ${sh.node} ${shape('dimension/metadata#NextInHierarchyShape')} ;
+    ] .
 
   ${shape('dimension/metadata#PathShape')}
     ${sh.xone} (
