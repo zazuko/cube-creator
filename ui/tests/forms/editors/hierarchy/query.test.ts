@@ -9,9 +9,9 @@ import { parsers } from '@rdf-esm/formats-common'
 import toStream from 'string-to-stream'
 import clownface from 'clownface'
 import { gn, rdf, rdfs, schema, sh } from '@tpluscode/rdf-ns-builders/strict'
-import { buildQuery } from '../../../../src/forms/editors/HierarchyPathEditor/query'
+import { properties, types } from '../../../../src/forms/editors/hierarchy/query'
 
-describe('@cube-creator/ui/forms/editors/HierarchyPathEditor/query @SPARQL', () => {
+describe('@cube-creator/ui/forms/editors/hierarchy/query @SPARQL', () => {
   const testDataGraph = $rdf.namedNode('urn:hierarchy:test')
 
   async function testData (strings: TemplateStringsArray, ...values: TurtleValue[]) {
@@ -32,25 +32,25 @@ describe('@cube-creator/ui/forms/editors/HierarchyPathEditor/query @SPARQL', () 
     return clownface({ dataset })
   }
 
-  describe('buildQuery', () => {
-    before(async () => {
-      await testData`
-        <CH> a ${ex.Country} ; ${schema.containedInPlace} <Europe> .
+  before(async () => {
+    await testData`
+      <CH> a ${ex.Country} ; ${schema.containedInPlace} <Europe> .
 
-        <https://sws.geonames.org/2658434>
-          a ${gn.Feature} ; ${gn.parentFeature} <Europe> .
+      <https://sws.geonames.org/2658434>
+        a ${gn.Feature} ; ${gn.parentFeature} <Europe> .
 
-        <ZH> a ${ex.Canton} ; ${schema.containedInPlace} <CH> .
+      <ZH> a ${ex.Canton} ; ${schema.containedInPlace} <CH> .
 
-        <Affoltern> a ${ex.District} ;
-          ${schema.containedInPlace} <ZH> ;
-          ${schema.containsPlace} <Bonstetten> ;
-        .
+      <Affoltern> a ${ex.District} ;
+        ${schema.containedInPlace} <ZH> ;
+        ${schema.containsPlace} <Bonstetten> ;
+      .
 
-        <Bonstetten> a ${ex.Municipality} .
-      `
-    })
+      <Bonstetten> a ${ex.Municipality} .
+    `
+  })
 
+  describe('properties', () => {
     it('returns properties for first level', async () => {
       // given
       const hierarchy = await parse`
@@ -59,7 +59,7 @@ describe('@cube-creator/ui/forms/editors/HierarchyPathEditor/query @SPARQL', () 
           ${meta.nextInHierarchy} <firstLevel> ;
         .
       `
-      const query = buildQuery(hierarchy.namedNode('firstLevel'))
+      const query = properties(hierarchy.namedNode('firstLevel'))
 
       // when
       const dataset = $rdf.dataset(await mdClients.parsingClient.query.construct(query))
@@ -79,17 +79,17 @@ describe('@cube-creator/ui/forms/editors/HierarchyPathEditor/query @SPARQL', () 
 
         <firstLevel> ${sh.targetClass} ${gn.Feature} ; ${sh.path} [] .
       `
-      const query = buildQuery(hierarchy.namedNode('firstLevel'))
+      const query = properties(hierarchy.namedNode('firstLevel'))
 
       // when
       const dataset = $rdf.dataset(await mdClients.parsingClient.query.construct(query))
 
       // then
-      const properties = clownface({ dataset })
+      const results = clownface({ dataset })
         .has(rdfs.label)
         .terms
-      expect(properties).to.have.length(1)
-      expect(properties).to.deep.contain.members([
+      expect(results).to.have.length(1)
+      expect(results).to.deep.contain.members([
         gn.parentFeature
       ])
     })
@@ -104,7 +104,7 @@ describe('@cube-creator/ui/forms/editors/HierarchyPathEditor/query @SPARQL', () 
 
         <firstLevel> ${sh.path} [] .
       `
-      const query = buildQuery(hierarchy.namedNode('firstLevel'))
+      const query = properties(hierarchy.namedNode('firstLevel'))
 
       // when
       const dataset = $rdf.dataset(await mdClients.parsingClient.query.construct(query))
@@ -140,7 +140,7 @@ describe('@cube-creator/ui/forms/editors/HierarchyPathEditor/query @SPARQL', () 
           ]
         .
       `
-      const query = buildQuery(hierarchy.namedNode('municipalityLevel'))
+      const query = properties(hierarchy.namedNode('municipalityLevel'))
 
       // when
       const dataset = $rdf.dataset(await mdClients.parsingClient.query.construct(query))
@@ -176,10 +176,34 @@ describe('@cube-creator/ui/forms/editors/HierarchyPathEditor/query @SPARQL', () 
         .
       `
       // when
-      const query = buildQuery(hierarchy.namedNode('municipalityLevel'))
+      const query = properties(hierarchy.namedNode('municipalityLevel'))
 
       // then
       expect(query).to.be.empty
+    })
+  })
+
+  describe('types', () => {
+    it('returns types of resources in specific level in hierarchy', async () => {
+      // given
+      const hierarchy = await parse`
+        <>
+          ${meta.hierarchyRoot} <Europe> ;
+          ${meta.nextInHierarchy} <firstLevel> ;
+        .
+        <firstLevel> ${sh.path} [] .
+      `
+      const query = types(hierarchy.namedNode('firstLevel'))
+
+      // when
+      const dataset = $rdf.dataset(await mdClients.parsingClient.query.construct(query))
+
+      // then
+      const result = clownface({ dataset })
+      expect(result.has(rdfs.label).terms).to.deep.contain.members([
+        gn.Feature,
+        ex.Country
+      ])
     })
   })
 })

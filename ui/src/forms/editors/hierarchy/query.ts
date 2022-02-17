@@ -7,23 +7,6 @@ import { Term, Variable } from 'rdf-js'
 import { variable } from '@rdf-esm/data-model'
 import { toSparql } from 'clownface-shacl-path'
 
-function propertiesQuery (root: Term, patterns: SparqlTemplateResult) {
-  return CONSTRUCT`?property ${rdfs.label} ?label`
-    .WHERE`
-      {
-          ${SELECT.DISTINCT`?property`.WHERE`
-            ${patterns}
-            filter(isiri(?this))
-          `}
-      }
-
-      optional { ?property ${rdfs.label} ?rdfsLabel }
-
-      bind(if(bound(?rdfsLabel), concat(?rdfsLabel, " (", str(?property), ")"), str(?property)) as ?label)
-    `
-    .build()
-}
-
 function parent (level: number): Variable {
   return variable(`parent${level}`)
 }
@@ -72,7 +55,7 @@ function getHierarchyPatterns (focusNode: MultiPointer) {
   }
 
   if (!root) {
-    return {}
+    return null
   }
 
   patterns = sparql`
@@ -80,13 +63,50 @@ function getHierarchyPatterns (focusNode: MultiPointer) {
     ${patterns}
   `
 
-  return { root, patterns }
+  return patterns
 }
 
-export function buildQuery (focusNode: GraphPointer) {
-  const { root, patterns } = getHierarchyPatterns(focusNode)
-  if (root && patterns) {
-    return propertiesQuery(root, patterns)
+export function properties (focusNode: GraphPointer): string {
+  const patterns = getHierarchyPatterns(focusNode)
+  if (!patterns) {
+    return ''
   }
-  return ''
+
+  return CONSTRUCT`?property ${rdfs.label} ?label`
+    .WHERE`
+      {
+        ${SELECT.DISTINCT`?property`.WHERE`
+          ${patterns}
+          filter(isiri(?this))
+        `}
+      }
+
+      optional { ?property ${rdfs.label} ?rdfsLabel }
+
+      bind(if(bound(?rdfsLabel), concat(?rdfsLabel, " (", str(?property), ")"), str(?property)) as ?label)
+    `
+    .build()
+}
+
+export function types (focusNode: GraphPointer): string {
+  const patterns = getHierarchyPatterns(focusNode)
+  if (!patterns) {
+    return ''
+  }
+
+  return CONSTRUCT`?type ${rdfs.label} ?label`
+    .WHERE`
+      {
+        ${SELECT.DISTINCT`?type`.WHERE`
+          ${patterns}
+          ?this a ?type
+          filter(isiri(?this))
+        `}
+      }
+
+      optional { ?type ${rdfs.label} ?rdfsLabel }
+
+      bind(if(bound(?rdfsLabel), concat(?rdfsLabel, " (", str(?type), ")"), str(?type)) as ?label)
+    `
+    .build()
 }

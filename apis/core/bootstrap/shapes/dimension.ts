@@ -313,6 +313,10 @@ ${shape('dimension/metadata')} {
       ${sh.maxCount} 1 ;
       ${sh.nodeKind} ${sh.IRI} ;
       ${sh.order} 15 ;
+      ${dash.editor} ${editor.HierarchyLevelTargetEditor} ;
+      ${dcterms.source} [
+        ${sd.endpoint} <${env.PUBLIC_QUERY_ENDPOINT}>
+      ];
     ] , [
       ${sh.name} "Property" ;
       ${sh.path} ${sh.path} ;
