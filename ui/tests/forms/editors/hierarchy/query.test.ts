@@ -34,6 +34,9 @@ describe('@cube-creator/ui/forms/editors/hierarchy/query @SPARQL', () => {
 
   before(async () => {
     await testData`
+      <US> a ${ex.Country} ; ${schema.containedInPlace} <North-America> .
+      <BR> a ${ex.Country} ; ${schema.containedInPlace} <South-America> .
+
       <CH> a ${ex.Country} ; ${schema.containedInPlace} <Europe> .
 
       <https://sws.geonames.org/2658434>
@@ -202,6 +205,27 @@ describe('@cube-creator/ui/forms/editors/hierarchy/query @SPARQL', () => {
       const result = clownface({ dataset })
       expect(result.has(rdfs.label).terms).to.deep.contain.members([
         gn.Feature,
+        ex.Country
+      ])
+    })
+
+    it('handles multiple roots', async () => {
+      // given
+      const hierarchy = await parse`
+        <>
+          ${meta.hierarchyRoot} <South-America>, <North-America> ;
+          ${meta.nextInHierarchy} <firstLevel> ;
+        .
+        <firstLevel> ${sh.path} [] .
+      `
+      const query = types(hierarchy.namedNode('firstLevel'))
+
+      // when
+      const dataset = $rdf.dataset(await mdClients.parsingClient.query.construct(query))
+
+      // then
+      const result = clownface({ dataset })
+      expect(result.has(rdfs.label).terms).to.deep.contain.members([
         ex.Country
       ])
     })
