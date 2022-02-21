@@ -7,7 +7,7 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { prepareHeaders } from '@/api'
-import { parse } from '@tinyhttp/content-disposition/dist/index.js'
+import { parse } from '@tinyhttp/content-disposition'
 import store from '@/store'
 import { Resource } from 'alcaeus'
 
@@ -43,7 +43,7 @@ export default class DownloadButton extends Vue {
 
       anchor.href = objectUrl
       if (contentDisposition) {
-        anchor.download = parse(contentDisposition).parameters.filename
+        anchor.download = parse(contentDisposition).parameters.filename as string
       }
       anchor.click()
 

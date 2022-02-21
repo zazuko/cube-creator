@@ -160,7 +160,7 @@ describe('CSV mapping flow', () => {
     cy.contains('.button', 'Delete').click()
 
     cy.contains('Table My secondary table deleted successfully').should('be.visible')
-    cy.contains('.mapper-table', 'My secondary table').should('not.be.visible')
+    cy.contains('.mapper-table', 'My secondary table').should('not.exist')
   })
 
   it('Deletes project', () => {
@@ -177,6 +177,6 @@ describe('CSV mapping flow', () => {
       .click({ force: true })
 
     cy.contains('Project My project successfully deleted').should('be.visible')
-    cy.contains('My project').should('not.be.visible')
+    cy.contains('My project').should('not.exist')
   })
 })
