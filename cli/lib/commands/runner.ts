@@ -13,6 +13,8 @@ import { updateJobStatus } from '../job'
 import { logger } from '../log'
 import { importDynamic } from '../module'
 import bufferDebug from '../bufferDebug'
+import { HydraClient } from 'alcaeus/alcaeus'
+import DatasetExt from 'rdf-ext/lib/Dataset'
 
 const ns = {
   pipeline: namespace('urn:pipeline:cube-creator'),
@@ -66,7 +68,7 @@ export function create<TOptions extends RunOptions>({ pipelineSources, prepare, 
       params: command.authParam,
     }
 
-    const apiClient = Alcaeus.create()
+    const apiClient = Alcaeus.create({ datasetFactory: $rdf.dataset }) as HydraClient<DatasetExt>
     apiClient.resources.factory.addMixin(...Object.values(Models))
     apiClient.cacheStrategy.shouldLoad = previous => {
       if (previous.representation?.root?.types.has(cc.CSVSource)) {

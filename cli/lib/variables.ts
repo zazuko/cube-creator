@@ -6,7 +6,7 @@ import { PublishJob, UnlistJob } from '../../packages/model/Job'
 
 declare module 'barnard59-core' {
   interface Variables {
-    apiClient: HydraClient
+    apiClient: HydraClient<DatasetExt>
     jobUri: string
     executionUrl: string
     'graph-store-endpoint': string
