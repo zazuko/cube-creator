@@ -83,6 +83,7 @@ export async function getDimensionTypes(metadata: GraphPointer, store: ResourceS
 
       graph ?observationTable {
         ?observationTable a ${cc.ObservationTable} ;
+                          ${cc.csvMapping} ?csvMapping ;
                           ${cc.columnMapping} ?column .
       }
 
