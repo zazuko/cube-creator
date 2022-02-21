@@ -3264,9 +3264,9 @@
     namespace-emitter "^2.0.1"
 
 "@uppy/companion@^3.1.4":
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/@uppy/companion/-/companion-3.2.1.tgz#4cf51091115fff64cd22eb929c843a07eeced0ed"
-  integrity sha512-6+g27flyfLndFnUlrzXmTk/QJwvfZH01NQKc5XSDxBXRBqpdjY9+NngTtwHfOIppfZ0H5hPCa48+3ikIWqqdyw==
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/@uppy/companion/-/companion-3.3.0.tgz#1e6ceda7fc95e387d9962cb39a08e9b62590f7fd"
+  integrity sha512-/TF95YAYNcuuyfxuYDm+82ployEafonT8MDP5oVZr1zdqRGjyrAiOfAWiCjONPWVKVa/mp6Jj8WPgnzLzuA13Q==
   dependencies:
     "@purest/providers" "1.0.1"
     atob "2.1.2"
@@ -4386,9 +4386,9 @@ autoprefixer@^9.8.6:
     postcss-value-parser "^4.1.0"
 
 aws-sdk@^2.1038.0, aws-sdk@^2.1048.0, aws-sdk@^2.559.0:
-  version "2.1074.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1074.0.tgz#be3283f781b3060cd67d5abef50d1edacefede70"
-  integrity sha512-tD478mkukglutjs+mq5FQmYFzz+l/wddl5u3tTMWTNa+j1eSL+AqaHPFM1rC3O9h98QqpKKzeKbLrPhGDvYaRg==
+  version "2.1077.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1077.0.tgz#d4a391d38ede867fe9a88f31555f09a338dfdf4e"
+  integrity sha512-orJvJROs8hJaQRfHsX7Zl5PxEgrD/uTXyqXz9Yu9Io5VVxzvnOty9oHmvEMSlgTIf1qd01gnev/vpvP1HgzKtw==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
@@ -14884,9 +14884,9 @@ url-loader@^2.2.0:
     schema-utils "^2.5.0"
 
 url-parse@^1.4.3, url-parse@^1.5.3:
-  version "1.5.6"
-  resolved "https://registry.yarnpkg.com/url-parse/-/url-parse-1.5.6.tgz#b2a41d5a233645f3c31204cc8be60e76a15230a2"
-  integrity sha512-xj3QdUJ1DttD1LeSfvJlU1eiF1RvBSBfUu8GplFGdUzSO28y5yUtEl7wb//PI4Af6qh0o/K8545vUmucRrfWsw==
+  version "1.5.9"
+  resolved "https://registry.yarnpkg.com/url-parse/-/url-parse-1.5.9.tgz#05ff26484a0b5e4040ac64dcee4177223d74675e"
+  integrity sha512-HpOvhKBvre8wYez+QhHcYiVvVmeF6DVnuSOOPhe3cTum3BnqHhvKaZm8FU5yTiOu/Jut2ZpB2rA/SbBA1JIGlQ==
   dependencies:
     querystringify "^2.1.1"
     requires-port "^1.0.0"
