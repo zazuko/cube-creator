@@ -9314,11 +9314,11 @@ is-unicode-supported@^0.1.0:
   integrity sha512-knxG2q4UC3u8stRGyAVJCOdxFmv5DZiRcdlIaAQXAbSfJya+OhopNotLQrstBhququ4ZpuKbDc/8S6mgXgPFPw==
 
 is-uri@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/is-uri/-/is-uri-1.2.0.tgz#b92ff234af68c0ed97d2eed46492d01793b7d420"
-  integrity sha1-uS/yNK9owO2X0u7UZJLQF5O31CA=
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/is-uri/-/is-uri-1.2.2.tgz#193280a1b37575b5693e6a5ea7b3dbd4d48a8d86"
+  integrity sha512-naS56jDF8Xsdx/Pcek0llK2vNwm3/tx5H1H2gwhJ4uRY9VFOCLVeWqcmrB2mIr++FDZT3u45e2wYNLp4diUaPw==
   dependencies:
-    parse-uri "~1.0.0"
+    parse-uri "~1.0.3"
     punycode2 "~1.0.0"
 
 is-weakref@^1.0.1:
@@ -11542,10 +11542,10 @@ parse-prefer-header@^1.0.0:
   dependencies:
     lodash.camelcase "^4.3.0"
 
-parse-uri@~1.0.0:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/parse-uri/-/parse-uri-1.0.3.tgz#f3c24a74907a4e357c1741e96ca9faadecfd6db5"
-  integrity sha512-upMnGxNcm+45So85HoguwZTVZI9u11i36DdxJfGF2HYWS2eh3TIx7+/tTi7qrEq15qzGkVhsKjesau+kCk48pA==
+parse-uri@~1.0.3:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/parse-uri/-/parse-uri-1.0.5.tgz#41954321ef7a9623182b7c44cc6bba3257b45d4d"
+  integrity sha512-v0TPDnYmnDu1w19tAkX8XI+5zO8qjUH8Htdh0YkZsMSp7iYkNPSgMOih0qRjJNSgvM1GI7arNXwSASGna/jB1w==
 
 parse5-htmlparser2-tree-adapter@^6.0.0:
   version "6.0.1"
@@ -13586,9 +13586,9 @@ slice-ansi@^4.0.0:
     is-fullwidth-code-point "^3.0.0"
 
 slug@^4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/slug/-/slug-4.0.2.tgz#35a62b4e71582778ac08bb30a1bf439fd0a43ea7"
-  integrity sha512-c5XbWkwxHU13gAdSvBHQgnGy2sxv/REMz0ugcM0SOSBCO/N4wfU0TDBC3pgdOwVGjZwGnLBTRljXzdVYE+KYNw==
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/slug/-/slug-4.1.0.tgz#f2c3ee98f43983d1ef2a0a517b3d0450b3a18da5"
+  integrity sha512-4CbVfau2lVbmoBYn0M+rHA/g90LL/AAJvI/b4tF68A+vs/1EwdWXPn8R35Fuh0kxtfx9hWH4TuZdxbv3a8PRrg==
 
 slugify@^1.4.6:
   version "1.6.5"
@@ -14830,9 +14830,9 @@ uri-template-route@^1.0.0:
     uri-templates "^0.2.0"
 
 uri-template@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/uri-template/-/uri-template-1.0.1.tgz#14a925a37e4d93f7625432aa116b05e50cae81ad"
-  integrity sha1-FKklo35Nk/diVDKqEWsF5Qyuga0=
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/uri-template/-/uri-template-1.0.3.tgz#1d59931c94ce3c7721fc28eeaefec318fa0fd8fe"
+  integrity sha512-zwGFnYBY2Rpdms0WXrMjmiHneqFRstazRwVgyMjg6IFoMhTtwznEQjMhYLAbcHicXXZppzd3VKtuFG0l8GGaAg==
   dependencies:
     pct-encode "~1.0.0"
 
