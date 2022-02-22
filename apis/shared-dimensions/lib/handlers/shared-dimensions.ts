@@ -48,9 +48,12 @@ export const get = asyncMiddleware(async (req, res) => {
   return res.dataset(collection.dataset)
 })
 
-function termsCollectionId(dimension: Term, search?: string) {
+function termsCollectionId(dimensions: Term[], search?: string) {
   const uri = new URL(`${env.MANAGED_DIMENSIONS_BASE}dimension/_terms`)
-  uri.searchParams.set('dimension', dimension.value)
+
+  for (const dimension of dimensions) {
+    uri.searchParams.set('dimension', dimension.value)
+  }
 
   if (search) {
     uri.searchParams.set('q', search)
@@ -65,8 +68,9 @@ export const getTerms = asyncMiddleware(async (req, res, next) => {
     .has(schema.inDefinedTermSet)
     .out(schema.inDefinedTermSet)
 
-  const { term } = termSet
-  if (!term) {
+  const sharedDimensions = termSet.terms
+
+  if (sharedDimensions.length === 0) {
     return next(new httpError.NotFound())
   }
 
@@ -74,7 +78,7 @@ export const getTerms = asyncMiddleware(async (req, res, next) => {
   const page = Number(query.out(hydra.pageIndex).value || 1)
   const offset = (page - 1) * pageSize
   const queryParams = {
-    sharedDimension: rewriteTerm(term),
+    sharedDimensions: sharedDimensions.map(rewriteTerm),
     freetextQuery: query.has(hydra.freetextQuery).out(hydra.freetextQuery).value,
     validThrough: query.has(md.onlyValidTerms, query.literal(true)).terms.length ? new Date() : undefined,
     limit: pageSize,
@@ -85,7 +89,7 @@ export const getTerms = asyncMiddleware(async (req, res, next) => {
     memberQuads: await getSharedTerms(queryParams).execute(parsingClient.query),
     memberType: schema.DefinedTerm,
     collectionType: md.SharedDimensionTerms,
-    collection: termsCollectionId(term, queryParams.freetextQuery),
+    collection: termsCollectionId(sharedDimensions, queryParams.freetextQuery),
   })
 
   collection.out(hydra.member)
@@ -111,7 +115,7 @@ const postDirect = protectedResource(shaclValidate, asyncMiddleware(async (req, 
 export const post = conditional(isMultipart, postImportedDimension, postDirect)
 
 export const injectTermsLink: Enrichment = async (req, pointer) => {
-  pointer.deleteOut(md.terms).addOut(md.terms, termsCollectionId(pointer.term))
+  pointer.deleteOut(md.terms).addOut(md.terms, termsCollectionId([pointer.term]))
 }
 
 export const injectExportLink: Enrichment = async (req, pointer) => {

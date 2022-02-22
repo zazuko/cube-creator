@@ -18,7 +18,7 @@
             icon-left="link"
             size="is-small"
             type="is-text"
-            :class="{ 'has-text-primary': dimension.sharedDimension }"
+            :class="{ 'has-text-primary': dimension.sharedDimensions.length > 0 }"
           />
         </b-tooltip>
       </div>
@@ -34,8 +34,9 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
 import { DimensionMetadata } from '@cube-creator/model'
+import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Literal } from 'rdf-js'
 import HydraOperationButton from './HydraOperationButton.vue'
 import DataKindIcon from './DataKindIcon.vue'
 import ScaleOfMeasureIcon from './ScaleOfMeasureIcon.vue'
@@ -59,8 +60,9 @@ export default class CubePreviewDimension extends Vue {
   get linkToSharedDimensionLabel (): string {
     const dimension: any = this.dimension
 
-    if (dimension.sharedDimension) {
-      return `Linked to ${dimension.sharedDimension.label} (click to edit)`
+    if (dimension.sharedDimensions.length > 0) {
+      const label = dimension.sharedDimensions.map(({ label }: { label: Literal }) => `"${label.value}"`).join(' & ')
+      return `Linked to ${label} (click to edit)`
     } else if (dimension.mappings) {
       return 'Link to shared dimension'
     } else {
