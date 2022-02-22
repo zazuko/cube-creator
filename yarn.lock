@@ -1806,10 +1806,10 @@
     "@tpluscode/rdfine" "^0.5.27"
     es6-url-template "^3.0.2"
 
-"@rdfine/hydra@^0.8.0", "@rdfine/hydra@^0.8.1":
-  version "0.8.2"
-  resolved "https://registry.yarnpkg.com/@rdfine/hydra/-/hydra-0.8.2.tgz#3c2ab6449495265725a8039e68dabdeac2b887e6"
-  integrity sha512-Gijtp1HJvRFhOnRgtw7Rn6MjG6U7yhhH0nw2cz2Sp4B5LhjGZG1JxcwzrFhNqO56J0Db/kxBmTZbiWHCf+5xew==
+"@rdfine/hydra@^0.8.0", "@rdfine/hydra@^0.8.1", "@rdfine/hydra@^0.8.2":
+  version "0.8.3"
+  resolved "https://registry.yarnpkg.com/@rdfine/hydra/-/hydra-0.8.3.tgz#c2f2a4e3fc828962db526170717efda7b15464a6"
+  integrity sha512-UYIE34cie+acg2GLPlTpwZxQBMyC1gjBJ0cGpbA0/BdZRwBHNvnUA9ysAD2IbMcRHs1B9jdm+LFBeLYw6iUmnA==
   dependencies:
     "@rdf-esm/data-model" "^0.5.3"
     "@rdfine/rdf" "^0.5.6"
