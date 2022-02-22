@@ -22,7 +22,7 @@ services:
     moreHttpPorts:
       - 45671
   ui:
-    type: node:13
+    type: node:16
     command: (cd ui; yarn serve --public app.cube-creator.lndo.site --hostname 0.0.0.0 --port 80)
     ssl: true
   store:
