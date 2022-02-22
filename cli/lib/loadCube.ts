@@ -29,8 +29,9 @@ export async function loadCube(this: Pipeline.Context, { jobUri, endpoint, user,
 
     filter (?p != ${csvw.describes})
 
-    // Filter out original values of mapped dimensions from published data
-    filter(not exists{ ?p a ${cc.OriginalValuePredicate} })
+    # Filter out original values of mapped dimensions from published data
+    filter not exists { ?p a ${cc.OriginalValuePredicate} }
+    filter not exists { ?s a ${cc.OriginalValuePredicate} }
   `
 
   const combined = new PassThrough({

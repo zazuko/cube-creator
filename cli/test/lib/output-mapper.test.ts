@@ -50,28 +50,6 @@ describe('lib/output-mapper', function () {
       expect(match.size).to.equal(1)
     })
 
-    it('original value is kept around', async () => {
-      // given
-
-      const obsId = $rdf.namedNode('observation')
-      const quads = $rdf.dataset([
-        $rdf.quad(
-          obsId,
-          predicate,
-          $rdf.literal('co'),
-          cube.Cube),
-      ]).toStream()
-
-      // when
-      const map = await mapDimensions.call(context)
-      const mapped = await $rdf.dataset().import(quads.pipe(map))
-
-      // then
-      const match = mapped.match(obsId, null, $rdf.literal('co'))
-      expect(match.size).to.equal(1)
-      expect([...match][0].predicate.value).to.not.eq(predicate.value)
-    })
-
     it('unmapped value with entry does not change', async () => {
       // given
 

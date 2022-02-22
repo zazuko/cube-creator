@@ -68,7 +68,7 @@
                        <#toCubeShape>
                        <#flatten>
                        <#filterCubeLinks>
-                       <#injectNonObservationQuads>
+                       <#injectOriginalValueQuads>
                        <#setGraph>
                      ) ] .
 
@@ -190,7 +190,7 @@
   code:arguments     ( [ code:link <file:../lib/output-filter#removeCubeLinks> ;
                          a         code:EcmaScript ] ) .
 
-<#injectNonObservationQuads>
+<#injectOriginalValueQuads>
   a :Step ;
-  code:implementedBy [ code:link <file:../lib/output-mapper#injectNonObservationQuads> ;
+  code:implementedBy [ code:link <file:../lib/output-mapper#injectOriginalValueQuads> ;
                        a         code:EcmaScript ] .

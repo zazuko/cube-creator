@@ -36,6 +36,6 @@ declare module 'barnard59-core' {
     transformed: { csvwResource: Csvw.Table<DatasetExt> ; isObservationTable: boolean }
     lastTransformed: { csv?: string; row?: number }
     messages: string[]
-    nonObservationQuads: DatasetExt
+    originalValueQuads: DatasetExt
   }
 }
