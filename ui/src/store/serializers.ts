@@ -148,7 +148,7 @@ export function serializeDimensionMetadataCollection (collection: DimensionMetad
 }
 
 export function serializeDimensionMetadata (dimension: DimensionMetadata): DimensionMetadata {
-  const sharedDimension = dimension.pointer.out(cc.dimensionMapping).out(cc.sharedDimension)
+  const sharedDimensions = dimension.pointer.out(cc.dimensionMapping).out(cc.sharedDimension)
 
   const dataKind = dimension.dataKind
     ? dimension.pointer.node(dimension.dataKind).out(rdf.type).term
@@ -162,12 +162,10 @@ export function serializeDimensionMetadata (dimension: DimensionMetadata): Dimen
     scaleOfMeasure: dimension.scaleOfMeasure,
     dataKind,
     mappings: dimension.mappings,
-    sharedDimension: sharedDimension.term
-      ? {
-          id: sharedDimension.term,
-          label: sharedDimension.out([rdfs.label, schema.name], { language: displayLanguage }),
-        }
-      : undefined,
+    sharedDimensions: sharedDimensions.map(sharedDimension => ({
+      id: sharedDimension.term,
+      label: sharedDimension.out([rdfs.label, schema.name], { language: displayLanguage }),
+    })),
     isKeyDimension: dimension.isKeyDimension,
     isMeasureDimension: dimension.isMeasureDimension,
     order: dimension.order,

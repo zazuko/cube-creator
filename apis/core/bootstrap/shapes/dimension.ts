@@ -317,12 +317,10 @@ ${shape('dimension/shared-mapping')} {
       ${sh.maxCount} 1 ;
     ] , [
       ${sh.path} ${cc.sharedDimension} ;
-      ${sh.name} "Shared dimension" ;
-      ${sh.description} "**WARNING!** Changing the selected shared dimension will erase all current mappings" ;
+      ${sh.name} "Shared dimensions" ;
       ${dash.editor} ${dash.AutoCompleteEditor} ;
       ${hydra.collection} ${sharedDimensionCollection} ;
       ${sh.nodeKind} ${sh.IRI} ;
-      ${sh.maxCount} 1 ;
       ${sh.order} 10 ;
     ] , [
       ${sh.path} ${md.onlyValidTerms} ;
