@@ -318,7 +318,6 @@ ${shape('dimension/shared-mapping')} {
     ] , [
       ${sh.path} ${cc.sharedDimension} ;
       ${sh.name} "Shared dimensions" ;
-      ${sh.description} "**WARNING!** Removing a shared dimension will erase all current mappings to it" ;
       ${dash.editor} ${dash.AutoCompleteEditor} ;
       ${hydra.collection} ${sharedDimensionCollection} ;
       ${sh.nodeKind} ${sh.IRI} ;
