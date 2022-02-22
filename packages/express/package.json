@@ -6,7 +6,7 @@
     "@rdfjs-elements/formats-pretty": "^0.3.3",
     "clownface": "^1.4.0",
     "express": "^4.17.1",
-    "http-errors": "^1.8.0",
+    "http-errors": "^2.0.0",
     "middleware-async": "^1.2.7",
     "mime-types": "^2",
     "multer": "^1.4.3",
