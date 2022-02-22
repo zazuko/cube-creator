@@ -87,7 +87,7 @@
     "eslint": "^7.11.0",
     "node-env-run": "^4.0.2",
     "sass": "^1.27.0",
-    "sass-loader": "^10.0.3",
+    "sass-loader": "^12.0.0",
     "typescript": "^4.0.3",
     "vue-template-compiler": "^2.6.14"
   },
