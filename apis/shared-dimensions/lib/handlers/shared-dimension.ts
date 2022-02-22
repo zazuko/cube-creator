@@ -4,6 +4,7 @@ import clownface, { GraphPointer } from 'clownface'
 import { hydra, schema } from '@tpluscode/rdf-ns-builders/strict'
 import cors from 'cors'
 import { serializers } from '@rdfjs-elements/formats-pretty'
+import * as error from 'http-errors'
 import { createTerm, getExportedDimension, update } from '../domain/shared-dimension'
 import { store } from '../store'
 import { shaclValidate } from '../middleware/shacl'
@@ -40,7 +41,11 @@ export const put = protectedResource(shaclValidate, asyncMiddleware(async (req, 
   return res.dataset(dimension.dataset)
 }))
 
-export const getExport = protectedResource(cors({ exposedHeaders: 'content-disposition' }), asyncMiddleware(async (req, res) => {
+export const getExport = protectedResource(cors({ exposedHeaders: 'content-disposition' }), asyncMiddleware(async (req, res, next) => {
+  if (!req.dataset) {
+    return next(new error.BadRequest())
+  }
+
   const query = clownface({ dataset: await req.dataset() })
   const termSet: any = query
     .has(schema.inDefinedTermSet)

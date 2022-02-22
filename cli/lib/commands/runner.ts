@@ -66,7 +66,7 @@ export function create<TOptions extends RunOptions>({ pipelineSources, prepare, 
       params: command.authParam,
     }
 
-    const apiClient = Alcaeus.create()
+    const apiClient = Alcaeus.create({ datasetFactory: $rdf.dataset })
     apiClient.resources.factory.addMixin(...Object.values(Models))
     apiClient.cacheStrategy.shouldLoad = previous => {
       if (previous.representation?.root?.types.has(cc.CSVSource)) {

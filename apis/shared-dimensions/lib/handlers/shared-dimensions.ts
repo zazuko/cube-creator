@@ -6,6 +6,7 @@ import httpError from 'http-errors'
 import clownface, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import { NamedNode, Quad, Term } from 'rdf-js'
+import * as error from 'http-errors'
 import { md } from '@cube-creator/core/namespace'
 import { shaclValidate } from '../middleware/shacl'
 import { getSharedDimensions, getSharedTerms } from '../domain/shared-dimensions'
@@ -63,6 +64,10 @@ function termsCollectionId(dimensions: Term[], search?: string) {
 }
 
 export const getTerms = asyncMiddleware(async (req, res, next) => {
+  if (!req.dataset) {
+    return next(new error.BadRequest())
+  }
+
   const query = clownface({ dataset: await req.dataset() })
   const termSet = query
     .has(schema.inDefinedTermSet)
