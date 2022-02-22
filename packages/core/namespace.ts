@@ -98,11 +98,14 @@ type SharedDimensionsTerms =
   'SharedDimensionTerms' |
   'SharedDimensionExport' |
   'sharedDimensions' |
+  'sharedDimension' |
   'terms' |
   'onlyValidTerms' |
   'export' |
   'createAs' |
-  'dynamicPropertyType'
+  'dynamicPropertyType' |
+  'hierarchies' |
+  'Hierarchies'
 
 type MetaTerms =
   'SharedDimension' |
@@ -112,7 +115,8 @@ type MetaTerms =
   'relatesTo' |
   'hasHierarchy' |
   'hierarchyRoot' |
-  'nextInHierarchy'
+  'nextInHierarchy' |
+  'Hierarchy'
 
 prefixes.cube = 'https://cube.link/'
 prefixes.view = 'https://cube.link/view/'

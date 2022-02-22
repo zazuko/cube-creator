@@ -1,4 +1,3 @@
-PREFIX meta: <https://cube.link/meta/>
 PREFIX as: <https://www.w3.org/ns/activitystreams#>
 base <https://cube-creator.lndo.site/>
 prefix schema: <http://schema.org/>
@@ -107,21 +106,6 @@ graph <cube-project/ubd/dimensions-metadata> {
     qudt:scaleType qudt:NominalScale ;
     cc:dimensionMapping <cube-project/ubd/dimension-mapping/station> ;
     schema:name "Station"@en ;
-    meta:hasHierarchy
-      [
-        schema:name "CH - Canton - Station" ;
-        # TODO: this should be in meta namespace?
-        cc:sharedDimension <http://example.com/dimension/countries> ;
-        meta:hierarchyRoot <http://example.com/dimension/countries/Switzerland> ;
-        meta:nextInHierarchy
-          [
-            schema:name "Canton" ;
-            sh:path
-              [
-                sh:inversePath schema:containedInPlace
-              ] ;
-          ] ;
-  ] ;
   .
 
   <cube-project/ubd/dimensions-metadata/aggregation>

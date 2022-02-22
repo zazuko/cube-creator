@@ -1,4 +1,5 @@
-import { NamedNode, Quad, Term } from 'rdf-js'
+import { BlankNode, NamedNode, Quad, Term } from 'rdf-js'
+import through2 from 'through2'
 import $rdf from 'rdf-ext'
 import clownface, { GraphPointer } from 'clownface'
 import TermMap from '@rdfjs/term-map'
@@ -56,4 +57,32 @@ export function removeBnodes(pointer: GraphPointer<NamedNode>): GraphPointer<Nam
 
   const dataset = $rdf.dataset([...pointer.dataset]).map(replaceBlank)
   return clownface({ dataset }).namedNode(pointer.term)
+}
+
+export function restoreBnodes() {
+  const map = new TermMap<Term, BlankNode>()
+
+  function namedToBlank<T extends Term>(term: T): T | BlankNode {
+    if (term.termType === 'NamedNode' && /^urn:/.test(term.value)) {
+      const blank = map.get(term) || $rdf.blankNode()
+      map.set(term, blank)
+      return blank
+    }
+
+    return term
+  }
+
+  return through2.obj(function (quad: Quad, _, next) {
+    const { subject, predicate, object, graph } = quad
+
+    const restoredQuad = $rdf.quad(
+      namedToBlank(subject),
+      predicate,
+      namedToBlank(object),
+      namedToBlank(graph),
+    )
+
+    this.push(restoredQuad)
+    return next()
+  })
 }

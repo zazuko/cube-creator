@@ -11,7 +11,11 @@ function parent (level: number): Variable {
   return variable(`parent${level}`)
 }
 
-function getHierarchyPatterns (focusNode: MultiPointer) {
+interface GetHierarchyPatterns {
+  restrictTypes?: boolean
+}
+
+function getHierarchyPatterns (focusNode: MultiPointer, { restrictTypes = true }: GetHierarchyPatterns = {}) {
   let currentLevel = focusNode
   let roots: Term[] = []
   let patterns = sparql``
@@ -43,7 +47,7 @@ function getHierarchyPatterns (focusNode: MultiPointer) {
     }
 
     const targetClass = currentLevel.out(sh.targetClass).term
-    if (targetClass) {
+    if (targetClass && restrictTypes) {
       nextPattern = sparql`${nextPattern}\n${subject} a ${targetClass} .`
     }
 
@@ -89,7 +93,7 @@ export function properties (focusNode: GraphPointer): string {
 }
 
 export function types (focusNode: GraphPointer): string {
-  const patterns = getHierarchyPatterns(focusNode)
+  const patterns = getHierarchyPatterns(focusNode, { restrictTypes: false })
   if (!patterns) {
     return ''
   }
@@ -101,6 +105,9 @@ export function types (focusNode: GraphPointer): string {
           ${patterns}
           ?this a ?type
           filter(isiri(?this))
+          minus {
+            ?this a ${meta.Hierarchy}
+          }
         `}
       }
 

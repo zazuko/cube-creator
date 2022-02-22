@@ -7,7 +7,7 @@ import { rdf, sh } from '@tpluscode/rdf-ns-builders'
 import $rdf from 'rdf-ext'
 import { parsingClient } from './sparql'
 import env from './env'
-import { removeBnodes } from './rewrite'
+import { removeBnodes, restoreBnodes } from './rewrite'
 import { extractShape, deleteShapesQuery, deleteQuery, resourceQuery } from './resource'
 
 export { resourceQuery } from './resource'
@@ -27,7 +27,11 @@ export default class Store implements SharedDimensionsStore {
   async load(term: NamedNode) {
     const query = await resourceQuery(term, this.graph, this.client)
     const quads = await query.execute(this.client.query, { operation: 'postUrlencoded' })
-    return clownface({ dataset: $rdf.dataset(quads), term })
+    const dataset = $rdf.dataset(quads).toStream().pipe(restoreBnodes())
+    return clownface({
+      dataset: await $rdf.dataset().import(dataset),
+      term,
+    })
   }
 
   async delete(id: NamedNode) {

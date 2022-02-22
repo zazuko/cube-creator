@@ -8,11 +8,13 @@ import { Collection, RdfResource } from 'alcaeus'
 export interface SharedDimensionsState {
   entrypoint: null | RdfResource
   collection: null | Collection,
+  hierarchies: null | Collection,
 }
 
 const initialState = {
   entrypoint: null,
   collection: null,
+  hierarchies: null,
 }
 
 const getters: GetterTree<SharedDimensionsState, RootState> = {
@@ -43,6 +45,17 @@ const actions: ActionTree<SharedDimensionsState, RootState> = {
     const collection = await api.fetchResource(collectionURI.value)
     context.commit('storeCollection', collection)
   },
+
+  async fetchHierarchies (context) {
+    const entrypoint = context.state.entrypoint
+    const collectionURI = entrypoint?.get(md.hierarchies)?.id
+
+    if (!collectionURI) throw new Error('Missing hierarchies collection in entrypoint')
+
+    const collection = await api.fetchResource(collectionURI.value)
+
+    context.commit('storeHierarchies', collection)
+  },
 }
 
 const mutations: MutationTree<SharedDimensionsState> = {
@@ -52,6 +65,10 @@ const mutations: MutationTree<SharedDimensionsState> = {
 
   storeCollection (state, collection) {
     state.collection = collection ? serializeSharedDimensionCollection(collection) : null
+  },
+
+  storeHierarchies (state, collection) {
+    state.hierarchies = collection || null
   },
 }
 

@@ -24,22 +24,6 @@ export const post = protectedResource(shaclValidate, asyncMiddleware(async (req,
   return res.dataset(term.dataset)
 }))
 
-export const put = protectedResource(shaclValidate, asyncMiddleware(async (req, res) => {
-  const hydraExpects = req.hydra.operation.out(hydra.expects).term
-  let shape: GraphPointer | undefined
-  if (hydraExpects?.termType === 'NamedNode') {
-    shape = await shapes.get(hydraExpects)?.(req)
-  }
-
-  const dimension = await update({
-    resource: rewrite(await req.resource()),
-    store: store(),
-    shape,
-  })
-
-  return res.dataset(dimension.dataset)
-}))
-
 export const getExport = protectedResource(cors({ exposedHeaders: 'content-disposition' }), asyncMiddleware(async (req, res) => {
   const query = clownface({ dataset: await req.dataset() })
   const termSet: any = query

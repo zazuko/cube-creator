@@ -1,11 +1,11 @@
-import { hydra, oa, rdf, schema } from '@tpluscode/rdf-ns-builders'
+import { hydra, oa, schema } from '@tpluscode/rdf-ns-builders'
 import { asyncMiddleware } from 'middleware-async'
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
 import { Enrichment } from '@hydrofoil/labyrinth/lib/middleware/preprocessResource'
 import httpError from 'http-errors'
 import clownface, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
-import { NamedNode, Quad, Term } from 'rdf-js'
+import { Term } from 'rdf-js'
 import { md } from '@cube-creator/core/namespace'
 import { shaclValidate } from '../middleware/shacl'
 import { getSharedDimensions, getSharedTerms } from '../domain/shared-dimensions'
@@ -17,25 +17,7 @@ import { rewrite, rewriteTerm } from '../rewrite'
 import conditional from 'express-conditional-middleware'
 import { isMultipart } from '@cube-creator/express/multipart'
 import { postImportedDimension } from './shared-dimension/import'
-
-interface CollectionHandler {
-  memberType: NamedNode
-  collectionType: NamedNode
-  memberQuads: Quad[]
-  collection: NamedNode
-}
-
-function getCollection({ collection, memberQuads, memberType, collectionType }: CollectionHandler) {
-  const dataset = $rdf.dataset(memberQuads)
-
-  const graph = clownface({ dataset })
-  const members = graph.has(rdf.type, memberType)
-
-  return graph.node(collection)
-    .addOut(rdf.type, [hydra.Collection, collectionType])
-    .addOut(hydra.member, members)
-    .addOut(hydra.totalItems, members.terms.length)
-}
+import { getCollection } from './collection'
 
 export const get = asyncMiddleware(async (req, res) => {
   const collection = await getCollection({

@@ -8,6 +8,7 @@ import { terms, termSets, exportSet } from './termSetCollections'
 import { entrypoint } from './entrypoint'
 import { store } from '../lib/store'
 import shapes from './shapes'
+import { hierarchies } from './hierarchies'
 
 export interface BootstrappedResourceFactory {
   (term: string): GraphPointer<NamedNode>
@@ -19,6 +20,7 @@ const pointerFactory = (term: string) => clownface({ dataset: $rdf.dataset(), te
 const resources = [
   terms(pointerFactory),
   termSets(pointerFactory),
+  hierarchies(pointerFactory),
   exportSet(pointerFactory),
   entrypoint(pointerFactory, ns),
   ...shapes,

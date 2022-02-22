@@ -1,4 +1,4 @@
-import { cc, meta, shape, sh1, cube, md, relation, editor } from '@cube-creator/core/namespace'
+import { cc, meta, shape, sh1, cube, md, relation } from '@cube-creator/core/namespace'
 import { supportedLanguages } from '@cube-creator/core/languages'
 import { sparql, turtle } from '@tpluscode/rdf-string'
 import { lindasQuery } from '../lib/query'
@@ -6,8 +6,6 @@ import { dash, hydra, prov, rdf, rdfs, schema, sh, qudt, time, xsd } from '@tplu
 import namespace from '@rdfjs/namespace'
 import $rdf from 'rdf-ext'
 import { placeholderEntity } from '../../lib/domain/dimension-mapping/DimensionMapping'
-import { dcterms, sd } from '@tpluscode/rdf-ns-builders/strict'
-import env from '@cube-creator/core/env'
 
 const sou = namespace('http://qudt.org/vocab/sou/')
 
@@ -243,116 +241,11 @@ ${shape('dimension/metadata')} {
       ${sh.description} "Built a path of shared term properties to this dimension's values" ;
       ${sh.path} ${meta.hasHierarchy} ;
       ${sh.nodeKind} ${sh.BlankNode} ;
-      ${sh.node} ${shape('dimension/metadata#HierarchyShape')} ;
       ${sh.maxCount} 1 ;
       ${sh.group} ${shape('dimension/metadata#hierarchyGroup')} ;
     ] ,
     ${validateDataKindShape}
   .
-
-  ${shape('dimension/metadata#HierarchyShape')}
-    ${sh.property} [
-      ${sh.name} "Name" ;
-      ${sh.path} ${schema.name} ;
-      ${sh.minCount} 1 ;
-      ${sh.maxCount} 1 ;
-      ${sh.datatype} ${xsd.string} ;
-      ${sh.order} 1 ;
-    ] , [
-      ${sh.name} "Root dimension" ;
-      ${sh.path} ${cc.sharedDimension} ;
-      ${sh.minCount} 1 ;
-      ${sh.maxCount} 1 ;
-      ${sh.nodeKind} ${sh.IRI} ;
-      ${dash.editor} ${dash.InstancesSelectEditor} ;
-      ${hydra.collection} ${sharedDimensionCollection} ;
-      ${sh.order} 5 ;
-    ] , [
-      ${sh.name} "Root" ;
-      ${sh.path} ${meta.hierarchyRoot} ;
-      ${sh.minCount} 1 ;
-      ${sh.nodeKind} ${sh.IRI} ;
-      ${dash.editor} ${dash.AutoCompleteEditor} ;
-      ${sh.order} 10 ;
-      ${hydra.search} [
-        ${hydra.variableRepresentation} ${hydra.ExplicitRepresentation} ;
-        ${hydra.template} "dimension/_terms?dimension={dimension}{&q}" ;
-        ${hydra.mapping} [
-          ${hydra.variable} "dimension" ;
-          ${hydra.property} ${cc.sharedDimension} ;
-          ${hydra.required} true ;
-        ] , [
-          ${hydra.variable} "q" ;
-          ${hydra.property} ${hydra.freetextQuery} ;
-          ${sh.minLength} 0 ;
-        ];
-      ]
-    ] , [
-      ${sh.name} "First level" ;
-      ${sh.path} ${meta.nextInHierarchy} ;
-      ${sh.order} 15 ;
-      ${dash.editor} ${dash.DetailsEditor} ;
-      ${sh.nodeKind} ${sh.BlankNode} ;
-      ${sh.node} ${shape('dimension/metadata#NextInHierarchyShape')} ;
-      ${sh.minCount} 1 ;
-      ${sh.maxCount} 1 ;
-    ] ;
-  .
-
-  ${shape('dimension/metadata#NextInHierarchyShape')}
-    ${sh.property} [
-      ${sh.name} "Name" ;
-      ${sh.path} ${schema.name} ;
-      ${sh.minCount} 1 ;
-      ${sh.maxCount} 1 ;
-      ${sh.datatype} ${xsd.string} ;
-      ${sh.order} 10 ;
-    ] , [
-      ${sh.name} "Type" ;
-      ${sh.path} ${sh.targetClass} ;
-      ${sh.maxCount} 1 ;
-      ${sh.nodeKind} ${sh.IRI} ;
-      ${sh.order} 15 ;
-      ${dash.editor} ${editor.HierarchyLevelTargetEditor} ;
-      ${dcterms.source} [
-        ${sd.endpoint} <${env.PUBLIC_QUERY_ENDPOINT}>
-      ];
-    ] , [
-      ${sh.name} "Property" ;
-      ${sh.path} ${sh.path} ;
-      ${sh.minCount} 1 ;
-      ${sh.maxCount} 1 ;
-      ${dash.editor} ${editor.HierarchyPathEditor} ;
-      ${sh.node} ${shape('dimension/metadata#PathShape')} ;
-      ${dcterms.source} [
-        ${sd.endpoint} <${env.PUBLIC_QUERY_ENDPOINT}>
-      ];
-      ${sh.order} 20 ;
-    ] , [
-      ${sh.name} "Next level" ;
-      ${sh.path} ${meta.nextInHierarchy} ;
-      ${sh.order} 25 ;
-      ${dash.editor} ${dash.DetailsEditor} ;
-      ${sh.nodeKind} ${sh.BlankNode} ;
-      ${sh.node} ${shape('dimension/metadata#NextInHierarchyShape')} ;
-      ${sh.maxCount} 1 ;
-    ] .
-
-  ${shape('dimension/metadata#PathShape')}
-    ${sh.xone} (
-      [
-        ${sh.nodeKind} ${sh.IRI} ;
-      ]
-      [
-        ${sh.nodeKind} ${sh.BlankNode} ;
-        ${sh.property} [
-          ${sh.path} ${sh.inversePath} ;
-          ${sh.nodeKind} ${sh.IRI} ;
-          ${sh.minCount} 1 ;
-          ${sh.maxCount} 1 ;
-        ] ;
-      ]
-    ) .
 
   ${cube.MeasureDimension} ${rdfs.label} "Measure dimension"@en .
   ${cube.KeyDimension} ${rdfs.label} "Key dimension"@en .

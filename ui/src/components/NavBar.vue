@@ -12,6 +12,9 @@
       <b-navbar-item tag="router-link" :to="{ name: 'SharedDimensions' }">
         Shared Dimensions
       </b-navbar-item>
+      <b-navbar-item tag="router-link" :to="{ name: 'Hierarchies' }">
+        Hierarchies
+      </b-navbar-item>
     </template>
     <template slot="end">
       <b-navbar-item

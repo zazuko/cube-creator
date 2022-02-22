@@ -38,6 +38,9 @@ import SharedDimensionCreate from '@/views/SharedDimensionCreate.vue'
 import SharedDimensionTermCreate from '@/views/SharedDimensionTermCreate.vue'
 import SharedDimensionTermEdit from '@/views/SharedDimensionTermEdit.vue'
 import SharedDimensionEdit from '@/views/SharedDimensionEdit.vue'
+import Hierarchies from '@/views/Hierarchies.vue'
+import HierarchyCreate from '@/views/HierarchyCreate.vue'
+import HierarchyEdit from '@/views/HierarchyEdit.vue'
 
 Vue.use(VueRouter)
 
@@ -214,6 +217,23 @@ const routes: Array<RouteConfig> = [
           }
         ],
       },
+      {
+        path: '/hierarchies',
+        name: 'Hierarchies',
+        component: Hierarchies,
+        children: [
+          {
+            path: 'new',
+            name: 'HierarchyCreate',
+            component: HierarchyCreate,
+          },
+        ],
+      },
+      {
+        path: '/hierarchy/:id',
+        name: 'Hierarchy',
+        component: HierarchyEdit
+      }
     ],
   },
   {

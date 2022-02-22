@@ -21,7 +21,7 @@ graph <http://example.com/dimension/cantons> {
   .
 
   <http://example.com/dimension/canton/ZH>
-    a schema:DefinedTerm ;
+    a schema:DefinedTerm, <http://example.com/vocab#Canton> ;
     schema:identifier "ZH" ;
     schema:containedInPlace <http://example.com/dimension/countries/Switzerland> ;
     gn:parentFeature <http://example.com/dimension/countries/Switzerland> ;
@@ -37,14 +37,14 @@ graph <http://example.com/dimension/districts> {
   .
 
   <http://example.com/dimension/district/ZH>
-    a schema:DefinedTerm ;
+    a schema:DefinedTerm, <http://example.com/vocab#District> ;
     schema:identifier "ZH-ZH" ;
     schema:containedInPlace <http://example.com/dimension/canton/ZH> ;
     schema:name "city of Zürich"@en ;
     schema:inDefinedTermSet <http://example.com/dimension/districts> .
 
   <http://example.com/dimension/district/ZH-Affoltern>
-    a schema:DefinedTerm ;
+    a schema:DefinedTerm, <http://example.com/vocab#District> ;
     schema:identifier "ZH-Affoltern" ;
     schema:containedInPlace <http://example.com/dimension/canton/ZH> ;
     schema:name "Affoltern"@en ;
