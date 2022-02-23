@@ -25,6 +25,9 @@ services:
     type: node:16
     command: (cd ui; yarn serve --public app.cube-creator.lndo.site --hostname 0.0.0.0 --port 80)
     ssl: true
+    overrides:
+      environment:
+        NO_WEBSOCKET: "true"
   store:
     type: compose
     services:
