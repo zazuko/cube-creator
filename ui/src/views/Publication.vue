@@ -63,7 +63,7 @@ import * as storeNs from '../store/namespace'
 })
 export default class PublicationView extends Vue {
   @storeNs.app.State('language') language!: string[]
-  @storeNs.project.State('jobCollection') jobCollection!: JobCollection | null;
+  @storeNs.project.State('jobCollection') jobCollection!: JobCollection | null
   @storeNs.project.Getter('publicationJobs') jobs!: (PublishJob | UnlistJob)[]
 }
 </script>

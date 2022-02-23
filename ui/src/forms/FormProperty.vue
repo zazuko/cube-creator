@@ -32,10 +32,10 @@ import RenderWcTemplate from './RenderWcTemplate.vue'
   components: { RenderWcTemplate, VueMarkdown },
 })
 export default class extends Vue {
-  @Prop() property!: PropertyState;
-  @Prop() actions!: any;
-  @Prop() renderObject!: (arg: { object: PropertyObjectState }) => TemplateResult;
-  @Prop() renderMultiEditor!: () => TemplateResult;
+  @Prop() property!: PropertyState
+  @Prop() actions!: any
+  @Prop() renderObject!: (arg: { object: PropertyObjectState }) => TemplateResult
+  @Prop() renderMultiEditor!: () => TemplateResult
 
   linkAttrs = {
     target: '_blank',

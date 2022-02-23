@@ -33,10 +33,10 @@ export default class CubeProjectEditView extends Vue {
   @storeNs.project.State('project') project!: Project
   @storeNs.project.Getter('findSource') findSource!: (id: string) => CsvSource
 
-  resource: GraphPointer | null = null;
-  isSubmitting = false;
-  error: ErrorDetails | null = null;
-  shape: Shape | null = null;
+  resource: GraphPointer | null = null
+  isSubmitting = false
+  error: ErrorDetails | null = null
+  shape: Shape | null = null
 
   get source (): CsvSource {
     const sourceId = this.$route.params.sourceId

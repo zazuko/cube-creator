@@ -7,7 +7,7 @@ import { Prop, Component, Vue } from 'vue-property-decorator'
 
 @Component
 export default class DatePickerEditor extends Vue {
-  @Prop() value?: string;
+  @Prop() value?: string
   @Prop() update!: (newValue: string) => void
 
   get dateValue (): Date | null {

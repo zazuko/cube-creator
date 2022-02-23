@@ -136,10 +136,10 @@ import * as storeNs from '../store/namespace'
   },
 })
 export default class CsvSourceMapping extends Vue {
-  @Prop({ default: false }) readonly isFirstSource!: boolean;
-  @Prop() readonly source!: CsvSource;
-  @Prop() readonly tables!: Table[];
-  @Prop() readonly tableCollection!: TableCollection;
+  @Prop({ default: false }) readonly isFirstSource!: boolean
+  @Prop() readonly source!: CsvSource
+  @Prop() readonly tables!: Table[]
+  @Prop() readonly tableCollection!: TableCollection
 
   @storeNs.project.Getter('getSourceTables') getSourceTables!: (source: CsvSource) => Table[]
 

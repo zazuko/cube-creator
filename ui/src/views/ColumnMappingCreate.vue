@@ -57,8 +57,8 @@ export default class CubeProjectEditView extends Vue {
   @storeNs.project.Getter('getSource') getSource!: (uri: Term) => CsvSource
 
   columnMappingType: ColumnMappingType = 'literal'
-  isSubmitting = false;
-  error: ErrorDetails | null = null;
+  isSubmitting = false
+  error: ErrorDetails | null = null
 
   get table (): Table {
     const tableId = this.$route.params.tableId

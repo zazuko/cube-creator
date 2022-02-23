@@ -50,7 +50,7 @@ export default class TableCreateView extends Vue {
 
   resource: GraphPointer | null = clownface({ dataset: dataset() }).namedNode('')
   shape: Shape | null = null
-  isSubmitting = false;
+  isSubmitting = false
   error: ErrorDetails | null = null
 
   async mounted (): Promise<void> {

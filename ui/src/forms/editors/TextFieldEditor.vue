@@ -7,7 +7,7 @@ import { Prop, Component, Vue } from 'vue-property-decorator'
 
 @Component
 export default class extends Vue {
-  @Prop() value?: string;
+  @Prop() value?: string
   @Prop() update!: (newValue: string) => void
 }
 </script>

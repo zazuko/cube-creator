@@ -22,7 +22,8 @@
       {
         "registeredComponentsOnly": true
       }
-    ]
+    ],
+    "indent": ["error", 2, { "SwitchCase": 1, "ignoredNodes": ["PropertyDefinition"] }]
   },
   "overrides": [
     {

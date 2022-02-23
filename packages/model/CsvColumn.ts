@@ -18,10 +18,10 @@ export function CsvColumnMixin<Base extends Constructor>(Resource: Base): Mixin 
     name!: string
 
     @property.literal({ path: dtype.order, type: Number })
-    order!: number;
+    order!: number
 
     @property.literal({ path: cc.csvColumnSample, values: 'array' })
-    samples!: string[];
+    samples!: string[]
   }
 
   return Impl

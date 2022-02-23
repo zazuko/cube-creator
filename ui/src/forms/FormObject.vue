@@ -21,10 +21,10 @@ import LoadingBlock from '@/components/LoadingBlock.vue'
   components: { RenderWcTemplate, LoadingBlock },
 })
 export default class extends Vue {
-  @Prop() object!: PropertyObjectState;
-  @Prop() property!: PropertyState;
-  @Prop() actions!: any;
-  @Prop() renderEditor!: () => TemplateResult;
+  @Prop() object!: PropertyObjectState
+  @Prop() property!: PropertyState
+  @Prop() actions!: any
+  @Prop() renderEditor!: () => TemplateResult
 
   get isReady (): boolean {
     return !this.object?.componentState?.loading
