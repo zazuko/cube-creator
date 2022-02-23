@@ -10,7 +10,7 @@ services:
     overrides:
       image: node:14
       ports:
-        - '45671:45671'
+        - "45671:45671"
       environment:
         TS_NODE_TRANSPILE_ONLY: "true"
         TS_NODE_PROJECT: apis/core/tsconfig.json
@@ -31,17 +31,14 @@ services:
   store:
     type: compose
     services:
-      image: blankdots/jena-fuseki:fuseki3.13.1
-      command: /docker-entrypoint.sh /jena-fuseki/start-fuseki.sh
+      image: ghcr.io/zazuko/fuseki-geosparql:v2.0.1
+      command: /opt/fuseki/entrypoint.sh
       environment:
         ADMIN_PASSWORD: password
-        ENABLE_DATA_WRITE: "true"
-        ENABLE_UPDATE: "true"
-        ENABLE_UPLOAD: "true"
       volumes:
-        - ./fuseki/config.ttl:/data/fuseki/config/config.ttl
+        - ./fuseki/config.ttl:/fuseki/config.ttl
       healthcheck:
-        test: wget --no-verbose --tries=1 --spider http://localhost:3030 || exit 1
+        test: wget --no-verbose --tries=1 --spider http://localhost:3030/$$/ping || exit 1
         interval: 5s
         timeout: 3s
         retries: 3
@@ -75,7 +72,7 @@ services:
         TS_NODE_TRANSPILE_ONLY: "true"
         NODE_TLS_REJECT_UNAUTHORIZED: 0
     moreHttpPorts:
-          - 45681
+      - 45681
   collector:
     type: compose
     scanner: false
