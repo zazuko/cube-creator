@@ -138,3 +138,7 @@ export const createReference = initializer<ReferenceColumnMapping, ReferenceRequ
 type IdentifierMappingRequiredProperties = 'referencedColumn'
 
 export const createIdentifierMapping = initializer<IdentifierMapping, IdentifierMappingRequiredProperties>(IdentifierMappingMixin, {})
+
+export function isLiteralColumnMapping(columnMapping: ColumnMapping): columnMapping is LiteralColumnMapping {
+  return columnMapping.types.has(cc.LiteralColumnMapping)
+}

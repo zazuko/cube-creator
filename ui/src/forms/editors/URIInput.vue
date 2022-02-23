@@ -25,12 +25,12 @@ export default class extends Vue {
     return this.value?.value || ''
   }
 
-  mounted () {
+  mounted (): void {
     this.__fetch()
   }
 
-  onUpdate (e: any): void {
-    const newValue = e.target.value
+  onUpdate (e: Event): void {
+    const newValue = (e.target as HTMLInputElement).value
 
     try {
       const url = new URL(newValue)
@@ -44,7 +44,7 @@ export default class extends Vue {
     }
   }
 
-  async __fetch () {
+  async __fetch (): Promise<void> {
     if (!this.value) {
       return
     }
