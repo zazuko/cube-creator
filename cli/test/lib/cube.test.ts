@@ -2,8 +2,8 @@ import { describe, it } from 'mocha'
 import { expect } from 'chai'
 import $rdf from 'rdf-ext'
 import { cc, cube } from '@cube-creator/core/namespace'
-import { getObservationSetId, injectRevision } from '../../lib/cube'
 import { rdf } from '@tpluscode/rdf-ns-builders'
+import { getObservationSetId, injectRevision } from '../../lib/cube'
 import { logger } from '../support/logger'
 
 describe('lib/cube', () => {

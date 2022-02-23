@@ -3,8 +3,8 @@ import { expect } from 'chai'
 import $rdf from 'rdf-ext'
 import { mdClients } from '@cube-creator/testing/lib'
 import { insertTestDimensions } from '@cube-creator/testing/lib/seedData'
-import { getSharedDimensions, getSharedTerms } from '../../../lib/domain/shared-dimensions'
 import { rdf, schema } from '@tpluscode/rdf-ns-builders'
+import { getSharedDimensions, getSharedTerms } from '../../../lib/domain/shared-dimensions'
 
 describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimensions @SPARQL', () => {
   before(async () => {

@@ -1,3 +1,4 @@
+import { Literal } from 'rdf-js'
 import { RdfResource } from '@tpluscode/rdfine/RdfResource'
 import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import { Constructor, property } from '@tpluscode/rdfine'
@@ -8,7 +9,6 @@ import { Cube } from './Cube'
 import { DimensionMetadataCollection, DimensionMetadataCollectionMixin } from './DimensionMetadata'
 import { Link } from './lib/Link'
 import { childResource } from './lib/resourceIdentifiers'
-import { Literal } from 'rdf-js'
 
 export interface Dataset extends RdfResource {
   hasPart: Cube[]

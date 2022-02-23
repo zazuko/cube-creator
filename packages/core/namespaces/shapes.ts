@@ -1,5 +1,5 @@
-import namespace from '@rdf-esm/namespace'
 import { NamedNode } from 'rdf-js'
+import namespace from '@rdf-esm/namespace'
 import env from '../env'
 
 export const baseUri = env.maybe.API_CORE_BASE || ''

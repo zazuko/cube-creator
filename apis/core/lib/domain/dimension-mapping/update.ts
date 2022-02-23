@@ -1,12 +1,12 @@
-import { GraphPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'
+import { GraphPointer } from 'clownface'
 import error from 'http-errors'
-import { ResourceStore } from '../../ResourceStore'
-import { replaceValueWithDefinedTerms } from '../queries/dimension-mappings'
 import { Dictionary } from '@rdfine/prov'
 import { fromPointer } from '@rdfine/prov/lib/Dictionary'
-import * as log from '../../log'
 import { cc } from '@cube-creator/core/namespace'
+import { ResourceStore } from '../../ResourceStore'
+import { replaceValueWithDefinedTerms } from '../queries/dimension-mappings'
+import * as log from '../../log'
 
 interface UpdateDimensionMapping {
   resource: NamedNode

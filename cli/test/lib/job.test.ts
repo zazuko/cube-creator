@@ -2,14 +2,14 @@ import { describe, before, beforeEach, it } from 'mocha'
 import { expect } from 'chai'
 import { Hydra } from 'alcaeus/node'
 import env from '@cube-creator/core/env'
-import { TableIterator } from '../../lib/job'
 import { insertTestProject } from '@cube-creator/testing/lib/seedData'
-import { setupEnv } from '../support/env'
 import { Table } from '@rdfine/csvw'
-import { logger } from '../support/logger'
 import type { VariableMap } from 'barnard59-core'
 import * as Models from '@cube-creator/model'
 import * as Csvw from '@rdfine/csvw'
+import { logger } from '../support/logger'
+import { setupEnv } from '../support/env'
+import { TableIterator } from '../../lib/job'
 
 Hydra.resources.factory.addMixin(...Object.values(Models))
 Hydra.resources.factory.addMixin(...Object.values(Csvw))

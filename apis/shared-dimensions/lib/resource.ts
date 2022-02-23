@@ -1,6 +1,6 @@
+import { BlankNode, NamedNode, Term } from 'rdf-js'
 import { sparql, SparqlTemplateResult } from '@tpluscode/rdf-string'
 import { sh } from '@tpluscode/rdf-ns-builders'
-import { BlankNode, NamedNode, Term } from 'rdf-js'
 import clownface, { AnyPointer, GraphPointer } from 'clownface'
 import { nanoid } from 'nanoid'
 import TermSet from '@rdfjs/term-set'

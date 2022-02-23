@@ -1,12 +1,12 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import express from 'express'
 import * as http from 'http'
+import * as path from 'path'
+import express from 'express'
 import asyncMiddleware from 'middleware-async'
 import debug from 'debug'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 import dotenv from 'dotenv'
-import * as path from 'path'
 import * as command from './lib/commands'
 
 dotenv.config({

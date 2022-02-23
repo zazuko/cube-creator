@@ -1,5 +1,5 @@
-import { Column, Table } from '@rdfine/csvw'
 import { NamedNode } from 'rdf-js'
+import { Column, Table } from '@rdfine/csvw'
 
 export function findColumn(table: Table, nameOrProp: string | NamedNode): Column | undefined {
   if (typeof nameOrProp === 'string') {

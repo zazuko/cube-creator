@@ -1,7 +1,7 @@
+import { Term, Quad, NamedNode } from 'rdf-js'
 import { Request, Response } from 'express'
 import asyncMiddleware from 'middleware-async'
 import $rdf from 'rdf-ext'
-import { Term, Quad, NamedNode } from 'rdf-js'
 import { hydra, rdf, sh } from '@tpluscode/rdf-ns-builders'
 import SHACLValidator from 'rdf-validate-shacl'
 import clownface, { GraphPointer } from 'clownface'

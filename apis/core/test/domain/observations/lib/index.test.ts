@@ -1,3 +1,4 @@
+import { Term } from 'rdf-js'
 import { describe, it, beforeEach, before } from 'mocha'
 import { expect } from 'chai'
 import * as sinon from 'sinon'
@@ -12,7 +13,6 @@ import { IriTemplate } from '@rdfine/hydra'
 import { IriTemplateBundle } from '@rdfine/hydra/bundles'
 import RdfResource from '@tpluscode/rdfine/RdfResource'
 import { populateFilters, createHydraCollection, createView } from '../../../../lib/domain/observations/lib'
-import { Term } from 'rdf-js'
 
 RdfResource.factory.addMixin(...IriTemplateBundle)
 

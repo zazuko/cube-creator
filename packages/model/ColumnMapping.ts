@@ -1,12 +1,12 @@
-import { Initializer, RdfResource, RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
-import { CsvColumn } from './CsvColumn'
-import { Table } from './Table'
 import { DatasetCore, NamedNode, Term } from 'rdf-js'
-import { Link } from './lib/Link'
+import { Initializer, RdfResource, RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import RdfResourceImpl, { Constructor, namespace, property, ResourceIdentifier } from '@tpluscode/rdfine'
 import { cc } from '@cube-creator/core/namespace'
-import { initializer } from './lib/initializer'
 import type { GraphPointer } from 'clownface'
+import { CsvColumn } from './CsvColumn'
+import { Table } from './Table'
+import { Link } from './lib/Link'
+import { initializer } from './lib/initializer'
 
 export interface ColumnMapping extends RdfResource {
   targetProperty: Term

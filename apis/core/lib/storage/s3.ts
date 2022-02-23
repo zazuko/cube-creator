@@ -1,5 +1,5 @@
-import aws from 'aws-sdk'
 import { Readable } from 'stream'
+import aws from 'aws-sdk'
 import { PromiseResult } from 'aws-sdk/lib/request'
 import type { MediaObject } from '@rdfine/schema'
 import env from '@cube-creator/core/env'

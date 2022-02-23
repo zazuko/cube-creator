@@ -1,3 +1,4 @@
+import { Literal } from 'rdf-js'
 import { describe, it, beforeEach } from 'mocha'
 import { Request } from 'express'
 import sinon from 'sinon'
@@ -6,12 +7,11 @@ import { expect } from 'chai'
 import $rdf from 'rdf-ext'
 import { prov } from '@tpluscode/rdf-ns-builders'
 import { fromPointer } from '@rdfine/prov/lib/Dictionary'
-import { prepareEntries } from '../../lib/handlers/dimension-mapping'
 import { namedNode } from '@cube-creator/testing/clownface'
 import { ex } from '@cube-creator/testing/lib/namespace'
+import { prepareEntries } from '../../lib/handlers/dimension-mapping'
 import * as queries from '../../lib/domain/queries/dimension-mappings'
 import '../../lib/domain'
-import { Literal } from 'rdf-js'
 
 describe('lib/handlers/dimension-mapping', () => {
   describe('prepareEntries', () => {

@@ -4,9 +4,9 @@ import * as sinon from 'sinon'
 import $rdf from 'rdf-ext'
 import clownface from 'clownface'
 import { dcterms, rdf } from '@tpluscode/rdf-ns-builders'
-import * as trigger from '../../lib/pipeline/trigger'
 import env from '@cube-creator/core/env'
 import { cc } from '@cube-creator/core/namespace'
+import * as trigger from '../../lib/pipeline/trigger'
 
 describe('pipeline/trigger', () => {
   const transformJob = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('transformjob') })

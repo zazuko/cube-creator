@@ -1,16 +1,16 @@
-import { GraphPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'
+import { GraphPointer } from 'clownface'
 import type { MediaObject } from '@rdfine/schema'
-import { ResourceStore } from '../../ResourceStore'
-import { loadFileHeadString } from '../csv/file-head'
-import { parse } from '../csv'
 import { CsvSource } from '@cube-creator/model'
 import { fromPointer as mediaObjectFromPointer } from '@cube-creator/model/MediaObject'
-import { createOrUpdateColumns } from './update'
 import { DomainError } from '@cube-creator/api-errors'
 import { ResourceNode } from '@tpluscode/rdfine/RdfResource'
+import { parse } from '../csv'
+import { loadFileHeadString } from '../csv/file-head'
+import { ResourceStore } from '../../ResourceStore'
 import type { GetMediaStorage, MediaStorage } from '../../storage'
 import { getMediaStorage } from '../../storage'
+import { createOrUpdateColumns } from './update'
 
 interface ReplaceCSVCommand {
   csvSourceId: NamedNode

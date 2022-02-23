@@ -1,16 +1,16 @@
+import { DatasetCore } from 'rdf-js'
 import RdfResourceImpl, { RdfResource, Constructor, namespace, property, ResourceIdentifier } from '@tpluscode/rdfine'
 import type { GraphPointer } from 'clownface'
 import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import type * as Csvw from '@rdfine/csvw'
 import { cc } from '@cube-creator/core/namespace'
 import { schema } from '@tpluscode/rdf-ns-builders'
-import { CsvSource } from './CsvSource'
 import type { Collection } from '@rdfine/hydra'
+import { CsvSource } from './CsvSource'
 import { Link } from './lib/Link'
 import { initializer } from './lib/initializer'
 import { CsvMapping } from './CsvMapping'
 import { childResource } from './lib/resourceIdentifiers'
-import { DatasetCore } from 'rdf-js'
 import { parse, ParsedTemplate } from './lib/uriTemplateParser'
 
 export interface Table<D extends DatasetCore = DatasetCore> extends RdfResource<D> {

@@ -1,9 +1,9 @@
+import type { DatasetCore, NamedNode } from 'rdf-js'
 import type * as Schema from '@rdfine/schema'
 import RdfResourceImpl, { Initializer, RdfResourceCore, ResourceIdentifier } from '@tpluscode/rdfine/RdfResource'
 import { Constructor, property } from '@tpluscode/rdfine'
 import { MediaObjectMixin as SchemaMediaObjectMixin } from '@rdfine/schema'
 import { schema } from '@tpluscode/rdf-ns-builders'
-import type { DatasetCore, NamedNode } from 'rdf-js'
 import type { GraphPointer } from 'clownface'
 import { cc } from '@cube-creator/core/namespace'
 

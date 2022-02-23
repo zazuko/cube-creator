@@ -4,8 +4,8 @@ import { sparql } from '@tpluscode/rdf-string'
 import { rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { cc, cube } from '@cube-creator/core/namespace'
 import TermMap from '@rdfjs/term-map'
-import { parsingClient, streamClient } from '../../query-client'
 import TermSet from '@rdfjs/term-set'
+import { parsingClient, streamClient } from '../../query-client'
 
 function patternsToFindCubeGraph(dimensionMapping: Term) {
   return sparql`BIND ( ${dimensionMapping} as ?dimensionMapping )

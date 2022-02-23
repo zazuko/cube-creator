@@ -1,7 +1,7 @@
+import { NamedNode } from 'rdf-js'
 import { describe, it, beforeEach, afterEach } from 'mocha'
 import clownface, { GraphPointer } from 'clownface'
 import { blankNode, namedNode } from '@cube-creator/testing/clownface'
-import { NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import { expect } from 'chai'
 import { BadRequest } from 'http-errors'

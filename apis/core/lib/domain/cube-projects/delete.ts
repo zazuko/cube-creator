@@ -1,6 +1,6 @@
 import { NamedNode } from 'rdf-js'
-import { ResourceStore } from '../../ResourceStore'
 import { cc } from '@cube-creator/core/namespace'
+import { ResourceStore } from '../../ResourceStore'
 import { deleteMapping } from '../csv-mapping/delete'
 
 interface DeleteProjectCommand {

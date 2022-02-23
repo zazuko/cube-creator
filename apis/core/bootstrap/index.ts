@@ -1,10 +1,10 @@
 import * as core from '@cube-creator/core/bootstrap'
-import { cubeProjects } from './cube-projects'
+import env from '@cube-creator/core/env'
 import { log } from '../lib/log'
+import { cubeProjects } from './cube-projects'
 import { entrypoint } from './entrypoint'
 import { organizations } from './organizations'
 import shapes from './shapes'
-import env from '@cube-creator/core/env'
 
 const resources = [cubeProjects, entrypoint, organizations, ...shapes]
 

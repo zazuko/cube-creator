@@ -1,7 +1,6 @@
-import { GraphPointer } from 'clownface'
-import { cc } from '@cube-creator/core/namespace'
-import { ResourceStore } from '../../ResourceStore'
 import { NamedNode, Term } from 'rdf-js'
+import { cc } from '@cube-creator/core/namespace'
+import { GraphPointer } from 'clownface'
 import {
   CsvSource,
   DimensionMetadataCollection,
@@ -9,14 +8,15 @@ import {
   ReferenceColumnMapping,
   Table,
 } from '@cube-creator/model'
-import { getDimensionMetaDataCollection } from '../queries/dimension-metadata'
-import { findMapping } from './lib'
 import { NotFoundError, DomainError } from '@cube-creator/api-errors'
 import { rdf } from '@tpluscode/rdf-ns-builders'
 import TermSet from '@rdfjs/term-set'
 import type { Organization } from '@rdfine/schema'
-import { findOrganization } from '../organization/query'
 import { CsvProject } from '@cube-creator/model/Project'
+import { findOrganization } from '../organization/query'
+import { ResourceStore } from '../../ResourceStore'
+import { getDimensionMetaDataCollection } from '../queries/dimension-metadata'
+import { findMapping } from './lib'
 
 interface CreateColumnMappingCommand {
   tableId: NamedNode

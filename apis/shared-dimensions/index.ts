@@ -1,6 +1,6 @@
+import path from 'path'
 import { hydraBox } from '@hydrofoil/labyrinth'
 import { Router } from 'express'
-import path from 'path'
 import $rdf from 'rdf-ext'
 import camouflage from 'camouflage-rewrite'
 import env from './lib/env'

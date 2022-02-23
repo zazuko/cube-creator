@@ -1,7 +1,7 @@
-import { ForbiddenMapper, UnauthorizedMapper } from './auth'
-import { DomainErrorMapper } from './domain'
 import { Term } from 'rdf-js'
 import type { GraphPointer } from 'clownface'
+import { ForbiddenMapper, UnauthorizedMapper } from './auth'
+import { DomainErrorMapper } from './domain'
 
 export { DomainError } from './domain'
 

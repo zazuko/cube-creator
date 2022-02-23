@@ -1,5 +1,5 @@
-import { SparqlQueryLoader } from '@hydrofoil/labyrinth/lib/loader'
 import { NamedNode } from 'rdf-js'
+import { SparqlQueryLoader } from '@hydrofoil/labyrinth/lib/loader'
 import { PropertyResource, Resource } from 'hydra-box'
 import ParsingClient from 'sparql-http-client/ParsingClient'
 import { SELECT } from '@tpluscode/sparql-builder'

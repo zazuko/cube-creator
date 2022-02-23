@@ -1,7 +1,7 @@
 import { NamedNode } from 'rdf-js'
+import { cc } from '@cube-creator/core/namespace'
 import { ResourceStore } from '../../ResourceStore'
 import { deleteSource } from '../csv-source/delete'
-import { cc } from '@cube-creator/core/namespace'
 import { deleteTable } from '../table/delete'
 import { getTablesForMapping } from '../queries/table'
 

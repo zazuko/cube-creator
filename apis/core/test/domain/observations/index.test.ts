@@ -1,7 +1,7 @@
+import { Quad, Term } from 'rdf-js'
 import { describe, it, beforeEach, before, after } from 'mocha'
 import { expect } from 'chai'
 import clownface, { GraphPointer } from 'clownface'
-import { Quad, Term } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import { IriTemplate } from '@rdfine/hydra'
 import * as sinon from 'sinon'

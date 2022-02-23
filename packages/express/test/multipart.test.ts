@@ -1,13 +1,13 @@
+import path from 'path'
 import { describe, beforeEach, it } from 'mocha'
 import request from 'supertest'
 import express from 'express'
 import asyncMiddleware from 'middleware-async'
-import { isMultipart, multiPartResourceHandler } from '../multipart'
 import { expect } from 'chai'
-import path from 'path'
 import $rdf from 'rdf-ext'
 import { rdf, schema } from '@tpluscode/rdf-ns-builders/strict'
 import clownface from 'clownface'
+import { isMultipart, multiPartResourceHandler } from '../multipart'
 
 describe('@cube-creator/express/multipart', () => {
   describe('isMultipart', () => {

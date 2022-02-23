@@ -3,9 +3,9 @@ import { supportedLanguages } from '@cube-creator/core/languages'
 import { hydra, rdfs, sh, dcat, dcterms, xsd, rdf, vcard, schema, _void, dash, skos } from '@tpluscode/rdf-ns-builders'
 import { sparql, turtle } from '@tpluscode/rdf-string'
 import $rdf from 'rdf-ext'
-import { lindasQuery } from '../lib/query'
 import { Draft, Published } from '@cube-creator/model/Cube'
 import env from '@cube-creator/core/env'
+import { lindasQuery } from '../lib/query'
 
 const shapeId = shape('dataset/edit-metadata')
 const temporalFromTo = $rdf.namedNode(shapeId.value + '#temporalFromTo')

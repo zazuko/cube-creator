@@ -1,3 +1,4 @@
+import { NamedNode } from 'rdf-js'
 import { describe, it, beforeEach } from 'mocha'
 import { expect } from 'chai'
 import * as sinon from 'sinon'
@@ -7,15 +8,14 @@ import { csvw, hydra, rdf, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import * as Organization from '@cube-creator/model/Organization'
 import * as Project from '@cube-creator/model/Project'
+import { DomainError } from '@cube-creator/api-errors'
+import DatasetExt from 'rdf-ext/lib/Dataset'
+import { namedNode } from '@cube-creator/testing/clownface'
 import { createColumnMapping } from '../../../lib/domain/column-mapping/create'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import * as DimensionMetadataQueries from '../../../lib/domain/queries/dimension-metadata'
 import * as orgQueries from '../../../lib/domain/organization/query'
 import '../../../lib/domain'
-import { DomainError } from '@cube-creator/api-errors'
-import { NamedNode } from 'rdf-js'
-import DatasetExt from 'rdf-ext/lib/Dataset'
-import { namedNode } from '@cube-creator/testing/clownface'
 
 describe('domain/column-mapping/create', () => {
   let store: TestResourceStore

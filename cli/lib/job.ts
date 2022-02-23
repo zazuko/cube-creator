@@ -1,3 +1,4 @@
+import { Term } from 'rdf-js'
 import stream from 'readable-stream'
 import { HydraClient } from 'alcaeus/alcaeus'
 import { Job, Table, TransformJob } from '@cube-creator/model'
@@ -6,13 +7,12 @@ import { schema } from '@tpluscode/rdf-ns-builders/strict'
 import type { Logger } from 'winston'
 import type { Context, VariableMap } from 'barnard59-core'
 import $rdf from 'rdf-ext'
-import { logger } from './log'
 import { cc } from '@cube-creator/core/namespace'
 import TermMap from '@rdfjs/term-map'
 import { GraphPointer } from 'clownface'
-import { Term } from 'rdf-js'
 import type ValidationReport from 'rdf-validate-shacl/src/validation-report'
 import DatasetExt from 'rdf-ext/lib/Dataset'
+import { logger } from './log'
 
 interface Params {
   jobUri: string

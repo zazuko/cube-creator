@@ -2391,10 +2391,10 @@
   resolved "https://registry.yarnpkg.com/@tinyhttp/content-disposition/-/content-disposition-2.0.5.tgz#dc17d67b26697990bf0dac0d8f5ad03cc99b3d96"
   integrity sha512-glfgD8Ae1HwF7QntvD1jAr/ieHmGmU4drcH7AeXkK6uj/GyCSRw9yPgSfYqjBkEeP1hR19ZTDi5rrKMIFifesA==
 
-"@tpluscode/eslint-config@^0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@tpluscode/eslint-config/-/eslint-config-0.1.1.tgz#5562e9753d4a4e9bd6ee4785baeaf9e6c7f42bfc"
-  integrity sha512-gv7CE+3iQ6YNoEofgzMKWUgOHxY7Kozq06M4ls0PkOScOmvCoHTFD2XvPtqmADmXezQsMcZyM6VsHEilgHoasw==
+"@tpluscode/eslint-config@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@tpluscode/eslint-config/-/eslint-config-0.2.0.tgz#1f24085da4d708efbb7d0cc5a9444371468875b3"
+  integrity sha512-4Dg4VpPSMPa6/DzDFKbrv7XEgE1A4pTWePiX8TRMPLrpgF0/0SYN6ucnPwVWccklpO+W23zovfL060AHYTpM/w==
 
 "@tpluscode/rdf-ns-builders@^0.4.0":
   version "0.4.5"

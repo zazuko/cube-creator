@@ -1,7 +1,7 @@
+import { Term } from 'rdf-js'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import { SELECT } from '@tpluscode/sparql-builder'
-import { Term } from 'rdf-js'
 import { ParsingClient } from 'sparql-http-client/ParsingClient'
 import { ResultRow } from 'sparql-http-client/ResultParser'
 import { parsingClient } from '../../query-client'
