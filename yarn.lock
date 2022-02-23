@@ -4318,9 +4318,9 @@ available-typed-arrays@^1.0.5:
   integrity sha512-DMD0KiN46eipeziST1LPP/STfDU0sufISXmjSgvVsoU2tqxctQeASejWcfNtxYKqETM1UxQ8sp2OrSBWpHY6sw==
 
 aws-sdk@^2.1038.0, aws-sdk@^2.1048.0, aws-sdk@^2.559.0:
-  version "2.1077.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1077.0.tgz#d4a391d38ede867fe9a88f31555f09a338dfdf4e"
-  integrity sha512-orJvJROs8hJaQRfHsX7Zl5PxEgrD/uTXyqXz9Yu9Io5VVxzvnOty9oHmvEMSlgTIf1qd01gnev/vpvP1HgzKtw==
+  version "2.1079.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1079.0.tgz#41ede54aa4ba5ce77d4ffe202f9a1ee7869da2a8"
+  integrity sha512-WHYWiye9f2XYQ33Rj/uVw4VF/Qq/xrB9NDnGlRhgK8Ga7T20+8/iZD5/Z8wICVNZTsfUZ3g6LfkeZ1l+LZhHKw==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
@@ -4659,9 +4659,9 @@ browserslist@^4.0.0, browserslist@^4.14.5, browserslist@^4.16.3, browserslist@^4
     picocolors "^1.0.0"
 
 buefy@^0.9.5:
-  version "0.9.16"
-  resolved "https://registry.yarnpkg.com/buefy/-/buefy-0.9.16.tgz#0d3eb371c0eeee5ea2fc6b3d774f62779dba7e4c"
-  integrity sha512-RTuCFkMLBkZWXe3lMqEab/OpXwbCidcUSZpjsTZewDsOEFOuUMtbaody4buJB+7Zh2msOMowq1gSb1ARix6/vA==
+  version "0.9.17"
+  resolved "https://registry.yarnpkg.com/buefy/-/buefy-0.9.17.tgz#ac5857a1413f253cbb9beb0d87a48021e5b21c78"
+  integrity sha512-+rERzamvkflMsoE6GDqGdj5vpDUmdm5MnCnwjK2O8pdnwr8Pmab94cO//0Vd8ys539qWoeqsjh+B7vPg/lT/nQ==
   dependencies:
     bulma "0.9.3"
 
@@ -6783,14 +6783,14 @@ express-jwt-permissions@^1.3.3:
     lodash.get "^4.4.2"
 
 express-jwt@^6.0.0:
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/express-jwt/-/express-jwt-6.1.0.tgz#5818c813e245b0eb361c5cf161425cf16f9c8591"
-  integrity sha512-mmSR52Ps1FMeGwchroHzEJONWhsobd5KHVVKBffYiUEpZh9iK9wI9ZWkmzY5ROwWQtJLNGHV/VUMLh2M208s4Q==
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/express-jwt/-/express-jwt-6.1.1.tgz#2b157fb4fa33c2d367ee71c61b5aca762de39657"
+  integrity sha512-m8gkY04v5jtiFZn6bYQINYX/DVXq1DVb5nIW7H8l87qJ4BBvtQKFRpxyRE31odct7OPfHdT+B8678zJHhlMrpw==
   dependencies:
     async "^1.5.0"
     express-unless "^1.0.0"
     jsonwebtoken "^8.1.0"
-    lodash.set "^4.0.0"
+    lodash "^4.17.21"
 
 express-prom-bundle@6.3.0:
   version "6.3.0"
@@ -8928,11 +8928,6 @@ lodash.once@^4.0.0, lodash.once@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/lodash.once/-/lodash.once-4.1.1.tgz#0dd3971213c7c56df880977d504c88fb471a97ac"
   integrity sha1-DdOXEhPHxW34gJd9UEyI+0cal6w=
-
-lodash.set@^4.0.0:
-  version "4.3.2"
-  resolved "https://registry.yarnpkg.com/lodash.set/-/lodash.set-4.3.2.tgz#d8757b1da807dde24816b0d6a84bea1a76230b23"
-  integrity sha1-2HV7HagH3eJIFrDWqEvqGnYjCyM=
 
 lodash.startcase@^4.4.0:
   version "4.4.0"
