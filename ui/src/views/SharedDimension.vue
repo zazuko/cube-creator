@@ -164,9 +164,9 @@ export default class extends Vue {
   @storeNs.sharedDimension.State('terms') terms!: SharedDimensionTerm[] | null
   @storeNs.sharedDimension.State('page') page!: number
   @storeNs.sharedDimension.State('pageSize') pageSize!: number
-  @storeNs.sharedDimension.Action('nextPage') nextPage!: () => any
-  @storeNs.sharedDimension.Action('prevPage') prevPage!: () => any
-  @storeNs.sharedDimension.Action('changePageSize') changePageSize!: () => any
+  @storeNs.sharedDimension.Action('nextPage') nextPage!: () => void
+  @storeNs.sharedDimension.Action('prevPage') prevPage!: () => void
+  @storeNs.sharedDimension.Action('changePageSize') changePageSize!: () => void
 
   pageSizes = [10, 20, 50, 100]
   tableWidth = 3

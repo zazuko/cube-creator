@@ -139,7 +139,7 @@ export default class extends Vue {
 
     if (!this.shape) return emptyPointer
 
-    const nodes: any = this.shape.pointer.out(sh.property).has(sh.path, [cc.dimensionType]).out(sh.in).list()
+    const nodes = this.shape.pointer.out(sh.property).has(sh.path, [cc.dimensionType]).out(sh.in).list()
 
     if (!nodes) return emptyPointer
 

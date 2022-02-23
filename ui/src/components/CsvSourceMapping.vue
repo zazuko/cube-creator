@@ -123,6 +123,7 @@
 <script lang="ts">
 import { Prop, Component, Vue, Watch } from 'vue-property-decorator'
 import { CsvSource, Table, TableCollection, CsvColumn, ColumnMapping } from '@cube-creator/model'
+import { isLiteralColumnMapping } from '@cube-creator/model/ColumnMapping'
 import MapperTable from './MapperTable.vue'
 import HydraOperationButton from './HydraOperationButton.vue'
 import { api } from '@/api'
@@ -174,8 +175,8 @@ export default class CsvSourceMapping extends Vue {
   getColumnMappings (column: CsvColumn): {table: Table; columnMapping: ColumnMapping}[] {
     return this.tables
       .map((table) => {
-        return (table.columnMappings as any[])
-          .filter((columnMapping) => column.id.equals(columnMapping?.sourceColumn?.id))
+        return (table.columnMappings)
+          .filter((columnMapping) => isLiteralColumnMapping(columnMapping) && column.id.equals(columnMapping.sourceColumn.id))
           .map((columnMapping) => ({ table, columnMapping }))
       })
       .flat()

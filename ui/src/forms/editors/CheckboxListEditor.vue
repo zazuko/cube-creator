@@ -1,10 +1,11 @@
 <template>
   <b-field>
-    <b-checkbox-button v-for="[term, label] in choices"
-                       :key="term.value"
-                       :native-value="term.value"
-                       v-model="selected"
-                       @input="emit"
+    <b-checkbox-button
+      v-for="[term, label] in choices"
+      :key="term.value"
+      :native-value="term.value"
+      v-model="selected"
+      @input="emit"
     >
       <span>{{ label }}</span>
     </b-checkbox-button>
@@ -24,7 +25,7 @@ export default class extends Vue {
 
   selected: string[] = []
 
-  mounted () {
+  mounted (): void {
     this.selected = this.value.map(v => v.value)
   }
 

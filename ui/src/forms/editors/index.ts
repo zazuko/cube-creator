@@ -328,7 +328,7 @@ export const checkboxList: Lazy<MultiEditorComponent> = {
   async lazyRender () {
     await import('./CheckboxListEditor.vue').then(createCustomElement('checkbox-list'))
 
-    return ({ property, form }, { update }) => {
+    return ({ property }, { update }) => {
       const values = property.objects.map(obj => obj.object?.term).filter(Boolean)
       const choices = property.shape.in.map(term => [term, property.shape.pointer.node(term).out(rdfs.label, { language: '*' })])
       return html`<checkbox-list .value="${values}"

@@ -33,7 +33,7 @@ import FileUpload, { UploadedFile } from '@/components/FileUpload.vue'
   components: { FileUpload },
 })
 export default class CsvUploadForm extends Vue {
-  @Prop() fileMeta: any
+  @Prop({ default: undefined }) fileMeta!: Record<string, unknown>
   @Prop({ default: true }) allowMultiple!: boolean
   @Prop({ default: false }) isLoading!: boolean
 
