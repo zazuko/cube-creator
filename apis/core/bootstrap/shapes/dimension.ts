@@ -236,13 +236,6 @@ ${shape('dimension/metadata')} {
       ${sh.maxCount} 1 ;
       ${dash.hidden} true ;
       ${sh.group} ${shape('dimension/metadata#coreGroup')} ;
-    ] , [
-      ${sh.name} "Parent terms" ;
-      ${sh.description} "Built a path of shared term properties to this dimension's values" ;
-      ${sh.path} ${meta.hasHierarchy} ;
-      ${sh.nodeKind} ${sh.BlankNode} ;
-      ${sh.maxCount} 1 ;
-      ${sh.group} ${shape('dimension/metadata#hierarchyGroup')} ;
     ] ,
     ${validateDataKindShape}
   .
