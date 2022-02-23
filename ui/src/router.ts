@@ -227,12 +227,12 @@ const routes: Array<RouteConfig> = [
             name: 'HierarchyCreate',
             component: HierarchyCreate,
           },
+          {
+            path: '/hierarchy/:id',
+            name: 'Hierarchy',
+            component: HierarchyEdit
+          },
         ],
-      },
-      {
-        path: '/hierarchy/:id',
-        name: 'Hierarchy',
-        component: HierarchyEdit
       }
     ],
   },
