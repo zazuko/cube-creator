@@ -7,7 +7,8 @@ import { timeoutJobs } from '../../../lib/commands'
 import { setupEnv } from '../../support/env'
 
 describe('@cube-creator/cli/lib/commands/timeoutJobs', () => {
-  beforeEach(() => {
+  beforeEach(function () {
+    this.timeout(20000)
     setupEnv()
     return insertTestProject()
   })
