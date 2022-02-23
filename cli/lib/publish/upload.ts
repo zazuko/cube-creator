@@ -25,6 +25,7 @@ export function uploadCube(variables: VariableMap) {
         '-T',
         cubeFile,
         '-H', 'content-type:application/n-quads',
+        '--fail',
       ],
       { stdio: [process.stdin, process.stdout, process.stderr] })
 

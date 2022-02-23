@@ -47,18 +47,24 @@ export async function loadCube(this: Pipeline.Context, { jobUri, endpoint, user,
 
     const params = new URLSearchParams({ query }).toString()
 
-    tracer.startActiveSpan('download cube data', span => {
-      spawnSync('curl', [
+    const exit = tracer.startActiveSpan('download cube data', span => {
+      const exit = spawnSync('curl', [
         endpoint,
         '-X', 'POST',
         '-u', `${user}:${password}`,
         '--data', params,
         '-H', 'Accept:text/turtle',
         '-o', tempFile,
+        '--fail',
       ],
       { stdio: [process.stdin, process.stdout, process.stderr] })
       span.end()
+      return exit
     })
+
+    if (exit) {
+      throw new Error('Cube download failed')
+    }
 
     this.logger.info('Reading cube data to temp file')
     const localQuads: any = fromFile(tempFile)
