@@ -311,6 +311,20 @@ describe('@cube-creator/cli/lib/commands/transform', function () {
       expect(ors).to.have.length(2)
       expect(ors).to.deep.contain.members([xsd.string, cube.Undefined])
     })
+
+    it('keeps original values of shared dimension mappings around', async function () {
+      const originalValues = await SELECT`?s ?p ?o`
+        .FROM($rdf.namedNode(`${env.API_CORE_BASE}cube-project/ubd/cube-data`))
+        .WHERE`
+          ?s ?p ?o .
+          ?p a ${cc.OriginalValuePredicate} .
+        `
+        .execute(ccClients.parsingClient.query)
+
+      expect(originalValues).to.have.length(28999)
+      expect(originalValues[0].p).to.deep.eq($rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/pollutant#_original'))
+      expect(originalValues[0].o).to.deep.eq($rdf.literal('co'))
+    })
   })
 
   it('updates job when pipeline has errors', async function () {

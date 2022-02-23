@@ -12,6 +12,7 @@ import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import { HydraResponse } from 'alcaeus'
 import { DefaultCsvwLiteral } from '@cube-creator/core/mapping'
 import through2 from 'through2'
+import { rdf } from '@tpluscode/rdf-ns-builders'
 import { importDynamic } from './module'
 
 const undef = $rdf.literal('', cube.Undefined)
@@ -104,6 +105,11 @@ export async function mapDimensions(this: Pick<Context, 'variables'>) {
     return value
   }
 
+  // We store original value quads in memory and inject them into the stream
+  // after all the observation-specific steps
+  const originalValueQuads = $rdf.dataset()
+  this.variables.set('originalValueQuads', originalValueQuads)
+
   const { default: map } = await importDynamic('barnard59-base/map.js')
 
   return map(async (quad: Quad) => {
@@ -116,11 +122,32 @@ export async function mapDimensions(this: Pick<Context, 'variables'>) {
 
       const mappedValue = await getMappedValue(mappingTerm.value, object)
       if (mappedValue?.termType === 'NamedNode') {
+        const predicateOriginal = $rdf.namedNode(predicate.value + '#_original')
+
+        originalValueQuads.add($rdf.quad(predicateOriginal, rdf.type, cc.OriginalValuePredicate, graph))
+        originalValueQuads.add($rdf.quad(predicateOriginal, schema.about, predicate, graph))
+        originalValueQuads.add($rdf.quad(subject, predicateOriginal, object, graph))
+
         return $rdf.quad(subject, predicate, mappedValue, graph)
       }
     }
 
     return quad
+  })
+}
+
+export function injectOriginalValueQuads(this: Pick<Context, 'variables'>) {
+  const originalValueQuads = this.variables.get('originalValueQuads')
+
+  return through2.obj(function (quad, _encoding, callback) {
+    this.push(quad)
+    callback()
+  }, function (done) {
+    for (const quad of originalValueQuads) {
+      this.push(quad)
+    }
+
+    done()
   })
 }
 

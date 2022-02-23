@@ -95,6 +95,31 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
     expect(anyHydra).to.be.false
   }
 
+  async function removesMappingsOriginalValues() {
+    const project = $rdf.namedNode('https://cube-creator.lndo.site/cube-project/ubd')
+    const anyHydra = await ASK`
+        graph ${project} {
+          ${project} ${schema.maintainer} ?org .
+        }
+
+        graph ?org {
+          ?org ${cc.publishGraph} ?expectedGraph .
+        }
+
+        graph ?expectedGraph {
+          ?s ?p ?o .
+        }
+
+        FILTER (
+          strends(str(?s), "#_original") ||
+          strends(str(?p), "#_original") ||
+          strends(str(?o), "#_original")
+        )
+      `.execute(ccClients.parsingClient.query)
+
+    expect(anyHydra).to.be.false
+  }
+
   describe('publishing published', () => {
     before(resetData)
     before(function makeCubePublished() {
@@ -109,6 +134,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
     before(runJob)
 
     it('removes hydra terms', removesHydraTerms)
+    it('removes original values of mapped dimensions', removesMappingsOriginalValues)
 
     it('does not publish a cube with trailing slash', async () => {
       const trailingSlashCubeExists = await ASK`${ns.baseCube('3/')} ?p ?o`
@@ -151,6 +177,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
     before(runJob)
 
     it('removes hydra terms', removesHydraTerms)
+    it('removes original values of mapped dimensions', removesMappingsOriginalValues)
 
     it('does not remove previously published triples', () => {
       const prevCube = cubePointer.namedNode(ns.baseCube('1'))

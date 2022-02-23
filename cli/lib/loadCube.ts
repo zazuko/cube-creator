@@ -2,7 +2,7 @@ import type * as Pipeline from 'barnard59-core/lib/Pipeline'
 import { Stream, PassThrough } from 'stream'
 import { CONSTRUCT, sparql } from '@tpluscode/sparql-builder'
 import { csvw } from '@tpluscode/rdf-ns-builders'
-import { cube } from '@cube-creator/core/namespace'
+import { cc, cube } from '@cube-creator/core/namespace'
 import tempy from 'tempy'
 import { spawnSync } from 'child_process'
 import fromFile from 'rdf-utils-fs/fromFile'
@@ -27,7 +27,12 @@ export async function loadCube(this: Pipeline.Context, { jobUri, endpoint, user,
     ?cube a ${cube.Cube} ; !${cube.observationConstraint}* ?s .
     ?s ?p ?o .
 
-    filter (?p != ${csvw.describes})`
+    filter (?p != ${csvw.describes})
+
+    # Filter out original values of mapped dimensions from published data
+    filter not exists { ?p a ${cc.OriginalValuePredicate} }
+    filter not exists { ?s a ${cc.OriginalValuePredicate} }
+  `
 
   const combined = new PassThrough({
     objectMode: true,
