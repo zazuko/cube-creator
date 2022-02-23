@@ -139,7 +139,7 @@ md:SharedDimensionTerms
       hydra-box:variables
         [
           a hydra:IriTemplate ;
-          hydra:template "/_terms?dimension={dimension}{&q,valid,pageSize,page}" ;
+          hydra:template "/_terms{?dimension,q,valid,pageSize,page}" ;
           hydra:variableRepresentation hydra:ExplicitRepresentation ;
           hydra:mapping
             [

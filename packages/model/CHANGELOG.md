@@ -1,5 +1,19 @@
 # @cube-creator/model
 
+## 0.1.26
+
+### Patch Changes
+
+- 3c4ca273: Do not crash when table has no identifier template
+
+## 0.1.25
+
+### Patch Changes
+
+- b01ca6d7: Store SHACL validation error for publication jobs and display it in the UI
+- Updated dependencies [b01ca6d7]
+  - @cube-creator/core@0.3.4
+
 ## 0.1.24
 
 ### Patch Changes

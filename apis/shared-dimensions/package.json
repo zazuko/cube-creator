@@ -1,10 +1,10 @@
 {
   "name": "@cube-creator/shared-dimensions-api",
-  "version": "2.5.1",
+  "version": "2.5.2",
   "private": true,
   "dependencies": {
-    "@cube-creator/api-errors": "0.0.4",
-    "@cube-creator/core": "0.3.3",
+    "@cube-creator/api-errors": "0.0.5",
+    "@cube-creator/core": "0.3.4",
     "@cube-creator/express": "0.0.0",
     "@hydrofoil/labyrinth": "^0.4.1",
     "@rdfine/hydra": "^0.8.2",
@@ -26,7 +26,7 @@
     "debug": "^4.3.1",
     "express": "^4.17.1",
     "express-conditional-middleware": "^2.1.1",
-    "http-errors": "^1.8.0",
+    "http-errors": "^2.0.0",
     "http-status": "^1.5.0",
     "hydra-box-middleware-shacl": "1.1.0",
     "middleware-async": "^1.2.7",
@@ -40,7 +40,7 @@
     "through2": "^2.0.5"
   },
   "devDependencies": {
-    "@cube-creator/testing": "^0.1.19",
+    "@cube-creator/testing": "^0.1.20",
     "@types/camouflage-rewrite": "^1.2.0",
     "@types/clownface": "^1.2.6",
     "@types/parse-prefer-header": "^1.0.0",
@@ -48,6 +48,6 @@
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "mocha": "^9.0.0",
-    "sinon": "^11.0.0"
+    "sinon": "^13.0.0"
   }
 }

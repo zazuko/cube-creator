@@ -27,21 +27,22 @@ export function getSharedDimensions() {
 }
 
 interface GetSharedTerms {
-  sharedDimension: Term
+  sharedDimensions: Term[]
   freetextQuery: string | undefined
   limit?: number
   offset?: number
   validThrough?: Date
 }
 
-export function getSharedTerms({ sharedDimension, freetextQuery, validThrough, limit = 10, offset = 0 }: GetSharedTerms) {
+export function getSharedTerms({ sharedDimensions, freetextQuery, validThrough, limit = 10, offset = 0 }: GetSharedTerms) {
   const term = $rdf.variable('term')
   const name = $rdf.variable('name')
 
   let select = SELECT.DISTINCT`${term}`
     .WHERE`
-      ${sharedDimension} a ${meta.SharedDimension} .
-      ${term} ${schema.inDefinedTermSet} ${sharedDimension} .
+      ?sharedDimension a ${meta.SharedDimension} .
+      VALUES ?sharedDimension { ${sharedDimensions} }
+      ${term} ${schema.inDefinedTermSet} ?sharedDimension .
       ${term} ${schema.name} ${name} .
     `
 

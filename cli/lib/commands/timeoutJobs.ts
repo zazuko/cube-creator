@@ -5,6 +5,7 @@ import * as Alcaeus from 'alcaeus/node'
 import { cc } from '@cube-creator/core/namespace'
 import * as Models from '@cube-creator/model'
 import { parse, toSeconds } from 'iso8601-duration'
+import $rdf from 'rdf-ext'
 import { toRdf } from 'rdf-literal'
 import { updateJobStatus } from '../job'
 import { setupAuthentication } from '../auth'
@@ -46,7 +47,7 @@ export async function timeoutJobs({
     `
     .execute(client.query)
 
-  const apiClient = Alcaeus.create()
+  const apiClient = Alcaeus.create({ datasetFactory: $rdf.dataset })
   apiClient.resources.factory.addMixin(...Object.values(Models))
   setupAuthentication({}, logger, apiClient)
 

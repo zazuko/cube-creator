@@ -12,6 +12,7 @@ import TermMap from '@rdfjs/term-map'
 import { GraphPointer } from 'clownface'
 import { Term } from 'rdf-js'
 import type ValidationReport from 'rdf-validate-shacl/src/validation-report'
+import DatasetExt from 'rdf-ext/lib/Dataset'
 
 interface Params {
   jobUri: string
@@ -45,7 +46,7 @@ interface JobStatusUpdate {
   status: Schema.ActionStatusType
   modified: Date
   error?: Error | string
-  apiClient: HydraClient
+  apiClient: HydraClient<DatasetExt>
   lastTransformed?: { csv?: string; row?: number }
   messages?: string[]
 }

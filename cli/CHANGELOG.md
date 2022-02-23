@@ -1,5 +1,23 @@
 # @cube-creator/cli
 
+## 1.10.3
+
+### Patch Changes
+
+- Updated dependencies [3c4ca273]
+  - @cube-creator/model@0.1.26
+
+## 1.10.2
+
+### Patch Changes
+
+- f46844fc: Stardog would refuse job update because shape ids were relative
+- a227b86b: Some cubes were published with a second resource, wrongly ending with a `/`
+- b01ca6d7: Store SHACL validation error for publication jobs and display it in the UI
+- Updated dependencies [b01ca6d7]
+  - @cube-creator/core@0.3.4
+  - @cube-creator/model@0.1.25
+
 ## 1.10.1
 
 ### Patch Changes

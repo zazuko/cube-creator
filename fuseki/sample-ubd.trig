@@ -234,8 +234,13 @@ graph <cube-project/ubd/cube-data> {
     <https://environment.ld.admin.ch/foen/ubd/28/dimension/value> "5.4"^^xsd:decimal ;
     <https://environment.ld.admin.ch/foen/ubd/28/dimension/year>  "1999"^^xsd:gYear ;
     <https://environment.ld.admin.ch/foen/ubd/28/pollutant>       <http://www.wikidata.org/entity/Q2025> ;
+    <https://environment.ld.admin.ch/foen/ubd/28/pollutant#_original>       "co" ;
     <https://environment.ld.admin.ch/foen/ubd/28/station>         <https://environment.ld.admin.ch/foen/ubd/28/station/blBAS> ;
     <https://environment.ld.admin.ch/foen/ubd/28/unit>            <http://qudt.org/vocab/unit/MicroGM-PER-M3> ;
+  .
+
+  <https://environment.ld.admin.ch/foen/ubd/28/pollutant#_original> a cc:OriginalValuePredicate ;
+    schema:about <https://environment.ld.admin.ch/foen/ubd/28/pollutant> ;
   .
 
   <https://environment.ld.admin.ch/foen/ubd/28/station/blBAS>

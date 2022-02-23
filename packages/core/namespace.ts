@@ -33,7 +33,8 @@ type CubeCreatorClass =
   'UnlistJob' |
   'ReplaceCSVAction' |
   'MediaLocal' |
-  'MediaURL'
+  'MediaURL' |
+  'OriginalValuePredicate'
 
 type CubeCreatorProperty =
   'projectSourceKind' |

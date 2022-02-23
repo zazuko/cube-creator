@@ -40,7 +40,11 @@ export function appMock(prepare?: (hydra: HydraBox) => void): express.RequestHan
 
 export function mockResourceMiddleware(): express.RequestHandler {
   return (req, res, next) => {
-    req.resource = async () => cf({ dataset: await req.dataset() }).namedNode('')
+    req.resource = async () => {
+      if (!req.dataset) throw new Error('Missing request `.dataset`')
+
+      return cf({ dataset: await req.dataset() }).namedNode('')
+    }
 
     next()
   }

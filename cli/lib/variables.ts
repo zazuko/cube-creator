@@ -6,7 +6,7 @@ import { PublishJob, UnlistJob } from '../../packages/model/Job'
 
 declare module 'barnard59-core' {
   interface Variables {
-    apiClient: HydraClient
+    apiClient: HydraClient<DatasetExt>
     jobUri: string
     executionUrl: string
     'graph-store-endpoint': string
@@ -36,5 +36,6 @@ declare module 'barnard59-core' {
     transformed: { csvwResource: Csvw.Table<DatasetExt> ; isObservationTable: boolean }
     lastTransformed: { csv?: string; row?: number }
     messages: string[]
+    originalValueQuads: DatasetExt
   }
 }
