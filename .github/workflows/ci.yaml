@@ -8,7 +8,7 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v2
-      - uses: ./.github/workflows/setup-env.yaml
+      - uses: ./.github/workflows/setup-env
       - run: yarn test
       - run: yarn test:queries
       - run: yarn test:cli:rest
@@ -41,7 +41,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Set e2e environment variables
         run: echo -e "\nVUE_APP_E2E=true\nVUE_APP_X_USER=john-doe\nVUE_APP_X_PERMISSION=pipelines:read,pipelines:write" >> .local.env
-      - uses: ./.github/workflows/setup-env.yaml
+      - uses: ./.github/workflows/setup-env
       - run: yarn seed-data
 
       - name: Hydra e2e tests
@@ -73,7 +73,7 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v2
-      - uses: ./.github/workflows/setup-env.yaml
+      - uses: ./.github/workflows/setup-env
       - run: yarn test:cli:transform
       - name: logs on fail
         if: ${{ failure() }}
@@ -84,7 +84,7 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v2
-      - uses: ./.github/workflows/setup-env.yaml
+      - uses: ./.github/workflows/setup-env
       - run: yarn test:cli:publish
       - name: logs on fail
         if: ${{ failure() }}
