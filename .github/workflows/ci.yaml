@@ -75,6 +75,8 @@ jobs:
       - uses: actions/checkout@v2
       - uses: ./.github/workflows/setup-env
       - run: yarn test:cli:transform
+        env:
+          AUTH_RUNNER_CLIENT_SECRET: ${{ secrets.AUTH_RUNNER_CLIENT_SECRET }}
       - name: logs on fail
         if: ${{ failure() }}
         run: lando logs -s core
@@ -86,6 +88,8 @@ jobs:
       - uses: actions/checkout@v2
       - uses: ./.github/workflows/setup-env
       - run: yarn test:cli:publish
+        env:
+          AUTH_RUNNER_CLIENT_SECRET: ${{ secrets.AUTH_RUNNER_CLIENT_SECRET }}
       - name: logs on fail
         if: ${{ failure() }}
         run: lando logs -s core
