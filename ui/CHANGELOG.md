@@ -1,5 +1,11 @@
 # @cube-creator/ui
 
+## 1.8.4
+
+### Patch Changes
+
+- 37a8a356: Allow mapping dimension to multiple shared dimensions
+
 ## 1.8.3
 
 ### Patch Changes

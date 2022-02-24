@@ -1,5 +1,13 @@
 # @cube-creator/core-api
 
+## 1.9.6
+
+### Patch Changes
+
+- 37a8a356: Allow mapping dimension to multiple shared dimensions
+- Updated dependencies [37a8a356]
+  - @cube-creator/shared-dimensions-api@2.5.3
+
 ## 1.9.5
 
 ### Patch Changes
