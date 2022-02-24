@@ -1,10 +1,10 @@
-import type * as Pipeline from 'barnard59-core/lib/Pipeline'
 import { Stream, PassThrough } from 'stream'
+import { spawnSync } from 'child_process'
+import type * as Pipeline from 'barnard59-core/lib/Pipeline'
 import { CONSTRUCT, sparql } from '@tpluscode/sparql-builder'
 import { csvw } from '@tpluscode/rdf-ns-builders'
 import { cc, cube } from '@cube-creator/core/namespace'
 import tempy from 'tempy'
-import { spawnSync } from 'child_process'
 import fromFile from 'rdf-utils-fs/fromFile'
 import { loadProject } from './project'
 import { tracer } from './otel/tracer'
@@ -62,8 +62,8 @@ export async function loadCube(this: Pipeline.Context, { jobUri, endpoint, user,
       return exit
     })
 
-    if (exit) {
-      throw new Error('Cube download failed')
+    if (exit.status) {
+      throw new Error(`Cube download failed. Curl exited with ${exit.status}`)
     }
 
     this.logger.info('Reading cube data to temp file')
@@ -76,6 +76,8 @@ export async function loadCube(this: Pipeline.Context, { jobUri, endpoint, user,
     })
   }, {
     extension: 'ttl',
+  }).catch(e => {
+    combined.destroy(e)
   })
 
   return combined
