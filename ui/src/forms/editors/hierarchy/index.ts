@@ -1,10 +1,38 @@
 import { InstancesSelectEditor } from '@hydrofoil/shaperone-core/components'
-import { rdfs } from '@tpluscode/rdf-ns-builders/strict'
+import { dcterms, foaf, rdfs, sd } from '@tpluscode/rdf-ns-builders/strict'
 import $rdf from 'rdf-ext'
 import clownface, { GraphPointer } from 'clownface'
+import StreamClient from 'sparql-http-client'
+import { Lazy, SingleEditorRenderParams } from '@hydrofoil/shaperone-core/models/components/index'
 
-export function loader (createQuery: (arg: GraphPointer) => string): Pick<InstancesSelectEditor, 'shouldLoad' | 'loadChoices'> {
+interface InstancesSelectEditorEx extends InstancesSelectEditor {
+  _init?(context: SingleEditorRenderParams): void
+}
+
+export function loader (createQuery: (arg: GraphPointer) => string, editor: Lazy<InstancesSelectEditor>): Lazy<InstancesSelectEditorEx> {
   return {
+    ...editor,
+    init (context) {
+      if (!context.value.componentState.client) {
+        const source = context.property.shape.get(dcterms.source)
+
+        const endpointUrl = source?.get(sd.endpoint).id.value
+        const queryUi = source?.getString(foaf.page)
+
+        let client: StreamClient | undefined
+        if (endpointUrl) {
+          client = new StreamClient({
+            endpointUrl
+          })
+        }
+
+        context.updateComponentState({ client, queryUi })
+      }
+
+      this._init?.(context)
+
+      return editor.init?.call(this, context) || true
+    },
     shouldLoad ({ focusNode, value: { componentState } }) {
       // run query only when it's different from previous
       const query = createQuery(focusNode)

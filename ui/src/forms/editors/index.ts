@@ -351,33 +351,16 @@ interface HierarchyPathComponentState extends InstancesSelect {
 
 interface HierarchyPathEditor extends SingleEditorComponent<HierarchyPathComponentState> {
   loadExample(arg: SingleEditorRenderParams<HierarchyPathComponentState>): Promise<void>
+  _init(arg: SingleEditorRenderParams): void
 }
 
 export const hierarchyPath: Lazy<HierarchyPathEditor> = {
-  ...instanceSelect,
+  ...loader(hierarchyQueries.properties, instanceSelect),
   editor: ns.editor.HierarchyPathEditor,
-  ...loader(hierarchyQueries.properties),
-  init (context) {
-    if (!context.value.componentState.client) {
-      const source = context.property.shape.get(dcterms.source)
-
-      const endpointUrl = source?.get(sd.endpoint).id.value
-      const queryUi = source?.getString(foaf.page)
-
-      let client: StreamClient | undefined
-      if (endpointUrl) {
-        client = new StreamClient({
-          endpointUrl
-        })
-      }
-
-      context.updateComponentState({ client, queryUi })
-    }
-
+  _init (context) {
     if (context.value.object && !context.value.componentState.example) {
       this.loadExample(context)
     }
-    return instanceSelect.init?.call(this, context) || true
   },
   async loadExample ({ value, focusNode, updateComponentState }) {
     const client = value.componentState.client
@@ -422,7 +405,6 @@ export const hierarchyPath: Lazy<HierarchyPathEditor> = {
 }
 
 export const hierarchyLevelTarget: Lazy<InstancesSelectEditor> = {
-  ...instanceSelect,
+  ...loader(hierarchyQueries.types, instanceSelect),
   editor: ns.editor.HierarchyLevelTargetEditor,
-  ...loader(hierarchyQueries.types)
 }
