@@ -31,7 +31,7 @@ services:
   store:
     type: compose
     services:
-      image: ghcr.io/zazuko/fuseki-geosparql:v2.0.1
+      image: ghcr.io/zazuko/fuseki-geosparql:v2.0.2
       command: /opt/fuseki/entrypoint.sh
       environment:
         ADMIN_PASSWORD: password
