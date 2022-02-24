@@ -7,21 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2.4.0
-        with:
-          node-version: 14
-          cache: 'yarn'
-      - run: yarn install --ci
+      - uses: ./.github/actions/setup-env.yaml
       - run: yarn test
-      - name: setup-docker
-        uses: docker-practice/actions-setup-docker@1.0.4
-        with:
-          docker_version: 20.10.3
-      - name: Install lando
-        run: sh e2e-tests/install-lando.sh
-      - name: Start site
-        run: sh e2e-tests/start-lando.sh
       - run: yarn test:queries
       - run: yarn test:cli
         env:
@@ -50,22 +37,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2.4.0
-        with:
-          node-version: 14
-          cache: 'yarn'
-      - run: yarn install --ci
-      - name: setup-docker
-        uses: docker-practice/actions-setup-docker@1.0.4
-        with:
-          docker_version: 20.10.3
-      - name: Install lando
-        run: sh e2e-tests/install-lando.sh
       - name: Set e2e environment variables
         run: echo -e "\nVUE_APP_E2E=true\nVUE_APP_X_USER=john-doe\nVUE_APP_X_PERMISSION=pipelines:read,pipelines:write" >> .local.env
-      - name: Start site
-        run: sh e2e-tests/start-lando.sh
+      - uses: ./.github/actions/setup-env.yaml
       - run: yarn seed-data
 
       - name: Hydra e2e tests
