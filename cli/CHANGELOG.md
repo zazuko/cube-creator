@@ -1,5 +1,12 @@
 # @cube-creator/cli
 
+## 1.10.4
+
+### Patch Changes
+
+- 78f12155: Fail publish job when store upload fails (fixes #1086)
+- f692f023: Publish pipeline interrupted after download cube (fixes #1110)
+
 ## 1.10.3
 
 ### Patch Changes
