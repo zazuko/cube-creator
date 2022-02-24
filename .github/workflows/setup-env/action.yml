@@ -1,20 +1,18 @@
-on:
-  workflow_call:
+name: "Env setup"
 
-jobs:
-  setup:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/setup-node@v2.4.0
-        with:
-          node-version: 14
-          cache: 'yarn'
-      - run: yarn install --ci
-      - name: setup-docker
-        uses: docker-practice/actions-setup-docker@1.0.4
-        with:
-          docker_version: 20.10.3
-      - name: Install lando
-        run: sh e2e-tests/install-lando.sh
-      - name: Start site
-        run: sh e2e-tests/start-lando.sh
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/setup-node@v2.4.0
+      with:
+        node-version: 14
+        cache: 'yarn'
+    - run: yarn install --ci
+    - name: setup-docker
+      uses: docker-practice/actions-setup-docker@1.0.4
+      with:
+        docker_version: 20.10.3
+    - name: Install lando
+      run: sh e2e-tests/install-lando.sh
+    - name: Start site
+      run: sh e2e-tests/start-lando.sh
