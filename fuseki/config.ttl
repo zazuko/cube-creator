@@ -7,49 +7,52 @@
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 
 [] rdf:type fuseki:Server ;
-   fuseki:services (
-                     <#cube-creator>
-                     <#shared-dimensions>
-                     <#px-cube>
-                   ) .
-
-<#cube-creator> rdf:type fuseki:Service ;
-              rdfs:label                        "Cube creator database" ;
-              fuseki:name                       "cube-creator" ;       # http://host:port/read
-              fuseki:serviceQuery               "sparql" ;   # SPARQL query service
-              fuseki:serviceQuery               "query" ;    # SPARQL query service (alt name)
-              fuseki:serviceUpdate              "update" ;   # SPARQL update service
-              fuseki:serviceUpload              "upload" ;   # Non-SPARQL upload service
-              fuseki:serviceReadWriteGraphStore "data" ;     # SPARQL Graph store protocol (read and write)
-              fuseki:dataset                    [rdf:type tdb:DatasetTDB ; tdb:location "DB1" ;] ;
+  fuseki:services (
+    <#cube-creator>
+    <#shared-dimensions>
+    <#px-cube>
+  )
 .
 
+<#cube-creator> rdf:type fuseki:Service ;
+  rdfs:label "Cube creator database" ;
+  fuseki:name "cube-creator" ;                # http://host:port/read
+  fuseki:serviceQuery "sparql" ;              # SPARQL query service
+  fuseki:serviceQuery "query" ;               # SPARQL query service (alt name)
+  fuseki:serviceUpdate "update" ;             # SPARQL update service
+  fuseki:serviceUpload "upload" ;             # Non-SPARQL upload service
+  fuseki:serviceReadWriteGraphStore "data" ;  # SPARQL Graph store protocol (read and write)
+  fuseki:dataset [
+    rdf:type tdb:DatasetTDB ;
+    tdb:location "databases/DB1" ;
+  ] ;
+.
 
 <#shared-dimensions> rdf:type fuseki:Service ;
-                     rdfs:label "Shared dimensions database" ;
-                     fuseki:name "shared-dimensions" ;       # http://host:port/read
-                     fuseki:serviceQuery "sparql" ;   # SPARQL query service
-                     fuseki:serviceQuery "query" ;    # SPARQL query service (alt name)
-                     fuseki:serviceUpdate "update" ;   # SPARQL update service
-                     fuseki:serviceUpload "upload" ;   # Non-SPARQL upload service
-                     fuseki:serviceReadWriteGraphStore "data" ;     # SPARQL Graph store protocol (read and write)
-                     fuseki:dataset [
-                                      rdf:type tdb:DatasetTDB ;
-                                      tdb:location "DB2" ;
-                                      tdb:unionDefaultGraph true ;
-                                     ] ;
+  rdfs:label "Shared dimensions database" ;
+  fuseki:name "shared-dimensions" ;           # http://host:port/read
+  fuseki:serviceQuery "sparql" ;              # SPARQL query service
+  fuseki:serviceQuery "query" ;               # SPARQL query service (alt name)
+  fuseki:serviceUpdate "update" ;             # SPARQL update service
+  fuseki:serviceUpload "upload" ;             # Non-SPARQL upload service
+  fuseki:serviceReadWriteGraphStore "data" ;  # SPARQL Graph store protocol (read and write)
+  fuseki:dataset [
+    rdf:type tdb:DatasetTDB ;
+    tdb:location "databases/DB2" ;
+    tdb:unionDefaultGraph true ;
+  ] ;
 .
 
 <#px-cube> rdf:type fuseki:Service ;
-           rdfs:label "Sample PX cube database" ;
-           fuseki:name "px-cube" ;          # http://host:port/read
-           fuseki:serviceQuery "sparql" ;   # SPARQL query service
-           fuseki:serviceQuery "query" ;    # SPARQL query service (alt name)
-           fuseki:serviceUpdate "update" ;   # SPARQL update service
-           fuseki:serviceUpload "upload" ;   # Non-SPARQL upload service
-           fuseki:serviceReadWriteGraphStore "data" ;     # SPARQL Graph store protocol (read and write)
-           fuseki:dataset [
-                            rdf:type tdb:DatasetTDB ;
-                            tdb:location "DB3" ;
-                           ] ;
+  rdfs:label "Sample PX cube database" ;
+  fuseki:name "px-cube" ;                     # http://host:port/read
+  fuseki:serviceQuery "sparql" ;              # SPARQL query service
+  fuseki:serviceQuery "query" ;               # SPARQL query service (alt name)
+  fuseki:serviceUpdate "update" ;             # SPARQL update service
+  fuseki:serviceUpload "upload" ;             # Non-SPARQL upload service
+  fuseki:serviceReadWriteGraphStore "data" ;  # SPARQL Graph store protocol (read and write)
+  fuseki:dataset [
+    rdf:type tdb:DatasetTDB ;
+    tdb:location "databases/DB3" ;
+  ] ;
 .
