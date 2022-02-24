@@ -10,7 +10,7 @@ jobs:
       - uses: ./.github/actions/setup-env.yaml
       - run: yarn test
       - run: yarn test:queries
-      - run: yarn test:cli
+      - run: yarn test:cli:rest
         env:
           AUTH_RUNNER_CLIENT_SECRET: ${{ secrets.AUTH_RUNNER_CLIENT_SECRET }}
       - name: logs on fail
@@ -65,3 +65,23 @@ jobs:
         with:
           name: cypress-screenshots
           path: ui/tests/e2e/screenshots/*
+
+  test-transform:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: ./.github/actions/setup-env.yaml
+      - run: yarn test:cli:transform
+      - name: logs on fail
+        if: ${{ failure() }}
+        run: lando logs -s core
+
+  test-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: ./.github/actions/setup-env.yaml
+      - run: yarn test:cli:publish
+      - name: logs on fail
+        if: ${{ failure() }}
+        run: lando logs -s core
