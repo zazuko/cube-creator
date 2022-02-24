@@ -6,7 +6,6 @@ import { Enrichment } from '@hydrofoil/labyrinth/lib/middleware/preprocessResour
 import httpError from 'http-errors'
 import clownface, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
-import * as error from 'http-errors'
 import { md } from '@cube-creator/core/namespace'
 import conditional from 'express-conditional-middleware'
 import { isMultipart } from '@cube-creator/express/multipart'
@@ -65,7 +64,7 @@ function termsCollectionId(dimensions: Term[], search?: string) {
 
 export const getTerms = asyncMiddleware(async (req, res, next) => {
   if (!req.dataset) {
-    return next(new error.BadRequest())
+    return next(new httpError.BadRequest())
   }
 
   const query = clownface({ dataset: await req.dataset() })

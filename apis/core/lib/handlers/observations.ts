@@ -1,6 +1,6 @@
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
 import asyncMiddleware from 'middleware-async'
-import * as error from 'http-errors'
+import error from 'http-errors'
 import { IriTemplate, IriTemplateMixin } from '@rdfine/hydra'
 import clownface, { AnyContext, AnyPointer } from 'clownface'
 import $rdf from 'rdf-ext'

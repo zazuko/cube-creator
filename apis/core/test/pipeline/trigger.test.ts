@@ -1,6 +1,6 @@
 import { describe, it } from 'mocha'
 import { expect } from 'chai'
-import * as sinon from 'sinon'
+import sinon from 'sinon'
 import $rdf from 'rdf-ext'
 import clownface from 'clownface'
 import { dcterms, rdf } from '@tpluscode/rdf-ns-builders'

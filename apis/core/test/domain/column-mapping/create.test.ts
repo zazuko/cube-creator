@@ -1,7 +1,7 @@
 import { NamedNode } from 'rdf-js'
 import { describe, it, beforeEach } from 'mocha'
 import { expect } from 'chai'
-import * as sinon from 'sinon'
+import sinon from 'sinon'
 import clownface, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import { csvw, hydra, rdf, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'

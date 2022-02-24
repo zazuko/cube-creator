@@ -1,6 +1,6 @@
 import { describe, beforeEach, it } from 'mocha'
 import { expect } from 'chai'
-import * as sinon from 'sinon'
+import sinon from 'sinon'
 import $rdf from 'rdf-ext'
 import StreamClient from 'sparql-http-client'
 import clownface, { GraphPointer } from 'clownface'

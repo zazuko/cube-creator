@@ -2391,10 +2391,10 @@
   resolved "https://registry.yarnpkg.com/@tinyhttp/content-disposition/-/content-disposition-2.0.5.tgz#dc17d67b26697990bf0dac0d8f5ad03cc99b3d96"
   integrity sha512-glfgD8Ae1HwF7QntvD1jAr/ieHmGmU4drcH7AeXkK6uj/GyCSRw9yPgSfYqjBkEeP1hR19ZTDi5rrKMIFifesA==
 
-"@tpluscode/eslint-config@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@tpluscode/eslint-config/-/eslint-config-0.2.0.tgz#1f24085da4d708efbb7d0cc5a9444371468875b3"
-  integrity sha512-4Dg4VpPSMPa6/DzDFKbrv7XEgE1A4pTWePiX8TRMPLrpgF0/0SYN6ucnPwVWccklpO+W23zovfL060AHYTpM/w==
+"@tpluscode/eslint-config@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@tpluscode/eslint-config/-/eslint-config-0.3.0.tgz#73c71b4fd6ea3d9a91bc500142f35370026b0103"
+  integrity sha512-hpGHFJx21NZEXqgHNfym55plvVByqaggPDJ0r5xG3Zv3FOCzVIkH+6r8JeFmn1MWExIXgyYrdtkzbXtDtUQ/2w==
 
 "@tpluscode/rdf-ns-builders@^0.4.0":
   version "0.4.5"
@@ -6320,6 +6320,17 @@ eslint-import-resolver-node@^0.3.4, eslint-import-resolver-node@^0.3.6:
   dependencies:
     debug "^3.2.7"
     resolve "^1.20.0"
+
+eslint-import-resolver-typescript@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/eslint-import-resolver-typescript/-/eslint-import-resolver-typescript-2.5.0.tgz#07661966b272d14ba97f597b51e1a588f9722f0a"
+  integrity sha512-qZ6e5CFr+I7K4VVhQu3M/9xGv9/YmwsEXrsm3nimw8vWaVHRDrQRp26BgCypTxBp3vUp4o5aVEJRiy0F2DFddQ==
+  dependencies:
+    debug "^4.3.1"
+    glob "^7.1.7"
+    is-glob "^4.0.1"
+    resolve "^1.20.0"
+    tsconfig-paths "^3.9.0"
 
 eslint-import-resolver-webpack@^0.13.1:
   version "0.13.1"
@@ -12500,7 +12511,7 @@ ts-node@^9.0.0:
     source-map-support "^0.5.17"
     yn "3.1.1"
 
-tsconfig-paths@^3.11.0, tsconfig-paths@^3.12.0:
+tsconfig-paths@^3.11.0, tsconfig-paths@^3.12.0, tsconfig-paths@^3.9.0:
   version "3.12.0"
   resolved "https://registry.yarnpkg.com/tsconfig-paths/-/tsconfig-paths-3.12.0.tgz#19769aca6ee8f6a1a341e38c8fa45dd9fb18899b"
   integrity sha512-e5adrnOYT6zqVnWqZu7i/BQ3BnhzvGbjEjejFXO20lKIKpwTaupkCPgEfv4GZK1IBciJUEhYs3J3p75FdaTFVg==

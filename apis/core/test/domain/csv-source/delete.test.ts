@@ -1,6 +1,6 @@
 import { describe, it, beforeEach } from 'mocha'
 import { expect } from 'chai'
-import * as sinon from 'sinon'
+import sinon from 'sinon'
 import $rdf from 'rdf-ext'
 import { cc } from '@cube-creator/core/namespace'
 import { rdf, schema } from '@tpluscode/rdf-ns-builders'

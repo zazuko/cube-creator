@@ -2,7 +2,7 @@ import { describe, it, beforeEach } from 'mocha'
 import env from '@cube-creator/core/env'
 import $rdf from 'rdf-ext'
 import ParsingClient from 'sparql-http-client/ParsingClient'
-import * as sinon from 'sinon'
+import sinon from 'sinon'
 import { expect } from 'chai'
 import { loadResourcesTypes } from '../../../lib/domain/queries/resources-types'
 
