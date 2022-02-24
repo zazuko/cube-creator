@@ -4,15 +4,18 @@ import {
   InstancesSelectEditor, instancesSelect as instancesSelectCore, Item
 } from '@hydrofoil/shaperone-core/components'
 import * as ns from '@cube-creator/core/namespace'
-import { dash, hydra, rdfs, schema, xsd } from '@tpluscode/rdf-ns-builders/strict'
+import { dash, dcterms, foaf, hydra, rdfs, schema, sd, xsd } from '@tpluscode/rdf-ns-builders/strict'
 import $rdf from 'rdf-ext'
-import { GraphPointer } from 'clownface'
+import clownface, { GraphPointer } from 'clownface'
 import { FocusNode } from '@hydrofoil/shaperone-core'
 import { createCustomElement } from '../custom-element'
 import '@rdfine/dash/extensions/sh/PropertyShape'
 import { Literal } from 'rdf-js'
 import * as hierarchyQueries from './hierarchy/query'
 import { loader } from './hierarchy/index'
+import { SingleEditorRenderParams, UpdateComponentState } from '@hydrofoil/shaperone-core/models/components/index'
+import { InstancesSelect } from '@hydrofoil/shaperone-core/lib/components/instancesSelect'
+import StreamClient from 'sparql-http-client'
 
 export const textField: Lazy<SingleEditorComponent> = {
   editor: dash.TextFieldEditor,
@@ -340,17 +343,80 @@ export const checkboxList: Lazy<MultiEditorComponent> = {
   }
 }
 
-export const hierarchyPath: Lazy<InstancesSelectEditor> = {
+interface HierarchyPathComponentState extends InstancesSelect {
+  client?: StreamClient
+  queryUi?: string
+  example?: GraphPointer
+}
+
+interface HierarchyPathEditor extends SingleEditorComponent<HierarchyPathComponentState> {
+  loadExample(arg: SingleEditorRenderParams<HierarchyPathComponentState>): Promise<void>
+}
+
+export const hierarchyPath: Lazy<HierarchyPathEditor> = {
   ...instanceSelect,
   editor: ns.editor.HierarchyPathEditor,
   ...loader(hierarchyQueries.properties),
+  init (context) {
+    if (!context.value.componentState.client) {
+      const source = context.property.shape.get(dcterms.source)
+
+      const endpointUrl = source?.get(sd.endpoint).id.value
+      const queryUi = source?.getString(foaf.page)
+
+      let client: StreamClient | undefined
+      if (endpointUrl) {
+        client = new StreamClient({
+          endpointUrl
+        })
+      }
+
+      context.updateComponentState({ client, queryUi })
+    }
+
+    if (context.value.object && !context.value.componentState.example) {
+      this.loadExample(context)
+    }
+    return instanceSelect.init?.call(this, context) || true
+  },
+  async loadExample ({ value, focusNode, updateComponentState }) {
+    const client = value.componentState.client
+    const queryUi = value.componentState.queryUi
+    const query = hierarchyQueries.example(focusNode)
+    if (!client || !query) return
+
+    let moreExamples: URL | undefined
+    if (queryUi) {
+      moreExamples = new URL(queryUi)
+      const params = new URLSearchParams({
+        query: hierarchyQueries.example(focusNode, 20)
+      })
+      moreExamples.hash = params.toString()
+    }
+
+    const stream = await client.query.construct(query)
+    const dataset = await $rdf.dataset().import(stream)
+    updateComponentState({
+      example: clownface({ dataset }).in().toArray().shift(),
+      moreExamples: moreExamples?.toString()
+    })
+  },
   async lazyRender () {
     await import('./HierarchyPathEditor.vue').then(createCustomElement('hierarchy-path'))
 
-    return ({ value }, { update }) => {
-      return html`<hierarchy-path .update="${update}"
+    return ({ value, updateComponentState }, { update }) => {
+      const onUpdate: typeof update = (arg) => {
+        update(arg)
+        updateComponentState({
+          example: undefined
+        })
+      }
+
+      return html`<hierarchy-path .update="${onUpdate}"
                                   .value="${value.object}"
-                                  .properties="${value.componentState.instances}"></hierarchy-path>`
+                                  .properties="${value.componentState.instances}"
+                                  .example="${value.componentState.example}"
+                                  .moreExamples="${value.componentState.moreExamples}"></hierarchy-path>`
     }
   }
 }

@@ -9,7 +9,7 @@ import { parsers } from '@rdf-esm/formats-common'
 import toStream from 'string-to-stream'
 import clownface from 'clownface'
 import { gn, rdf, rdfs, schema, sh } from '@tpluscode/rdf-ns-builders/strict'
-import { properties, types } from '../../../../src/forms/editors/hierarchy/query'
+import { properties, types, example } from '../../../../src/forms/editors/hierarchy/query'
 
 describe('@cube-creator/ui/forms/editors/hierarchy/query @SPARQL', () => {
   const testDataGraph = $rdf.namedNode('urn:hierarchy:test')
@@ -21,13 +21,17 @@ describe('@cube-creator/ui/forms/editors/hierarchy/query @SPARQL', () => {
       ${INSERT.DATA`GRAPH ${testDataGraph} {
         ${turtle(strings, ...values)}
       }`}
-    `.toString()
+    `.toString({
+        base: 'http://example.com/'
+      })
 
     await mdClients.streamClient.query.update(query)
   }
 
   async function parse (strings: TemplateStringsArray, ...values: TurtleValue[]) {
-    const graph = turtle(strings, ...values).toString()
+    const graph = turtle(strings, ...values).toString({
+      base: 'http://example.com/'
+    })
     const dataset = await $rdf.dataset().import(parsers.import('text/turtle', toStream(graph))!)
     return clownface({ dataset })
   }
@@ -40,7 +44,11 @@ describe('@cube-creator/ui/forms/editors/hierarchy/query @SPARQL', () => {
       <CH> a ${ex.Country} ; ${schema.containedInPlace} <Europe> .
 
       <https://sws.geonames.org/2658434>
-        a ${gn.Feature} ; ${gn.parentFeature} <Europe> .
+        a ${gn.A} ; ${gn.parentFeature} <Europe> .
+
+
+      <https://sws.geonames.org/798544>
+        a ${gn.A} ; ${schema.containedInPlace} <Europe> .
 
       <ZH> a ${ex.Canton} ; ${schema.containedInPlace} <CH> .
 
@@ -62,7 +70,7 @@ describe('@cube-creator/ui/forms/editors/hierarchy/query @SPARQL', () => {
           ${meta.nextInHierarchy} <firstLevel> ;
         .
       `
-      const query = properties(hierarchy.namedNode('firstLevel'))
+      const query = properties(hierarchy.namedNode(ex.firstLevel))
 
       // when
       const dataset = $rdf.dataset(await mdClients.parsingClient.query.construct(query))
@@ -80,9 +88,9 @@ describe('@cube-creator/ui/forms/editors/hierarchy/query @SPARQL', () => {
           ${meta.nextInHierarchy} <firstLevel> ;
         .
 
-        <firstLevel> ${sh.targetClass} ${gn.Feature} ; ${sh.path} [] .
+        <firstLevel> ${sh.targetClass} ${ex.Country} ; ${sh.path} [] .
       `
-      const query = properties(hierarchy.namedNode('firstLevel'))
+      const query = properties(hierarchy.namedNode(ex.firstLevel))
 
       // when
       const dataset = $rdf.dataset(await mdClients.parsingClient.query.construct(query))
@@ -93,7 +101,7 @@ describe('@cube-creator/ui/forms/editors/hierarchy/query @SPARQL', () => {
         .terms
       expect(results).to.have.length(1)
       expect(results).to.deep.contain.members([
-        gn.parentFeature
+        schema.containedInPlace
       ])
     })
 
@@ -107,7 +115,7 @@ describe('@cube-creator/ui/forms/editors/hierarchy/query @SPARQL', () => {
 
         <firstLevel> ${sh.path} [] .
       `
-      const query = properties(hierarchy.namedNode('firstLevel'))
+      const query = properties(hierarchy.namedNode(ex.firstLevel))
 
       // when
       const dataset = $rdf.dataset(await mdClients.parsingClient.query.construct(query))
@@ -143,7 +151,7 @@ describe('@cube-creator/ui/forms/editors/hierarchy/query @SPARQL', () => {
           ]
         .
       `
-      const query = properties(hierarchy.namedNode('municipalityLevel'))
+      const query = properties(hierarchy.namedNode(ex.municipalityLevel))
 
       // when
       const dataset = $rdf.dataset(await mdClients.parsingClient.query.construct(query))
@@ -179,7 +187,7 @@ describe('@cube-creator/ui/forms/editors/hierarchy/query @SPARQL', () => {
         .
       `
       // when
-      const query = properties(hierarchy.namedNode('municipalityLevel'))
+      const query = properties(hierarchy.namedNode(ex.municipalityLevel))
 
       // then
       expect(query).to.be.empty
@@ -196,7 +204,7 @@ describe('@cube-creator/ui/forms/editors/hierarchy/query @SPARQL', () => {
         .
         <firstLevel> ${sh.path} [] .
       `
-      const query = types(hierarchy.namedNode('firstLevel'))
+      const query = types(hierarchy.namedNode(ex.firstLevel))
 
       // when
       const dataset = $rdf.dataset(await mdClients.parsingClient.query.construct(query))
@@ -204,7 +212,7 @@ describe('@cube-creator/ui/forms/editors/hierarchy/query @SPARQL', () => {
       // then
       const result = clownface({ dataset })
       expect(result.has(rdfs.label).terms).to.deep.contain.members([
-        gn.Feature,
+        gn.A,
         ex.Country
       ])
     })
@@ -218,7 +226,7 @@ describe('@cube-creator/ui/forms/editors/hierarchy/query @SPARQL', () => {
         .
         <firstLevel> ${sh.path} [] .
       `
-      const query = types(hierarchy.namedNode('firstLevel'))
+      const query = types(hierarchy.namedNode(ex.firstLevel))
 
       // when
       const dataset = $rdf.dataset(await mdClients.parsingClient.query.construct(query))
@@ -228,6 +236,70 @@ describe('@cube-creator/ui/forms/editors/hierarchy/query @SPARQL', () => {
       expect(result.has(rdfs.label).terms).to.deep.contain.members([
         ex.Country
       ])
+    })
+  })
+
+  describe('example', () => {
+    it('returns empty query when last property id not defined', async () => {
+      // given
+      const hierarchy = await parse`
+        <>
+          ${meta.hierarchyRoot} <Europe> ;
+          ${meta.nextInHierarchy} <firstLevel> ;
+        .
+        <firstLevel> ${sh.path} [] .
+      `
+
+      // when
+      const query = example(hierarchy.namedNode(ex.firstLevel))
+
+      // then
+      expect(query).to.be.empty
+    })
+
+    it('returns single instance', async () => {
+      // given
+      const hierarchy = await parse`
+        <>
+          ${meta.hierarchyRoot} <Europe> ;
+          ${meta.nextInHierarchy} <firstLevel> ;
+        .
+        <firstLevel> ${sh.path} [
+          ${sh.inversePath} ${schema.containedInPlace}
+        ] .
+      `
+
+      // when
+      const query = example(hierarchy.namedNode(ex.firstLevel))
+      const dataset = $rdf.dataset(await mdClients.parsingClient.query.construct(query))
+
+      // then
+      const country = clownface({ dataset }).has(rdf.type)
+      expect(country.term).to.deep.eq(ex.CH)
+    })
+
+    it('returns instance narrowed by class name', async () => {
+      // given
+      const hierarchy = await parse`
+        <>
+          ${meta.hierarchyRoot} <Europe> ;
+          ${meta.nextInHierarchy} <firstLevel> ;
+        .
+        <firstLevel>
+          ${sh.path} [
+            ${sh.inversePath} ${schema.containedInPlace}
+          ] ;
+          ${sh.targetClass} ${gn.A} ;
+        .
+      `
+
+      // when
+      const query = example(hierarchy.namedNode(ex.firstLevel))
+      const dataset = $rdf.dataset(await mdClients.parsingClient.query.construct(query))
+
+      // then
+      const country = clownface({ dataset }).has(rdf.type)
+      expect(country.term).to.deep.eq($rdf.namedNode('https://sws.geonames.org/798544'))
     })
   })
 })

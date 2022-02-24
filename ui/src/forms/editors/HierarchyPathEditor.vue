@@ -11,6 +11,10 @@
                         :value="property"
       />
     </b-field>
+    <b-field label="Example resource" v-if="exampleLabel">
+      <a target="_blank" :href="example.value">{{ exampleLabel }}</a>
+      <a target="_blank" :href="moreExamples">&nbsp;(more)</a>
+    </b-field>
   </div>
 </template>
 
@@ -19,7 +23,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 import { NamedNode, Term } from 'rdf-js'
 import { dataset } from '@rdf-esm/dataset'
 import clownface, { GraphPointer } from 'clownface'
-import { sh } from '@tpluscode/rdf-ns-builders/strict'
+import { sh, schema, rdfs } from '@tpluscode/rdf-ns-builders/strict'
 import { Item } from '@hydrofoil/shaperone-core/components'
 import InstancesSelect from './SelectEditor.vue'
 
@@ -41,10 +45,21 @@ function getProperty (value: GraphPointer | undefined) {
 })
 export default class extends Vue {
   @Prop() value?: GraphPointer;
+  @Prop() example?: GraphPointer;
+  @Prop() moreExamples?: string;
   inverse = false;
   property?: Term | null = null;
   @Prop() properties!: Item[];
   @Prop() update!: (newValue: GraphPointer | Term) => void;
+
+  get exampleLabel () {
+    if (typeof this.example?.out === 'function') {
+      return this.example.out([schema.name, rdfs.label]).values?.shift() ||
+          this.example.value
+    }
+
+    return ''
+  }
 
   mounted () {
     const { inverse, property } = getProperty(this.value)

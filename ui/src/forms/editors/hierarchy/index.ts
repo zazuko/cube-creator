@@ -1,6 +1,5 @@
 import { InstancesSelectEditor } from '@hydrofoil/shaperone-core/components'
-import { dcterms, rdfs, sd } from '@tpluscode/rdf-ns-builders/strict'
-import StreamClient from 'sparql-http-client'
+import { rdfs } from '@tpluscode/rdf-ns-builders/strict'
 import $rdf from 'rdf-ext'
 import clownface, { GraphPointer } from 'clownface'
 
@@ -11,15 +10,11 @@ export function loader (createQuery: (arg: GraphPointer) => string): Pick<Instan
       const query = createQuery(focusNode)
       return !!query && query !== componentState.query
     },
-    async loadChoices ({ property, focusNode, updateComponentState }) {
-      const endpointUrl = property.shape.get(dcterms.source)?.get(sd.endpoint).id.value
-      if (!endpointUrl) {
+    async loadChoices ({ value, focusNode, updateComponentState }) {
+      const client = value.componentState.client
+      if (!client) {
         return []
       }
-
-      const client = new StreamClient({
-        endpointUrl
-      })
 
       // build query based on current hierarchy selection
       const query = createQuery(focusNode)

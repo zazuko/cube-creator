@@ -1,4 +1,4 @@
-import { CONSTRUCT, SELECT, sparql, SparqlTemplateResult } from '@tpluscode/sparql-builder'
+import { DESCRIBE, CONSTRUCT, SELECT, sparql, SparqlTemplateResult } from '@tpluscode/sparql-builder'
 import { rdfs } from '@tpluscode/rdf-ns-builders'
 import { GraphPointer, MultiPointer } from 'clownface'
 import { meta } from '@cube-creator/core/namespace'
@@ -13,9 +13,23 @@ function parent (level: number): Variable {
 
 interface GetHierarchyPatterns {
   restrictTypes?: boolean
+  firstLevel(subject: Term, path: MultiPointer, level: number): SparqlTemplateResult
 }
 
-function getHierarchyPatterns (focusNode: MultiPointer, { restrictTypes = true }: GetHierarchyPatterns = {}) {
+function anyPath (subject: Term, path: MultiPointer, level: number) {
+  const inverse = path.term?.termType === 'BlankNode'
+  if (inverse) {
+    return sparql`${subject} ?property ${parent(level)} .`
+  }
+
+  return sparql`${parent(level)} ?property ${subject} .`
+}
+
+function requiredPath (subject: Term, path: MultiPointer, level: number) {
+  return sparql`${parent(level)} ${toSparql(path)} ${subject} .`
+}
+
+function getHierarchyPatterns (focusNode: MultiPointer, { restrictTypes = true, firstLevel }: GetHierarchyPatterns) {
   let currentLevel = focusNode
   let roots: Term[] = []
   let patterns = sparql``
@@ -30,20 +44,15 @@ function getHierarchyPatterns (focusNode: MultiPointer, { restrictTypes = true }
     }
 
     let nextPattern: SparqlTemplateResult
-    const path = currentLevel.out(sh.path)
-    if (level === 1) {
-      const inverse = path.term?.termType === 'BlankNode'
-      if (inverse) {
-        nextPattern = sparql`${subject} ?property ${parent(level)} .`
+    try {
+      const path = currentLevel.out(sh.path)
+      if (level === 1) {
+        nextPattern = firstLevel(subject, path, level)
       } else {
-        nextPattern = sparql`${parent(level)} ?property ${subject} .`
+        nextPattern = requiredPath(subject, path, level)
       }
-    } else {
-      try {
-        nextPattern = sparql`${parent(level)} ${toSparql(path)} ${subject} .`
-      } catch {
-        break
-      }
+    } catch {
+      break
     }
 
     const targetClass = currentLevel.out(sh.targetClass).term
@@ -71,7 +80,9 @@ function getHierarchyPatterns (focusNode: MultiPointer, { restrictTypes = true }
 }
 
 export function properties (focusNode: GraphPointer): string {
-  const patterns = getHierarchyPatterns(focusNode)
+  const patterns = getHierarchyPatterns(focusNode, {
+    firstLevel: anyPath,
+  })
   if (!patterns) {
     return ''
   }
@@ -93,7 +104,10 @@ export function properties (focusNode: GraphPointer): string {
 }
 
 export function types (focusNode: GraphPointer): string {
-  const patterns = getHierarchyPatterns(focusNode, { restrictTypes: false })
+  const patterns = getHierarchyPatterns(focusNode, {
+    restrictTypes: false,
+    firstLevel: anyPath,
+  })
   if (!patterns) {
     return ''
   }
@@ -115,5 +129,22 @@ export function types (focusNode: GraphPointer): string {
 
       bind(if(bound(?rdfsLabel), concat(?rdfsLabel, " (", str(?type), ")"), str(?type)) as ?label)
     `
+    .build()
+}
+
+export function example (focusNode: GraphPointer, limit = 1): string {
+  const patterns = getHierarchyPatterns(focusNode, {
+    firstLevel: requiredPath,
+  })
+  if (!patterns) {
+    return ''
+  }
+
+  return DESCRIBE`?this`
+    .WHERE`
+      ${patterns}
+      filter(isiri(?this))
+    `
+    .LIMIT(limit)
     .build()
 }
