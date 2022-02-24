@@ -8,11 +8,14 @@ runs:
         node-version: 14
         cache: 'yarn'
     - run: yarn install --ci
+      shell: bash
     - name: setup-docker
       uses: docker-practice/actions-setup-docker@1.0.4
       with:
         docker_version: 20.10.3
     - name: Install lando
       run: sh e2e-tests/install-lando.sh
+      shell: bash
     - name: Start site
       run: sh e2e-tests/start-lando.sh
+      shell: bash
