@@ -10,7 +10,8 @@ import { removeActivities } from './support'
 describe('@cube-creator/core-api/lib/domain/cube-projects/details/metadata @SPARQL', () => {
   const project = $rdf.namedNode('https://cube-creator.lndo.site/cube-project/ubd')
 
-  before(async () => {
+  before(async function () {
+    this.timeout(20000)
     await removeActivities()
     await insertTestProject()
   })

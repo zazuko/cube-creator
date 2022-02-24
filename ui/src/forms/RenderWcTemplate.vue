@@ -21,7 +21,7 @@ export default class RenderWc extends Vue {
   }
 
   renderTemplate (): void {
-    render(this.templateResult, this.$el as any)
+    render(this.templateResult, this.$el as HTMLElement)
   }
 }
 </script>

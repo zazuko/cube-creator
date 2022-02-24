@@ -25,13 +25,14 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import type { Shape } from '@rdfine/shacl'
 import $rdf from '@rdf-esm/data-model'
 import { sh } from '@tpluscode/rdf-ns-builders'
+import { ValidationReport } from '@/api/errors'
 
 @Component({
   // Define `name` to allow recursive call
   name: 'hydra-operation-error-result',
 })
 export default class HydraOperationErrorResult extends Vue {
-  @Prop({ default: null }) result!: any
+  @Prop({ default: null }) result!: ValidationReport
   @Prop({ default: null }) shape!: Shape | null
 
   propertyLabel (uri: string | undefined): string {

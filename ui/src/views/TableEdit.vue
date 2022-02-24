@@ -65,11 +65,13 @@ export default class TableCreateView extends Vue {
   }
 
   async onSubmit (resource: GraphPointer): Promise<void> {
+    if (!this.table) return
+
     this.error = null
     this.isSubmitting = true
 
     try {
-      const { identifierTemplate } = this.table!
+      const { identifierTemplate } = this.table
       const table: Table = await this.$store.dispatch('api/invokeSaveOperation', {
         operation: this.operation,
         resource,

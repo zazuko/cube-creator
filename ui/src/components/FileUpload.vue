@@ -29,8 +29,8 @@ export interface UploadedFile extends UppyFile {
   components: { LoadingBlock, UppyDashboard },
 })
 export default class extends Vue {
-  @Prop() afterUpload: any
-  @Prop() fileMeta: any
+  @Prop() afterUpload!: (files: UploadedFile[]) => Promise<void>
+  @Prop({ default: undefined }) fileMeta!: Record<string, unknown> | undefined
   @Prop({ default: true }) allowMultiple!: boolean
 
   uppy: Uppy | null = null
