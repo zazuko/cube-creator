@@ -13,6 +13,18 @@ user interface.
 
 ## Running locally
 
+### Preparing the environment
+
+To be able to run transform/publish pipelines locally, an OIDC secret must be added to `cli/.env` as
+
+```
+AUTH_RUNNER_CLIENT_SECRET=foo-bar
+```
+
+It is obtained from [keycloak](https://keycloak.zazukoians.org/admin/master/console/#/realms/zazuko-dev/clients/64f92868-71e3-48e1-9d8b-7bfaf5fac2bd/credentials)
+
+### Starting
+
 The easiest way it to start a local dockerized environment which will run the database, API and UI, and provide set up local HTTPS endpoints for them.
 
 1. Download and install [lando](https://github.com/lando/lando/releases)
