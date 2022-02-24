@@ -1,12 +1,12 @@
+import { NamedNode } from 'rdf-js'
 import { GraphPointer } from 'clownface'
 import { csvw, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
-import { ResourceStore } from '../../ResourceStore'
-import { NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import { CsvColumn, CsvMapping, CsvSource, DimensionMetadataCollection, CsvProject } from '@cube-creator/model'
-import * as DimensionMetadataQueries from '../queries/dimension-metadata'
 import type { Organization } from '@rdfine/schema'
+import * as DimensionMetadataQueries from '../queries/dimension-metadata'
+import { ResourceStore } from '../../ResourceStore'
 import { findOrganization } from '../organization/query'
 
 const trueTerm = $rdf.literal('true', xsd.boolean)

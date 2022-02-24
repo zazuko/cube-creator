@@ -1,13 +1,13 @@
+import { NamedNode } from 'rdf-js'
+import { PassThrough } from 'stream'
 import { SELECT } from '@tpluscode/sparql-builder'
 import type HydraBox from 'hydra-box'
-import { NamedNode } from 'rdf-js'
 import { rdf } from '@tpluscode/rdf-ns-builders'
 import TermSet from '@rdfjs/term-set'
 import $rdf from 'rdf-ext'
 import { ParsingClient } from 'sparql-http-client/ParsingClient'
 import { StreamClient } from 'sparql-http-client/StreamClient'
 import once from 'once'
-import { PassThrough } from 'stream'
 import { resourceQuery } from './store'
 
 interface LoaderOptions {

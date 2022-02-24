@@ -1,6 +1,6 @@
+import { DatasetCore, NamedNode, Quad } from 'rdf-js'
 import { dash, hydra, rdf, rdfs, schema, sh, xsd } from '@tpluscode/rdf-ns-builders/strict'
 import { iso6391, md } from '@cube-creator/core/namespace'
-import { DatasetCore, NamedNode, Quad } from 'rdf-js'
 import { CONSTRUCT } from '@tpluscode/sparql-builder'
 import $rdf from 'rdf-ext'
 import clownface, { AnyPointer, GraphPointer } from 'clownface'

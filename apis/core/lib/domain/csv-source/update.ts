@@ -1,5 +1,5 @@
-import { GraphPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'
+import { GraphPointer } from 'clownface'
 import { CsvSource } from '@cube-creator/model'
 import RdfResource from '@tpluscode/rdfine'
 import { schema } from '@tpluscode/rdf-ns-builders'

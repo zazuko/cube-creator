@@ -1,13 +1,13 @@
+import { env } from 'process'
 import { before, describe, it } from 'mocha'
 import { expect } from 'chai'
 import $rdf from 'rdf-ext'
 import { cube } from '@cube-creator/core/namespace'
-import { mapDimensions } from '../../lib/output-mapper'
 import { insertTestProject } from '@cube-creator/testing/lib/seedData'
-import { setupEnv } from '../support/env'
-import { env } from 'process'
 import { Hydra } from 'alcaeus/node'
 import * as Models from '@cube-creator/model'
+import { setupEnv } from '../support/env'
+import { mapDimensions } from '../../lib/output-mapper'
 
 Hydra.resources.factory.addMixin(...Object.values(Models))
 

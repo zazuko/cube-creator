@@ -1,5 +1,5 @@
-import $rdf from 'rdf-ext'
 import { DatasetCore, Quad, Term } from 'rdf-js'
+import $rdf from 'rdf-ext'
 import { cc } from '@cube-creator/core/namespace'
 import clownface, { GraphPointer } from 'clownface'
 import type { Context } from 'barnard59-core/lib/Pipeline'

@@ -1,17 +1,17 @@
-import { GraphPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'
+import { GraphPointer } from 'clownface'
 import { dcterms, rdfs, schema } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import * as Project from '@cube-creator/model/Project'
 import * as Dataset from '@cube-creator/model/Dataset'
 import * as DimensionMetadata from '@cube-creator/model/DimensionMetadata'
+import { DomainError } from '@cube-creator/api-errors'
+import error from 'http-errors'
 import { ResourceStore } from '../../ResourceStore'
 import * as id from '../identifiers'
-import { DomainError } from '@cube-creator/api-errors'
-import { exists } from './queries'
 import { cubeNamespaceAllowed } from '../organization/query'
-import error from 'http-errors'
 import { createImportJob } from '../job/create'
+import { exists } from './queries'
 
 interface CreateProjectCommand {
   projectsCollection: GraphPointer<NamedNode>

@@ -1,6 +1,6 @@
-import * as runner from './runner'
 import * as Csvw from '@rdfine/csvw'
 import { ThingMixin } from '@rdfine/schema'
+import * as runner from './runner'
 
 interface TransformRunOptions extends runner.RunOptions {
   to: 'stdout' | 'filesystem' | 'graph-store'

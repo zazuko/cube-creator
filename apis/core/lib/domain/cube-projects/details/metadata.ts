@@ -1,8 +1,8 @@
 import { SELECT } from '@tpluscode/sparql-builder'
 import { schema } from '@tpluscode/rdf-ns-builders/strict'
 import { cc } from '@cube-creator/core/namespace'
-import type { ProjectDetailPart } from '../details.js'
 import $rdf from 'rdf-ext'
+import type { ProjectDetailPart } from '../details.js'
 
 export const projectStatus: ProjectDetailPart = (project, status) => {
   return [

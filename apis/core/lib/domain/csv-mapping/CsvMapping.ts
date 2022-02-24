@@ -1,3 +1,4 @@
+import { NamedNode } from 'rdf-js'
 import { Constructor } from '@tpluscode/rdfine'
 import { rdf } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
@@ -8,7 +9,6 @@ import * as CsvSource from '@cube-creator/model/CsvSource'
 import * as Table from '@cube-creator/model/Table'
 import { ResourceStore } from '../../ResourceStore'
 import * as id from '../identifiers'
-import { NamedNode } from 'rdf-js'
 
 RdfResource.factory.addMixin(...Object.values(Hydra))
 

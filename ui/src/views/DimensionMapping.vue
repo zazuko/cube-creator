@@ -36,9 +36,9 @@ export default class extends Vue {
   @storeNs.project.Getter('findDimension') findDimension!: (id: string) => DimensionMetadata
 
   mappings: RdfResource | null = null
-  resource: GraphPointer | null = null;
-  shape: Shape | null = null;
-  error: ErrorDetails | null = null;
+  resource: GraphPointer | null = null
+  shape: Shape | null = null
+  error: ErrorDetails | null = null
   isSubmitting = false
 
   async mounted (): Promise<void> {

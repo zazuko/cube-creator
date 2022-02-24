@@ -35,7 +35,7 @@ export default class TableCreateView extends Vue {
 
   resource: GraphPointer | null = null
   shape: Shape | null = null
-  isSubmitting = false;
+  isSubmitting = false
   error: ErrorDetails | null = null
 
   async mounted (): Promise<void> {

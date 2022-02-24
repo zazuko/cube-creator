@@ -1,14 +1,14 @@
+import { NamedNode } from 'rdf-js'
 import asyncMiddleware from 'middleware-async'
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
 import { GraphPointer } from 'clownface'
+import env from '@cube-creator/core/env'
+import express from 'express'
 import { shaclValidate } from '../middleware/shacl'
 import { createPublishJob, createUnlistJob, createTransformJob, createImportJob } from '../domain/job/create'
 import * as triggers from '../pipeline/trigger'
-import env from '@cube-creator/core/env'
-import { NamedNode } from 'rdf-js'
 import { update } from '../domain/job/update'
 import { ResourceStore } from '../ResourceStore'
-import express from 'express'
 
 const trigger = (triggers as Record<string, (job: GraphPointer<NamedNode>, params: GraphPointer) => void>)[env.PIPELINE_TYPE]
 

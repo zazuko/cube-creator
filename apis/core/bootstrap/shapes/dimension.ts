@@ -1,10 +1,10 @@
 import { cc, meta, shape, sh1, cube, md, relation } from '@cube-creator/core/namespace'
 import { supportedLanguages } from '@cube-creator/core/languages'
 import { sparql, turtle } from '@tpluscode/rdf-string'
-import { lindasQuery } from '../lib/query'
 import { dash, hydra, prov, rdf, rdfs, schema, sh, qudt, time, xsd } from '@tpluscode/rdf-ns-builders'
 import namespace from '@rdfjs/namespace'
 import $rdf from 'rdf-ext'
+import { lindasQuery } from '../lib/query'
 import { placeholderEntity } from '../../lib/domain/dimension-mapping/DimensionMapping'
 
 const sou = namespace('http://qudt.org/vocab/sou/')

@@ -1,10 +1,10 @@
-import { describe, it } from 'mocha'
-import { expect } from 'chai'
 import { createReadStream, promises as fs } from 'fs'
 import { resolve } from 'path'
+import { Readable } from 'stream'
+import { describe, it } from 'mocha'
+import { expect } from 'chai'
 import { sniffParse } from '../../../lib/domain/csv'
 import { loadFileHeadString } from '../../../lib/domain/csv/file-head'
-import { Readable } from 'stream'
 
 describe('domain/csv/parse', () => {
   it('sniffs and parses', async () => {

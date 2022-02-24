@@ -1,14 +1,14 @@
+import { NamedNode } from 'rdf-js'
 import { describe, it, beforeEach } from 'mocha'
 import { expect } from 'chai'
 import { namedNode } from '@cube-creator/testing/clownface'
 import { DomainError } from '@cube-creator/api-errors'
 import { schema, xsd } from '@tpluscode/rdf-ns-builders'
+import { GraphPointer } from 'clownface'
+import $rdf from 'rdf-ext'
 import { updateTerm } from '../../../lib/domain/shared-dimension-term'
 import { SharedDimensionsStore } from '../../../lib/store'
 import { testStore } from '../../support/store'
-import { GraphPointer } from 'clownface'
-import { NamedNode } from 'rdf-js'
-import $rdf from 'rdf-ext'
 
 describe('@cube-creator/shared-dimensions-api/lib/domain/sahred-dimension-term', () => {
   describe('updateTerm', () => {

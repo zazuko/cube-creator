@@ -1,6 +1,6 @@
+import { Term } from 'rdf-js'
 import { ColumnMapping, CsvProject, Table } from '@cube-creator/model'
 import type { Organization } from '@rdfine/schema'
-import { Term } from 'rdf-js'
 import { ResourceStore } from '../../../ResourceStore'
 import { findOrganization } from '../../organization/query'
 

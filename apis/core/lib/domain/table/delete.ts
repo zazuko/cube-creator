@@ -1,6 +1,6 @@
 import { NamedNode } from 'rdf-js'
-import { ResourceStore } from '../../ResourceStore'
 import { cc } from '@cube-creator/core/namespace'
+import { ResourceStore } from '../../ResourceStore'
 import * as TableQueries from '../queries/table'
 import * as ColumnMappingQueries from '../queries/column-mapping'
 import { deleteColumnMapping } from '../column-mapping/delete'

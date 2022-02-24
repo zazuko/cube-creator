@@ -1,5 +1,5 @@
-import TermMap from '@rdfjs/term-map'
 import { NamedNode } from 'rdf-js'
+import TermMap from '@rdfjs/term-map'
 import { GraphPointer } from 'clownface'
 
 export function loader(pointers: GraphPointer<NamedNode>[]) {

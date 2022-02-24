@@ -1,10 +1,10 @@
+import { Term } from 'rdf-js'
 import { SELECT } from '@tpluscode/sparql-builder'
 import { Draft, Published } from '@cube-creator/model/Cube'
 import { cc } from '@cube-creator/core/namespace'
-import type { ProjectDetailPart } from '../details.js'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import $rdf from 'rdf-ext'
-import { Term } from 'rdf-js'
+import type { ProjectDetailPart } from '../details.js'
 
 function versionQuery(project: Term, variable: Term, status: Term) {
   return SELECT`(MAX(?version) as ${variable})`.WHERE`

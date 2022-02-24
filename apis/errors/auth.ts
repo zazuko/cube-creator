@@ -4,7 +4,7 @@ import httpError from 'http-errors'
 import env from '@cube-creator/core/env'
 
 class AuthErrorMapper extends ErrorMapper {
-  private readonly status: number;
+  private readonly status: number
   constructor(e: any, status: number) {
     super(e)
     this.status = status

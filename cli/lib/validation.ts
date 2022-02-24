@@ -1,5 +1,5 @@
-import { turtle } from '@tpluscode/rdf-string'
 import { NamedNode, Quad } from 'rdf-js'
+import { turtle } from '@tpluscode/rdf-string'
 import type { Context } from 'barnard59-core/lib/Pipeline'
 import { validateQuad } from 'rdf-validate-datatype'
 

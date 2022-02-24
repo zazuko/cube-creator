@@ -1,7 +1,7 @@
+import { NamedNode } from 'rdf-js'
 import { cc } from '@cube-creator/core/namespace'
 import { dcat, hydra, rdf, schema, vcard, _void } from '@tpluscode/rdf-ns-builders'
 import { GraphPointer } from 'clownface'
-import { NamedNode } from 'rdf-js'
 import { ResourceStore } from '../../ResourceStore'
 
 interface AddMetaDataCommand {

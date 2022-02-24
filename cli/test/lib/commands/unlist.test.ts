@@ -1,17 +1,17 @@
+import { NamedNode } from 'rdf-js'
 import env from '@cube-creator/core/env'
 import { before, describe, it } from 'mocha'
 import { expect } from 'chai'
 import $rdf from 'rdf-ext'
 import { CONSTRUCT, SELECT } from '@tpluscode/sparql-builder'
 import { schema, xsd } from '@tpluscode/rdf-ns-builders'
-import { setupEnv } from '../../support/env'
 import { ccClients } from '@cube-creator/testing/lib'
 import { insertTestProject } from '@cube-creator/testing/lib/seedData'
 import { cc } from '@cube-creator/core/namespace'
 import clownface, { AnyPointer } from 'clownface'
-import runner from '../../../lib/commands/unlist'
 import namespace from '@rdfjs/namespace'
-import { NamedNode } from 'rdf-js'
+import runner from '../../../lib/commands/unlist'
+import { setupEnv } from '../../support/env'
 
 describe('@cube-creator/cli/lib/commands/unlist', function () {
   this.timeout(200000)

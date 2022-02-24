@@ -1,7 +1,7 @@
 import { foaf, rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
-import * as sinon from 'sinon'
+import sinon from 'sinon'
 import $rdf from 'rdf-ext'
 import { ex } from '@cube-creator/testing/lib/namespace'
 import { ChangelogDataset } from '../lib/ChangelogDataset'

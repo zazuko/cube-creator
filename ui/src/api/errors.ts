@@ -19,8 +19,8 @@ export type ErrorDetails = {
 }
 
 export class APIError extends Error {
-  details: ErrorDetails | null;
-  response: HydraResponse<DatasetCore, RdfResourceCore>;
+  details: ErrorDetails | null
+  response: HydraResponse<DatasetCore, RdfResourceCore>
 
   constructor (details: ErrorDetails, response: HydraResponse<DatasetCore, RdfResourceCore>) {
     const message = details?.title || 'Unknown error'

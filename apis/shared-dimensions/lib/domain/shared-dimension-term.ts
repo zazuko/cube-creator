@@ -1,6 +1,6 @@
+import { NamedNode } from 'rdf-js'
 import { hydra, rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { GraphPointer } from 'clownface'
-import { NamedNode } from 'rdf-js'
 import { DomainError } from '@cube-creator/api-errors'
 import { SharedDimensionsStore } from '../store'
 

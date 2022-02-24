@@ -1,4 +1,4 @@
-import * as error from 'http-errors'
+import error from 'http-errors'
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
 import asyncMiddleware from 'middleware-async'
 import $rdf from 'rdf-ext'

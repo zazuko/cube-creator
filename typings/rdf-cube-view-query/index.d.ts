@@ -1,4 +1,4 @@
-/* eslint-disable import/no-duplicates,@typescript-eslint/no-empty-interface */
+/* eslint-disable import/no-duplicates,@typescript-eslint/no-empty-interface,no-use-before-define */
 declare module 'rdf-cube-view-query' {
   import View = require('rdf-cube-view-query/lib/View')
   import Cube = require('rdf-cube-view-query/lib/Cube')

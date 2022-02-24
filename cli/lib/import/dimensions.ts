@@ -1,3 +1,4 @@
+import { DatasetCore, NamedNode, Term } from 'rdf-js'
 import type { Context } from 'barnard59-core/lib/Pipeline'
 import ParsingClient from 'sparql-http-client/ParsingClient'
 import clownface, { AnyContext, AnyPointer, GraphPointer } from 'clownface'
@@ -5,7 +6,6 @@ import $rdf from 'rdf-ext'
 import { hydra, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import * as ns from '@cube-creator/core/namespace'
 import { CONSTRUCT, SELECT } from '@tpluscode/sparql-builder'
-import { DatasetCore, NamedNode, Term } from 'rdf-js'
 import StreamClient from 'sparql-http-client/StreamClient'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 

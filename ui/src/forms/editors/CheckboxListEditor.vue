@@ -19,9 +19,9 @@ import { namedNode } from '@rdf-esm/data-model'
 
 @Component
 export default class extends Vue {
-  @Prop() choices!: [Term, string][];
-  @Prop() value!: Term[];
-  @Prop() update!: (newValue: Term[]) => void;
+  @Prop() choices!: [Term, string][]
+  @Prop() value!: Term[]
+  @Prop() update!: (newValue: Term[]) => void
 
   selected: string[] = []
 

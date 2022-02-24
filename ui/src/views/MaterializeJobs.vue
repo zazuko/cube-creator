@@ -17,6 +17,6 @@ import * as storeNs from '../store/namespace'
 
 @Component
 export default class MaterializeJobs extends Vue {
-  @storeNs.project.Getter('materializeLabel') materializeLabel!: string;
+  @storeNs.project.Getter('materializeLabel') materializeLabel!: string
 }
 </script>

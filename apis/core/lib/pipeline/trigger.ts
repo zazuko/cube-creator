@@ -1,10 +1,10 @@
 import { URLSearchParams } from 'url'
+import { NamedNode } from 'rdf-js'
 import nodeFetch, { RequestInit } from 'node-fetch'
 import env from '@cube-creator/core/env'
 import { GraphPointer } from 'clownface'
 import { dcterms, rdf } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
-import { NamedNode } from 'rdf-js'
 import TermMap from '@rdfjs/term-map'
 
 const pipelineURI = env.PIPELINE_URI

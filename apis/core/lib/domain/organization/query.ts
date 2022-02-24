@@ -1,10 +1,10 @@
+import { NamedNode, Term } from 'rdf-js'
 import { CsvMapping, Table } from '@cube-creator/model'
 import { ASK, SELECT } from '@tpluscode/sparql-builder'
-import { NamedNode, Term } from 'rdf-js'
 import { cc } from '@cube-creator/core/namespace'
 import { schema } from '@tpluscode/rdf-ns-builders'
-import { parsingClient } from '../../query-client'
 import $rdf from 'rdf-ext'
+import { parsingClient } from '../../query-client'
 
 type FindOrganization = {
   table: Table

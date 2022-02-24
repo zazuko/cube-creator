@@ -26,7 +26,7 @@ import { GraphPointer } from 'clownface'
 export default class extends Vue {
   @Prop() property!: PropertyShape
   @Prop() update!: (newValue: string | Term) => void
-  @Prop() value?: NamedNode;
+  @Prop() value?: NamedNode
   @Prop() options!: [GraphPointer, string][]
 
   get valueStr (): string {

@@ -17,7 +17,7 @@ const palette = [
   components: { ColorPicker: Compact },
 })
 export default class extends Vue {
-  @Prop() value?: string;
+  @Prop() value?: string
   @Prop() update!: (newValue: string) => void
 
   mounted (): void {

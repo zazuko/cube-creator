@@ -1,8 +1,8 @@
+import { NamedNode } from 'rdf-js'
 import * as Table from '@cube-creator/model/Table'
 import * as Csvw from '@rdfine/csvw'
-import { NamedNode } from 'rdf-js'
-import { ResourceStore } from '../../ResourceStore'
 import { NotFoundError } from '@cube-creator/api-errors'
+import { ResourceStore } from '../../ResourceStore'
 import { buildCsvw } from '../../csvw-builder'
 import '../../domain'
 

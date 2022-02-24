@@ -1,3 +1,4 @@
+import { NamedNode, Quad, Term } from 'rdf-js'
 import { hydra, oa, rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { asyncMiddleware } from 'middleware-async'
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
@@ -5,9 +6,9 @@ import { Enrichment } from '@hydrofoil/labyrinth/lib/middleware/preprocessResour
 import httpError from 'http-errors'
 import clownface, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
-import { NamedNode, Quad, Term } from 'rdf-js'
-import * as error from 'http-errors'
 import { md } from '@cube-creator/core/namespace'
+import conditional from 'express-conditional-middleware'
+import { isMultipart } from '@cube-creator/express/multipart'
 import { shaclValidate } from '../middleware/shacl'
 import { getSharedDimensions, getSharedTerms } from '../domain/shared-dimensions'
 import { create } from '../domain/shared-dimension'
@@ -15,8 +16,6 @@ import { store } from '../store'
 import { parsingClient } from '../sparql'
 import env from '../env'
 import { rewrite, rewriteTerm } from '../rewrite'
-import conditional from 'express-conditional-middleware'
-import { isMultipart } from '@cube-creator/express/multipart'
 import { postImportedDimension } from './shared-dimension/import'
 
 interface CollectionHandler {
@@ -65,7 +64,7 @@ function termsCollectionId(dimensions: Term[], search?: string) {
 
 export const getTerms = asyncMiddleware(async (req, res, next) => {
   if (!req.dataset) {
-    return next(new error.BadRequest())
+    return next(new httpError.BadRequest())
   }
 
   const query = clownface({ dataset: await req.dataset() })

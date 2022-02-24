@@ -1,3 +1,4 @@
+import { NamedNode, Term } from 'rdf-js'
 import { Constructor, property } from '@tpluscode/rdfine'
 import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import { CsvColumn, Table } from '@cube-creator/model'
@@ -5,10 +6,9 @@ import { cc } from '@cube-creator/core/namespace'
 import * as ColumnMapping from '@cube-creator/model/ColumnMapping'
 import $rdf from 'rdf-ext'
 import slug from 'slug'
-import { NamedNode, Term } from 'rdf-js'
+import { Link } from '@cube-creator/model/lib/Link'
 import { ResourceStore } from '../../ResourceStore'
 import * as id from '../identifiers'
-import { Link } from '@cube-creator/model/lib/Link'
 
 interface CreateLiteralColumnMapping {
   store: ResourceStore

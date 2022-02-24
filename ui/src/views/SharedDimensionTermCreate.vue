@@ -33,11 +33,11 @@ import { SharedDimension } from '../store/types'
 export default class extends Vue {
   @storeNs.sharedDimension.State('dimension') dimension!: SharedDimension
 
-  resource: GraphPointer | null = Object.freeze(clownface({ dataset: dataset() }).namedNode(''));
-  error: ErrorDetails | null = null;
-  isSubmitting = false;
-  shape: Shape | null = null;
-  shapes: GraphPointer | null = null;
+  resource: GraphPointer | null = Object.freeze(clownface({ dataset: dataset() }).namedNode(''))
+  error: ErrorDetails | null = null
+  isSubmitting = false
+  shape: Shape | null = null
+  shapes: GraphPointer | null = null
 
   get operation (): RuntimeOperation | null {
     return this.dimension.actions.create

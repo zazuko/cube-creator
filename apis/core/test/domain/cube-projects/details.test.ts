@@ -1,11 +1,11 @@
 import { describe, it } from 'mocha'
 import $rdf from 'rdf-ext'
 import { Parser, ConstructQuery, GroupPattern } from 'sparqljs'
-import { getProjectDetails, ProjectDetailPart } from '../../../lib/domain/cube-projects/details'
 import { expect } from 'chai'
 import { SELECT } from '@tpluscode/sparql-builder'
 import sinon from 'sinon'
 import { schema } from '@tpluscode/rdf-ns-builders/strict'
+import { getProjectDetails, ProjectDetailPart } from '../../../lib/domain/cube-projects/details'
 
 describe('@cube-creator/core-api/lib/domain/cube-projects/details', () => {
   const project = $rdf.namedNode('project')

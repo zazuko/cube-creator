@@ -1,6 +1,6 @@
+import { NamedNode } from 'rdf-js'
 import UrlSlugify from 'url-slugify'
 import $rdf from 'rdf-ext'
-import { NamedNode } from 'rdf-js'
 import { GraphPointer } from 'clownface'
 import env from '@cube-creator/core/env'
 import { nanoid } from 'nanoid'

@@ -10,8 +10,8 @@ import { xsd } from '@tpluscode/rdf-ns-builders'
 
 @Component
 export default class extends Vue {
-  @Prop() value?: boolean;
-  @Prop() update!: (newValue: Term | string) => void;
+  @Prop() value?: boolean
+  @Prop() update!: (newValue: Term | string) => void
 
   emit (value: boolean): void {
     this.update(literal(value.toString(), xsd.boolean))

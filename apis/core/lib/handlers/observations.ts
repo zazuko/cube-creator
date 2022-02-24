@@ -1,18 +1,18 @@
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
 import asyncMiddleware from 'middleware-async'
-import * as error from 'http-errors'
+import error from 'http-errors'
 import { IriTemplate, IriTemplateMixin } from '@rdfine/hydra'
 import clownface, { AnyContext, AnyPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import Parser from '@rdfjs/parser-n3'
 import toStream from 'string-to-stream'
-import { getObservations } from '../domain/observations'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import RdfResourceImpl from '@tpluscode/rdfine'
 import * as ns from '@cube-creator/core/namespace'
 import { cc, hydraBox } from '@cube-creator/core/namespace'
-import { warning } from '../log'
 import { hydra } from '@tpluscode/rdf-ns-builders'
+import { warning } from '../log'
+import { getObservations } from '../domain/observations'
 
 const parser = new Parser()
 

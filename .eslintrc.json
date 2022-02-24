@@ -4,6 +4,9 @@
   "parserOptions": {
     "project": "./tsconfig.json"
   },
+  "rules": {
+    "@typescript-eslint/indent": ["error", 2, { "SwitchCase": 1, "ignoredNodes": ["PropertyDefinition"] }]
+  },
   "overrides": [{
     "files": ["*.test.ts"],
     "rules": {

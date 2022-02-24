@@ -1,9 +1,8 @@
-import type StreamClient from 'sparql-http-client/StreamClient'
 import { NamedNode, Quad, Term } from 'rdf-js'
+import type StreamClient from 'sparql-http-client/StreamClient'
 import cf, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import DatasetExt from 'rdf-ext/lib/Dataset'
-import { ChangelogDataset } from './ChangelogDataset'
 import { CONSTRUCT, INSERT } from '@tpluscode/sparql-builder'
 import TermMap from '@rdfjs/term-map'
 import { as, hydra, rdf } from '@tpluscode/rdf-ns-builders'
@@ -12,6 +11,7 @@ import { sparql, SparqlTemplateResult } from '@tpluscode/rdf-string'
 import TermSet from '@rdfjs/term-set'
 import RdfResource, { RdfResourceCore, ResourceIdentifier } from '@tpluscode/rdfine/RdfResource'
 import { Link } from '@cube-creator/model/lib/Link'
+import { ChangelogDataset } from './ChangelogDataset'
 import * as Activity from './activity/index'
 
 interface ResourceCreationOptions {

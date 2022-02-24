@@ -4,14 +4,14 @@ import $rdf from 'rdf-ext'
 import { dcterms, rdf, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import '../../../lib/domain'
-import { TestResourceStore } from '../../support/TestResourceStore'
-import { createPublishJob, createTransformJob } from '../../../lib/domain/job/create'
 import { DomainError } from '@cube-creator/api-errors'
-import * as sinon from 'sinon'
+import sinon from 'sinon'
 import * as Organization from '@cube-creator/model/Organization'
 import { namedNode } from '@cube-creator/testing/clownface'
 import * as Project from '@cube-creator/model/Project'
 import { ex } from '@cube-creator/testing/lib/namespace'
+import { createPublishJob, createTransformJob } from '../../../lib/domain/job/create'
+import { TestResourceStore } from '../../support/TestResourceStore'
 
 describe('domain/job/create', () => {
   let store: TestResourceStore

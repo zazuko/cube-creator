@@ -1,5 +1,5 @@
-import clownface, { GraphPointer } from 'clownface'
 import { NamedNode, Quad } from 'rdf-js'
+import clownface, { GraphPointer } from 'clownface'
 import TermSet from '@rdfjs/term-set'
 import $rdf from 'rdf-ext'
 import { DimensionMetadataCollection, Project } from '@cube-creator/model'

@@ -1,17 +1,17 @@
+import { NamedNode, Term } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import { cc } from '@cube-creator/core/namespace'
 import { GraphPointer } from 'clownface'
-import { NamedNode, Term } from 'rdf-js'
 import { DESCRIBE } from '@tpluscode/sparql-builder'
 import * as Job from '@cube-creator/model/Job'
 import * as ImportJob from '@cube-creator/model/ImportJob'
 import { CsvMapping, Project, Dataset, ImportProject, CsvProject } from '@cube-creator/model'
-import { ResourceStore } from '../../ResourceStore'
-import * as id from '../identifiers'
 import { DomainError } from '@cube-creator/api-errors'
 import env from '@cube-creator/core/env'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { isCsvProject } from '@cube-creator/model/Project'
+import * as id from '../identifiers'
+import { ResourceStore } from '../../ResourceStore'
 
 interface StartTransformationCommand {
   resource: NamedNode

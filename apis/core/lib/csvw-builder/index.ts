@@ -1,3 +1,4 @@
+import { Term } from 'rdf-js'
 import * as Csvw from '@rdfine/csvw'
 import TermMap from '@rdfjs/term-map'
 import {
@@ -15,12 +16,11 @@ import RdfResource from '@tpluscode/rdfine'
 import { Initializer } from '@tpluscode/rdfine/RdfResource'
 import type { Organization } from '@rdfine/schema'
 import { cc } from '@cube-creator/core/namespace'
-import { ResourceStore } from '../ResourceStore'
-import { warning } from '../log'
-import { Term } from 'rdf-js'
-import { findOrganization } from '../domain/organization/query'
 import { DefaultCsvwLiteral } from '@cube-creator/core/mapping'
 import { qudt } from '@tpluscode/rdf-ns-builders/strict'
+import { ResourceStore } from '../ResourceStore'
+import { warning } from '../log'
+import { findOrganization } from '../domain/organization/query'
 
 RdfResource.factory.addMixin(
   ...Object.values(Csvw),

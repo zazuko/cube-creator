@@ -1,6 +1,6 @@
+import { Stream } from 'rdf-js'
 import { PassThrough } from 'readable-stream'
 import $rdf from 'rdf-ext'
-import { Stream } from 'rdf-js'
 import { readable } from 'duplex-to'
 import { CsvSource } from '@cube-creator/model'
 import fetch from 'node-fetch'

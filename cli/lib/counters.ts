@@ -1,7 +1,7 @@
+import { Quad } from 'rdf-js'
 import type { Context } from 'barnard59-core/lib/Pipeline'
 import { PassThrough } from 'readable-stream'
 import through2 from 'through2'
-import { Quad } from 'rdf-js'
 import { csvw } from '@tpluscode/rdf-ns-builders/strict'
 import { quadCounter } from './otel/metrics'
 

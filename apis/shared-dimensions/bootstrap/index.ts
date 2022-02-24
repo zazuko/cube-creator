@@ -1,12 +1,12 @@
+import { NamedNode } from 'rdf-js'
 import namespace from '@rdfjs/namespace'
 import clownface, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
-import { NamedNode } from 'rdf-js'
 import env from '../lib/env'
 import { log } from '../lib/log'
+import { store } from '../lib/store'
 import { terms, termSets, exportSet } from './termSetCollections'
 import { entrypoint } from './entrypoint'
-import { store } from '../lib/store'
 import shapes from './shapes'
 
 export interface BootstrappedResourceFactory {

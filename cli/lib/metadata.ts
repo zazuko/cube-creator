@@ -1,5 +1,5 @@
-import { obj } from 'through2'
 import { Literal, NamedNode, Quad } from 'rdf-js'
+import { obj } from 'through2'
 import $rdf from 'rdf-ext'
 import { dcat, dcterms, rdf, schema, sh, _void } from '@tpluscode/rdf-ns-builders'
 import { cc, cube } from '@cube-creator/core/namespace'

@@ -1,14 +1,14 @@
-import { describe, it, before } from 'mocha'
-import Parser from '@rdfjs/parser-n3'
-import toStream from 'string-to-stream'
-import $rdf from 'rdf-ext'
-import { DimensionMetadataShape } from '../../bootstrap/shapes/dimension'
 import { DatasetCore } from 'rdf-js'
+import $rdf from 'rdf-ext'
+import toStream from 'string-to-stream'
+import Parser from '@rdfjs/parser-n3'
+import { describe, it, before } from 'mocha'
 import { expect } from 'chai'
 import { rdf, schema, time } from '@tpluscode/rdf-ns-builders'
 import { namedNode } from '@cube-creator/testing/clownface'
 import { GraphPointer } from 'clownface'
 import { meta } from '@cube-creator/core/namespace'
+import { DimensionMetadataShape } from '../../bootstrap/shapes/dimension'
 
 const parser = new Parser()
 
