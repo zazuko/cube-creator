@@ -37,11 +37,6 @@ services:
         ADMIN_PASSWORD: password
       volumes:
         - ./fuseki/config.ttl:/fuseki/config.ttl
-      healthcheck:
-        test: wget --no-verbose --tries=1 --spider http://localhost:3030/$$/ping || exit 1
-        interval: 5s
-        timeout: 3s
-        retries: 3
   trifid:
     type: compose
     app_mount: false
