@@ -6,10 +6,18 @@ process.env.VUE_APP_VERSION = require('./package.json').version
 
 const publicPath = process.env.PUBLIC_PATH || '/'
 
+const websocketConfig = {}
+if (process.env.NO_WEBSOCKET === 'true') {
+  websocketConfig.webSocketServer = false
+  websocketConfig.hot = false
+  websocketConfig.liveReload = false
+}
+
 module.exports = {
   publicPath,
   devServer: {
     allowedHosts: 'all',
+    ...websocketConfig,
     client: {
       progress: false,
     },

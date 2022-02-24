@@ -62,8 +62,8 @@ export async function loadCube(this: Pipeline.Context, { jobUri, endpoint, user,
       return exit
     })
 
-    if (exit) {
-      throw new Error('Cube download failed')
+    if (exit.status) {
+      throw new Error(`Cube download failed. Curl exited with ${exit.status}`)
     }
 
     this.logger.info('Reading cube data to temp file')
@@ -76,6 +76,8 @@ export async function loadCube(this: Pipeline.Context, { jobUri, endpoint, user,
     })
   }, {
     extension: 'ttl',
+  }).catch(e => {
+    combined.destroy(e)
   })
 
   return combined
