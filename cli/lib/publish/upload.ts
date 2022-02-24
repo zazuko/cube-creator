@@ -30,7 +30,7 @@ export function uploadCube(variables: VariableMap) {
       { stdio: [process.stdin, process.stdout, process.stderr] })
 
       if (exit.status) {
-        throw new Error('Upload failed')
+        throw new Error(`Upload failed. Curl exited with ${exit.status}`)
       }
     } finally {
       span.end()
