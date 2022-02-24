@@ -9,6 +9,10 @@ runs:
         cache: "yarn"
     - run: yarn install --ci
       shell: bash
+    - name: Set up Docker
+      uses: docker-practice/actions-setup-docker@1.0.8
+      with:
+        docker_version: 20.10.12
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
     - name: Install lando
