@@ -5,7 +5,7 @@ import { RootState } from '../types'
 export interface Message {
   title: string
   message: string
-  type: 'is-info' | 'is-success' | 'is-danger'
+  type: 'info' | 'success' | 'danger'
 }
 
 export interface AppState {

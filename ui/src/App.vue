@@ -7,19 +7,25 @@
     </div>
 
     <div class="messages">
-      <b-message
+      <o-notification
         v-for="(message, index) in messages"
         :key="index"
-        :title="message.title || ' '"
         :type="message.type"
+        :class="'is-' + message.type"
         has-icon
+        closable
         aria-close-label="Dismiss"
         @close="dismissMessage(message)"
-        :auto-close="message.type !== 'is-danger'"
+        :auto-close="message.type !== 'danger'"
         :duration="7000"
       >
-        {{ message.message }}
-      </b-message>
+        <h3 class="has-text-weight-bold">
+          {{ message.title }}
+        </h3>
+        <p>
+          {{ message.message }}
+        </p>
+      </o-notification>
     </div>
 
     <b-loading :active="isLoading" :is-full-page="true" />
