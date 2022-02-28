@@ -1,32 +1,40 @@
 <template>
-  <b-navbar type="is-light" shadow>
-    <template slot="brand">
-      <b-navbar-item tag="router-link" :to="{ name: 'Home' }">
+  <nav class="navbar is-light has-shadow">
+    <div class="navbar-brand">
+      <router-link class="navbar-item" :to="{ name: 'Home' }">
         Cube Creator
-      </b-navbar-item>
-    </template>
-    <template slot="start">
-      <b-navbar-item tag="router-link" :to="{ name: 'CubeProjects' }">
-        Cube Projects
-      </b-navbar-item>
-      <b-navbar-item tag="router-link" :to="{ name: 'SharedDimensions' }">
-        Shared Dimensions
-      </b-navbar-item>
-    </template>
-    <template slot="end">
-      <b-navbar-item
-        href="https://github.com/zazuko/cube-creator/wiki"
-        target="_blank"
-        rel="noopener noreferrer nofollow"
-      >
-        <b-icon icon="question-circle" />
-        <span>Help</span>
-      </b-navbar-item>
-      <b-navbar-item>
-        <sign-out-button />
-      </b-navbar-item>
-    </template>
-  </b-navbar>
+      </router-link>
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" @click="isOpen = !isOpen">
+        <span aria-hidden="true" />
+        <span aria-hidden="true" />
+        <span aria-hidden="true" />
+      </a>
+    </div>
+    <div class="navbar-menu" :class="{ 'is-active': isOpen }">
+      <div class="navbar-start">
+        <router-link class="navbar-item" :to="{ name: 'CubeProjects' }">
+          Cube Projects
+        </router-link>
+        <router-link class="navbar-item" :to="{ name: 'SharedDimensions' }">
+          Shared Dimensions
+        </router-link>
+      </div>
+      <div class="navbar-end">
+        <a
+          class="navbar-item"
+          href="https://github.com/zazuko/cube-creator/wiki"
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+        >
+          <o-icon icon="question-circle" />
+          <span class="ml-1">Help</span>
+        </a>
+        <div class="navbar-item">
+          <sign-out-button />
+        </div>
+      </div>
+    </div>
+  </nav>
 </template>
 
 <script>
@@ -36,6 +44,12 @@ import SignOutButton from './auth/SignOutButton.vue'
 export default Vue.extend({
   name: 'NavBar',
   components: { SignOutButton },
+
+  data () {
+    return {
+      isOpen: false,
+    }
+  }
 })
 </script>
 

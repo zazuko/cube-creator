@@ -1,8 +1,8 @@
 <template>
   <div v-if="user">
-    <b-button @click="signOut" icon-right="power-off" title="Sign out">
+    <o-button @click="signOut" icon-right="power-off" title="Sign out">
       {{ user.name }}
-    </b-button>
+    </o-button>
   </div>
 </template>
 
