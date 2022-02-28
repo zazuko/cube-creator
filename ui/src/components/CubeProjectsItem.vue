@@ -27,7 +27,7 @@
         </o-tooltip>
       </div>
     </div>
-    <b-collapse animation="slide" v-model="detailsShown">
+    <o-collapse animation="slide" :open.sync="detailsShown">
       <table v-if="details" class="table is-fullwidth has-background-light">
         <tr v-for="part in details.parts" :key="part.id.value" class="is-size-7">
           <th class="w-1/3">
@@ -43,7 +43,7 @@
         </tr>
       </table>
       <loading-block v-else />
-    </b-collapse>
+    </o-collapse>
   </div>
 </template>
 
