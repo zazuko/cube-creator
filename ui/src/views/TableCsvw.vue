@@ -7,15 +7,15 @@
     <div v-if="csvw.data">
       <div class="is-flex is-justify-content-space-between">
         <o-field>
-          <b-radio-button
+          <radio-button
             v-for="format in formats"
             :key="format.value"
             :native-value="format.value"
             v-model="selectedFormat"
-            size="is-small"
+            size="small"
           >
             {{ format.label }}
-          </b-radio-button>
+          </radio-button>
         </o-field>
         <o-button size="small" icon-left="clipboard" @click="copy">
           Copy
@@ -41,12 +41,13 @@ import { Vue, Component } from 'vue-property-decorator'
 import BMessage from '@/components/BMessage.vue'
 import SidePane from '@/components/SidePane.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
+import RadioButton from '@/components/RadioButton.vue'
 import { Table } from '@cube-creator/model'
 import Remote, { RemoteData } from '@/remote'
 import * as storeNs from '../store/namespace'
 
 @Component({
-  components: { BMessage, SidePane, LoadingBlock },
+  components: { BMessage, SidePane, LoadingBlock, RadioButton },
 })
 export default class TableCreateView extends Vue {
   @storeNs.project.Getter('findTable') findTable!: (id: string) => Table | null

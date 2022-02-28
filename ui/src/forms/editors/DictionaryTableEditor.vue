@@ -1,14 +1,14 @@
 <template>
   <div>
     <o-field>
-      <b-radio-button
+      <radio-button
         v-for="filter in filters"
         :key="filter"
         :native-value="filter"
         v-model="selectedFilter"
       >
         {{ filter }}
-      </b-radio-button>
+      </radio-button>
     </o-field>
     <table class="terms-table">
       <tbody>
@@ -45,10 +45,11 @@ import { prov, sh } from '@tpluscode/rdf-ns-builders'
 import { Term } from 'rdf-js'
 import { PropertyShape } from '@rdfine/shacl'
 import { PropertyRenderer } from '@hydrofoil/shaperone-core/renderer'
+import RadioButton from '@/components/RadioButton.vue'
 import RenderWcTemplate from '../RenderWcTemplate.vue'
 
 @Component({
-  components: { RenderWcTemplate },
+  components: { RadioButton, RenderWcTemplate },
 })
 export default class extends Vue {
   @Prop() objects!: PropertyObjectState[]

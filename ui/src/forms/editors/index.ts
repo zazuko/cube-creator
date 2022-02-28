@@ -159,12 +159,12 @@ export const autoComplete: Lazy<InstancesSelectEditor> = {
 export const radioButtons: Lazy<SingleEditorComponent> = {
   editor: ns.editor.RadioButtons,
   async lazyRender () {
-    await import('./RadioButtons.vue').then(createCustomElement('b-radio'))
+    await import('./RadioButtons.vue').then(createCustomElement('radio-buttons'))
 
     return ({ property, value }, { update }) => {
       const items = property.shape.pointer.node(property.shape.in)
 
-      return html`<b-radio .options="${items}" .value="${value.object}" .update="${update}"></b-radio>`
+      return html`<radio-buttons .options="${items}" .value="${value.object}" .update="${update}"></radio-buttons>`
     }
   }
 }

@@ -1,12 +1,12 @@
 <template>
   <side-pane :title="operation.title" @close="onCancel">
     <o-field label="Column mapping type">
-      <b-radio-button v-model="columnMappingType" native-value="literal">
+      <radio-button v-model="columnMappingType" native-value="literal">
         Literal value
-      </b-radio-button>
-      <b-radio-button v-model="columnMappingType" native-value="reference">
+      </radio-button>
+      <radio-button v-model="columnMappingType" native-value="reference">
         Link to another table
-      </b-radio-button>
+      </radio-button>
     </o-field>
 
     <literal-column-mapping-form
@@ -41,6 +41,7 @@ import { RuntimeOperation } from 'alcaeus'
 import { GraphPointer } from 'clownface'
 import { Term } from 'rdf-js'
 import { CsvSource, Table } from '@cube-creator/model'
+import RadioButton from '@/components/RadioButton.vue'
 import SidePane from '@/components/SidePane.vue'
 import ReferenceColumnMappingForm from '@/components/ReferenceColumnMappingForm.vue'
 import LiteralColumnMappingForm from '@/components/LiteralColumnMappingForm.vue'
@@ -50,7 +51,7 @@ import * as storeNs from '../store/namespace'
 type ColumnMappingType = 'literal' | 'reference'
 
 @Component({
-  components: { SidePane, LiteralColumnMappingForm, ReferenceColumnMappingForm },
+  components: { RadioButton, SidePane, LiteralColumnMappingForm, ReferenceColumnMappingForm },
 })
 export default class CubeProjectEditView extends Vue {
   @storeNs.project.Getter('findTable') findTable!: (id: string) => Table
