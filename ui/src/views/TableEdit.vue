@@ -26,6 +26,7 @@ import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 import { Table } from '@cube-creator/model'
 import { cc } from '@cube-creator/core/namespace'
 import * as storeNs from '../store/namespace'
+import { displayToast } from '@/use-toast'
 
 @Component({
   components: { SidePane, HydraOperationForm },
@@ -79,9 +80,9 @@ export default class TableCreateView extends Vue {
 
       this.$store.commit('project/storeTable', table)
 
-      this.$buefy.toast.open({
+      displayToast(this, {
         message: `Table ${table.name} was successfully created`,
-        type: 'is-success',
+        variant: 'success',
       })
 
       if (table.identifierTemplate !== identifierTemplate) {

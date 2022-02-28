@@ -45,6 +45,7 @@ import RadioButton from '@/components/RadioButton.vue'
 import { Table } from '@cube-creator/model'
 import Remote, { RemoteData } from '@/remote'
 import * as storeNs from '../store/namespace'
+import { displayToast } from '@/use-toast'
 
 @Component({
   components: { BMessage, SidePane, LoadingBlock, RadioButton },
@@ -87,7 +88,10 @@ export default class TableCreateView extends Vue {
     const snippet = this.$refs.snippet as any
     const content = snippet.codeMirror.value
     await navigator.clipboard.writeText(content)
-    this.$buefy.toast.open('Copied 👍')
+    displayToast(this, {
+      message: 'Copied 👍',
+      variant: 'success',
+    })
   }
 
   onCancel (): void {

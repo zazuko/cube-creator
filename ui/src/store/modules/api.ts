@@ -52,7 +52,7 @@ const actions: ActionTree<APIState, RootState> = {
       context.commit('app/pushMessage', {
         title: 'An error occurred',
         message: `${e}`,
-        type: 'danger',
+        variant: 'danger',
       }, { root: true })
 
       throw e

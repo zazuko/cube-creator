@@ -47,6 +47,7 @@ import ReferenceColumnMappingForm from '@/components/ReferenceColumnMappingForm.
 import LiteralColumnMappingForm from '@/components/LiteralColumnMappingForm.vue'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 import * as storeNs from '../store/namespace'
+import { displayToast } from '@/use-toast'
 
 type ColumnMappingType = 'literal' | 'reference'
 
@@ -97,9 +98,9 @@ export default class CubeProjectEditView extends Vue {
 
       this.$store.commit('project/storeNewColumnMapping', { table: this.table, columnMapping })
 
-      this.$buefy.toast.open({
+      displayToast(this, {
         message: 'Column mapping was successfully created',
-        type: 'is-success',
+        variant: 'success',
       })
 
       this.$router.push({ name: 'CSVMapping' })

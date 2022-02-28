@@ -32,6 +32,7 @@ import { conciseBoundedDescription } from '@/graph'
 import * as storeNs from '../store/namespace'
 import { rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { meta } from '@cube-creator/core/namespace'
+import { displayToast } from '@/use-toast'
 
 @Component({
   components: { SidePane, HydraOperationFormWithRaw, TermDisplay },
@@ -108,9 +109,9 @@ export default class extends Vue {
 
       this.$store.dispatch('project/refreshDimensionMetadataCollection')
 
-      this.$buefy.toast.open({
+      displayToast(this, {
         message: 'Dimension metadata was saved',
-        type: 'is-success',
+        variant: 'success',
       })
 
       this.$router.push({ name: 'CubeDesigner' })

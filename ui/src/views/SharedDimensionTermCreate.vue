@@ -26,6 +26,7 @@ import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 import * as storeNs from '../store/namespace'
 import { SharedDimension } from '../store/types'
+import { displayToast } from '@/use-toast'
 
 @Component({
   components: { SidePane, HydraOperationForm },
@@ -68,9 +69,9 @@ export default class extends Vue {
 
       this.$store.dispatch('sharedDimension/addTerm', term)
 
-      this.$buefy.toast.open({
+      displayToast(this, {
         message: 'Shared dimension term successfully created',
-        type: 'is-success',
+        variant: 'success',
       })
 
       this.$router.push({ name: 'SharedDimension', params: { id: this.dimension.clientPath } })

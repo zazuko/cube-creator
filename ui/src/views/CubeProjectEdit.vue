@@ -49,6 +49,7 @@ import { Shape } from '@rdfine/shacl'
 import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 import * as storeNs from '../store/namespace'
+import { displayToast } from '@/use-toast'
 
 @Component({
   components: { HydraOperationForm, DownloadButton },
@@ -85,9 +86,9 @@ export default class CubeProjectEditView extends Vue {
 
       this.$store.commit('project/storeProject', project)
 
-      this.$buefy.toast.open({
+      displayToast(this, {
         message: 'Project settings were saved',
-        type: 'is-success',
+        variant: 'success',
       })
     } catch (e) {
       this.error = e.details ?? { detail: e.toString() }

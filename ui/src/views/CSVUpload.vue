@@ -27,6 +27,7 @@ import CsvUploadForm from '@/components/CsvUploadForm.vue'
 import FormSubmitCancel from '@/components/FormSubmitCancel.vue'
 import SidePane from '@/components/SidePane.vue'
 import * as storeNs from '../store/namespace'
+import { displayToast } from '@/use-toast'
 
 @Component({
   components: { BMessage, CsvUploadForm, SidePane, FormSubmitCancel },
@@ -63,9 +64,9 @@ export default class CSVUploadView extends Vue {
     try {
       await Promise.all(uploads)
 
-      this.$buefy.toast.open({
+      displayToast(this, {
         message: 'CSV files were successfully uploaded',
-        type: 'is-success',
+        variant: 'success',
       })
 
       await this.close()

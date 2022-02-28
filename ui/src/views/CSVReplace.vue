@@ -40,6 +40,7 @@ import CsvUploadForm from '@/components/CsvUploadForm.vue'
 import SidePane from '@/components/SidePane.vue'
 import BMessage from '@/components/BMessage.vue'
 import * as storeNs from '../store/namespace'
+import { displayToast } from '@/use-toast'
 
 @Component({
   components: { BMessage, CsvUploadForm, SidePane },
@@ -83,9 +84,9 @@ export default class CSVReplaceView extends Vue {
     try {
       await api.invokeSaveOperation(operation, resource)
 
-      this.$buefy.toast.open({
+      displayToast(this, {
         message: 'CSV file was successfully replaced',
-        type: 'is-success',
+        variant: 'success',
       })
 
       await this.close()

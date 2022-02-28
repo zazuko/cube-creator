@@ -39,6 +39,7 @@ import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 import { SourcesCollection, CsvSource, CsvColumn } from '@cube-creator/model'
 import * as storeNs from '../store/namespace'
+import { displayToast } from '@/use-toast'
 
 @Component({
   components: { SidePane, HydraOperationForm },
@@ -134,9 +135,9 @@ export default class TableCreateView extends Vue {
 
       this.$store.commit('project/storeTable', table)
 
-      this.$buefy.toast.open({
+      displayToast(this, {
         message: `Table ${table.name} was successfully created`,
-        type: 'is-success',
+        variant: 'success',
       })
 
       this.$router.push({ name: 'CSVMapping' })

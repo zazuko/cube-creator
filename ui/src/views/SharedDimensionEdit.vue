@@ -25,6 +25,7 @@ import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 import * as storeNs from '../store/namespace'
 import { SharedDimension } from '../store/types'
+import { displayToast } from '@/use-toast'
 
 @Component({
   components: { SidePane, HydraOperationFormWithRaw },
@@ -76,9 +77,9 @@ export default class extends Vue {
 
       this.$store.dispatch('sharedDimensions/fetchCollection')
 
-      this.$buefy.toast.open({
+      displayToast(this, {
         message: 'Shared dimension successfully saved',
-        type: 'is-success',
+        variant: 'success',
       })
 
       this.$router.push({ name: 'SharedDimension', params: { id: this.dimension.clientPath } })

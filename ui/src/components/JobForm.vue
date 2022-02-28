@@ -27,6 +27,7 @@ import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 import { rdf, sh } from '@tpluscode/rdf-ns-builders'
 import { NamedNode } from 'rdf-js'
+import { displayToast } from '@/use-toast'
 
 @Component({
   components: { HydraOperationForm },
@@ -69,9 +70,9 @@ export default class JobForm extends Vue {
         resource,
       })
 
-      this.$buefy.toast.open({
+      displayToast(this, {
         message: `${job.name} was started`,
-        type: 'is-success',
+        variant: 'success',
       })
 
       this.$store.dispatch('project/fetchJobCollection')

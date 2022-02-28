@@ -10,14 +10,13 @@
       <o-notification
         v-for="(message, index) in messages"
         :key="index"
-        :type="message.type"
-        :class="'is-' + message.type"
+        :variant="message.variant"
         has-icon
         closable
         aria-close-label="Dismiss"
         @close="dismissMessage(message)"
-        :auto-close="message.type !== 'danger'"
-        :duration="7000"
+        :auto-close="message.variant !== 'danger'"
+        :duration="5000"
       >
         <h3 class="has-text-weight-bold">
           {{ message.title }}

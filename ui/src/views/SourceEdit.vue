@@ -25,6 +25,7 @@ import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 import * as storeNs from '../store/namespace'
+import { displayToast } from '@/use-toast'
 
 @Component({
   components: { SidePane, HydraOperationForm },
@@ -69,9 +70,9 @@ export default class CubeProjectEditView extends Vue {
 
       this.$store.dispatch('project/refreshSourcesCollection')
 
-      this.$buefy.toast.open({
+      displayToast(this, {
         message: 'Settings successfully saved',
-        type: 'is-success',
+        variant: 'success',
       })
 
       this.$router.push({ name: 'CSVMapping' })

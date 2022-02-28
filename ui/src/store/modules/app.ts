@@ -1,11 +1,12 @@
 import { ActionTree, MutationTree, GetterTree } from 'vuex'
+import { ColorsModifiers } from '@oruga-ui/oruga/types/helpers'
 import { loadCommonProperties } from '@/rdf-properties'
 import { RootState } from '../types'
 
 export interface Message {
-  title: string
+  title?: string
   message: string
-  type: 'info' | 'success' | 'danger'
+  variant: ColorsModifiers
 }
 
 export interface AppState {
