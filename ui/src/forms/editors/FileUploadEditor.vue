@@ -1,6 +1,6 @@
 <template>
   <o-field class="file is-primary" :class="{'has-name': !!file}">
-    <b-upload v-model="file" class="file-label" @input="onFileSelected">
+    <o-upload v-model="file" class="file-label" @input="onFileSelected">
       <span class="file-cta">
         <o-icon class="file-icon" icon="upload" />
         <span class="file-label">Select file</span>
@@ -8,7 +8,7 @@
       <span class="file-name" v-if="file">
         {{ file.name }}
       </span>
-    </b-upload>
+    </o-upload>
   </o-field>
 </template>
 
