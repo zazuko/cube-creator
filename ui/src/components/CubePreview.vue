@@ -16,11 +16,11 @@
                 </div>
               </div>
               <div class="level-right">
-                <b-select :value="selectedLanguage" @input="$emit('selectLanguage', $event)" class="level-item" title="Language">
+                <o-select :value="selectedLanguage" @input="$emit('selectLanguage', $event)" class="level-item" title="Language">
                   <option v-for="language in languages" :key="language" :value="language">
                     {{ language }}
                   </option>
-                </b-select>
+                </o-select>
               </div>
             </div>
           </th>
@@ -115,11 +115,11 @@
               </div>
               <div class="is-flex gap-2">
                 <o-tooltip label="Page size">
-                  <b-select v-model="pageSize" title="Page size">
+                  <o-select v-model="pageSize" title="Page size">
                     <option v-for="pageSizeOption in pageSizes" :key="pageSizeOption" :native-value="pageSizeOption">
                       {{ pageSizeOption }}
                     </option>
-                  </b-select>
+                  </o-select>
                 </o-tooltip>
                 <o-tooltip label="Refresh data">
                   <o-button icon-left="sync" @click="refreshData" />

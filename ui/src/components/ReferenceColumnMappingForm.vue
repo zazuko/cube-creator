@@ -1,11 +1,11 @@
 <template>
   <form @submit.prevent="onSubmit">
     <o-field label="Link to table">
-      <b-select v-model="data.referencedTable" placeholder="Select a table">
+      <o-select v-model="data.referencedTable" placeholder="Select a table">
         <option v-for="table in tables" :key="table.clientPath" :value="table">
           {{ table.name }}
         </option>
-      </b-select>
+      </o-select>
     </o-field>
 
     <o-field label="Using the property">
@@ -22,11 +22,11 @@
           <tbody>
             <tr v-for="mapping in data.identifierMapping" :key="mapping.referencedColumn.id.value">
               <td>
-                <b-select v-model="mapping.sourceColumnId">
+                <o-select v-model="mapping.sourceColumnId">
                   <option v-for="column in source.columns" :key="column.clientPath" :value="column.id.value">
                     {{ column.name }}
                   </option>
-                </b-select>
+                </o-select>
               </td>
               <td>for <code>{{ '{' + getColumn(data.referencedTable.id, mapping.referencedColumn.id).name + '}' }}</code></td>
             </tr>

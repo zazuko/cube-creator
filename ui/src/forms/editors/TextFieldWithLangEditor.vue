@@ -1,11 +1,11 @@
 <template>
   <o-field>
     <o-input :value="valueText" @input="updateValue" class="text-input" :type="inputType" />
-    <b-select :value="valueLanguage" @input="updateLanguage">
+    <o-select :value="valueLanguage" @input="updateLanguage">
       <option v-for="language in languages" :key="language">
         {{ language }}
       </option>
-    </b-select>
+    </o-select>
   </o-field>
 </template>
 

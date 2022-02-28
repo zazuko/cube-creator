@@ -51,25 +51,25 @@ export const textAreaWithLang: Lazy<SingleEditorComponent> = {
 export const instanceSelect: Lazy<InstancesSelectEditor> = {
   ...instancesSelectCore,
   async lazyRender () {
-    await import('./SelectEditor.vue').then(createCustomElement('b-select'))
+    await import('./SelectEditor.vue').then(createCustomElement('select-editor'))
 
-    return ({ property, value }, { update }) => html`<b-select .property="${property.shape}"
+    return ({ property, value }, { update }) => html`<select-editor .property="${property.shape}"
                           .update="${update}"
                           .options="${value.componentState.instances}"
-                          .value="${value.object?.term}"></b-select>`
+                          .value="${value.object?.term}"></select-editor>`
   }
 }
 
 export const enumSelect: Lazy<EnumSelectEditor> = {
   ...enumSelectCore,
   async lazyRender () {
-    await import('./SelectEditor.vue').then(createCustomElement('b-select'))
+    await import('./SelectEditor.vue').then(createCustomElement('select-editor'))
 
     return ({ property, value }, { update }) =>
-      html`<b-select .property="${property.shape}"
+      html`<select-editor .property="${property.shape}"
                           .update="${update}"
                           .options="${value.componentState.choices}"
-                          .value="${value.object?.term}"></b-select>`
+                          .value="${value.object?.term}"></select-editor>`
   }
 }
 

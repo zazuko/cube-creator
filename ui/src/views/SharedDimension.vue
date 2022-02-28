@@ -116,11 +116,11 @@
                   </o-tooltip>
                 </div>
                 <o-tooltip label="Page size">
-                  <b-select :value="pageSize" @input="changePageSize" title="Page size">
+                  <o-select :value="pageSize" @input="changePageSize" title="Page size">
                     <option v-for="pageSizeOption in pageSizes" :key="pageSizeOption" :native-value="pageSizeOption">
                       {{ pageSizeOption }}
                     </option>
-                  </b-select>
+                  </o-select>
                 </o-tooltip>
               </div>
             </td>

@@ -8,11 +8,11 @@
         @remove="removeTag(languageIndex, $event)"
         class="is-flex-grow-1"
       />
-      <b-select :value="language" @input="updateLanguage(languageIndex, $event)">
+      <o-select :value="language" @input="updateLanguage(languageIndex, $event)">
         <option v-for="languageOption in languages" :key="languageOption">
           {{ languageOption }}
         </option>
-      </b-select>
+      </o-select>
     </o-field>
     <o-tooltip label="Add value">
       <o-button icon-left="plus" @click="addLanguage" variant="white" />
