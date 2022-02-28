@@ -1,7 +1,7 @@
 <template>
   <div>
     <o-field v-for="([language, objects], languageIndex) in tags" :key="languageIndex" :addons="false" class="is-flex">
-      <b-taginput
+      <o-inputitems
         :value="objects"
         field="value"
         @add="addTag(languageIndex, language, $event)"
