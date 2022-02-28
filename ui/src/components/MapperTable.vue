@@ -49,9 +49,9 @@
       @mouseleave="$emit('unhighlight-arrows', [columnMapping.id.value])"
     >
       <div class="is-flex gap-2">
-        <b-tag v-if="columnMapping.referencedTable" rounded :style="{ 'background-color': getTableColor(columnMapping.referencedTable.id) }">
+        <span v-if="columnMapping.referencedTable" class="tag is-rounded" :style="{ 'background-color': getTableColor(columnMapping.referencedTable.id) }">
           <property-display :term="columnMapping.targetProperty" />
-        </b-tag>
+        </span>
         <span v-else>
           <property-display :term="columnMapping.targetProperty" />
           <span v-if="columnMapping.datatype" class="has-text-grey"> (<property-display :term="columnMapping.datatype" />)</span>

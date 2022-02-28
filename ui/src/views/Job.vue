@@ -10,15 +10,15 @@
       </p>
     </header>
     <div class="is-flex gap-1">
-      <b-tag v-if="job.revision">
+      <span v-if="job.revision" class="tag">
         Version {{ job.revision }}
-      </b-tag>
-      <b-tag v-if="job.status">
+      </span>
+      <span v-if="job.status" class="tag">
         <ExternalTerm :resource="job.status" />
-      </b-tag>
-      <b-tag v-if="job.publishedTo">
+      </span>
+      <span v-if="job.publishedTo" class="tag">
         <ExternalTerm :resource="job.publishedTo" />
-      </b-tag>
+      </span>
     </div>
     <div class="is-flex gap-1">
       <a v-if="job.query" :href="job.query" target="_blank" rel="noopener" class="button is-small">

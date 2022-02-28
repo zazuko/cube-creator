@@ -78,9 +78,9 @@
             <td>
               <div class="is-flex is-justify-content-space-between">
                 <div>
-                  <b-tag v-if="term.validThrough <= new Date()" type="is-warning is-light">
+                  <span v-if="term.validThrough <= new Date()" class="tag is-warning is-light">
                     deprecated
-                  </b-tag>
+                  </span>
                 </div>
                 <div>
                   <shared-dimension-term-link :term="term" />
