@@ -36,6 +36,10 @@ services:
       command: /opt/fuseki/entrypoint.sh
       environment:
         ADMIN_PASSWORD: password
+        OTEL_RESOURCE_ATTRIBUTES: service.name=fuseki
+        OTEL_TRACES_EXPORTER: otlp
+        OTEL_METRICS_EXPORTER: otlp
+        OTEL_EXPORTER_OTLP_ENDPOINT: http://otel.cube-creator.lndo.site
       volumes:
         - ./fuseki/config.ttl:/fuseki/config.ttl
       healthcheck:
@@ -43,6 +47,8 @@ services:
         interval: 5s
         timeout: 3s
         retries: 10
+      depends_on:
+        - collector
   trifid:
     type: compose
     app_mount: false
@@ -87,12 +93,20 @@ services:
         - 8889:8889
       volumes:
         - ./otel/collector.yaml:/collector.yaml:ro
+      depends_on:
+        jaeger:
+          condition: service_healthy
   jaeger:
     type: compose
     scanner: false
     services:
       image: jaegertracing/all-in-one:1.22
       command: /go/bin/all-in-one-linux --sampling.strategies-file=/etc/jaeger/sampling_strategies.json
+      healthcheck:
+        test: wget -nv -t1 --spider localhost:14269/ || exit 1
+        interval: 5s
+        timeout: 3s
+        retries: 10
   prometheus:
     type: compose
     scanner: false
