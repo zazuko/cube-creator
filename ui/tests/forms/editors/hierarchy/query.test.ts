@@ -22,8 +22,8 @@ describe('@cube-creator/ui/forms/editors/hierarchy/query @SPARQL', () => {
         ${turtle(strings, ...values)}
       }`}
     `.toString({
-        base: 'http://example.com/'
-      })
+    base: 'http://example.com/'
+  })
 
     await mdClients.streamClient.query.update(query)
   }

@@ -11,7 +11,6 @@ import { createTerm, getExportedDimension } from '../domain/shared-dimension'
 import { store } from '../store'
 import { shaclValidate } from '../middleware/shacl'
 import { rewrite } from '../rewrite'
-import shapes from '../shapes'
 
 export const post = protectedResource(shaclValidate, asyncMiddleware(async (req, res) => {
   const term = await createTerm({

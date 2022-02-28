@@ -17,10 +17,11 @@
     </div>
     <div v-if="collection" class="panel">
       <div v-if="collection.member.length > 0">
-        <router-link v-for="hierarchy in collection.member"
-                     :key="hierarchy.id.value"
-                     :to="{ name: 'Hierarchy', params: { id: hierarchy.clientPath } }"
-                     class="panel-block"
+        <router-link
+          v-for="hierarchy in collection.member"
+          :key="hierarchy.id.value"
+          :to="{ name: 'Hierarchy', params: { id: hierarchy.clientPath } }"
+          class="panel-block"
         >
           <div class="is-flex-grow-1 is-flex is-justify-content-space-between">
             <div class="is-flex is-justify-content-space-between">

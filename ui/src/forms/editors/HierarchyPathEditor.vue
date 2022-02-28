@@ -6,9 +6,10 @@
       </b-checkbox>
     </b-field>
     <b-field>
-      <instances-select :update="__onPropertySelected"
-                        :options="properties"
-                        :value="property"
+      <instances-select
+        :update="__onPropertySelected"
+        :options="properties"
+        :value="property"
       />
     </b-field>
     <b-field label="Example resource" v-if="exampleLabel">
@@ -20,7 +21,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import { NamedNode, Term } from 'rdf-js'
+import { Term } from 'rdf-js'
 import { dataset } from '@rdf-esm/dataset'
 import clownface, { GraphPointer } from 'clownface'
 import { sh, schema, rdfs } from '@tpluscode/rdf-ns-builders/strict'
@@ -44,13 +45,13 @@ function getProperty (value: GraphPointer | undefined) {
   components: { InstancesSelect }
 })
 export default class extends Vue {
-  @Prop() value?: GraphPointer;
-  @Prop() example?: GraphPointer;
-  @Prop() moreExamples?: string;
-  inverse = false;
-  property?: Term | null = null;
-  @Prop() properties!: Item[];
-  @Prop() update!: (newValue: GraphPointer | Term) => void;
+  @Prop() value?: GraphPointer
+  @Prop() example?: GraphPointer
+  @Prop() moreExamples?: string
+  inverse = false
+  property?: Term | null = null
+  @Prop() properties!: Item[]
+  @Prop() update!: (newValue: GraphPointer | Term) => void
 
   get exampleLabel () {
     if (typeof this.example?.out === 'function') {

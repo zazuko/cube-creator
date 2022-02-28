@@ -1,7 +1,7 @@
+import { NamedNode, Quad } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import clownface from 'clownface'
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
-import { NamedNode, Quad } from 'rdf-js'
 
 interface CollectionHandler {
   memberType: NamedNode
