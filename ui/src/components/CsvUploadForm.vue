@@ -1,13 +1,13 @@
 <template>
-  <b-tabs type="is-boxed" v-model="sourceKind">
-    <b-tab-item label="Upload" value="MediaLocal">
+  <o-tabs type="boxed" v-model="sourceKind">
+    <o-tab-item label="Upload" value="MediaLocal">
       <file-upload
         :file-meta="fileMeta"
         :after-upload="submitLocal"
         @done="close"
       />
-    </b-tab-item>
-    <b-tab-item label="URL" value="MediaURL">
+    </o-tab-item>
+    <o-tab-item label="URL" value="MediaURL">
       <form @submit.prevent="submitUrl">
         <b-field label="URL">
           <b-input v-model="fileUrl" type="url" required />
@@ -16,8 +16,8 @@
           Upload
         </o-button>
       </form>
-    </b-tab-item>
-  </b-tabs>
+    </o-tab-item>
+  </o-tabs>
 </template>
 
 <script lang="ts">
