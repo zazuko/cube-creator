@@ -38,10 +38,11 @@ import { CsvMapping, CsvSource } from '@cube-creator/model'
 import { api } from '@/api'
 import CsvUploadForm from '@/components/CsvUploadForm.vue'
 import SidePane from '@/components/SidePane.vue'
+import BMessage from '@/components/BMessage.vue'
 import * as storeNs from '../store/namespace'
 
 @Component({
-  components: { CsvUploadForm, SidePane },
+  components: { BMessage, CsvUploadForm, SidePane },
 })
 export default class CSVReplaceView extends Vue {
   @storeNs.project.State('csvMapping') mapping!: CsvMapping

@@ -95,12 +95,13 @@ import { Prop, Component, Vue } from 'vue-property-decorator'
 import { Term } from 'rdf-js'
 import { ResourceIdentifier } from '@tpluscode/rdfine'
 import { ColumnMapping, Table } from '@cube-creator/model'
+import BMessage from './BMessage.vue'
 import HydraOperationButton from './HydraOperationButton.vue'
 import PropertyDisplay from './PropertyDisplay.vue'
 import * as storeNs from '../store/namespace'
 
 @Component({
-  components: { HydraOperationButton, PropertyDisplay },
+  components: { BMessage, HydraOperationButton, PropertyDisplay },
 })
 export default class MapperTable extends Vue {
   @Prop() readonly table!: Table

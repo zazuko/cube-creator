@@ -38,6 +38,7 @@
 import '@rdfjs-elements/rdf-editor'
 import { Quad } from 'rdf-js'
 import { Vue, Component } from 'vue-property-decorator'
+import BMessage from '@/components/BMessage.vue'
 import SidePane from '@/components/SidePane.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import { Table } from '@cube-creator/model'
@@ -45,7 +46,7 @@ import Remote, { RemoteData } from '@/remote'
 import * as storeNs from '../store/namespace'
 
 @Component({
-  components: { SidePane, LoadingBlock },
+  components: { BMessage, SidePane, LoadingBlock },
 })
 export default class TableCreateView extends Vue {
   @storeNs.project.Getter('findTable') findTable!: (id: string) => Table | null

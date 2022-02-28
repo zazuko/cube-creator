@@ -44,7 +44,7 @@
             </b-dropdown>
           </div>
         </div>
-        <b-message v-if="source.errorMessages.length" type="is-danger" class="content">
+        <b-message v-if="source.errorMessages.length" type="is-danger" class="content mb-0">
           <p>An error occurred while parsing the CSV file:</p>
           <pre v-for="error in source.errorMessages" :key="error">{{ error }}</pre>
           <div class="content" v-if="source.actions.delete || source.actions.edit">
@@ -124,6 +124,7 @@
 import { Prop, Component, Vue, Watch } from 'vue-property-decorator'
 import { CsvSource, Table, TableCollection, CsvColumn, ColumnMapping } from '@cube-creator/model'
 import { isLiteralColumnMapping } from '@cube-creator/model/ColumnMapping'
+import BMessage from './BMessage.vue'
 import MapperTable from './MapperTable.vue'
 import HydraOperationButton from './HydraOperationButton.vue'
 import { api } from '@/api'
@@ -131,6 +132,7 @@ import * as storeNs from '../store/namespace'
 
 @Component({
   components: {
+    BMessage,
     MapperTable,
     HydraOperationButton,
   },

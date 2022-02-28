@@ -137,6 +137,7 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import HydraOperationButton from '@/components/HydraOperationButton.vue'
+import BMessage from '@/components/BMessage.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import PageContent from '@/components/PageContent.vue'
 import SharedDimensionTags from '@/components/SharedDimensionTags.vue'
@@ -149,6 +150,7 @@ import { SharedDimension, SharedDimensionTerm } from '../store/types'
 
 @Component({
   components: {
+    BMessage,
     HydraOperationButton,
     LoadingBlock,
     PageContent,

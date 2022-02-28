@@ -32,6 +32,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 import { RuntimeOperation } from 'alcaeus'
 import $rdf from 'rdf-ext'
 import clownface, { GraphPointer } from 'clownface'
+import BMessage from './BMessage.vue'
 import FormSubmitCancel from './FormSubmitCancel.vue'
 import HydraOperationError from './HydraOperationError.vue'
 import { ErrorDetails } from '@/api/errors'
@@ -44,7 +45,7 @@ interface ParseError {
 }
 
 @Component({
-  components: { FormSubmitCancel, HydraOperationError, LoadingBlock },
+  components: { BMessage, FormSubmitCancel, HydraOperationError, LoadingBlock },
 })
 export default class HydraRawRdfForm extends Vue {
   @Prop({ required: true }) operation!: RuntimeOperation

@@ -145,6 +145,7 @@ import type { Cube, Dataset, DimensionMetadata, DimensionMetadataCollection } fr
 import { supportedLanguages } from '@cube-creator/core/languages'
 import { api } from '@/api'
 import Remote, { RemoteData } from '@/remote'
+import BMessage from './BMessage.vue'
 import HydraOperationButton from './HydraOperationButton.vue'
 import TermWithLanguage from './TermWithLanguage.vue'
 import LoadingBlock from './LoadingBlock.vue'
@@ -155,6 +156,7 @@ const debounceRefreshDelay = 500
 
 @Component({
   components: {
+    BMessage,
     CubePreviewDimension,
     CubePreviewValue,
     HydraOperationButton,
