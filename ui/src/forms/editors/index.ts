@@ -15,9 +15,9 @@ import { Literal } from 'rdf-js'
 export const textField: Lazy<SingleEditorComponent> = {
   editor: dash.TextFieldEditor,
   async lazyRender () {
-    await import('./TextFieldEditor.vue').then(createCustomElement('b-textbox'))
+    await import('./TextFieldEditor.vue').then(createCustomElement('textfield-editor'))
 
-    return ({ value }, { update }) => html`<b-textbox .value="${value.object?.value || ''}" .update="${update}"></b-textbox>`
+    return ({ value }, { update }) => html`<textfield-editor .value="${value.object?.value || ''}" .update="${update}"></textfield-editor>`
   }
 }
 
