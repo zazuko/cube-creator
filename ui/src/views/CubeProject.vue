@@ -9,7 +9,7 @@
                 <h2 class="project-title has-text-weight-bold truncate">
                   {{ project.title }}
                 </h2>
-                <b-icon icon="cog" class="ml-1" />
+                <o-icon icon="cog" class="ml-1" />
               </a>
             </o-tooltip>
           </li>

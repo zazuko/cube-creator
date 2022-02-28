@@ -1,9 +1,9 @@
 <template>
   <span v-if="showLabel" class="tag is-light" :class="typeClass">
-    <b-icon :icon="icon" :class="iconColorClass" />
+    <o-icon :icon="icon" :class="iconColorClass" />
     <span>{{ label }}</span>
   </span>
-  <b-icon v-else :icon="icon" :class="iconColorClass" />
+  <o-icon v-else :icon="icon" :class="iconColorClass" />
 </template>
 
 <script lang="ts">

@@ -3,7 +3,7 @@
     <b-field label="URI" v-if="termUri">
       <a class="form-input" :href="termUri" target="_blank" rel="noopener noreferer">
         <span>{{ termUri }}</span>
-        <b-icon icon="external-link-alt" />
+        <o-icon icon="external-link-alt" />
       </a>
     </b-field>
     <hydra-operation-form-with-raw

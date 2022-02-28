@@ -8,7 +8,7 @@
       </div>
       <slot />
     </div>
-    <b-icon icon="chevron-right" />
+    <o-icon icon="chevron-right" />
   </router-link>
 </template>
 

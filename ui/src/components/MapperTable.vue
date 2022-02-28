@@ -20,7 +20,7 @@
             />
             <o-dropdown position="bottom-left" class="has-text-weight-normal">
               <button class="button is-text is-small" slot="trigger">
-                <b-icon icon="ellipsis-h" />
+                <o-icon icon="ellipsis-h" />
               </button>
               <o-dropdown-item tag="div" item-class="p" v-if="table.csvw" has-link>
                 <router-link class="dropdown-item" :to="{ name: 'TableCsvw', params: { tableId: table.clientPath } }">
@@ -58,10 +58,10 @@
           <span v-if="columnMapping.language" class="has-text-grey"> (language: {{ columnMapping.language.value }})</span>
         </span>
         <o-tooltip v-if="columnMapping.isKeyDimension" label="Key dimension">
-          <b-icon icon="key" type="is-grey" />
+          <o-icon icon="key" variant="grey" />
         </o-tooltip>
         <o-tooltip v-if="columnMapping.isMeasureDimension" label="Measure dimension">
-          <b-icon icon="chart-bar" type="is-primary" />
+          <o-icon icon="chart-bar" variant="primary" />
         </o-tooltip>
       </div>
       <div class="is-flex">

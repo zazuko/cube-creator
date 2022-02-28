@@ -27,7 +27,7 @@
       <scale-of-measure-icon :scale-of-measure="dimension.scaleOfMeasure" />
       <data-kind-icon :data-kind="dimension.dataKind" />
       <o-tooltip v-show="description" :label="description">
-        <b-icon icon="comment-alt" pack="far" type="is-primary" />
+        <o-icon icon="comment-alt" pack="far" variant="primary" />
       </o-tooltip>
     </div>
   </div>

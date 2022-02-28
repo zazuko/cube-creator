@@ -1,7 +1,7 @@
 <template>
   <o-tooltip :label="uri">
     <a :href="uri" target="_blank" rel="noopener noreferer" class="button is-small is-text">
-      <b-icon icon="external-link-alt" />
+      <o-icon icon="external-link-alt" />
     </a>
   </o-tooltip>
 </template>

@@ -23,7 +23,7 @@
     <div class="is-flex gap-1">
       <a v-if="job.query" :href="job.query" target="_blank" rel="noopener" class="button is-small">
         <span>Open in LINDAS</span>
-        <b-icon icon="chevron-right" />
+        <o-icon icon="chevron-right" />
       </a>
       <a
         v-for="workExample in job.workExamples"
@@ -34,7 +34,7 @@
         class="button is-small"
       >
         <span>{{ workExampleLabel(workExample) }}</span>
-        <b-icon icon="external-link-alt" />
+        <o-icon icon="external-link-alt" />
       </a>
     </div>
     <div>
@@ -45,7 +45,7 @@
         <vue-markdown :source="comment" />
       </b-message>
       <a :disabled="!link" :href="link" target="_blank" rel="noopener noreferer" class="button is-small mb-1">
-        <b-icon icon="book" />
+        <o-icon icon="book" />
         <span>View full log</span>
       </a>
       <pre v-if="job.error && job.error.description" class="has-background-danger-light">

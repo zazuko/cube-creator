@@ -44,7 +44,7 @@
           <td :colspan="tableWidth" class="p-0">
             <div class="message is-warning">
               <p class="message-body px-2 py-1 is-flex">
-                <b-icon icon="exclamation-triangle" class="mr-1" />
+                <o-icon icon="exclamation-triangle" class="mr-1" />
                 <span>{{ error.description }}</span>
               </p>
             </div>

@@ -1,6 +1,6 @@
 <template>
   <o-tooltip v-if="dataKind" :label="label" class="tag is-rounded is-primary">
-    <b-icon :icon="icon" />
+    <o-icon :icon="icon" />
   </o-tooltip>
 </template>
 
