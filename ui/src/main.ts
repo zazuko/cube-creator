@@ -25,6 +25,10 @@ Vue.use(Oruga, {
   ...bulmaConfig,
   iconPack: 'fas',
   iconComponent: 'FontAwesomeIcon',
+  dropdown: {
+    ...bulmaConfig.dropdown,
+    itemClass: (s: string, { props }: any) => props.itemClass || 'dropdown-item',
+  },
 })
 
 Vue.use(Buefy, {

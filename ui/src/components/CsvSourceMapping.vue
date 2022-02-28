@@ -17,31 +17,31 @@
             >
               Create table from selected columns
             </o-button>
-            <b-dropdown position="is-bottom-left" class="has-text-weight-normal">
+            <o-dropdown position="bottom-left" class="has-text-weight-normal" aria-role="list">
               <button class="button is-text is-small" slot="trigger">
-                <b-icon icon="ellipsis-h" />
+                <o-icon icon="ellipsis-h" />
               </button>
-              <b-dropdown-item v-if="source.actions.edit" has-link>
-                <router-link :to="{ name: 'SourceEdit', params: { sourceId: source.clientPath } }">
-                  <b-icon icon="pencil-alt" />
+              <o-dropdown-item tag="div" item-class="p" clickable v-if="source.actions.edit">
+                <router-link class="dropdown-item" :to="{ name: 'SourceEdit', params: { sourceId: source.clientPath } }">
+                  <o-icon icon="pencil-alt" />
                   {{ source.actions.edit.title }}
                 </router-link>
-              </b-dropdown-item>
-              <b-dropdown-item v-if="source.actions.replace" has-link>
-                <router-link :to="{ name: 'SourceReplaceCSV', params: { sourceId: source.clientPath } }">
-                  <b-icon icon="upload" />
+              </o-dropdown-item>
+              <o-dropdown-item tag="div" item-class="p" v-if="source.actions.replace">
+                <router-link class="dropdown-item" :to="{ name: 'SourceReplaceCSV', params: { sourceId: source.clientPath } }">
+                  <o-icon icon="upload" />
                   {{ source.actions.replace.title }}
                 </router-link>
-              </b-dropdown-item>
-              <b-dropdown-item v-if="source.actions.download" @click="downloadSource(source)">
-                <b-icon icon="download" />
+              </o-dropdown-item>
+              <o-dropdown-item v-if="source.actions.download" @click="downloadSource(source)">
+                <o-icon icon="download" />
                 {{ source.actions.download.title }}
-              </b-dropdown-item>
-              <b-dropdown-item v-if="source.actions.delete" @click="deleteSource(source)">
-                <b-icon icon="trash" />
+              </o-dropdown-item>
+              <o-dropdown-item v-if="source.actions.delete" @click="deleteSource(source)">
+                <o-icon icon="trash" />
                 {{ source.actions.delete.title }}
-              </b-dropdown-item>
-            </b-dropdown>
+              </o-dropdown-item>
+            </o-dropdown>
           </div>
         </div>
         <b-message v-if="source.errorMessages.length" type="is-danger" class="content mb-0">

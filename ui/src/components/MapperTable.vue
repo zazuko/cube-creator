@@ -18,16 +18,16 @@
               @click="deleteTable(table)"
               data-testid="delete-table"
             />
-            <b-dropdown position="is-bottom-left">
+            <o-dropdown position="bottom-left" class="has-text-weight-normal">
               <button class="button is-text is-small" slot="trigger">
                 <b-icon icon="ellipsis-h" />
               </button>
-              <b-dropdown-item v-if="table.csvw" has-link>
-                <router-link :to="{ name: 'TableCsvw', params: { tableId: table.clientPath } }">
+              <o-dropdown-item tag="div" item-class="p" v-if="table.csvw" has-link>
+                <router-link class="dropdown-item" :to="{ name: 'TableCsvw', params: { tableId: table.clientPath } }">
                   View generated CSVW
                 </router-link>
-              </b-dropdown-item>
-            </b-dropdown>
+              </o-dropdown-item>
+            </o-dropdown>
           </div>
         </div>
       </div>
