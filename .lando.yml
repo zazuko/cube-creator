@@ -36,10 +36,10 @@ services:
       command: /opt/fuseki/entrypoint.sh
       environment:
         ADMIN_PASSWORD: password
-        OTEL_RESOURCE_ATTRIBUTES: service.name=fuseki
-        OTEL_TRACES_EXPORTER: otlp
-        OTEL_METRICS_EXPORTER: otlp
-        OTEL_EXPORTER_OTLP_ENDPOINT: http://otel.cube-creator.lndo.site
+        OTEL_SERVICE_NAME: store
+        OTEL_TRACES_EXPORTER: jaeger
+        OTEL_EXPORTER_JAEGER_ENDPOINT: http://jaeger:14250
+        OTEL_PROPAGATORS: tracecontext,jaeger
       volumes:
         - ./fuseki/config.ttl:/fuseki/config.ttl
       healthcheck:
