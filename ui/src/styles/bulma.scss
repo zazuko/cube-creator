@@ -16,6 +16,7 @@ $panel-radius: 0;
 // Import Bulma and Buefy styles
 @import "~bulma";
 @import "~buefy/src/scss/buefy";
+@import "./loading";
 
 .panel-block,
 .panel-heading,

@@ -40,13 +40,14 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import BLoading from '@/components/BLoading.vue'
 import NavBar from '@/components/NavBar.vue'
 import { APIErrorAuthorization } from './api/errors'
 import { Message } from './store/modules/app'
 import * as storeNs from './store/namespace'
 
 @Component({
-  components: { NavBar },
+  components: { BLoading, NavBar },
 })
 export default class App extends Vue {
   @storeNs.app.State('loading') isLoading!: boolean
