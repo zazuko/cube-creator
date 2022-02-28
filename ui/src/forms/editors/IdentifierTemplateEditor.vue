@@ -3,7 +3,7 @@
     :message="wasValidated ? invalidMessage : ''"
     :variant="wasValidated && invalidMessage ? 'danger' : ''"
   >
-    <b-autocomplete
+    <o-autocomplete
       ref="autocomplete"
       :value="value"
       @input="update"

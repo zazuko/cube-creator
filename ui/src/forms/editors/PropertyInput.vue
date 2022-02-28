@@ -1,6 +1,6 @@
 <template>
   <o-field :message="fullURI">
-    <b-autocomplete
+    <o-autocomplete
       :value="textValue"
       @input="onUpdate"
       :data="suggestions"
