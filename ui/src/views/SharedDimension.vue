@@ -11,7 +11,7 @@
         <div class="is-flex is-align-items-center gap-1">
           <hydra-operation-button :operation="dimension.actions.replace" :to="{ name: 'SharedDimensionEdit' }" />
           <hydra-operation-button :operation="dimension.actions.delete" @click="deleteDimension(dimension)" />
-          <download-button :resource="dimension.export" size="is-small" type="is-white" />
+          <download-button :resource="dimension.export" size="small" variant="white" />
         </div>
       </div>
       <table class="table is-narrow is-bordered is-striped is-fullwidth">
@@ -28,7 +28,7 @@
                 v-if="dimension.actions.create"
                 :operation="dimension.actions.create"
                 :to="{ name: 'SharedDimensionTermCreate' }"
-                type="is-default"
+                variant="default"
               >
                 {{ dimension.actions.create.title }}
               </hydra-operation-button>
@@ -101,14 +101,14 @@
                 <div class="is-flex is-align-items-center gap-1">
                   <span class="pr-1">Page {{ page }}</span>
                   <b-tooltip label="Previous page">
-                    <b-button
+                    <o-button
                       icon-left="chevron-left"
                       @click="prevPage"
                       :disabled="!terms.data || page === 1"
                     />
                   </b-tooltip>
                   <b-tooltip label="Next page">
-                    <b-button
+                    <o-button
                       icon-left="chevron-right"
                       @click="nextPage"
                       :disabled="!terms.data || terms.data.length === 0"

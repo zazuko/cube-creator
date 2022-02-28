@@ -3,14 +3,14 @@
     <hr>
     <b-field class="buttons" :addons="false">
       <div class="control">
-        <b-button native-type="submit" class="button" :type="submitButtonType" :disabled="disabled" :loading="isSubmitting">
+        <o-button native-type="submit" class="button" :variant="submitButtonVariant" :disabled="disabled" :loading="isSubmitting">
           {{ _submitLabel }}
-        </b-button>
+        </o-button>
       </div>
       <div class="control" v-if="showCancel">
-        <b-button @click="$emit('cancel')">
+        <o-button @click="$emit('cancel')">
           Cancel
-        </b-button>
+        </o-button>
       </div>
     </b-field>
   </b-field>
@@ -25,7 +25,7 @@ export default class FormSubmitCancel extends Vue {
   @Prop() disabled?: boolean
   @Prop() isSubmitting?: boolean
   @Prop({ default: true }) showCancel?: boolean
-  @Prop({ default: 'is-primary' }) submitButtonType?: string
+  @Prop({ default: 'primary' }) submitButtonVariant?: string
 
   get _submitLabel (): string {
     return this.submitLabel || 'Save'

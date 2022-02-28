@@ -21,7 +21,7 @@
           </td>
           <td class="term-remove-col">
             <b-tooltip label="Remove value">
-              <b-button icon-left="minus" @click.prevent="renderer.actions.removeObject(o.object)" type="is-white" />
+              <o-button icon-left="minus" @click.prevent="renderer.actions.removeObject(o.object)" variant="white" />
             </b-tooltip>
           </td>
         </tr>
@@ -33,7 +33,7 @@
       </tbody>
     </table>
     <b-tooltip label="Add value">
-      <b-button icon-left="plus" @click.prevent="renderer.actions.addObject" type="is-white" />
+      <o-button icon-left="plus" @click.prevent="renderer.actions.addObject" variant="white" />
     </b-tooltip>
   </div>
 </template>

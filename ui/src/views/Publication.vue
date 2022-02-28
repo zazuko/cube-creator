@@ -14,7 +14,7 @@
           :operation="jobCollection.actions.createUnlist"
           :confirm="true"
           confirmation-message="Are you sure you want to unlist this cube? This operation is not reversible."
-          submit-button-type="is-danger"
+          submit-button-variant="danger"
           class="box"
         />
       </div>

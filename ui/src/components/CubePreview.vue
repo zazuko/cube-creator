@@ -87,14 +87,14 @@
             <div class="is-flex is-justify-content-space-between gap-4">
               <div class="is-flex is-align-items-center gap-1">
                 <b-tooltip label="Previous page">
-                  <b-button
+                  <o-button
                     icon-left="chevron-left"
                     @click="page = page - 1"
                     :disabled="!hasPreviousPage"
                   />
                 </b-tooltip>
                 <b-tooltip label="Next page">
-                  <b-button
+                  <o-button
                     icon-left="chevron-right"
                     @click="page = page + 1"
                     :disabled="!hasNextPage"
@@ -122,7 +122,7 @@
                   </b-select>
                 </b-tooltip>
                 <b-tooltip label="Refresh data">
-                  <b-button icon-left="sync" @click="refreshData" />
+                  <o-button icon-left="sync" @click="refreshData" />
                 </b-tooltip>
               </div>
             </div>

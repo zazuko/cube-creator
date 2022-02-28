@@ -3,7 +3,7 @@
     <render-wc-template :template-result="renderEditor()" class="form-object-editor" />
     <div v-if="property.canRemove">
       <b-tooltip label="Remove value">
-        <b-button icon-left="minus" @click.prevent="actions.remove" type="is-text" />
+        <o-button icon-left="minus" @click.prevent="actions.remove" variant="text" />
       </b-tooltip>
     </div>
   </div>

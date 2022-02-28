@@ -12,9 +12,9 @@
         <b-field label="URL">
           <b-input v-model="fileUrl" type="url" required />
         </b-field>
-        <b-button native-type="submit" type="is-primary" :loading="isLoading">
+        <o-button native-type="submit" variant="primary" :loading="isLoading">
           Upload
-        </b-button>
+        </o-button>
       </form>
     </b-tab-item>
   </b-tabs>

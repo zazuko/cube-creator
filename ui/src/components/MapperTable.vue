@@ -77,11 +77,11 @@
     </div>
     <div class="panel-block">
       <b-tooltip v-if="table.actions.createLiteralColumnMapping || table.actions.createReferenceColumnMapping" label="Map column">
-        <b-button
+        <o-button
           tag="router-link"
           :to="{ name: 'ColumnMappingCreate', params: { tableId: table.clientPath } }"
-          type="is-text"
-          size="is-small"
+          variant="text"
+          size="small"
           icon-left="plus"
           data-testid="create-column-mapping"
         />

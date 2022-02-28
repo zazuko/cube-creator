@@ -1,7 +1,7 @@
 <template>
-  <b-button :size="size" :type="type" icon-left="download" @click="download" :loading="loading" v-if="this.resource">
+  <o-button :size="size" :variant="variant" icon-left="download" @click="download" :loading="loading" v-if="this.resource">
     {{ title }}
-  </b-button>
+  </o-button>
 </template>
 
 <script lang="ts">
@@ -14,8 +14,8 @@ import { Resource } from 'alcaeus'
 @Component
 export default class DownloadButton extends Vue {
   @Prop({ required: true }) resource: Resource | undefined
-  @Prop({ default: 'is-default' }) type!: string
-  @Prop({ default: 'is-normal' }) size!: string
+  @Prop({ default: 'default' }) variant!: string
+  @Prop({ default: 'normal' }) size!: string
 
   loading = false
 

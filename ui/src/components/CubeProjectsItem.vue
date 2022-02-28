@@ -23,7 +23,7 @@
           </p>
         </div>
         <b-tooltip class="is-block" label="More details">
-          <b-button icon-left="info-circle" type="is-white" size="is-small" @click="toggleDetails" />
+          <o-button icon-left="info-circle" variant="white" size="small" @click="toggleDetails" />
         </b-tooltip>
       </div>
     </div>

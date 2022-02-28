@@ -17,9 +17,9 @@
             {{ format.label }}
           </b-radio-button>
         </b-field>
-        <b-button size="is-small" icon-left="clipboard" @click="copy">
+        <o-button size="small" icon-left="clipboard" @click="copy">
           Copy
-        </b-button>
+        </o-button>
       </div>
       <rdf-editor
         :quads.prop="csvw.data"

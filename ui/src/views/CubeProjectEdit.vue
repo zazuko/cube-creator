@@ -31,9 +31,9 @@
         Delete all data related to this project. This operation is not revertible!
       </p>
       <b-field v-if="project.actions.delete">
-        <b-button icon-left="trash" type="is-danger" @click="deleteProject">
+        <o-button icon-left="trash" variant="danger" @click="deleteProject">
           {{ project.actions.delete.title }}
-        </b-button>
+        </o-button>
       </b-field>
     </div>
   </div>

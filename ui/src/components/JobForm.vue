@@ -11,7 +11,7 @@
       :is-submitting="isSubmitting"
       @submit="onSubmit"
       :show-cancel="false"
-      :submit-button-type="submitButtonType"
+      :submit-button-variant="submitButtonVariant"
     />
   </div>
 </template>
@@ -33,7 +33,7 @@ import { NamedNode } from 'rdf-js'
 })
 export default class JobForm extends Vue {
   @Prop() operation!: RuntimeOperation
-  @Prop() submitButtonType?: string
+  @Prop() submitButtonVariant?: string
   @Prop({ default: false }) confirm!: boolean
   @Prop({ default: 'Are you sure?' }) confirmationMessage!: string
 

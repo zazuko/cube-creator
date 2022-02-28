@@ -12,12 +12,12 @@
       />
       <div v-if="dimension.mappings">
         <b-tooltip :label="linkToSharedDimensionLabel">
-          <b-button
+          <o-button
             tag="router-link"
             :to="{ name: 'DimensionMapping', params: { dimensionId: dimension.clientPath } }"
             icon-left="link"
-            size="is-small"
-            type="is-text"
+            size="small"
+            variant="text"
             :class="{ 'has-text-primary': dimension.sharedDimensions.length > 0 }"
           />
         </b-tooltip>

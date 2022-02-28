@@ -7,16 +7,16 @@
             {{ source.name }}
           </h4>
           <div class="is-flex gap-1">
-            <b-button
+            <o-button
               v-if="tableCollection.actions.create"
               :disabled="selectedColumns.length === 0"
               tag="router-link"
               :to="{ name: 'TableCreate', query: createTableQueryParams }"
-              size="is-small"
+              size="small"
               icon-left="plus"
             >
               Create table from selected columns
-            </b-button>
+            </o-button>
             <b-dropdown position="is-bottom-left" class="has-text-weight-normal">
               <button class="button is-text is-small" slot="trigger">
                 <b-icon icon="ellipsis-h" />
