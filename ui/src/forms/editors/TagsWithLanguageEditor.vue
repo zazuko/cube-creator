@@ -14,9 +14,9 @@
         </option>
       </b-select>
     </b-field>
-    <b-tooltip label="Add value">
+    <o-tooltip label="Add value">
       <o-button icon-left="plus" @click="addLanguage" variant="white" />
-    </b-tooltip>
+    </o-tooltip>
   </div>
 </template>
 

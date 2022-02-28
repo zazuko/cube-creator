@@ -20,9 +20,9 @@
             />
           </td>
           <td class="term-remove-col">
-            <b-tooltip label="Remove value">
+            <o-tooltip label="Remove value">
               <o-button icon-left="minus" @click.prevent="renderer.actions.removeObject(o.object)" variant="white" />
-            </b-tooltip>
+            </o-tooltip>
           </td>
         </tr>
         <tr v-if="displayedObjects.length === 0">
@@ -32,9 +32,9 @@
         </tr>
       </tbody>
     </table>
-    <b-tooltip label="Add value">
+    <o-tooltip label="Add value">
       <o-button icon-left="plus" @click.prevent="renderer.actions.addObject" variant="white" />
-    </b-tooltip>
+    </o-tooltip>
   </div>
 </template>
 

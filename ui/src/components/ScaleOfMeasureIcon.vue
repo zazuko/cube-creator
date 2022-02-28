@@ -1,7 +1,7 @@
 <template>
-  <b-tooltip v-if="scaleOfMeasure" :label="label" class="tag is-rounded is-primary">
+  <o-tooltip v-if="scaleOfMeasure" :label="label" class="tag is-rounded is-primary">
     <b-icon :icon="icon" />
-  </b-tooltip>
+  </o-tooltip>
 </template>
 
 <script lang="ts">

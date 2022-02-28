@@ -100,28 +100,28 @@
               <div class="is-flex gap-4">
                 <div class="is-flex is-align-items-center gap-1">
                   <span class="pr-1">Page {{ page }}</span>
-                  <b-tooltip label="Previous page">
+                  <o-tooltip label="Previous page">
                     <o-button
                       icon-left="chevron-left"
                       @click="prevPage"
                       :disabled="!terms.data || page === 1"
                     />
-                  </b-tooltip>
-                  <b-tooltip label="Next page">
+                  </o-tooltip>
+                  <o-tooltip label="Next page">
                     <o-button
                       icon-left="chevron-right"
                       @click="nextPage"
                       :disabled="!terms.data || terms.data.length === 0"
                     />
-                  </b-tooltip>
+                  </o-tooltip>
                 </div>
-                <b-tooltip label="Page size">
+                <o-tooltip label="Page size">
                   <b-select :value="pageSize" @input="changePageSize" title="Page size">
                     <option v-for="pageSizeOption in pageSizes" :key="pageSizeOption" :native-value="pageSizeOption">
                       {{ pageSizeOption }}
                     </option>
                   </b-select>
-                </b-tooltip>
+                </o-tooltip>
               </div>
             </td>
           </tr>

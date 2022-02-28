@@ -1,7 +1,7 @@
 <template>
-  <b-tooltip :label="displayFull" :active="displayShort !== displayFull">
+  <o-tooltip :label="displayFull" :active="displayShort !== displayFull">
     {{ displayShort }}<span v-if="showLanguage && term.language" class="has-text-grey-light">@{{ term.language }}</span>
-  </b-tooltip>
+  </o-tooltip>
 </template>
 
 <script lang="ts">

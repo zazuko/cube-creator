@@ -11,7 +11,7 @@
         :to="{ name: 'DimensionEdit', params: { dimensionId: dimension.clientPath } }"
       />
       <div v-if="dimension.mappings">
-        <b-tooltip :label="linkToSharedDimensionLabel">
+        <o-tooltip :label="linkToSharedDimensionLabel">
           <o-button
             tag="router-link"
             :to="{ name: 'DimensionMapping', params: { dimensionId: dimension.clientPath } }"
@@ -20,15 +20,15 @@
             variant="text"
             :class="{ 'has-text-primary': dimension.sharedDimensions.length > 0 }"
           />
-        </b-tooltip>
+        </o-tooltip>
       </div>
     </div>
     <div class="icons">
       <scale-of-measure-icon :scale-of-measure="dimension.scaleOfMeasure" />
       <data-kind-icon :data-kind="dimension.dataKind" />
-      <b-tooltip v-show="description" :label="description">
+      <o-tooltip v-show="description" :label="description">
         <b-icon icon="comment-alt" pack="far" type="is-primary" />
-      </b-tooltip>
+      </o-tooltip>
     </div>
   </div>
 </template>

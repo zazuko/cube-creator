@@ -1,9 +1,9 @@
 <template>
-  <b-tooltip :label="uri">
+  <o-tooltip :label="uri">
     <a :href="uri" target="_blank" rel="noopener noreferer" class="button is-small is-text">
       <b-icon icon="external-link-alt" />
     </a>
-  </b-tooltip>
+  </o-tooltip>
 </template>
 
 <script lang="ts">

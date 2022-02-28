@@ -1,5 +1,5 @@
 <template>
-  <b-tooltip v-if="operation" :label="operation.title">
+  <o-tooltip v-if="operation" :label="operation.title">
     <o-button
       :tag="tag"
       :to="to"
@@ -11,7 +11,7 @@
     >
       <slot />
     </o-button>
-  </b-tooltip>
+  </o-tooltip>
 </template>
 
 <script lang="ts">

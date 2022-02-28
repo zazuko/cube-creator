@@ -57,12 +57,12 @@
           <span v-if="columnMapping.datatype" class="has-text-grey"> (<property-display :term="columnMapping.datatype" />)</span>
           <span v-if="columnMapping.language" class="has-text-grey"> (language: {{ columnMapping.language.value }})</span>
         </span>
-        <b-tooltip v-if="columnMapping.isKeyDimension" label="Key dimension">
+        <o-tooltip v-if="columnMapping.isKeyDimension" label="Key dimension">
           <b-icon icon="key" type="is-grey" />
-        </b-tooltip>
-        <b-tooltip v-if="columnMapping.isMeasureDimension" label="Measure dimension">
+        </o-tooltip>
+        <o-tooltip v-if="columnMapping.isMeasureDimension" label="Measure dimension">
           <b-icon icon="chart-bar" type="is-primary" />
-        </b-tooltip>
+        </o-tooltip>
       </div>
       <div class="is-flex">
         <hydra-operation-button
@@ -76,7 +76,7 @@
       </div>
     </div>
     <div class="panel-block">
-      <b-tooltip v-if="table.actions.createLiteralColumnMapping || table.actions.createReferenceColumnMapping" label="Map column">
+      <o-tooltip v-if="table.actions.createLiteralColumnMapping || table.actions.createReferenceColumnMapping" label="Map column">
         <o-button
           tag="router-link"
           :to="{ name: 'ColumnMappingCreate', params: { tableId: table.clientPath } }"
@@ -85,7 +85,7 @@
           icon-left="plus"
           data-testid="create-column-mapping"
         />
-      </b-tooltip>
+      </o-tooltip>
     </div>
   </div>
 </template>

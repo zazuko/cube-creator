@@ -84,7 +84,7 @@
             </span>
           </o-checkbox>
           <div>
-            <b-tooltip
+            <o-tooltip
               v-for="{table, columnMapping} in getColumnMappings(column)"
               :key="columnMapping.id.value"
               class="source-column-mapping"

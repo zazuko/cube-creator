@@ -27,7 +27,23 @@ Vue.use(Oruga, {
   iconComponent: 'FontAwesomeIcon',
   dropdown: {
     ...bulmaConfig.dropdown,
-    itemClass: (s: string, { props }: any) => props.itemClass || 'dropdown-item',
+    itemClass: (_: string, { props }: any) => props.itemClass || 'dropdown-item',
+  },
+  tooltip: {
+    ...bulmaConfig.tooltip,
+    rootClass: (_: string, { props }: any) => {
+      const classes = ['b-tooltip']
+
+      if (props.variant) {
+        classes.push(`is-${props.variant}`)
+      } else {
+        classes.push('is-light')
+      }
+
+      if (props.position) classes.push(`is-${props.position}`)
+
+      return classes.join(' ')
+    },
   },
 })
 

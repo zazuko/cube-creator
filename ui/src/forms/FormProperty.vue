@@ -13,9 +13,9 @@
       <render-wc-template :template-result="renderObject({ object })" />
     </div>
     <div v-if="!property.selectedEditor && property.canAdd">
-      <b-tooltip label="Add value">
+      <o-tooltip label="Add value">
         <o-button icon-left="plus" @click.prevent="actions.addObject" variant="text" />
-      </b-tooltip>
+      </o-tooltip>
     </div>
   </label>
 </template>

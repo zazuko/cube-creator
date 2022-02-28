@@ -86,20 +86,20 @@
           <td :colspan="tableWidth" class="has-background-light">
             <div class="is-flex is-justify-content-space-between gap-4">
               <div class="is-flex is-align-items-center gap-1">
-                <b-tooltip label="Previous page">
+                <o-tooltip label="Previous page">
                   <o-button
                     icon-left="chevron-left"
                     @click="page = page - 1"
                     :disabled="!hasPreviousPage"
                   />
-                </b-tooltip>
-                <b-tooltip label="Next page">
+                </o-tooltip>
+                <o-tooltip label="Next page">
                   <o-button
                     icon-left="chevron-right"
                     @click="page = page + 1"
                     :disabled="!hasNextPage"
                   />
-                </b-tooltip>
+                </o-tooltip>
                 <span class="ml-4">Page</span>
                 <b-input
                   v-model.number="page"
@@ -114,16 +114,16 @@
                 </span>
               </div>
               <div class="is-flex gap-2">
-                <b-tooltip label="Page size">
+                <o-tooltip label="Page size">
                   <b-select v-model="pageSize" title="Page size">
                     <option v-for="pageSizeOption in pageSizes" :key="pageSizeOption" :native-value="pageSizeOption">
                       {{ pageSizeOption }}
                     </option>
                   </b-select>
-                </b-tooltip>
-                <b-tooltip label="Refresh data">
+                </o-tooltip>
+                <o-tooltip label="Refresh data">
                   <o-button icon-left="sync" @click="refreshData" />
-                </b-tooltip>
+                </o-tooltip>
               </div>
             </div>
           </td>

@@ -22,9 +22,9 @@
             {{ project.creator.name }}
           </p>
         </div>
-        <b-tooltip class="is-block" label="More details">
+        <o-tooltip class="is-block" label="More details">
           <o-button icon-left="info-circle" variant="white" size="small" @click="toggleDetails" />
-        </b-tooltip>
+        </o-tooltip>
       </div>
     </div>
     <b-collapse animation="slide" v-model="detailsShown">
