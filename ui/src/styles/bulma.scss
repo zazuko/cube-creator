@@ -37,6 +37,10 @@ $panel-radius: 0;
     flex-grow: 1;
 }
 
+.panel-block input[type=checkbox] {
+    margin-right: 0;
+}
+
 .tabs.is-highlighted li.is-active a {
     background-color: $tabs-toggle-link-active-background-color;
     border-color: $tabs-toggle-link-active-border-color;

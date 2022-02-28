@@ -73,12 +73,16 @@
           @mouseenter="highlightArrows(column)"
           @mouseleave="unhighlightArrows(column)"
         >
-          <b-checkbox :value="selectedColumnsMap[column.clientPath]" @input="selectedColumnsMap[column.clientPath] = $event" class="source-column-name">
+          <o-checkbox
+            :value="selectedColumnsMap[column.clientPath]"
+            @input="selectedColumnsMap[column.clientPath] = $event"
+            class="source-column-name"
+          >
             {{ column.name }}
             <span class="has-text-grey" v-if="column.samples.length > 0">
               &nbsp;({{ column.samples.slice(0, 3).join(", ") }})
             </span>
-          </b-checkbox>
+          </o-checkbox>
           <div>
             <b-tooltip
               v-for="{table, columnMapping} in getColumnMappings(column)"
