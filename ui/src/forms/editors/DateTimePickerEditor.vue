@@ -1,5 +1,5 @@
 <template>
-  <b-datetimepicker :value="dateValue" @input="onUpdate" icon="calendar-alt" />
+  <o-datetimepicker :value="dateValue" @input="onUpdate" icon="calendar-alt" />
 </template>
 
 <script lang="ts">
