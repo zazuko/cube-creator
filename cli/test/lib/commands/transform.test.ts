@@ -7,11 +7,11 @@ import { ASK, DESCRIBE, SELECT } from '@tpluscode/sparql-builder'
 import namespace from '@rdfjs/namespace'
 import { Hydra } from 'alcaeus/node'
 import { csvw, rdf, rdfs, schema, sh, unit, xsd } from '@tpluscode/rdf-ns-builders/strict'
-import runner from '../../../lib/commands/transform'
-import { setupEnv } from '../../support/env'
 import { ccClients } from '@cube-creator/testing/lib'
 import { insertTestProject } from '@cube-creator/testing/lib/seedData'
 import { cc, cube } from '@cube-creator/core/namespace'
+import { setupEnv } from '../../support/env'
+import runner from '../../../lib/commands/transform'
 
 describe('@cube-creator/cli/lib/commands/transform', function () {
   this.timeout(360 * 1000)

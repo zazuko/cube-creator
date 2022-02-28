@@ -82,11 +82,11 @@ import * as storeNs from '../store/namespace'
   components: { CsvSourceMapping, HydraOperationButton, LoadingBlock },
 })
 export default class CSVMappingView extends Vue {
-  @storeNs.project.State('csvMapping') mapping!: CsvMapping | null;
-  @storeNs.project.State('sourcesCollection') sourcesCollection!: SourcesCollection | null;
-  @storeNs.project.State('tableCollection') tableCollection!: TableCollection | null;
-  @storeNs.project.Getter('sources') sources!: CsvSource[];
-  @storeNs.project.Getter('tables') tables!: Table[];
+  @storeNs.project.State('csvMapping') mapping!: CsvMapping | null
+  @storeNs.project.State('sourcesCollection') sourcesCollection!: SourcesCollection | null
+  @storeNs.project.State('tableCollection') tableCollection!: TableCollection | null
+  @storeNs.project.Getter('sources') sources!: CsvSource[]
+  @storeNs.project.Getter('tables') tables!: Table[]
 
   activeArrows: string[] = []
 

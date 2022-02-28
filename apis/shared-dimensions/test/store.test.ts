@@ -1,14 +1,14 @@
+import { Term } from 'rdf-js'
 import { describe, it, before, beforeEach } from 'mocha'
 import { namedNode } from '@cube-creator/testing/clownface'
 import { mdClients } from '@cube-creator/testing/lib'
 import { foaf, schema, sh, rdfs } from '@tpluscode/rdf-ns-builders'
 import { ASK, INSERT, SELECT } from '@tpluscode/sparql-builder'
 import { expect } from 'chai'
-import Store, { SharedDimensionsStore } from '../lib/store'
 import $rdf from 'rdf-ext'
 import { ex } from '@cube-creator/testing/lib/namespace'
-import { Term } from 'rdf-js'
 import { insertTestDimensions } from '@cube-creator/testing/lib/seedData'
+import Store, { SharedDimensionsStore } from '../lib/store'
 
 const { parsingClient } = mdClients
 

@@ -31,13 +31,13 @@ import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 })
 export default class extends Vue {
   @State((state) => state.projects.collection.actions.create)
-  operation!: RuntimeOperation | null;
+  operation!: RuntimeOperation | null
 
-  resource: GraphPointer | null = Object.freeze(clownface({ dataset: dataset() }).namedNode(''));
-  error: ErrorDetails | null = null;
-  isSubmitting = false;
-  shape: Shape | null = null;
-  shapes: GraphPointer | null = null;
+  resource: GraphPointer | null = Object.freeze(clownface({ dataset: dataset() }).namedNode(''))
+  error: ErrorDetails | null = null
+  isSubmitting = false
+  shape: Shape | null = null
+  shapes: GraphPointer | null = null
 
   get title (): string {
     return this.operation?.title ?? ''

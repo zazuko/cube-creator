@@ -1,6 +1,6 @@
+import { NamedNode } from 'rdf-js'
 import { beforeEach, describe, it } from 'mocha'
 import { expect } from 'chai'
-import { NamedNode } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import { fromPointer } from '@cube-creator/model/Table'
 import { namedNode } from '@cube-creator/testing/clownface'

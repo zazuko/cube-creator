@@ -4,13 +4,14 @@ import clownface from 'clownface'
 import { schema } from '@tpluscode/rdf-ns-builders/strict'
 import cors from 'cors'
 import { serializers } from '@rdfjs-elements/formats-pretty'
-import * as error from 'http-errors'
+import error from 'http-errors'
+import { md, meta } from '@cube-creator/core/namespace'
+import * as ns from '@tpluscode/rdf-ns-builders'
 import { createTerm, getExportedDimension } from '../domain/shared-dimension'
 import { store } from '../store'
 import { shaclValidate } from '../middleware/shacl'
 import { rewrite } from '../rewrite'
-import { md, meta } from '@cube-creator/core/namespace'
-import * as ns from '@tpluscode/rdf-ns-builders'
+import shapes from '../shapes'
 
 export const post = protectedResource(shaclValidate, asyncMiddleware(async (req, res) => {
   const term = await createTerm({

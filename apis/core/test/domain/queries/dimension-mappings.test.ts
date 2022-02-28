@@ -1,6 +1,6 @@
+import { Term } from 'rdf-js'
 import { describe, it, beforeEach } from 'mocha'
 import sinon from 'sinon'
-import { Term } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import { expect } from 'chai'
 import { DESCRIBE } from '@tpluscode/sparql-builder'

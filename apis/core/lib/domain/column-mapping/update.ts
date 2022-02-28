@@ -1,7 +1,6 @@
+import { NamedNode } from 'rdf-js'
 import { GraphPointer } from 'clownface'
 import { cc } from '@cube-creator/core/namespace'
-import { ResourceStore } from '../../ResourceStore'
-import { NamedNode } from 'rdf-js'
 import {
   ColumnMapping,
   CsvSource,
@@ -11,15 +10,16 @@ import {
   ReferenceColumnMapping,
   Table,
 } from '@cube-creator/model'
-import { getDimensionMetaDataCollection } from '../queries/dimension-metadata'
-import * as TableQueries from '../queries/table'
-import { findMapping } from './lib'
 import { NotFoundError, DomainError } from '@cube-creator/api-errors'
-import * as id from '../identifiers'
 import { createIdentifierMapping } from '@cube-creator/model/ColumnMapping'
-import { findOrganization } from '../organization/query'
 import type { Organization } from '@rdfine/schema'
 import { Dictionary } from '@rdfine/prov'
+import { ResourceStore } from '../../ResourceStore'
+import { getDimensionMetaDataCollection } from '../queries/dimension-metadata'
+import * as TableQueries from '../queries/table'
+import * as id from '../identifiers'
+import { findOrganization } from '../organization/query'
+import { findMapping } from './lib'
 
 interface UpdateColumnMappingCommand {
   resource: GraphPointer

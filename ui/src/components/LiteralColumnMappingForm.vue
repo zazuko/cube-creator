@@ -42,7 +42,7 @@ export default class extends Vue {
   @storeNs.project.Getter('tables') tables!: Table[]
 
   resource: GraphPointer = clownface({ dataset: $rdf.dataset() }).namedNode('').addOut(rdf.type, cc.LiteralColumnMapping)
-  shape: Shape | null = null;
+  shape: Shape | null = null
 
   async mounted (): Promise<void> {
     if (!this.operation) return

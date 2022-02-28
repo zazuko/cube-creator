@@ -2,14 +2,14 @@ import { NamedNode, Term } from 'rdf-js'
 import { CsvProject, Project, CsvMapping, ImportProject } from '@cube-creator/model'
 import { Constructor } from '@tpluscode/rdfine'
 import { create as createMapping } from '@cube-creator/model/CsvMapping'
-import { ResourceStore } from '../../ResourceStore'
-import * as id from '../identifiers'
 import '../csv-mapping/CsvMapping'
 import { cc } from '@cube-creator/core/namespace'
 import * as Hydra from '@rdfine/hydra'
 import { rdf } from '@tpluscode/rdf-ns-builders'
 import { childResource } from '@cube-creator/model/lib/resourceIdentifiers'
 import { DomainError } from '@cube-creator/api-errors'
+import * as id from '../identifiers'
+import { ResourceStore } from '../../ResourceStore'
 
 interface ApiProject {
   nextRevision: number

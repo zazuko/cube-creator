@@ -55,8 +55,8 @@ import * as storeNs from '../store/namespace'
   components: { CubeProjectsItem, PageContent, LoadingBlock, HydraOperationButton },
 })
 export default class CubeProjectsView extends Vue {
-  @storeNs.projects.State('collection') projectsCollection!: ProjectsCollection | null;
-  @storeNs.auth.Getter('oidcUser') user?: any;
+  @storeNs.projects.State('collection') projectsCollection!: ProjectsCollection | null
+  @storeNs.auth.Getter('oidcUser') user?: any
 
   async mounted (): Promise<void> {
     await this.$store.dispatch('projects/fetchCollection')

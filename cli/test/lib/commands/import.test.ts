@@ -8,9 +8,9 @@ import { insertTestProject, insertPxCube } from '@cube-creator/testing/lib/seedD
 import { ASK, SELECT } from '@tpluscode/sparql-builder'
 import * as ns from '@cube-creator/core/namespace'
 import { ccClients } from '@cube-creator/testing/lib'
+import { cc, meta } from '@cube-creator/core/namespace'
 import { setupEnv } from '../../support/env'
 import runner from '../../../lib/commands/import'
-import { cc, meta } from '@cube-creator/core/namespace'
 
 describe('@cube-creator/cli/lib/commands/import', () => {
   const cube = $rdf.namedNode('https://environment.ld.admin.ch/foen/example/px-cube')

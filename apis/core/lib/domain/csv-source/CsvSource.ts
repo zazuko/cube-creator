@@ -1,13 +1,13 @@
+import { NamedNode } from 'rdf-js'
 import { cc } from '@cube-creator/core/namespace'
 import { CsvSource } from '@cube-creator/model'
 import * as CsvColumn from '@cube-creator/model/CsvColumn'
 import { fromPointer as mediaObjectFromPointer } from '@cube-creator/model/MediaObject'
 import { Constructor, property } from '@tpluscode/rdfine'
-import { NamedNode } from 'rdf-js'
 import { csvw, schema } from '@tpluscode/rdf-ns-builders'
 import type * as Csvw from '@rdfine/csvw'
-import * as id from '../identifiers'
 import { DialectMixin } from '@rdfine/csvw'
+import * as id from '../identifiers'
 
 interface CreateOrUpdateColumn {
   name: string

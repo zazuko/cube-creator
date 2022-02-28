@@ -41,9 +41,9 @@ export default class extends Vue {
   @storeNs.project.Getter('dimensions') dimensions!: DimensionMetadata[]
   @storeNs.project.Getter('findDimension') findDimension!: (id: string) => DimensionMetadata
 
-  resource: GraphPointer | null = null;
-  shape: Shape | null = null;
-  error: ErrorDetails | null = null;
+  resource: GraphPointer | null = null
+  shape: Shape | null = null
+  error: ErrorDetails | null = null
   isSubmitting = false
 
   async mounted (): Promise<void> {

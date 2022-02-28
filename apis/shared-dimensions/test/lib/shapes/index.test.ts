@@ -1,3 +1,4 @@
+import { NamedNode } from 'rdf-js'
 import { describe, it, beforeEach } from 'mocha'
 import { Request } from 'express'
 import sinon from 'sinon'
@@ -6,7 +7,6 @@ import { dcterms, hydra, qudt, rdf, schema, sh } from '@tpluscode/rdf-ns-builder
 import { md, meta } from '@cube-creator/core/namespace'
 import $rdf from 'rdf-ext'
 import { expect } from 'chai'
-import { NamedNode } from 'rdf-js'
 import { GraphPointer } from 'clownface'
 import shapes from '../../../lib/shapes'
 import * as ns from '../../../lib/namespace'

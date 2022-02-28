@@ -103,7 +103,7 @@ import * as storeNs from '../store/namespace'
   components: { HydraOperationButton, PropertyDisplay },
 })
 export default class MapperTable extends Vue {
-  @Prop() readonly table!: Table;
+  @Prop() readonly table!: Table
 
   @storeNs.project.Getter('getTable') getTable!: (uri: Term) => Table
 

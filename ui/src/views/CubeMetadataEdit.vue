@@ -32,11 +32,11 @@ import * as storeNs from '../store/namespace'
   components: { SidePane, HydraOperationFormWithRaw },
 })
 export default class CubeMetadataEdit extends Vue {
-  @storeNs.project.State('cubeMetadata') cubeMetadata!: Dataset;
+  @storeNs.project.State('cubeMetadata') cubeMetadata!: Dataset
 
-  resource: GraphPointer | null = null;
-  shape: Shape | null = null;
-  error: ErrorDetails | null = null;
+  resource: GraphPointer | null = null
+  shape: Shape | null = null
+  error: ErrorDetails | null = null
   isSubmitting = false
 
   async mounted (): Promise<void> {

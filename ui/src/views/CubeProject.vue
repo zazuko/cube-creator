@@ -57,11 +57,11 @@ import * as storeNs from '../store/namespace'
   components: { PageContent, LoadingBlock },
 })
 export default class CubeProjectView extends Vue {
-  @storeNs.project.State('project') project!: Project | null;
-  @storeNs.project.Getter('hasCSVMapping') hasCSVMapping!: boolean;
-  @storeNs.project.Getter('materializeLabel') materializeLabel!: string;
-  @storeNs.project.State('jobCollection') jobCollection!: JobCollection | null;
-  @storeNs.project.Getter('transformJobs') transformJobs!: Job[];
+  @storeNs.project.State('project') project!: Project | null
+  @storeNs.project.Getter('hasCSVMapping') hasCSVMapping!: boolean
+  @storeNs.project.Getter('materializeLabel') materializeLabel!: string
+  @storeNs.project.State('jobCollection') jobCollection!: JobCollection | null
+  @storeNs.project.Getter('transformJobs') transformJobs!: Job[]
 
   poller: number | null = null
 

@@ -1,15 +1,15 @@
-import { GraphPointer } from 'clownface'
 import { NamedNode } from 'rdf-js'
+import { GraphPointer } from 'clownface'
 import { DomainError } from '@cube-creator/api-errors'
 import { cc } from '@cube-creator/core/namespace'
-import { ResourceStore } from '../../ResourceStore'
 import { dcterms, rdfs, schema } from '@tpluscode/rdf-ns-builders'
 import { CsvProject, ImportProject, Project } from '@cube-creator/model'
 import type { Organization } from '@rdfine/schema'
 import type { Dictionary } from '@rdfine/prov'
-import { exists, previouslyPublished } from './queries'
 import { isCsvProject } from '@cube-creator/model/Project'
+import { ResourceStore } from '../../ResourceStore'
 import { cubeNamespaceAllowed } from '../organization/query'
+import { exists, previouslyPublished } from './queries'
 
 interface UpdateProjectCommand {
   resource: GraphPointer

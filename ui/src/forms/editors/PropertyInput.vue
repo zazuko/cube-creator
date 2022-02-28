@@ -21,7 +21,7 @@ import * as storeNs from '../../store/namespace'
 
 @Component
 export default class extends Vue {
-  @Prop() value?: Term;
+  @Prop() value?: Term
   @Prop() update!: (newValue: Term | null) => void
 
   get $store (): Store<RootState> {

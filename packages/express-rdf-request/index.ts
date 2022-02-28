@@ -1,6 +1,6 @@
+import { NamedNode, Quad } from 'rdf-js'
 import express from 'express'
 import clownface, { GraphPointer } from 'clownface'
-import { NamedNode, Quad } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 

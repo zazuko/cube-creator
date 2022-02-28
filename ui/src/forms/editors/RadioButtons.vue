@@ -20,9 +20,9 @@ import { rdfs } from '@tpluscode/rdf-ns-builders'
 
 @Component
 export default class extends Vue {
-  @Prop() options?: MultiPointer;
-  @Prop() value?: GraphPointer;
-  @Prop() update!: (newValue: Term | string) => void;
+  @Prop() options?: MultiPointer
+  @Prop() value?: GraphPointer
+  @Prop() update!: (newValue: Term | string) => void
 
   get _value (): string {
     return this.value?.value || ''

@@ -21,7 +21,13 @@
           Copy
         </b-button>
       </div>
-      <rdf-editor :serialized.prop="csvw.data" :format="selectedFormat" ref="snippet" readonly />
+      <rdf-editor
+        :quads.prop="csvw.data"
+        :format="selectedFormat"
+        :prefixes="editorPrefixes"
+        ref="snippet"
+        readonly
+      />
     </div>
 
     <loading-block v-show="csvw.isLoading" />
@@ -29,8 +35,9 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
 import '@rdfjs-elements/rdf-editor'
+import { Quad } from 'rdf-js'
+import { Vue, Component } from 'vue-property-decorator'
 import SidePane from '@/components/SidePane.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import { Table } from '@cube-creator/model'
@@ -43,13 +50,15 @@ import * as storeNs from '../store/namespace'
 export default class TableCreateView extends Vue {
   @storeNs.project.Getter('findTable') findTable!: (id: string) => Table | null
 
-  csvw: RemoteData<string> = Remote.loading()
+  csvw: RemoteData<Quad[]> = Remote.loading()
   selectedFormat = 'application/ld+json'
   formats = [
     { label: 'JSON-LD', value: 'application/ld+json' },
     { label: 'Turtle', value: 'text/turtle' },
     { label: 'N-Triples', value: 'application/n-triples' },
   ]
+
+  editorPrefixes = ['hydra', 'rdf', 'rdfs', 'schema', 'xsd']
 
   get table (): Table | null {
     const tableId = this.$route.params.tableId
@@ -68,9 +77,8 @@ export default class TableCreateView extends Vue {
       return
     }
 
-    const csvw = representation.root.toJSON()
-    const csvwString = JSON.stringify(csvw, null, 2)
-    this.csvw = Remote.loaded(csvwString)
+    const csvw = representation.root.pointer.dataset
+    this.csvw = Remote.loaded([...csvw])
   }
 
   async copy (): Promise<void> {

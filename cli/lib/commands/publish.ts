@@ -5,9 +5,9 @@ import { CsvProject, Dataset, ImportProject, PublishJob } from '@cube-creator/mo
 import '../variables'
 import { isCsvProject } from '@cube-creator/model/Project'
 import $rdf from 'rdf-ext'
-import * as runner from './runner'
 import { logger } from '../log'
 import { uploadCube } from '../publish/upload'
+import * as runner from './runner'
 
 interface PublishRunOptions extends runner.RunOptions {
   to: 'filesystem' | 'graph-store'

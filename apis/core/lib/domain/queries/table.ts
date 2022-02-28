@@ -1,9 +1,9 @@
 import { NamedNode, Term } from 'rdf-js'
 import { SELECT } from '@tpluscode/sparql-builder'
 import { Table } from '@cube-creator/model'
-import { parsingClient } from '../../query-client'
 import { cc } from '@cube-creator/core/namespace'
 import { ResourceIdentifier } from '@tpluscode/rdfine'
+import { parsingClient } from '../../query-client'
 
 export async function * getTablesForMapping(csvMapping: NamedNode, client = parsingClient) {
   const results = await SELECT

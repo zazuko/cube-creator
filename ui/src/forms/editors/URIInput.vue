@@ -16,7 +16,7 @@ const language = supportedLanguages.map(({ value }) => value)
 
 @Component
 export default class extends Vue {
-  @Prop() value?: NamedNode | null;
+  @Prop() value?: NamedNode | null
   @Prop() update!: (newValue: NamedNode | null) => void
 
   message = ''

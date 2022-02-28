@@ -32,11 +32,11 @@ import * as storeNs from '../store/namespace'
 export default class extends Vue {
   @storeNs.sharedDimensions.State('collection') collection!: Collection
 
-  resource: GraphPointer | null = Object.freeze(clownface({ dataset: dataset() }).namedNode(''));
-  error: ErrorDetails | null = null;
-  isSubmitting = false;
-  shape: Shape | null = null;
-  shapes: GraphPointer | null = null;
+  resource: GraphPointer | null = Object.freeze(clownface({ dataset: dataset() }).namedNode(''))
+  error: ErrorDetails | null = null
+  isSubmitting = false
+  shape: Shape | null = null
+  shapes: GraphPointer | null = null
 
   get operation (): RuntimeOperation | null {
     return this.collection.actions.create

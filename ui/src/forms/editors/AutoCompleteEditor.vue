@@ -32,8 +32,8 @@ interface Option {
 export default class extends Vue {
   @Prop() property!: PropertyShape
   @Prop() update!: (newValue: Term | null) => void
-  @Prop() value?: NamedNode;
-  @Prop() placeholder!: string;
+  @Prop() value?: NamedNode
+  @Prop() placeholder!: string
   @Prop() options?: [GraphPointer, string][]
   @Prop({ default: 300 }) debounceWait!: number
 

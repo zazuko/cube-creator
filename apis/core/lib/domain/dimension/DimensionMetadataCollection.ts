@@ -1,3 +1,4 @@
+import { BlankNode, DatasetCore, NamedNode, Term } from 'rdf-js'
 import { GraphPointer } from 'clownface'
 import { Constructor } from '@tpluscode/rdfine'
 import type { Organization } from '@rdfine/schema'
@@ -7,9 +8,8 @@ import { schema } from '@tpluscode/rdf-ns-builders'
 import * as DimensionMetadata from '@cube-creator/model/DimensionMetadata'
 import $rdf from 'rdf-ext'
 import { shrink } from '@zazuko/rdf-vocabularies'
-import { ResourceStore } from '../../ResourceStore'
-import { BlankNode, DatasetCore, NamedNode, Term } from 'rdf-js'
 import TermSet from '@rdfjs/term-set'
+import { ResourceStore } from '../../ResourceStore'
 
 interface CreateColumnMetadata {
   store: ResourceStore

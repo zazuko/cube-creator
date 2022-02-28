@@ -1,10 +1,10 @@
+import { NamedNode } from 'rdf-js'
 import { HydraBox } from 'hydra-box'
 import express from 'express'
 import cf, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import rdfHandler from '@rdfjs/express-handler'
 import { ex } from './lib/namespace'
-import { NamedNode } from 'rdf-js'
 
 declare module 'express-serve-static-core' {
   export interface Request {

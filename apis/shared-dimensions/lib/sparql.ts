@@ -1,6 +1,6 @@
-import env from './env'
 import ParsingClient from 'sparql-http-client/ParsingClient'
 import StreamClient from 'sparql-http-client/StreamClient'
+import env from './env'
 
 export const sparql = {
   endpointUrl: env.MANAGED_DIMENSIONS_STORE_QUERY_ENDPOINT,

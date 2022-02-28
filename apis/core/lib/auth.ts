@@ -1,10 +1,10 @@
 import { Router, Request, Response, NextFunction } from 'express'
 import error from 'http-errors'
 import env from '@cube-creator/core/env'
-import { log, warning } from './log'
 import fetch from 'node-fetch'
 import jwt from 'express-jwt'
 import jwksRsa from 'jwks-rsa'
+import { log, warning } from './log'
 import * as idOf from './domain/identifiers'
 
 declare module '@hydrofoil/labyrinth' {

@@ -1,6 +1,6 @@
+import { DatasetCore, NamedNode, Quad, Term } from 'rdf-js'
 import { cc } from '@cube-creator/core/namespace'
 import DatasetExt from 'rdf-ext/lib/Dataset'
-import { DatasetCore, NamedNode, Quad, Term } from 'rdf-js'
 import { dcterms, schema } from '@tpluscode/rdf-ns-builders'
 import type { Context } from 'barnard59-core/lib/Pipeline'
 import StreamClient from 'sparql-http-client'

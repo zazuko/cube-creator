@@ -2,9 +2,9 @@ import { NamedNode, Term } from 'rdf-js'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import clownface, { GraphPointer } from 'clownface'
 import TermMap from '@rdfjs/term-map'
+import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import ResourceStore from '../../lib/ResourceStore'
 import { ChangelogDataset } from '../../lib/ChangelogDataset'
-import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 
 class InMemoryStorage {
   private readonly __resources: TermMap<NamedNode, GraphPointer<NamedNode, ChangelogDataset<DatasetExt>>>

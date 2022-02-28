@@ -1,15 +1,15 @@
+import type { NamedNode, Stream, Term } from 'rdf-js'
 import { cc } from '@cube-creator/core/namespace'
 import { Project } from '@cube-creator/model/Project'
 import { SELECT } from '@tpluscode/sparql-builder'
 import { IN } from '@tpluscode/sparql-builder/expressions'
-import type { NamedNode, Stream, Term } from 'rdf-js'
 import StreamClient from 'sparql-http-client'
 import through2 from 'through2'
 import $rdf from 'rdf-ext'
-import { streamClient } from '../../query-client'
-import { ResourceStore } from '../../ResourceStore'
 import { dcterms, schema } from '@tpluscode/rdf-ns-builders'
 import { rdfs } from '@tpluscode/rdf-ns-builders/strict'
+import { streamClient } from '../../query-client'
+import { ResourceStore } from '../../ResourceStore'
 
 interface GetExportedProject {
   resource: NamedNode

@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
+import querystring from 'querystring'
 import fetch from 'node-fetch'
 import { Logger } from 'winston'
-import querystring from 'querystring'
 import { HydraClient } from 'alcaeus/alcaeus'
 import once from 'once'
 

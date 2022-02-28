@@ -1,12 +1,12 @@
-import { CONSTRUCT, SELECT } from '@tpluscode/sparql-builder'
-import { parsingClient } from '../../query-client'
-import { cc } from '@cube-creator/core/namespace'
 import { Term } from 'rdf-js'
+import { cc } from '@cube-creator/core/namespace'
+import { CONSTRUCT, SELECT } from '@tpluscode/sparql-builder'
 import { dcterms, rdfs, schema } from '@tpluscode/rdf-ns-builders'
 import { GraphPointer } from 'clownface'
 import { ParsingClient } from 'sparql-http-client/ParsingClient'
 import TermMap from '@rdfjs/term-map'
 import type { Organization } from '@rdfine/schema'
+import { parsingClient } from '../../query-client'
 import { ResourceStore } from '../../ResourceStore'
 
 export async function getDimensionMetaDataCollection(csvMapping: Term, client = parsingClient) {

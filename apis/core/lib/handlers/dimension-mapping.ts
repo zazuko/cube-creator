@@ -1,15 +1,15 @@
+import { Term } from 'rdf-js'
 import asyncMiddleware from 'middleware-async'
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
 import { Enrichment } from '@hydrofoil/labyrinth/lib/middleware/preprocessResource'
 import { fromPointer } from '@rdfine/prov/lib/Dictionary'
 import env from '@cube-creator/shared-dimensions-api/lib/env'
-import { Term } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import clownface from 'clownface'
+import { prov, rdfs } from '@tpluscode/rdf-ns-builders'
 import { shaclValidate } from '../middleware/shacl'
 import { update } from '../domain/dimension-mapping/update'
 import { getUnmappedValues } from '../domain/queries/dimension-mappings'
-import { prov, rdfs } from '@tpluscode/rdf-ns-builders'
 
 function rewrite<T extends Term>(term: T, from: string, to: string): T {
   if (term.termType === 'NamedNode') {

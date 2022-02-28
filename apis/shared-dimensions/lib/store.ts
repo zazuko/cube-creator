@@ -1,7 +1,7 @@
+import { NamedNode, Term } from 'rdf-js'
 import { ASK, INSERT } from '@tpluscode/sparql-builder'
 import { sparql } from '@tpluscode/rdf-string'
 import clownface, { GraphPointer } from 'clownface'
-import { NamedNode, Term } from 'rdf-js'
 import ParsingClient from 'sparql-http-client/ParsingClient'
 import { rdf, sh } from '@tpluscode/rdf-ns-builders'
 import $rdf from 'rdf-ext'

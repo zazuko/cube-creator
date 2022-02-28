@@ -1,6 +1,6 @@
+import { DatasetCore } from 'rdf-js'
 import { Constructor } from '@tpluscode/rdfine'
 import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
-import { DatasetCore } from 'rdf-js'
 import { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import DatasetExt from 'rdf-ext/lib/Dataset'

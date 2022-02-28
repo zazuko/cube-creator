@@ -1,3 +1,4 @@
+import { Term } from 'rdf-js'
 import CubeQuery from 'rdf-cube-view-query'
 import { Source } from 'rdf-cube-view-query/lib/Source'
 import { View } from 'rdf-cube-view-query/lib/View'
@@ -8,7 +9,6 @@ import clownface, { AnyPointer, GraphPointer } from 'clownface'
 import { Collection, CollectionMixin, IriTemplate } from '@rdfine/hydra'
 import { cc } from '@cube-creator/core/namespace'
 import $rdf from 'rdf-ext'
-import { Term } from 'rdf-js'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 
 export function createSource(sourceGraph: string): Source {

@@ -1,10 +1,10 @@
 import asyncMiddleware from 'middleware-async'
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
+import { oa } from '@tpluscode/rdf-ns-builders'
 import { updateTerm } from '../domain/shared-dimension-term'
 import { store } from '../store'
 import { shaclValidate } from '../middleware/shacl'
 import { rewrite } from '../rewrite'
-import { oa } from '@tpluscode/rdf-ns-builders'
 
 export const get = protectedResource(asyncMiddleware(async (req, res) => {
   const term = rewrite(await req.resource())
