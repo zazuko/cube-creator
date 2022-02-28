@@ -20,6 +20,8 @@
     "@hydrofoil/shaperone-core": "^0.8.2",
     "@hydrofoil/shaperone-hydra": "^0.3.1",
     "@hydrofoil/shaperone-wc": "^0.6.3",
+    "@oruga-ui/oruga": "^0.5.4",
+    "@oruga-ui/theme-bulma": "^0.2.2",
     "@rdf-esm/data-model": "^0.5.3",
     "@rdf-esm/dataset": "^0.5.1",
     "@rdfine/schema": "^0.6.3",

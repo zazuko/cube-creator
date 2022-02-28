@@ -2,6 +2,8 @@ import Vue from 'vue'
 import * as Sentry from '@sentry/vue'
 import { Integrations } from '@sentry/tracing'
 import Buefy from 'buefy'
+import Oruga from '@oruga-ui/oruga'
+import { bulmaConfig } from '@oruga-ui/theme-bulma'
 import App from './App.vue'
 import router from './router'
 
@@ -18,6 +20,12 @@ import('./forms')
 iconsLibrary.add(fas)
 iconsLibrary.add(far)
 Vue.component('FontAwesomeIcon', FontAwesomeIcon)
+
+Vue.use(Oruga, {
+  ...bulmaConfig,
+  iconPack: 'fas',
+  iconComponent: 'FontAwesomeIcon',
+})
 
 Vue.use(Buefy, {
   defaultIconPack: 'fas',
