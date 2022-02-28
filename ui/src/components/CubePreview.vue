@@ -101,7 +101,7 @@
                   />
                 </o-tooltip>
                 <span class="ml-4">Page</span>
-                <b-input
+                <o-input
                   v-model.number="page"
                   type="number"
                   min="1"
