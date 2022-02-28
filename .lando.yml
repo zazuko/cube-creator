@@ -32,7 +32,7 @@ services:
     type: compose
     ssl: true
     services:
-      image: ghcr.io/zazuko/fuseki-geosparql:v2.0.2
+      image: ghcr.io/zazuko/fuseki-geosparql:v2.0.3
       command: /opt/fuseki/entrypoint.sh
       environment:
         ADMIN_PASSWORD: password
