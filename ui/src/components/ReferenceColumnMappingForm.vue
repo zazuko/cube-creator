@@ -1,18 +1,18 @@
 <template>
   <form @submit.prevent="onSubmit">
-    <b-field label="Link to table">
+    <o-field label="Link to table">
       <b-select v-model="data.referencedTable" placeholder="Select a table">
         <option v-for="table in tables" :key="table.clientPath" :value="table">
           {{ table.name }}
         </option>
       </b-select>
-    </b-field>
+    </o-field>
 
-    <b-field label="Using the property">
+    <o-field label="Using the property">
       <property-input :value="data.targetProperty" :update="(value) => data.targetProperty = value" />
-    </b-field>
+    </o-field>
 
-    <b-field v-if="data.referencedTable" label="Identifier mapping" :addons="false">
+    <o-field v-if="data.referencedTable" label="Identifier mapping" :addons="false">
       <div v-if="data.identifierMapping">
         <p v-if="data.identifierMapping">
           The identifier <code>{{ data.referencedTable.identifierTemplate }}</code> will take
@@ -34,16 +34,16 @@
         </table>
       </div>
       <loading-block v-else />
-    </b-field>
+    </o-field>
 
-    <b-field label="Dimension type">
+    <o-field label="Dimension type">
       <radio-buttons
         class="has-addons"
         :options="dimensionTypes"
         :value="data.dimensionType"
         :update="(value) => data.dimensionType = value"
       />
-    </b-field>
+    </o-field>
 
     <hydra-operation-error :error="error" class="mt-4" />
 

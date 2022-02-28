@@ -3,12 +3,12 @@
     <span class="label">
       {{ property.name }}
     </span>
-    <b-field v-if="property.shape.description">
+    <o-field v-if="property.shape.description">
       <vue-markdown class="help" :anchor-attributes="linkAttrs" :source="property.shape.description" />
-    </b-field>
-    <b-field v-if="property.selectedEditor">
+    </o-field>
+    <o-field v-if="property.selectedEditor">
       <render-wc-template :template-result="renderMultiEditor()" />
-    </b-field>
+    </o-field>
     <div v-else v-for="object in property.objects" :key="object.key">
       <render-wc-template :template-result="renderObject({ object })" />
     </div>

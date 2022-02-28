@@ -1,7 +1,7 @@
 <template>
-  <b-field :addons="false">
+  <o-field :addons="false">
     <hr>
-    <b-field class="buttons" :addons="false">
+    <o-field class="buttons" :addons="false">
       <div class="control">
         <o-button native-type="submit" class="button" :variant="submitButtonVariant" :disabled="disabled" :loading="isSubmitting">
           {{ _submitLabel }}
@@ -12,8 +12,8 @@
           Cancel
         </o-button>
       </div>
-    </b-field>
-  </b-field>
+    </o-field>
+  </o-field>
 </template>
 
 <script lang="ts">

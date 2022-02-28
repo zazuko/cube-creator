@@ -19,9 +19,9 @@
       <h3 class="title is-5">
         Export project
       </h3>
-      <b-field>
+      <o-field>
         <download-button :resource="project.export" />
-      </b-field>
+      </o-field>
     </div>
     <div class="box container-narrow" v-if="project.actions.delete">
       <h3 class="title is-5">
@@ -30,11 +30,11 @@
       <p class="block">
         Delete all data related to this project. This operation is not revertible!
       </p>
-      <b-field v-if="project.actions.delete">
+      <o-field v-if="project.actions.delete">
         <o-button icon-left="trash" variant="danger" @click="deleteProject">
           {{ project.actions.delete.title }}
         </o-button>
-      </b-field>
+      </o-field>
     </div>
   </div>
 </template>

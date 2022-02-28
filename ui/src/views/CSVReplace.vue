@@ -4,11 +4,11 @@
       {{ error }}
     </b-message>
 
-    <b-field>
+    <o-field>
       <p>
         You can upload a new CSV file to replace <em>{{ source.name }}</em>.
       </p>
-    </b-field>
+    </o-field>
 
     <b-message type="is-info">
       <ul class="list-disc list-inside">

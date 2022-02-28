@@ -1,5 +1,5 @@
 <template>
-  <b-field :addons="false">
+  <o-field :addons="false">
     <o-checkbox
       v-for="[term, label] in choices"
       :key="term.value"
@@ -9,7 +9,7 @@
     >
       <span>{{ label }}</span>
     </o-checkbox>
-  </b-field>
+  </o-field>
 </template>
 
 <script lang="ts">

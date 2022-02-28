@@ -9,9 +9,9 @@
     </o-tab-item>
     <o-tab-item label="URL" value="MediaURL">
       <form @submit.prevent="submitUrl">
-        <b-field label="URL">
+        <o-field label="URL">
           <b-input v-model="fileUrl" type="url" required />
-        </b-field>
+        </o-field>
         <o-button native-type="submit" variant="primary" :loading="isLoading">
           Upload
         </o-button>

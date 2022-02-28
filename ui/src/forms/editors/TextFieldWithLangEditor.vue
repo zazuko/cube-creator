@@ -1,12 +1,12 @@
 <template>
-  <b-field>
+  <o-field>
     <b-input :value="valueText" @input="updateValue" class="text-input" :type="inputType" />
     <b-select :value="valueLanguage" @input="updateLanguage">
       <option v-for="language in languages" :key="language">
         {{ language }}
       </option>
     </b-select>
-  </b-field>
+  </o-field>
 </template>
 
 <script lang="ts">

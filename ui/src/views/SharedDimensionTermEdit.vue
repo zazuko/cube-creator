@@ -1,11 +1,11 @@
 <template>
   <side-pane :title="title" @close="onCancel">
-    <b-field label="URI" v-if="termUri">
+    <o-field label="URI" v-if="termUri">
       <a class="form-input" :href="termUri" target="_blank" rel="noopener noreferer">
         <span>{{ termUri }}</span>
         <o-icon icon="external-link-alt" />
       </a>
-    </b-field>
+    </o-field>
     <hydra-operation-form-with-raw
       v-if="operation"
       :operation="operation"

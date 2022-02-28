@@ -1,13 +1,13 @@
 <template>
   <side-pane :title="operation.title" @close="onCancel">
-    <b-field label="Column mapping type">
+    <o-field label="Column mapping type">
       <b-radio-button v-model="columnMappingType" native-value="literal">
         Literal value
       </b-radio-button>
       <b-radio-button v-model="columnMappingType" native-value="reference">
         Link to another table
       </b-radio-button>
-    </b-field>
+    </o-field>
 
     <literal-column-mapping-form
       v-if="columnMappingType === 'literal'"

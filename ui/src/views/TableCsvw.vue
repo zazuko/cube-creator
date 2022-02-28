@@ -6,7 +6,7 @@
 
     <div v-if="csvw.data">
       <div class="is-flex is-justify-content-space-between">
-        <b-field>
+        <o-field>
           <b-radio-button
             v-for="format in formats"
             :key="format.value"
@@ -16,7 +16,7 @@
           >
             {{ format.label }}
           </b-radio-button>
-        </b-field>
+        </o-field>
         <o-button size="small" icon-left="clipboard" @click="copy">
           Copy
         </o-button>

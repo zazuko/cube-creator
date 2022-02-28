@@ -1,11 +1,11 @@
 <template>
-  <b-field :message="fullURI">
+  <o-field :message="fullURI">
     <b-autocomplete
       :value="textValue"
       @input="onUpdate"
       :data="suggestions"
     />
-  </b-field>
+  </o-field>
 </template>
 
 <script lang="ts">

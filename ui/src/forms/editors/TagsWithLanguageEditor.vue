@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-field v-for="([language, objects], languageIndex) in tags" :key="languageIndex" :addons="false" class="is-flex">
+    <o-field v-for="([language, objects], languageIndex) in tags" :key="languageIndex" :addons="false" class="is-flex">
       <b-taginput
         :value="objects"
         field="value"
@@ -13,7 +13,7 @@
           {{ languageOption }}
         </option>
       </b-select>
-    </b-field>
+    </o-field>
     <o-tooltip label="Add value">
       <o-button icon-left="plus" @click="addLanguage" variant="white" />
     </o-tooltip>

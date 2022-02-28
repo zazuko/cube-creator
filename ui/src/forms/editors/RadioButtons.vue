@@ -1,5 +1,5 @@
 <template>
-  <b-field :message="message">
+  <o-field :message="message">
     <b-radio-button
       v-for="option in choices"
       :key="option.value"
@@ -9,7 +9,7 @@
     >
       {{ label(option) }}
     </b-radio-button>
-  </b-field>
+  </o-field>
 </template>
 
 <script lang="ts">

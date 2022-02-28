@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-field>
+    <o-field>
       <b-radio-button
         v-for="filter in filters"
         :key="filter"
@@ -9,7 +9,7 @@
       >
         {{ filter }}
       </b-radio-button>
-    </b-field>
+    </o-field>
     <table class="terms-table">
       <tbody>
         <tr v-for="o in displayedObjects" :key="o.key" class="term-row">

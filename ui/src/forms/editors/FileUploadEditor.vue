@@ -1,5 +1,5 @@
 <template>
-  <b-field class="file is-primary" :class="{'has-name': !!file}">
+  <o-field class="file is-primary" :class="{'has-name': !!file}">
     <b-upload v-model="file" class="file-label" @input="onFileSelected">
       <span class="file-cta">
         <o-icon class="file-icon" icon="upload" />
@@ -9,7 +9,7 @@
         {{ file.name }}
       </span>
     </b-upload>
-  </b-field>
+  </o-field>
 </template>
 
 <script lang="ts">

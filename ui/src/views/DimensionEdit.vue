@@ -1,8 +1,8 @@
 <template>
   <side-pane :title="title" @close="onCancel">
-    <b-field label="Dimension property">
+    <o-field label="Dimension property">
       <term-display v-if="dimension.about" :term="dimension.about" :base="cubeUri" />
-    </b-field>
+    </o-field>
     <hydra-operation-form-with-raw
       v-if="resource && operation"
       :operation="operation"
