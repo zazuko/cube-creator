@@ -133,6 +133,7 @@ import MapperTable from './MapperTable.vue'
 import HydraOperationButton from './HydraOperationButton.vue'
 import { api } from '@/api'
 import * as storeNs from '../store/namespace'
+import { confirmDialog } from '@/use-dialog'
 
 @Component({
   components: {
@@ -189,12 +190,10 @@ export default class CsvSourceMapping extends Vue {
   }
 
   async deleteSource (source: CsvSource): Promise<void> {
-    this.$buefy.dialog.confirm({
+    confirmDialog(this, {
       title: source.actions.delete?.title,
       message: 'Are you sure you want to delete this CSV source?',
       confirmText: 'Delete',
-      type: 'is-danger',
-      hasIcon: true,
       onConfirm: () => {
         this.$store.dispatch('api/invokeDeleteOperation', {
           operation: source.actions.delete,

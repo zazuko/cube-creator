@@ -28,6 +28,7 @@ import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 import { rdf, sh } from '@tpluscode/rdf-ns-builders'
 import { NamedNode } from 'rdf-js'
 import { displayToast } from '@/use-toast'
+import { confirmDialog } from '@/use-dialog'
 
 @Component({
   components: { HydraOperationForm },
@@ -89,12 +90,10 @@ export default class JobForm extends Vue {
 
   async askConfirmation (): Promise<boolean> {
     return new Promise((resolve) => {
-      this.$buefy.dialog.confirm({
+      confirmDialog(this, {
         title: this.operation.title,
         message: this.confirmationMessage,
         confirmText: 'Confirm',
-        type: 'is-danger',
-        hasIcon: true,
         onConfirm () {
           resolve(true)
         },

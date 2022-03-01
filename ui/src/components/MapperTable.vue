@@ -99,6 +99,7 @@ import BMessage from './BMessage.vue'
 import HydraOperationButton from './HydraOperationButton.vue'
 import PropertyDisplay from './PropertyDisplay.vue'
 import * as storeNs from '../store/namespace'
+import { confirmDialog } from '../use-dialog'
 
 @Component({
   components: { BMessage, HydraOperationButton, PropertyDisplay },
@@ -136,12 +137,10 @@ export default class MapperTable extends Vue {
   }
 
   deleteTable (table: Table): void {
-    this.$buefy.dialog.confirm({
+    confirmDialog(this, {
       title: table.actions.delete?.title,
       message: 'Are you sure you want to delete this table?',
       confirmText: 'Delete',
-      type: 'is-danger',
-      hasIcon: true,
       onConfirm: () => {
         this.$store.dispatch('api/invokeDeleteOperation', {
           operation: table.actions.delete,
@@ -153,12 +152,10 @@ export default class MapperTable extends Vue {
   }
 
   deleteColumnMapping (columnMapping: ColumnMapping): void {
-    this.$buefy.dialog.confirm({
+    confirmDialog(this, {
       title: columnMapping.actions.delete?.title,
       message: 'Are you sure you want to delete this column mapping?',
       confirmText: 'Delete',
-      type: 'is-danger',
-      hasIcon: true,
       onConfirm: () => {
         this.$store.dispatch('api/invokeDeleteOperation', {
           operation: columnMapping.actions.delete,

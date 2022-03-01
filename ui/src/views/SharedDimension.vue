@@ -147,6 +147,7 @@ import TermWithLanguage from '@/components/TermWithLanguage.vue'
 import DownloadButton from '@/components/DownloadButton.vue'
 import * as storeNs from '../store/namespace'
 import { SharedDimension, SharedDimensionTerm } from '../store/types'
+import { confirmDialog } from '@/use-dialog'
 
 @Component({
   components: {
@@ -183,12 +184,10 @@ export default class extends Vue {
   }
 
   deleteDimension (dimension: SharedDimension): void {
-    this.$buefy.dialog.confirm({
+    confirmDialog(this, {
       title: dimension.actions.delete?.title,
       message: 'Are you sure you want to delete this shared dimension?',
       confirmText: 'Delete',
-      type: 'is-danger',
-      hasIcon: true,
       onConfirm: async () => {
         await this.$store.dispatch('api/invokeDeleteOperation', {
           operation: dimension.actions.delete,
@@ -200,12 +199,10 @@ export default class extends Vue {
   }
 
   deleteTerm (term: SharedDimensionTerm): void {
-    this.$buefy.dialog.confirm({
+    confirmDialog(this, {
       title: term.actions.delete?.title,
       message: 'Are you sure you want to delete this term?',
       confirmText: 'Delete',
-      type: 'is-danger',
-      hasIcon: true,
       onConfirm: () => {
         this.$store.dispatch('api/invokeDeleteOperation', {
           operation: term.actions.delete,
