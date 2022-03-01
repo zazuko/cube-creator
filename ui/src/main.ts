@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import * as Sentry from '@sentry/vue'
 import { Integrations } from '@sentry/tracing'
-import Buefy from 'buefy'
 import Oruga from '@oruga-ui/oruga'
 import { bulmaConfig } from '@oruga-ui/theme-bulma'
 import App from './App.vue'
@@ -45,13 +44,6 @@ Vue.use(Oruga, {
       return classes.join(' ')
     },
   },
-})
-
-Vue.use(Buefy, {
-  defaultIconPack: 'fas',
-  defaultIconComponent: 'FontAwesomeIcon',
-  defaultTooltipType: 'is-light',
-  defaultTooltipDelay: 200,
 })
 
 Sentry.init({

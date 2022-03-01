@@ -38,7 +38,6 @@
     "@uppy/vue": "^0.4.5",
     "@zazuko/rdf-vocabularies": "^2021.3.17",
     "alcaeus": "^2.1",
-    "buefy": "^0.9.5",
     "buffer": "^6.0.3",
     "bulma-quickview": "^2.0.0",
     "clownface": "^1.2.0",

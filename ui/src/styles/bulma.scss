@@ -13,9 +13,8 @@ $panel-shadow: none;
 $panel-heading-size: 1rem;
 $panel-radius: 0;
 
-// Import Bulma and Buefy styles
 @import "~bulma";
-@import "~buefy/src/scss/buefy";
+@import '~@oruga-ui/theme-bulma/dist/scss/bulma';
 @import "./loading";
 
 .panel-block,
@@ -46,5 +45,3 @@ $panel-radius: 0;
     border-color: $tabs-toggle-link-active-border-color;
     color: $tabs-toggle-link-active-color;
 }
-
-@import '~@oruga-ui/theme-bulma/dist/scss/bulma';
