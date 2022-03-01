@@ -12,9 +12,9 @@
         <o-field label="URL">
           <o-input v-model="fileUrl" type="url" required />
         </o-field>
-        <o-button native-type="submit" variant="primary" :loading="isLoading">
+        <button-loading native-type="submit" variant="primary" :loading="isLoading">
           Upload
-        </o-button>
+        </button-loading>
       </form>
     </o-tab-item>
   </o-tabs>
@@ -27,10 +27,11 @@ import { schema } from '@tpluscode/rdf-ns-builders'
 import clownface from 'clownface'
 
 import { cc } from '@cube-creator/core/namespace'
-import FileUpload, { UploadedFile } from '@/components/FileUpload.vue'
+import ButtonLoading from './ButtonLoading.vue'
+import FileUpload, { UploadedFile } from './FileUpload.vue'
 
 @Component({
-  components: { FileUpload },
+  components: { ButtonLoading, FileUpload },
 })
 export default class CsvUploadForm extends Vue {
   @Prop({ default: undefined }) fileMeta!: Record<string, unknown>

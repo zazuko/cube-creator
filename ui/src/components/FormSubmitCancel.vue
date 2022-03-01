@@ -3,9 +3,14 @@
     <hr>
     <o-field class="buttons" :addons="false">
       <div class="control">
-        <o-button native-type="submit" class="button" :variant="submitButtonVariant" :disabled="disabled" :loading="isSubmitting">
+        <button-loading
+          native-type="submit"
+          :variant="submitButtonVariant"
+          :disabled="disabled"
+          :loading="isSubmitting"
+        >
           {{ _submitLabel }}
-        </o-button>
+        </button-loading>
       </div>
       <div class="control" v-if="showCancel">
         <o-button @click="$emit('cancel')">
@@ -18,8 +23,11 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
+import ButtonLoading from './ButtonLoading.vue'
 
-@Component
+@Component({
+  components: { ButtonLoading },
+})
 export default class FormSubmitCancel extends Vue {
   @Prop() submitLabel?: string
   @Prop() disabled?: boolean
