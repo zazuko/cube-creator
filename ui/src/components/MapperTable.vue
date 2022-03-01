@@ -19,9 +19,11 @@
               data-testid="delete-table"
             />
             <o-dropdown position="bottom-left" class="has-text-weight-normal">
-              <button class="button is-text is-small" slot="trigger">
-                <o-icon icon="ellipsis-h" />
-              </button>
+              <template #trigger>
+                <button class="button is-text is-small">
+                  <o-icon icon="ellipsis-h" />
+                </button>
+              </template>
               <o-dropdown-item tag="div" item-class="p" v-if="table.csvw" has-link>
                 <router-link class="dropdown-item" :to="{ name: 'TableCsvw', params: { tableId: table.clientPath } }">
                   View generated CSVW

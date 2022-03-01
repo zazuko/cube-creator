@@ -18,9 +18,11 @@
               Create table from selected columns
             </o-button>
             <o-dropdown position="bottom-left" class="has-text-weight-normal" aria-role="list">
-              <button class="button is-text is-small" slot="trigger">
-                <o-icon icon="ellipsis-h" />
-              </button>
+              <template #trigger>
+                <button class="button is-text is-small">
+                  <o-icon icon="ellipsis-h" />
+                </button>
+              </template>
               <o-dropdown-item tag="div" item-class="p" clickable v-if="source.actions.edit">
                 <router-link class="dropdown-item" :to="{ name: 'SourceEdit', params: { sourceId: source.clientPath } }">
                   <o-icon icon="pencil-alt" />
