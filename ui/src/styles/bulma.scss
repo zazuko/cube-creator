@@ -45,3 +45,9 @@ $panel-radius: 0;
     border-color: $tabs-toggle-link-active-border-color;
     color: $tabs-toggle-link-active-color;
 }
+
+// Fix an issue in Oruga where the input doesn't have the proper `file-input`
+// class and there is no way to inject it in the configuration.
+.file > .file-label > input[type=file] {
+    @extend .file-input;
+}
