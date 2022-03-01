@@ -228,7 +228,7 @@ const routes: Array<RouteConfig> = [
             component: HierarchyCreate,
           },
           {
-            path: '/hierarchy/:id',
+            path: ':id',
             name: 'Hierarchy',
             component: HierarchyEdit
           },
