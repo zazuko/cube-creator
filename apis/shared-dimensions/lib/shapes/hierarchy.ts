@@ -23,6 +23,7 @@ export default function (graph: AnyPointer): Initializer<NodeShape> {
       order: 10,
     }, {
       name: 'Type',
+      description: 'Select a specific type of resource. The selection will also determine the properties available for selection',
       path: sh.targetClass,
       maxCount: 1,
       nodeKind: sh.IRI,
@@ -31,6 +32,7 @@ export default function (graph: AnyPointer): Initializer<NodeShape> {
       [dcterms.source.value]: publicQueryEndpoint,
     }, {
       name: 'Property',
+      description: 'Define how this level in hierarchy connects to the parent. Select ***inverse*** to choose from properties directed from the lower level up. Otherwise, properties directed down will be show',
       path: sh.path,
       minCount: 1,
       maxCount: 1,
@@ -102,7 +104,7 @@ export default function (graph: AnyPointer): Initializer<NodeShape> {
         }],
       }),
     }, {
-      name: 'First level',
+      name: 'Next level',
       path: meta.nextInHierarchy,
       order: 15,
       [dash.editor.value]: dash.DetailsEditor,
