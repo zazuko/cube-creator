@@ -18,16 +18,16 @@
               @click="deleteTable(table)"
               data-testid="delete-table"
             />
-            <b-dropdown position="is-bottom-left">
+            <o-dropdown position="bottom-left" class="has-text-weight-normal">
               <button class="button is-text is-small" slot="trigger">
-                <b-icon icon="ellipsis-h" />
+                <o-icon icon="ellipsis-h" />
               </button>
-              <b-dropdown-item v-if="table.csvw" has-link>
-                <router-link :to="{ name: 'TableCsvw', params: { tableId: table.clientPath } }">
+              <o-dropdown-item tag="div" item-class="p" v-if="table.csvw" has-link>
+                <router-link class="dropdown-item" :to="{ name: 'TableCsvw', params: { tableId: table.clientPath } }">
                   View generated CSVW
                 </router-link>
-              </b-dropdown-item>
-            </b-dropdown>
+              </o-dropdown-item>
+            </o-dropdown>
           </div>
         </div>
       </div>
@@ -49,20 +49,20 @@
       @mouseleave="$emit('unhighlight-arrows', [columnMapping.id.value])"
     >
       <div class="is-flex gap-2">
-        <b-tag v-if="columnMapping.referencedTable" rounded :style="{ 'background-color': getTableColor(columnMapping.referencedTable.id) }">
+        <span v-if="columnMapping.referencedTable" class="tag is-rounded" :style="{ 'background-color': getTableColor(columnMapping.referencedTable.id) }">
           <property-display :term="columnMapping.targetProperty" />
-        </b-tag>
+        </span>
         <span v-else>
           <property-display :term="columnMapping.targetProperty" />
           <span v-if="columnMapping.datatype" class="has-text-grey"> (<property-display :term="columnMapping.datatype" />)</span>
           <span v-if="columnMapping.language" class="has-text-grey"> (language: {{ columnMapping.language.value }})</span>
         </span>
-        <b-tooltip v-if="columnMapping.isKeyDimension" label="Key dimension">
-          <b-icon icon="key" type="is-grey" />
-        </b-tooltip>
-        <b-tooltip v-if="columnMapping.isMeasureDimension" label="Measure dimension">
-          <b-icon icon="chart-bar" type="is-primary" />
-        </b-tooltip>
+        <o-tooltip v-if="columnMapping.isKeyDimension" label="Key dimension">
+          <o-icon icon="key" variant="grey" />
+        </o-tooltip>
+        <o-tooltip v-if="columnMapping.isMeasureDimension" label="Measure dimension">
+          <o-icon icon="chart-bar" variant="primary" />
+        </o-tooltip>
       </div>
       <div class="is-flex">
         <hydra-operation-button
@@ -76,16 +76,16 @@
       </div>
     </div>
     <div class="panel-block">
-      <b-tooltip v-if="table.actions.createLiteralColumnMapping || table.actions.createReferenceColumnMapping" label="Map column">
-        <b-button
+      <o-tooltip v-if="table.actions.createLiteralColumnMapping || table.actions.createReferenceColumnMapping" label="Map column">
+        <o-button
           tag="router-link"
           :to="{ name: 'ColumnMappingCreate', params: { tableId: table.clientPath } }"
-          type="is-text"
-          size="is-small"
+          variant="text"
+          size="small"
           icon-left="plus"
           data-testid="create-column-mapping"
         />
-      </b-tooltip>
+      </o-tooltip>
     </div>
   </div>
 </template>
@@ -95,12 +95,14 @@ import { Prop, Component, Vue } from 'vue-property-decorator'
 import { Term } from 'rdf-js'
 import { ResourceIdentifier } from '@tpluscode/rdfine'
 import { ColumnMapping, Table } from '@cube-creator/model'
+import BMessage from './BMessage.vue'
 import HydraOperationButton from './HydraOperationButton.vue'
 import PropertyDisplay from './PropertyDisplay.vue'
 import * as storeNs from '../store/namespace'
+import { confirmDialog } from '../use-dialog'
 
 @Component({
-  components: { HydraOperationButton, PropertyDisplay },
+  components: { BMessage, HydraOperationButton, PropertyDisplay },
 })
 export default class MapperTable extends Vue {
   @Prop() readonly table!: Table
@@ -135,12 +137,10 @@ export default class MapperTable extends Vue {
   }
 
   deleteTable (table: Table): void {
-    this.$buefy.dialog.confirm({
+    confirmDialog(this, {
       title: table.actions.delete?.title,
       message: 'Are you sure you want to delete this table?',
       confirmText: 'Delete',
-      type: 'is-danger',
-      hasIcon: true,
       onConfirm: () => {
         this.$store.dispatch('api/invokeDeleteOperation', {
           operation: table.actions.delete,
@@ -152,12 +152,10 @@ export default class MapperTable extends Vue {
   }
 
   deleteColumnMapping (columnMapping: ColumnMapping): void {
-    this.$buefy.dialog.confirm({
+    confirmDialog(this, {
       title: columnMapping.actions.delete?.title,
       message: 'Are you sure you want to delete this column mapping?',
       confirmText: 'Delete',
-      type: 'is-danger',
-      hasIcon: true,
       onConfirm: () => {
         this.$store.dispatch('api/invokeDeleteOperation', {
           operation: columnMapping.actions.delete,

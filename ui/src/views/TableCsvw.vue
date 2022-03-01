@@ -6,20 +6,20 @@
 
     <div v-if="csvw.data">
       <div class="is-flex is-justify-content-space-between">
-        <b-field>
-          <b-radio-button
+        <o-field>
+          <radio-button
             v-for="format in formats"
             :key="format.value"
             :native-value="format.value"
             v-model="selectedFormat"
-            size="is-small"
+            size="small"
           >
             {{ format.label }}
-          </b-radio-button>
-        </b-field>
-        <b-button size="is-small" icon-left="clipboard" @click="copy">
+          </radio-button>
+        </o-field>
+        <o-button size="small" icon-left="clipboard" @click="copy">
           Copy
-        </b-button>
+        </o-button>
       </div>
       <rdf-editor
         :quads.prop="csvw.data"
@@ -38,14 +38,17 @@
 import '@rdfjs-elements/rdf-editor'
 import { Quad } from 'rdf-js'
 import { Vue, Component } from 'vue-property-decorator'
+import BMessage from '@/components/BMessage.vue'
 import SidePane from '@/components/SidePane.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
+import RadioButton from '@/components/RadioButton.vue'
 import { Table } from '@cube-creator/model'
 import Remote, { RemoteData } from '@/remote'
 import * as storeNs from '../store/namespace'
+import { displayToast } from '@/use-toast'
 
 @Component({
-  components: { SidePane, LoadingBlock },
+  components: { BMessage, SidePane, LoadingBlock, RadioButton },
 })
 export default class TableCreateView extends Vue {
   @storeNs.project.Getter('findTable') findTable!: (id: string) => Table | null
@@ -85,7 +88,10 @@ export default class TableCreateView extends Vue {
     const snippet = this.$refs.snippet as any
     const content = snippet.codeMirror.value
     await navigator.clipboard.writeText(content)
-    this.$buefy.toast.open('Copied 👍')
+    displayToast(this, {
+      message: 'Copied 👍',
+      variant: 'success',
+    })
   }
 
   onCancel (): void {

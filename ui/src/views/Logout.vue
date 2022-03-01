@@ -15,9 +15,12 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import BMessage from '../components/BMessage.vue'
 import * as storeNs from '../store/namespace'
 
-@Component
+@Component({
+  components: { BMessage },
+})
 export default class LogoutView extends Vue {
   @storeNs.auth.Getter('oidcIsAuthenticated') isAuthenticated!: boolean
 

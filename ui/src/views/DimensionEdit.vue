@@ -1,8 +1,8 @@
 <template>
   <side-pane :title="title" @close="onCancel">
-    <b-field label="Dimension property">
+    <o-field label="Dimension property">
       <term-display v-if="dimension.about" :term="dimension.about" :base="cubeUri" />
-    </b-field>
+    </o-field>
     <hydra-operation-form-with-raw
       v-if="resource && operation"
       :operation="operation"
@@ -32,6 +32,7 @@ import { conciseBoundedDescription } from '@/graph'
 import * as storeNs from '../store/namespace'
 import { rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { meta } from '@cube-creator/core/namespace'
+import { displayToast } from '@/use-toast'
 
 @Component({
   components: { SidePane, HydraOperationFormWithRaw, TermDisplay },
@@ -108,9 +109,9 @@ export default class extends Vue {
 
       this.$store.dispatch('project/refreshDimensionMetadataCollection')
 
-      this.$buefy.toast.open({
+      displayToast(this, {
         message: 'Dimension metadata was saved',
-        type: 'is-success',
+        variant: 'success',
       })
 
       this.$router.push({ name: 'CubeDesigner' })

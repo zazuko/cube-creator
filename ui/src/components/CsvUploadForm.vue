@@ -1,23 +1,23 @@
 <template>
-  <b-tabs type="is-boxed" v-model="sourceKind">
-    <b-tab-item label="Upload" value="MediaLocal">
+  <o-tabs type="boxed" v-model="sourceKind">
+    <o-tab-item label="Upload" value="MediaLocal">
       <file-upload
         :file-meta="fileMeta"
         :after-upload="submitLocal"
         @done="close"
       />
-    </b-tab-item>
-    <b-tab-item label="URL" value="MediaURL">
+    </o-tab-item>
+    <o-tab-item label="URL" value="MediaURL">
       <form @submit.prevent="submitUrl">
-        <b-field label="URL">
-          <b-input v-model="fileUrl" type="url" required />
-        </b-field>
-        <b-button native-type="submit" type="is-primary" :loading="isLoading">
+        <o-field label="URL">
+          <o-input v-model="fileUrl" type="url" required />
+        </o-field>
+        <button-loading native-type="submit" variant="primary" :loading="isLoading">
           Upload
-        </b-button>
+        </button-loading>
       </form>
-    </b-tab-item>
-  </b-tabs>
+    </o-tab-item>
+  </o-tabs>
 </template>
 
 <script lang="ts">
@@ -27,10 +27,11 @@ import { schema } from '@tpluscode/rdf-ns-builders'
 import clownface from 'clownface'
 
 import { cc } from '@cube-creator/core/namespace'
-import FileUpload, { UploadedFile } from '@/components/FileUpload.vue'
+import ButtonLoading from './ButtonLoading.vue'
+import FileUpload, { UploadedFile } from './FileUpload.vue'
 
 @Component({
-  components: { FileUpload },
+  components: { ButtonLoading, FileUpload },
 })
 export default class CsvUploadForm extends Vue {
   @Prop({ default: undefined }) fileMeta!: Record<string, unknown>

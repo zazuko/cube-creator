@@ -1,31 +1,39 @@
 <template>
-  <b-field :addons="false">
+  <o-field :addons="false">
     <hr>
-    <b-field class="buttons" :addons="false">
+    <o-field class="buttons" :addons="false">
       <div class="control">
-        <b-button native-type="submit" class="button" :type="submitButtonType" :disabled="disabled" :loading="isSubmitting">
+        <button-loading
+          native-type="submit"
+          :variant="submitButtonVariant"
+          :disabled="disabled"
+          :loading="isSubmitting"
+        >
           {{ _submitLabel }}
-        </b-button>
+        </button-loading>
       </div>
       <div class="control" v-if="showCancel">
-        <b-button @click="$emit('cancel')">
+        <o-button @click="$emit('cancel')">
           Cancel
-        </b-button>
+        </o-button>
       </div>
-    </b-field>
-  </b-field>
+    </o-field>
+  </o-field>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
+import ButtonLoading from './ButtonLoading.vue'
 
-@Component
+@Component({
+  components: { ButtonLoading },
+})
 export default class FormSubmitCancel extends Vue {
   @Prop() submitLabel?: string
   @Prop() disabled?: boolean
   @Prop() isSubmitting?: boolean
   @Prop({ default: true }) showCancel?: boolean
-  @Prop({ default: 'is-primary' }) submitButtonType?: string
+  @Prop({ default: 'primary' }) submitButtonVariant?: string
 
   get _submitLabel (): string {
     return this.submitLabel || 'Save'

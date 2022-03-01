@@ -27,6 +27,7 @@ import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 import { cc, cube } from '@cube-creator/core/namespace'
 import { conciseBoundedDescription } from '@/graph'
 import * as storeNs from '../store/namespace'
+import { displayToast } from '@/use-toast'
 
 @Component({
   components: { SidePane, HydraOperationFormWithRaw },
@@ -75,9 +76,9 @@ export default class CubeMetadataEdit extends Vue {
 
       this.$store.dispatch('project/fetchCubeMetadata')
 
-      this.$buefy.toast.open({
+      displayToast(this, {
         message: 'Cube metadata was saved',
-        type: 'is-success',
+        variant: 'success',
       })
 
       this.$router.push({ name: 'CubeDesigner' })

@@ -11,7 +11,7 @@
       :is-submitting="isSubmitting"
       @submit="onSubmit"
       :show-cancel="false"
-      :submit-button-type="submitButtonType"
+      :submit-button-variant="submitButtonVariant"
     />
   </div>
 </template>
@@ -27,13 +27,15 @@ import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 import { rdf, sh } from '@tpluscode/rdf-ns-builders'
 import { NamedNode } from 'rdf-js'
+import { displayToast } from '@/use-toast'
+import { confirmDialog } from '@/use-dialog'
 
 @Component({
   components: { HydraOperationForm },
 })
 export default class JobForm extends Vue {
   @Prop() operation!: RuntimeOperation
-  @Prop() submitButtonType?: string
+  @Prop() submitButtonVariant?: string
   @Prop({ default: false }) confirm!: boolean
   @Prop({ default: 'Are you sure?' }) confirmationMessage!: string
 
@@ -69,9 +71,9 @@ export default class JobForm extends Vue {
         resource,
       })
 
-      this.$buefy.toast.open({
+      displayToast(this, {
         message: `${job.name} was started`,
-        type: 'is-success',
+        variant: 'success',
       })
 
       this.$store.dispatch('project/fetchJobCollection')
@@ -88,12 +90,10 @@ export default class JobForm extends Vue {
 
   async askConfirmation (): Promise<boolean> {
     return new Promise((resolve) => {
-      this.$buefy.dialog.confirm({
+      confirmDialog(this, {
         title: this.operation.title,
         message: this.confirmationMessage,
         confirmText: 'Confirm',
-        type: 'is-danger',
-        hasIcon: true,
         onConfirm () {
           resolve(true)
         },

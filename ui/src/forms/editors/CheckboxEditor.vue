@@ -1,5 +1,5 @@
 <template>
-  <b-checkbox :value="value" @input="emit" />
+  <o-checkbox :value="value" @input="emit" />
 </template>
 
 <script lang="ts">

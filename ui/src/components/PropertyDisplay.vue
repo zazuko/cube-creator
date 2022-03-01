@@ -1,7 +1,7 @@
 <template>
-  <b-tooltip :label="expanded">
+  <o-tooltip :label="expanded">
     {{ shrunk }}
-  </b-tooltip>
+  </o-tooltip>
 </template>
 
 <script lang="ts">

@@ -27,6 +27,7 @@ import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 import { RdfResource } from '@tpluscode/rdfine/RdfResource'
 import { serializeResource } from '../store/serializers'
 import * as storeNs from '../store/namespace'
+import { displayToast } from '@/use-toast'
 
 @Component({
   components: { SidePane, HydraOperationForm, TermDisplay },
@@ -78,9 +79,9 @@ export default class extends Vue {
 
       this.$store.dispatch('project/fetchDimensionMetadataCollection')
 
-      this.$buefy.toast.open({
+      displayToast(this, {
         message: 'Mapping to shared dimension was saved',
-        type: 'is-success',
+        variant: 'success',
       })
 
       this.$router.push({ name: 'CubeDesigner' })

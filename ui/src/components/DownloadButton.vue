@@ -1,7 +1,14 @@
 <template>
-  <b-button :size="size" :type="type" icon-left="download" @click="download" :loading="loading" v-if="this.resource">
+  <button-loading
+    v-if="resource"
+    :size="size"
+    :variant="variant"
+    icon-left="download"
+    @click="download"
+    :loading="loading"
+  >
     {{ title }}
-  </b-button>
+  </button-loading>
 </template>
 
 <script lang="ts">
@@ -10,12 +17,15 @@ import { prepareHeaders } from '@/api'
 import { parse } from '@tinyhttp/content-disposition'
 import store from '@/store'
 import { Resource } from 'alcaeus'
+import ButtonLoading from './ButtonLoading.vue'
 
-@Component
+@Component({
+  components: { ButtonLoading },
+})
 export default class DownloadButton extends Vue {
   @Prop({ required: true }) resource: Resource | undefined
-  @Prop({ default: 'is-default' }) type!: string
-  @Prop({ default: 'is-normal' }) size!: string
+  @Prop({ default: 'default' }) variant!: string
+  @Prop({ default: 'normal' }) size!: string
 
   loading = false
 

@@ -19,9 +19,9 @@
       <h3 class="title is-5">
         Export project
       </h3>
-      <b-field>
+      <o-field>
         <download-button :resource="project.export" />
-      </b-field>
+      </o-field>
     </div>
     <div class="box container-narrow" v-if="project.actions.delete">
       <h3 class="title is-5">
@@ -30,11 +30,11 @@
       <p class="block">
         Delete all data related to this project. This operation is not revertible!
       </p>
-      <b-field v-if="project.actions.delete">
-        <b-button icon-left="trash" type="is-danger" @click="deleteProject">
+      <o-field v-if="project.actions.delete">
+        <o-button icon-left="trash" variant="danger" @click="deleteProject">
           {{ project.actions.delete.title }}
-        </b-button>
-      </b-field>
+        </o-button>
+      </o-field>
     </div>
   </div>
 </template>
@@ -49,6 +49,8 @@ import { Shape } from '@rdfine/shacl'
 import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 import * as storeNs from '../store/namespace'
+import { displayToast } from '@/use-toast'
+import { confirmDialog } from '@/use-dialog'
 
 @Component({
   components: { HydraOperationForm, DownloadButton },
@@ -85,9 +87,9 @@ export default class CubeProjectEditView extends Vue {
 
       this.$store.commit('project/storeProject', project)
 
-      this.$buefy.toast.open({
+      displayToast(this, {
         message: 'Project settings were saved',
-        type: 'is-success',
+        variant: 'success',
       })
     } catch (e) {
       this.error = e.details ?? { detail: e.toString() }
@@ -101,12 +103,10 @@ export default class CubeProjectEditView extends Vue {
   }
 
   async deleteProject (): Promise<void> {
-    this.$buefy.dialog.confirm({
+    confirmDialog(this, {
       title: this.project.actions.delete?.title,
       message: 'Are you sure you want to delete this project? This action is not revertible.',
       confirmText: 'Delete',
-      type: 'is-danger',
-      hasIcon: true,
       onConfirm: async () => {
         await this.$store.dispatch('api/invokeDeleteOperation', {
           operation: this.project.actions.delete,

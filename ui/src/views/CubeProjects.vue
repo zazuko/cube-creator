@@ -8,8 +8,8 @@
         <hydra-operation-button
           :operation="projectsCollection.actions.create"
           :to="{ name: 'CubeProjectCreate' }"
-          type="is-default"
-          size=""
+          variant="default"
+          size="normal"
         >
           {{ projectsCollection.actions.create.title }}
         </hydra-operation-button>

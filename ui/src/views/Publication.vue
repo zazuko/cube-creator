@@ -14,7 +14,7 @@
           :operation="jobCollection.actions.createUnlist"
           :confirm="true"
           confirmation-message="Are you sure you want to unlist this cube? This operation is not reversible."
-          submit-button-type="is-danger"
+          submit-button-variant="danger"
           class="box"
         />
       </div>
@@ -29,15 +29,15 @@
       <div v-if="jobs.length > 0" class="panel container-narrow">
         <job-item v-for="job in jobs" :key="job.clientPath" :job="job" detail-view="PublicationJob" class="panel-block">
           <div class="is-flex-grow-1 is-flex gap-1">
-            <b-tag v-if="job.revision">
+            <span v-if="job.revision" class="tag">
               Version {{ job.revision }}
-            </b-tag>
-            <b-tag v-if="job.status">
+            </span>
+            <span v-if="job.status" class="tag">
               <ExternalTerm :resource="job.status" />
-            </b-tag>
-            <b-tag v-if="job.publishedTo">
+            </span>
+            <span v-if="job.publishedTo" class="tag">
               <ExternalTerm :resource="job.publishedTo" />
-            </b-tag>
+            </span>
           </div>
         </job-item>
       </div>

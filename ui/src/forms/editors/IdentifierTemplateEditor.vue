@@ -1,6 +1,9 @@
 <template>
-  <b-field :message="wasValidated ? invalidMessage : ''" :type="{ 'is-danger': wasValidated && invalidMessage }">
-    <b-autocomplete
+  <o-field
+    :message="wasValidated ? invalidMessage : ''"
+    :variant="wasValidated && invalidMessage ? 'danger' : ''"
+  >
+    <o-autocomplete
       ref="autocomplete"
       :value="value"
       @input="update"
@@ -12,7 +15,7 @@
       placeholder="e.g. MyTable/{column_id}"
       :disabled="!source"
     />
-  </b-field>
+  </o-field>
 </template>
 
 <script lang="ts">

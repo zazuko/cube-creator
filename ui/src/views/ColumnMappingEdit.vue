@@ -39,6 +39,7 @@ import ReferenceColumnMappingForm from '@/components/ReferenceColumnMappingForm.
 import LiteralColumnMappingForm from '@/components/LiteralColumnMappingForm.vue'
 import { Term } from 'rdf-js'
 import * as storeNs from '../store/namespace'
+import { displayToast } from '@/use-toast'
 
 @Component({
   components: { SidePane, LiteralColumnMappingForm, ReferenceColumnMappingForm },
@@ -89,9 +90,9 @@ export default class CubeProjectEditView extends Vue {
 
       this.$store.commit('project/storeUpdatedColumnMapping', { table: this.table, columnMapping })
 
-      this.$buefy.toast.open({
+      displayToast(this, {
         message: 'Column mapping was successfully updated',
-        type: 'is-success',
+        variant: 'success',
       })
 
       this.$router.push({ name: 'CSVMapping' })

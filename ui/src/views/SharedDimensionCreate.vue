@@ -25,6 +25,7 @@ import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 import * as storeNs from '../store/namespace'
+import { displayToast } from '@/use-toast'
 
 @Component({
   components: { SidePane, HydraOperationForm },
@@ -64,9 +65,9 @@ export default class extends Vue {
 
       await this.$store.dispatch('sharedDimensions/fetchCollection')
 
-      this.$buefy.toast.open({
+      displayToast(this, {
         message: `Shared dimension ${dimension.name} successfully created`,
-        type: 'is-success',
+        variant: 'success',
       })
 
       this.$router.push({ name: 'SharedDimension', params: { id: dimension.clientPath } })

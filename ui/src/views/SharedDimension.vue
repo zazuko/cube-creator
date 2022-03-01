@@ -11,7 +11,7 @@
         <div class="is-flex is-align-items-center gap-1">
           <hydra-operation-button :operation="dimension.actions.replace" :to="{ name: 'SharedDimensionEdit' }" />
           <hydra-operation-button :operation="dimension.actions.delete" @click="deleteDimension(dimension)" />
-          <download-button :resource="dimension.export" size="is-small" type="is-white" />
+          <download-button :resource="dimension.export" size="small" variant="white" />
         </div>
       </div>
       <table class="table is-narrow is-bordered is-striped is-fullwidth">
@@ -28,7 +28,7 @@
                 v-if="dimension.actions.create"
                 :operation="dimension.actions.create"
                 :to="{ name: 'SharedDimensionTermCreate' }"
-                type="is-default"
+                variant="default"
               >
                 {{ dimension.actions.create.title }}
               </hydra-operation-button>
@@ -78,9 +78,9 @@
             <td>
               <div class="is-flex is-justify-content-space-between">
                 <div>
-                  <b-tag v-if="term.validThrough <= new Date()" type="is-warning is-light">
+                  <span v-if="term.validThrough <= new Date()" class="tag is-warning is-light">
                     deprecated
-                  </b-tag>
+                  </span>
                 </div>
                 <div>
                   <shared-dimension-term-link :term="term" />
@@ -100,28 +100,28 @@
               <div class="is-flex gap-4">
                 <div class="is-flex is-align-items-center gap-1">
                   <span class="pr-1">Page {{ page }}</span>
-                  <b-tooltip label="Previous page">
-                    <b-button
+                  <o-tooltip label="Previous page">
+                    <o-button
                       icon-left="chevron-left"
                       @click="prevPage"
                       :disabled="!terms.data || page === 1"
                     />
-                  </b-tooltip>
-                  <b-tooltip label="Next page">
-                    <b-button
+                  </o-tooltip>
+                  <o-tooltip label="Next page">
+                    <o-button
                       icon-left="chevron-right"
                       @click="nextPage"
                       :disabled="!terms.data || terms.data.length === 0"
                     />
-                  </b-tooltip>
+                  </o-tooltip>
                 </div>
-                <b-tooltip label="Page size">
-                  <b-select :value="pageSize" @input="changePageSize" title="Page size">
+                <o-tooltip label="Page size">
+                  <o-select :value="pageSize" @input="changePageSize" title="Page size">
                     <option v-for="pageSizeOption in pageSizes" :key="pageSizeOption" :native-value="pageSizeOption">
                       {{ pageSizeOption }}
                     </option>
-                  </b-select>
-                </b-tooltip>
+                  </o-select>
+                </o-tooltip>
               </div>
             </td>
           </tr>
@@ -137,6 +137,7 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import HydraOperationButton from '@/components/HydraOperationButton.vue'
+import BMessage from '@/components/BMessage.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import PageContent from '@/components/PageContent.vue'
 import SharedDimensionTags from '@/components/SharedDimensionTags.vue'
@@ -146,9 +147,11 @@ import TermWithLanguage from '@/components/TermWithLanguage.vue'
 import DownloadButton from '@/components/DownloadButton.vue'
 import * as storeNs from '../store/namespace'
 import { SharedDimension, SharedDimensionTerm } from '../store/types'
+import { confirmDialog } from '@/use-dialog'
 
 @Component({
   components: {
+    BMessage,
     HydraOperationButton,
     LoadingBlock,
     PageContent,
@@ -181,12 +184,10 @@ export default class extends Vue {
   }
 
   deleteDimension (dimension: SharedDimension): void {
-    this.$buefy.dialog.confirm({
+    confirmDialog(this, {
       title: dimension.actions.delete?.title,
       message: 'Are you sure you want to delete this shared dimension?',
       confirmText: 'Delete',
-      type: 'is-danger',
-      hasIcon: true,
       onConfirm: async () => {
         await this.$store.dispatch('api/invokeDeleteOperation', {
           operation: dimension.actions.delete,
@@ -198,12 +199,10 @@ export default class extends Vue {
   }
 
   deleteTerm (term: SharedDimensionTerm): void {
-    this.$buefy.dialog.confirm({
+    confirmDialog(this, {
       title: term.actions.delete?.title,
       message: 'Are you sure you want to delete this term?',
       confirmText: 'Delete',
-      type: 'is-danger',
-      hasIcon: true,
       onConfirm: () => {
         this.$store.dispatch('api/invokeDeleteOperation', {
           operation: term.actions.delete,

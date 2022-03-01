@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import * as Sentry from '@sentry/vue'
 import { Integrations } from '@sentry/tracing'
-import Buefy from 'buefy'
+import Oruga from '@oruga-ui/oruga'
+import { bulmaConfig } from '@oruga-ui/theme-bulma'
 import App from './App.vue'
 import router from './router'
 
@@ -19,11 +20,30 @@ iconsLibrary.add(fas)
 iconsLibrary.add(far)
 Vue.component('FontAwesomeIcon', FontAwesomeIcon)
 
-Vue.use(Buefy, {
-  defaultIconPack: 'fas',
-  defaultIconComponent: 'FontAwesomeIcon',
-  defaultTooltipType: 'is-light',
-  defaultTooltipDelay: 200,
+Vue.use(Oruga, {
+  ...bulmaConfig,
+  iconPack: 'fas',
+  iconComponent: 'FontAwesomeIcon',
+  dropdown: {
+    ...bulmaConfig.dropdown,
+    itemClass: (_: string, { props }: any) => props.itemClass || 'dropdown-item',
+  },
+  tooltip: {
+    ...bulmaConfig.tooltip,
+    rootClass: (_: string, { props }: any) => {
+      const classes = ['b-tooltip']
+
+      if (props.variant) {
+        classes.push(`is-${props.variant}`)
+      } else {
+        classes.push('is-light')
+      }
+
+      if (props.position) classes.push(`is-${props.position}`)
+
+      return classes.join(' ')
+    },
+  },
 })
 
 Sentry.init({

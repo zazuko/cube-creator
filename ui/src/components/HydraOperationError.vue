@@ -18,10 +18,11 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import type { Shape } from '@rdfine/shacl'
 import { ErrorDetails } from '@/api/errors'
+import BMessage from './BMessage.vue'
 import HydraOperationErrorResult from './HydraOperationErrorResult.vue'
 
 @Component({
-  components: { HydraOperationErrorResult },
+  components: { BMessage, HydraOperationErrorResult },
 })
 export default class extends Vue {
   @Prop({ default: null }) error!: ErrorDetails | null

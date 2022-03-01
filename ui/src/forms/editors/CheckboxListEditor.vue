@@ -1,6 +1,6 @@
 <template>
-  <b-field>
-    <b-checkbox-button
+  <o-field :addons="false">
+    <o-checkbox
       v-for="[term, label] in choices"
       :key="term.value"
       :native-value="term.value"
@@ -8,8 +8,8 @@
       @input="emit"
     >
       <span>{{ label }}</span>
-    </b-checkbox-button>
-  </b-field>
+    </o-checkbox>
+  </o-field>
 </template>
 
 <script lang="ts">

@@ -1,11 +1,11 @@
 <template>
   <div class="is-flex gap-1">
-    <b-tag v-if="dimension.validThrough <= new Date()" type="is-warning is-light">
+    <span v-if="dimension.validThrough <= new Date()" class="tag is-warning is-light">
       deprecated
-    </b-tag>
-    <b-tag v-if="!dimension.actions.replace" type="is-light">
+    </span>
+    <span v-if="!dimension.actions.replace" class="tag is-light">
       read-only
-    </b-tag>
+    </span>
   </div>
 </template>
 

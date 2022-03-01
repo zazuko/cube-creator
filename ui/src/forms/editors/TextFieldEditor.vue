@@ -1,5 +1,5 @@
 <template>
-  <b-input :value="value" @input="update" />
+  <o-input :value="value" @input="update" />
 </template>
 
 <script lang="ts">

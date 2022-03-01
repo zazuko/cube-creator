@@ -3,19 +3,19 @@
     <span class="label">
       {{ property.name }}
     </span>
-    <b-field v-if="property.shape.description">
+    <o-field v-if="property.shape.description">
       <vue-markdown class="help" :anchor-attributes="linkAttrs" :source="property.shape.description" />
-    </b-field>
-    <b-field v-if="property.selectedEditor">
+    </o-field>
+    <o-field v-if="property.selectedEditor">
       <render-wc-template :template-result="renderMultiEditor()" />
-    </b-field>
+    </o-field>
     <div v-else v-for="object in property.objects" :key="object.key">
       <render-wc-template :template-result="renderObject({ object })" />
     </div>
     <div v-if="!property.selectedEditor && property.canAdd">
-      <b-tooltip label="Add value">
-        <b-button icon-left="plus" @click.prevent="actions.addObject" type="is-text" />
-      </b-tooltip>
+      <o-tooltip label="Add value">
+        <o-button icon-left="plus" @click.prevent="actions.addObject" variant="text" />
+      </o-tooltip>
     </div>
   </label>
 </template>
