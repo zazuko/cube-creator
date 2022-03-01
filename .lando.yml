@@ -33,7 +33,8 @@ services:
     ssl: true
     services:
       image: ghcr.io/zazuko/fuseki-geosparql:v2.0.3
-      command: /opt/fuseki/entrypoint.sh
+      command: sh -c '/opt/java-minimal/bin/keytool -importcert -trustcacerts -noprompt -storepass changeit -cacerts -file /usr/share/ca-certificates/lndo.site.pem -alias LandoCert ; /opt/fuseki/entrypoint.sh'
+      user: root
       environment:
         ADMIN_PASSWORD: password
         OTEL_SERVICE_NAME: store
