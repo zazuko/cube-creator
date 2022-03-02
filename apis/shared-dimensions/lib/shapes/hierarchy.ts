@@ -36,7 +36,6 @@ export default function (graph: AnyPointer): Initializer<NodeShape> {
       path: sh.path,
       minCount: 1,
       maxCount: 1,
-      nodeKind: sh.IRI,
       node: nodeShape({
         xone: [{
           nodeKind: sh.IRI,
