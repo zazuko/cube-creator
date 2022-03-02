@@ -1,7 +1,7 @@
 <template>
-  <b-field :message="message">
-    <b-input :value="textValue" @blur="onUpdate" />
-  </b-field>
+  <o-field :message="message">
+    <o-input :value="textValue" @blur="onUpdate" />
+  </o-field>
 </template>
 
 <script lang="ts">

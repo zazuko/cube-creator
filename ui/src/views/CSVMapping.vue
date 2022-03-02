@@ -15,7 +15,7 @@
       </div>
       <div class="column is-1">
         <p class="has-text-centered">
-          <b-icon icon="arrow-right" size="is-small" />
+          <o-icon icon="arrow-right" size="small" />
         </p>
       </div>
       <div class="column is-5">

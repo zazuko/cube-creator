@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="mb-1">
-      <b-button tag="router-link" :to="{ name: 'Materialize' }" icon-left="arrow-left" size="is-small">
+      <o-button tag="router-link" :to="{ name: 'Materialize' }" icon-left="arrow-left" size="small">
         Back to {{ materializeLabel }}
-      </b-button>
+      </o-button>
     </div>
     <div class="box container-narrow">
       <router-view />

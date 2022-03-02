@@ -1,22 +1,22 @@
 <template>
   <div>
-    <b-field v-for="([language, objects], languageIndex) in tags" :key="languageIndex" :addons="false" class="is-flex">
-      <b-taginput
+    <o-field v-for="([language, objects], languageIndex) in tags" :key="languageIndex" :addons="false" class="is-flex">
+      <o-inputitems
         :value="objects"
         field="value"
         @add="addTag(languageIndex, language, $event)"
         @remove="removeTag(languageIndex, $event)"
         class="is-flex-grow-1"
       />
-      <b-select :value="language" @input="updateLanguage(languageIndex, $event)">
+      <o-select :value="language" @input="updateLanguage(languageIndex, $event)">
         <option v-for="languageOption in languages" :key="languageOption">
           {{ languageOption }}
         </option>
-      </b-select>
-    </b-field>
-    <b-tooltip label="Add value">
-      <b-button icon-left="plus" @click="addLanguage" type="is-white" />
-    </b-tooltip>
+      </o-select>
+    </o-field>
+    <o-tooltip label="Add value">
+      <o-button icon-left="plus" @click="addLanguage" variant="white" />
+    </o-tooltip>
   </div>
 </template>
 

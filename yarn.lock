@@ -1709,6 +1709,18 @@
     "@opentelemetry/semantic-conventions" "0.24.0"
     lodash.merge "^4.6.2"
 
+"@oruga-ui/oruga@^0.5.4":
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/@oruga-ui/oruga/-/oruga-0.5.4.tgz#ab9cbeec2e64bf7ab1d8338bc3ee0bb37334f95d"
+  integrity sha512-c41Bjjq9YzWtm2RQ8Q0jG1xqBFwHnG81oDlstnpn/0Td7SpwpSnSHO+/xiBHBRgbAMMXlJowfcEsEvkK1Z4hBw==
+
+"@oruga-ui/theme-bulma@^0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@oruga-ui/theme-bulma/-/theme-bulma-0.2.2.tgz#d3309beeeefdbe52980933cc113bfc185d6ebbf2"
+  integrity sha512-reMiUyOvSaE7Tg3VrJ6kMhFs7JVNdzQ6UyI511qpqRuCB1b4k6SeAaOs5S2LRInacafOJYaFD7xQCMQV8k8UmA==
+  dependencies:
+    bulma "0.9.3"
+
 "@panva/asn1.js@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@panva/asn1.js/-/asn1.js-1.0.0.tgz#dd55ae7b8129e02049f009408b97c61ccf9032f6"
@@ -4657,13 +4669,6 @@ browserslist@^4.0.0, browserslist@^4.14.5, browserslist@^4.16.3, browserslist@^4
     escalade "^3.1.1"
     node-releases "^2.0.2"
     picocolors "^1.0.0"
-
-buefy@^0.9.5:
-  version "0.9.17"
-  resolved "https://registry.yarnpkg.com/buefy/-/buefy-0.9.17.tgz#ac5857a1413f253cbb9beb0d87a48021e5b21c78"
-  integrity sha512-+rERzamvkflMsoE6GDqGdj5vpDUmdm5MnCnwjK2O8pdnwr8Pmab94cO//0Vd8ys539qWoeqsjh+B7vPg/lT/nQ==
-  dependencies:
-    bulma "0.9.3"
 
 buffer-crc32@~0.2.3:
   version "0.2.13"

@@ -20,9 +20,9 @@ import StreamClient from 'sparql-http-client'
 export const textField: Lazy<SingleEditorComponent> = {
   editor: dash.TextFieldEditor,
   async lazyRender () {
-    await import('./TextFieldEditor.vue').then(createCustomElement('b-textbox'))
+    await import('./TextFieldEditor.vue').then(createCustomElement('textfield-editor'))
 
-    return ({ value }, { update }) => html`<b-textbox .value="${value.object?.value || ''}" .update="${update}"></b-textbox>`
+    return ({ value }, { update }) => html`<textfield-editor .value="${value.object?.value || ''}" .update="${update}"></textfield-editor>`
   }
 }
 
@@ -56,25 +56,25 @@ export const textAreaWithLang: Lazy<SingleEditorComponent> = {
 export const instanceSelect: Lazy<InstancesSelectEditor> = {
   ...instancesSelectCore,
   async lazyRender () {
-    await import('./SelectEditor.vue').then(createCustomElement('b-select'))
+    await import('./SelectEditor.vue').then(createCustomElement('select-editor'))
 
-    return ({ property, value }, { update }) => html`<b-select .property="${property.shape}"
+    return ({ property, value }, { update }) => html`<select-editor .property="${property.shape}"
                           .update="${update}"
                           .options="${value.componentState.instances}"
-                          .value="${value.object?.term}"></b-select>`
+                          .value="${value.object?.term}"></select-editor>`
   }
 }
 
 export const enumSelect: Lazy<EnumSelectEditor> = {
   ...enumSelectCore,
   async lazyRender () {
-    await import('./SelectEditor.vue').then(createCustomElement('b-select'))
+    await import('./SelectEditor.vue').then(createCustomElement('select-editor'))
 
     return ({ property, value }, { update }) =>
-      html`<b-select .property="${property.shape}"
+      html`<select-editor .property="${property.shape}"
                           .update="${update}"
                           .options="${value.componentState.choices}"
-                          .value="${value.object?.term}"></b-select>`
+                          .value="${value.object?.term}"></select-editor>`
   }
 }
 
@@ -164,12 +164,12 @@ export const autoComplete: Lazy<InstancesSelectEditor> = {
 export const radioButtons: Lazy<SingleEditorComponent> = {
   editor: ns.editor.RadioButtons,
   async lazyRender () {
-    await import('./RadioButtons.vue').then(createCustomElement('b-radio'))
+    await import('./RadioButtons.vue').then(createCustomElement('radio-buttons'))
 
     return ({ property, value }, { update }) => {
       const items = property.shape.pointer.node(property.shape.in)
 
-      return html`<b-radio .options="${items}" .value="${value.object}" .update="${update}"></b-radio>`
+      return html`<radio-buttons .options="${items}" .value="${value.object}" .update="${update}"></radio-buttons>`
     }
   }
 }

@@ -1,17 +1,17 @@
 <template>
-  <b-tooltip v-if="operation" :label="operation.title">
-    <b-button
+  <o-tooltip v-if="operation" :label="operation.title">
+    <o-button
       :tag="tag"
       :to="to"
       @click="$emit('click')"
-      :type="type"
+      :variant="variant"
       :size="size"
       :icon-left="iconName"
       :disabled="disabled"
     >
       <slot />
-    </b-button>
-  </b-tooltip>
+    </o-button>
+  </o-tooltip>
 </template>
 
 <script lang="ts">
@@ -23,8 +23,8 @@ import { Location } from 'vue-router'
 export default class HydraOperationButton extends Vue {
   @Prop({ default: null }) operation!: RuntimeOperation | null
   @Prop({ default: null }) to!: Location | null
-  @Prop({ default: 'is-text' }) type!: string
-  @Prop({ default: 'is-small' }) size!: string
+  @Prop({ default: 'text' }) variant!: string
+  @Prop({ default: 'small' }) size!: string
   @Prop({ default: null }) icon!: string | null
   @Prop({ default: false }) disabled!: boolean
 

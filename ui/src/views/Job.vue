@@ -10,20 +10,20 @@
       </p>
     </header>
     <div class="is-flex gap-1">
-      <b-tag v-if="job.revision">
+      <span v-if="job.revision" class="tag">
         Version {{ job.revision }}
-      </b-tag>
-      <b-tag v-if="job.status">
+      </span>
+      <span v-if="job.status" class="tag">
         <ExternalTerm :resource="job.status" />
-      </b-tag>
-      <b-tag v-if="job.publishedTo">
+      </span>
+      <span v-if="job.publishedTo" class="tag">
         <ExternalTerm :resource="job.publishedTo" />
-      </b-tag>
+      </span>
     </div>
     <div class="is-flex gap-1">
       <a v-if="job.query" :href="job.query" target="_blank" rel="noopener" class="button is-small">
         <span>Open in LINDAS</span>
-        <b-icon icon="chevron-right" />
+        <o-icon icon="chevron-right" />
       </a>
       <a
         v-for="workExample in job.workExamples"
@@ -34,7 +34,7 @@
         class="button is-small"
       >
         <span>{{ workExampleLabel(workExample) }}</span>
-        <b-icon icon="external-link-alt" />
+        <o-icon icon="external-link-alt" />
       </a>
     </div>
     <div>
@@ -45,13 +45,13 @@
         <vue-markdown :source="comment" />
       </b-message>
       <a :disabled="!link" :href="link" target="_blank" rel="noopener noreferer" class="button is-small mb-1">
-        <b-icon icon="book" />
+        <o-icon icon="book" />
         <span>View full log</span>
       </a>
       <pre v-if="job.error && job.error.description" class="has-background-danger-light">
         {{ job.error.description }}
       </pre>
-      <b-message v-if="job.error && job.error.validationReport" type="is-danger" title="Validation error" :closable="false">
+      <b-message v-if="job.error && job.error.validationReport" type="is-danger" title="Validation error">
         <validation-report-display :report="job.error.validationReport" />
       </b-message>
     </div>
@@ -65,6 +65,7 @@ import type { CreativeWork } from '@rdfine/schema'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { Component, Vue } from 'vue-property-decorator'
 import VueMarkdown from 'vue-markdown/src/VueMarkdown'
+import BMessage from '@/components/BMessage.vue'
 import ExternalTerm from '@/components/ExternalTerm.vue'
 import JobStatus from '../components/JobStatus.vue'
 import LoadingBlock from '../components/LoadingBlock.vue'
@@ -72,7 +73,7 @@ import ValidationReportDisplay from '../components/ValidationReportDisplay.vue'
 import * as storeNs from '../store/namespace'
 
 @Component({
-  components: { ExternalTerm, JobStatus, LoadingBlock, ValidationReportDisplay, VueMarkdown },
+  components: { BMessage, ExternalTerm, JobStatus, LoadingBlock, ValidationReportDisplay, VueMarkdown },
 })
 export default class JobView extends Vue {
   @storeNs.app.State('language') language!: string[]

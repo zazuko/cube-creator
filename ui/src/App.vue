@@ -7,19 +7,24 @@
     </div>
 
     <div class="messages">
-      <b-message
+      <o-notification
         v-for="(message, index) in messages"
         :key="index"
-        :title="message.title || ' '"
-        :type="message.type"
+        :variant="message.variant"
         has-icon
+        closable
         aria-close-label="Dismiss"
         @close="dismissMessage(message)"
-        :auto-close="message.type !== 'is-danger'"
-        :duration="7000"
+        :auto-close="message.variant !== 'danger'"
+        :duration="5000"
       >
-        {{ message.message }}
-      </b-message>
+        <h3 class="has-text-weight-bold">
+          {{ message.title }}
+        </h3>
+        <p>
+          {{ message.message }}
+        </p>
+      </o-notification>
     </div>
 
     <b-loading :active="isLoading" :is-full-page="true" />
@@ -34,13 +39,14 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import BLoading from '@/components/BLoading.vue'
 import NavBar from '@/components/NavBar.vue'
 import { APIErrorAuthorization } from './api/errors'
 import { Message } from './store/modules/app'
 import * as storeNs from './store/namespace'
 
 @Component({
-  components: { NavBar },
+  components: { BLoading, NavBar },
 })
 export default class App extends Vue {
   @storeNs.app.State('loading') isLoading!: boolean

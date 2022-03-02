@@ -4,11 +4,11 @@
       {{ error }}
     </b-message>
 
-    <b-field>
+    <o-field>
       <p>
         You can upload a new CSV file to replace <em>{{ source.name }}</em>.
       </p>
-    </b-field>
+    </o-field>
 
     <b-message type="is-info">
       <ul class="list-disc list-inside">
@@ -38,10 +38,12 @@ import { CsvMapping, CsvSource } from '@cube-creator/model'
 import { api } from '@/api'
 import CsvUploadForm from '@/components/CsvUploadForm.vue'
 import SidePane from '@/components/SidePane.vue'
+import BMessage from '@/components/BMessage.vue'
 import * as storeNs from '../store/namespace'
+import { displayToast } from '@/use-toast'
 
 @Component({
-  components: { CsvUploadForm, SidePane },
+  components: { BMessage, CsvUploadForm, SidePane },
 })
 export default class CSVReplaceView extends Vue {
   @storeNs.project.State('csvMapping') mapping!: CsvMapping
@@ -82,9 +84,9 @@ export default class CSVReplaceView extends Vue {
     try {
       await api.invokeSaveOperation(operation, resource)
 
-      this.$buefy.toast.open({
+      displayToast(this, {
         message: 'CSV file was successfully replaced',
-        type: 'is-success',
+        variant: 'success',
       })
 
       await this.close()

@@ -16,11 +16,11 @@
                 </div>
               </div>
               <div class="level-right">
-                <b-select :value="selectedLanguage" @input="$emit('selectLanguage', $event)" class="level-item" title="Language">
+                <o-select :value="selectedLanguage" @input="$emit('selectLanguage', $event)" class="level-item" title="Language">
                   <option v-for="language in languages" :key="language" :value="language">
                     {{ language }}
                   </option>
-                </b-select>
+                </o-select>
               </div>
             </div>
           </th>
@@ -44,7 +44,7 @@
           <td :colspan="tableWidth" class="p-0">
             <div class="message is-warning">
               <p class="message-body px-2 py-1 is-flex">
-                <b-icon icon="exclamation-triangle" class="mr-1" />
+                <o-icon icon="exclamation-triangle" class="mr-1" />
                 <span>{{ error.description }}</span>
               </p>
             </div>
@@ -87,22 +87,22 @@
           <td :colspan="tableWidth" class="has-background-light">
             <div class="is-flex is-justify-content-space-between gap-4">
               <div class="is-flex is-align-items-center gap-1">
-                <b-tooltip label="Previous page">
-                  <b-button
+                <o-tooltip label="Previous page">
+                  <o-button
                     icon-left="chevron-left"
                     @click="page = page - 1"
                     :disabled="!hasPreviousPage"
                   />
-                </b-tooltip>
-                <b-tooltip label="Next page">
-                  <b-button
+                </o-tooltip>
+                <o-tooltip label="Next page">
+                  <o-button
                     icon-left="chevron-right"
                     @click="page = page + 1"
                     :disabled="!hasNextPage"
                   />
-                </b-tooltip>
+                </o-tooltip>
                 <span class="ml-4">Page</span>
-                <b-input
+                <o-input
                   v-model.number="page"
                   type="number"
                   min="1"
@@ -115,16 +115,16 @@
                 </span>
               </div>
               <div class="is-flex gap-2">
-                <b-tooltip label="Page size">
-                  <b-select v-model="pageSize" title="Page size">
+                <o-tooltip label="Page size">
+                  <o-select v-model="pageSize" title="Page size">
                     <option v-for="pageSizeOption in pageSizes" :key="pageSizeOption" :native-value="pageSizeOption">
                       {{ pageSizeOption }}
                     </option>
-                  </b-select>
-                </b-tooltip>
-                <b-tooltip label="Refresh data">
-                  <b-button icon-left="sync" @click="refreshData" />
-                </b-tooltip>
+                  </o-select>
+                </o-tooltip>
+                <o-tooltip label="Refresh data">
+                  <o-button icon-left="sync" @click="refreshData" />
+                </o-tooltip>
               </div>
             </div>
           </td>
@@ -146,6 +146,7 @@ import type { Cube, Dataset, DimensionMetadata, DimensionMetadataCollection } fr
 import { supportedLanguages } from '@cube-creator/core/languages'
 import { api } from '@/api'
 import Remote, { RemoteData } from '@/remote'
+import BMessage from './BMessage.vue'
 import HydraOperationButton from './HydraOperationButton.vue'
 import TermWithLanguage from './TermWithLanguage.vue'
 import LoadingBlock from './LoadingBlock.vue'
@@ -156,6 +157,7 @@ const debounceRefreshDelay = 500
 
 @Component({
   components: {
+    BMessage,
     CubePreviewDimension,
     CubePreviewValue,
     HydraOperationButton,

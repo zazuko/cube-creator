@@ -1,21 +1,21 @@
 <template>
   <div>
-    <b-field>
-      <b-checkbox :value="inverse" @input="__onInverseToggled">
+    <o-field>
+      <o-checkbox :value="inverse" @input="__onInverseToggled">
         Inverse
-      </b-checkbox>
-    </b-field>
-    <b-field>
+      </o-checkbox>
+    </o-field>
+    <o-field>
       <instances-select
         :update="__onPropertySelected"
         :options="properties"
         :value="property"
       />
-    </b-field>
-    <b-field label="Example resource" v-if="exampleLabel">
+    </o-field>
+    <o-field label="Example resource" v-if="exampleLabel">
       <a target="_blank" :href="example.value">{{ exampleLabel }}</a>
       <a target="_blank" :href="moreExamples">&nbsp;(more)</a>
-    </b-field>
+    </o-field>
   </div>
 </template>
 

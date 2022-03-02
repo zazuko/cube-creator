@@ -2,9 +2,9 @@
   <div v-if="isReady" class="form-object">
     <render-wc-template :template-result="renderEditor()" class="form-object-editor" />
     <div v-if="property.canRemove">
-      <b-tooltip label="Remove value">
-        <b-button icon-left="minus" @click.prevent="actions.remove" type="is-text" />
-      </b-tooltip>
+      <o-tooltip label="Remove value">
+        <o-button icon-left="minus" @click.prevent="actions.remove" variant="text" />
+      </o-tooltip>
     </div>
   </div>
   <loading-block v-else class="is-size-7 py-5" />

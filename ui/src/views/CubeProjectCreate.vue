@@ -25,6 +25,7 @@ import SidePane from '@/components/SidePane.vue'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
+import { displayToast } from '@/use-toast'
 
 @Component({
   components: { SidePane, HydraOperationForm },
@@ -59,9 +60,9 @@ export default class extends Vue {
         resource,
       })
 
-      this.$buefy.toast.open({
+      displayToast(this, {
         message: `Project ${project.title} successfully created`,
-        type: 'is-success',
+        variant: 'success',
       })
 
       this.$router.push({ name: 'CubeProject', params: { id: project.clientPath } })

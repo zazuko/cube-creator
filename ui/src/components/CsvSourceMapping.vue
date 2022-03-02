@@ -7,44 +7,44 @@
             {{ source.name }}
           </h4>
           <div class="is-flex gap-1">
-            <b-button
+            <o-button
               v-if="tableCollection.actions.create"
               :disabled="selectedColumns.length === 0"
               tag="router-link"
               :to="{ name: 'TableCreate', query: createTableQueryParams }"
-              size="is-small"
+              size="small"
               icon-left="plus"
             >
               Create table from selected columns
-            </b-button>
-            <b-dropdown position="is-bottom-left" class="has-text-weight-normal">
+            </o-button>
+            <o-dropdown position="bottom-left" class="has-text-weight-normal" aria-role="list">
               <button class="button is-text is-small" slot="trigger">
-                <b-icon icon="ellipsis-h" />
+                <o-icon icon="ellipsis-h" />
               </button>
-              <b-dropdown-item v-if="source.actions.edit" has-link>
-                <router-link :to="{ name: 'SourceEdit', params: { sourceId: source.clientPath } }">
-                  <b-icon icon="pencil-alt" />
+              <o-dropdown-item tag="div" item-class="p" clickable v-if="source.actions.edit">
+                <router-link class="dropdown-item" :to="{ name: 'SourceEdit', params: { sourceId: source.clientPath } }">
+                  <o-icon icon="pencil-alt" />
                   {{ source.actions.edit.title }}
                 </router-link>
-              </b-dropdown-item>
-              <b-dropdown-item v-if="source.actions.replace" has-link>
-                <router-link :to="{ name: 'SourceReplaceCSV', params: { sourceId: source.clientPath } }">
-                  <b-icon icon="upload" />
+              </o-dropdown-item>
+              <o-dropdown-item tag="div" item-class="p" v-if="source.actions.replace">
+                <router-link class="dropdown-item" :to="{ name: 'SourceReplaceCSV', params: { sourceId: source.clientPath } }">
+                  <o-icon icon="upload" />
                   {{ source.actions.replace.title }}
                 </router-link>
-              </b-dropdown-item>
-              <b-dropdown-item v-if="source.actions.download" @click="downloadSource(source)">
-                <b-icon icon="download" />
+              </o-dropdown-item>
+              <o-dropdown-item v-if="source.actions.download" @click="downloadSource(source)">
+                <o-icon icon="download" />
                 {{ source.actions.download.title }}
-              </b-dropdown-item>
-              <b-dropdown-item v-if="source.actions.delete" @click="deleteSource(source)">
-                <b-icon icon="trash" />
+              </o-dropdown-item>
+              <o-dropdown-item v-if="source.actions.delete" @click="deleteSource(source)">
+                <o-icon icon="trash" />
                 {{ source.actions.delete.title }}
-              </b-dropdown-item>
-            </b-dropdown>
+              </o-dropdown-item>
+            </o-dropdown>
           </div>
         </div>
-        <b-message v-if="source.errorMessages.length" type="is-danger" class="content">
+        <b-message v-if="source.errorMessages.length" type="is-danger" class="content mb-0">
           <p>An error occurred while parsing the CSV file:</p>
           <pre v-for="error in source.errorMessages" :key="error">{{ error }}</pre>
           <div class="content" v-if="source.actions.delete || source.actions.edit">
@@ -73,14 +73,18 @@
           @mouseenter="highlightArrows(column)"
           @mouseleave="unhighlightArrows(column)"
         >
-          <b-checkbox :value="selectedColumnsMap[column.clientPath]" @input="selectedColumnsMap[column.clientPath] = $event" class="source-column-name">
+          <o-checkbox
+            :value="selectedColumnsMap[column.clientPath]"
+            @input="selectedColumnsMap[column.clientPath] = $event"
+            class="source-column-name"
+          >
             {{ column.name }}
             <span class="has-text-grey" v-if="column.samples.length > 0">
               &nbsp;({{ column.samples.slice(0, 3).join(", ") }})
             </span>
-          </b-checkbox>
+          </o-checkbox>
           <div>
-            <b-tooltip
+            <o-tooltip
               v-for="{table, columnMapping} in getColumnMappings(column)"
               :key="columnMapping.id.value"
               class="source-column-mapping"
@@ -124,13 +128,16 @@
 import { Prop, Component, Vue, Watch } from 'vue-property-decorator'
 import { CsvSource, Table, TableCollection, CsvColumn, ColumnMapping } from '@cube-creator/model'
 import { isLiteralColumnMapping } from '@cube-creator/model/ColumnMapping'
+import BMessage from './BMessage.vue'
 import MapperTable from './MapperTable.vue'
 import HydraOperationButton from './HydraOperationButton.vue'
 import { api } from '@/api'
 import * as storeNs from '../store/namespace'
+import { confirmDialog } from '@/use-dialog'
 
 @Component({
   components: {
+    BMessage,
     MapperTable,
     HydraOperationButton,
   },
@@ -183,12 +190,10 @@ export default class CsvSourceMapping extends Vue {
   }
 
   async deleteSource (source: CsvSource): Promise<void> {
-    this.$buefy.dialog.confirm({
+    confirmDialog(this, {
       title: source.actions.delete?.title,
       message: 'Are you sure you want to delete this CSV source?',
       confirmText: 'Delete',
-      type: 'is-danger',
-      hasIcon: true,
       onConfirm: () => {
         this.$store.dispatch('api/invokeDeleteOperation', {
           operation: source.actions.delete,

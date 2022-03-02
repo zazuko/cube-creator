@@ -1,6 +1,6 @@
 <template>
-  <b-field :message="message">
-    <b-radio-button
+  <o-field :message="message">
+    <radio-button
       v-for="option in choices"
       :key="option.value"
       :value="_value"
@@ -8,8 +8,8 @@
       @input="emit"
     >
       {{ label(option) }}
-    </b-radio-button>
-  </b-field>
+    </radio-button>
+  </o-field>
 </template>
 
 <script lang="ts">
@@ -17,8 +17,11 @@ import { Prop, Component, Vue } from 'vue-property-decorator'
 import { GraphPointer, MultiPointer } from 'clownface'
 import { Term } from 'rdf-js'
 import { rdfs } from '@tpluscode/rdf-ns-builders'
+import RadioButton from '@/components/RadioButton.vue'
 
-@Component
+@Component({
+  components: { RadioButton },
+})
 export default class extends Vue {
   @Prop() options?: MultiPointer
   @Prop() value?: GraphPointer

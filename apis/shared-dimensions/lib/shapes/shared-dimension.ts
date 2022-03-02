@@ -118,6 +118,7 @@ const properties: Initializer<PropertyShape>[] = [{
           name: 'Time precision',
           path: time.unitType,
           maxCount: 1,
+          order: 20,
           nodeKind: sh.IRI,
           [sh1.if.value]: {
             [sh.path.value]: rdf.type,

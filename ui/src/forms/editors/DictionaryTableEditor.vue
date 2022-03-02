@@ -1,15 +1,15 @@
 <template>
   <div>
-    <b-field>
-      <b-radio-button
+    <o-field>
+      <radio-button
         v-for="filter in filters"
         :key="filter"
         :native-value="filter"
         v-model="selectedFilter"
       >
         {{ filter }}
-      </b-radio-button>
-    </b-field>
+      </radio-button>
+    </o-field>
     <table class="terms-table">
       <tbody>
         <tr v-for="o in displayedObjects" :key="o.key" class="term-row">
@@ -20,9 +20,9 @@
             />
           </td>
           <td class="term-remove-col">
-            <b-tooltip label="Remove value">
-              <b-button icon-left="minus" @click.prevent="renderer.actions.removeObject(o.object)" type="is-white" />
-            </b-tooltip>
+            <o-tooltip label="Remove value">
+              <o-button icon-left="minus" @click.prevent="renderer.actions.removeObject(o.object)" variant="white" />
+            </o-tooltip>
           </td>
         </tr>
         <tr v-if="displayedObjects.length === 0">
@@ -32,9 +32,9 @@
         </tr>
       </tbody>
     </table>
-    <b-tooltip label="Add value">
-      <b-button icon-left="plus" @click.prevent="renderer.actions.addObject" type="is-white" />
-    </b-tooltip>
+    <o-tooltip label="Add value">
+      <o-button icon-left="plus" @click.prevent="renderer.actions.addObject" variant="white" />
+    </o-tooltip>
   </div>
 </template>
 
@@ -45,10 +45,11 @@ import { prov, sh } from '@tpluscode/rdf-ns-builders'
 import { Term } from 'rdf-js'
 import { PropertyShape } from '@rdfine/shacl'
 import { PropertyRenderer } from '@hydrofoil/shaperone-core/renderer'
+import RadioButton from '@/components/RadioButton.vue'
 import RenderWcTemplate from '../RenderWcTemplate.vue'
 
 @Component({
-  components: { RenderWcTemplate },
+  components: { RadioButton, RenderWcTemplate },
 })
 export default class extends Vue {
   @Prop() objects!: PropertyObjectState[]

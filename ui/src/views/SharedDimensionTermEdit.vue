@@ -1,11 +1,11 @@
 <template>
   <side-pane :title="title" @close="onCancel">
-    <b-field label="URI" v-if="termUri">
+    <o-field label="URI" v-if="termUri">
       <a class="form-input" :href="termUri" target="_blank" rel="noopener noreferer">
         <span>{{ termUri }}</span>
-        <b-icon icon="external-link-alt" />
+        <o-icon icon="external-link-alt" />
       </a>
-    </b-field>
+    </o-field>
     <hydra-operation-form-with-raw
       v-if="operation"
       :operation="operation"
@@ -32,6 +32,7 @@ import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 import * as storeNs from '../store/namespace'
 import { serializeSharedDimensionTerm } from '../store/serializers'
 import { SharedDimension, SharedDimensionTerm } from '../store/types'
+import { displayToast } from '@/use-toast'
 
 @Component({
   components: { SidePane, HydraOperationFormWithRaw },
@@ -92,9 +93,9 @@ export default class extends Vue {
 
       this.$store.dispatch('sharedDimension/updateTerm', term)
 
-      this.$buefy.toast.open({
+      displayToast(this, {
         message: 'Shared dimension term successfully saved',
-        type: 'is-success',
+        variant: 'success',
       })
 
       this.$router.push({ name: 'SharedDimension', params: { id: this.dimension.clientPath } })

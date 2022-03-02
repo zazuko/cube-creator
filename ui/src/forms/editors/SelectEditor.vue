@@ -1,5 +1,5 @@
 <template>
-  <b-select class="select-editor" placeholder="Select" @input="onInput" :value="valueStr">
+  <o-select class="select-editor" placeholder="Select" @input="onInput" :value="valueStr">
     <option
       v-for="[option, label] in options"
       :value="option.term.value"
@@ -7,7 +7,7 @@
     >
       {{ label }}
     </option>
-  </b-select>
+  </o-select>
 </template>
 
 <style scoped>

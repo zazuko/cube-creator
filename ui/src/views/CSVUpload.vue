@@ -22,13 +22,15 @@ import { Component, Vue } from 'vue-property-decorator'
 import { CsvMapping } from '@cube-creator/model'
 
 import { api } from '@/api'
+import BMessage from '@/components/BMessage.vue'
 import CsvUploadForm from '@/components/CsvUploadForm.vue'
 import FormSubmitCancel from '@/components/FormSubmitCancel.vue'
 import SidePane from '@/components/SidePane.vue'
 import * as storeNs from '../store/namespace'
+import { displayToast } from '@/use-toast'
 
 @Component({
-  components: { CsvUploadForm, SidePane, FormSubmitCancel },
+  components: { BMessage, CsvUploadForm, SidePane, FormSubmitCancel },
 })
 export default class CSVUploadView extends Vue {
   @storeNs.project.State('csvMapping') mapping!: CsvMapping
@@ -62,9 +64,9 @@ export default class CSVUploadView extends Vue {
     try {
       await Promise.all(uploads)
 
-      this.$buefy.toast.open({
+      displayToast(this, {
         message: 'CSV files were successfully uploaded',
-        type: 'is-success',
+        variant: 'success',
       })
 
       await this.close()

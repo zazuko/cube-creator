@@ -13,9 +13,9 @@
       @cancel="$emit('cancel', $event)"
     />
     <div class="mt-4 has-text-right">
-      <b-button @click="toggleMode" icon-left="chevron-left">
+      <o-button @click="toggleMode" icon-left="chevron-left">
         Back to form (basic)
-      </b-button>
+      </o-button>
     </div>
   </div>
   <div v-else>
@@ -32,9 +32,9 @@
       @cancel="$emit('cancel', $event)"
     />
     <div class="mt-4 has-text-right">
-      <b-button icon-right="exclamation-triangle" @click="toggleMode" type="is-text">
+      <o-button icon-right="exclamation-triangle" @click="toggleMode" variant="text">
         Edit raw RDF (advanced)
-      </b-button>
+      </o-button>
     </div>
   </div>
 </template>
