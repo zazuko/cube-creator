@@ -223,8 +223,8 @@ export default defineComponent({
 
     errors (): Schema.Thing[] {
       return [
-        ...this.cubeMetadata.errors!,
-        ...this.dimensionMetadataCollection.errors!,
+        ...(this.cubeMetadata.errors ?? []),
+        ...(this.dimensionMetadataCollection.errors ?? []),
       ]
     },
 

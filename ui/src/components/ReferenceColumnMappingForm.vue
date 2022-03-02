@@ -2,8 +2,8 @@
   <form @submit.prevent="onSubmit">
     <o-field label="Link to table">
       <o-select v-model="data.referencedTable" placeholder="Select a table">
-        <option v-for="table in tables" :key="table.clientPath" :value="table">
-          {{ table.name }}
+        <option v-for="optionTable in tables" :key="optionTable.clientPath" :value="optionTable">
+          {{ optionTable.name }}
         </option>
       </o-select>
     </o-field>
