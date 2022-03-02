@@ -13,17 +13,29 @@
 </template>
 
 <script lang="ts">
-import { Prop, Component, Vue } from 'vue-property-decorator'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { Term } from 'rdf-js'
 import { FileLiteral } from '@/forms/FileLiteral'
 
-@Component
-export default class FileUploadEditor extends Vue {
-  file: File | null = null
-  @Prop() update!: (term: Term) => void
+export default defineComponent({
+  name: 'FileUploadEditor',
+  props: {
+    update: {
+      type: Function as PropType<(term: Term) => void>,
+      required: true,
+    },
+  },
 
-  onFileSelected (value: File): void {
-    this.update(new FileLiteral(value))
-  }
-}
+  data (): { file: File | null } {
+    return {
+      file: null,
+    }
+  },
+
+  methods: {
+    onFileSelected (value: File): void {
+      this.update(new FileLiteral(value))
+    },
+  },
+})
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div v-if="cubeMetadata && dimensionMetadataCollection">
-    <CubePreview
+    <cube-preview
       :cube-metadata="cubeMetadata"
       :dimensions="dimensions"
       :dimension-metadata-collection="dimensionMetadataCollection"
@@ -15,32 +15,39 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
-import type { Dataset, DimensionMetadata, DimensionMetadataCollection } from '@cube-creator/model'
+import { defineComponent } from '@vue/composition-api'
 import CubePreview from '@/components/CubePreview.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
-import * as storeNs from '../store/namespace'
+import { mapGetters, mapState } from 'vuex'
 
-@Component({
+export default defineComponent({
+  name: 'CubeDesignerView',
   components: { CubePreview, LoadingBlock },
-})
-export default class CubeDesignerView extends Vue {
-  @storeNs.project.State('cubeMetadata') cubeMetadata!: Dataset | null
-  @storeNs.project.State('selectedLanguage') selectedLanguage!: string
-  @storeNs.project.State('dimensionMetadataCollection') dimensionMetadataCollection!: DimensionMetadataCollection | null
-  @storeNs.project.Getter('dimensions') dimensions!: DimensionMetadata[]
+
+  computed: {
+    ...mapState('project', [
+      'cubeMetadata',
+      'selectedLanguage',
+      'dimensionMetadataCollection',
+    ]),
+    ...mapGetters('project', {
+      dimensions: 'dimensions',
+    }),
+  },
 
   async mounted (): Promise<void> {
     await this.$store.dispatch('project/fetchCubeMetadata')
     this.$store.dispatch('project/fetchDimensionMetadataCollection')
-  }
+  },
 
-  selectLanguage (language: string): void {
-    this.$store.dispatch('project/selectLanguage', language)
-  }
+  methods: {
+    selectLanguage (language: string): void {
+      this.$store.dispatch('project/selectLanguage', language)
+    },
 
-  refreshDimensions (): void {
-    this.$store.dispatch('project/refreshDimensionMetadataCollection')
-  }
-}
+    refreshDimensions (): void {
+      this.$store.dispatch('project/refreshDimensionMetadataCollection')
+    },
+  },
+})
 </script>

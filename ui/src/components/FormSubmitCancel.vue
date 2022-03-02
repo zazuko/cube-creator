@@ -22,23 +22,42 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { ColorsModifiers } from '@oruga-ui/oruga/types/helpers'
+import { defineComponent, PropType } from '@vue/composition-api'
 import ButtonLoading from './ButtonLoading.vue'
 
-@Component({
+export default defineComponent({
+  name: 'FormSubmitCancel',
   components: { ButtonLoading },
-})
-export default class FormSubmitCancel extends Vue {
-  @Prop() submitLabel?: string
-  @Prop() disabled?: boolean
-  @Prop() isSubmitting?: boolean
-  @Prop({ default: true }) showCancel?: boolean
-  @Prop({ default: 'primary' }) submitButtonVariant?: string
+  props: {
+    submitLabel: {
+      type: String,
+      default: undefined,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+    isSubmitting: {
+      type: Boolean,
+      default: false,
+    },
+    showCancel: {
+      type: Boolean,
+      default: true,
+    },
+    submitButtonVariant: {
+      type: String as PropType<ColorsModifiers>,
+      default: 'primary',
+    },
+  },
 
-  get _submitLabel (): string {
-    return this.submitLabel || 'Save'
-  }
-}
+  computed: {
+    _submitLabel (): string {
+      return this.submitLabel || 'Save'
+    },
+  },
+})
 </script>
 
 <style scoped>

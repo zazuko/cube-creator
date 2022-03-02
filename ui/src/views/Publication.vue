@@ -33,10 +33,10 @@
               Version {{ job.revision }}
             </span>
             <span v-if="job.status" class="tag">
-              <ExternalTerm :resource="job.status" />
+              <external-term :resource="job.status" />
             </span>
             <span v-if="job.publishedTo" class="tag">
-              <ExternalTerm :resource="job.publishedTo" />
+              <external-term :resource="job.publishedTo" />
             </span>
           </div>
         </job-item>
@@ -50,20 +50,30 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { defineComponent } from '@vue/composition-api'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import JobForm from '@/components/JobForm.vue'
 import JobItem from '@/components/JobItem.vue'
 import ExternalTerm from '@/components/ExternalTerm.vue'
-import { JobCollection, PublishJob, UnlistJob } from '@cube-creator/model'
-import * as storeNs from '../store/namespace'
+import { JobCollection } from '@cube-creator/model'
+import { mapGetters } from 'vuex'
 
-@Component({
+export default defineComponent({
+  name: 'PublicationView',
   components: { ExternalTerm, LoadingBlock, JobForm, JobItem },
+
+  computed: {
+    ...mapGetters('project', {
+      jobs: 'publicationJobs',
+    }),
+
+    language (): string[] {
+      return this.$store.state.app.language
+    },
+
+    jobCollection (): JobCollection {
+      return this.$store.state.project.jobCollection
+    },
+  },
 })
-export default class PublicationView extends Vue {
-  @storeNs.app.State('language') language!: string[]
-  @storeNs.project.State('jobCollection') jobCollection!: JobCollection | null
-  @storeNs.project.Getter('publicationJobs') jobs!: (PublishJob | UnlistJob)[]
-}
 </script>

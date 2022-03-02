@@ -36,87 +36,97 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch } from 'vue-property-decorator'
+import { defineComponent } from '@vue/composition-api'
 import { RuntimeOperation } from 'alcaeus'
 import { GraphPointer } from 'clownface'
-import { Term } from 'rdf-js'
+import { mapGetters } from 'vuex'
 import { CsvSource, Table } from '@cube-creator/model'
 import RadioButton from '@/components/RadioButton.vue'
 import SidePane from '@/components/SidePane.vue'
 import ReferenceColumnMappingForm from '@/components/ReferenceColumnMappingForm.vue'
 import LiteralColumnMappingForm from '@/components/LiteralColumnMappingForm.vue'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
-import * as storeNs from '../store/namespace'
 import { displayToast } from '@/use-toast'
 
 type ColumnMappingType = 'literal' | 'reference'
 
-@Component({
+export default defineComponent({
+  name: 'ColumnMappingCreateView',
   components: { RadioButton, SidePane, LiteralColumnMappingForm, ReferenceColumnMappingForm },
-})
-export default class CubeProjectEditView extends Vue {
-  @storeNs.project.Getter('findTable') findTable!: (id: string) => Table
-  @storeNs.project.Getter('getSource') getSource!: (uri: Term) => CsvSource
 
-  columnMappingType: ColumnMappingType = 'literal'
-  isSubmitting = false
-  error: ErrorDetails | null = null
-
-  get table (): Table {
-    const tableId = this.$route.params.tableId
-    return this.findTable(tableId)
-  }
-
-  get source (): CsvSource {
-    const source = this.table.csvSource && this.getSource(this.table.csvSource.id)
-
-    if (!source) throw new Error('Source not found')
-
-    return source
-  }
-
-  get operation (): RuntimeOperation | null {
-    return this.columnMappingType === 'literal'
-      ? this.table?.actions.createLiteralColumnMapping ?? null
-      : this.table?.actions.createReferenceColumnMapping ?? null
-  }
-
-  @Watch('columnMappingType')
-  resetError (): void {
-    this.error = null
-  }
-
-  async onSubmit (resource: GraphPointer): Promise<void> {
-    this.error = null
-    this.isSubmitting = true
-
-    try {
-      const columnMapping = await this.$store.dispatch('api/invokeSaveOperation', {
-        operation: this.operation,
-        resource,
-      })
-
-      this.$store.commit('project/storeNewColumnMapping', { table: this.table, columnMapping })
-
-      displayToast(this, {
-        message: 'Column mapping was successfully created',
-        variant: 'success',
-      })
-
-      this.$router.push({ name: 'CSVMapping' })
-    } catch (e) {
-      this.error = e.details ?? { detail: e.toString() }
-
-      if (!(e instanceof APIErrorValidation)) {
-        console.error(e)
-      }
-    } finally {
-      this.isSubmitting = false
+  data (): { columnMappingType: ColumnMappingType, isSubmitting: boolean, error: ErrorDetails | null } {
+    return {
+      columnMappingType: 'literal',
+      isSubmitting: false,
+      error: null,
     }
-  }
+  },
 
-  onCancel (): void {
-    this.$router.push({ name: 'CSVMapping' })
-  }
-}
+  computed: {
+    ...mapGetters('project', {
+      findTable: 'findTable',
+      getSource: 'getSource',
+    }),
+
+    table (): Table {
+      const tableId = this.$route.params.tableId
+      return this.findTable(tableId)
+    },
+
+    source (): CsvSource {
+      const source = this.table.csvSource && this.getSource(this.table.csvSource.id)
+
+      if (!source) throw new Error('Source not found')
+
+      return source
+    },
+
+    operation (): RuntimeOperation | null {
+      return this.columnMappingType === 'literal'
+        ? this.table?.actions.createLiteralColumnMapping ?? null
+        : this.table?.actions.createReferenceColumnMapping ?? null
+    },
+  },
+
+  methods: {
+    async onSubmit (resource: GraphPointer): Promise<void> {
+      this.error = null
+      this.isSubmitting = true
+
+      try {
+        const columnMapping = await this.$store.dispatch('api/invokeSaveOperation', {
+          operation: this.operation,
+          resource,
+        })
+
+        this.$store.commit('project/storeNewColumnMapping', { table: this.table, columnMapping })
+
+        displayToast(this, {
+          message: 'Column mapping was successfully created',
+          variant: 'success',
+        })
+
+        this.$router.push({ name: 'CSVMapping' })
+      } catch (e) {
+        this.error = e.details ?? { detail: e.toString() }
+
+        if (!(e instanceof APIErrorValidation)) {
+          console.error(e)
+        }
+      } finally {
+        this.isSubmitting = false
+      }
+    },
+
+    onCancel (): void {
+      this.$router.push({ name: 'CSVMapping' })
+    },
+  },
+
+  watch: {
+    columnMappingType () {
+      this.error = null
+    }
+  },
+})
 </script>

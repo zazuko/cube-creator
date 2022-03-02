@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { defineComponent } from '@vue/composition-api'
 import { GraphPointer } from 'clownface'
 import { RuntimeOperation } from 'alcaeus'
 import { Shape } from '@rdfine/shacl'
@@ -25,19 +25,26 @@ import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 import { Table } from '@cube-creator/model'
 import { cc } from '@cube-creator/core/namespace'
-import * as storeNs from '../store/namespace'
 import { displayToast } from '@/use-toast'
+import { mapGetters } from 'vuex'
 
-@Component({
+export default defineComponent({
+  name: 'TableEditView',
   components: { SidePane, HydraOperationForm },
-})
-export default class TableCreateView extends Vue {
-  @storeNs.project.Getter('findTable') findTable!: (id: string) => Table | null
 
-  resource: GraphPointer | null = null
-  shape: Shape | null = null
-  isSubmitting = false
-  error: ErrorDetails | null = null
+  data (): {
+    resource: GraphPointer | null,
+    error: ErrorDetails | null,
+    isSubmitting: boolean,
+    shape: Shape | null,
+    } {
+    return {
+      resource: null,
+      error: null,
+      isSubmitting: false,
+      shape: null,
+    }
+  },
 
   async mounted (): Promise<void> {
     if (this.operation) {
@@ -50,59 +57,67 @@ export default class TableCreateView extends Vue {
       this.resource = table.pointer
         .addOut(cc.isObservationTable, table.isObservationTable)
     }
-  }
+  },
 
-  get table (): Table | null {
-    const tableId = this.$route.params.tableId
-    return this.findTable(tableId)
-  }
+  computed: {
+    ...mapGetters('project', {
+      findTable: 'findTable',
+    }),
 
-  get operation (): RuntimeOperation | null {
-    return this.table?.actions.edit ?? null
-  }
+    table (): Table | null {
+      const tableId = this.$route.params.tableId
+      return this.findTable(tableId)
+    },
 
-  get title (): string {
-    return this.operation?.title ?? 'Error: Missing operation'
-  }
+    operation (): RuntimeOperation | null {
+      return this.table?.actions.edit ?? null
+    },
 
-  async onSubmit (resource: GraphPointer): Promise<void> {
-    if (!this.table) return
+    title (): string {
+      return this.operation?.title ?? 'Error: Missing operation'
+    },
+  },
 
-    this.error = null
-    this.isSubmitting = true
+  methods: {
+    async onSubmit (resource: GraphPointer): Promise<void> {
+      if (!this.table) return
 
-    try {
-      const { identifierTemplate } = this.table
-      const table: Table = await this.$store.dispatch('api/invokeSaveOperation', {
-        operation: this.operation,
-        resource,
-      })
+      this.error = null
+      this.isSubmitting = true
 
-      this.$store.commit('project/storeTable', table)
+      try {
+        const { identifierTemplate } = this.table
+        const table: Table = await this.$store.dispatch('api/invokeSaveOperation', {
+          operation: this.operation,
+          resource,
+        })
 
-      displayToast(this, {
-        message: `Table ${table.name} was successfully created`,
-        variant: 'success',
-      })
+        this.$store.commit('project/storeTable', table)
 
-      if (table.identifierTemplate !== identifierTemplate) {
-        this.$store.dispatch('project/fetchCSVMapping')
+        displayToast(this, {
+          message: `Table ${table.name} was successfully created`,
+          variant: 'success',
+        })
+
+        if (table.identifierTemplate !== identifierTemplate) {
+          this.$store.dispatch('project/fetchCSVMapping')
+        }
+
+        this.$router.push({ name: 'CSVMapping' })
+      } catch (e) {
+        this.error = e.details ?? { detail: e.toString() }
+
+        if (!(e instanceof APIErrorValidation)) {
+          console.error(e)
+        }
+      } finally {
+        this.isSubmitting = false
       }
+    },
 
+    onCancel (): void {
       this.$router.push({ name: 'CSVMapping' })
-    } catch (e) {
-      this.error = e.details ?? { detail: e.toString() }
-
-      if (!(e instanceof APIErrorValidation)) {
-        console.error(e)
-      }
-    } finally {
-      this.isSubmitting = false
-    }
-  }
-
-  onCancel (): void {
-    this.$router.push({ name: 'CSVMapping' })
-  }
-}
+    },
+  },
+})
 </script>

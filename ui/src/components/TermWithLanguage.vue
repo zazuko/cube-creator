@@ -4,20 +4,30 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { Literal } from 'rdf-js'
 
-@Component
-export default class extends Vue {
-  @Prop() values?: Literal[]
-  @Prop() selectedLanguage!: string
+export default defineComponent({
+  name: 'TermWithLanguage',
+  props: {
+    values: {
+      type: Array as PropType<Literal[]>,
+      default: undefined,
+    },
+    selectedLanguage: {
+      type: String,
+      required: true,
+    },
+  },
 
-  get value (): string | undefined {
-    const term =
-      this.values?.find(({ language }) => language === this.selectedLanguage) ||
-      this.values?.find(({ language }) => !language)
+  computed: {
+    value (): string | undefined {
+      const term =
+        this.values?.find(({ language }) => language === this.selectedLanguage) ||
+        this.values?.find(({ language }) => !language)
 
-    return term?.value
-  }
-}
+      return term?.value
+    },
+  },
+})
 </script>

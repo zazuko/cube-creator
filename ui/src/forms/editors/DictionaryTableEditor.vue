@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { PropertyObjectState } from '@hydrofoil/shaperone-core/models/forms'
 import { prov, sh } from '@tpluscode/rdf-ns-builders'
 import { Term } from 'rdf-js'
@@ -48,47 +48,63 @@ import { PropertyRenderer } from '@hydrofoil/shaperone-core/renderer'
 import RadioButton from '@/components/RadioButton.vue'
 import RenderWcTemplate from '../RenderWcTemplate.vue'
 
-@Component({
+export default defineComponent({
+  name: 'DictionaryTableEditor',
   components: { RadioButton, RenderWcTemplate },
-})
-export default class extends Vue {
-  @Prop() objects!: PropertyObjectState[]
-  @Prop() shape!: PropertyShape
-  @Prop() renderer!: PropertyRenderer
+  props: {
+    objects: {
+      type: Array as PropType<PropertyObjectState[]>,
+      required: true,
+    },
+    shape: {
+      type: Object as PropType<PropertyShape>,
+      required: true,
+    },
+    renderer: {
+      type: Object as PropType<PropertyRenderer>,
+      required: true,
+    },
+  },
 
-  filters = ['All', 'Mapped', 'Unmapped']
-  selectedFilter = 'All'
-
-  get defaultValue (): Term | undefined {
-    return this.shape.node?.pointer
-      .out(sh.property)
-      .has(sh.path, prov.pairEntity)
-      .out(sh.defaultValue)
-      .term
-  }
-
-  get displayedObjects (): PropertyObjectState[] {
-    const objects = [...this.objects].sort((obj1, obj2) => {
-      const key1 = obj1.object?.out(prov.pairKey).value ?? ''
-      const key2 = obj2.object?.out(prov.pairKey).value ?? ''
-      return key1.localeCompare(key2)
-    })
-
-    const isUnmapped = (object: PropertyObjectState) => (
-      !object.object?.out(prov.pairEntity).term ||
-      object.object?.out(prov.pairEntity).term?.equals(this.defaultValue)
-    )
-    const isMapped = (object: PropertyObjectState) => !isUnmapped(object)
-
-    if (this.selectedFilter === 'Unmapped') {
-      return objects.filter(isUnmapped)
-    } else if (this.selectedFilter === 'Mapped') {
-      return objects.filter(isMapped)
-    } else {
-      return objects
+  data () {
+    return {
+      filters: ['All', 'Mapped', 'Unmapped'],
+      selectedFilter: 'All',
     }
-  }
-}
+  },
+
+  computed: {
+    defaultValue (): Term | undefined {
+      return this.shape.node?.pointer
+        .out(sh.property)
+        .has(sh.path, prov.pairEntity)
+        .out(sh.defaultValue)
+        .term
+    },
+
+    displayedObjects (): PropertyObjectState[] {
+      const objects = [...this.objects].sort((obj1, obj2) => {
+        const key1 = obj1.object?.out(prov.pairKey).value ?? ''
+        const key2 = obj2.object?.out(prov.pairKey).value ?? ''
+        return key1.localeCompare(key2)
+      })
+
+      const isUnmapped = (object: PropertyObjectState) => (
+        !object.object?.out(prov.pairEntity).term ||
+        object.object?.out(prov.pairEntity).term?.equals(this.defaultValue)
+      )
+      const isMapped = (object: PropertyObjectState) => !isUnmapped(object)
+
+      if (this.selectedFilter === 'Unmapped') {
+        return objects.filter(isUnmapped)
+      } else if (this.selectedFilter === 'Mapped') {
+        return objects.filter(isMapped)
+      } else {
+        return objects
+      }
+    },
+  },
+})
 </script>
 
 <style scoped>

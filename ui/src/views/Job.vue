@@ -14,10 +14,10 @@
         Version {{ job.revision }}
       </span>
       <span v-if="job.status" class="tag">
-        <ExternalTerm :resource="job.status" />
+        <external-term :resource="job.status" />
       </span>
       <span v-if="job.publishedTo" class="tag">
-        <ExternalTerm :resource="job.publishedTo" />
+        <external-term :resource="job.publishedTo" />
       </span>
     </div>
     <div class="is-flex gap-1">
@@ -60,38 +60,47 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from '@vue/composition-api'
 import { Job } from '@cube-creator/model'
 import type { CreativeWork } from '@rdfine/schema'
 import { schema } from '@tpluscode/rdf-ns-builders'
-import { Component, Vue } from 'vue-property-decorator'
 import VueMarkdown from 'vue-markdown/src/VueMarkdown'
 import BMessage from '@/components/BMessage.vue'
 import ExternalTerm from '@/components/ExternalTerm.vue'
 import JobStatus from '../components/JobStatus.vue'
 import LoadingBlock from '../components/LoadingBlock.vue'
 import ValidationReportDisplay from '../components/ValidationReportDisplay.vue'
-import * as storeNs from '../store/namespace'
+import { mapGetters } from 'vuex'
 
-@Component({
+export default defineComponent({
+  name: 'JobView',
   components: { BMessage, ExternalTerm, JobStatus, LoadingBlock, ValidationReportDisplay, VueMarkdown },
+
+  computed: {
+    ...mapGetters('project', {
+      findJob: 'findJob',
+    }),
+
+    language (): string[] {
+      return this.$store.state.app.language
+    },
+
+    job (): Job | undefined {
+      const jobId = this.$route.params.jobId
+      return this.findJob(jobId)
+    },
+
+    link (): string | undefined {
+      return this.job?.link?.id.value
+    },
+  },
+
+  methods: {
+    workExampleLabel (workExample: CreativeWork): string {
+      return workExample.pointer.out(schema.name, { language: this.language }).value || 'Example'
+    },
+  },
 })
-export default class JobView extends Vue {
-  @storeNs.app.State('language') language!: string[]
-  @storeNs.project.Getter('findJob') findJob!: (id: string) => Job
-
-  get job (): Job | undefined {
-    const jobId = this.$route.params.jobId
-    return this.findJob(jobId)
-  }
-
-  workExampleLabel (workExample: CreativeWork): string {
-    return workExample.pointer.out(schema.name, { language: this.language }).value || 'Example'
-  }
-
-  get link (): string | undefined {
-    return this.job?.link?.id.value
-  }
-}
 </script>
 
 <style scoped>

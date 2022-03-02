@@ -15,27 +15,50 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { ColorsModifiers } from '@oruga-ui/oruga/types/helpers'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { RuntimeOperation } from 'alcaeus'
 import { Location } from 'vue-router'
 
-@Component
-export default class HydraOperationButton extends Vue {
-  @Prop({ default: null }) operation!: RuntimeOperation | null
-  @Prop({ default: null }) to!: Location | null
-  @Prop({ default: 'text' }) variant!: string
-  @Prop({ default: 'small' }) size!: string
-  @Prop({ default: null }) icon!: string | null
-  @Prop({ default: false }) disabled!: boolean
+export default defineComponent({
+  name: 'HydraOperationButton',
+  props: {
+    operation: {
+      type: Object as PropType<RuntimeOperation | null>,
+      default: null,
+    },
+    to: {
+      type: Object as PropType<Location | null>,
+      default: null,
+    },
+    variant: {
+      type: String as PropType<ColorsModifiers>,
+      default: 'text',
+    },
+    size: {
+      type: String,
+      default: 'small',
+    },
+    icon: {
+      type: String,
+      default: null,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+  },
 
-  get tag (): string {
-    return this.to ? 'router-link' : 'button'
-  }
+  computed: {
+    tag (): string {
+      return this.to ? 'router-link' : 'button'
+    },
 
-  get iconName (): string | null {
-    return this.icon || guessIcon(this.operation)
-  }
-}
+    iconName (): string | null {
+      return this.icon || guessIcon(this.operation)
+    },
+  },
+})
 
 function guessIcon (operation: RuntimeOperation | null): string | null {
   if (!operation) return null

@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { defineComponent, PropType } from '@vue/composition-api'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import HydraRawRdfForm from '@/components/HydraRawRdfForm.vue'
 import clownface, { GraphPointer } from 'clownface'
@@ -49,40 +49,68 @@ import { RuntimeOperation } from 'alcaeus'
 import { Shape } from '@rdfine/shacl'
 import { ErrorDetails } from '@/api/errors'
 
-@Component({
+export default defineComponent({
+  name: 'HydraOperationFormWithRaw',
   components: { HydraOperationForm, HydraRawRdfForm },
-})
-export default class extends Vue {
-  @Prop({ required: true }) operation!: RuntimeOperation
-  @Prop({ required: true }) resource!: GraphPointer
-  @Prop({ required: true }) shape!: Shape | null
-  @Prop({ default: null }) error!: ErrorDetails | null
-  @Prop({ default: false }) isSubmitting!: boolean
-  @Prop() showCancel?: boolean
-  @Prop() submitLabel?: string
+  props: {
+    operation: {
+      type: Object as PropType<RuntimeOperation>,
+      required: true,
+    },
+    resource: {
+      type: Object as PropType<GraphPointer>,
+      required: true,
+    },
+    shape: {
+      type: Object as PropType<Shape | null>,
+      required: true,
+    },
+    error: {
+      type: Object as PropType<ErrorDetails | null>,
+      default: null,
+    },
+    isSubmitting: {
+      type: Boolean,
+      default: false,
+    },
+    showCancel: {
+      type: Boolean,
+      default: false,
+    },
+    submitLabel: {
+      type: String,
+      default: undefined,
+    },
+  },
 
-  isRawMode = false
-  internalResource: GraphPointer | null = this.resource
-
-  async toggleMode (): Promise<void> {
-    await this.syncResource()
-    this.isRawMode = !this.isRawMode
-  }
-
-  async syncResource (): Promise<void> {
-    if (!this.internalResource) return
-
-    if (this.isRawMode) {
-      const rdfEditor = this.$refs.rdfEditor as HydraRawRdfForm
-      await rdfEditor.waitParsing()
-      this.internalResource = Object.freeze(clownface({
-        dataset: $rdf.dataset(rdfEditor.editorQuads || []),
-        term: this.internalResource.term,
-      }))
-    } else {
-      const form = this.$refs.form as HydraOperationForm
-      this.internalResource = Object.freeze(form.clone)
+  data (): { isRawMode: boolean, internalResource: GraphPointer | null} {
+    return {
+      isRawMode: false,
+      internalResource: this.resource,
     }
-  }
-}
+  },
+
+  methods: {
+    async toggleMode (): Promise<void> {
+      await this.syncResource()
+      this.isRawMode = !this.isRawMode
+    },
+
+    async syncResource (): Promise<void> {
+      if (!this.internalResource) return
+
+      if (this.isRawMode) {
+        const rdfEditor = this.$refs.rdfEditor as any
+        await rdfEditor.waitParsing()
+        this.internalResource = Object.freeze(clownface({
+          dataset: $rdf.dataset(rdfEditor.editorQuads || []),
+          term: this.internalResource.term,
+        }))
+      } else {
+        const form = this.$refs.form as any
+        this.internalResource = Object.freeze(form.clone)
+      }
+    },
+  },
+})
 </script>

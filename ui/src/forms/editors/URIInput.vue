@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { Prop, Component, Vue } from 'vue-property-decorator'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { NamedNode } from 'rdf-js'
 import * as $rdf from '@rdf-esm/data-model'
 import { api } from '@/api'
@@ -14,52 +14,68 @@ import { supportedLanguages } from '@cube-creator/core/languages'
 
 const language = supportedLanguages.map(({ value }) => value)
 
-@Component
-export default class extends Vue {
-  @Prop() value?: NamedNode | null
-  @Prop() update!: (newValue: NamedNode | null) => void
+export default defineComponent({
+  name: 'URIInput',
+  props: {
+    value: {
+      type: Object as PropType<NamedNode | null>,
+      default: undefined,
+    },
+    update: {
+      type: Function as PropType<(newValue: NamedNode | null) => void>,
+      required: true,
+    },
+  },
 
-  message = ''
-
-  get textValue (): string {
-    return this.value?.value || ''
-  }
+  data () {
+    return {
+      message: '',
+    }
+  },
 
   mounted (): void {
     this.__fetch()
-  }
+  },
 
-  onUpdate (e: Event): void {
-    const newValue = (e.target as HTMLInputElement).value
+  computed: {
+    textValue (): string {
+      return this.value?.value || ''
+    },
+  },
 
-    try {
-      const url = new URL(newValue)
+  methods: {
+    onUpdate (e: Event): void {
+      const newValue = (e.target as HTMLInputElement).value
 
-      const newTerm = $rdf.namedNode(url.toString())
+      try {
+        const url = new URL(newValue)
 
-      this.update(newTerm)
-      this.__fetch()
-    } catch (e) {
-      this.message = ''
-    }
-  }
+        const newTerm = $rdf.namedNode(url.toString())
 
-  async __fetch (): Promise<void> {
-    if (!this.value) {
-      return
-    }
-
-    this.message = '...'
-    api.fetchResource(this.value.value)
-      .then(resource => {
-        [this.message] = resource.pointer.out(
-          [schema.name, skos.prefLabel, rdfs.label],
-          { language }
-        ).values
-      })
-      .catch(() => {
+        this.update(newTerm)
+        this.__fetch()
+      } catch (e) {
         this.message = ''
-      })
-  }
-}
+      }
+    },
+
+    async __fetch (): Promise<void> {
+      if (!this.value) {
+        return
+      }
+
+      this.message = '...'
+      api.fetchResource(this.value.value)
+        .then(resource => {
+          [this.message] = resource.pointer.out(
+            [schema.name, skos.prefLabel, rdfs.label],
+            { language }
+          ).values
+        })
+        .catch(() => {
+          this.message = ''
+        })
+    },
+  },
+})
 </script>

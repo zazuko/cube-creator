@@ -56,7 +56,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { RuntimeOperation } from 'alcaeus'
 import clownface, { AnyPointer } from 'clownface'
 import { rdf, sh } from '@tpluscode/rdf-ns-builders'
@@ -74,7 +74,7 @@ import { ErrorDetails } from '@/api/errors'
 import { Link } from '@cube-creator/model/lib/Link'
 import { api } from '@/api'
 import { Shape } from '@rdfine/shacl'
-import * as storeNs from '../store/namespace'
+import { mapGetters } from 'vuex'
 
 interface FormData {
   targetProperty: Term | null
@@ -86,31 +86,51 @@ interface FormData {
   dimensionType?: Term | null
 }
 
-@Component({
+export default defineComponent({
+  name: 'ReferenceColumnMappingForm',
   components: { FormSubmitCancel, HydraOperationError, LoadingBlock, PropertyInput, RadioButtons },
-})
-export default class extends Vue {
-  @Prop({ required: true }) table!: Table
-  @Prop({ required: true }) source!: CsvSource
-  @Prop({ default: null }) columnMapping!: ReferenceColumnMapping
-  @Prop({ required: true }) operation!: RuntimeOperation
-  @Prop({ default: null }) error!: ErrorDetails | null
-  @Prop({ default: false }) isSubmitting!: boolean
-  @Prop() submitLabel?: string
+  props: {
+    table: {
+      type: Object as PropType<Table>,
+      required: true,
+    },
+    source: {
+      type: Object as PropType<CsvSource>,
+      required: true
+    },
+    columnMapping: {
+      type: Object as PropType<ReferenceColumnMapping | null>,
+      default: null,
+    },
+    operation: {
+      type: Object as PropType<RuntimeOperation>,
+      required: true,
+    },
+    error: {
+      type: Object as PropType<ErrorDetails | null>,
+      default: null,
+    },
+    isSubmitting: {
+      type: Boolean,
+      default: false,
+    },
+    submitLabel: {
+      type: String,
+      default: undefined,
+    },
+  },
 
-  shape: Shape | null = null
-
-  @storeNs.project.Getter('findTable') findTable!: (id: string) => Table
-  @storeNs.project.Getter('getTable') getTable!: (id: Term) => Table
-  @storeNs.project.Getter('getSource') getSource!: (id: Term) => CsvSource
-  @storeNs.project.Getter('tables') tables!: Table[]
-
-  data: FormData = {
-    targetProperty: null,
-    referencedTable: null,
-    identifierMapping: null,
-    dimensionType: null,
-  }
+  data (): { shape: Shape | null, data: FormData } {
+    return {
+      shape: null,
+      data: {
+        targetProperty: null,
+        referencedTable: null,
+        identifierMapping: null,
+        dimensionType: null,
+      },
+    }
+  },
 
   async mounted (): Promise<void> {
     if (this.columnMapping) {
@@ -132,98 +152,109 @@ export default class extends Vue {
     this.$watch('data.referencedTable', this.populateColumnMapping)
 
     this.shape = await api.fetchOperationShape(this.operation)
-  }
+  },
 
-  get dimensionTypes (): AnyPointer {
-    const emptyPointer = clownface({ dataset: $rdf.dataset() })
+  computed: {
+    ...mapGetters('project', {
+      findTable: 'findTable',
+      getTable: 'getTable',
+      getSource: 'getSource',
+      tables: 'tables',
+    }),
 
-    if (!this.shape) return emptyPointer
+    dimensionTypes (): AnyPointer {
+      const emptyPointer = clownface({ dataset: $rdf.dataset() })
 
-    const nodes = this.shape.pointer.out(sh.property).has(sh.path, [cc.dimensionType]).out(sh.in).list()
+      if (!this.shape) return emptyPointer
 
-    if (!nodes) return emptyPointer
+      const nodes = this.shape.pointer.out(sh.property).has(sh.path, [cc.dimensionType]).out(sh.in).list()
 
-    return this.shape.pointer.node(nodes)
-  }
+      if (!nodes) return emptyPointer
 
-  getColumn (tableId: Term, columnId: Term): CsvColumn {
-    const table = this.getTable(tableId)
-    if (!table.csvSource) throw new Error('Table does not have source')
+      return this.shape.pointer.node(nodes)
+    },
+  },
 
-    const source = this.getSource(table.csvSource.id)
-    const column = source.columns.find(({ id }) => id.equals(columnId))
+  methods: {
+    getColumn (tableId: Term, columnId: Term): CsvColumn {
+      const table = this.getTable(tableId)
+      if (!table.csvSource) throw new Error('Table does not have source')
 
-    if (!column) throw new Error(`Column not found: ${columnId}`)
+      const source: CsvSource = this.getSource(table.csvSource.id)
+      const column = source.columns.find(({ id }) => id.equals(columnId))
 
-    return column
-  }
+      if (!column) throw new Error(`Column not found: ${columnId}`)
 
-  populatePredicate (table: Table | null): void {
-    if (!table) return
+      return column
+    },
 
-    if (!this.data.targetProperty) {
-      this.data.targetProperty = $rdf.literal(slugify(table.name, { lower: true }))
-    }
-  }
+    populatePredicate (table: Table | null): void {
+      if (!table) return
 
-  populateColumnMapping (table: Table | null): void {
-    if (!table) return
+      if (!this.data.targetProperty) {
+        this.data.targetProperty = $rdf.literal(slugify(table.name, { lower: true }))
+      }
+    },
 
-    const partialReferencedSource = table.csvSource
-    if (!partialReferencedSource) throw new Error('Table has no source')
-    const referencedSource = this.getSource(partialReferencedSource.id)
+    populateColumnMapping (table: Table | null): void {
+      if (!table) return
 
-    // TODO: Get from API
-    const template = table.identifierTemplate
-    const matches = template.match(/\{[^{}]*\}/g) || []
-    const identifierColumns = matches
-      .map((columnNameWithBrackets) => {
-        const columnName = columnNameWithBrackets.replace('{', '').replace('}', '')
-        return referencedSource.columns.find(({ name }) => name === columnName)
-      })
-      .filter((column): column is CsvColumn => !!column)
+      const partialReferencedSource = table.csvSource
+      if (!partialReferencedSource) throw new Error('Table has no source')
+      const referencedSource: CsvSource = this.getSource(partialReferencedSource.id)
 
-    this.data.identifierMapping = identifierColumns.map((column) => ({
-      sourceColumnId: guessMappedColumn(column, referencedSource, this.source),
-      referencedColumn: column,
-    }))
-  }
-
-  onSubmit (): void {
-    const data = this.data
-
-    const id = this.columnMapping?.id ?? $rdf.namedNode('')
-    const resource = clownface({ dataset: $rdf.dataset() })
-      .node(id)
-      .addOut(rdf.type, cc.ReferenceColumnMapping)
-
-    if (data.targetProperty) {
-      resource.addOut(cc.targetProperty, data.targetProperty)
-    }
-
-    if (data.referencedTable) {
-      resource.addOut(cc.referencedTable, data.referencedTable.id)
-    }
-
-    if (data.identifierMapping) {
-      data.identifierMapping.forEach(({ sourceColumnId, referencedColumn }) => {
-        resource.addOut(cc.identifierMapping, $rdf.blankNode(), (identifierMapping) => {
-          identifierMapping.addOut(cc.referencedColumn, referencedColumn.id)
-
-          if (sourceColumnId) {
-            identifierMapping.addOut(cc.sourceColumn, $rdf.namedNode(sourceColumnId))
-          }
+      // TODO: Get from API
+      const template = table.identifierTemplate
+      const matches = template.match(/\{[^{}]*\}/g) || []
+      const identifierColumns = matches
+        .map((columnNameWithBrackets) => {
+          const columnName = columnNameWithBrackets.replace('{', '').replace('}', '')
+          return referencedSource.columns.find(({ name }) => name === columnName)
         })
-      })
-    }
+        .filter((column): column is CsvColumn => !!column)
 
-    if (data.dimensionType) {
-      resource.addOut(cc.dimensionType, data.dimensionType)
-    }
+      this.data.identifierMapping = identifierColumns.map((column) => ({
+        sourceColumnId: guessMappedColumn(column, referencedSource, this.source),
+        referencedColumn: column,
+      }))
+    },
 
-    this.$emit('submit', resource)
-  }
-}
+    onSubmit (): void {
+      const data = this.data
+
+      const id = this.columnMapping?.id ?? $rdf.namedNode('')
+      const resource = clownface({ dataset: $rdf.dataset() })
+        .node(id)
+        .addOut(rdf.type, cc.ReferenceColumnMapping)
+
+      if (data.targetProperty) {
+        resource.addOut(cc.targetProperty, data.targetProperty)
+      }
+
+      if (data.referencedTable) {
+        resource.addOut(cc.referencedTable, data.referencedTable.id)
+      }
+
+      if (data.identifierMapping) {
+        data.identifierMapping.forEach(({ sourceColumnId, referencedColumn }) => {
+          resource.addOut(cc.identifierMapping, $rdf.blankNode(), (identifierMapping) => {
+            identifierMapping.addOut(cc.referencedColumn, referencedColumn.id)
+
+            if (sourceColumnId) {
+              identifierMapping.addOut(cc.sourceColumn, $rdf.namedNode(sourceColumnId))
+            }
+          })
+        })
+      }
+
+      if (data.dimensionType) {
+        resource.addOut(cc.dimensionType, data.dimensionType)
+      }
+
+      this.$emit('submit', resource)
+    },
+  },
+})
 
 function guessMappedColumn (referencedColumn: CsvColumn, referencedSource: CsvSource, tableSource: CsvSource): string | null {
   if (tableSource.clientPath === referencedSource.clientPath) {

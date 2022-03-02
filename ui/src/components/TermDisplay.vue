@@ -5,50 +5,63 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { Literal, Term } from 'rdf-js'
 import { shrink } from '@/rdf-properties'
 import { xsd } from '@tpluscode/rdf-ns-builders'
 
-@Component
-export default class extends Vue {
-  @Prop({ required: true }) term!: Term
-  @Prop({ default: false }) showLanguage!: boolean
-  @Prop() base?: string
+export default defineComponent({
+  name: 'TermDisplay',
+  props: {
+    term: {
+      type: Object as PropType<Term>,
+      required: true,
+    },
+    showLanguage: {
+      type: Boolean,
+      default: false,
+    },
+    base: {
+      type: String,
+      default: undefined,
+    },
+  },
 
-  get displayShort (): string {
-    return this.__commonTermPrefixes || this.__rawLabel
-  }
+  computed: {
+    displayShort (): string {
+      return this.__commonTermPrefixes || this.__rawLabel
+    },
 
-  get displayFull (): string {
-    if (this.term.termType === 'Literal') {
-      const datatype = this.term.datatype ? `^^${shrink(this.term.datatype.value)}` : ''
-      const language = this.term.language ? `@${this.term.language}` : ''
+    displayFull (): string {
+      if (this.term.termType === 'Literal') {
+        const datatype = this.term.datatype ? `^^${shrink(this.term.datatype.value)}` : ''
+        const language = this.term.language ? `@${this.term.language}` : ''
 
-      return `"${this.term.value}${language}"${datatype}`
-    } else {
+        return `"${this.term.value}${language}"${datatype}`
+      } else {
+        return this.term.value
+      }
+    },
+
+    __commonTermPrefixes (): string | null {
+      const shrunk = shrink(this.term.value)
+
+      return shrunk !== this.term.value ? shrunk : null
+    },
+
+    __rawLabel (): string {
+      if (this.term.termType === 'NamedNode') {
+        return shrink(this.term.value, this.base)
+      }
+
+      if (this.term.termType === 'Literal') {
+        return formatLiteral(this.term)
+      }
+
       return this.term.value
-    }
-  }
-
-  get __commonTermPrefixes (): string | null {
-    const shrunk = shrink(this.term.value)
-
-    return shrunk !== this.term.value ? shrunk : null
-  }
-
-  get __rawLabel (): string {
-    if (this.term.termType === 'NamedNode') {
-      return shrink(this.term.value, this.base)
-    }
-
-    if (this.term.termType === 'Literal') {
-      return formatLiteral(this.term)
-    }
-
-    return this.term.value
-  }
-}
+    },
+  },
+})
 
 function formatLiteral (term: Literal): string {
   if (xsd.dateTime.equals(term.datatype)) {

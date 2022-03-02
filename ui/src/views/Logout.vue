@@ -14,20 +14,24 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { defineComponent } from '@vue/composition-api'
+import { mapGetters } from 'vuex'
 import BMessage from '../components/BMessage.vue'
-import * as storeNs from '../store/namespace'
 
-@Component({
+export default defineComponent({
+  name: 'LogoutView',
   components: { BMessage },
-})
-export default class LogoutView extends Vue {
-  @storeNs.auth.Getter('oidcIsAuthenticated') isAuthenticated!: boolean
 
   mounted (): void {
     if (this.isAuthenticated) {
       this.$router.push({ name: 'Home' })
     }
-  }
-}
+  },
+
+  computed: {
+    ...mapGetters('auth', {
+      isAuthenticated: 'oidcIsAuthenticated',
+    })
+  },
+})
 </script>

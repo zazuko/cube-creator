@@ -5,28 +5,36 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { Term } from 'rdf-js'
 import { shrink } from '@/rdf-properties'
 import { CreateIdentifier } from '../store/modules/project'
-import * as storeNs from '../store/namespace'
 
-@Component
-export default class PropertyDisplay extends Vue {
-  @Prop() term!: Term
+export default defineComponent({
+  name: 'PropertyDisplay',
+  props: {
+    term: {
+      type: Object as PropType<Term>,
+      required: true,
+    }
+  },
 
-  @storeNs.project.State('createIdentifier') createIdentifier!: CreateIdentifier
+  computed: {
+    createIdentifier (): CreateIdentifier {
+      return this.$store.state.project.createIdentifier
+    },
 
-  get value (): string {
-    return this.term.value || ''
-  }
+    value (): string {
+      return this.term.value || ''
+    },
 
-  get expanded (): string {
-    return this.createIdentifier(this.term)
-  }
+    expanded (): string {
+      return this.createIdentifier(this.term)
+    },
 
-  get shrunk (): string {
-    return shrink(this.value)
-  }
-}
+    shrunk (): string {
+      return shrink(this.value)
+    },
+  },
+})
 </script>

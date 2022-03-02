@@ -28,27 +28,33 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { defineComponent } from '@vue/composition-api'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import JobForm from '@/components/JobForm.vue'
 import JobItem from '@/components/JobItem.vue'
-import ExternalTerm from '@/components/ExternalTerm.vue'
-import { ImportJob, JobCollection, TransformJob } from '@cube-creator/model'
-import * as storeNs from '../store/namespace'
+import { JobCollection } from '@cube-creator/model'
 import { RuntimeOperation } from 'alcaeus/Resources/Operation'
+import { mapGetters } from 'vuex'
 
-@Component({
-  components: { ExternalTerm, LoadingBlock, JobForm, JobItem },
+export default defineComponent({
+  name: 'PublicationView',
+  components: { LoadingBlock, JobForm, JobItem },
+
+  computed: {
+    ...mapGetters('project', {
+      hasCSVMapping: 'hasCSVMapping',
+      jobs: 'transformJobs',
+    }),
+
+    jobCollection (): JobCollection {
+      return this.$store.state.project.jobCollection
+    },
+
+    operation (): RuntimeOperation | null {
+      return this.hasCSVMapping
+        ? this.jobCollection.actions.createTransform
+        : this.jobCollection.actions.createImport
+    },
+  },
 })
-export default class PublicationView extends Vue {
-  @storeNs.project.Getter('hasCSVMapping') hasCSVMapping!: boolean
-  @storeNs.project.State('jobCollection') jobCollection!: JobCollection
-  @storeNs.project.Getter('transformJobs') jobs!: (TransformJob | ImportJob)[]
-
-  get operation (): RuntimeOperation | null {
-    return this.hasCSVMapping
-      ? this.jobCollection.actions.createTransform
-      : this.jobCollection.actions.createImport
-  }
-}
 </script>

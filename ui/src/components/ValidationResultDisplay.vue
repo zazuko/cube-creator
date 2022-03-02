@@ -19,16 +19,18 @@
 </template>
 
 <script lang="ts">
+import { defineComponent, PropType } from '@vue/composition-api'
 import { ValidationResult } from '@rdfine/shacl'
-import { Vue, Component, Prop } from 'vue-property-decorator'
 import PropertyDisplay from './PropertyDisplay.vue'
 
-@Component({
-  // Define `name` to allow recursive call
-  name: 'validation-result-display',
+export default defineComponent({
+  name: 'ValidationResultDisplay',
   components: { PropertyDisplay },
+  props: {
+    result: {
+      type: Object as PropType<ValidationResult>,
+      required: true,
+    },
+  },
 })
-export default class ValidationResultDisplay extends Vue {
-  @Prop({ required: true }) result!: ValidationResult
-}
 </script>

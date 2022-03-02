@@ -3,20 +3,32 @@
 </template>
 
 <script lang="ts">
-import { Prop, Component, Vue } from 'vue-property-decorator'
+import { defineComponent, PropType } from '@vue/composition-api'
 
-@Component
-export default class DatePickerEditor extends Vue {
-  @Prop() value?: string
-  @Prop() update!: (newValue: string) => void
+export default defineComponent({
+  name: 'DateTimePickerEditor',
+  props: {
+    value: {
+      type: String,
+      default: undefined,
+    },
+    update: {
+      type: Function as PropType<(newValue: string) => void>,
+      required: true,
+    }
+  },
 
-  get dateValue (): Date | null {
-    return this.value ? new Date(this.value) : null
-  }
+  computed: {
+    dateValue (): Date | null {
+      return this.value ? new Date(this.value) : null
+    },
+  },
 
-  onUpdate (value: Date): void {
-    const stringValue = value.toISOString()
-    this.update(stringValue)
-  }
-}
+  methods: {
+    onUpdate (value: Date): void {
+      const stringValue = value.toISOString()
+      this.update(stringValue)
+    },
+  },
+})
 </script>

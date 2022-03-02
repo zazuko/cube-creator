@@ -25,9 +25,9 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { defineComponent } from '@vue/composition-api'
 import $rdf from '@rdfjs/data-model'
-import { Term } from 'rdf-js'
+import { NamedNode, Term } from 'rdf-js'
 import TermSet from '@rdf-esm/term-set'
 import RdfResource from '@tpluscode/rdfine/RdfResource'
 import { GraphPointer } from 'clownface'
@@ -37,23 +37,19 @@ import LoadingBlock from '@/components/LoadingBlock.vue'
 import TermDisplay from '@/components/TermDisplay.vue'
 import CubePreviewValue from '@/components/CubePreviewValue.vue'
 import { api } from '@/api'
-import * as storeNs from '../store/namespace'
+import { mapState } from 'vuex'
 
-@Component({
+export default defineComponent({
+  name: 'ResourcePreview',
   components: { CubePreviewValue, LoadingBlock, SidePane, TermDisplay },
-})
-export default class ResourcePreview extends Vue {
-  @storeNs.project.State('project') project!: Project | null
-  @storeNs.project.State('cubeMetadata') cubeMetadata!: Dataset | null
-  @storeNs.project.State('selectedLanguage') selectedLanguage!: string
 
-  get cubeUri (): string | undefined {
-    return this.cubeMetadata?.hasPart[0]?.id.value
-  }
-
-  resourceId = $rdf.namedNode(this.$route.params.resourceId)
-  resource: GraphPointer | null = null
-  properties: [Term, (Term | RdfResource)[]][] = []
+  data (): { resourceId: NamedNode, resource: GraphPointer | null, properties: [Term, (Term | RdfResource)[]][] } {
+    return {
+      resourceId: $rdf.namedNode(this.$route.params.resourceId),
+      resource: null,
+      properties: [],
+    }
+  },
 
   async mounted (): Promise<void> {
     const cubeGraph = this.project?.cubeGraph
@@ -80,10 +76,24 @@ export default class ResourcePreview extends Vue {
 
       return [predicate, values]
     })
-  }
+  },
 
-  onCancel (): void {
-    this.$router.push({ name: 'CubeDesigner' })
-  }
-}
+  computed: {
+    ...mapState('project', {
+      project: 'project',
+      cubeMetadata: 'cubeMetadata',
+      selectedLanguage: 'selectedLanguage',
+    }),
+
+    cubeUri (): string | undefined {
+      return this.cubeMetadata?.hasPart[0]?.id.value
+    },
+  },
+
+  methods: {
+    onCancel (): void {
+      this.$router.push({ name: 'CubeDesigner' })
+    },
+  },
+})
 </script>

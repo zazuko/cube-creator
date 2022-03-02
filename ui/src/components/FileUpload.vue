@@ -4,7 +4,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { defineComponent, PropType } from '@vue/composition-api'
 import AwsS3Multipart from '@uppy/aws-s3-multipart'
 import { Uppy, UppyFile } from '@uppy/core'
 import { Dashboard as UppyDashboard } from '@uppy/vue'
@@ -25,21 +25,39 @@ export interface UploadedFile extends UppyFile {
   }
 }
 
-@Component({
+export default defineComponent({
+  name: 'FileUpload',
   components: { LoadingBlock, UppyDashboard },
-})
-export default class extends Vue {
-  @Prop() afterUpload!: (files: UploadedFile[]) => Promise<void>
-  @Prop({ default: undefined }) fileMeta!: Record<string, unknown> | undefined
-  @Prop({ default: true }) allowMultiple!: boolean
+  props: {
+    afterUpload: {
+      type: Function as PropType<(files: UploadedFile[]) => Promise<void>>,
+      default: undefined,
+    },
+    fileMeta: {
+      type: Object as PropType<Record<string, unknown>>,
+      default: undefined,
+    },
+    allowMultiple: {
+      type: Boolean,
+      default: true,
+    },
+  },
 
-  uppy: Uppy | null = null
-  uppyDashboardOptions = {
-    proudlyDisplayPoweredByUppy: false,
-    showLinkToFileUploadResult: false,
-    note: 'CSV files only',
-    doneButtonHandler: this.onDone,
-  }
+  data (): { uppy: Uppy | null, uppyDashboardOptions: any } {
+    return {
+      uppy: null,
+      uppyDashboardOptions: undefined,
+    }
+  },
+
+  created () {
+    this.uppyDashboardOptions = {
+      proudlyDisplayPoweredByUppy: false,
+      showLinkToFileUploadResult: false,
+      note: 'CSV files only',
+      doneButtonHandler: this.onDone,
+    }
+  },
 
   mounted (): void {
     const uppy = new Uppy({
@@ -60,22 +78,24 @@ export default class extends Vue {
     uppy.addPostProcessor(this.onUploaded)
 
     this.uppy = uppy
-  }
+  },
 
-  beforeDestroy (): void {
-    this.uppy?.close()
-  }
+  methods: {
+    beforeDestroy (): void {
+      this.uppy?.close()
+    },
 
-  onUploaded (fileIds: string[]): Promise<void> {
-    const files = fileIds.map(id => toUploadedFile(this.uppy?.getFile(id)))
+    onUploaded (fileIds: string[]): Promise<void> {
+      const files = fileIds.map(id => toUploadedFile(this.uppy?.getFile(id)))
 
-    return this.afterUpload(files)
-  }
+      return this.afterUpload(files)
+    },
 
-  onDone (): void {
-    this.$emit('done')
-  }
-}
+    onDone (): void {
+      this.$emit('done')
+    },
+  },
+})
 
 function toUploadedFile (file: UppyFile | undefined): UploadedFile {
   if (!file) throw new Error('File not found')

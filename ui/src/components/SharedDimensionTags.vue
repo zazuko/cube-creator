@@ -10,11 +10,16 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { SharedDimension } from '@/store/types'
 
-@Component
-export default class extends Vue {
-  @Prop({ required: true }) dimension!: SharedDimension
-}
+export default defineComponent({
+  name: 'SharedDimensionTags',
+  props: {
+    dimension: {
+      type: Object as PropType<SharedDimension>,
+      required: true,
+    }
+  },
+})
 </script>

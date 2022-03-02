@@ -7,15 +7,22 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { SharedDimensionTerm } from '../store/types'
 
-@Component
-export default class extends Vue {
-  @Prop({ required: true }) term!: SharedDimensionTerm
+export default defineComponent({
+  name: 'SharedDimensionTermLink',
+  props: {
+    term: {
+      type: Object as PropType<SharedDimensionTerm>,
+      required: true,
+    },
+  },
 
-  get uri (): string {
-    return this.term.canonical?.value || this.term.id?.value
-  }
-}
+  computed: {
+    uri (): string {
+      return this.term.canonical?.value || this.term.id?.value
+    },
+  },
+})
 </script>

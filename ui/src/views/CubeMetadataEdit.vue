@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { defineComponent } from '@vue/composition-api'
 import { RuntimeOperation } from 'alcaeus'
 import type { Shape } from '@rdfine/shacl'
 import { GraphPointer } from 'clownface'
@@ -26,19 +26,20 @@ import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 import { cc, cube } from '@cube-creator/core/namespace'
 import { conciseBoundedDescription } from '@/graph'
-import * as storeNs from '../store/namespace'
 import { displayToast } from '@/use-toast'
 
-@Component({
+export default defineComponent({
+  name: 'CubeMetadataEdit',
   components: { SidePane, HydraOperationFormWithRaw },
-})
-export default class CubeMetadataEdit extends Vue {
-  @storeNs.project.State('cubeMetadata') cubeMetadata!: Dataset
 
-  resource: GraphPointer | null = null
-  shape: Shape | null = null
-  error: ErrorDetails | null = null
-  isSubmitting = false
+  data (): { resource: GraphPointer | null, shape: Shape | null, error: ErrorDetails | null, isSubmitting: boolean } {
+    return {
+      resource: null,
+      shape: null,
+      error: null,
+      isSubmitting: false,
+    }
+  },
 
   async mounted (): Promise<void> {
     if (this.operation) {
@@ -54,47 +55,55 @@ export default class CubeMetadataEdit extends Vue {
       cc.dimensionMetadata
     ]
     this.resource = Object.freeze(conciseBoundedDescription(this.cubeMetadata.pointer, exclude))
-  }
+  },
 
-  get operation (): RuntimeOperation | null {
-    return this.cubeMetadata.actions.edit
-  }
+  computed: {
+    cubeMetadata (): Dataset {
+      return this.$store.state.project.cubeMetadata
+    },
 
-  get title (): string {
-    return this.operation?.title ?? 'Error: Missing operation'
-  }
+    operation (): RuntimeOperation | null {
+      return this.cubeMetadata.actions.edit
+    },
 
-  async onSubmit (resource: GraphPointer): Promise<void> {
-    this.error = null
-    this.isSubmitting = true
+    title (): string {
+      return this.operation?.title ?? 'Error: Missing operation'
+    },
+  },
 
-    try {
-      await this.$store.dispatch('api/invokeSaveOperation', {
-        operation: this.operation,
-        resource,
-      })
+  methods: {
+    async onSubmit (resource: GraphPointer): Promise<void> {
+      this.error = null
+      this.isSubmitting = true
 
-      this.$store.dispatch('project/fetchCubeMetadata')
+      try {
+        await this.$store.dispatch('api/invokeSaveOperation', {
+          operation: this.operation,
+          resource,
+        })
 
-      displayToast(this, {
-        message: 'Cube metadata was saved',
-        variant: 'success',
-      })
+        this.$store.dispatch('project/fetchCubeMetadata')
 
-      this.$router.push({ name: 'CubeDesigner' })
-    } catch (e) {
-      this.error = e.details ?? { detail: e.toString() }
+        displayToast(this, {
+          message: 'Cube metadata was saved',
+          variant: 'success',
+        })
 
-      if (!(e instanceof APIErrorValidation)) {
-        console.error(e)
+        this.$router.push({ name: 'CubeDesigner' })
+      } catch (e) {
+        this.error = e.details ?? { detail: e.toString() }
+
+        if (!(e instanceof APIErrorValidation)) {
+          console.error(e)
+        }
+      } finally {
+        this.isSubmitting = false
       }
-    } finally {
-      this.isSubmitting = false
-    }
-  }
+    },
 
-  onCancel (): void {
-    this.$router.push({ name: 'CubeDesigner' })
-  }
-}
+    onCancel (): void {
+      this.$router.push({ name: 'CubeDesigner' })
+    },
+  },
+})
 </script>

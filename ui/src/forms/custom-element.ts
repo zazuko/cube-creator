@@ -6,7 +6,6 @@ export function createCustomElement (tag: string) {
 
     Vue.use(vueCustomElement)
 
-    // eslint-disable-next-line new-cap
-    Vue.customElement(tag, (new component.default().$options))
+    Vue.customElement(tag, component.default)
   }
 }

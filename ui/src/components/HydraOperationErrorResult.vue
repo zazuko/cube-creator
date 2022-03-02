@@ -21,37 +21,46 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { defineComponent, PropType } from '@vue/composition-api'
 import type { Shape } from '@rdfine/shacl'
 import $rdf from '@rdf-esm/data-model'
 import { sh } from '@tpluscode/rdf-ns-builders'
 import { ValidationReport } from '@/api/errors'
 
-@Component({
-  // Define `name` to allow recursive call
-  name: 'hydra-operation-error-result',
+export default defineComponent({
+  name: 'HydraOperationErrorResult',
+  props: {
+    result: {
+      type: Object as PropType<ValidationReport>,
+      required: true,
+    },
+    shape: {
+      type: Object as PropType<Shape | null>,
+      default: null,
+    },
+  },
+
+  computed: {
+    usefullMessages (): string[] {
+      return this.result.message.filter((message: string) => !message.startsWith('Value does not have shape'))
+    },
+  },
+
+  methods: {
+    propertyLabel (uri: string | undefined): string {
+      if (!uri) return ''
+
+      const shrunkProperty = uri.split('#').slice(-1)[0]
+
+      if (!this.shape) return shrunkProperty
+
+      const label = this.shape.pointer.any()
+        .has(sh.path, $rdf.namedNode(uri))
+        .out(sh.name, { language: ['en', ''] })
+        .value
+
+      return label || shrunkProperty
+    },
+  },
 })
-export default class HydraOperationErrorResult extends Vue {
-  @Prop({ default: null }) result!: ValidationReport
-  @Prop({ default: null }) shape!: Shape | null
-
-  propertyLabel (uri: string | undefined): string {
-    if (!uri) return ''
-
-    const shrunkProperty = uri.split('#').slice(-1)[0]
-
-    if (!this.shape) return shrunkProperty
-
-    const label = this.shape.pointer.any()
-      .has(sh.path, $rdf.namedNode(uri))
-      .out(sh.name, { language: ['en', ''] })
-      .value
-
-    return label || shrunkProperty
-  }
-
-  get usefullMessages (): string[] {
-    return this.result.message.filter((message: string) => !message.startsWith('Value does not have shape'))
-  }
-}
 </script>

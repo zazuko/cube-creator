@@ -38,7 +38,7 @@
         <tbody>
           <tr v-if="terms.isLoading">
             <td :colspan="tableWidth" class="p-0">
-              <loading-block class="has-background-light is-size-2" :style="`height: calc(38px * ${this.pageSize});`" />
+              <loading-block class="has-background-light is-size-2" :style="`height: calc(38px * ${pageSize});`" />
             </td>
           </tr>
           <tr v-else-if="terms.error">
@@ -135,7 +135,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { defineComponent } from '@vue/composition-api'
 import HydraOperationButton from '@/components/HydraOperationButton.vue'
 import BMessage from '@/components/BMessage.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
@@ -143,13 +143,13 @@ import PageContent from '@/components/PageContent.vue'
 import SharedDimensionTags from '@/components/SharedDimensionTags.vue'
 import SharedDimensionTermLink from '@/components/SharedDimensionTermLink.vue'
 import TermDisplay from '@/components/TermDisplay.vue'
-import TermWithLanguage from '@/components/TermWithLanguage.vue'
 import DownloadButton from '@/components/DownloadButton.vue'
-import * as storeNs from '../store/namespace'
 import { SharedDimension, SharedDimensionTerm } from '../store/types'
 import { confirmDialog } from '@/use-dialog'
+import { mapState } from 'vuex'
 
-@Component({
+export default defineComponent({
+  name: 'SharedDimensionView',
   components: {
     BMessage,
     HydraOperationButton,
@@ -158,62 +158,79 @@ import { confirmDialog } from '@/use-dialog'
     SharedDimensionTags,
     SharedDimensionTermLink,
     TermDisplay,
-    TermWithLanguage,
     DownloadButton
   },
-})
-export default class extends Vue {
-  @storeNs.sharedDimension.State('dimension') dimension!: SharedDimension | null
-  @storeNs.sharedDimension.State('terms') terms!: SharedDimensionTerm[] | null
-  @storeNs.sharedDimension.State('page') page!: number
-  @storeNs.sharedDimension.State('pageSize') pageSize!: number
-  @storeNs.sharedDimension.Action('nextPage') nextPage!: () => void
-  @storeNs.sharedDimension.Action('prevPage') prevPage!: () => void
-  @storeNs.sharedDimension.Action('changePageSize') changePageSize!: () => void
 
-  pageSizes = [10, 20, 50, 100]
-  tableWidth = 3
+  data () {
+    return {
+      pageSizes: [10, 20, 50, 100],
+      tableWidth: 3,
+    }
+  },
 
   mounted (): void {
     const id = this.$route.params.id
     this.$store.dispatch('sharedDimension/fetchDimension', id)
-  }
+  },
 
   beforeDestroy (): void {
     this.$store.dispatch('sharedDimension/reset')
-  }
+  },
 
-  deleteDimension (dimension: SharedDimension): void {
-    confirmDialog(this, {
-      title: dimension.actions.delete?.title,
-      message: 'Are you sure you want to delete this shared dimension?',
-      confirmText: 'Delete',
-      onConfirm: async () => {
-        await this.$store.dispatch('api/invokeDeleteOperation', {
-          operation: dimension.actions.delete,
-          successMessage: `Dimension ${dimension.name} deleted successfully`,
-        })
-        this.$router.push({ name: 'SharedDimensions' })
-      },
-    })
-  }
+  computed: {
+    ...mapState('sharedDimension', {
+      dimension: 'dimension',
+      terms: 'terms',
+      page: 'page',
+      pageSize: 'pageSize',
+    }),
+  },
 
-  deleteTerm (term: SharedDimensionTerm): void {
-    confirmDialog(this, {
-      title: term.actions.delete?.title,
-      message: 'Are you sure you want to delete this term?',
-      confirmText: 'Delete',
-      onConfirm: () => {
-        this.$store.dispatch('api/invokeDeleteOperation', {
-          operation: term.actions.delete,
-          successMessage: 'Term deleted successfully',
-          callbackAction: 'sharedDimension/removeTerm',
-          callbackParams: term,
-        })
-      },
-    })
-  }
-}
+  methods: {
+    nextPage (): void {
+      this.$store.dispatch('sharedDimension/nextPage')
+    },
+
+    prevPage (): void {
+      this.$store.dispatch('sharedDimension/prevPage')
+    },
+
+    changePageSize (newPageSize: number): void {
+      this.$store.dispatch('sharedDimension/changePageSize', newPageSize)
+    },
+
+    deleteDimension (dimension: SharedDimension): void {
+      confirmDialog(this, {
+        title: dimension.actions.delete?.title,
+        message: 'Are you sure you want to delete this shared dimension?',
+        confirmText: 'Delete',
+        onConfirm: async () => {
+          await this.$store.dispatch('api/invokeDeleteOperation', {
+            operation: dimension.actions.delete,
+            successMessage: `Dimension ${dimension.name} deleted successfully`,
+          })
+          this.$router.push({ name: 'SharedDimensions' })
+        },
+      })
+    },
+
+    deleteTerm (term: SharedDimensionTerm): void {
+      confirmDialog(this, {
+        title: term.actions.delete?.title,
+        message: 'Are you sure you want to delete this term?',
+        confirmText: 'Delete',
+        onConfirm: () => {
+          this.$store.dispatch('api/invokeDeleteOperation', {
+            operation: term.actions.delete,
+            successMessage: 'Term deleted successfully',
+            callbackAction: 'sharedDimension/removeTerm',
+            callbackParams: term,
+          })
+        },
+      })
+    },
+  },
+})
 </script>
 
 <style scoped>

@@ -35,44 +35,65 @@
 </template>
 
 <script lang="ts">
+import { defineComponent, PropType } from '@vue/composition-api'
 import type { ColorsModifiers } from '@oruga-ui/oruga/types/helpers'
-import { Prop, Component, Vue } from 'vue-property-decorator'
 
-@Component
-export default class DialogConfirm extends Vue {
-  @Prop({ default: 'Are you sure?' }) title!: string
-  @Prop({ required: true }) message!: string
-  @Prop({ default: 'Confirm' }) confirmText!: string
-  @Prop({ default: 'danger' }) variant!: ColorsModifiers
-  @Prop({ default: true }) hasIcon!: boolean
+export default defineComponent({
+  name: 'DialogConfirm',
+  props: {
+    title: {
+      type: String,
+      default: 'Are you sure?',
+    },
+    message: {
+      type: String,
+      required: true,
+    },
+    confirmText: {
+      type: String,
+      default: 'Confirm',
+    },
+    variant: {
+      type: String as PropType<ColorsModifiers>,
+      default: 'danger',
+    },
+    hasIcon: {
+      type: Boolean,
+      default: true,
+    },
+  },
 
-  onConfirm (): void {
-    this.$emit('confirm')
-    this.$emit('close')
-  }
-
-  onCancel (): void {
-    this.$emit('cancel')
-    this.$emit('close')
-  }
-
-  get icon () {
-    if (!this.hasIcon) {
-      return null
-    }
-
-    switch (this.variant) {
-      case 'info':
-        return 'information'
-      case 'success':
-        return 'check-circle'
-      case 'warning':
-        return 'alert'
-      case 'danger':
-        return 'alert-circle'
-      default:
+  computed: {
+    icon () {
+      if (!this.hasIcon) {
         return null
-    }
-  }
-}
+      }
+
+      switch (this.variant) {
+        case 'info':
+          return 'information'
+        case 'success':
+          return 'check-circle'
+        case 'warning':
+          return 'alert'
+        case 'danger':
+          return 'alert-circle'
+        default:
+          return null
+      }
+    },
+  },
+
+  methods: {
+    onConfirm (): void {
+      this.$emit('confirm')
+      this.$emit('close')
+    },
+
+    onCancel (): void {
+      this.$emit('cancel')
+      this.$emit('close')
+    },
+  },
+})
 </script>

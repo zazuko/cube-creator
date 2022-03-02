@@ -13,32 +13,51 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
-import BLoading from './BLoading.vue'
+import { defineComponent } from '@vue/composition-api'
 
-@Component({
-  components: { BLoading },
+export default defineComponent({
+  name: 'ButtonLoading',
+  props: {
+    nativeType: {
+      type: String,
+      default: undefined,
+    },
+    variant: {
+      type: String,
+      default: undefined,
+    },
+    size: {
+      type: String,
+      default: undefined,
+    },
+    iconLeft: {
+      type: String,
+      default: undefined,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+    loading: {
+      type: Boolean,
+      default: false,
+    },
+  },
+
+  computed: {
+    icon (): string | undefined {
+      if (this.loading) {
+        return 'spinner'
+      } else {
+        return this.iconLeft
+      }
+    },
+
+    iconClass (): string {
+      return this.loading
+        ? 'animate-spin'
+        : ''
+    },
+  }
 })
-export default class ButtonLoading extends Vue {
-  @Prop() nativeType?: string
-  @Prop() variant?: string
-  @Prop() size?: string
-  @Prop() iconLeft?: string
-  @Prop() disabled?: boolean
-  @Prop() loading?: boolean
-
-  get icon () {
-    if (this.loading) {
-      return 'spinner'
-    } else {
-      return this.iconLeft
-    }
-  }
-
-  get iconClass () {
-    return this.loading
-      ? 'animate-spin'
-      : ''
-  }
-}
 </script>

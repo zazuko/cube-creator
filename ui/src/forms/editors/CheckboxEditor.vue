@@ -3,18 +3,28 @@
 </template>
 
 <script lang="ts">
-import { Prop, Component, Vue } from 'vue-property-decorator'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { Term } from 'rdf-js'
 import { literal } from '@rdf-esm/data-model'
 import { xsd } from '@tpluscode/rdf-ns-builders'
 
-@Component
-export default class extends Vue {
-  @Prop() value?: boolean
-  @Prop() update!: (newValue: Term | string) => void
+export default defineComponent({
+  name: 'CheckboxEditor',
+  props: {
+    value: {
+      type: Boolean,
+      default: undefined,
+    },
+    update: {
+      type: Function as PropType<(newValue: Term | string) => void>,
+      required: true,
+    }
+  },
 
-  emit (value: boolean): void {
-    this.update(literal(value.toString(), xsd.boolean))
-  }
-}
+  methods: {
+    emit (value: boolean): void {
+      this.update(literal(value.toString(), xsd.boolean))
+    },
+  },
+})
 </script>

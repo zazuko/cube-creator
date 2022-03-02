@@ -10,38 +10,56 @@
 </template>
 
 <script lang="ts">
+import { defineComponent, PropType } from '@vue/composition-api'
 import { Literal } from 'rdf-js'
 import * as $rdf from '@rdf-esm/data-model'
 import { PropertyState } from '@hydrofoil/shaperone-core/models/forms'
-import { Prop, Component, Vue } from 'vue-property-decorator'
 
-@Component
-export default class extends Vue {
-  @Prop() value?: Literal
-  @Prop() property?: PropertyState
-  @Prop() update!: (newValue: Literal) => void
-  @Prop({ default: 'text' }) inputType?: string
+export default defineComponent({
+  name: 'TextFieldWithLangEditor',
+  props: {
+    value: {
+      type: Object as PropType<Literal>,
+      default: undefined,
+    },
+    property: {
+      type: Object as PropType<PropertyState>,
+      default: undefined,
+    },
+    update: {
+      type: Function as PropType<(newValue: Literal) => void>,
+      required: true,
+    },
+    inputType: {
+      type: String,
+      default: 'text',
+    },
+  },
 
-  get languages (): string[] {
-    return this.property?.shape.languageIn || []
-  }
+  computed: {
+    languages (): string[] {
+      return this.property?.shape.languageIn || []
+    },
 
-  get valueText (): string {
-    return this.value?.value || ''
-  }
+    valueText (): string {
+      return this.value?.value || ''
+    },
 
-  get valueLanguage (): string | undefined {
-    return this.value?.language
-  }
+    valueLanguage (): string | undefined {
+      return this.value?.language
+    },
+  },
 
-  updateValue (newValue: string): void {
-    this.update($rdf.literal(newValue, this.valueLanguage))
-  }
+  methods: {
+    updateValue (newValue: string): void {
+      this.update($rdf.literal(newValue, this.valueLanguage))
+    },
 
-  updateLanguage (newLanguage: string): void {
-    this.update($rdf.literal(this.valueText, newLanguage))
-  }
-}
+    updateLanguage (newLanguage: string): void {
+      this.update($rdf.literal(this.valueText, newLanguage))
+    },
+  },
+})
 </script>
 
 <style scoped>
