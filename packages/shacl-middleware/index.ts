@@ -101,8 +101,5 @@ export const shaclMiddleware = ({ getTargetNode, loadResource, loadResourcesType
     return next()
   }
 
-  const r = $rdf.dataset([...validationReport.dataset]).toString()
-  console.log(r)
-
   validationReportResponse(res, validationReport)
 })
