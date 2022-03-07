@@ -14,7 +14,7 @@ import { GraphPointer } from 'clownface'
 import { Literal, NamedNode, Term } from 'rdf-js'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import TermWithLanguage from '@/components/TermWithLanguage.vue'
-import { mapGetters, mapState } from 'vuex'
+import { mapState } from 'vuex'
 
 export default defineComponent({
   name: 'ExternalTerm',
