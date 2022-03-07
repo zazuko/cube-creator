@@ -12,11 +12,16 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
-import * as storeNs from '../store/namespace'
+import { defineComponent } from '@vue/composition-api'
+import { mapGetters } from 'vuex'
 
-@Component
-export default class MaterializeJobs extends Vue {
-  @storeNs.project.Getter('materializeLabel') materializeLabel!: string
-}
+export default defineComponent({
+  name: 'MaterializeJobs',
+
+  computed: {
+    ...mapGetters('project', {
+      materializeLabel: 'materializeLabel',
+    }),
+  },
+})
 </script>

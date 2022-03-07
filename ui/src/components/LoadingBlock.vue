@@ -5,13 +5,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { defineComponent } from '@vue/composition-api'
 import BLoading from './BLoading.vue'
 
-@Component({
+export default defineComponent({
+  name: 'LoadingBlock',
   components: { BLoading },
 })
-export default class LoadingBlock extends Vue {}
 </script>
 
 <style scoped>

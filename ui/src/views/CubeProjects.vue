@@ -25,7 +25,7 @@
         </router-link>
       </div>
       <div v-if="projects.length > 0" class="panel">
-        <CubeProjectsItem
+        <cube-projects-item
           v-for="project in projects"
           :key="project.id.value"
           :project="project"
@@ -43,20 +43,17 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
-import { ProjectsCollection, Project } from '@cube-creator/model'
+import { defineComponent } from '@vue/composition-api'
+import { Project } from '@cube-creator/model'
 import CubeProjectsItem from '@/components/CubeProjectsItem.vue'
 import PageContent from '@/components/PageContent.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import HydraOperationButton from '@/components/HydraOperationButton.vue'
-import * as storeNs from '../store/namespace'
+import { mapGetters, mapState } from 'vuex'
 
-@Component({
+export default defineComponent({
+  name: 'CubeProjectsView',
   components: { CubeProjectsItem, PageContent, LoadingBlock, HydraOperationButton },
-})
-export default class CubeProjectsView extends Vue {
-  @storeNs.projects.State('collection') projectsCollection!: ProjectsCollection | null
-  @storeNs.auth.Getter('oidcUser') user?: any
 
   async mounted (): Promise<void> {
     await this.$store.dispatch('projects/fetchCollection')
@@ -65,16 +62,25 @@ export default class CubeProjectsView extends Vue {
     if (!this.$route.query.creator && this.user) {
       this.$router.replace({ query: { creator: 'me' } })
     }
-  }
+  },
 
-  get projects (): Project[] {
-    const projects = this.projectsCollection?.member ?? []
+  computed: {
+    ...mapState('projects', {
+      projectsCollection: 'collection',
+    }),
+    ...mapGetters('auth', {
+      user: 'oidcUser',
+    }),
 
-    if (this.$route.query.creator === 'all' || !this.user) {
-      return projects
-    } else {
-      return projects.filter(({ creator }) => creator.name === this.user.name)
-    }
-  }
-}
+    projects (): Project[] {
+      const projects: Project[] = this.projectsCollection?.member ?? []
+
+      if (this.$route.query.creator === 'all' || !this.user) {
+        return projects
+      } else {
+        return projects.filter(({ creator }) => creator.name === this.user.name)
+      }
+    },
+  },
+})
 </script>

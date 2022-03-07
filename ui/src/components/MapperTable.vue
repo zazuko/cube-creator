@@ -19,9 +19,11 @@
               data-testid="delete-table"
             />
             <o-dropdown position="bottom-left" class="has-text-weight-normal">
-              <button class="button is-text is-small" slot="trigger">
-                <o-icon icon="ellipsis-h" />
-              </button>
+              <template #trigger>
+                <button class="button is-text is-small">
+                  <o-icon icon="ellipsis-h" />
+                </button>
+              </template>
               <o-dropdown-item tag="div" item-class="p" v-if="table.csvw" has-link>
                 <router-link class="dropdown-item" :to="{ name: 'TableCsvw', params: { tableId: table.clientPath } }">
                   View generated CSVW
@@ -91,81 +93,91 @@
 </template>
 
 <script lang="ts">
-import { Prop, Component, Vue } from 'vue-property-decorator'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { Term } from 'rdf-js'
 import { ResourceIdentifier } from '@tpluscode/rdfine'
 import { ColumnMapping, Table } from '@cube-creator/model'
 import BMessage from './BMessage.vue'
 import HydraOperationButton from './HydraOperationButton.vue'
 import PropertyDisplay from './PropertyDisplay.vue'
-import * as storeNs from '../store/namespace'
 import { confirmDialog } from '../use-dialog'
+import { mapGetters } from 'vuex'
 
-@Component({
+export default defineComponent({
+  name: 'MapperTable',
   components: { BMessage, HydraOperationButton, PropertyDisplay },
-})
-export default class MapperTable extends Vue {
-  @Prop() readonly table!: Table
-
-  @storeNs.project.Getter('getTable') getTable!: (uri: Term) => Table
-
-  get errors (): Array<{ id: ResourceIdentifier, description?: string }> {
-    const columnErrors = this.table.columnMappings
-      .flatMap(cm => (cm.errors || []).map(({ id, description }) => ({
-        id,
-        description: `Property ${cm.targetProperty?.value}: ${description}`
-      })))
-
-    return [
-      ...(this.table.errors || []),
-      ...columnErrors,
-    ]
-  }
-
-  get prefix (): string {
-    return this.table.isObservationTable
-      ? 'Cube:'
-      : 'Concept:'
-  }
-
-  getTableColor (tableId: Term): string {
-    try {
-      return this.getTable(tableId).color
-    } catch {
-      return 'red'
+  props: {
+    table: {
+      type: Object as PropType<Table>,
+      required: true,
     }
-  }
+  },
 
-  deleteTable (table: Table): void {
-    confirmDialog(this, {
-      title: table.actions.delete?.title,
-      message: 'Are you sure you want to delete this table?',
-      confirmText: 'Delete',
-      onConfirm: () => {
-        this.$store.dispatch('api/invokeDeleteOperation', {
-          operation: table.actions.delete,
-          successMessage: `Table ${table.name} deleted successfully`,
-          callbackAction: 'project/refreshTableCollection',
-        })
-      },
-    })
-  }
+  computed: {
+    ...mapGetters('project', {
+      getTable: 'getTable',
+    }),
 
-  deleteColumnMapping (columnMapping: ColumnMapping): void {
-    confirmDialog(this, {
-      title: columnMapping.actions.delete?.title,
-      message: 'Are you sure you want to delete this column mapping?',
-      confirmText: 'Delete',
-      onConfirm: () => {
-        this.$store.dispatch('api/invokeDeleteOperation', {
-          operation: columnMapping.actions.delete,
-          successMessage: 'Column mapping deleted successfully',
-          callbackAction: 'project/refreshTableCollection',
-        })
-      },
-    })
-  }
-}
+    errors (): Array<{ id: ResourceIdentifier, description?: string }> {
+      const columnErrors = this.table.columnMappings
+        .flatMap(cm => (cm.errors || []).map(({ id, description }) => ({
+          id,
+          description: `Property ${cm.targetProperty?.value}: ${description}`
+        })))
+
+      return [
+        ...(this.table.errors || []),
+        ...columnErrors,
+      ]
+    },
+
+    prefix (): string {
+      return this.table.isObservationTable
+        ? 'Cube:'
+        : 'Concept:'
+    },
+  },
+
+  methods: {
+    getTableColor (tableId: Term): string {
+      try {
+        return this.getTable(tableId).color
+      } catch {
+        return 'red'
+      }
+    },
+
+    deleteTable (table: Table): void {
+      confirmDialog(this, {
+        title: table.actions.delete?.title,
+        message: 'Are you sure you want to delete this table?',
+        confirmText: 'Delete',
+        onConfirm: () => {
+          this.$store.dispatch('api/invokeDeleteOperation', {
+            operation: table.actions.delete,
+            successMessage: `Table ${table.name} deleted successfully`,
+            callbackAction: 'project/refreshTableCollection',
+          })
+        },
+      })
+    },
+
+    deleteColumnMapping (columnMapping: ColumnMapping): void {
+      confirmDialog(this, {
+        title: columnMapping.actions.delete?.title,
+        message: 'Are you sure you want to delete this column mapping?',
+        confirmText: 'Delete',
+        onConfirm: () => {
+          this.$store.dispatch('api/invokeDeleteOperation', {
+            operation: columnMapping.actions.delete,
+            successMessage: 'Column mapping deleted successfully',
+            callbackAction: 'project/refreshTableCollection',
+          })
+        },
+      })
+    },
+  },
+})
 </script>
 
 <style scoped>

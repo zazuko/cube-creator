@@ -71,24 +71,22 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator'
+import { defineComponent } from '@vue/composition-api'
 import CsvSourceMapping from '@/components/CsvSourceMapping.vue'
 import HydraOperationButton from '@/components/HydraOperationButton.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
-import { CsvMapping, SourcesCollection, TableCollection, Table, CsvSource, ColumnMapping } from '@cube-creator/model'
-import * as storeNs from '../store/namespace'
+import { Table, ColumnMapping } from '@cube-creator/model'
+import { mapGetters, mapState } from 'vuex'
 
-@Component({
+export default defineComponent({
+  name: 'CSVMappingView',
   components: { CsvSourceMapping, HydraOperationButton, LoadingBlock },
-})
-export default class CSVMappingView extends Vue {
-  @storeNs.project.State('csvMapping') mapping!: CsvMapping | null
-  @storeNs.project.State('sourcesCollection') sourcesCollection!: SourcesCollection | null
-  @storeNs.project.State('tableCollection') tableCollection!: TableCollection | null
-  @storeNs.project.Getter('sources') sources!: CsvSource[]
-  @storeNs.project.Getter('tables') tables!: Table[]
 
-  activeArrows: string[] = []
+  data (): { activeArrows: string[] } {
+    return {
+      activeArrows: [],
+    }
+  },
 
   async mounted (): Promise<void> {
     await this.$store.dispatch('project/fetchCSVMapping')
@@ -97,46 +95,65 @@ export default class CSVMappingView extends Vue {
     window.onresize = () => {
       this.drawArrows()
     }
-  }
+  },
 
-  get columnMappings (): ColumnMapping[] {
-    return this.tables.flatMap((table: Table) => table.columnMappings)
-  }
+  computed: {
+    ...mapState('project', {
+      mapping: 'csvMapping',
+      sourcesCollection: 'sourcesCollection',
+      tableCollection: 'tableCollection',
+    }),
+    ...mapGetters('project', {
+      sources: 'sources',
+      tables: 'tables',
+    }),
 
-  @Watch('columnMappings')
-  drawArrows (): void {
-    this.$nextTick(() => {
-      const offsetX = this.$el.getBoundingClientRect().x
-      const offsetY = this.$el.getBoundingClientRect().y
+    columnMappings (): ColumnMapping[] {
+      return this.tables.flatMap((table: Table) => table.columnMappings)
+    },
+  },
 
-      this.columnMappings.forEach((columnMapping) => {
-        const targetId = columnMapping.id.value
-        const arrowEl = this.$el.querySelector(`[data-arrow-id="${targetId}"]`)
-        const sourceEl = this.$el.querySelector(`[data-arrow-target="${targetId}"]`)
-        const targetEl = this.$el.querySelector(`[data-column-mapping-id="${targetId}"]`)
+  methods: {
+    drawArrows (): void {
+      this.$nextTick(() => {
+        const offsetX = this.$el.getBoundingClientRect().x
+        const offsetY = this.$el.getBoundingClientRect().y
 
-        if (!sourceEl || !targetEl || !arrowEl) return
+        this.columnMappings.forEach((columnMapping) => {
+          const targetId = columnMapping.id.value
+          const arrowEl = this.$el.querySelector(`[data-arrow-id="${targetId}"]`)
+          const sourceEl = this.$el.querySelector(`[data-arrow-target="${targetId}"]`)
+          const targetEl = this.$el.querySelector(`[data-column-mapping-id="${targetId}"]`)
 
-        const sourceBox = sourceEl.getBoundingClientRect()
-        const targetBox = targetEl.getBoundingClientRect()
+          if (!sourceEl || !targetEl || !arrowEl) return
 
-        const path = `
-          M ${(sourceBox.x + sourceBox.width / 2) - offsetX},${(sourceBox.y + sourceBox.height / 2) - offsetY}
-          L ${targetBox.x - offsetX},${(targetBox.y + targetBox.height / 2) - offsetY}
-        `
-        arrowEl.setAttribute('d', path)
+          const sourceBox = sourceEl.getBoundingClientRect()
+          const targetBox = targetEl.getBoundingClientRect()
+
+          const path = `
+            M ${(sourceBox.x + sourceBox.width / 2) - offsetX},${(sourceBox.y + sourceBox.height / 2) - offsetY}
+            L ${targetBox.x - offsetX},${(targetBox.y + targetBox.height / 2) - offsetY}
+          `
+          arrowEl.setAttribute('d', path)
+        })
       })
-    })
-  }
+    },
 
-  highlightArrows (ids: string[]): void {
-    this.activeArrows.push(...ids)
-  }
+    highlightArrows (ids: string[]): void {
+      this.activeArrows.push(...ids)
+    },
 
-  unhighlightArrows (ids: string[]): void {
-    this.activeArrows = this.activeArrows.filter((id) => !ids.includes(id))
-  }
-}
+    unhighlightArrows (ids: string[]): void {
+      this.activeArrows = this.activeArrows.filter((id) => !ids.includes(id))
+    },
+  },
+
+  watch: {
+    columnMappings () {
+      this.drawArrows()
+    }
+  },
+})
 </script>
 
 <style scoped>

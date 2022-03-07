@@ -13,8 +13,11 @@ base <https://ld.admin.ch/cube/dimension/>
 
 <shared-dimensions> a void:Dataset .
 
-graph <https://register.ld.admin.ch/opendataswiss/categories> {
-  <https://register.ld.admin.ch/opendataswiss/category/agriculture> a schema:DefinedTerm .
+graph <https://lindas.admin.ch/sfa/opendataswiss> {
+  <https://register.ld.admin.ch/opendataswiss/category/agriculture> a schema:DefinedTerm ;
+    schema:inDefinedTermSet <https://register.ld.admin.ch/opendataswiss/category> ;
+    schema:name "Agriculture"@en ;
+  .
 }
 
 <http://example.com/dimension/cantons> void:inDataset <shared-dimensions> .

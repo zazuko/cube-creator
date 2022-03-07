@@ -35,38 +35,40 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from '@vue/composition-api'
 import '@rdfjs-elements/rdf-editor'
 import { Quad } from 'rdf-js'
-import { Vue, Component } from 'vue-property-decorator'
 import BMessage from '@/components/BMessage.vue'
 import SidePane from '@/components/SidePane.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import RadioButton from '@/components/RadioButton.vue'
 import { Table } from '@cube-creator/model'
 import Remote, { RemoteData } from '@/remote'
-import * as storeNs from '../store/namespace'
 import { displayToast } from '@/use-toast'
+import { mapGetters } from 'vuex'
 
-@Component({
+export default defineComponent({
+  name: 'TableCreateView',
   components: { BMessage, SidePane, LoadingBlock, RadioButton },
-})
-export default class TableCreateView extends Vue {
-  @storeNs.project.Getter('findTable') findTable!: (id: string) => Table | null
 
-  csvw: RemoteData<Quad[]> = Remote.loading()
-  selectedFormat = 'application/ld+json'
-  formats = [
-    { label: 'JSON-LD', value: 'application/ld+json' },
-    { label: 'Turtle', value: 'text/turtle' },
-    { label: 'N-Triples', value: 'application/n-triples' },
-  ]
-
-  editorPrefixes = ['hydra', 'rdf', 'rdfs', 'schema', 'xsd']
-
-  get table (): Table | null {
-    const tableId = this.$route.params.tableId
-    return this.findTable(tableId)
-  }
+  data (): {
+    csvw: RemoteData<Quad[]>,
+    selectedFormat: string,
+    formats: { label: string,
+    value: string }[],
+    editorPrefixes: string[],
+    } {
+    return {
+      csvw: Remote.loading(),
+      selectedFormat: 'application/ld+json',
+      formats: [
+        { label: 'JSON-LD', value: 'application/ld+json' },
+        { label: 'Turtle', value: 'text/turtle' },
+        { label: 'N-Triples', value: 'application/n-triples' },
+      ],
+      editorPrefixes: ['hydra', 'rdf', 'rdfs', 'schema', 'xsd'],
+    }
+  },
 
   async mounted (): Promise<void> {
     if (!this.table?.csvw.load) {
@@ -82,22 +84,35 @@ export default class TableCreateView extends Vue {
 
     const csvw = representation.root.pointer.dataset
     this.csvw = Remote.loaded([...csvw])
-  }
+  },
 
-  async copy (): Promise<void> {
-    const snippet = this.$refs.snippet as any
-    const content = snippet.codeMirror.value
-    await navigator.clipboard.writeText(content)
-    displayToast(this, {
-      message: 'Copied 👍',
-      variant: 'success',
-    })
-  }
+  computed: {
+    ...mapGetters('project', {
+      findTable: 'findTable',
+    }),
 
-  onCancel (): void {
-    this.$router.push({ name: 'CSVMapping' })
-  }
-}
+    table (): Table | null {
+      const tableId = this.$route.params.tableId
+      return this.findTable(tableId)
+    },
+  },
+
+  methods: {
+    async copy (): Promise<void> {
+      const snippet = this.$refs.snippet as any
+      const content = snippet.codeMirror.value
+      await navigator.clipboard.writeText(content)
+      displayToast(this, {
+        message: 'Copied 👍',
+        variant: 'success',
+      })
+    },
+
+    onCancel (): void {
+      this.$router.push({ name: 'CSVMapping' })
+    },
+  },
+})
 </script>
 
 <style scoped>

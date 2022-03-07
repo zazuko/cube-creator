@@ -9,71 +9,76 @@
 </template>
 
 <script lang="ts">
-import { Prop, Component, Vue } from 'vue-property-decorator'
-import { Store } from 'vuex'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { Term } from 'rdf-js'
 import * as $rdf from '@rdf-esm/data-model'
 import { expand, shrink } from '@/rdf-properties'
 import store from '../../store'
-import { RootState } from '../../store/types'
 import { CreateIdentifier } from '../../store/modules/project'
-import * as storeNs from '../../store/namespace'
 
-@Component
-export default class extends Vue {
-  @Prop() value?: Term
-  @Prop() update!: (newValue: Term | null) => void
+export default defineComponent({
+  name: 'PropertyInput',
+  props: {
+    value: {
+      type: Object as PropType<Term>,
+      default: undefined,
+    },
+    update: {
+      type: Function as PropType<(newValue: Term | null) => void>,
+      required: true,
+    },
+  },
 
-  get $store (): Store<RootState> {
-    return store
-  }
+  computed: {
+    createIdentifier (): CreateIdentifier | null {
+      return store.state.project.createIdentifier
+    },
 
-  set $store (store: Store<RootState>) {
-    // Setter is required when using the component directly in the app
-    // Do nothing
-  }
+    rdfProperties (): string[] {
+      return store.state.app.commonRDFProperties
+    },
 
-  @storeNs.project.State((state) => state.createIdentifier) createIdentifier?: CreateIdentifier
-  @storeNs.app.State('commonRDFProperties') rdfProperties!: string[]
+    textValue (): string {
+      if (!this.value) {
+        return ''
+      }
 
-  get textValue (): string {
-    if (!this.value) {
-      return ''
-    }
+      if (this.value.termType === 'Literal') {
+        return this.value.value
+      } else {
+        return shrink(this.value.value)
+      }
+    },
 
-    if (this.value.termType === 'Literal') {
-      return this.value.value
-    } else {
-      return shrink(this.value.value)
-    }
-  }
+    fullURI (): string {
+      if (!this.value?.value) {
+        return ''
+      }
 
-  get fullURI (): string {
-    if (!this.value?.value) {
-      return ''
-    }
+      if (this.value.termType === 'Literal') {
+        return this.createIdentifier?.(this.value) || ''
+      } else {
+        return this.value.value
+      }
+    },
 
-    if (this.value.termType === 'Literal') {
-      return this.createIdentifier?.(this.value) || ''
-    } else {
-      return this.value.value
-    }
-  }
+    suggestions (): string[] {
+      return this.textValue
+        ? this.rdfProperties.filter((p) => p.includes(this.textValue))
+        : []
+    },
+  },
 
-  get suggestions (): string[] {
-    return this.textValue
-      ? this.rdfProperties.filter((p) => p.includes(this.textValue))
-      : []
-  }
+  methods: {
+    onUpdate (newValue: string): void {
+      const expanded = expand(newValue)
 
-  onUpdate (newValue: string): void {
-    const expanded = expand(newValue)
+      const newTerm = expanded.startsWith('http')
+        ? $rdf.namedNode(expanded)
+        : $rdf.literal(newValue)
 
-    const newTerm = expanded.startsWith('http')
-      ? $rdf.namedNode(expanded)
-      : $rdf.literal(newValue)
-
-    this.update(newTerm)
-  }
-}
+      this.update(newTerm)
+    },
+  },
+})
 </script>

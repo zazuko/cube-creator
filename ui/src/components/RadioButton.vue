@@ -12,18 +12,31 @@
 </template>
 
 <script lang="ts">
-import { Prop, Component, Vue } from 'vue-property-decorator'
+import { defineComponent } from '@vue/composition-api'
 
-@Component
-export default class RadioButton extends Vue {
-  @Prop() value!: string
-  @Prop() nativeValue!: string
-  @Prop() size?: string
+export default defineComponent({
+  name: 'RadioButton',
+  props: {
+    value: {
+      type: String,
+      default: undefined,
+    },
+    nativeValue: {
+      type: String,
+      default: undefined,
+    },
+    size: {
+      type: String,
+      default: undefined,
+    },
+  },
 
-  get isSelected () {
-    return this.value === this.nativeValue
+  computed: {
+    isSelected (): boolean {
+      return this.value === this.nativeValue
+    },
   }
-}
+})
 </script>
 
 <style>

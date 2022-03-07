@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { Term } from 'rdf-js'
 import { qudt } from '@tpluscode/rdf-ns-builders'
 
@@ -16,18 +16,25 @@ const icons: Record<string, string> = {
   [qudt.RatioScale.value]: 'balance-scale-right',
 }
 
-@Component
-export default class extends Vue {
-  @Prop() scaleOfMeasure?: Term
+export default defineComponent({
+  name: 'ScaleOfMeasureIcon',
+  props: {
+    scaleOfMeasure: {
+      type: Object as PropType<Term>,
+      default: undefined,
+    },
+  },
 
-  get label (): string {
-    return this.scaleOfMeasure?.value.split('/').slice(-1)[0] ?? ''
-  }
+  computed: {
+    label (): string {
+      return this.scaleOfMeasure?.value.split('/').slice(-1)[0] ?? ''
+    },
 
-  get icon (): string {
-    const scaleOfMeasure = this.scaleOfMeasure?.value ?? ''
+    icon (): string {
+      const scaleOfMeasure = this.scaleOfMeasure?.value ?? ''
 
-    return icons[scaleOfMeasure] || 'question-circle'
-  }
-}
+      return icons[scaleOfMeasure] || 'question-circle'
+    },
+  },
+})
 </script>

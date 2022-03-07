@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { defineComponent } from '@vue/composition-api'
 import { RuntimeOperation } from 'alcaeus'
 import { ColumnMapping, Table, CsvSource } from '@cube-creator/model'
 import { cc } from '@cube-creator/core/namespace'
@@ -37,78 +37,87 @@ import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 import SidePane from '@/components/SidePane.vue'
 import ReferenceColumnMappingForm from '@/components/ReferenceColumnMappingForm.vue'
 import LiteralColumnMappingForm from '@/components/LiteralColumnMappingForm.vue'
-import { Term } from 'rdf-js'
-import * as storeNs from '../store/namespace'
 import { displayToast } from '@/use-toast'
+import { mapGetters } from 'vuex'
 
-@Component({
+export default defineComponent({
+  name: 'ColumnMappingEditView',
   components: { SidePane, LiteralColumnMappingForm, ReferenceColumnMappingForm },
-})
-export default class CubeProjectEditView extends Vue {
-  @storeNs.project.Getter('findColumnMapping') findColumnMapping!: (id: string) => ColumnMapping | null
-  @storeNs.project.Getter('getSource') getSource!: (uri: Term) => CsvSource
-  @storeNs.project.Getter('tables') tables!: Table[]
 
-  isSubmitting = false
-  error: ErrorDetails | null = null
-
-  get columnMapping (): ColumnMapping | null {
-    const columnMappingId = this.$route.params.columnMappingId
-    return this.findColumnMapping(columnMappingId)
-  }
-
-  get isLiteral (): boolean {
-    return this.columnMapping?.types.has(cc.LiteralColumnMapping) ?? false
-  }
-
-  get table (): Table {
-    const table = this.tables.find((table) =>
-      table.columnMappings.some((columnMapping) => columnMapping.clientPath === this.columnMapping?.clientPath))
-
-    if (!table) throw new Error('Table not found')
-
-    return table
-  }
-
-  get source (): CsvSource | null {
-    return this.table.csvSource ? this.getSource(this.table.csvSource.id) : null
-  }
-
-  get operation (): RuntimeOperation | null {
-    return this.columnMapping?.actions.edit ?? null
-  }
-
-  async onSubmit (resource: GraphPointer): Promise<void> {
-    this.error = null
-    this.isSubmitting = true
-
-    try {
-      const columnMapping = await this.$store.dispatch('api/invokeSaveOperation', {
-        operation: this.operation,
-        resource,
-      })
-
-      this.$store.commit('project/storeUpdatedColumnMapping', { table: this.table, columnMapping })
-
-      displayToast(this, {
-        message: 'Column mapping was successfully updated',
-        variant: 'success',
-      })
-
-      this.$router.push({ name: 'CSVMapping' })
-    } catch (e) {
-      this.error = e.details ?? { detail: e.toString() }
-
-      if (!(e instanceof APIErrorValidation)) {
-        console.error(e)
-      }
-    } finally {
-      this.isSubmitting = false
+  data (): { isSubmitting: boolean, error: ErrorDetails | null } {
+    return {
+      isSubmitting: false,
+      error: null,
     }
-  }
+  },
 
-  onCancel (): void {
-    this.$router.push({ name: 'CSVMapping' })
-  }
-}
+  computed: {
+    ...mapGetters('project', {
+      findColumnMapping: 'findColumnMapping',
+      getSource: 'getSource',
+      tables: 'tables',
+    }),
+
+    columnMapping (): ColumnMapping | null {
+      const columnMappingId = this.$route.params.columnMappingId
+      return this.findColumnMapping(columnMappingId)
+    },
+
+    isLiteral (): boolean {
+      return this.columnMapping?.types.has(cc.LiteralColumnMapping) ?? false
+    },
+
+    table (): Table {
+      const table = this.tables.find((table: Table) =>
+        table.columnMappings.some((columnMapping) => columnMapping.clientPath === this.columnMapping?.clientPath))
+
+      if (!table) throw new Error('Table not found')
+
+      return table
+    },
+
+    source (): CsvSource | null {
+      return this.table.csvSource ? this.getSource(this.table.csvSource.id) : null
+    },
+
+    operation (): RuntimeOperation | null {
+      return this.columnMapping?.actions.edit ?? null
+    },
+  },
+
+  methods: {
+    async onSubmit (resource: GraphPointer): Promise<void> {
+      this.error = null
+      this.isSubmitting = true
+
+      try {
+        const columnMapping = await this.$store.dispatch('api/invokeSaveOperation', {
+          operation: this.operation,
+          resource,
+        })
+
+        this.$store.commit('project/storeUpdatedColumnMapping', { table: this.table, columnMapping })
+
+        displayToast(this, {
+          message: 'Column mapping was successfully updated',
+          variant: 'success',
+        })
+
+        this.$router.push({ name: 'CSVMapping' })
+      } catch (e) {
+        this.error = e.details ?? { detail: e.toString() }
+
+        if (!(e instanceof APIErrorValidation)) {
+          console.error(e)
+        }
+      } finally {
+        this.isSubmitting = false
+      }
+    },
+
+    onCancel (): void {
+      this.$router.push({ name: 'CSVMapping' })
+    },
+  },
+})
 </script>

@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { Prop, Component, Vue } from 'vue-property-decorator'
+import { defineComponent, PropType } from '@vue/composition-api'
 import type { PropertyShape } from '@rdfine/shacl'
 import { Term, NamedNode } from 'rdf-js'
 import { GraphPointer } from 'clownface'
@@ -26,23 +26,46 @@ interface Option {
   term: Term
 }
 
-@Component({
+export default defineComponent({
+  name: 'AutoCompleteEditor',
   components: { VueSelect },
-})
-export default class extends Vue {
-  @Prop() property!: PropertyShape
-  @Prop() update!: (newValue: Term | null) => void
-  @Prop() value?: NamedNode
-  @Prop() placeholder!: string
-  @Prop() options?: [GraphPointer, string][]
-  @Prop({ default: 300 }) debounceWait!: number
+  props: {
+    property: {
+      type: Object as PropType<PropertyShape>,
+      required: true,
+    },
+    update: {
+      type: Function as PropType<(newValue: Term | null) => void>,
+      required: true,
+    },
+    value: {
+      type: Object as PropType<NamedNode>,
+      default: undefined,
+    },
+    placeholder: {
+      type: String,
+      required: true,
+    },
+    options: {
+      type: Array as PropType<[GraphPointer, string][]>,
+      default: undefined,
+    },
+    debounceWait: {
+      type: Number,
+      default: 300,
+    },
+  },
 
-  searchValue = ''
-  initialLoaded = false
-  onSearch!: (freetextQuery: string, loading: () => void) => void
+  data (): { searchValue: string, initialLoaded: boolean, onSearch: (query: string, loading: () => void) => void } {
+    return {
+      searchValue: '',
+      initialLoaded: false,
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      onSearch: () => {},
+    }
+  },
 
-  constructor () {
-    super()
+  created () {
     this.onSearch = debounce((freetextQuery: string, loading: () => void): void => {
       if (this.initialLoaded && !freetextQuery) {
         return
@@ -52,27 +75,31 @@ export default class extends Vue {
       this.initialLoaded = true
       this.$emit('search', freetextQuery, loading)
     }, this.debounceWait)
-  }
+  },
 
-  get _options (): Option[] {
-    const options = this.options ?? []
-    return options.map(([pointer, label]) => ({ value: pointer.term.value, label, term: pointer.term }))
-  }
+  computed: {
+    _options (): Option[] {
+      const options = this.options ?? []
+      return options.map(([pointer, label]) => ({ value: pointer.term.value, label, term: pointer.term }))
+    },
 
-  get _value (): Option | null {
-    return this._options.find(({ value }) => value === this.value?.value) ?? null
-  }
+    _value (): Option | null {
+      return this._options.find(({ value }) => value === this.value?.value) ?? null
+    },
+  },
 
-  onInput (value: Option | null): void {
-    this.update(value?.term ?? null)
-  }
+  methods: {
+    onInput (value: Option | null): void {
+      this.update(value?.term ?? null)
+    },
 
-  clearOnBlur (): boolean {
-    return false
-  }
+    clearOnBlur (): boolean {
+      return false
+    },
 
-  __load (): void {
-    this.$emit('search', this.searchValue)
-  }
-}
+    __load (): void {
+      this.$emit('search', this.searchValue)
+    },
+  },
+})
 </script>

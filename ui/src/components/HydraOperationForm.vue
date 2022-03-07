@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { RuntimeOperation } from 'alcaeus'
 import $rdf from 'rdf-ext'
 import clownface, { GraphPointer } from 'clownface'
@@ -28,58 +28,91 @@ import HydraOperationError from './HydraOperationError.vue'
 import { ErrorDetails } from '@/api/errors'
 import LoadingBlock from './LoadingBlock.vue'
 
-@Component({
+export default defineComponent({
+  name: 'HydraOperationForm',
   components: { FormSubmitCancel, HydraOperationError, LoadingBlock },
+  props: {
+    operation: {
+      type: Object as PropType<RuntimeOperation>,
+      required: true,
+    },
+    resource: {
+      type: Object as PropType<GraphPointer>,
+      default: null,
+    },
+    shape: {
+      type: Object as PropType<Shape | null>,
+      default: null,
+    },
+    error: {
+      type: Object as PropType<ErrorDetails | null>,
+      default: null,
+    },
+    isSubmitting: {
+      type: Boolean,
+      default: false,
+    },
+    showCancel: {
+      type: Boolean,
+      default: false,
+    },
+    submitLabel: {
+      type: String,
+      default: undefined,
+    },
+    submitButtonVariant: {
+      type: String,
+      default: undefined,
+    },
+  },
+
+  data (): { __clone: GraphPointer | null } {
+    return {
+      // eslint-disable-next-line vue/no-reserved-keys
+      __clone: null,
+    }
+  },
+
+  computed: {
+    clone (): GraphPointer | null {
+      const { __clone, resource } = this
+
+      if (__clone) {
+        return __clone
+      }
+
+      if (!resource) {
+        return resource
+      }
+
+      const { graph } = resource._context[0]
+
+      const clone = $rdf.dataset([
+        ...resource.dataset.match(null, null, null, graph)
+      ])
+
+      return clownface({
+        dataset: clone,
+        term: resource.term,
+        graph,
+      })
+    },
+
+    shapePointer (): GraphPointer | null {
+      return this.shape?.pointer ?? null
+    },
+
+    _submitLabel (): string {
+      return this.submitLabel ?? this.operation.title ?? 'Save'
+    },
+  },
+
+  watch: {
+    resource (newResource: GraphPointer, oldResource: GraphPointer) {
+      if (newResource !== oldResource) {
+        this.__clone = null
+      }
+    },
+  },
 })
-export default class HydraOperationForm extends Vue {
-  @Prop({ required: true }) operation!: RuntimeOperation
-  @Prop({ required: true }) resource!: GraphPointer
-  @Prop({ required: true }) shape!: Shape | null
-  @Prop({ default: null }) error!: ErrorDetails | null
-  @Prop({ default: false }) isSubmitting!: boolean
-  @Prop() showCancel?: boolean
-  @Prop() submitLabel?: string
-  @Prop() submitButtonVariant?: string
-
-  __clone: GraphPointer | null = null
-
-  @Watch('resource')
-  private resourceChanged (newResource: GraphPointer, oldResource: GraphPointer) {
-    if (newResource !== oldResource) {
-      this.__clone = null
-    }
-  }
-
-  get clone (): GraphPointer | null {
-    const { __clone, resource } = this
-
-    if (__clone) {
-      return __clone
-    }
-
-    if (!resource) {
-      return resource
-    }
-
-    const { graph } = resource._context[0]
-
-    const clone = $rdf.dataset([
-      ...resource.dataset.match(null, null, null, graph)
-    ])
-
-    return clownface({
-      dataset: clone,
-      term: resource.term,
-      graph,
-    })
-  }
-
-  get shapePointer (): GraphPointer | null {
-    return this.shape?.pointer ?? null
-  }
-
-  get _submitLabel (): string {
-    return this.submitLabel ?? this.operation.title ?? 'Save'
-  }
-}
 </script>

@@ -13,15 +13,22 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { Job } from '@cube-creator/model'
 import JobStatus from './JobStatus.vue'
 
-@Component({
+export default defineComponent({
+  name: 'JobItem',
   components: { JobStatus },
+  props: {
+    job: {
+      type: Object as PropType<Job>,
+      required: true,
+    },
+    detailView: {
+      type: String,
+      default: 'Job',
+    },
+  },
 })
-export default class extends Vue {
-  @Prop() job!: Job
-  @Prop({ default: 'Job' }) detailView!: string
-}
 </script>

@@ -15,40 +15,35 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { defineComponent } from '@vue/composition-api'
 import { GraphPointer } from 'clownface'
 import { RuntimeOperation } from 'alcaeus'
 import type { Shape } from '@rdfine/shacl'
-import { Project, CsvSource } from '@cube-creator/model'
+import { CsvSource } from '@cube-creator/model'
 import SidePane from '@/components/SidePane.vue'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
-import * as storeNs from '../store/namespace'
 import { displayToast } from '@/use-toast'
+import { mapGetters, mapState } from 'vuex'
 
-@Component({
+export default defineComponent({
+  name: 'CubeProjectEditView',
   components: { SidePane, HydraOperationForm },
-})
-export default class CubeProjectEditView extends Vue {
-  @storeNs.project.State('project') project!: Project
-  @storeNs.project.Getter('findSource') findSource!: (id: string) => CsvSource
 
-  resource: GraphPointer | null = null
-  isSubmitting = false
-  error: ErrorDetails | null = null
-  shape: Shape | null = null
-
-  get source (): CsvSource {
-    const sourceId = this.$route.params.sourceId
-    return this.findSource(sourceId)
-  }
-
-  get operation (): RuntimeOperation | null {
-    if (!this.source) return null
-
-    return this.source.actions.edit
-  }
+  data (): {
+    resource: GraphPointer | null,
+    error: ErrorDetails | null,
+    isSubmitting: boolean,
+    shape: Shape | null,
+    } {
+    return {
+      resource: null,
+      error: null,
+      isSubmitting: false,
+      shape: null,
+    }
+  },
 
   async mounted (): Promise<void> {
     this.resource = Object.freeze(this.source.pointer)
@@ -56,39 +51,61 @@ export default class CubeProjectEditView extends Vue {
     if (this.operation) {
       this.shape = await api.fetchOperationShape(this.operation)
     }
-  }
+  },
 
-  async onSubmit (resource: GraphPointer): Promise<void> {
-    this.error = null
-    this.isSubmitting = true
+  computed: {
+    ...mapState('project', {
+      project: 'project',
+    }),
+    ...mapGetters('project', {
+      findSource: 'findSource',
+    }),
 
-    try {
-      await this.$store.dispatch('api/invokeSaveOperation', {
-        operation: this.operation,
-        resource,
-      })
+    source (): CsvSource {
+      const sourceId = this.$route.params.sourceId
+      return this.findSource(sourceId)
+    },
 
-      this.$store.dispatch('project/refreshSourcesCollection')
+    operation (): RuntimeOperation | null {
+      if (!this.source) return null
 
-      displayToast(this, {
-        message: 'Settings successfully saved',
-        variant: 'success',
-      })
+      return this.source.actions.edit
+    },
+  },
 
-      this.$router.push({ name: 'CSVMapping' })
-    } catch (e) {
-      this.error = e.details ?? { detail: e.toString() }
+  methods: {
+    async onSubmit (resource: GraphPointer): Promise<void> {
+      this.error = null
+      this.isSubmitting = true
 
-      if (!(e instanceof APIErrorValidation)) {
-        console.error(e)
+      try {
+        await this.$store.dispatch('api/invokeSaveOperation', {
+          operation: this.operation,
+          resource,
+        })
+
+        this.$store.dispatch('project/refreshSourcesCollection')
+
+        displayToast(this, {
+          message: 'Settings successfully saved',
+          variant: 'success',
+        })
+
+        this.$router.push({ name: 'CSVMapping' })
+      } catch (e) {
+        this.error = e.details ?? { detail: e.toString() }
+
+        if (!(e instanceof APIErrorValidation)) {
+          console.error(e)
+        }
+      } finally {
+        this.isSubmitting = false
       }
-    } finally {
-      this.isSubmitting = false
-    }
-  }
+    },
 
-  onCancel (): void {
-    this.$router.push({ name: 'CSVMapping' })
-  }
-}
+    onCancel (): void {
+      this.$router.push({ name: 'CSVMapping' })
+    },
+  },
+})
 </script>

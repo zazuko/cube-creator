@@ -15,12 +15,23 @@
 </template>
 
 <script lang="ts">
-import { Prop, Component, Vue } from 'vue-property-decorator'
+import { defineComponent } from '@vue/composition-api'
 
-@Component
-export default class BMessage extends Vue {
-  @Prop() type?: string
-  @Prop() size?: string
-  @Prop() title?: string
-}
+export default defineComponent({
+  name: 'BMessage',
+  props: {
+    type: {
+      type: String,
+      default: undefined,
+    },
+    size: {
+      type: String,
+      default: undefined,
+    },
+    title: {
+      type: String,
+      default: undefined,
+    },
+  },
+})
 </script>

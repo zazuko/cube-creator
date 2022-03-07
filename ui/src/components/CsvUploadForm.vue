@@ -21,7 +21,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { defineComponent, PropType } from '@vue/composition-api'
+
 import * as $rdf from '@rdfjs/dataset'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import clownface from 'clownface'
@@ -30,41 +31,57 @@ import { cc } from '@cube-creator/core/namespace'
 import ButtonLoading from './ButtonLoading.vue'
 import FileUpload, { UploadedFile } from './FileUpload.vue'
 
-@Component({
+export default defineComponent({
+  name: 'CsvUploadForm',
   components: { ButtonLoading, FileUpload },
+  props: {
+    fileMeta: {
+      type: Object as PropType<Record<string, unknown>>,
+      default: undefined,
+    },
+    allowMultiple: {
+      type: Boolean,
+      default: true,
+    },
+    isLoading: {
+      type: Boolean,
+      default: false,
+    },
+  },
+
+  data () {
+    return {
+      sourceKind: 'MediaLocal',
+      fileUrl: '',
+    }
+  },
+
+  methods: {
+    submitLocal (files: UploadedFile[]): void {
+      const mediaObjects = files.map((file) =>
+        clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('') })
+          .addOut(cc.sourceKind, cc.MediaLocal)
+          .addOut(schema.name, $rdf.literal(file.name))
+          .addOut(schema.identifier, $rdf.literal(file.s3Multipart.key))
+      )
+
+      this.$emit('submit', mediaObjects)
+    },
+
+    submitUrl (): void {
+      const dataset = $rdf.dataset()
+      const fileName = this.fileUrl.split('/').slice(-1)[0]
+      const mediaObject = clownface({ dataset, term: $rdf.namedNode('') })
+        .addOut(cc.sourceKind, cc.MediaURL)
+        .addOut(schema.name, $rdf.literal(fileName))
+        .addOut(schema.contentUrl, $rdf.namedNode(this.fileUrl))
+
+      this.$emit('submit', [mediaObject])
+    },
+
+    close (): void {
+      this.$emit('close')
+    },
+  },
 })
-export default class CsvUploadForm extends Vue {
-  @Prop({ default: undefined }) fileMeta!: Record<string, unknown>
-  @Prop({ default: true }) allowMultiple!: boolean
-  @Prop({ default: false }) isLoading!: boolean
-
-  sourceKind = 'MediaLocal'
-  fileUrl = ''
-
-  submitLocal (files: UploadedFile[]): void {
-    const mediaObjects = files.map((file) =>
-      clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('') })
-        .addOut(cc.sourceKind, cc.MediaLocal)
-        .addOut(schema.name, $rdf.literal(file.name))
-        .addOut(schema.identifier, $rdf.literal(file.s3Multipart.key))
-    )
-
-    this.$emit('submit', mediaObjects)
-  }
-
-  submitUrl (): void {
-    const dataset = $rdf.dataset()
-    const fileName = this.fileUrl.split('/').slice(-1)[0]
-    const mediaObject = clownface({ dataset, term: $rdf.namedNode('') })
-      .addOut(cc.sourceKind, cc.MediaURL)
-      .addOut(schema.name, $rdf.literal(fileName))
-      .addOut(schema.contentUrl, $rdf.namedNode(this.fileUrl))
-
-    this.$emit('submit', [mediaObject])
-  }
-
-  close (): void {
-    this.$emit('close')
-  }
-}
 </script>

@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import { Prop, Component, Vue } from 'vue-property-decorator'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { Compact } from 'vue-color'
 
 const palette = [
@@ -13,27 +13,38 @@ const palette = [
   '#FFAB91', '#BCAAA4', '#EEEEEE', '#B0BEC5',
 ]
 
-@Component({
+export default defineComponent({
+  name: 'ColorPickerEditor',
   components: { ColorPicker: Compact },
-})
-export default class extends Vue {
-  @Prop() value?: string
-  @Prop() update!: (newValue: string) => void
+  props: {
+    value: {
+      type: String,
+      default: undefined,
+    },
+    update: {
+      type: Function as PropType<(newValue: string) => void>,
+      required: true,
+    },
+  },
 
   mounted (): void {
     if (!this.value) {
       this.update(takeRandom(palette))
     }
-  }
+  },
 
-  emit (color: { hex: string }): void {
-    this.update(color.hex)
-  }
+  computed: {
+    palette (): string[] {
+      return palette
+    },
+  },
 
-  get palette (): string[] {
-    return palette
-  }
-}
+  methods: {
+    emit (color: { hex: string }): void {
+      this.update(color.hex)
+    },
+  },
+})
 
 function takeRandom<T> (array: T[]): T {
   return array[Math.floor(Math.random() * array.length)]

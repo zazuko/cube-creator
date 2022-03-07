@@ -10,14 +10,18 @@
 </template>
 
 <script lang="ts">
+import { defineComponent, PropType } from '@vue/composition-api'
 import { ValidationReport } from '@rdfine/shacl'
-import { Vue, Component, Prop } from 'vue-property-decorator'
 import ValidationResultDisplay from './ValidationResultDisplay.vue'
 
-@Component({
+export default defineComponent({
+  name: 'ValidationReportDisplay',
   components: { ValidationResultDisplay },
+  props: {
+    report: {
+      type: Object as PropType<ValidationReport>,
+      required: true,
+    },
+  },
 })
-export default class ValidationReportDisplay extends Vue {
-  @Prop({ required: true }) report!: ValidationReport
-}
 </script>

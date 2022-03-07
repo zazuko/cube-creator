@@ -21,27 +21,44 @@
 </template>
 
 <script lang="ts">
-import { Prop, Component, Vue } from 'vue-property-decorator'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { PropertyObjectState, PropertyState } from '@hydrofoil/shaperone-core/models/forms'
 import { TemplateResult } from 'lit'
 // Makes the hidden property visible to typescript
 import VueMarkdown from 'vue-markdown/src/VueMarkdown'
 import RenderWcTemplate from './RenderWcTemplate.vue'
 
-@Component({
+export default defineComponent({
+  name: 'FormProperty',
   components: { RenderWcTemplate, VueMarkdown },
-})
-export default class extends Vue {
-  @Prop() property!: PropertyState
-  @Prop() actions!: any
-  @Prop() renderObject!: (arg: { object: PropertyObjectState }) => TemplateResult
-  @Prop() renderMultiEditor!: () => TemplateResult
+  props: {
+    property: {
+      type: Object as PropType<PropertyState>,
+      required: true,
+    },
+    actions: {
+      type: Object,
+      required: true,
+    },
+    renderObject: {
+      type: Function as PropType<(arg: { object: PropertyObjectState }) => TemplateResult>,
+      required: true,
+    },
+    renderMultiEditor: {
+      type: Function as PropType<() => TemplateResult>,
+      required: true,
+    },
+  },
 
-  linkAttrs = {
-    target: '_blank',
-    rel: 'noopener noreferrer nofollow',
+  data () {
+    return {
+      linkAttrs: {
+        target: '_blank',
+        rel: 'noopener noreferrer nofollow',
+      },
+    }
   }
-}
+})
 </script>
 
 <style scoped>

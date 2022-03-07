@@ -47,23 +47,20 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
-import { Job, JobCollection, Project } from '@cube-creator/model'
+import { defineComponent } from '@vue/composition-api'
 import PageContent from '@/components/PageContent.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
-import * as storeNs from '../store/namespace'
+import { mapGetters, mapState } from 'vuex'
 
-@Component({
+export default defineComponent({
+  name: 'CubeProjectView',
   components: { PageContent, LoadingBlock },
-})
-export default class CubeProjectView extends Vue {
-  @storeNs.project.State('project') project!: Project | null
-  @storeNs.project.Getter('hasCSVMapping') hasCSVMapping!: boolean
-  @storeNs.project.Getter('materializeLabel') materializeLabel!: string
-  @storeNs.project.State('jobCollection') jobCollection!: JobCollection | null
-  @storeNs.project.Getter('transformJobs') transformJobs!: Job[]
 
-  poller: number | null = null
+  data (): { poller: number | null } {
+    return {
+      poller: null,
+    }
+  },
 
   async mounted (): Promise<void> {
     const id = this.$route.params.id
@@ -79,28 +76,42 @@ export default class CubeProjectView extends Vue {
         this.$router.push({ name: 'Materialize' })
       }
     }
-  }
+  },
 
   beforeDestroy (): void {
     this.stopPolling()
     this.$store.dispatch('project/reset')
-  }
+  },
 
-  async pollJobs (): Promise<void> {
-    try {
-      await this.$store.dispatch('project/fetchJobCollection')
-    } catch (e) {
-      this.stopPolling()
-      throw e
-    }
-  }
+  computed: {
+    ...mapState('project', {
+      project: 'project',
+      jobCollection: 'jobCollection',
+    }),
+    ...mapGetters('project', {
+      hasCSVMapping: 'hasCSVMapping',
+      materializeLabel: 'materializeLabel',
+      transformJobs: 'transformJobs',
+    }),
+  },
 
-  stopPolling (): void {
-    if (this.poller) {
-      clearInterval(this.poller)
-    }
-  }
-}
+  methods: {
+    async pollJobs (): Promise<void> {
+      try {
+        await this.$store.dispatch('project/fetchJobCollection')
+      } catch (e) {
+        this.stopPolling()
+        throw e
+      }
+    },
+
+    stopPolling (): void {
+      if (this.poller) {
+        clearInterval(this.poller)
+      }
+    },
+  },
+})
 </script>
 
 <style scoped>

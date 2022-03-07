@@ -11,15 +11,17 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { defineComponent } from '@vue/composition-api'
 import PageContent from '@/components/PageContent.vue'
 
-@Component({
+export default defineComponent({
+  name: 'NotAuthorizedView',
   components: { PageContent },
+
+  computed: {
+    link (): string | null {
+      return this.$route.params.link
+    },
+  },
 })
-export default class NotAuthorizedView extends Vue {
-  get link (): string | null {
-    return this.$route.params.link
-  }
-}
 </script>

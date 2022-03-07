@@ -38,52 +38,58 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { defineComponent } from '@vue/composition-api'
 import BLoading from '@/components/BLoading.vue'
 import NavBar from '@/components/NavBar.vue'
 import { APIErrorAuthorization } from './api/errors'
 import { Message } from './store/modules/app'
-import * as storeNs from './store/namespace'
+import { mapState } from 'vuex'
 
-@Component({
+export default defineComponent({
+  name: 'App',
   components: { BLoading, NavBar },
-})
-export default class App extends Vue {
-  @storeNs.app.State('loading') isLoading!: boolean
-  @storeNs.app.State('messages') messages!: Message[]
-
-  get release (): string {
-    const commit = process.env.VUE_APP_COMMIT?.slice(0, 7) ?? 'dev'
-    return `${process.env.VUE_APP_VERSION} (${commit})`
-  }
 
   mounted (): void {
     this.$store.dispatch('app/loadCommonRDFProperties')
 
     window.addEventListener('vuexoidc:userLoaded', this.onUserLoaded)
-  }
+  },
 
   destroyed (): void {
     window.removeEventListener('vuexoidc:userLoaded', this.onUserLoaded)
-  }
+  },
 
-  onUserLoaded (): void {
-    // Clear stale state in OIDC store to avoid "Request Header Or Cookie Too Large" error
-    this.$store.dispatch('auth/clearStaleState')
-  }
+  computed: {
+    ...mapState('app', {
+      isLoading: 'loading',
+      messages: 'messages',
+    }),
 
-  dismissMessage (message: Message): void {
-    this.$store.dispatch('app/dismissMessage', message)
-  }
+    release (): string {
+      const commit = process.env.VUE_APP_COMMIT?.slice(0, 7) ?? 'dev'
+      return `${process.env.VUE_APP_VERSION} (${commit})`
+    },
+  },
 
-  errorCaptured (err: Error): false | void {
-    if (err instanceof APIErrorAuthorization) {
-      const link = err.details?.link?.href ?? ''
-      this.$router.push({ name: 'NotAuthorized', params: { link } })
-      return false
-    }
-  }
-}
+  methods: {
+    onUserLoaded (): void {
+      // Clear stale state in OIDC store to avoid "Request Header Or Cookie Too Large" error
+      this.$store.dispatch('auth/clearStaleState')
+    },
+
+    dismissMessage (message: Message): void {
+      this.$store.dispatch('app/dismissMessage', message)
+    },
+
+    errorCaptured (err: Error): false | void {
+      if (err instanceof APIErrorAuthorization) {
+        const link = err.details?.link?.href ?? ''
+        this.$router.push({ name: 'NotAuthorized', params: { link } })
+        return false
+      }
+    },
+  },
+})
 </script>
 
 <style>

@@ -40,28 +40,34 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
-import { Project } from '@cube-creator/model'
+import { defineComponent } from '@vue/composition-api'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import DownloadButton from '@/components/DownloadButton.vue'
 import { GraphPointer } from 'clownface'
 import { Shape } from '@rdfine/shacl'
 import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
-import * as storeNs from '../store/namespace'
 import { displayToast } from '@/use-toast'
 import { confirmDialog } from '@/use-dialog'
+import { mapState } from 'vuex'
 
-@Component({
+export default defineComponent({
+  name: 'CubeProjectEditView',
   components: { HydraOperationForm, DownloadButton },
-})
-export default class CubeProjectEditView extends Vue {
-  @storeNs.project.State('project') project!: Project
 
-  resource: GraphPointer | null = null
-  shape: Shape | null = null
-  isSubmitting = false
-  error: ErrorDetails | null = null
+  data (): {
+    resource: GraphPointer | null,
+    error: ErrorDetails | null,
+    isSubmitting: boolean,
+    shape: Shape | null,
+    } {
+    return {
+      resource: null,
+      error: null,
+      isSubmitting: false,
+      shape: null,
+    }
+  },
 
   async mounted (): Promise<void> {
     const operation = this.project.actions.edit
@@ -71,51 +77,57 @@ export default class CubeProjectEditView extends Vue {
     }
 
     this.resource = Object.freeze(this.project.pointer)
-  }
+  },
 
-  async updateProject (resource: GraphPointer): Promise<void> {
-    const operation = this.project.actions.edit
+  computed: {
+    ...mapState('project', ['project']),
+  },
 
-    this.error = null
-    this.isSubmitting = true
+  methods: {
+    async updateProject (resource: GraphPointer): Promise<void> {
+      const operation = this.project.actions.edit
 
-    try {
-      const project = await this.$store.dispatch('api/invokeSaveOperation', {
-        operation: operation,
-        resource,
-      })
+      this.error = null
+      this.isSubmitting = true
 
-      this.$store.commit('project/storeProject', project)
-
-      displayToast(this, {
-        message: 'Project settings were saved',
-        variant: 'success',
-      })
-    } catch (e) {
-      this.error = e.details ?? { detail: e.toString() }
-
-      if (!(e instanceof APIErrorValidation)) {
-        console.error(e)
-      }
-    } finally {
-      this.isSubmitting = false
-    }
-  }
-
-  async deleteProject (): Promise<void> {
-    confirmDialog(this, {
-      title: this.project.actions.delete?.title,
-      message: 'Are you sure you want to delete this project? This action is not revertible.',
-      confirmText: 'Delete',
-      onConfirm: async () => {
-        await this.$store.dispatch('api/invokeDeleteOperation', {
-          operation: this.project.actions.delete,
-          successMessage: `Project ${this.project.label} successfully deleted`,
-          callbackAction: 'projects/fetchCollection',
+      try {
+        const project = await this.$store.dispatch('api/invokeSaveOperation', {
+          operation: operation,
+          resource,
         })
-        this.$router.push({ name: 'CubeProjects' })
-      },
-    })
-  }
-}
+
+        this.$store.commit('project/storeProject', project)
+
+        displayToast(this, {
+          message: 'Project settings were saved',
+          variant: 'success',
+        })
+      } catch (e) {
+        this.error = e.details ?? { detail: e.toString() }
+
+        if (!(e instanceof APIErrorValidation)) {
+          console.error(e)
+        }
+      } finally {
+        this.isSubmitting = false
+      }
+    },
+
+    async deleteProject (): Promise<void> {
+      confirmDialog(this, {
+        title: this.project.actions.delete?.title,
+        message: 'Are you sure you want to delete this project? This action is not revertible.',
+        confirmText: 'Delete',
+        onConfirm: async () => {
+          await this.$store.dispatch('api/invokeDeleteOperation', {
+            operation: this.project.actions.delete,
+            successMessage: `Project ${this.project.label} successfully deleted`,
+            callbackAction: 'projects/fetchCollection',
+          })
+          this.$router.push({ name: 'CubeProjects' })
+        },
+      })
+    },
+  },
+})
 </script>

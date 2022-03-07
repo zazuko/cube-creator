@@ -15,8 +15,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
-import { Collection, RuntimeOperation } from 'alcaeus'
+import { defineComponent } from '@vue/composition-api'
+import { RuntimeOperation } from 'alcaeus'
 import clownface, { GraphPointer } from 'clownface'
 import type { Shape } from '@rdfine/shacl'
 import { dataset } from '@rdf-esm/dataset'
@@ -24,66 +24,82 @@ import SidePane from '@/components/SidePane.vue'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
-import * as storeNs from '../store/namespace'
 import { displayToast } from '@/use-toast'
+import { mapState } from 'vuex'
 
-@Component({
+export default defineComponent({
+  name: 'SharedDimensionCreateView',
   components: { SidePane, HydraOperationForm },
-})
-export default class extends Vue {
-  @storeNs.sharedDimensions.State('collection') collection!: Collection
 
-  resource: GraphPointer | null = Object.freeze(clownface({ dataset: dataset() }).namedNode(''))
-  error: ErrorDetails | null = null
-  isSubmitting = false
-  shape: Shape | null = null
-  shapes: GraphPointer | null = null
-
-  get operation (): RuntimeOperation | null {
-    return this.collection.actions.create
-  }
-
-  get title (): string {
-    return this.operation?.title ?? ''
-  }
+  data (): {
+    resource: GraphPointer | null,
+    error: ErrorDetails | null,
+    isSubmitting: boolean,
+    shape: Shape | null,
+    shapes: GraphPointer | null,
+    } {
+    return {
+      resource: Object.freeze(clownface({ dataset: dataset() }).namedNode('')),
+      error: null,
+      isSubmitting: false,
+      shape: null,
+      shapes: null,
+    }
+  },
 
   async mounted (): Promise<void> {
     if (this.operation) {
       this.shape = await api.fetchOperationShape(this.operation)
     }
-  }
+  },
 
-  async onSubmit (resource: GraphPointer): Promise<void> {
-    this.error = null
-    this.isSubmitting = true
+  computed: {
+    ...mapState('sharedDimensions', {
+      collection: 'collection',
+    }),
 
-    try {
-      const dimension = await this.$store.dispatch('api/invokeSaveOperation', {
-        operation: this.operation,
-        resource,
-      })
+    operation (): RuntimeOperation | null {
+      return this.collection.actions.create
+    },
 
-      await this.$store.dispatch('sharedDimensions/fetchCollection')
+    title (): string {
+      return this.operation?.title ?? ''
+    },
+  },
 
-      displayToast(this, {
-        message: `Shared dimension ${dimension.name} successfully created`,
-        variant: 'success',
-      })
+  methods: {
+    async onSubmit (resource: GraphPointer): Promise<void> {
+      this.error = null
+      this.isSubmitting = true
 
-      this.$router.push({ name: 'SharedDimension', params: { id: dimension.clientPath } })
-    } catch (e) {
-      this.error = e.details ?? { detail: e.toString() }
+      try {
+        const dimension = await this.$store.dispatch('api/invokeSaveOperation', {
+          operation: this.operation,
+          resource,
+        })
 
-      if (!(e instanceof APIErrorValidation)) {
-        console.error(e)
+        await this.$store.dispatch('sharedDimensions/fetchCollection')
+
+        displayToast(this, {
+          message: `Shared dimension ${dimension.name} successfully created`,
+          variant: 'success',
+        })
+
+        this.$router.push({ name: 'SharedDimension', params: { id: dimension.clientPath } })
+      } catch (e) {
+        this.error = e.details ?? { detail: e.toString() }
+
+        if (!(e instanceof APIErrorValidation)) {
+          console.error(e)
+        }
+      } finally {
+        this.isSubmitting = false
       }
-    } finally {
-      this.isSubmitting = false
-    }
-  }
+    },
 
-  onCancel (): void {
-    this.$router.push({ name: 'SharedDimensions' })
-  }
-}
+    onCancel (): void {
+      this.$router.push({ name: 'SharedDimensions' })
+    },
+  },
+})
 </script>

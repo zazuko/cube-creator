@@ -48,35 +48,49 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { defineComponent, PropType } from '@vue/composition-api'
+import { mapGetters } from 'vuex'
 
 import { Project } from '@cube-creator/model'
 import { RdfResource } from 'alcaeus'
 
 import LoadingBlock from '../components/LoadingBlock.vue'
 import ExternalTerm from '../components/ExternalTerm.vue'
-import * as storeNs from '../store/namespace'
 
-@Component({
+export default defineComponent({
+  name: 'CubeProjectsItem',
   components: { LoadingBlock, ExternalTerm },
-})
-export default class CubeProjectsItem extends Vue {
-  @Prop({ required: true }) project!: Project
-
-  detailsShown = false
-
-  @storeNs.projects.Getter('getProjectDetails') getDetails!: (project: Project) => RdfResource | null
-
-  get details (): RdfResource | null {
-    return this.getDetails(this.project)
-  }
-
-  toggleDetails (): void {
-    if (!this.detailsShown) {
-      this.$store.dispatch('projects/fetchProjectDetails', this.project)
+  props: {
+    project: {
+      type: Object as PropType<Project>,
+      required: true,
     }
+  },
 
-    this.detailsShown = !this.detailsShown
-  }
-}
+  data () {
+    return {
+      detailsShown: false,
+    }
+  },
+
+  computed: {
+    ...mapGetters({
+      getDetails: 'projects/getProjectDetails',
+    }),
+
+    details (): RdfResource | null {
+      return this.getDetails(this.project)
+    },
+  },
+
+  methods: {
+    toggleDetails (): void {
+      if (!this.detailsShown) {
+        this.$store.dispatch('projects/fetchProjectDetails', this.project)
+      }
+
+      this.detailsShown = !this.detailsShown
+    },
+  },
+})
 </script>

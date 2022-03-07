@@ -3,25 +3,33 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
+import { defineComponent, PropType } from '@vue/composition-api'
 import type { TemplateResult } from 'lit'
 import { render } from 'lit'
 
-@Component
-export default class RenderWc extends Vue {
-  @Prop() templateResult!: TemplateResult
+export default defineComponent({
+  name: 'RenderWcTemplate',
+  props: {
+    templateResult: {
+      type: Object as PropType<TemplateResult>,
+      required: true,
+    },
+  },
 
   mounted (): void {
     this.renderTemplate()
-  }
+  },
 
-  @Watch('templateResult')
-  onTemplateResultChange (): void {
-    this.renderTemplate()
-  }
+  watch: {
+    templateResult (): void {
+      this.renderTemplate()
+    },
+  },
 
-  renderTemplate (): void {
-    render(this.templateResult, this.$el as HTMLElement)
-  }
-}
+  methods: {
+    renderTemplate (): void {
+      render(this.templateResult, this.$el as HTMLElement)
+    },
+  },
+})
 </script>

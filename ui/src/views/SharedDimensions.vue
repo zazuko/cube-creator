@@ -44,26 +44,29 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
-import { Collection } from 'alcaeus'
+import { defineComponent } from '@vue/composition-api'
 import PageContent from '@/components/PageContent.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import HydraOperationButton from '@/components/HydraOperationButton.vue'
 import SharedDimensionTags from '@/components/SharedDimensionTags.vue'
-import TermWithLanguage from '@/components/TermWithLanguage.vue'
-import * as storeNs from '../store/namespace'
-import { SharedDimension } from '../store/types'
+import { mapGetters, mapState } from 'vuex'
 
-@Component({
-  components: { PageContent, LoadingBlock, HydraOperationButton, SharedDimensionTags, TermWithLanguage },
-})
-export default class CubeProjectsView extends Vue {
-  @storeNs.sharedDimensions.State('collection') collection!: Collection | null
-  @storeNs.sharedDimensions.Getter('dimensions') dimensions!: SharedDimension[]
+export default defineComponent({
+  name: 'CubeProjectsView',
+  components: { PageContent, LoadingBlock, HydraOperationButton, SharedDimensionTags },
 
   async mounted (): Promise<void> {
     await this.$store.dispatch('sharedDimensions/fetchEntrypoint')
     await this.$store.dispatch('sharedDimensions/fetchCollection')
-  }
-}
+  },
+
+  computed: {
+    ...mapState('sharedDimensions', {
+      collection: 'collection',
+    }),
+    ...mapGetters('sharedDimensions', {
+      dimensions: 'dimensions',
+    }),
+  },
+})
 </script>

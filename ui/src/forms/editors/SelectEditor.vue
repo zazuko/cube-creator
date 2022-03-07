@@ -17,27 +17,40 @@
 </style>
 
 <script lang="ts">
-import { Prop, Component, Vue } from 'vue-property-decorator'
-import type { PropertyShape } from '@rdfine/shacl'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { Term, NamedNode } from 'rdf-js'
 import { GraphPointer } from 'clownface'
 
-@Component
-export default class extends Vue {
-  @Prop() property!: PropertyShape
-  @Prop() update!: (newValue: string | Term) => void
-  @Prop() value?: NamedNode
-  @Prop() options!: [GraphPointer, string][]
+export default defineComponent({
+  name: 'SelectEditor',
+  props: {
+    update: {
+      type: Function as PropType<(newValue: Term | string) => void>,
+      required: true,
+    },
+    value: {
+      type: Object as PropType<NamedNode>,
+      default: undefined,
+    },
+    options: {
+      type: Array as PropType<[GraphPointer, string][]>,
+      default: () => [],
+    },
+  },
 
-  get valueStr (): string {
-    return this.value?.value || ''
-  }
+  computed: {
+    valueStr (): string {
+      return this.value?.value || ''
+    },
+  },
 
-  onInput (value: string): void {
-    const selected = this.options.find(opt => opt[0].value === value)?.[0]
-    if (selected) {
-      this.update(selected.term)
-    }
-  }
-}
+  methods: {
+    onInput (value: string): void {
+      const selected = this.options.find(opt => opt[0].value === value)?.[0]
+      if (selected) {
+        this.update(selected.term)
+      }
+    },
+  },
+})
 </script>

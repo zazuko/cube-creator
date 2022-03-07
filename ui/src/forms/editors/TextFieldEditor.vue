@@ -3,11 +3,19 @@
 </template>
 
 <script lang="ts">
-import { Prop, Component, Vue } from 'vue-property-decorator'
+import { defineComponent, PropType } from '@vue/composition-api'
 
-@Component
-export default class extends Vue {
-  @Prop() value?: string
-  @Prop() update!: (newValue: string) => void
-}
+export default defineComponent({
+  name: 'TextFieldEditor',
+  props: {
+    value: {
+      type: String,
+      default: undefined,
+    },
+    update: {
+      type: Function as PropType<(newValue: string) => void>,
+      required: true,
+    },
+  },
+})
 </script>

@@ -4,7 +4,7 @@ import {
   InstancesSelectEditor, instancesSelect as instancesSelectCore, Item
 } from '@hydrofoil/shaperone-core/components'
 import * as ns from '@cube-creator/core/namespace'
-import { dash, dcterms, foaf, hydra, rdfs, schema, sd, xsd } from '@tpluscode/rdf-ns-builders/strict'
+import { dash, hydra, rdfs, schema, xsd } from '@tpluscode/rdf-ns-builders/strict'
 import $rdf from 'rdf-ext'
 import clownface, { GraphPointer } from 'clownface'
 import { FocusNode } from '@hydrofoil/shaperone-core'
@@ -13,7 +13,7 @@ import '@rdfine/dash/extensions/sh/PropertyShape'
 import { Literal } from 'rdf-js'
 import * as hierarchyQueries from './hierarchy/query'
 import { loader } from './hierarchy/index'
-import { SingleEditorRenderParams, UpdateComponentState } from '@hydrofoil/shaperone-core/models/components/index'
+import { SingleEditorRenderParams } from '@hydrofoil/shaperone-core/models/components/index'
 import { InstancesSelect } from '@hydrofoil/shaperone-core/lib/components/instancesSelect'
 import StreamClient from 'sparql-http-client'
 

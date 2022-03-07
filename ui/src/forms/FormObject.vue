@@ -11,25 +11,40 @@
 </template>
 
 <script lang="ts">
-import { Prop, Component, Vue } from 'vue-property-decorator'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { PropertyObjectState, PropertyState } from '@hydrofoil/shaperone-core/models/forms'
 import { TemplateResult } from 'lit'
 import RenderWcTemplate from './RenderWcTemplate.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 
-@Component({
+export default defineComponent({
+  name: 'FormObject',
   components: { RenderWcTemplate, LoadingBlock },
-})
-export default class extends Vue {
-  @Prop() object!: PropertyObjectState
-  @Prop() property!: PropertyState
-  @Prop() actions!: any
-  @Prop() renderEditor!: () => TemplateResult
+  props: {
+    object: {
+      type: Object as PropType<PropertyObjectState>,
+      required: true,
+    },
+    property: {
+      type: Object as PropType<PropertyState>,
+      required: true,
+    },
+    actions: {
+      type: Object,
+      required: true,
+    },
+    renderEditor: {
+      type: Function as PropType<() => TemplateResult>,
+      required: true,
+    },
+  },
 
-  get isReady (): boolean {
-    return !this.object?.componentState?.loading
-  }
-}
+  computed: {
+    isReady (): boolean {
+      return !this.object?.componentState?.loading
+    },
+  },
+})
 </script>
 
 <style scoped>

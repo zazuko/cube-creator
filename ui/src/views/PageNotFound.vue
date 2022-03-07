@@ -7,12 +7,11 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { defineComponent } from '@vue/composition-api'
 import PageContent from '@/components/PageContent.vue'
 
-@Component({
+export default defineComponent({
+  name: 'PageNotFoundView',
   components: { PageContent },
 })
-export default class PageNotFoundView extends Vue {
-}
 </script>

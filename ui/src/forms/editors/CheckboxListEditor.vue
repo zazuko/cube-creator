@@ -13,24 +13,41 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { Term } from 'rdf-js'
 import { namedNode } from '@rdf-esm/data-model'
 
-@Component
-export default class extends Vue {
-  @Prop() choices!: [Term, string][]
-  @Prop() value!: Term[]
-  @Prop() update!: (newValue: Term[]) => void
+export default defineComponent({
+  name: 'CheckboxListEditor',
+  props: {
+    choices: {
+      type: Array as PropType<[Term, string][]>,
+      required: true,
+    },
+    value: {
+      type: Array as PropType<Term[]>,
+      required: true,
+    },
+    update: {
+      type: Function as PropType<(newValue: Term[]) => void>,
+      required: true,
+    }
+  },
 
-  selected: string[] = []
+  data (): { selected: string[] } {
+    return {
+      selected: []
+    }
+  },
 
   mounted (): void {
     this.selected = this.value.map(v => v.value)
-  }
+  },
 
-  emit (): void {
-    this.update(this.selected.map(namedNode))
-  }
-}
+  methods: {
+    emit (): void {
+      this.update(this.selected.map(namedNode))
+    },
+  },
+})
 </script>

@@ -14,12 +14,23 @@
 </template>
 
 <script lang="ts">
-import { Prop, Component, Vue } from 'vue-property-decorator'
+import { defineComponent } from '@vue/composition-api'
 
-@Component
-export default class BLoading extends Vue {
-  @Prop({ default: false }) active!: boolean
-  @Prop({ default: true }) isFullPage!: boolean
-  @Prop({ default: 'fade' }) animation!: string
-}
+export default defineComponent({
+  name: 'BLoading',
+  props: {
+    active: {
+      type: Boolean,
+      default: false,
+    },
+    isFullPage: {
+      type: Boolean,
+      default: true,
+    },
+    animation: {
+      type: String,
+      default: 'fade',
+    }
+  },
+})
 </script>

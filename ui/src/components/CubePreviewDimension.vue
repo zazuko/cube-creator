@@ -35,7 +35,7 @@
 
 <script lang="ts">
 import { DimensionMetadata } from '@cube-creator/model'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { Literal } from 'rdf-js'
 import HydraOperationButton from './HydraOperationButton.vue'
 import DataKindIcon from './DataKindIcon.vue'
@@ -43,33 +43,51 @@ import ScaleOfMeasureIcon from './ScaleOfMeasureIcon.vue'
 import TermDisplay from './TermDisplay.vue'
 import TermWithLanguage from './TermWithLanguage.vue'
 
-@Component({
-  components: { DataKindIcon, HydraOperationButton, ScaleOfMeasureIcon, TermDisplay, TermWithLanguage },
+export default defineComponent({
+  name: 'CubePreviewDimension',
+  components: {
+    DataKindIcon,
+    HydraOperationButton,
+    ScaleOfMeasureIcon,
+    TermDisplay,
+    TermWithLanguage,
+  },
+  props: {
+    dimension: {
+      type: Object as PropType<DimensionMetadata>,
+      required: true,
+    },
+    selectedLanguage: {
+      type: String,
+      required: true,
+    },
+    cubeUri: {
+      type: String,
+      required: true,
+    },
+  },
+
+  computed: {
+    description (): string {
+      const description = this.dimension.description.find(({ language }) => language === this.selectedLanguage)
+
+      return description?.value ?? ''
+    },
+
+    linkToSharedDimensionLabel (): string {
+      const dimension: any = this.dimension
+
+      if (dimension.sharedDimensions.length > 0) {
+        const label = dimension.sharedDimensions.map(({ label }: { label: Literal }) => `"${label.value}"`).join(' & ')
+        return `Linked to ${label} (click to edit)`
+      } else if (dimension.mappings) {
+        return 'Link to shared dimension'
+      } else {
+        return ''
+      }
+    },
+  },
 })
-export default class CubePreviewDimension extends Vue {
-  @Prop({ required: true }) dimension!: DimensionMetadata
-  @Prop({ required: true }) selectedLanguage!: string
-  @Prop({ required: true }) cubeUri!: string
-
-  get description (): string {
-    const description = this.dimension.description.find(({ language }) => language === this.selectedLanguage)
-
-    return description?.value ?? ''
-  }
-
-  get linkToSharedDimensionLabel (): string {
-    const dimension: any = this.dimension
-
-    if (dimension.sharedDimensions.length > 0) {
-      const label = dimension.sharedDimensions.map(({ label }: { label: Literal }) => `"${label.value}"`).join(' & ')
-      return `Linked to ${label} (click to edit)`
-    } else if (dimension.mappings) {
-      return 'Link to shared dimension'
-    } else {
-      return ''
-    }
-  }
-}
 </script>
 
 <style scoped>

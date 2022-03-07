@@ -16,32 +16,46 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { defineComponent } from '@vue/composition-api'
 import 'bulma-quickview/dist/css/bulma-quickview.min.css'
 
-@Component({})
-export default class SidePane extends Vue {
-  @Prop({ default: true }) isOpen!: boolean
-  @Prop({ required: true }) title!: string
+export default defineComponent({
+  name: 'SidePane',
+  props: {
+    isOpen: {
+      type: Boolean,
+      default: true,
+    },
+    title: {
+      type: String,
+      required: true,
+    },
+  },
 
-  width: string | null = null
-
-  onMouseDown (): void {
-    const containerWidth = window.innerWidth
-
-    const onMouseMove = ({ pageX }: MouseEvent) => {
-      this.width = `${containerWidth - pageX}px`
+  data (): { width: string | null } {
+    return {
+      width: null,
     }
+  },
 
-    const onMouseUp = () => {
-      window.removeEventListener('mousemove', onMouseMove)
-      window.removeEventListener('mouseup', onMouseUp)
-    }
+  methods: {
+    onMouseDown (): void {
+      const containerWidth = window.innerWidth
 
-    window.addEventListener('mousemove', onMouseMove)
-    window.addEventListener('mouseup', onMouseUp)
-  }
-}
+      const onMouseMove = ({ pageX }: MouseEvent) => {
+        this.width = `${containerWidth - pageX}px`
+      }
+
+      const onMouseUp = () => {
+        window.removeEventListener('mousemove', onMouseMove)
+        window.removeEventListener('mouseup', onMouseUp)
+      }
+
+      window.addEventListener('mousemove', onMouseMove)
+      window.addEventListener('mouseup', onMouseUp)
+    },
+  },
+})
 </script>
 
 <style scoped>

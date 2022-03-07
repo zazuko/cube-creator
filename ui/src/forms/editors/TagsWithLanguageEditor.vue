@@ -21,18 +21,30 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { PropertyState } from '@hydrofoil/shaperone-core/models/forms'
 import $rdf from '@rdfjs/data-model'
 import { Literal, Term } from 'rdf-js'
 
-@Component
-export default class extends Vue {
-  @Prop() property!: PropertyState
-  @Prop() update!: (newValues: Term[]) => void
+export default defineComponent({
+  name: 'TagsWithLanguageEditor',
+  props: {
+    property: {
+      type: Object as PropType<PropertyState>,
+      required: true,
+    },
+    update: {
+      type: Function as PropType<(newValues: Term[]) => void>,
+      required: true,
+    },
+  },
 
-  // List of [language, tags]
-  tags: [string, Term[]][] = []
+  data (): { tags: [string, Term[]][] } {
+    return {
+      // List of [language, tags]
+      tags: []
+    }
+  },
 
   mounted (): void {
     // Ignoring non-literals
@@ -52,42 +64,46 @@ export default class extends Vue {
     }
 
     this.tags = [...tagsByLanguage.entries()]
-  }
+  },
 
-  get languages (): string[] {
-    return this.property?.shape.languageIn || []
-  }
+  computed: {
+    languages (): string[] {
+      return this.property?.shape.languageIn || []
+    },
+  },
 
-  addLanguage (): void {
-    const usedLanguages = new Set(this.tags.map(([language]) => language))
-    const nextLanguage = this.languages.filter((language) => !usedLanguages.has(language))[0] || ''
+  methods: {
+    addLanguage (): void {
+      const usedLanguages = new Set(this.tags.map(([language]) => language))
+      const nextLanguage = this.languages.filter((language) => !usedLanguages.has(language))[0] || ''
 
-    this.tags.push([nextLanguage, []])
-  }
+      this.tags.push([nextLanguage, []])
+    },
 
-  addTag (languageIndex: number, language: string, tagValue: string): void {
-    const newTerm = $rdf.literal(tagValue, language)
-    this.tags[languageIndex][1].push(newTerm)
+    addTag (languageIndex: number, language: string, tagValue: string): void {
+      const newTerm = $rdf.literal(tagValue, language)
+      this.tags[languageIndex][1].push(newTerm)
 
-    this.updateFromTags()
-  }
+      this.updateFromTags()
+    },
 
-  removeTag (languageIndex: number, tag: Literal): void {
-    this.tags[languageIndex][1] = this.tags[languageIndex][1].filter(term => !term.equals(tag))
+    removeTag (languageIndex: number, tag: Literal): void {
+      this.tags[languageIndex][1] = this.tags[languageIndex][1].filter(term => !term.equals(tag))
 
-    this.updateFromTags()
-  }
+      this.updateFromTags()
+    },
 
-  updateLanguage (languageIndex: number, newLanguage: string): void {
-    const updatedTerms = this.tags[languageIndex][1].map(term => $rdf.literal(term.value, newLanguage))
-    this.tags[languageIndex] = [newLanguage, updatedTerms]
+    updateLanguage (languageIndex: number, newLanguage: string): void {
+      const updatedTerms = this.tags[languageIndex][1].map(term => $rdf.literal(term.value, newLanguage))
+      this.tags[languageIndex] = [newLanguage, updatedTerms]
 
-    this.updateFromTags()
-  }
+      this.updateFromTags()
+    },
 
-  updateFromTags (): void {
-    const terms = this.tags.flatMap(([, terms]) => terms)
-    this.update(terms)
-  }
-}
+    updateFromTags (): void {
+      const terms = this.tags.flatMap(([, terms]) => terms)
+      this.update(terms)
+    },
+  },
+})
 </script>

@@ -135,7 +135,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+import { defineComponent, PropType } from '@vue/composition-api'
 import clownface from 'clownface'
 import { Collection } from 'alcaeus'
 import { hydra, qudt } from '@tpluscode/rdf-ns-builders'
@@ -155,7 +155,8 @@ import CubePreviewValue from './CubePreviewValue.vue'
 
 const debounceRefreshDelay = 500
 
-@Component({
+export default defineComponent({
+  name: 'CubePreview',
   components: {
     BMessage,
     CubePreviewDimension,
@@ -164,126 +165,154 @@ const debounceRefreshDelay = 500
     LoadingBlock,
     TermWithLanguage,
   },
-})
-export default class extends Vue {
-  @Prop({ required: true }) cubeMetadata!: Dataset
-  @Prop({ required: true }) dimensions!: DimensionMetadata[]
-  @Prop({ required: true }) dimensionMetadataCollection!: DimensionMetadataCollection
-  @Prop({ required: true }) selectedLanguage!: string
+  props: {
+    cubeMetadata: {
+      type: Object as PropType<Dataset>,
+      required: true,
+    },
+    dimensions: {
+      type: Array as PropType<DimensionMetadata[]>,
+      required: true,
+    },
+    dimensionMetadataCollection: {
+      type: Object as PropType<DimensionMetadataCollection>,
+      required: true,
+    },
+    selectedLanguage: {
+      type: String,
+      required: true,
+    },
+  },
 
-  languages = supportedLanguages.map(({ value }) => value)
-  pageSize = 10
-  page = 1
-  pageSizes = [10, 20, 50, 100]
-  observations: RemoteData<unknown[]> = Remote.loading()
-  totalItems: number | null = null
-  debouncedFetchCubeData!: () => Promise<void>
+  data (): {
+    languages: string[],
+    pageSize: number,
+    page: number,
+    pageSizes: number[],
+    observations: RemoteData<unknown[]>,
+    totalItems: number | null,
+    debouncedFetchCubeData: () => Promise<void>,
+    } {
+    return {
+      languages: supportedLanguages.map(({ value }) => value),
+      pageSize: 10,
+      page: 1,
+      pageSizes: [10, 20, 50, 100],
+      observations: Remote.loading(),
+      totalItems: null,
+      debouncedFetchCubeData: () => new Promise(resolve => resolve()),
+    }
+  },
 
   created (): void {
     this.debouncedFetchCubeData = debounce(this.fetchCubeData.bind(this), debounceRefreshDelay)
-  }
-
-  get cube (): Cube | null {
-    return this.cubeMetadata.hasPart[0] ?? null
-  }
-
-  get tableWidth (): number {
-    return this.dimensions.length || 1
-  }
+  },
 
   mounted (): void {
     this.fetchCubeData()
-  }
+  },
 
-  dimensionClasses (dimension: DimensionMetadata): string {
-    const scaleOfMeasure = dimension.scaleOfMeasure
+  computed: {
+    cube (): Cube | null {
+      return this.cubeMetadata.hasPart[0] ?? null
+    },
 
-    if (
-      qudt.RatioScale.equals(scaleOfMeasure) ||
-      qudt.IntervalScale.equals(scaleOfMeasure)
-    ) {
-      return 'has-text-right'
-    }
+    tableWidth (): number {
+      return this.dimensions.length || 1
+    },
 
-    return ''
-  }
+    errors (): Schema.Thing[] {
+      return [
+        ...(this.cubeMetadata.errors ?? []),
+        ...(this.dimensionMetadataCollection.errors ?? []),
+      ]
+    },
 
-  get errors (): Schema.Thing[] {
-    return [
-      ...this.cubeMetadata.errors!,
-      ...this.dimensionMetadataCollection.errors!,
-    ]
-  }
+    totalPages (): number | null {
+      if (!this.totalItems) return null
 
-  get totalPages (): number | null {
-    if (!this.totalItems) return null
+      return Math.ceil(this.totalItems / this.pageSize)
+    },
 
-    return Math.ceil(this.totalItems / this.pageSize)
-  }
+    hasPreviousPage (): boolean {
+      return this.page > 1
+    },
 
-  get hasPreviousPage (): boolean {
-    return this.page > 1
-  }
+    hasNextPage (): boolean {
+      return this.page < (this.totalPages ?? 0)
+    },
+  },
 
-  get hasNextPage (): boolean {
-    return this.page < (this.totalPages ?? 0)
-  }
+  methods: {
+    dimensionClasses (dimension: DimensionMetadata): string {
+      const scaleOfMeasure = dimension.scaleOfMeasure
 
-  async refreshData (): Promise<void> {
-    if (this.dimensions.length === 0) {
-      this.$emit('refreshDimensions')
-    }
+      if (
+        qudt.RatioScale.equals(scaleOfMeasure) ||
+        qudt.IntervalScale.equals(scaleOfMeasure)
+      ) {
+        return 'has-text-right'
+      }
 
-    return this.fetchCubeData()
-  }
+      return ''
+    },
 
-  @Watch('pageSize')
-  resetPage (): void {
-    this.page = 1
-  }
+    async refreshData (): Promise<void> {
+      if (this.dimensions.length === 0) {
+        this.$emit('refreshDimensions')
+      }
 
-  @Watch('pageSize')
-  @Watch('page')
-  onPageChange (): void {
-    this.debouncedFetchCubeData()
-  }
+      return this.fetchCubeData()
+    },
 
-  async fetchCubeData (): Promise<void> {
-    if (this.page <= 0) {
-      return
-    }
+    async fetchCubeData (): Promise<void> {
+      if (this.page <= 0) {
+        return
+      }
 
-    this.observations = Remote.loading()
+      this.observations = Remote.loading()
 
-    if (!this.cube) {
-      this.observations = Remote.error('No available cube')
-      return
-    }
+      if (!this.cube) {
+        this.observations = Remote.error('No available cube')
+        return
+      }
 
-    if (!this.cube.observations) {
-      // Fake wait to make it clear that something is happening
-      await sleep(200)
-      this.observations = Remote.loaded([])
-      this.totalItems = 0
-      return
-    }
+      if (!this.cube.observations) {
+        // Fake wait to make it clear that something is happening
+        await sleep(200)
+        this.observations = Remote.loaded([])
+        this.totalItems = 0
+        return
+      }
 
-    const filters = clownface({ dataset: $rdf.dataset() })
-      .blankNode()
-      .addOut(hydra.limit, this.pageSize)
-      .addOut(hydra.pageIndex, this.page)
+      const filters = clownface({ dataset: $rdf.dataset() })
+        .blankNode()
+        .addOut(hydra.limit, this.pageSize)
+        .addOut(hydra.pageIndex, this.page)
 
-    const uri = this.cube.observations.expand(filters)
+      const uri = this.cube.observations.expand(filters)
 
-    try {
-      const collection = await api.fetchResource<Collection>(uri)
-      this.totalItems = collection.totalItems ?? 0
-      this.observations = Remote.loaded(collection.member)
-    } catch (e) {
-      this.observations = Remote.error(e.toString())
-    }
-  }
-}
+      try {
+        const collection = await api.fetchResource<Collection>(uri)
+        this.totalItems = collection.totalItems ?? 0
+        this.observations = Remote.loaded(collection.member)
+      } catch (e) {
+        this.observations = Remote.error(e.toString())
+      }
+    },
+  },
+
+  watch: {
+    pageSize () {
+      this.page = 1
+      this.debouncedFetchCubeData()
+    },
+
+    page () {
+      this.debouncedFetchCubeData()
+    },
+  },
+})
 
 async function sleep (duration: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, duration))

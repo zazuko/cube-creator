@@ -18,9 +18,11 @@
               Create table from selected columns
             </o-button>
             <o-dropdown position="bottom-left" class="has-text-weight-normal" aria-role="list">
-              <button class="button is-text is-small" slot="trigger">
-                <o-icon icon="ellipsis-h" />
-              </button>
+              <template #trigger>
+                <button class="button is-text is-small">
+                  <o-icon icon="ellipsis-h" />
+                </button>
+              </template>
               <o-dropdown-item tag="div" item-class="p" clickable v-if="source.actions.edit">
                 <router-link class="dropdown-item" :to="{ name: 'SourceEdit', params: { sourceId: source.clientPath } }">
                   <o-icon icon="pencil-alt" />
@@ -125,104 +127,126 @@
 </template>
 
 <script lang="ts">
-import { Prop, Component, Vue, Watch } from 'vue-property-decorator'
+import { defineComponent, PropType } from '@vue/composition-api'
+import { mapGetters } from 'vuex'
 import { CsvSource, Table, TableCollection, CsvColumn, ColumnMapping } from '@cube-creator/model'
 import { isLiteralColumnMapping } from '@cube-creator/model/ColumnMapping'
 import BMessage from './BMessage.vue'
 import MapperTable from './MapperTable.vue'
-import HydraOperationButton from './HydraOperationButton.vue'
-import { api } from '@/api'
-import * as storeNs from '../store/namespace'
-import { confirmDialog } from '@/use-dialog'
+import { api } from '../api'
+import { confirmDialog } from '../use-dialog'
 
-@Component({
-  components: {
-    BMessage,
-    MapperTable,
-    HydraOperationButton,
+export default defineComponent({
+  name: 'CsvSourceMapping',
+  components: { BMessage, MapperTable },
+  props: {
+    isFirstSource: {
+      type: Boolean,
+      default: false,
+    },
+    source: {
+      type: Object as PropType<CsvSource>,
+      required: true,
+    },
+    tables: {
+      type: Array as PropType<Table[]>,
+      required: true,
+    },
+    tableCollection: {
+      type: Object as PropType<TableCollection>,
+      required: true,
+    }
+  },
+
+  data () {
+    const selectedColumnsMap = prepareSelectedColumnsMap(this.source)
+
+    return {
+      selectedColumnsMap,
+    }
+  },
+
+  computed: {
+    ...mapGetters({
+      getSourceTables: 'project/getSourceTables',
+    }),
+
+    selectedColumns (): string[] {
+      return Object.entries(this.selectedColumnsMap)
+        .filter(([, isSelected]) => isSelected)
+        .map(([columnId]) => columnId)
+    },
+
+    sourceTables (): Table[] {
+      return this.getSourceTables(this.source)
+    },
+
+    createTableQueryParams (): Record<string, string | string[]> {
+      return {
+        source: this.source.clientPath,
+        columns: this.selectedColumns,
+      }
+    },
+  },
+
+  watch: {
+    $route (): void {
+      this.selectedColumnsMap = prepareSelectedColumnsMap(this.source)
+    }
+  },
+
+  methods: {
+
+    getColumnMappings (column: CsvColumn): {table: Table; columnMapping: ColumnMapping}[] {
+      return this.tables
+        .map((table) => {
+          return (table.columnMappings)
+            .filter((columnMapping) => isLiteralColumnMapping(columnMapping) && column.id.equals(columnMapping.sourceColumn.id))
+            .map((columnMapping) => ({ table, columnMapping }))
+        })
+        .flat()
+    },
+
+    async deleteSource (source: CsvSource): Promise<void> {
+      confirmDialog(this, {
+        title: source.actions.delete?.title,
+        message: 'Are you sure you want to delete this CSV source?',
+        confirmText: 'Delete',
+        onConfirm: () => {
+          this.$store.dispatch('api/invokeDeleteOperation', {
+            operation: source.actions.delete,
+            successMessage: 'CSV source deleted successfully',
+            callbackAction: 'project/refreshSourcesCollection',
+          })
+        },
+      })
+    },
+
+    async downloadSource (source: CsvSource): Promise<void> {
+      const headers = { accept: 'text/csv' }
+      const response = await api.invokeDownloadOperation(source.actions.download, headers)
+      const downloadLink = response.xhr.headers.get('Location')
+
+      if (downloadLink) {
+        window.open(downloadLink)
+      }
+    },
+
+    highlightArrows (column: CsvColumn): void {
+      const ids = this.getColumnMappings(column).map(({ columnMapping }) => columnMapping.id.value)
+      this.$emit('highlight-arrows', ids)
+    },
+
+    unhighlightArrows (column: CsvColumn): void {
+      const ids = this.getColumnMappings(column).map(({ columnMapping }) => columnMapping.id.value)
+      this.$emit('unhighlight-arrows', ids)
+    },
   },
 })
-export default class CsvSourceMapping extends Vue {
-  @Prop({ default: false }) readonly isFirstSource!: boolean
-  @Prop() readonly source!: CsvSource
-  @Prop() readonly tables!: Table[]
-  @Prop() readonly tableCollection!: TableCollection
 
-  @storeNs.project.Getter('getSourceTables') getSourceTables!: (source: CsvSource) => Table[]
-
-  selectedColumnsMap = this.prepareSelectedColumnsMap()
-
-  get selectedColumns (): string[] {
-    return Object.entries(this.selectedColumnsMap)
-      .filter(([, isSelected]) => isSelected)
-      .map(([columnId]) => columnId)
-  }
-
-  @Watch('$route')
-  resetSelectedColumnsMap (): void {
-    this.selectedColumnsMap = this.prepareSelectedColumnsMap()
-  }
-
-  prepareSelectedColumnsMap (): Record<string, boolean> {
-    return this.source.columns
-      .reduce((acc, { clientPath }) => ({ ...acc, [clientPath]: false }), {})
-  }
-
-  get sourceTables (): Table[] {
-    return this.getSourceTables(this.source)
-  }
-
-  get createTableQueryParams (): Record<string, string | string[]> {
-    return {
-      source: this.source.clientPath,
-      columns: this.selectedColumns,
-    }
-  }
-
-  getColumnMappings (column: CsvColumn): {table: Table; columnMapping: ColumnMapping}[] {
-    return this.tables
-      .map((table) => {
-        return (table.columnMappings)
-          .filter((columnMapping) => isLiteralColumnMapping(columnMapping) && column.id.equals(columnMapping.sourceColumn.id))
-          .map((columnMapping) => ({ table, columnMapping }))
-      })
-      .flat()
-  }
-
-  async deleteSource (source: CsvSource): Promise<void> {
-    confirmDialog(this, {
-      title: source.actions.delete?.title,
-      message: 'Are you sure you want to delete this CSV source?',
-      confirmText: 'Delete',
-      onConfirm: () => {
-        this.$store.dispatch('api/invokeDeleteOperation', {
-          operation: source.actions.delete,
-          successMessage: 'CSV source deleted successfully',
-          callbackAction: 'project/refreshSourcesCollection',
-        })
-      },
-    })
-  }
-
-  async downloadSource (source: CsvSource): Promise<void> {
-    const headers = { accept: 'text/csv' }
-    const response = await api.invokeDownloadOperation(source.actions.download, headers)
-    const downloadLink = response.xhr.headers.get('Location')
-
-    if (downloadLink) {
-      window.open(downloadLink)
-    }
-  }
-
-  highlightArrows (column: CsvColumn): void {
-    const ids = this.getColumnMappings(column).map(({ columnMapping }) => columnMapping.id.value)
-    this.$emit('highlight-arrows', ids)
-  }
-
-  unhighlightArrows (column: CsvColumn): void {
-    const ids = this.getColumnMappings(column).map(({ columnMapping }) => columnMapping.id.value)
-    this.$emit('unhighlight-arrows', ids)
-  }
+function prepareSelectedColumnsMap (source: CsvSource): Record<string, boolean> {
+  return source.columns
+    .reduce((acc, { clientPath }) => ({ ...acc, [clientPath]: false }), {})
 }
 </script>
 

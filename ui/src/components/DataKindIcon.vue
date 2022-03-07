@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { Term } from 'rdf-js'
 import { schema, time } from '@tpluscode/rdf-ns-builders'
 
@@ -21,20 +21,27 @@ const icons: Record<string, string> = {
   [schema.GeoShape.value]: 'map-marked-alt',
 }
 
-@Component
-export default class extends Vue {
-  @Prop() dataKind?: Term
+export default defineComponent({
+  name: 'DataKindIcon',
+  props: {
+    dataKind: {
+      type: Object as PropType<Term>,
+      default: undefined,
+    }
+  },
 
-  get dataKindURI (): string {
-    return this.dataKind?.value ?? ''
-  }
+  computed: {
+    dataKindURI (): string {
+      return this.dataKind?.value ?? ''
+    },
 
-  get label (): string {
-    return labels[this.dataKindURI] || this.dataKindURI
-  }
+    label (): string {
+      return labels[this.dataKindURI] || this.dataKindURI
+    },
 
-  get icon (): string {
-    return icons[this.dataKindURI] || 'question-circle'
-  }
-}
+    icon (): string {
+      return icons[this.dataKindURI] || 'question-circle'
+    },
+  },
+})
 </script>
