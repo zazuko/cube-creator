@@ -23,7 +23,7 @@
 
 <script lang="ts">
 import { ColorsModifiers } from '@oruga-ui/oruga/types/helpers'
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import ButtonLoading from './ButtonLoading.vue'
 
 export default defineComponent({

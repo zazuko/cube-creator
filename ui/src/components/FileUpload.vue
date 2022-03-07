@@ -4,7 +4,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import AwsS3Multipart from '@uppy/aws-s3-multipart'
 import { Uppy, UppyFile } from '@uppy/core'
 import { Dashboard as UppyDashboard } from '@uppy/vue'

@@ -17,7 +17,7 @@
 </style>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { Term, NamedNode } from 'rdf-js'
 import { GraphPointer } from 'clownface'
 

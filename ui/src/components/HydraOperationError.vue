@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import type { Shape } from '@rdfine/shacl'
 import { ErrorDetails } from '@/api/errors'
 import BMessage from './BMessage.vue'

@@ -127,7 +127,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { mapGetters } from 'vuex'
 import { CsvSource, Table, TableCollection, CsvColumn, ColumnMapping } from '@cube-creator/model'
 import { isLiteralColumnMapping } from '@cube-creator/model/ColumnMapping'

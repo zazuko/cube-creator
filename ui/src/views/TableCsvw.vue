@@ -22,7 +22,7 @@
         </o-button>
       </div>
       <rdf-editor
-        :quads.prop="csvw.data"
+        :quads="csvw.data"
         :format="selectedFormat"
         :prefixes="editorPrefixes"
         ref="snippet"
@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import '@rdfjs-elements/rdf-editor'
 import { Quad } from 'rdf-js'
 import BMessage from '@/components/BMessage.vue'

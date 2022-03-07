@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { PropertyObjectState } from '@hydrofoil/shaperone-core/models/forms'
 import { prov, sh } from '@tpluscode/rdf-ns-builders'
 import { Term } from 'rdf-js'

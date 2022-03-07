@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { Term } from 'rdf-js'
 import { dataset } from '@rdf-esm/dataset'
 import clownface, { GraphPointer } from 'clownface'

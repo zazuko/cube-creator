@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { Job } from '@cube-creator/model'
 import JobStatus from './JobStatus.vue'
 

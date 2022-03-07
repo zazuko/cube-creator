@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import { RuntimeOperation } from 'alcaeus'
 import { ColumnMapping, Table, CsvSource } from '@cube-creator/model'
 import { cc } from '@cube-creator/core/namespace'

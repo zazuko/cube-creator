@@ -56,7 +56,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { RuntimeOperation } from 'alcaeus'
 import clownface, { AnyPointer } from 'clownface'
 import { rdf, sh } from '@tpluscode/rdf-ns-builders'

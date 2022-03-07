@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import { GraphPointer } from 'clownface'
 import { RuntimeOperation } from 'alcaeus'
 import type { Shape } from '@rdfine/shacl'

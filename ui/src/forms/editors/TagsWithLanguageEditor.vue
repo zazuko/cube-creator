@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { PropertyState } from '@hydrofoil/shaperone-core/models/forms'
 import $rdf from '@rdfjs/data-model'
 import { Literal, Term } from 'rdf-js'

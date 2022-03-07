@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { Term } from 'rdf-js'
 import { literal } from '@rdf-esm/data-model'
 import { xsd } from '@tpluscode/rdf-ns-builders'

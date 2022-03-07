@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent="$emit('submit', clone)">
-    <cc-form :resource.prop="clone" :shapes.prop="shapePointer" no-editor-switches />
+    <cc-form :resource="clone" :shapes="shapePointer" no-editor-switches />
 
     <loading-block v-if="!shape" />
 
@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { RuntimeOperation } from 'alcaeus'
 import $rdf from 'rdf-ext'
 import clownface, { GraphPointer } from 'clownface'

@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { Term } from 'rdf-js'
 import { schema, time } from '@tpluscode/rdf-ns-builders'
 

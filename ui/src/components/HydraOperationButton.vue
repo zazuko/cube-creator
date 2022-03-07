@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import { ColorsModifiers } from '@oruga-ui/oruga/types/helpers'
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { RuntimeOperation } from 'alcaeus'
 import { Location } from 'vue-router'
 

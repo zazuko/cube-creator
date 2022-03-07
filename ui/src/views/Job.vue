@@ -60,7 +60,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import { Job } from '@cube-creator/model'
 import type { CreativeWork } from '@rdfine/schema'
 import { schema } from '@tpluscode/rdf-ns-builders'

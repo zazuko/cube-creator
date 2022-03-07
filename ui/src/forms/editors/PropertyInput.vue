@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { Term } from 'rdf-js'
 import * as $rdf from '@rdf-esm/data-model'
 import { expand, shrink } from '@/rdf-properties'

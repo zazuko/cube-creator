@@ -43,7 +43,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import { Project } from '@cube-creator/model'
 import CubeProjectsItem from '@/components/CubeProjectsItem.vue'
 import PageContent from '@/components/PageContent.vue'

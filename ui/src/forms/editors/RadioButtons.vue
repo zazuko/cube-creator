@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { GraphPointer, MultiPointer } from 'clownface'
 import { Term } from 'rdf-js'
 import { rdfs } from '@tpluscode/rdf-ns-builders'

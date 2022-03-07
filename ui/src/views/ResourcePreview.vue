@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import $rdf from '@rdfjs/data-model'
 import { NamedNode, Term } from 'rdf-js'
 import TermSet from '@rdf-esm/term-set'

@@ -135,7 +135,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import HydraOperationButton from '@/components/HydraOperationButton.vue'
 import BMessage from '@/components/BMessage.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'

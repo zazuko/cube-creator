@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import clownface, { GraphPointer } from 'clownface'
 import { RuntimeOperation } from 'alcaeus'
 import { dataset } from '@rdf-esm/dataset'

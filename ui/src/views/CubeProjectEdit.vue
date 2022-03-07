@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import DownloadButton from '@/components/DownloadButton.vue'
 import { GraphPointer } from 'clownface'

@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { Literal } from 'rdf-js'
 import * as $rdf from '@rdf-esm/data-model'
 import { PropertyState } from '@hydrofoil/shaperone-core/models/forms'

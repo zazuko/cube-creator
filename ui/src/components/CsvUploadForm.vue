@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 
 import * as $rdf from '@rdfjs/dataset'
 import { schema } from '@tpluscode/rdf-ns-builders'

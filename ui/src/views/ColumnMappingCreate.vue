@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import { RuntimeOperation } from 'alcaeus'
 import { GraphPointer } from 'clownface'
 import { mapGetters } from 'vuex'

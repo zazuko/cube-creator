@@ -19,8 +19,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType, Vue } from 'vue'
 import { CsvSource } from '@cube-creator/model'
 import { Term } from 'rdf-js'
 import { mapGetters, Store } from 'vuex'

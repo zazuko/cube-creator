@@ -37,4 +37,21 @@ module.exports = {
       }),
     )
   },
+  chainWebpack: config => {
+    // Enable Vue 2 compatible build of Vue 3
+    config.resolve.alias.set('vue', '@vue/compat')
+    config.module
+      .rule('vue')
+      .use('vue-loader')
+      .tap((options) => {
+        return {
+          ...options,
+          compilerOptions: {
+            compatConfig: {
+              MODE: 2
+            }
+          }
+        }
+      })
+  },
 }

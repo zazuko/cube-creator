@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { PropertyObjectState, PropertyState } from '@hydrofoil/shaperone-core/models/forms'
 import { TemplateResult } from 'lit'
 import RenderWcTemplate from './RenderWcTemplate.vue'
