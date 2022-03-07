@@ -42,6 +42,7 @@ async function main() {
     .option('-v, --variable <name=value>', 'Pipeline variables', parseVariables, new Map())
     .option('--debug', 'Print diagnostic information to standard output')
     .option('--auth-param <name=value>', 'Additional variables to pass to the token endpoint', parseVariables, new Map())
+    .option('--no-status-update', 'Does not update job status')
     .action(capture('Transform', ({ job }) => ({ job }), transform))
 
   program
@@ -53,6 +54,7 @@ async function main() {
     .option('-v, --variable <name=value>', 'Pipeline variables', parseVariables, new Map())
     .option('--debug', 'Print diagnostic information to standard output')
     .option('--no-upload', 'When used together with --to filesystem, will prevent writing to store')
+    .option('--no-status-update', 'Does not update job status')
     .option('--auth-param <name=value>', 'Additional variables to pass to the token endpoint', parseVariables, new Map())
     .action(capture('Publish', ({ job }) => ({ job }), publish))
 
@@ -64,6 +66,7 @@ async function main() {
     .option('-v, --variable <name=value>', 'Pipeline variables', parseVariables, new Map())
     .option('--debug', 'Print diagnostic information to standard output')
     .option('--enable-buffer-monitor', 'enable histogram of buffer usage')
+    .option('--no-status-update', 'Does not update job status')
     .option('--auth-param <name=value>', 'Additional variables to pass to the token endpoint', parseVariables, new Map())
     .action(capture('Unlist', ({ job }) => ({ job }), unlist))
 
@@ -80,6 +83,7 @@ async function main() {
     .option('--execution-url <executionUrl>', 'Link to job execution')
     .option('-v, --variable <name=value>', 'Pipeline variables', parseVariables, new Map())
     .option('--debug', 'Print diagnostic information to standard output')
+    .option('--no-status-update', 'Does not update job status')
     .option('--auth-param <name=value>', 'Additional variables to pass to the token endpoint', parseVariables, new Map())
     .action(capture('Import', ({ job }) => ({ job }), importCube))
 
