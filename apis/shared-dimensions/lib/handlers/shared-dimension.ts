@@ -1,17 +1,16 @@
 import asyncMiddleware from 'middleware-async'
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
-import clownface, { GraphPointer } from 'clownface'
-import { hydra, schema } from '@tpluscode/rdf-ns-builders/strict'
+import clownface from 'clownface'
+import { schema } from '@tpluscode/rdf-ns-builders/strict'
 import cors from 'cors'
 import { serializers } from '@rdfjs-elements/formats-pretty'
 import error from 'http-errors'
 import { md, meta } from '@cube-creator/core/namespace'
 import * as ns from '@tpluscode/rdf-ns-builders'
-import { createTerm, getExportedDimension, update } from '../domain/shared-dimension'
+import { createTerm, getExportedDimension } from '../domain/shared-dimension'
 import { store } from '../store'
 import { shaclValidate } from '../middleware/shacl'
 import { rewrite } from '../rewrite'
-import shapes from '../shapes'
 
 export const post = protectedResource(shaclValidate, asyncMiddleware(async (req, res) => {
   const term = await createTerm({
@@ -25,27 +24,10 @@ export const post = protectedResource(shaclValidate, asyncMiddleware(async (req,
   return res.dataset(term.dataset)
 }))
 
-export const put = protectedResource(shaclValidate, asyncMiddleware(async (req, res) => {
-  const hydraExpects = req.hydra.operation.out(hydra.expects).term
-  let shape: GraphPointer | undefined
-  if (hydraExpects?.termType === 'NamedNode') {
-    shape = await shapes.get(hydraExpects)?.(req)
-  }
-
-  const dimension = await update({
-    resource: rewrite(await req.resource()),
-    store: store(),
-    shape,
-  })
-
-  return res.dataset(dimension.dataset)
-}))
-
 export const getExport = protectedResource(cors({ exposedHeaders: 'content-disposition' }), asyncMiddleware(async (req, res, next) => {
   if (!req.dataset) {
     return next(new error.BadRequest())
   }
-
   const query = clownface({ dataset: await req.dataset() })
   const termSet: any = query
     .has(schema.inDefinedTermSet)

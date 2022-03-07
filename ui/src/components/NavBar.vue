@@ -18,6 +18,9 @@
         <router-link class="navbar-item" :to="{ name: 'SharedDimensions' }">
           Shared Dimensions
         </router-link>
+        <router-link class="navbar-item" :to="{ name: 'Hierarchies' }">
+          Hierarchies
+        </router-link>
       </div>
       <div class="navbar-end">
         <a

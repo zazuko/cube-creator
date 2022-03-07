@@ -38,6 +38,10 @@ export const insertTestDimensions = () => {
   return insertTestData('fuseki/shared-dimensions.trig', mdClients)
 }
 
+export const insertTestHierarchies = () => {
+  return insertTestData('fuseki/hierarchies.trig', mdClients)
+}
+
 export const insertPxCube = () => {
   const client = new StreamClient({
     endpointUrl: process.env.PX_CUBE_QUERY_ENDPOINT!,

@@ -53,8 +53,9 @@ export function validationReportResponse(res: Response, validationReport: Valida
 }
 
 export const shaclMiddleware = ({ getTargetNode, loadResource, loadResourcesTypes, parseResource = defaultParse }: ShaclMiddlewareOptions) => asyncMiddleware(async (req, res, next) => {
-  const resource = await parseResource(req)
+  let resource = await parseResource(req)
   const targetNode = getTargetNode?.(req, res) || resource.term
+  resource = resource.node(targetNode)
 
   const shapes = $rdf.dataset()
   await Promise.all(req.hydra.operation.out(hydra.expects).map(async (expects) => {

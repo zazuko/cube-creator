@@ -9,6 +9,7 @@ import { ParsingClient } from 'sparql-http-client/ParsingClient'
 import { StreamClient } from 'sparql-http-client/StreamClient'
 import once from 'once'
 import { resourceQuery } from './store'
+import { restoreBnodes } from './rewrite'
 
 interface LoaderOptions {
   graph: NamedNode
@@ -39,7 +40,8 @@ export default class Loader implements HydraBox.ResourceLoader {
 
     const fullDataset = async () => {
       const query = await resourceQuery(term, this.options.graph, this.options.sparql)
-      return query.execute(this.options.stream.query)
+      const stream = await query.execute(this.options.stream.query)
+      return stream.pipe(restoreBnodes())
     }
 
     return [{

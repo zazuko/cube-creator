@@ -73,10 +73,11 @@
         </tr>
         <tr v-else v-for="observation in observations.data" :key="observation.id.value">
           <td v-for="dimension in dimensions" :key="dimension.clientPath" :class="dimensionClasses(dimension)">
-            <cube-preview-value :value="observation[dimension.about.value]"
-                                :is-shared-term="!!dimension.sharedDimension"
-                                :selected-language="selectedLanguage"
-                                :cube-uri="cube.id.value"
+            <cube-preview-value
+              :value="observation[dimension.about.value]"
+              :is-shared-term="!!dimension.sharedDimension"
+              :selected-language="selectedLanguage"
+              :cube-uri="cube.id.value"
             />
           </td>
         </tr>

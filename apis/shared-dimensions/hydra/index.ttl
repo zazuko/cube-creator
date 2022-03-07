@@ -55,6 +55,33 @@ md:SharedDimensions
 <dimension/_shape/shared-dimension-create> a sh:NodeShape, sh:Shape .
 <dimension/_shape/shared-dimension-update> a sh:NodeShape, sh:Shape .
 
+md:Hierarchies
+  a hydra:Class ;
+  rdfs:subClassOf hydra:Collection ;
+  hydra:supportedOperation
+    [
+      a hydra:Operation ;
+      hydra:method "GET" ;
+      code:implementedBy
+        [
+          a code:EcmaScript ;
+          code:link <file:handlers/hierarchies#get> ;
+        ] ;
+    ],
+    [
+      a hydra:Operation, schema:CreateAction ;
+      hydra:method "POST" ;
+      hydra:title "Create hierarchy" ;
+      hydra:expects <dimension/_shape/hierarchy> ;
+      code:implementedBy
+        [
+          a code:EcmaScript ;
+          code:link <file:handlers/hierarchies#post> ;
+        ] ;
+      hex:multiPartPath md:export ;
+    ]
+.
+
 sh:NodeShape
   a hydra:Class ;
   hydra:supportedOperation
@@ -183,10 +210,28 @@ md:SharedDimension
       code:implementedBy
         [
           a code:EcmaScript ;
-          code:link <file:handlers/shared-dimension#put> ;
+          code:link <file:handlers/resource#put> ;
         ] ;
     ] ;
 .
+
+md:Hierarchy
+  a hydra:Class ;
+  hydra:supportedOperation
+    [
+      a hydra:SupportedOperation, schema:ReplaceAction ;
+      hydra:method "PUT" ;
+      hydra:title "Edit hierarchy" ;
+      hydra:expects <dimension/_shape/hierarchy> ;
+      code:implementedBy
+        [
+          a code:EcmaScript ;
+          code:link <file:handlers/resource#put> ;
+        ] ;
+    ] ;
+.
+
+<dimension/_shape/hierarchy> a sh:Shape .
 
 md:SharedDimensionTerm
   a hydra:Class ;

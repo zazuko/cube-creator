@@ -1,0 +1,54 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX hydra: <http://www.w3.org/ns/hydra/core#>
+PREFIX void: <http://rdfs.org/ns/void#>
+PREFIX sh: <http://www.w3.org/ns/shacl#>
+PREFIX schema: <http://schema.org/>
+PREFIX meta: <https://cube.link/meta/>
+prefix md: <https://cube-creator.zazuko.com/shared-dimensions/vocab#>
+base <https://ld.admin.ch/cube/dimension/hierarchy/>
+
+<hierarchies> a void:Dataset .
+
+graph <https://lindas.admin.ch/cube/dimension> {
+  <ch-canton-station> a meta:Hierarchy, hydra:Resource, md:Hierarchy ;
+    schema:name "CH - Canton - Station" ;
+    md:sharedDimension <http://example.com/dimension/countries> ;
+    meta:hierarchyRoot <http://example.com/dimension/countries/Switzerland> ;
+    meta:nextInHierarchy <urn:hierarchyLevel:canton> ;
+  .
+
+  <urn:hierarchyLevel:canton>
+    schema:name "Canton" ;
+    sh:path <urn:hierarchyLevel:canton/path> ;
+  .
+
+  <urn:hierarchyLevel:canton/path>
+    sh:inversePath schema:containedInPlace ;
+  .
+
+  [
+    sh:targetNode <ch-canton-station> ;
+    sh:property
+      [ sh:path rdf:type ],
+      [ sh:path schema:name ],
+      [ sh:path meta:hierarchyRoot ],
+      [ sh:path md:sharedDimension ],
+      [
+        sh:path meta:nextInHierarchy ;
+        sh:node
+          [
+            sh:targetNode <urn:hierarchyLevel:canton> ;
+            sh:property
+              [ sh:path schema:name ],
+              [
+                sh:path sh:path ;
+                sh:node
+                  [
+                    sh:targetNode <urn:hierarchyLevel:canton/path> ;
+                    sh:property [ sh:path sh:inversePath ] ;
+                  ] ;
+              ] ;
+          ] ;
+      ] ;
+  ] .
+}

@@ -30,11 +30,19 @@ services:
         NO_WEBSOCKET: "true"
   store:
     type: compose
+    ssl: true
+    build_as_root:
+      - /opt/java-minimal/bin/keytool -importcert -trustcacerts -noprompt -storepass changeit -cacerts -file /usr/share/ca-certificates/lndo.site.pem -alias LandoCert
     services:
-      image: ghcr.io/zazuko/fuseki-geosparql:v2.0.2
+      image: ghcr.io/zazuko/fuseki-geosparql:v2.0.3
       command: /opt/fuseki/entrypoint.sh
+      user: root
       environment:
         ADMIN_PASSWORD: password
+        OTEL_SERVICE_NAME: store
+        OTEL_TRACES_EXPORTER: jaeger
+        OTEL_EXPORTER_JAEGER_ENDPOINT: http://jaeger:14250
+        OTEL_PROPAGATORS: tracecontext,jaeger
       volumes:
         - ./fuseki/config.ttl:/fuseki/config.ttl
       healthcheck:
@@ -42,6 +50,8 @@ services:
         interval: 5s
         timeout: 3s
         retries: 10
+      depends_on:
+        - collector
   trifid:
     type: compose
     app_mount: false
@@ -86,12 +96,20 @@ services:
         - 8889:8889
       volumes:
         - ./otel/collector.yaml:/collector.yaml:ro
+      depends_on:
+        jaeger:
+          condition: service_healthy
   jaeger:
     type: compose
     scanner: false
     services:
       image: jaegertracing/all-in-one:1.22
       command: /go/bin/all-in-one-linux --sampling.strategies-file=/etc/jaeger/sampling_strategies.json
+      healthcheck:
+        test: wget -nv -t1 --spider localhost:14269/ || exit 1
+        interval: 5s
+        timeout: 3s
+        retries: 10
   prometheus:
     type: compose
     scanner: false

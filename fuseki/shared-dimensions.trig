@@ -1,3 +1,4 @@
+PREFIX gn: <http://www.geonames.org/ontology#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX qb: <http://purl.org/linked-data/cube#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -11,6 +12,48 @@ prefix meta: <https://cube.link/meta/>
 base <https://ld.admin.ch/cube/dimension/>
 
 <shared-dimensions> a void:Dataset .
+
+graph <https://register.ld.admin.ch/opendataswiss/categories> {
+  <https://register.ld.admin.ch/opendataswiss/category/agriculture> a schema:DefinedTerm .
+}
+
+<http://example.com/dimension/cantons> void:inDataset <shared-dimensions> .
+graph <http://example.com/dimension/cantons> {
+  <http://example.com/dimension/cantons>
+    a schema:DefinedTermSet, meta:SharedDimension ;
+    schema:name "Cantons"@en ;
+  .
+
+  <http://example.com/dimension/canton/ZH>
+    a schema:DefinedTerm, <http://example.com/vocab#Canton> ;
+    schema:identifier "ZH" ;
+    schema:containedInPlace <http://example.com/dimension/countries/Switzerland> ;
+    gn:parentFeature <http://example.com/dimension/countries/Switzerland> ;
+    schema:name "Zurich"@en ;
+    schema:inDefinedTermSet <http://example.com/dimension/cantons> ;
+}
+
+<http://example.com/dimension/districts> void:inDataset <shared-dimensions> .
+graph <http://example.com/dimension/districts> {
+  <http://example.com/dimension/districts>
+    a schema:DefinedTermSet, meta:SharedDimension ;
+    schema:name "Districts"@en ;
+  .
+
+  <http://example.com/dimension/district/ZH>
+    a schema:DefinedTerm, <http://example.com/vocab#District> ;
+    schema:identifier "ZH-ZH" ;
+    schema:containedInPlace <http://example.com/dimension/canton/ZH> ;
+    schema:name "city of Zürich"@en ;
+    schema:inDefinedTermSet <http://example.com/dimension/districts> .
+
+  <http://example.com/dimension/district/ZH-Affoltern>
+    a schema:DefinedTerm, <http://example.com/vocab#District> ;
+    schema:identifier "ZH-Affoltern" ;
+    schema:containedInPlace <http://example.com/dimension/canton/ZH> ;
+    schema:name "Affoltern"@en ;
+    schema:inDefinedTermSet <http://example.com/dimension/districts> .
+}
 
 <http://example.com/dimension/chemicals> void:inDataset <shared-dimensions> .
 graph <http://example.com/dimension/chemicals> {
@@ -34,6 +77,14 @@ graph <http://example.com/dimension/countries> {
     schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
     schema:identifier "CH" ;
     schema:name "Switzerland"@en, "Die Schweiz"@de, "Suisse"@fr, "Svizzera"@it ;
+    schema:inDefinedTermSet <http://example.com/dimension/countries> ;
+  .
+
+  <http://example.com/dimension/countries/Poland>
+    a schema:DefinedTerm ;
+    schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
+    schema:identifier "PL" ;
+    schema:name "Poland"@en, "Polen"@de, "Pologne"@fr, "Polonia"@it ;
     schema:inDefinedTermSet <http://example.com/dimension/countries> ;
   .
 }

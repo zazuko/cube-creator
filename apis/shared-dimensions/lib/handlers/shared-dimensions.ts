@@ -1,5 +1,5 @@
-import { NamedNode, Quad, Term } from 'rdf-js'
-import { hydra, oa, rdf, schema } from '@tpluscode/rdf-ns-builders'
+import { Term } from 'rdf-js'
+import { hydra, oa, schema } from '@tpluscode/rdf-ns-builders'
 import { asyncMiddleware } from 'middleware-async'
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
 import { Enrichment } from '@hydrofoil/labyrinth/lib/middleware/preprocessResource'
@@ -17,25 +17,7 @@ import { parsingClient } from '../sparql'
 import env from '../env'
 import { rewrite, rewriteTerm } from '../rewrite'
 import { postImportedDimension } from './shared-dimension/import'
-
-interface CollectionHandler {
-  memberType: NamedNode
-  collectionType: NamedNode
-  memberQuads: Quad[]
-  collection: NamedNode
-}
-
-function getCollection({ collection, memberQuads, memberType, collectionType }: CollectionHandler) {
-  const dataset = $rdf.dataset(memberQuads)
-
-  const graph = clownface({ dataset })
-  const members = graph.has(rdf.type, memberType)
-
-  return graph.node(collection)
-    .addOut(rdf.type, [hydra.Collection, collectionType])
-    .addOut(hydra.member, members)
-    .addOut(hydra.totalItems, members.terms.length)
-}
+import { getCollection } from './collection'
 
 export const get = asyncMiddleware(async (req, res) => {
   const collection = await getCollection({
