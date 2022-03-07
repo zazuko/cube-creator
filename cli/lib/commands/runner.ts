@@ -27,6 +27,7 @@ export interface RunOptions {
   job: string
   executionUrl?: string
   variable?: VariableMap
+  noStatusUpdate?: boolean
   graphStore?: {
     endpoint: string
     user: string
@@ -61,6 +62,7 @@ export function create<TOptions extends RunOptions>({ pipelineSources, prepare, 
 
   return async function (command: TOptions) {
     const { variable: variables = new Map(), job: jobUri, debug = false, graphStore, executionUrl } = command
+    const shouldUpdateJobStatus = !command.noStatusUpdate
 
     const authConfig = {
       params: command.authParam,
@@ -113,24 +115,28 @@ export function create<TOptions extends RunOptions>({ pipelineSources, prepare, 
 
     bufferDebug(run.pipeline, jobUri, { interval: 100 })
 
-    await updateJobStatus({
-      jobUri,
-      modified: new Date(),
-      executionUrl: variables.get('executionUrl'),
-      status: schema.ActiveActionStatus,
-      apiClient,
-    })
-
-    async function jobFailed(error: Error) {
+    if (shouldUpdateJobStatus) {
       await updateJobStatus({
-        modified: timestamp,
-        jobUri: run.pipeline.context.variables.get('jobUri'),
-        executionUrl: run.pipeline.context.variables.get('executionUrl'),
-        lastTransformed: run.pipeline.context.variables.get('lastTransformed'),
-        status: schema.FailedActionStatus,
-        error,
+        jobUri,
+        modified: new Date(),
+        executionUrl: variables.get('executionUrl'),
+        status: schema.ActiveActionStatus,
         apiClient,
       })
+    }
+
+    async function jobFailed(error: Error) {
+      if (shouldUpdateJobStatus) {
+        await updateJobStatus({
+          modified: timestamp,
+          jobUri: run.pipeline.context.variables.get('jobUri'),
+          executionUrl: run.pipeline.context.variables.get('executionUrl'),
+          lastTransformed: run.pipeline.context.variables.get('lastTransformed'),
+          status: schema.FailedActionStatus,
+          error,
+          apiClient,
+        })
+      }
 
       throw error
     }
@@ -140,15 +146,16 @@ export function create<TOptions extends RunOptions>({ pipelineSources, prepare, 
     return run.finished
       .then(async () => {
         await after?.(command, variables)
-
-        await updateJobStatus({
-          modified: timestamp,
-          jobUri: run.pipeline.context.variables.get('jobUri'),
-          executionUrl: run.pipeline.context.variables.get('executionUrl'),
-          status: schema.CompletedActionStatus,
-          apiClient,
-          messages: run.pipeline.context.variables.get('messages'),
-        })
+        if (shouldUpdateJobStatus) {
+          await updateJobStatus({
+            modified: timestamp,
+            jobUri: run.pipeline.context.variables.get('jobUri'),
+            executionUrl: run.pipeline.context.variables.get('executionUrl'),
+            status: schema.CompletedActionStatus,
+            apiClient,
+            messages: run.pipeline.context.variables.get('messages'),
+          })
+        }
       })
       .catch(jobFailed)
   }

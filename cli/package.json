@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "postinstall": "mkdir -p output; touch .env",
-    "transform": "dotenv -e ./.env -e ./.test.env -e ../.local.env -- sh -c 'ts-node index.ts transform --job \"$TRANSFORM_JOB\" --debug --to filesystem'",
-    "publish": "dotenv -e ./.env -e ./.test.env -e ../.local.env -- sh -c 'ts-node index.ts publish --job \"$PUBLISH_JOB\" --debug --to filesystem --no-upload --variable targetFile=./output/cube.nq'",
-    "expire-timedout": "dotenv -e ./.env -e ./.test.env -- sh -c 'ts-node index.ts timeout-jobs'",
+    "transform": "dotenv -e ./.env -e ./.test.env -e ../.local.env -- sh -c 'ts-node index.ts transform --job \"$TRANSFORM_JOB\" --debug --to filesystem --no-status-update'",
+    "publish": "dotenv -e ./.env -e ./.test.env -e ../.local.env -- sh -c 'ts-node index.ts publish --job \"$PUBLISH_JOB\" --debug --to filesystem --no-upload --no-status-update --variable targetFile=./output/cube.nq'",
+    "expire-timedout": "dotenv -e ./.env -e ./.test.env -- sh -c 'ts-node index.ts timeout-jobs --no-status-update'",
     "build": "tsc"
   },
   "dependencies": {
