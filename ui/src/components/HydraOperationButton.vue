@@ -18,7 +18,7 @@
 import { ColorsModifiers } from '@oruga-ui/oruga/types/helpers'
 import { defineComponent, PropType } from 'vue'
 import { RuntimeOperation } from 'alcaeus'
-import { Location } from 'vue-router'
+import { RouteLocationRaw } from 'vue-router'
 
 export default defineComponent({
   name: 'HydraOperationButton',
@@ -28,7 +28,7 @@ export default defineComponent({
       default: null,
     },
     to: {
-      type: Object as PropType<Location | null>,
+      type: Object as PropType<RouteLocationRaw>,
       default: null,
     },
     variant: {

@@ -1,5 +1,4 @@
-import Vue from 'vue'
-import VueRouter, { RouteConfig } from 'vue-router'
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import { vuexOidcCreateRouterMiddleware } from 'vuex-oidc'
 
 import OidcCallback from '@/components/auth/OidcCallback.vue'
@@ -42,9 +41,7 @@ import Hierarchies from '@/views/Hierarchies.vue'
 import HierarchyCreate from '@/views/HierarchyCreate.vue'
 import HierarchyEdit from '@/views/HierarchyEdit.vue'
 
-Vue.use(VueRouter)
-
-const routes: Array<RouteConfig> = [
+const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'Home',
@@ -247,11 +244,6 @@ const routes: Array<RouteConfig> = [
     component: OidcError,
   },
   {
-    path: '*',
-    name: 'PageNotFound',
-    component: PageNotFound,
-  },
-  {
     path: '/logout',
     name: 'Logout',
     component: Logout,
@@ -261,11 +253,15 @@ const routes: Array<RouteConfig> = [
     name: 'NotAuthorized',
     component: NotAuthorized,
   },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'PageNotFound',
+    component: PageNotFound,
+  },
 ]
 
-const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
+const router = createRouter({
+  history: createWebHistory(process.env.BASE_URL),
   routes
 })
 
