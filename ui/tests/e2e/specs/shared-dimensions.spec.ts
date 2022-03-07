@@ -1,6 +1,6 @@
 import slugify from 'slugify'
 
-describe('CSV mapping flow', () => {
+describe('Shared dimensions', () => {
   it('Visits the app root url', () => {
     cy.visit('/')
     cy.contains('a', 'Cube Creator')
