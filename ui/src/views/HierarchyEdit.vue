@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator'
+import { defineComponent } from '@vue/composition-api'
 import { RuntimeOperation } from 'alcaeus'
 import { GraphPointer } from 'clownface'
 import type { Shape } from '@rdfine/shacl'
@@ -23,79 +23,95 @@ import SidePane from '@/components/SidePane.vue'
 import HydraOperationFormWithRaw from '@/components/HydraOperationFormWithRaw.vue'
 import { api } from '@/api'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
-import * as storeNs from '../store/namespace'
-import { SharedDimension } from '../store/types'
 import { displayToast } from '@/use-toast'
 
-@Component({
+export default defineComponent({
+  name: 'HierarchyEditView',
   components: { SidePane, HydraOperationFormWithRaw },
-})
-export default class extends Vue {
-  @storeNs.sharedDimension.State('hierarchy') dimension!: SharedDimension
 
-  resource: GraphPointer | null = null
-  operation: RuntimeOperation | null = null
-  error: ErrorDetails | null = null
-  isSubmitting = false
-  shape: Shape | null = null
-  shapes: GraphPointer | null = null
+  data (): {
+    resource: GraphPointer | null,
+    operation: RuntimeOperation | null,
+    error: ErrorDetails | null,
+    isSubmitting: boolean,
+    shape: Shape | null,
+    shapes: GraphPointer | null,
+    } {
+    return {
+      resource: null,
+      operation: null,
+      error: null,
+      isSubmitting: false,
+      shape: null,
+      shapes: null,
+    }
+  },
 
   mounted (): void {
     this.prepareForm()
-  }
+  },
 
-  @Watch('$route')
-  async prepareForm (): Promise<void> {
-    this.resource = null
-    this.operation = null
-    this.shape = null
+  computed: {
+    title (): string {
+      return this.operation?.title ?? ''
+    },
+  },
 
-    const hierarchyId = this.$route.params.id
-    const hierarchy = await api.fetchResource(hierarchyId)
+  methods: {
+    async prepareForm (): Promise<void> {
+      this.resource = null
+      this.operation = null
+      this.shape = null
 
-    this.resource = Object.freeze(hierarchy.pointer)
-    this.operation = hierarchy.actions.replace ?? null
+      const hierarchyId = this.$route.params.id
+      const hierarchy = await api.fetchResource(hierarchyId)
 
-    if (this.operation) {
-      this.shape = await api.fetchOperationShape(this.operation)
-    }
-  }
+      this.resource = Object.freeze(hierarchy.pointer)
+      this.operation = hierarchy.actions.replace ?? null
 
-  get title (): string {
-    return this.operation?.title ?? ''
-  }
-
-  async onSubmit (resource: GraphPointer): Promise<void> {
-    this.error = null
-    this.isSubmitting = true
-
-    try {
-      await this.$store.dispatch('api/invokeSaveOperation', {
-        operation: this.operation,
-        resource,
-      })
-
-      this.$store.dispatch('sharedDimensions/fetchCollection')
-
-      displayToast(this, {
-        message: 'Hierarchy successfully saved',
-        variant: 'success',
-      })
-
-      this.$router.push({ name: 'Hierarchies' })
-    } catch (e) {
-      this.error = e.details ?? { detail: e.toString() }
-
-      if (!(e instanceof APIErrorValidation)) {
-        console.error(e)
+      if (this.operation) {
+        this.shape = await api.fetchOperationShape(this.operation)
       }
-    } finally {
-      this.isSubmitting = false
-    }
-  }
+    },
 
-  onCancel (): void {
-    this.$router.push({ name: 'Hierarchies' })
-  }
-}
+    async onSubmit (resource: GraphPointer): Promise<void> {
+      this.error = null
+      this.isSubmitting = true
+
+      try {
+        await this.$store.dispatch('api/invokeSaveOperation', {
+          operation: this.operation,
+          resource,
+        })
+
+        this.$store.dispatch('sharedDimensions/fetchCollection')
+
+        displayToast(this, {
+          message: 'Hierarchy successfully saved',
+          variant: 'success',
+        })
+
+        this.$router.push({ name: 'Hierarchies' })
+      } catch (e) {
+        this.error = e.details ?? { detail: e.toString() }
+
+        if (!(e instanceof APIErrorValidation)) {
+          console.error(e)
+        }
+      } finally {
+        this.isSubmitting = false
+      }
+    },
+
+    onCancel (): void {
+      this.$router.push({ name: 'Hierarchies' })
+    },
+  },
+
+  watch: {
+    $route () {
+      this.prepareForm()
+    }
+  },
+})
 </script>

@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { defineComponent, PropType } from '@vue/composition-api'
 import { Term } from 'rdf-js'
 import { dataset } from '@rdf-esm/dataset'
 import clownface, { GraphPointer } from 'clownface'
@@ -41,54 +41,79 @@ function getProperty (value: GraphPointer | undefined) {
   return { property, inverse }
 }
 
-@Component({
-  components: { InstancesSelect }
-})
-export default class extends Vue {
-  @Prop() value?: GraphPointer
-  @Prop() example?: GraphPointer
-  @Prop() moreExamples?: string
-  inverse = false
-  property?: Term | null = null
-  @Prop() properties!: Item[]
-  @Prop() update!: (newValue: GraphPointer | Term) => void
-
-  get exampleLabel () {
-    if (typeof this.example?.out === 'function') {
-      return this.example.out([schema.name, rdfs.label]).values?.shift() ||
-          this.example.value
+export default defineComponent({
+  name: 'HierarchyPathEditor',
+  components: { InstancesSelect },
+  props: {
+    value: {
+      type: Object as PropType<GraphPointer>,
+      default: undefined,
+    },
+    example: {
+      type: Object as PropType<GraphPointer>,
+      default: undefined,
+    },
+    moreExamples: {
+      type: String,
+      default: undefined,
+    },
+    properties: {
+      type: Array as PropType<Item[]>,
+      default: undefined,
+    },
+    update: {
+      type: Function as PropType<(newValue: GraphPointer | Term) => void>,
+      required: true,
     }
+  },
 
-    return ''
-  }
+  data (): { inverse: boolean, property: Term | undefined | null } {
+    return {
+      inverse: false,
+      property: null,
+    }
+  },
 
   mounted () {
     const { inverse, property } = getProperty(this.value)
     this.inverse = !!inverse
     this.property = property?.term
-  }
+  },
 
-  __onInverseToggled () {
-    this.inverse = !this.inverse
-    this.__update()
-  }
-
-  __onPropertySelected (term: Term) {
-    this.property = term
-    this.__update()
-  }
-
-  __update () {
-    const pointer = clownface({ dataset: dataset() })
-    if (this.inverse) {
-      const path = pointer.blankNode()
-      if (this.property) {
-        path.addOut(sh.inversePath, this.property)
+  computed: {
+    exampleLabel (): string {
+      if (typeof this.example?.out === 'function') {
+        return this.example.out([schema.name, rdfs.label]).values?.shift() ||
+            this.example.value
       }
-      this.update(path)
-    } else if (this.property) {
-      this.update(this.property)
-    }
-  }
-}
+
+      return ''
+    },
+  },
+
+  methods: {
+    __onInverseToggled () {
+      this.inverse = !this.inverse
+      this.__update()
+    },
+
+    __onPropertySelected (term: Term) {
+      this.property = term
+      this.__update()
+    },
+
+    __update () {
+      const pointer = clownface({ dataset: dataset() })
+      if (this.inverse) {
+        const path = pointer.blankNode()
+        if (this.property) {
+          path.addOut(sh.inversePath, this.property)
+        }
+        this.update(path)
+      } else if (this.property) {
+        this.update(this.property)
+      }
+    },
+  },
+})
 </script>

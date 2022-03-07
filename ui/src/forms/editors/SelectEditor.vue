@@ -18,17 +18,12 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from '@vue/composition-api'
-import type { PropertyShape } from '@rdfine/shacl'
 import { Term, NamedNode } from 'rdf-js'
 import { GraphPointer } from 'clownface'
 
 export default defineComponent({
   name: 'SelectEditor',
   props: {
-    property: {
-      type: Object as PropType<PropertyShape>,
-      required: true,
-    },
     update: {
       type: Function as PropType<(newValue: Term | string) => void>,
       required: true,
@@ -39,7 +34,7 @@ export default defineComponent({
     },
     options: {
       type: Array as PropType<[GraphPointer, string][]>,
-      required: true,
+      default: () => [],
     },
   },
 
