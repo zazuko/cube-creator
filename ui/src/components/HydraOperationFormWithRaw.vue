@@ -62,8 +62,8 @@ export default defineComponent({
       required: true,
     },
     shape: {
-      type: Object as PropType<Shape | null>,
-      required: true,
+      type: Object as PropType<Shape>,
+      default: null,
     },
     error: {
       type: Object as PropType<ErrorDetails | null>,
