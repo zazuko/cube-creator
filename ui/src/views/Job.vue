@@ -6,7 +6,7 @@
         <job-status :job="job" :show-label="true" />
       </h2>
       <p class="has-text-grey-dark">
-        Triggered at {{ job.created | format-date }}
+        Triggered at {{ createdDate }}
       </p>
     </header>
     <div class="is-flex gap-1">
@@ -92,6 +92,10 @@ export default defineComponent({
 
     link (): string | undefined {
       return this.job?.link?.id.value
+    },
+
+    createdDate (): string {
+      return this.job?.created.toLocaleString() ?? ''
     },
   },
 
