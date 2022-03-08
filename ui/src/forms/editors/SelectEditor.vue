@@ -1,5 +1,5 @@
 <template>
-  <o-select class="select-editor" placeholder="Select" @input="onInput" :value="valueStr">
+  <o-select class="select-editor" placeholder="Select" @update:modelValue="onInput" :model-value="valueStr">
     <option
       v-for="[option, label] in options"
       :value="option.term.value"

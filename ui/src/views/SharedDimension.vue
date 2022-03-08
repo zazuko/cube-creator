@@ -29,9 +29,8 @@
                 :operation="dimension.actions.create"
                 :to="{ name: 'SharedDimensionTermCreate' }"
                 variant="default"
-              >
-                {{ dimension.actions.create.title }}
-              </hydra-operation-button>
+                :label="dimension.actions.create.title"
+              />
             </td>
           </tr>
         </thead>
@@ -116,7 +115,7 @@
                   </o-tooltip>
                 </div>
                 <o-tooltip label="Page size">
-                  <o-select :value="pageSize" @input="changePageSize" title="Page size">
+                  <o-select :model-value="pageSize" @update:modelValue="changePageSize" title="Page size">
                     <option v-for="pageSizeOption in pageSizes" :key="pageSizeOption" :native-value="pageSizeOption">
                       {{ pageSizeOption }}
                     </option>
@@ -200,7 +199,7 @@ export default defineComponent({
     },
 
     deleteDimension (dimension: SharedDimension): void {
-      confirmDialog(this, {
+      confirmDialog({
         title: dimension.actions.delete?.title,
         message: 'Are you sure you want to delete this shared dimension?',
         confirmText: 'Delete',
@@ -215,7 +214,7 @@ export default defineComponent({
     },
 
     deleteTerm (term: SharedDimensionTerm): void {
-      confirmDialog(this, {
+      confirmDialog({
         title: term.actions.delete?.title,
         message: 'Are you sure you want to delete this term?',
         confirmText: 'Delete',

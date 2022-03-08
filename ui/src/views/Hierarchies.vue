@@ -8,11 +8,10 @@
         <hydra-operation-button
           :operation="collection.actions.create"
           :to="{ name: 'HierarchyCreate' }"
-          type="is-default"
-          size=""
-        >
-          {{ collection.actions.create.title }}
-        </hydra-operation-button>
+          variant="default"
+          size="normal"
+          :label="collection.actions.create.title"
+        />
       </div>
     </div>
     <div v-if="collection" class="panel">

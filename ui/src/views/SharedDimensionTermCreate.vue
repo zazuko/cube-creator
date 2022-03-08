@@ -83,7 +83,7 @@ export default defineComponent({
 
         this.$store.dispatch('sharedDimension/addTerm', term)
 
-        displayToast(this, {
+        displayToast({
           message: 'Shared dimension term successfully created',
           variant: 'success',
         })

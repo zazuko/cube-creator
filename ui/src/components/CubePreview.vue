@@ -16,7 +16,12 @@
                 </div>
               </div>
               <div class="level-right">
-                <o-select :value="selectedLanguage" @input="$emit('selectLanguage', $event)" class="level-item" title="Language">
+                <o-select
+                  :model-value="selectedLanguage"
+                  @update:modelValue="$emit('selectLanguage', $event)"
+                  class="level-item"
+                  title="Language"
+                >
                   <option v-for="language in languages" :key="language" :value="language">
                     {{ language }}
                   </option>

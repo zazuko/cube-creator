@@ -91,7 +91,7 @@ export default defineComponent({
 
         this.$store.dispatch('sharedDimensions/fetchCollection')
 
-        displayToast(this, {
+        displayToast({
           message: 'Shared dimension successfully saved',
           variant: 'success',
         })

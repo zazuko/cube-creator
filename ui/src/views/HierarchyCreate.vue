@@ -80,7 +80,7 @@ export default defineComponent({
 
         await this.$store.dispatch('sharedDimensions/fetchCollection')
 
-        displayToast(this, {
+        displayToast({
           message: `Shared dimension ${dimension.name} successfully created`,
           variant: 'success',
         })

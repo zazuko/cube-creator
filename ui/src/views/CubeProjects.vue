@@ -10,9 +10,8 @@
           :to="{ name: 'CubeProjectCreate' }"
           variant="default"
           size="normal"
-        >
-          {{ projectsCollection.actions.create.title }}
-        </hydra-operation-button>
+          :label="projectsCollection.actions.create.title"
+        />
       </div>
     </div>
     <div v-if="projectsCollection">

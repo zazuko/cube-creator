@@ -1,5 +1,5 @@
 <template>
-  <o-input :value="value" @input="update" />
+  <o-input :model-value="value" @update:modelValue="update" />
 </template>
 
 <script lang="ts">

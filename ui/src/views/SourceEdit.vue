@@ -86,7 +86,7 @@ export default defineComponent({
 
         this.$store.dispatch('project/refreshSourcesCollection')
 
-        displayToast(this, {
+        displayToast({
           message: 'Settings successfully saved',
           variant: 'success',
         })

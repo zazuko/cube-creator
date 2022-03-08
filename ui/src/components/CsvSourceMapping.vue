@@ -76,8 +76,8 @@
           @mouseleave="unhighlightArrows(column)"
         >
           <o-checkbox
-            :value="selectedColumnsMap[column.clientPath]"
-            @input="selectedColumnsMap[column.clientPath] = $event"
+            :model-value="selectedColumnsMap[column.clientPath]"
+            @update:modelValue="selectedColumnsMap[column.clientPath] = $event"
             class="source-column-name"
           >
             {{ column.name }}
@@ -208,7 +208,7 @@ export default defineComponent({
     },
 
     async deleteSource (source: CsvSource): Promise<void> {
-      confirmDialog(this, {
+      confirmDialog({
         title: source.actions.delete?.title,
         message: 'Are you sure you want to delete this CSV source?',
         confirmText: 'Delete',

@@ -1,8 +1,8 @@
 <template>
   <o-field :message="fullURI">
     <o-autocomplete
-      :value="textValue"
-      @input="onUpdate"
+      :model-value="textValue"
+      @update:modelValue="onUpdate"
       :data="suggestions"
     />
   </o-field>

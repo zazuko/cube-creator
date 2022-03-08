@@ -98,7 +98,7 @@ export default defineComponent({
 
         this.$store.commit('project/storeProject', project)
 
-        displayToast(this, {
+        displayToast({
           message: 'Project settings were saved',
           variant: 'success',
         })
@@ -114,7 +114,7 @@ export default defineComponent({
     },
 
     async deleteProject (): Promise<void> {
-      confirmDialog(this, {
+      confirmDialog({
         title: this.project.actions.delete?.title,
         message: 'Are you sure you want to delete this project? This action is not revertible.',
         confirmText: 'Delete',

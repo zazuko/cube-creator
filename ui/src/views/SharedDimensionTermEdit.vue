@@ -109,7 +109,7 @@ export default defineComponent({
 
         this.$store.dispatch('sharedDimension/updateTerm', term)
 
-        displayToast(this, {
+        displayToast({
           message: 'Shared dimension term successfully saved',
           variant: 'success',
         })

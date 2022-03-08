@@ -5,8 +5,8 @@
   >
     <o-autocomplete
       ref="autocomplete"
-      :value="value"
-      @input="update"
+      :model-value="value"
+      @update:modelValue="update"
       @typing="onTyping"
       @select="onSelect"
       @blur="validate"

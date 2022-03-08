@@ -10,9 +10,8 @@
           :to="{ name: 'SharedDimensionCreate' }"
           variant="default"
           size="normal"
-        >
-          {{ collection.actions.create.title }}
-        </hydra-operation-button>
+          :label="collection.actions.create.title"
+        />
       </div>
     </div>
     <div v-if="collection">

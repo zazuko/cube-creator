@@ -1,6 +1,6 @@
 <template>
   <o-field :message="message">
-    <o-input :value="textValue" @blur="onUpdate" />
+    <o-input :model-value="textValue" @blur="onUpdate" />
   </o-field>
 </template>
 

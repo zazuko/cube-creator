@@ -1,5 +1,5 @@
 <template>
-  <o-checkbox :value="value" @input="emit" />
+  <o-checkbox :model-value="value" @update:modelValue="emit" />
 </template>
 
 <script lang="ts">

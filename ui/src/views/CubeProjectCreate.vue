@@ -73,7 +73,7 @@ export default defineComponent({
           resource,
         })
 
-        displayToast(this, {
+        displayToast({
           message: `Project ${project.title} successfully created`,
           variant: 'success',
         })

@@ -8,7 +8,7 @@
         @remove="removeTag(languageIndex, $event)"
         class="is-flex-grow-1"
       />
-      <o-select :value="language" @input="updateLanguage(languageIndex, $event)">
+      <o-select :model-value="language" @update:modelValue="updateLanguage(languageIndex, $event)">
         <option v-for="languageOption in languages" :key="languageOption">
           {{ languageOption }}
         </option>

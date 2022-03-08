@@ -94,7 +94,7 @@ export default defineComponent({
 
         this.$store.commit('project/storeTable', table)
 
-        displayToast(this, {
+        displayToast({
           message: `Table ${table.name} was successfully created`,
           variant: 'success',
         })

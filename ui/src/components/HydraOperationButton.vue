@@ -3,14 +3,13 @@
     <o-button
       :tag="tag"
       :to="to"
-      @click="$emit('click')"
+      @click.stop="$emit('click')"
       :variant="variant"
       :size="size"
       :icon-left="iconName"
       :disabled="disabled"
-    >
-      <slot />
-    </o-button>
+      :label="label"
+    />
   </o-tooltip>
 </template>
 
@@ -46,6 +45,10 @@ export default defineComponent({
     disabled: {
       type: Boolean,
       default: false,
+    },
+    label: {
+      type: String,
+      default: null,
     },
   },
 

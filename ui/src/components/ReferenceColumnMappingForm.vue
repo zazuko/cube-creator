@@ -40,8 +40,8 @@
       <radio-buttons
         class="has-addons"
         :options="dimensionTypes"
-        :value="data.dimensionType"
-        :update="(value) => data.dimensionType = value"
+        :model-value="data.dimensionType"
+        :update:modelValue="(value) => data.dimensionType = value"
       />
     </o-field>
 

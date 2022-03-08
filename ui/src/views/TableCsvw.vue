@@ -102,7 +102,7 @@ export default defineComponent({
       const snippet = this.$refs.snippet as any
       const content = snippet.codeMirror.value
       await navigator.clipboard.writeText(content)
-      displayToast(this, {
+      displayToast({
         message: 'Copied 👍',
         variant: 'success',
       })

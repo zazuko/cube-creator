@@ -1,9 +1,9 @@
 <template>
   <o-radio
-    :value="value"
+    :model-value="modelValue"
     :native-value="nativeValue"
     :size="size"
-    @input="$emit('input', $event)"
+    @update:modelValue="$emit('update:modelValue', $event)"
     class="button radio-button"
     :class="{ 'is-primary': isSelected }"
   >
@@ -17,7 +17,7 @@ import { defineComponent } from 'vue'
 export default defineComponent({
   name: 'RadioButton',
   props: {
-    value: {
+    modelValue: {
       type: String,
       default: undefined,
     },
@@ -30,10 +30,11 @@ export default defineComponent({
       default: undefined,
     },
   },
+  emits: ['update:modelValue'],
 
   computed: {
     isSelected (): boolean {
-      return this.value === this.nativeValue
+      return this.modelValue === this.nativeValue
     },
   }
 })

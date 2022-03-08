@@ -95,7 +95,7 @@ export default defineComponent({
       try {
         await api.invokeSaveOperation(operation, resource)
 
-        displayToast(this, {
+        displayToast({
           message: 'CSV file was successfully replaced',
           variant: 'success',
         })

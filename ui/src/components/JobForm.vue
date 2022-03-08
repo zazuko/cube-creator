@@ -95,7 +95,7 @@ export default defineComponent({
           resource,
         })
 
-        displayToast(this, {
+        displayToast({
           message: `${job.name} was started`,
           variant: 'success',
         })
@@ -114,7 +114,7 @@ export default defineComponent({
 
     async askConfirmation (): Promise<boolean> {
       return new Promise((resolve) => {
-        confirmDialog(this, {
+        confirmDialog({
           title: this.operation.title,
           message: this.confirmationMessage,
           confirmText: 'Confirm',

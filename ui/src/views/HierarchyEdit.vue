@@ -86,7 +86,7 @@ export default defineComponent({
 
         this.$store.dispatch('sharedDimensions/fetchCollection')
 
-        displayToast(this, {
+        displayToast({
           message: 'Hierarchy successfully saved',
           variant: 'success',
         })

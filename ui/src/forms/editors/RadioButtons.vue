@@ -3,9 +3,9 @@
     <radio-button
       v-for="option in choices"
       :key="option.value"
-      :value="_value"
+      :model-value="_value"
       :native-value="option.value"
-      @input="emit"
+      @update:modelValue="emit"
     >
       {{ label(option) }}
     </radio-button>

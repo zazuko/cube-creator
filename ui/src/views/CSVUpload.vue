@@ -70,7 +70,7 @@ export default defineComponent({
       try {
         await Promise.all(uploads)
 
-        displayToast(this, {
+        displayToast({
           message: 'CSV files were successfully uploaded',
           variant: 'success',
         })

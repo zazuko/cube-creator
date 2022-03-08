@@ -96,7 +96,7 @@ export default defineComponent({
 
         this.$store.dispatch('project/fetchDimensionMetadataCollection')
 
-        displayToast(this, {
+        displayToast({
           message: 'Mapping to shared dimension was saved',
           variant: 'success',
         })

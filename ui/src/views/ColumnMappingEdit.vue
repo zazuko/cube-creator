@@ -98,7 +98,7 @@ export default defineComponent({
 
         this.$store.commit('project/storeUpdatedColumnMapping', { table: this.table, columnMapping })
 
-        displayToast(this, {
+        displayToast({
           message: 'Column mapping was successfully updated',
           variant: 'success',
         })

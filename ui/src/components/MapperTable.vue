@@ -148,7 +148,7 @@ export default defineComponent({
     },
 
     deleteTable (table: Table): void {
-      confirmDialog(this, {
+      confirmDialog({
         title: table.actions.delete?.title,
         message: 'Are you sure you want to delete this table?',
         confirmText: 'Delete',
@@ -163,7 +163,7 @@ export default defineComponent({
     },
 
     deleteColumnMapping (columnMapping: ColumnMapping): void {
-      confirmDialog(this, {
+      confirmDialog({
         title: columnMapping.actions.delete?.title,
         message: 'Are you sure you want to delete this column mapping?',
         confirmText: 'Delete',

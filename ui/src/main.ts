@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import * as Sentry from '@sentry/vue'
 import { Integrations } from '@sentry/tracing'
-import Oruga from '@oruga-ui/oruga'
+import Oruga from '@oruga-ui/oruga-next'
 import { bulmaConfig } from '@oruga-ui/theme-bulma'
 import App from './App.vue'
 import router from './router'

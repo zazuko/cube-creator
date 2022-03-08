@@ -125,7 +125,7 @@ export default defineComponent({
 
         this.$store.dispatch('project/refreshDimensionMetadataCollection')
 
-        displayToast(this, {
+        displayToast({
           message: 'Dimension metadata was saved',
           variant: 'success',
         })

@@ -1,7 +1,7 @@
 <template>
   <o-field>
-    <o-input :value="valueText" @input="updateValue" class="text-input" :type="inputType" />
-    <o-select :value="valueLanguage" @input="updateLanguage">
+    <o-input :model-value="valueText" @update:modelValue="updateValue" class="text-input" :type="inputType" />
+    <o-select :model-value="valueLanguage" @update:modelValue="updateLanguage">
       <option v-for="language in languages" :key="language">
         {{ language }}
       </option>

@@ -84,7 +84,7 @@ export default defineComponent({
 
         this.$store.dispatch('project/fetchCubeMetadata')
 
-        displayToast(this, {
+        displayToast({
           message: 'Cube metadata was saved',
           variant: 'success',
         })
