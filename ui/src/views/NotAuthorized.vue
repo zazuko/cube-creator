@@ -19,8 +19,8 @@ export default defineComponent({
   components: { PageContent },
 
   computed: {
-    link (): string | null {
-      return this.$route.params.link
+    link (): string {
+      return this.$route.params.link as string
     },
   },
 })

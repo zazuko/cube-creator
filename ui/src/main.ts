@@ -71,3 +71,5 @@ Sentry.init({
 })
 
 app.mount('#app')
+
+export default app

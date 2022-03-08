@@ -31,7 +31,7 @@ export default defineComponent({
   props: {
     afterUpload: {
       type: Function as PropType<(files: UploadedFile[]) => Promise<void>>,
-      default: undefined,
+      default: (files: UploadedFile[]) => files,
     },
     fileMeta: {
       type: Object as PropType<Record<string, unknown>>,

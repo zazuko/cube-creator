@@ -33,7 +33,7 @@ import LoadingBlock from '@/components/LoadingBlock.vue'
 import JobForm from '@/components/JobForm.vue'
 import JobItem from '@/components/JobItem.vue'
 import { JobCollection } from '@cube-creator/model'
-import { RuntimeOperation } from 'alcaeus/Resources/Operation'
+import { RuntimeOperation } from 'alcaeus'
 import { mapGetters } from 'vuex'
 
 export default defineComponent({
@@ -46,11 +46,13 @@ export default defineComponent({
       jobs: 'transformJobs',
     }),
 
-    jobCollection (): JobCollection {
+    jobCollection (): JobCollection | null {
       return this.$store.state.project.jobCollection
     },
 
     operation (): RuntimeOperation | null {
+      if (!this.jobCollection) return null
+
       return this.hasCSVMapping
         ? this.jobCollection.actions.createTransform
         : this.jobCollection.actions.createImport

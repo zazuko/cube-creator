@@ -82,7 +82,7 @@ export default defineComponent({
       this.operation = null
       this.shape = null
 
-      const termId = this.$route.params.termId
+      const termId = this.$route.params.termId as string
       const term = await api.fetchResource(termId)
 
       this.term = serializeSharedDimensionTerm(term)

@@ -24,7 +24,7 @@ export default defineComponent({
   name: 'HydraOperationButton',
   props: {
     operation: {
-      type: Object as PropType<RuntimeOperation | null>,
+      type: Object as PropType<RuntimeOperation>,
       default: null,
     },
     to: {

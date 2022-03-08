@@ -73,7 +73,7 @@ export default defineComponent({
     }),
 
     operation (): RuntimeOperation | null {
-      return this.$store.state.project.tableCollection.actions.create
+      return this.$store.state.project.tableCollection?.actions.create ?? null
     },
 
     preselectedSource (): CsvSource | null {

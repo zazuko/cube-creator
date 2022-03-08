@@ -63,7 +63,7 @@ export default defineComponent({
       this.operation = null
       this.shape = null
 
-      const hierarchyId = this.$route.params.id
+      const hierarchyId = this.$route.params.id as string
       const hierarchy = await api.fetchResource(hierarchyId)
 
       this.resource = Object.freeze(hierarchy.pointer)

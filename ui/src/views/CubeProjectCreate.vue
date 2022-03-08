@@ -54,7 +54,7 @@ export default defineComponent({
 
   computed: {
     operation (): RuntimeOperation | null {
-      return this.$store.state.projects.collection.actions.create
+      return this.$store.state.projects.collection?.actions.create ?? null
     },
 
     title (): string {

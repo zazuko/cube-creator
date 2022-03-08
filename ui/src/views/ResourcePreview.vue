@@ -44,7 +44,7 @@ export default defineComponent({
 
   data (): { resourceId: NamedNode, resource: GraphPointer | null, properties: [Term, (Term | RdfResource)[]][] } {
     return {
-      resourceId: $rdf.namedNode(this.$route.params.resourceId),
+      resourceId: $rdf.namedNode(this.$route.params.resourceId as string),
       resource: null,
       properties: [],
     }
@@ -56,7 +56,7 @@ export default defineComponent({
 
     const url = new URL(cubeGraph.value)
     url.searchParams.append('resource', this.resourceId.value)
-    url.searchParams.append('sharedTerm', this.$route.params.sharedTerm)
+    url.searchParams.append('sharedTerm', this.$route.params.sharedTerm as string)
     const responseResource = await api.fetchResource(url.href)
 
     const resource = responseResource.pointer.namedNode(this.resourceId)

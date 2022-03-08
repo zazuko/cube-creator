@@ -71,7 +71,7 @@ export default defineComponent({
       return this.$store.state.app.language
     },
 
-    jobCollection (): JobCollection {
+    jobCollection (): JobCollection | null {
       return this.$store.state.project.jobCollection
     },
   },

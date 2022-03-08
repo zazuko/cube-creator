@@ -68,7 +68,7 @@ export default defineComponent({
       this.operation = null
       this.shape = null
 
-      const dimensionId = this.$route.params.id
+      const dimensionId = this.$route.params.id as string
       const dimension = await api.fetchResource(dimensionId)
 
       this.resource = Object.freeze(dimension.pointer)

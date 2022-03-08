@@ -19,7 +19,6 @@ import { defineComponent } from 'vue'
 import { RuntimeOperation } from 'alcaeus'
 import type { Shape } from '@rdfine/shacl'
 import { GraphPointer } from 'clownface'
-import { Dataset } from '@cube-creator/model'
 import SidePane from '@/components/SidePane.vue'
 import HydraOperationFormWithRaw from '@/components/HydraOperationFormWithRaw.vue'
 import { api } from '@/api'
@@ -27,6 +26,7 @@ import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 import { cc, cube } from '@cube-creator/core/namespace'
 import { conciseBoundedDescription } from '@/graph'
 import { displayToast } from '@/use-toast'
+import { mapState } from 'vuex'
 
 export default defineComponent({
   name: 'CubeMetadataEdit',
@@ -58,9 +58,9 @@ export default defineComponent({
   },
 
   computed: {
-    cubeMetadata (): Dataset {
-      return this.$store.state.project.cubeMetadata
-    },
+    ...mapState('project', {
+      cubeMetadata: 'cubeMetadata',
+    }),
 
     operation (): RuntimeOperation | null {
       return this.cubeMetadata.actions.edit

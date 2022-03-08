@@ -22,7 +22,7 @@ import { defineComponent } from 'vue'
 import { RuntimeOperation } from 'alcaeus'
 import { Shape } from '@rdfine/shacl'
 import { GraphPointer } from 'clownface'
-import { Dataset, DimensionMetadata } from '@cube-creator/model'
+import { DimensionMetadata } from '@cube-creator/model'
 import SidePane from '@/components/SidePane.vue'
 import HydraOperationFormWithRaw from '@/components/HydraOperationFormWithRaw.vue'
 import TermDisplay from '@/components/TermDisplay.vue'
@@ -32,7 +32,7 @@ import { conciseBoundedDescription } from '@/graph'
 import { rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { meta } from '@cube-creator/core/namespace'
 import { displayToast } from '@/use-toast'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 
 export default defineComponent({
   name: 'DimensionEditView',
@@ -91,10 +91,9 @@ export default defineComponent({
       dimensions: 'dimensions',
       findDimension: 'findDimension',
     }),
-
-    cubeMetadata (): Dataset {
-      return this.$store.state.project.cubeMetadata
-    },
+    ...mapState('project', {
+      cubeMetadata: 'cubeMetadata',
+    }),
 
     cubeUri (): string | undefined {
       return this.cubeMetadata?.hasPart[0]?.id.value

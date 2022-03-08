@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, Vue } from 'vue'
+import { defineComponent, PropType } from 'vue'
 import { CsvSource } from '@cube-creator/model'
 import { Term } from 'rdf-js'
 import { mapGetters, Store } from 'vuex'
@@ -114,7 +114,7 @@ export default defineComponent({
 
   methods: {
     getInputElement (): HTMLInputElement | null {
-      const autocomplete = this.$refs.autocomplete as Vue
+      const autocomplete = this.$refs.autocomplete as any
       return autocomplete?.$el.querySelector('input') ?? null
     },
 

@@ -20,7 +20,7 @@ export default defineComponent({
   },
 
   computed: {
-    createIdentifier (): CreateIdentifier {
+    createIdentifier (): CreateIdentifier | null {
       return this.$store.state.project.createIdentifier
     },
 
@@ -29,7 +29,9 @@ export default defineComponent({
     },
 
     expanded (): string {
-      return this.createIdentifier(this.term)
+      return this.createIdentifier
+        ? this.createIdentifier(this.term)
+        : this.term.value
     },
 
     shrunk (): string {
