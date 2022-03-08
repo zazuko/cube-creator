@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import { ActionTree, MutationTree, GetterTree } from 'vuex'
 import { api } from '@/api'
 import { RootState } from '../types'
@@ -342,7 +341,7 @@ const mutations: MutationTree<ProjectState> = {
   },
 
   storeTable (state, table) {
-    Vue.set(state.tables, table.id.value, serializeTable(table))
+    state.tables[table.id.value] = serializeTable(table)
   },
 
   storeNewColumnMapping (state, { table, columnMapping }) {
@@ -359,7 +358,7 @@ const mutations: MutationTree<ProjectState> = {
 
     const serializedColumnMapping = serializeColumnMapping(columnMapping)
     const index = storedTable.columnMappings.findIndex(({ id }) => id.equals(columnMapping.id))
-    Vue.set(storedTable.columnMappings, index, serializedColumnMapping)
+    storedTable.columnMappings[index] = serializedColumnMapping
   },
 
   storeCubeMetadata (state, cubeMetadata) {
