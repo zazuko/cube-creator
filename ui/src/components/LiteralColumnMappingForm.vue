@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType, ref, Ref } from 'vue'
 import { RuntimeOperation } from 'alcaeus'
 import clownface, { GraphPointer } from 'clownface'
 import { rdf, schema } from '@tpluscode/rdf-ns-builders'
@@ -59,10 +59,13 @@ export default defineComponent({
     },
   },
 
-  data (): { resource: GraphPointer, shape: Shape | null } {
+  setup () {
+    const resource: Ref<GraphPointer> = ref(clownface({ dataset: $rdf.dataset() }).namedNode('').addOut(rdf.type, cc.LiteralColumnMapping))
+    const shape: Ref<Shape | null> = ref(null)
+
     return {
-      resource: clownface({ dataset: $rdf.dataset() }).namedNode('').addOut(rdf.type, cc.LiteralColumnMapping),
-      shape: null,
+      resource,
+      shape,
     }
   },
 

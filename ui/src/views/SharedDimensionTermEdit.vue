@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref, Ref } from 'vue'
 import { RuntimeOperation } from 'alcaeus'
 import { GraphPointer } from 'clownface'
 import type { Shape } from '@rdfine/shacl'
@@ -38,23 +38,23 @@ export default defineComponent({
   name: 'SharedDimensionTermEditView',
   components: { SidePane, HydraOperationFormWithRaw },
 
-  data (): {
-    resource: GraphPointer | null,
-    term: SharedDimensionTerm | null,
-    operation: RuntimeOperation | null,
-    error: ErrorDetails | null,
-    isSubmitting: boolean,
-    shape: Shape | null,
-    shapes: GraphPointer | null,
-    } {
+  setup () {
+    const resource: Ref<GraphPointer | null> = ref(null)
+    const term: Ref<SharedDimensionTerm | null> = ref(null)
+    const operation: Ref<RuntimeOperation | null> = ref(null)
+    const error: Ref<ErrorDetails | null> = ref(null)
+    const isSubmitting = ref(false)
+    const shape: Ref<Shape | null> = ref(null)
+    const shapes: Ref<GraphPointer | null> = ref(null)
+
     return {
-      resource: null,
-      term: null,
-      operation: null,
-      error: null,
-      isSubmitting: false,
-      shape: null,
-      shapes: null,
+      resource,
+      term,
+      operation,
+      error,
+      isSubmitting,
+      shape,
+      shapes,
     }
   },
 

@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType, ref, Ref } from 'vue'
 import { RuntimeOperation } from 'alcaeus'
 import clownface, { GraphPointer } from 'clownface'
 import { dataset } from '@rdf-esm/dataset'
@@ -52,12 +52,17 @@ export default defineComponent({
     },
   },
 
-  data (): { resource: GraphPointer | null, shape: Shape | null, error: ErrorDetails | null, isSubmitting: boolean } {
+  setup () {
+    const resource: Ref<GraphPointer | null> = ref(null)
+    const shape: Ref<Shape | null> = ref(null)
+    const error: Ref<ErrorDetails | null> = ref(null)
+    const isSubmitting = ref(false)
+
     return {
-      resource: null,
-      shape: null,
-      error: null,
-      isSubmitting: false,
+      resource,
+      shape,
+      error,
+      isSubmitting,
     }
   },
 

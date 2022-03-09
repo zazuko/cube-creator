@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref, Ref } from 'vue'
 import { RuntimeOperation } from 'alcaeus'
 import clownface, { GraphPointer } from 'clownface'
 import type { Shape } from '@rdfine/shacl'
@@ -31,19 +31,19 @@ export default defineComponent({
   name: 'SHaredDimensionTermCreateView',
   components: { SidePane, HydraOperationForm },
 
-  data (): {
-    resource: GraphPointer | null,
-    error: ErrorDetails | null,
-    isSubmitting: boolean,
-    shape: Shape | null,
-    shapes: GraphPointer | null,
-    } {
+  setup () {
+    const resource: Ref<GraphPointer | null> = ref(clownface({ dataset: dataset() }).namedNode(''))
+    const error: Ref<ErrorDetails | null> = ref(null)
+    const isSubmitting = ref(false)
+    const shape: Ref<Shape | null> = ref(null)
+    const shapes: Ref<GraphPointer | null> = ref(null)
+
     return {
-      resource: Object.freeze(clownface({ dataset: dataset() }).namedNode('')),
-      error: null,
-      isSubmitting: false,
-      shape: null,
-      shapes: null,
+      resource,
+      error,
+      isSubmitting,
+      shape,
+      shapes,
     }
   },
 

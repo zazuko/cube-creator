@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref, Ref } from 'vue'
 import { GraphPointer } from 'clownface'
 import { RuntimeOperation } from 'alcaeus'
 import { Shape } from '@rdfine/shacl'
@@ -32,17 +32,17 @@ export default defineComponent({
   name: 'TableEditView',
   components: { SidePane, HydraOperationForm },
 
-  data (): {
-    resource: GraphPointer | null,
-    error: ErrorDetails | null,
-    isSubmitting: boolean,
-    shape: Shape | null,
-    } {
+  setup () {
+    const resource: Ref<GraphPointer | null> = ref(null)
+    const error: Ref<ErrorDetails | null> = ref(null)
+    const isSubmitting = ref(false)
+    const shape: Ref<Shape | null> = ref(null)
+
     return {
-      resource: null,
-      error: null,
-      isSubmitting: false,
-      shape: null,
+      resource,
+      error,
+      isSubmitting,
+      shape,
     }
   },
 

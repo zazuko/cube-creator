@@ -56,7 +56,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType, ref, Ref } from 'vue'
 import { RuntimeOperation } from 'alcaeus'
 import clownface, { AnyPointer } from 'clownface'
 import { rdf, sh } from '@tpluscode/rdf-ns-builders'
@@ -120,15 +120,18 @@ export default defineComponent({
     },
   },
 
-  data (): { shape: Shape | null, data: FormData } {
+  setup () {
+    const shape: Ref<Shape | null> = ref(null)
+    const data: Ref<FormData> = ref({
+      targetProperty: null,
+      referencedTable: null,
+      identifierMapping: null,
+      dimensionType: null,
+    })
+
     return {
-      shape: null,
-      data: {
-        targetProperty: null,
-        referencedTable: null,
-        identifierMapping: null,
-        dimensionType: null,
-      },
+      shape,
+      data,
     }
   },
 

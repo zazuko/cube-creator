@@ -172,7 +172,7 @@ export default defineComponent({
     this.$store.dispatch('sharedDimension/fetchDimension', id)
   },
 
-  beforeDestroy (): void {
+  beforeUnmount (): void {
     this.$store.dispatch('sharedDimension/reset')
   },
 

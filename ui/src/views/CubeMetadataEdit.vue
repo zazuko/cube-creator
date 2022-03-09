@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref, Ref } from 'vue'
 import { RuntimeOperation } from 'alcaeus'
 import type { Shape } from '@rdfine/shacl'
 import { GraphPointer } from 'clownface'
@@ -32,12 +32,17 @@ export default defineComponent({
   name: 'CubeMetadataEdit',
   components: { SidePane, HydraOperationFormWithRaw },
 
-  data (): { resource: GraphPointer | null, shape: Shape | null, error: ErrorDetails | null, isSubmitting: boolean } {
+  setup () {
+    const resource: Ref<GraphPointer | null> = ref(null)
+    const shape: Ref<Shape | null> = ref(null)
+    const error: Ref<ErrorDetails | null> = ref(null)
+    const isSubmitting = ref(false)
+
     return {
-      resource: null,
-      shape: null,
-      error: null,
-      isSubmitting: false,
+      resource,
+      shape,
+      error,
+      isSubmitting,
     }
   },
 
