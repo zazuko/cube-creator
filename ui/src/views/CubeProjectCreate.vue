@@ -79,7 +79,7 @@ export default defineComponent({
         })
 
         this.$router.push({ name: 'CubeProject', params: { id: project.clientPath } })
-      } catch (e) {
+      } catch (e: any) {
         this.error = e.details ?? { detail: e.toString() }
 
         if (!(e instanceof APIErrorValidation)) {

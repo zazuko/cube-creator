@@ -58,7 +58,7 @@ export async function createOrUpdateColumns(csvSource: CsvSource, getStorage: Ge
       const column = csvSource.appendOrUpdateColumn({ name, order: index })
       column.samples = sampleCol[index]
     }
-  } catch (err) {
+  } catch (err: any) {
     error(err)
     csvSource.pointer.addOut(schema.error, err.message)
   }

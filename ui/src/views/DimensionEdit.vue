@@ -132,7 +132,7 @@ export default defineComponent({
         })
 
         this.$router.push({ name: 'CubeDesigner' })
-      } catch (e) {
+      } catch (e: any) {
         this.error = e.details ?? { detail: e.toString() }
 
         if (!(e instanceof APIErrorValidation)) {

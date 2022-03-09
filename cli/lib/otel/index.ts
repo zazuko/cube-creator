@@ -42,7 +42,7 @@ export async function opentelemetry() {
     process.on('uncaughtException', onError)
     process.on('SIGINT', onError)
     process.on('SIGTERM', onError)
-  } catch (e) {
+  } catch (e: any) {
     await onError(e)
   }
 
