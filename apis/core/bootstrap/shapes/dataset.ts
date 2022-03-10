@@ -321,6 +321,12 @@ ${shapeId} {
       ${dash.hidden} true ;
       ${sh.equals} ${dcterms.issued} ;
     ] ;
+    ${sh.property} [
+      ${sh.path} ${dcterms.identifier} ;
+      ${sh.maxCount} 0 ;
+      ${dash.hidden} true ;
+      ${sh.message} "Metadata must not have the dcterms:identifier property. Please remove it in advanced RDF editor" ;
+    ] ;
   .
 
   ${temporalFromTo} a ${sh.NodeShape} ;
