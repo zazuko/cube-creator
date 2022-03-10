@@ -113,15 +113,13 @@ describe('domain/cube-projects/create', () => {
       })
     })
 
-    it('sets cube identifier as metadata identifier', async () => {
+    it('does not set cube identifier as metadata identifier', async () => {
       // then
       const dataset = await store.get(project.dataset.id)
       expect(dataset).to.matchShape({
         property: [{
           path: dcterms.identifier,
-          hasValue: 'ubd/28',
-          minCount: 1,
-          maxCount: 1,
+          maxCount: 0,
         }],
       })
     })

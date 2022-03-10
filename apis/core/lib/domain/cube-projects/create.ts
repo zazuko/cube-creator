@@ -50,9 +50,7 @@ async function createCsvProjectResource({ user, userName, projectNode, store, la
     sourceKind,
   })
 
-  const dataset = Dataset.create(store.create(project.dataset.id), {
-    [dcterms.identifier.value]: project.cubeIdentifier,
-  })
+  const dataset = Dataset.create(store.create(project.dataset.id))
 
   project.initializeCsvMapping(store)
   const organization = await store.getResource(project.maintainer)
