@@ -42,7 +42,7 @@
         {{ job.error.disambiguatingDescription }}
       </b-message>
       <b-message v-for="comment in job.comments" :key="comment" type="is-warning" class="mb-2">
-        <vue-markdown :source="comment" />
+        <markdown-render :source="comment" />
       </b-message>
       <a :disabled="!link" :href="link" target="_blank" rel="noopener noreferer" class="button is-small mb-1">
         <o-icon icon="book" />
@@ -64,17 +64,17 @@ import { defineComponent } from 'vue'
 import { Job } from '@cube-creator/model'
 import type { CreativeWork } from '@rdfine/schema'
 import { schema } from '@tpluscode/rdf-ns-builders'
-import VueMarkdown from 'vue-markdown/src/VueMarkdown'
 import BMessage from '@/components/BMessage.vue'
 import ExternalTerm from '@/components/ExternalTerm.vue'
 import JobStatus from '../components/JobStatus.vue'
 import LoadingBlock from '../components/LoadingBlock.vue'
+import MarkdownRender from '../components/MarkdownRender.vue'
 import ValidationReportDisplay from '../components/ValidationReportDisplay.vue'
 import { mapGetters } from 'vuex'
 
 export default defineComponent({
   name: 'JobView',
-  components: { BMessage, ExternalTerm, JobStatus, LoadingBlock, ValidationReportDisplay, VueMarkdown },
+  components: { BMessage, ExternalTerm, JobStatus, LoadingBlock, MarkdownRender, ValidationReportDisplay },
 
   computed: {
     ...mapGetters('project', {
