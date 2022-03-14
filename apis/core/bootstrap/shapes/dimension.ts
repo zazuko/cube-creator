@@ -509,6 +509,7 @@ ${shape('dimension/shared-mapping')} {
       ${sh.defaultValue} ${placeholderEntity} ;
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
+      ${sh1.itemHelptextPath} ( ${schema.inDefinedTermSet} ${schema.name} ) ;
       ${hydra.search} [
         ${sh.path} [
           ${sh.inversePath} ${prov.hadDictionaryMember} ;
