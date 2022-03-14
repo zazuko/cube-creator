@@ -22,13 +22,15 @@ export default defineComponent({
 
   watch: {
     templateResult (): void {
-      this.renderTemplate()
+      this.$nextTick(() => {
+        this.renderTemplate()
+      })
     },
   },
 
   methods: {
     renderTemplate (): void {
-      render(this.templateResult, this.$el as HTMLElement)
+      render(this.templateResult, this.$el)
     },
   },
 })
