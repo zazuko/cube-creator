@@ -101,7 +101,7 @@ export default defineComponent({
         })
 
         this.$store.dispatch('project/fetchJobCollection')
-      } catch (e) {
+      } catch (e: any) {
         this.error = e.details ?? { detail: e.toString() }
 
         if (!(e instanceof APIErrorValidation)) {

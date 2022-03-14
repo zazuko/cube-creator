@@ -101,7 +101,7 @@ export default defineComponent({
         })
 
         await this.close()
-      } catch (e) {
+      } catch (e: any) {
         this.error = e?.details?.detail ?? e.toString()
         throw e
       } finally {

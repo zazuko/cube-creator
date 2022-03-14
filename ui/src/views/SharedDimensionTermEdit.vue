@@ -115,7 +115,7 @@ export default defineComponent({
         })
 
         this.$router.push({ name: 'SharedDimension', params: { id: this.dimension.clientPath } })
-      } catch (e) {
+      } catch (e: any) {
         this.error = e.details ?? { detail: e.toString() }
 
         if (!(e instanceof APIErrorValidation)) {

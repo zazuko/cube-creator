@@ -65,7 +65,7 @@ export default defineComponent({
 
     this.resource = resource
     this.properties = [...resourcePredicates].map((predicate) => {
-      const values = resource.out(predicate).map((pointer: GraphPointer) => {
+      const values: (Term | RdfResource)[] = resource.out(predicate).map((pointer: GraphPointer) => {
         if (pointer.term.termType === 'NamedNode') {
           return RdfResource.factory.createEntity(pointer)
         } else {

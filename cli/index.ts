@@ -90,7 +90,7 @@ async function main() {
   return tracer.startActiveSpan('run', async span => {
     try {
       return await program.parseAsync(process.argv)
-    } catch (err) {
+    } catch (err: any) {
       span.recordException(err)
       span.setStatus({ code: SpanStatusCode.ERROR, message: err.message })
       Sentry.captureException(err)

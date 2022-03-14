@@ -12,6 +12,7 @@
     "strictNullChecks": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
+    "useDefineForClassFields": false,
     "typeRoots": ["./typings", "./node_modules/@types"],
     "allowJs": true
   },

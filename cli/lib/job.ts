@@ -100,7 +100,7 @@ export async function updateJobStatus({ jobUri, executionUrl, lastTransformed, s
     await operation.invoke(JSON.stringify(job.toJSON()), {
       'Content-Type': 'application/ld+json',
     })
-  } catch (e) {
+  } catch (e: any) {
     logger.error(`Failed to update job status: ${e.message}`)
   }
 }

@@ -43,7 +43,7 @@ export const query = protectedResource(
     if (viewArgument) {
       try {
         filters = clownface({ dataset: await $rdf.dataset().import(parser.import(toStream(viewArgument))) })
-      } catch (e) {
+      } catch (e: any) {
         warning('Failed to parse cube view')
         warning(e.toString())
         return next(new error.BadRequest('Malformed cube view'))

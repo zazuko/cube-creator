@@ -104,7 +104,7 @@ export default defineComponent({
         })
 
         this.$router.push({ name: 'CSVMapping' })
-      } catch (e) {
+      } catch (e: any) {
         this.error = e.details ?? { detail: e.toString() }
 
         if (!(e instanceof APIErrorValidation)) {

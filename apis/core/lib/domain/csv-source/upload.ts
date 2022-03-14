@@ -64,7 +64,7 @@ export async function createCSVSource({
         column.samples = sampleCol[index]
       }
     }
-  } catch (err) {
+  } catch (err: any) {
     error(err)
     csvSource.pointer.addOut(schema.error, err.message)
   }

@@ -61,7 +61,7 @@ const actions: ActionTree<SharedDimensionState, RootState> = {
       const terms = termsCollection.member.map(serializeSharedDimensionTerm)
       context.commit('storeTerms', Remote.loaded(terms))
       return terms
-    } catch (e) {
+    } catch (e: any) {
       context.commit('storeTerms', Remote.error(e.toString()))
     }
   },

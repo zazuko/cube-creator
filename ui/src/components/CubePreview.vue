@@ -296,7 +296,7 @@ export default defineComponent({
         const collection = await api.fetchResource<Collection>(uri)
         this.totalItems = collection.totalItems ?? 0
         this.observations = Remote.loaded(collection.member)
-      } catch (e) {
+      } catch (e: any) {
         this.observations = Remote.error(e.toString())
       }
     },

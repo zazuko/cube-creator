@@ -102,7 +102,7 @@ export default defineComponent({
           message: 'Project settings were saved',
           variant: 'success',
         })
-      } catch (e) {
+      } catch (e: any) {
         this.error = e.details ?? { detail: e.toString() }
 
         if (!(e instanceof APIErrorValidation)) {
