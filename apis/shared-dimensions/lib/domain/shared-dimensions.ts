@@ -1,5 +1,5 @@
 import { Term } from 'rdf-js'
-import { CONSTRUCT, SELECT } from '@tpluscode/sparql-builder'
+import { CONSTRUCT, DESCRIBE, SELECT } from '@tpluscode/sparql-builder'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { md, meta } from '@cube-creator/core/namespace'
 import $rdf from 'rdf-ext'
@@ -37,12 +37,13 @@ interface GetSharedTerms {
 export function getSharedTerms({ sharedDimensions, freetextQuery, validThrough, limit = 10, offset = 0 }: GetSharedTerms) {
   const term = $rdf.variable('term')
   const name = $rdf.variable('name')
+  const sharedDimension = $rdf.variable('sharedDimension')
 
   let select = SELECT.DISTINCT`${term}`
     .WHERE`
-      ?sharedDimension a ${meta.SharedDimension} .
-      VALUES ?sharedDimension { ${sharedDimensions} }
-      ${term} ${schema.inDefinedTermSet} ?sharedDimension .
+      ${sharedDimension} a ${meta.SharedDimension} .
+      VALUES ${sharedDimension} { ${sharedDimensions} }
+      ${term} ${schema.inDefinedTermSet} ${sharedDimension} .
       ${term} ${schema.name} ${name} .
     `
 
@@ -60,14 +61,15 @@ export function getSharedTerms({ sharedDimensions, freetextQuery, validThrough, 
     )`
   }
 
-  return CONSTRUCT`
-      ${term} ?p ?o .
+  return DESCRIBE`
+      ${term} ${sharedDimension}
     `
     .WHERE`
       {
-        ${select.LIMIT(limit).OFFSET(offset).ORDER().BY(name)}
+        ${select.LIMIT(limit).OFFSET(offset).ORDER().BY(sharedDimension).THEN.BY(name)}
       }
 
       ${term} ?p ?o .
+      ${term} ${schema.inDefinedTermSet} ${sharedDimension} .
     `
 }
