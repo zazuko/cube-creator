@@ -1,5 +1,11 @@
 # @cube-creator/cli
 
+## 1.10.5
+
+### Patch Changes
+
+- ced0132b: Optional flag to skip updating job resource
+
 ## 1.10.4
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @cube-creator/core-api
 
+## 1.9.7
+
+### Patch Changes
+
+- 9ef0fee6: Do not set identifier to cube metadata. This prevents validation errors on publish in case when the identifier is changed in Project settings but metadata would not be synchronized. It is redundant anyway, thus only the project value will be kept (fixes #1092)
+- Updated dependencies [75d4b4b2]
+  - @cube-creator/shared-dimensions-api@2.6.0
+
 ## 1.9.6
 
 ### Patch Changes
