@@ -16,3 +16,7 @@ type AppConfig = {
 interface Window {
   APP_CONFIG: AppConfig
 }
+
+declare module 'html-parsed-element' {
+  export default class HTMLParsedElement extends HTMLElement {}
+}

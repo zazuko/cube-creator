@@ -7778,6 +7778,11 @@ html-minifier-terser@^6.0.2:
     relateurl "^0.2.7"
     terser "^5.10.0"
 
+html-parsed-element@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/html-parsed-element/-/html-parsed-element-0.4.1.tgz#4fc1561e12bd683d898f163951cf388b0132ab1e"
+  integrity sha512-uRNt6oVAFAQ/PBS9JZiURMpR2Me0KR11mOG6sbamJl1PIX7qMX1h/ck2EhY11RPU4m39o9x9XvOs5KaLneaxGA==
+
 html-tags@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/html-tags/-/html-tags-2.0.0.tgz#10b30a386085f43cede353cc8fa7cb0deeea668b"

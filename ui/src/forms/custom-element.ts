@@ -1,11 +1,18 @@
-import app from '../main'
+import { defineCustomElement } from './vue-custom-element'
 
 export function createCustomElement (tag: string) {
-  return async function (component: any): Promise<void> {
-    const vueCustomElement = (await import('vue-custom-element')).default
+  return async function (componentModule: any): Promise<void> {
+    const component = componentModule.default
 
-    app.use(vueCustomElement);
+    const customElement = defineCustomElement(component, { shadowRoot: false })
 
-    (app as any).customElement(tag, component.default)
+    defineOnce(tag, customElement)
   }
+}
+
+function defineOnce (tagName: string, customElement: CustomElementConstructor) {
+  const existingCustomElement = customElements.get(tagName)
+  return typeof existingCustomElement !== 'undefined'
+    ? existingCustomElement
+    : customElements.define(tagName, customElement)
 }

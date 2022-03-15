@@ -47,6 +47,7 @@
     "cookie-storage": "^6.1.0",
     "core-js": "^3.6.5",
     "debounce": "^1.2.1",
+    "html-parsed-element": "^0.4.1",
     "markdown-it": "^12.3.2",
     "oidc-client": "^1.11.0",
     "process": "^0.11.10",
