@@ -1,10 +1,10 @@
 <template>
-  <color-picker class="color-picker" ref="input" :value="value" @input="emit" :palette="palette" />
+  <color-picker class="color-picker" ref="input" :model-value="value" @update:modelValue="emit" :palette="palette" />
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { Compact } from 'vue-color'
+import { Compact } from '@ckpack/vue-color'
 
 const palette = [
   '#EF9A9A', '#F48FB1', '#CE93D8', '#B39DDB', '#9FA8DA',
