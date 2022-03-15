@@ -38,8 +38,6 @@ module.exports = {
     )
   },
   chainWebpack: config => {
-    // Enable Vue 2 compatible build of Vue 3
-    config.resolve.alias.set('vue', '@vue/compat')
     config.module
       .rule('vue')
       .use('vue-loader')
@@ -47,9 +45,7 @@ module.exports = {
         return {
           ...options,
           compilerOptions: {
-            compatConfig: {
-              MODE: 2
-            }
+            isCustomElement: tag => tag === 'cc-form',
           }
         }
       })
