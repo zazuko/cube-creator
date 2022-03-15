@@ -29,7 +29,7 @@
     </div>
     <o-collapse animation="slide" :open="detailsShown">
       <!-- A bug in Oruga makes the trigger slot mandatory -->
-      <template #trigger></template>
+      <template #trigger />
       <table v-if="details" class="table is-fullwidth has-background-light">
         <tr v-for="part in details.parts" :key="part.id.value" class="is-size-7">
           <th class="w-1/3">
