@@ -1,6 +1,6 @@
 <template>
   <div v-if="isReady" class="form-object">
-    <render-wc-template :template-result="renderEditor()" class="form-object-editor" />
+    <render-wc-template :template-result="editor" class="form-object-editor" />
     <div v-if="property.canRemove">
       <o-tooltip label="Remove value">
         <o-button icon-left="minus" @click.prevent="actions.remove" variant="text" />
@@ -42,6 +42,10 @@ export default defineComponent({
   computed: {
     isReady (): boolean {
       return !this.object?.componentState?.loading
+    },
+
+    editor (): TemplateResult {
+      return this.renderEditor()
     },
   },
 })
