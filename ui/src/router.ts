@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHistory, LocationQuery, RouteLocation, RouteRecordRaw } from 'vue-router'
 import { vuexOidcCreateRouterMiddleware } from 'vuex-oidc'
 
 import OidcCallback from '@/components/auth/OidcCallback.vue'
@@ -262,7 +262,7 @@ const routes: Array<RouteRecordRaw> = [
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
+  routes,
 })
 
 if (!process.env.VUE_APP_E2E) {
@@ -270,3 +270,32 @@ if (!process.env.VUE_APP_E2E) {
 }
 
 export default router
+
+/**
+ * Replicates the route "active" matching behavior of vue-router 3.x.
+ *
+ * Copied from https://github.com/vuejs/rfcs/blob/master/active-rfcs/0028-router-active-link.md#motivation
+ */
+export function isRouteActive (route: RouteLocation, currentRoute: RouteLocation) {
+  return currentRoute.path.startsWith(route.path) && includesQuery(currentRoute.query, route.query)
+}
+
+function includesQuery (outter: LocationQuery, inner: LocationQuery): boolean {
+  for (const key in inner) {
+    const innerValue = inner[key]
+    const outterValue = outter[key]
+    if (typeof innerValue === 'string') {
+      if (innerValue !== outterValue) return false
+    } else {
+      if (
+        !Array.isArray(outterValue) ||
+        outterValue.length !== innerValue?.length ||
+        innerValue.some((value, i) => value !== outterValue[i])
+      ) {
+        return false
+      }
+    }
+  }
+
+  return true
+}
