@@ -65,6 +65,7 @@ export default defineComponent({
       default: undefined,
     },
   },
+  emits: ['submit', 'cancel'],
 
   data (): { __clone: GraphPointer | null } {
     return {

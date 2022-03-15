@@ -149,9 +149,12 @@ export default defineComponent({
   },
 
   watch: {
-    columnMappings () {
-      this.drawArrows()
-    }
+    columnMappings: {
+      handler () {
+        this.drawArrows()
+      },
+      deep: true,
+    },
   },
 })
 </script>

@@ -6,7 +6,6 @@
     :icon-left="icon"
     :icon-class="iconClass"
     :disabled="disabled || loading"
-    v-on="$listeners"
   >
     <slot />
   </o-button>

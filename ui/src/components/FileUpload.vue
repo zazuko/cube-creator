@@ -80,11 +80,11 @@ export default defineComponent({
     this.uppy = uppy
   },
 
-  methods: {
-    beforeDestroy (): void {
-      this.uppy?.close()
-    },
+  beforeUnmount (): void {
+    this.uppy?.close()
+  },
 
+  methods: {
     onUploaded (fileIds: string[]): Promise<void> {
       const files = fileIds.map(id => toUploadedFile(this.uppy?.getFile(id)))
 

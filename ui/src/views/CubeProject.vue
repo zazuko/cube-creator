@@ -78,7 +78,7 @@ export default defineComponent({
     }
   },
 
-  beforeDestroy (): void {
+  beforeUnmount (): void {
     this.stopPolling()
     this.$store.dispatch('project/reset')
   },
