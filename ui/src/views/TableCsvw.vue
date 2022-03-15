@@ -56,7 +56,7 @@ export default defineComponent({
     selectedFormat: string,
     formats: { label: string,
     value: string }[],
-    editorPrefixes: string[],
+    editorPrefixes: string,
     } {
     return {
       csvw: Remote.loading(),
@@ -66,7 +66,7 @@ export default defineComponent({
         { label: 'Turtle', value: 'text/turtle' },
         { label: 'N-Triples', value: 'application/n-triples' },
       ],
-      editorPrefixes: ['hydra', 'rdf', 'rdfs', 'schema', 'xsd'],
+      editorPrefixes: ['hydra', 'rdf', 'rdfs', 'schema', 'xsd'].join(','),
     }
   },
 

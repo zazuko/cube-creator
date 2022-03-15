@@ -78,11 +78,11 @@ export default defineComponent({
     },
   },
 
-  data (): { parseError: string | null, editorQuads: Quad[] | null, editorPrefixes: string[] } {
+  data (): { parseError: string | null, editorQuads: Quad[] | null, editorPrefixes: string } {
     return {
       parseError: null,
       editorQuads: null,
-      editorPrefixes: ['hydra', 'rdf', 'rdfs', 'schema', 'xsd'],
+      editorPrefixes: ['hydra', 'rdf', 'rdfs', 'schema', 'xsd'].join(','),
     }
   },
 
