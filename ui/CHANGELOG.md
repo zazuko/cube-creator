@@ -1,5 +1,15 @@
 # @cube-creator/ui
 
+## 1.9.0
+
+### Minor Changes
+
+- 75d4b4b2: Added hierarchies API
+
+### Patch Changes
+
+- 60f97b46: Fix "view generated CSVW" not working (fixes #1117)
+
 ## 1.8.4
 
 ### Patch Changes

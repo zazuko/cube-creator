@@ -1,5 +1,11 @@
 # @cube-creator/shared-dimensions-api
 
+## 2.6.0
+
+### Minor Changes
+
+- 75d4b4b2: Added hierarchies API
+
 ## 2.5.3
 
 ### Patch Changes
