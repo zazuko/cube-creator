@@ -3299,10 +3299,10 @@
     "@uppy/utils" "^4.0.4"
     namespace-emitter "^2.0.1"
 
-"@uppy/companion@^3.1.4":
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/@uppy/companion/-/companion-3.3.0.tgz#1e6ceda7fc95e387d9962cb39a08e9b62590f7fd"
-  integrity sha512-/TF95YAYNcuuyfxuYDm+82ployEafonT8MDP5oVZr1zdqRGjyrAiOfAWiCjONPWVKVa/mp6Jj8WPgnzLzuA13Q==
+"@uppy/companion@^3.3.1":
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/@uppy/companion/-/companion-3.3.1.tgz#649189ec4497b31ae5a786620ef07f53f2436a47"
+  integrity sha512-ke+qyGzYpUWsOgqSbwM6Ok3f6nqXmh4WdfFa3LGKgaNs8mHv4ss/06a3NwAYEGrUSaCNOCNa3+snwUE4rMQ5OA==
   dependencies:
     "@purest/providers" "1.0.1"
     atob "2.1.2"
