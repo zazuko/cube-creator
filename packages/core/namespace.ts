@@ -106,7 +106,8 @@ type SharedDimensionsTerms =
   'createAs' |
   'dynamicPropertyType' |
   'hierarchies' |
-  'Hierarchies'
+  'Hierarchies' |
+  'Hierarchy'
 
 type MetaTerms =
   'SharedDimension' |
