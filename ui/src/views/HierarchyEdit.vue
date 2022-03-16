@@ -109,8 +109,10 @@ export default defineComponent({
   },
 
   watch: {
-    $route () {
-      this.prepareForm()
+    $route (newRoute, oldRoute) {
+      if (newRoute.name === oldRoute.name) {
+        this.prepareForm()
+      }
     }
   },
 })
