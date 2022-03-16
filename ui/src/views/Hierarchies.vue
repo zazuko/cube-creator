@@ -8,8 +8,8 @@
         <hydra-operation-button
           :operation="collection.actions.create"
           :to="{ name: 'HierarchyCreate' }"
-          type="is-default"
-          size=""
+          variant="default"
+          size="normal"
         >
           {{ collection.actions.create.title }}
         </hydra-operation-button>
