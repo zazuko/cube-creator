@@ -1,6 +1,6 @@
 {
   "name": "@cube-creator/shared-dimensions-api",
-  "version": "2.5.3",
+  "version": "2.6.0",
   "private": true,
   "dependencies": {
     "@cube-creator/api-errors": "0.0.5",

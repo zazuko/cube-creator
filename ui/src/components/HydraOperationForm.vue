@@ -18,6 +18,7 @@
 </template>
 
 <script lang="ts">
+import { ColorsModifiers } from '@oruga-ui/oruga/types/helpers'
 import { defineComponent, PropType } from 'vue'
 import { RuntimeOperation } from 'alcaeus'
 import $rdf from 'rdf-ext'
@@ -61,7 +62,7 @@ export default defineComponent({
       default: undefined,
     },
     submitButtonVariant: {
-      type: String,
+      type: String as PropType<ColorsModifiers>,
       default: undefined,
     },
   },
