@@ -47,5 +47,6 @@ export default new TermMap<NamedNode, ShapeFactory>([
   entry(shape['shape/shared-dimension-update'], sharedDimension.update),
   entry(shape['shape/shared-dimension-term-create'], dimensionTerm.create),
   entry(shape['shape/shared-dimension-term-update'], dimensionTerm.update),
-  entry(shape['shape/hierarchy'], hierarchy),
+  entry(shape['shape/hierarchy-create'], hierarchy()),
+  entry(shape['shape/hierarchy'], hierarchy({ rdfTypeProperty: true })),
 ])

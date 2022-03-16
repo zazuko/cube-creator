@@ -73,19 +73,19 @@ export default defineComponent({
       this.isSubmitting = true
 
       try {
-        const dimension = await this.$store.dispatch('api/invokeSaveOperation', {
+        const hierarchy = await this.$store.dispatch('api/invokeSaveOperation', {
           operation: this.operation,
           resource,
         })
 
-        await this.$store.dispatch('sharedDimensions/fetchCollection')
+        await this.$store.dispatch('sharedDimensions/fetchHierarchies')
 
         displayToast(this, {
-          message: `Shared dimension ${dimension.name} successfully created`,
+          message: `Hierarchy ${hierarchy.name} successfully created`,
           variant: 'success',
         })
 
-        this.$router.push({ name: 'SharedDimension', params: { id: dimension.clientPath } })
+        this.$router.push({ name: 'Hierarchy', params: { id: hierarchy.clientPath } })
       } catch (e: any) {
         this.error = e.details ?? { detail: e.toString() }
 

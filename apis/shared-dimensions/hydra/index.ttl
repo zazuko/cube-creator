@@ -72,7 +72,7 @@ md:Hierarchies
       a hydra:Operation, schema:CreateAction ;
       hydra:method "POST" ;
       hydra:title "Create hierarchy" ;
-      hydra:expects <dimension/_shape/hierarchy> ;
+      hydra:expects <dimension/_shape/hierarchy-create> ;
       code:implementedBy
         [
           a code:EcmaScript ;
@@ -232,6 +232,7 @@ md:Hierarchy
 .
 
 <dimension/_shape/hierarchy> a sh:Shape .
+<dimension/_shape/hierarchy-create> a sh:Shape .
 
 md:SharedDimensionTerm
   a hydra:Class ;

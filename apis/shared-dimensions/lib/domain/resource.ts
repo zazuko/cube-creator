@@ -1,4 +1,4 @@
-import { NamedNode } from 'rdf-js'
+import { NamedNode, Quad } from 'rdf-js'
 import $rdf from 'rdf-ext'
 import { sparql } from '@tpluscode/rdf-string'
 import { AnyPointer, GraphPointer } from 'clownface'
@@ -68,5 +68,20 @@ export async function cascadeDelete({ store, term, api, client = parsingClient }
     }).catch(e => {
       error('Could not delete %s: %s', term.value, e.message)
     })
+  }
+}
+
+export function newId(base: string, name: string) {
+  if (base.endsWith('/')) {
+    return $rdf.namedNode(`${base}${name}`)
+  }
+  return $rdf.namedNode(`${base}/${name}`)
+}
+
+export function replace(from: NamedNode, to: NamedNode) {
+  return (quad: Quad) => {
+    const subject = quad.subject.equals(from) ? to : quad.subject
+    const object = quad.object.equals(from) ? to : quad.object
+    return $rdf.quad(subject, quad.predicate, object, quad.graph)
   }
 }
