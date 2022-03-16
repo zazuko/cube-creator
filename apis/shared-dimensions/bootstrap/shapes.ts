@@ -23,10 +23,15 @@ const Hierarchy = clownface({ dataset: $rdf.dataset() })
   .namedNode(shape('shape/hierarchy'))
   .addOut(rdf.type, sh.NodeShape)
 
+const HierarchyCreate = clownface({ dataset: $rdf.dataset() })
+  .namedNode(shape('shape/hierarchy-create'))
+  .addOut(rdf.type, sh.NodeShape)
+
 export default [
   SharedDimensionCreate,
   SharedDimensionUpdate,
   SharedDimensionTermCreate,
   SharedDimensionTermUpdate,
   Hierarchy,
+  HierarchyCreate,
 ]

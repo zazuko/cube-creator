@@ -36,6 +36,7 @@
     "rdf-ext": "^1.3.0",
     "rdf-literal": "^1.2.0",
     "rdf-validate-shacl": "^0.4.3",
+    "slugify": "^1.6.5",
     "sparql-http-client": "^2.2.2",
     "through2": "^2.0.5"
   },

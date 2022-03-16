@@ -14,27 +14,13 @@ import { streamClient } from '../sparql'
 import { SharedDimensionsStore } from '../store'
 import env from '../env'
 import { getPatternsFromShape, resourceShapePatterns } from '../resource'
+import { newId, replace } from './resource'
 
 export { importDimension } from './shared-dimension/import'
 
 interface CreateSharedDimension {
   resource: GraphPointer<NamedNode>
   store: SharedDimensionsStore
-}
-
-function newId(base: string, name: string) {
-  if (base.endsWith('/')) {
-    return $rdf.namedNode(`${base}${name}`)
-  }
-  return $rdf.namedNode(`${base}/${name}`)
-}
-
-function replace(from: NamedNode, to: NamedNode) {
-  return (quad: Quad) => {
-    const subject = quad.subject.equals(from) ? to : quad.subject
-    const object = quad.object.equals(from) ? to : quad.object
-    return $rdf.quad(subject, quad.predicate, object, quad.graph)
-  }
 }
 
 export async function create({ resource, store }: CreateSharedDimension): Promise<GraphPointer> {
