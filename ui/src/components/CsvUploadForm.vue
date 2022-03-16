@@ -48,6 +48,7 @@ export default defineComponent({
       default: false,
     },
   },
+  emits: ['submit', 'close'],
 
   data () {
     return {

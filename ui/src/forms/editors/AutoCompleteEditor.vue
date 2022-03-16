@@ -55,6 +55,7 @@ export default defineComponent({
       default: 300,
     },
   },
+  emits: ['search'],
 
   data (): { searchValue: string, initialLoaded: boolean, onSearch: (query: string, loading: () => void) => void } {
     return {

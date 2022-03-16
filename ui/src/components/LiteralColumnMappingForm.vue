@@ -58,6 +58,7 @@ export default defineComponent({
       default: undefined,
     },
   },
+  emits: ['submit', 'cancel'],
 
   setup () {
     const resource: Ref<GraphPointer> = ref(clownface({ dataset: $rdf.dataset() }).namedNode('').addOut(rdf.type, cc.LiteralColumnMapping))

@@ -42,6 +42,7 @@ export default defineComponent({
       default: true,
     },
   },
+  emits: ['done'],
 
   data (): { uppy: Uppy | null, uppyDashboardOptions: any } {
     return {

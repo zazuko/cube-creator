@@ -31,6 +31,7 @@ export default defineComponent({
       required: true,
     },
   },
+  emits: ['close'],
 
   data (): { width: string | null } {
     return {

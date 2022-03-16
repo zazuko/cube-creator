@@ -112,6 +112,7 @@ export default defineComponent({
       required: true,
     }
   },
+  emits: ['highlight-arrows', 'unhighlight-arrows'],
 
   computed: {
     ...mapGetters('project', {

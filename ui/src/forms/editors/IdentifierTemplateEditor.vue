@@ -55,6 +55,7 @@ export default defineComponent({
       default: true,
     },
   },
+  emits: ['input'],
 
   data () {
     return {

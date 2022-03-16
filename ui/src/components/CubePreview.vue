@@ -188,6 +188,7 @@ export default defineComponent({
       required: true,
     },
   },
+  emits: ['selectLanguage', 'refreshDimensions'],
 
   data (): {
     languages: string[],

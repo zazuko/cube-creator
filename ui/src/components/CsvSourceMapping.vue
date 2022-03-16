@@ -157,6 +157,7 @@ export default defineComponent({
       required: true,
     }
   },
+  emits: ['highlight-arrows', 'unhighlight-arrows'],
 
   data () {
     const selectedColumnsMap = prepareSelectedColumnsMap(this.source)

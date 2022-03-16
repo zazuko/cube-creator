@@ -3,7 +3,7 @@
     <o-button
       :tag="tag"
       :to="to"
-      @click.stop="$emit('click')"
+      @click="$emit('click')"
       :variant="variant"
       :size="size"
       :icon-left="iconName"
@@ -51,6 +51,7 @@ export default defineComponent({
       default: null,
     },
   },
+  emits: ['click'],
 
   computed: {
     tag (): string {

@@ -62,6 +62,7 @@ export default defineComponent({
       default: true,
     },
   },
+  emits: ['confirm', 'cancel', 'close'],
 
   computed: {
     icon () {

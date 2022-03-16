@@ -77,6 +77,7 @@ export default defineComponent({
       default: undefined,
     },
   },
+  emits: ['submit', 'cancel'],
 
   data (): { parseError: string | null, editorQuads: Quad[] | null, editorPrefixes: string } {
     return {

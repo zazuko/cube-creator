@@ -82,6 +82,7 @@ export default defineComponent({
       default: undefined,
     },
   },
+  emits: ['submit', 'cancel'],
 
   data (): { isRawMode: boolean, internalResource: GraphPointer | null} {
     return {
