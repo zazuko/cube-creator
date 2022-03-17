@@ -11,7 +11,7 @@
           <hydra-operation-button :operation="hierarchy.actions.replace" :to="{ name: 'HierarchyEdit' }" />
         </div>
       </div>
-      Tree here
+      <base-tree :tree-data="hierarchyTree" />
 
       <router-view />
     </div>
@@ -25,6 +25,40 @@ import HydraOperationButton from '@/components/HydraOperationButton.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import PageContent from '@/components/PageContent.vue'
 import { mapState } from 'vuex'
+import { BaseTree } from '@he-tree/vue3'
+import { Hierarchy, NextInHierarchy } from '@/store/types'
+
+interface Node {
+  text: string
+  children?: Node[]
+}
+
+function toNextLevelNode (level: NextInHierarchy): Node {
+  const text = level.name
+
+  const property = {
+    text: `Property: ${level.property.inversePath ? `^${level.property.inversePath.value}` : level.property.id.value}`
+  }
+
+  let types = level.targetType
+    .map(targetClass => ({
+      text: `Target type: ${targetClass.value}`
+    }))
+
+  if (!types.length) {
+    types = [{ text: 'Target type: any' }]
+  }
+
+  const children = [property, ...types]
+  if (level.nextInHierarchy) {
+    children.push(toNextLevelNode(level))
+  }
+
+  return {
+    text: `Next level: ${text}`,
+    children,
+  }
+}
 
 export default defineComponent({
   name: 'SharedDimensionView',
@@ -32,16 +66,41 @@ export default defineComponent({
     HydraOperationButton,
     LoadingBlock,
     PageContent,
+    BaseTree
   },
 
   mounted (): void {
     this.$store.dispatch('sharedDimensions/fetchHierarchy', this.$route.params.id)
   },
 
+  unmounted () {
+    this.$store.dispatch('sharedDimensions/resetHierarchy')
+  },
+
   computed: {
     ...mapState('sharedDimensions', {
       hierarchy: 'hierarchy',
     }),
+
+    hierarchyTree (): Node[] {
+      const hierarchy: Hierarchy | null = this.hierarchy
+
+      if (!hierarchy) {
+        return []
+      }
+
+      const roots = hierarchy.hierarchyRoot.map(root => ({
+        text: `Root: ${root.value}`
+      }))
+
+      const nextLevel = toNextLevelNode(hierarchy.nextInHierarchy)
+
+      return [{
+        text: `Dimension: ${hierarchy.dimension.value}`,
+      },
+      ...roots,
+      nextLevel]
+    }
   },
 })
 </script>

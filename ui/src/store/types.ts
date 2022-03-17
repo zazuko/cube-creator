@@ -1,5 +1,5 @@
 import { VuexOidcState } from 'vuex-oidc'
-import { DatasetCore, Quad, Term } from 'rdf-js'
+import { DatasetCore, NamedNode, Quad, Term } from 'rdf-js'
 import { AppState } from './modules/app'
 import { APIState } from './modules/api'
 import { ProjectsState } from '@/store/modules/projects'
@@ -10,6 +10,7 @@ import { SharedDimensionState } from './modules/sharedDimension'
 import { GraphPointer } from 'clownface'
 import { ResourceIdentifier } from 'alcaeus'
 import { TypeCollection } from '@tpluscode/rdfine/lib/TypeCollection'
+import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 
 export interface RootState {
   app: AppState
@@ -29,8 +30,22 @@ export interface Resource {
   types: TypeCollection<DatasetCore<Quad, Quad>>
 }
 
+export interface Path extends RdfResourceCore {
+  inversePath: NamedNode | undefined
+}
+
+export interface NextInHierarchy {
+  name: string
+  property: Path
+  targetType: NamedNode[]
+  nextInHierarchy: NextInHierarchy | undefined
+}
+
 export interface Hierarchy extends Resource {
-  name?: string
+  name: string
+  dimension: NamedNode
+  hierarchyRoot: NamedNode[]
+  nextInHierarchy: NextInHierarchy
 }
 
 export interface SharedDimension extends Resource {

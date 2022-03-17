@@ -62,6 +62,10 @@ const actions: ActionTree<SharedDimensionsState, RootState> = {
   async fetchHierarchy (context, id) {
     context.commit('storeHierarchy', await api.fetchResource(id))
   },
+
+  async resetHierarchy (context) {
+    context.commit('storeHierarchy', null)
+  },
 }
 
 const mutations: MutationTree<SharedDimensionsState> = {
