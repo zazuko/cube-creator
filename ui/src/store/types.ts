@@ -29,6 +29,10 @@ export interface Resource {
   types: TypeCollection<DatasetCore<Quad, Quad>>
 }
 
+export interface Hierarchy extends Resource {
+  name?: string
+}
+
 export interface SharedDimension extends Resource {
   name?: string
   terms?: Term

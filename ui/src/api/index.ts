@@ -13,6 +13,7 @@ import { APIError } from './errors'
 import { apiResourceMixin } from './mixins/ApiResource'
 import CSVSourceMixin from './mixins/CSVSource'
 import TableMixin from './mixins/Table'
+import HierarchyMixin from './mixins/Hierarchy'
 import JobCollectionMixin from './mixins/JobCollection'
 import OperationMixin from './mixins/Operation'
 import * as Models from '@cube-creator/model'
@@ -35,6 +36,7 @@ Hydra.resources.factory.addMixin(...Object.values(Models))
 Hydra.resources.factory.addMixin(apiResourceMixin(rootURL, segmentSeparator))
 Hydra.resources.factory.addMixin(CSVSourceMixin)
 Hydra.resources.factory.addMixin(TableMixin)
+Hydra.resources.factory.addMixin(HierarchyMixin)
 Hydra.resources.factory.addMixin(JobCollectionMixin)
 Hydra.resources.factory.addMixin(OperationMixin)
 Hydra.resources.factory.addMixin(...ShapeBundle)

@@ -91,7 +91,8 @@ export default defineComponent({
           variant: 'success',
         })
 
-        this.$router.push({ name: 'Hierarchies' })
+        this.$store.dispatch('sharedDimensions/fetchHierarchy', this.$route.params.id)
+        this.$router.push({ name: 'Hierarchy', params: { id: this.$route.params.id } })
       } catch (e: any) {
         this.error = e.details ?? { detail: e.toString() }
 
@@ -104,7 +105,7 @@ export default defineComponent({
     },
 
     onCancel (): void {
-      this.$router.push({ name: 'Hierarchies' })
+      this.$router.push({ name: 'Hierarchy', params: { id: this.$route.params.id } })
     },
   },
 
