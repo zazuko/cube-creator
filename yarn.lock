@@ -13005,11 +13005,6 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
-vue-class-component@^8.0.0-0:
-  version "8.0.0-rc.1"
-  resolved "https://registry.yarnpkg.com/vue-class-component/-/vue-class-component-8.0.0-rc.1.tgz#db692cd97656eb9a08206c03d0b7398cdb1d9420"
-  integrity sha512-w1nMzsT/UdbDAXKqhwTmSoyuJzUXKrxLE77PCFVuC6syr8acdFDAq116xgvZh9UCuV0h+rlCtxXolr3Hi3HyPQ==
-
 vue-custom-element@^3.2.14:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/vue-custom-element/-/vue-custom-element-3.3.0.tgz#c20bb6108a16d1f7df3c550125551bf53d0e5a75"
@@ -13075,7 +13070,7 @@ vue-template-es2015-compiler@^1.9.0:
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.9.1.tgz#1ee3bc9a16ecbf5118be334bb15f9c46f82f5825"
   integrity sha512-4gDntzrifFnCEvyoO8PqyJDmguXgVPxKiIxrBKjIowvL9l+N66196+72XVYR8BBf1Uv1Fgt3bGevJ+sEmxfZzw==
 
-vue@^3.0.0, vue@^3.1.0:
+vue@^3.1.0:
   version "3.2.31"
   resolved "https://registry.yarnpkg.com/vue/-/vue-3.2.31.tgz#e0c49924335e9f188352816788a4cca10f817ce6"
   integrity sha512-odT3W2tcffTiQCy57nOT93INw1auq5lYLLYtWpPYQQYQOOdHiqFct9Xhna6GJ+pJQaF67yZABraH47oywkJgFw==
@@ -13085,15 +13080,6 @@ vue@^3.0.0, vue@^3.1.0:
     "@vue/runtime-dom" "3.2.31"
     "@vue/server-renderer" "3.2.31"
     "@vue/shared" "3.2.31"
-
-vuejs-tree@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/vuejs-tree/-/vuejs-tree-3.0.2.tgz#b6e019fbeaec745752fa5f53da487b98be405e49"
-  integrity sha512-jQpDebY83CoO2ANSmwXBoV+3uJj51wsFb03SMw5tuniD0D3xiTv1zZ46EIS/fdXnehs7dzvH42HnUtGA7L0sRA==
-  dependencies:
-    core-js "^3.6.5"
-    vue "^3.0.0"
-    vue-class-component "^8.0.0-0"
 
 vuex-oidc@^3.10.1:
   version "3.10.3"
