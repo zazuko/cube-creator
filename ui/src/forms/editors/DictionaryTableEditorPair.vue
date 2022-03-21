@@ -1,12 +1,12 @@
 <template>
-  <render-wc-template :template-result="templateResult" />
+  <render-wc-template v-if="templateResult" :template-result="templateResult" />
 </template>
 
 <script lang="ts">
 import { PropertyObjectState } from '@hydrofoil/shaperone-core/models/forms'
 import { PropertyRenderer } from '@hydrofoil/shaperone-core/renderer'
 import { PropertyShape } from '@rdfine/shacl'
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType, nextTick, shallowRef, toRefs, watch } from 'vue'
 import RenderWcTemplate from '../RenderWcTemplate.vue'
 
 export default defineComponent({
@@ -27,15 +27,29 @@ export default defineComponent({
     },
   },
 
-  computed: {
-    templateResult () {
-      const object: any = this.object.object
+  setup (props) {
+    const { object, shape, renderer } = toRefs(props)
+    const templateResult = shallowRef(null)
 
-      return this.renderer.renderFocusNode({
-        focusNode: object,
-        shape: this.shape.node,
+    const renderTemplateResult = () => {
+      nextTick(() => {
+        const obj: any = object.value.object
+
+        if (!obj) {
+          return null
+        }
+
+        templateResult.value = renderer.value.renderFocusNode({
+          focusNode: obj,
+          shape: shape.value.node,
+        })
       })
     }
-  }
+    watch([object, shape, renderer], renderTemplateResult, { immediate: true })
+
+    return {
+      templateResult,
+    }
+  },
 })
 </script>

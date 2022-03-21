@@ -1,6 +1,6 @@
 <template>
   <div v-if="isReady" class="form-object">
-    <render-wc-template :template-result="editor" class="form-object-editor" />
+    <render-wc-template v-if="editor" :template-result="editor" class="form-object-editor" />
     <div v-if="property.canRemove">
       <o-tooltip label="Remove value">
         <o-button icon-left="minus" @click.prevent="actions.remove" variant="text" />
@@ -11,11 +11,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType, ref, Ref, toRefs, watch } from 'vue'
 import { PropertyObjectState, PropertyState } from '@hydrofoil/shaperone-core/models/forms'
 import { TemplateResult } from 'lit'
 import RenderWcTemplate from './RenderWcTemplate.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
+import { nextTick } from 'process'
 
 export default defineComponent({
   name: 'FormObject',
@@ -39,13 +40,25 @@ export default defineComponent({
     },
   },
 
+  setup (props) {
+    const { renderEditor } = toRefs(props)
+    const editor: Ref<TemplateResult | null> = ref(null)
+
+    const doRenderEditor = () => {
+      nextTick(() => {
+        editor.value = renderEditor.value()
+      })
+    }
+    watch(renderEditor, doRenderEditor, { immediate: true })
+
+    return {
+      editor,
+    }
+  },
+
   computed: {
     isReady (): boolean {
       return !this.object?.componentState?.loading
-    },
-
-    editor (): TemplateResult {
-      return this.renderEditor()
     },
   },
 })

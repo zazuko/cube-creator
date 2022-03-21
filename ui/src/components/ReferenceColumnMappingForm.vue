@@ -56,7 +56,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref, Ref } from 'vue'
+import { defineComponent, PropType, ref, Ref, shallowRef, ShallowRef } from 'vue'
 import { RuntimeOperation } from 'alcaeus'
 import clownface, { AnyPointer } from 'clownface'
 import { rdf, sh } from '@tpluscode/rdf-ns-builders'
@@ -122,7 +122,7 @@ export default defineComponent({
   emits: ['submit', 'cancel'],
 
   setup () {
-    const shape: Ref<Shape | null> = ref(null)
+    const shape: ShallowRef<Shape | null> = shallowRef(null)
     const data: Ref<FormData> = ref({
       targetProperty: null,
       referencedTable: null,

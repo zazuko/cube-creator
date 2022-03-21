@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref, Ref } from 'vue'
+import { defineComponent, PropType, ref, shallowRef, ShallowRef } from 'vue'
 import { RuntimeOperation } from 'alcaeus'
 import clownface, { GraphPointer } from 'clownface'
 import { dataset } from '@rdf-esm/dataset'
@@ -53,9 +53,9 @@ export default defineComponent({
   },
 
   setup () {
-    const resource: Ref<GraphPointer | null> = ref(null)
-    const shape: Ref<Shape | null> = ref(null)
-    const error: Ref<ErrorDetails | null> = ref(null)
+    const resource: ShallowRef<GraphPointer | null> = shallowRef(null)
+    const shape: ShallowRef<Shape | null> = shallowRef(null)
+    const error: ShallowRef<ErrorDetails | null> = shallowRef(null)
     const isSubmitting = ref(false)
 
     return {
@@ -67,7 +67,7 @@ export default defineComponent({
   },
 
   created () {
-    this.resource = Object.freeze(clownface({ dataset: dataset() }).namedNode('').addOut(rdf.type, this.resourceType))
+    this.resource = clownface({ dataset: dataset() }).namedNode('').addOut(rdf.type, this.resourceType)
   },
 
   async mounted (): Promise<void> {

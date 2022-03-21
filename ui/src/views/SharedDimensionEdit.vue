@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref } from 'vue'
+import { defineComponent, ref, shallowRef, ShallowRef } from 'vue'
 import { RuntimeOperation } from 'alcaeus'
 import { GraphPointer } from 'clownface'
 import type { Shape } from '@rdfine/shacl'
@@ -31,12 +31,12 @@ export default defineComponent({
   components: { SidePane, HydraOperationFormWithRaw },
 
   setup () {
-    const resource: Ref<GraphPointer | null> = ref(null)
-    const operation: Ref<RuntimeOperation | null> = ref(null)
-    const error: Ref<ErrorDetails | null> = ref(null)
+    const resource: ShallowRef<GraphPointer | null> = shallowRef(null)
+    const operation: ShallowRef<RuntimeOperation | null> = shallowRef(null)
+    const error: ShallowRef<ErrorDetails | null> = shallowRef(null)
     const isSubmitting = ref(false)
-    const shape: Ref<Shape | null> = ref(null)
-    const shapes: Ref<GraphPointer | null> = ref(null)
+    const shape: ShallowRef<Shape | null> = shallowRef(null)
+    const shapes: ShallowRef<GraphPointer | null> = shallowRef(null)
 
     return {
       resource,
@@ -71,7 +71,7 @@ export default defineComponent({
       const dimensionId = this.$route.params.id as string
       const dimension = await api.fetchResource(dimensionId)
 
-      this.resource = Object.freeze(dimension.pointer)
+      this.resource = dimension.pointer
       this.operation = dimension.actions.replace ?? null
 
       if (this.operation) {

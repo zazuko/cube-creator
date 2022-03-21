@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref } from 'vue'
+import { defineComponent, ref, shallowRef, ShallowRef } from 'vue'
 import { RuntimeOperation } from 'alcaeus'
 import type { Shape } from '@rdfine/shacl'
 import { GraphPointer } from 'clownface'
@@ -33,9 +33,9 @@ export default defineComponent({
   components: { SidePane, HydraOperationFormWithRaw },
 
   setup () {
-    const resource: Ref<GraphPointer | null> = ref(null)
-    const shape: Ref<Shape | null> = ref(null)
-    const error: Ref<ErrorDetails | null> = ref(null)
+    const resource: ShallowRef<GraphPointer | null> = shallowRef(null)
+    const shape: ShallowRef<Shape | null> = shallowRef(null)
+    const error: ShallowRef<ErrorDetails | null> = shallowRef(null)
     const isSubmitting = ref(false)
 
     return {
@@ -59,7 +59,7 @@ export default defineComponent({
       cc.observations,
       cc.dimensionMetadata
     ]
-    this.resource = Object.freeze(conciseBoundedDescription(this.cubeMetadata.pointer, exclude))
+    this.resource = conciseBoundedDescription(this.cubeMetadata.pointer, exclude)
   },
 
   computed: {

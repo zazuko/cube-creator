@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref } from 'vue'
+import { defineComponent, ref, shallowRef, ShallowRef } from 'vue'
 import clownface, { GraphPointer } from 'clownface'
 import { RuntimeOperation } from 'alcaeus'
 import { dataset } from '@rdf-esm/dataset'
@@ -46,10 +46,10 @@ export default defineComponent({
   components: { SidePane, HydraOperationForm },
 
   setup () {
-    const resource: Ref<GraphPointer | null> = ref(clownface({ dataset: dataset() }).namedNode(''))
-    const error: Ref<ErrorDetails | null> = ref(null)
+    const resource: ShallowRef<GraphPointer | null> = shallowRef(clownface({ dataset: dataset() }).namedNode(''))
+    const error: ShallowRef<ErrorDetails | null> = shallowRef(null)
     const isSubmitting = ref(false)
-    const shape: Ref<Shape | null> = ref(null)
+    const shape: ShallowRef<Shape | null> = shallowRef(null)
 
     return {
       resource,

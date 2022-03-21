@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref } from 'vue'
+import { defineComponent, ref, shallowRef, ShallowRef } from 'vue'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import DownloadButton from '@/components/DownloadButton.vue'
 import { GraphPointer } from 'clownface'
@@ -56,10 +56,10 @@ export default defineComponent({
   components: { HydraOperationForm, DownloadButton },
 
   setup () {
-    const resource: Ref<GraphPointer | null> = ref(null)
-    const error: Ref<ErrorDetails | null> = ref(null)
+    const resource: ShallowRef<GraphPointer | null> = shallowRef(null)
+    const error: ShallowRef<ErrorDetails | null> = shallowRef(null)
     const isSubmitting = ref(false)
-    const shape: Ref<Shape | null> = ref(null)
+    const shape: ShallowRef<Shape | null> = shallowRef(null)
 
     return {
       resource,
@@ -76,7 +76,7 @@ export default defineComponent({
       this.shape = await api.fetchOperationShape(operation)
     }
 
-    this.resource = Object.freeze(this.project.pointer)
+    this.resource = this.project.pointer
   },
 
   computed: {

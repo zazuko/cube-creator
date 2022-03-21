@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType, ref, shallowRef, ShallowRef, toRefs } from 'vue'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import HydraRawRdfForm from '@/components/HydraRawRdfForm.vue'
 import clownface, { GraphPointer } from 'clownface'
@@ -84,10 +84,15 @@ export default defineComponent({
   },
   emits: ['submit', 'cancel'],
 
-  data (): { isRawMode: boolean, internalResource: GraphPointer | null} {
+  setup (props) {
+    const { resource } = toRefs(props)
+
+    const isRawMode = ref(false)
+    const internalResource: ShallowRef<GraphPointer | null> = shallowRef(resource)
+
     return {
-      isRawMode: false,
-      internalResource: this.resource,
+      isRawMode,
+      internalResource,
     }
   },
 
@@ -103,13 +108,13 @@ export default defineComponent({
       if (this.isRawMode) {
         const rdfEditor = this.$refs.rdfEditor as any
         await rdfEditor.waitParsing()
-        this.internalResource = Object.freeze(clownface({
+        this.internalResource = clownface({
           dataset: $rdf.dataset(rdfEditor.editorQuads || []),
           term: this.internalResource.term,
-        }))
+        })
       } else {
         const form = this.$refs.form as any
-        this.internalResource = Object.freeze(form.clone)
+        this.internalResource = form.clone
       }
     },
   },

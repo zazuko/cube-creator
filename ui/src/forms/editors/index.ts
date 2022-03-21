@@ -58,7 +58,7 @@ export const instanceSelect: Lazy<InstancesSelectEditor> = {
   async lazyRender () {
     await import('./SelectEditor.vue').then(createCustomElement('select-editor'))
 
-    return ({ property, value }, { update }) => html`<select-editor .property="${property.shape}"
+    return ({ property, value }, { update }) => html`<select-editor .property="${Object.freeze(property.shape)}"
                           .update="${update}"
                           .options="${value.componentState.instances}"
                           .value="${value.object?.term}"></select-editor>`
@@ -71,7 +71,7 @@ export const enumSelect: Lazy<EnumSelectEditor> = {
     await import('./SelectEditor.vue').then(createCustomElement('select-editor'))
 
     return ({ property, value }, { update }) =>
-      html`<select-editor .property="${property.shape}"
+      html`<select-editor .property="${Object.freeze(property.shape)}"
                           .update="${update}"
                           .options="${value.componentState.choices}"
                           .value="${value.object?.term}"></select-editor>`
@@ -151,7 +151,7 @@ export const autoComplete: Lazy<InstancesSelectEditor> = {
 
       const label = value.object ? this.label(property.shape.pointer.node(value.object), form) : 'Select'
 
-      return html`<auto-complete .property="${property.shape}"
+      return html`<auto-complete .property="${Object.freeze(property.shape)}"
                             .update="${update}"
                             .options="${value.componentState.instances}"
                             .value="${value.object?.term}"
@@ -295,7 +295,7 @@ export const dictionaryTable: Lazy<MultiEditorComponent<DictionaryTable>> = {
 
     return ({ renderer, property: { objects, shape } }) => {
       return html`<dictionary-table-editor
-        .shape="${shape}"
+        .shape="${Object.freeze(shape)}"
         .objects="${objects}"
         .renderer="${renderer}"
       ></dictionary-table-editor>`
