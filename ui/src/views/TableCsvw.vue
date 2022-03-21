@@ -22,7 +22,7 @@
         </o-button>
       </div>
       <rdf-editor
-        :quads="csvw.data"
+        :value="csvw.data"
         :format="selectedFormat"
         :prefixes="editorPrefixes"
         ref="snippet"
@@ -37,7 +37,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import '@rdfjs-elements/rdf-editor'
-import { Quad } from 'rdf-js'
 import BMessage from '@/components/BMessage.vue'
 import SidePane from '@/components/SidePane.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
@@ -52,7 +51,7 @@ export default defineComponent({
   components: { BMessage, SidePane, LoadingBlock, RadioButton },
 
   data (): {
-    csvw: RemoteData<Quad[]>,
+    csvw: RemoteData<string>,
     selectedFormat: string,
     formats: { label: string,
     value: string }[],
@@ -82,8 +81,8 @@ export default defineComponent({
       return
     }
 
-    const csvw = representation.root.pointer.dataset
-    this.csvw = Remote.loaded([...csvw])
+    const csvw = representation.root.toJSON()
+    this.csvw = Remote.loaded(JSON.stringify(csvw, null, 2))
   },
 
   computed: {
