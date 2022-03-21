@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent, ref, Ref } from 'vue'
 import clownface, { GraphPointer } from 'clownface'
 import { RuntimeOperation } from 'alcaeus'
 import { dataset } from '@rdf-esm/dataset'
@@ -45,17 +45,17 @@ export default defineComponent({
   name: 'TableCreateView',
   components: { SidePane, HydraOperationForm },
 
-  data (): {
-    resource: GraphPointer | null,
-    error: ErrorDetails | null,
-    isSubmitting: boolean,
-    shape: Shape | null,
-    } {
+  setup () {
+    const resource: Ref<GraphPointer | null> = ref(clownface({ dataset: dataset() }).namedNode(''))
+    const error: Ref<ErrorDetails | null> = ref(null)
+    const isSubmitting = ref(false)
+    const shape: Ref<Shape | null> = ref(null)
+
     return {
-      resource: clownface({ dataset: dataset() }).namedNode(''),
-      error: null,
-      isSubmitting: false,
-      shape: null,
+      resource,
+      error,
+      isSubmitting,
+      shape,
     }
   },
 
@@ -73,7 +73,7 @@ export default defineComponent({
     }),
 
     operation (): RuntimeOperation | null {
-      return this.$store.state.project.tableCollection.actions.create
+      return this.$store.state.project.tableCollection?.actions.create ?? null
     },
 
     preselectedSource (): CsvSource | null {
@@ -154,7 +154,7 @@ export default defineComponent({
 
         this.$store.commit('project/storeTable', table)
 
-        displayToast(this, {
+        displayToast({
           message: `Table ${table.name} was successfully created`,
           variant: 'success',
         })

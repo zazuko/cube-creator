@@ -1,5 +1,6 @@
-import DialogConfirm from './components/DialogConfirm.vue'
+import { useProgrammatic } from '@oruga-ui/oruga-next'
 import type { ColorsModifiers } from '@oruga-ui/oruga/types/helpers'
+import DialogConfirm from './components/DialogConfirm.vue'
 
 interface ConfirmOptions {
   title?: string
@@ -11,34 +12,23 @@ interface ConfirmOptions {
   onCancel?: () => void
 }
 
-export function confirmDialog (parent: any, options: ConfirmOptions) {
-  const defaultOptions = {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    onConfirm: () => {},
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    onCancel: () => {},
-  }
+export function confirmDialog (options: ConfirmOptions) {
+  const { oruga } = useProgrammatic()
 
-  const finalOptions = {
-    ...defaultOptions,
-    ...options,
-  }
-
-  parent.$oruga.modal.open({
-    parent,
+  oruga.modal.open({
     component: DialogConfirm,
     props: {
-      title: finalOptions.title,
-      message: finalOptions.message,
-      confirmText: finalOptions.confirmText,
-      hasIcon: finalOptions.hasIcon,
-      variant: finalOptions.variant,
+      title: options.title,
+      message: options.message,
+      confirmText: options.confirmText,
+      hasIcon: options.hasIcon,
+      variant: options.variant,
     },
     events: {
-      cancel: finalOptions.onCancel,
-      confirm: finalOptions.onConfirm,
+      cancel: options.onCancel,
+      confirm: options.onConfirm,
     },
     trapFocus: true,
-    onCancel: finalOptions.onCancel,
+    onCancel: options.onCancel,
   })
 }

@@ -12,14 +12,20 @@
     </div>
     <div class="navbar-menu" :class="{ 'is-active': isOpen }">
       <div class="navbar-start">
-        <router-link class="navbar-item" :to="{ name: 'CubeProjects' }">
-          Cube Projects
+        <router-link :to="{ name: 'CubeProjects' }" v-slot="{ href, navigate, route }" custom>
+          <a :href="href" @click="navigate" class="navbar-item" :class="{ 'is-active': isRouteActive(route, $route) }">
+            Cube Projects
+          </a>
         </router-link>
-        <router-link class="navbar-item" :to="{ name: 'SharedDimensions' }">
-          Shared Dimensions
+        <router-link :to="{ name: 'SharedDimensions' }" v-slot="{ href, navigate, route }" custom>
+          <a :href="href" @click="navigate" class="navbar-item" :class="{ 'is-active': isRouteActive(route, $route) }">
+            Shared Dimensions
+          </a>
         </router-link>
-        <router-link class="navbar-item" :to="{ name: 'Hierarchies' }">
-          Hierarchies
+        <router-link :to="{ name: 'Hierarchies' }" v-slot="{ href, navigate, route }" custom>
+          <a :href="href" @click="navigate" class="navbar-item" :class="{ 'is-active': isRouteActive(route, $route) }">
+            Hierarchies
+          </a>
         </router-link>
       </div>
       <div class="navbar-end">
@@ -41,8 +47,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import SignOutButton from './auth/SignOutButton.vue'
+import { isRouteActive } from '../router'
 
 export default defineComponent({
   name: 'NavBar',
@@ -52,12 +59,16 @@ export default defineComponent({
     return {
       isOpen: false,
     }
-  }
+  },
+
+  methods: {
+    isRouteActive,
+  },
 })
 </script>
 
 <style scoped>
-.navbar-item.router-link-active {
+.navbar-item.is-active {
   font-weight: bold;
   color: #aaa;
 }

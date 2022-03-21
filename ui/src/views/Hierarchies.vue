@@ -10,9 +10,8 @@
           :to="{ name: 'HierarchyCreate' }"
           variant="default"
           size="normal"
-        >
-          {{ collection.actions.create.title }}
-        </hydra-operation-button>
+          :label="collection.actions.create.title"
+        />
       </div>
     </div>
     <div v-if="collection" class="panel">
@@ -43,7 +42,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import PageContent from '@/components/PageContent.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import HydraOperationButton from '@/components/HydraOperationButton.vue'

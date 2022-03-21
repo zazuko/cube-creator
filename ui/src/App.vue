@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import BLoading from '@/components/BLoading.vue'
 import NavBar from '@/components/NavBar.vue'
 import { APIErrorAuthorization } from './api/errors'
@@ -55,7 +55,7 @@ export default defineComponent({
     window.addEventListener('vuexoidc:userLoaded', this.onUserLoaded)
   },
 
-  destroyed (): void {
+  unmounted (): void {
     window.removeEventListener('vuexoidc:userLoaded', this.onUserLoaded)
   },
 

@@ -4,7 +4,7 @@
       ref="editor"
       v-if="shape"
       format="text/turtle"
-      :quads.prop="initQuads"
+      :quads="initQuads"
       :prefixes="editorPrefixes"
       @quads-changed="onParseSuccess"
       @parsing-failed="onParseError"
@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { RuntimeOperation } from 'alcaeus'
 import $rdf from 'rdf-ext'
 import clownface, { GraphPointer } from 'clownface'
@@ -77,12 +77,13 @@ export default defineComponent({
       default: undefined,
     },
   },
+  emits: ['submit', 'cancel'],
 
-  data (): { parseError: string | null, editorQuads: Quad[] | null, editorPrefixes: string[] } {
+  data (): { parseError: string | null, editorQuads: Quad[] | null, editorPrefixes: string } {
     return {
       parseError: null,
       editorQuads: null,
-      editorPrefixes: ['hydra', 'rdf', 'rdfs', 'schema', 'xsd'],
+      editorPrefixes: ['hydra', 'rdf', 'rdfs', 'schema', 'xsd'].join(','),
     }
   },
 

@@ -25,7 +25,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent, ref, Ref } from 'vue'
+import { mapState } from 'vuex'
+import { useRoute } from 'vue-router'
 import $rdf from '@rdfjs/data-model'
 import { NamedNode, Term } from 'rdf-js'
 import TermSet from '@rdf-esm/term-set'
@@ -36,17 +38,22 @@ import LoadingBlock from '@/components/LoadingBlock.vue'
 import TermDisplay from '@/components/TermDisplay.vue'
 import CubePreviewValue from '@/components/CubePreviewValue.vue'
 import { api } from '@/api'
-import { mapState } from 'vuex'
 
 export default defineComponent({
   name: 'ResourcePreview',
   components: { CubePreviewValue, LoadingBlock, SidePane, TermDisplay },
 
-  data (): { resourceId: NamedNode, resource: GraphPointer | null, properties: [Term, (Term | RdfResource)[]][] } {
+  setup () {
+    const route = useRoute()
+    const resourceIdParam = route.params.resourceId as string
+    const resourceId: Ref<NamedNode> = ref($rdf.namedNode(resourceIdParam))
+    const resource: Ref<GraphPointer | null> = ref(null)
+    const properties: Ref<[Term, (Term | RdfResource)[]][]> = ref([])
+
     return {
-      resourceId: $rdf.namedNode(this.$route.params.resourceId),
-      resource: null,
-      properties: [],
+      resourceId,
+      resource,
+      properties,
     }
   },
 
@@ -56,7 +63,7 @@ export default defineComponent({
 
     const url = new URL(cubeGraph.value)
     url.searchParams.append('resource', this.resourceId.value)
-    url.searchParams.append('sharedTerm', this.$route.params.sharedTerm)
+    url.searchParams.append('sharedTerm', this.$route.params.sharedTerm as string)
     const responseResource = await api.fetchResource(url.href)
 
     const resource = responseResource.pointer.namedNode(this.resourceId)

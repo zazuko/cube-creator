@@ -15,11 +15,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent, ref, Ref } from 'vue'
 import { RuntimeOperation } from 'alcaeus'
 import type { Shape } from '@rdfine/shacl'
 import { GraphPointer } from 'clownface'
-import { Dataset } from '@cube-creator/model'
 import SidePane from '@/components/SidePane.vue'
 import HydraOperationFormWithRaw from '@/components/HydraOperationFormWithRaw.vue'
 import { api } from '@/api'
@@ -27,17 +26,23 @@ import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 import { cc, cube } from '@cube-creator/core/namespace'
 import { conciseBoundedDescription } from '@/graph'
 import { displayToast } from '@/use-toast'
+import { mapState } from 'vuex'
 
 export default defineComponent({
   name: 'CubeMetadataEdit',
   components: { SidePane, HydraOperationFormWithRaw },
 
-  data (): { resource: GraphPointer | null, shape: Shape | null, error: ErrorDetails | null, isSubmitting: boolean } {
+  setup () {
+    const resource: Ref<GraphPointer | null> = ref(null)
+    const shape: Ref<Shape | null> = ref(null)
+    const error: Ref<ErrorDetails | null> = ref(null)
+    const isSubmitting = ref(false)
+
     return {
-      resource: null,
-      shape: null,
-      error: null,
-      isSubmitting: false,
+      resource,
+      shape,
+      error,
+      isSubmitting,
     }
   },
 
@@ -58,9 +63,9 @@ export default defineComponent({
   },
 
   computed: {
-    cubeMetadata (): Dataset {
-      return this.$store.state.project.cubeMetadata
-    },
+    ...mapState('project', {
+      cubeMetadata: 'cubeMetadata',
+    }),
 
     operation (): RuntimeOperation | null {
       return this.cubeMetadata.actions.edit
@@ -84,7 +89,7 @@ export default defineComponent({
 
         this.$store.dispatch('project/fetchCubeMetadata')
 
-        displayToast(this, {
+        displayToast({
           message: 'Cube metadata was saved',
           variant: 'success',
         })

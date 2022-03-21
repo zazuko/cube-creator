@@ -93,7 +93,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { Term } from 'rdf-js'
 import { ResourceIdentifier } from '@tpluscode/rdfine'
 import { ColumnMapping, Table } from '@cube-creator/model'
@@ -112,6 +112,7 @@ export default defineComponent({
       required: true,
     }
   },
+  emits: ['highlight-arrows', 'unhighlight-arrows'],
 
   computed: {
     ...mapGetters('project', {
@@ -148,7 +149,7 @@ export default defineComponent({
     },
 
     deleteTable (table: Table): void {
-      confirmDialog(this, {
+      confirmDialog({
         title: table.actions.delete?.title,
         message: 'Are you sure you want to delete this table?',
         confirmText: 'Delete',
@@ -163,7 +164,7 @@ export default defineComponent({
     },
 
     deleteColumnMapping (columnMapping: ColumnMapping): void {
-      confirmDialog(this, {
+      confirmDialog({
         title: columnMapping.actions.delete?.title,
         message: 'Are you sure you want to delete this column mapping?',
         confirmText: 'Delete',

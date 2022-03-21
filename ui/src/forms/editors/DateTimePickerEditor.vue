@@ -1,9 +1,9 @@
 <template>
-  <o-datetimepicker :value="dateValue" @input="onUpdate" icon="calendar-alt" />
+  <o-datetimepicker :model-value="dateValue" @update:modelValue="onUpdate" icon="calendar-alt" />
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 
 export default defineComponent({
   name: 'DateTimePickerEditor',

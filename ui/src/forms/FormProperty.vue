@@ -4,7 +4,7 @@
       {{ property.name }}
     </span>
     <o-field v-if="property.shape.description">
-      <vue-markdown class="help" :anchor-attributes="linkAttrs" :source="property.shape.description" />
+      <markdown-render class="help" :anchor-attributes="linkAttrs" :source="property.shape.description" />
     </o-field>
     <o-field v-if="property.selectedEditor">
       <render-wc-template :template-result="renderMultiEditor()" />
@@ -21,16 +21,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { PropertyObjectState, PropertyState } from '@hydrofoil/shaperone-core/models/forms'
 import { TemplateResult } from 'lit'
-// Makes the hidden property visible to typescript
-import VueMarkdown from 'vue-markdown/src/VueMarkdown'
+import MarkdownRender from '@/components/MarkdownRender.vue'
 import RenderWcTemplate from './RenderWcTemplate.vue'
 
 export default defineComponent({
   name: 'FormProperty',
-  components: { RenderWcTemplate, VueMarkdown },
+  components: { MarkdownRender, RenderWcTemplate },
   props: {
     property: {
       type: Object as PropType<PropertyState>,

@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { Term } from 'rdf-js'
 import { shrink } from '@/rdf-properties'
 import { CreateIdentifier } from '../store/modules/project'
@@ -20,7 +20,7 @@ export default defineComponent({
   },
 
   computed: {
-    createIdentifier (): CreateIdentifier {
+    createIdentifier (): CreateIdentifier | null {
       return this.$store.state.project.createIdentifier
     },
 
@@ -29,7 +29,9 @@ export default defineComponent({
     },
 
     expanded (): string {
-      return this.createIdentifier(this.term)
+      return this.createIdentifier
+        ? this.createIdentifier(this.term)
+        : this.term.value
     },
 
     shrunk (): string {

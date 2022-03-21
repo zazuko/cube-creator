@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import TermDisplay from './TermDisplay.vue'
 import { api } from '@/api'
 import { DESCRIBE } from '@tpluscode/sparql-builder'

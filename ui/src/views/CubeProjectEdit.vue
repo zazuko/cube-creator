@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent, ref, Ref } from 'vue'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import DownloadButton from '@/components/DownloadButton.vue'
 import { GraphPointer } from 'clownface'
@@ -55,17 +55,17 @@ export default defineComponent({
   name: 'CubeProjectEditView',
   components: { HydraOperationForm, DownloadButton },
 
-  data (): {
-    resource: GraphPointer | null,
-    error: ErrorDetails | null,
-    isSubmitting: boolean,
-    shape: Shape | null,
-    } {
+  setup () {
+    const resource: Ref<GraphPointer | null> = ref(null)
+    const error: Ref<ErrorDetails | null> = ref(null)
+    const isSubmitting = ref(false)
+    const shape: Ref<Shape | null> = ref(null)
+
     return {
-      resource: null,
-      error: null,
-      isSubmitting: false,
-      shape: null,
+      resource,
+      error,
+      isSubmitting,
+      shape,
     }
   },
 
@@ -98,7 +98,7 @@ export default defineComponent({
 
         this.$store.commit('project/storeProject', project)
 
-        displayToast(this, {
+        displayToast({
           message: 'Project settings were saved',
           variant: 'success',
         })
@@ -114,7 +114,7 @@ export default defineComponent({
     },
 
     async deleteProject (): Promise<void> {
-      confirmDialog(this, {
+      confirmDialog({
         title: this.project.actions.delete?.title,
         message: 'Are you sure you want to delete this project? This action is not revertible.',
         confirmText: 'Delete',

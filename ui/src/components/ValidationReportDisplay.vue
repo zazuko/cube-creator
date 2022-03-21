@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { ValidationReport } from '@rdfine/shacl'
 import ValidationResultDisplay from './ValidationResultDisplay.vue'
 

@@ -22,7 +22,7 @@
         </o-button>
       </div>
       <rdf-editor
-        :quads.prop="csvw.data"
+        :quads="csvw.data"
         :format="selectedFormat"
         :prefixes="editorPrefixes"
         ref="snippet"
@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import '@rdfjs-elements/rdf-editor'
 import { Quad } from 'rdf-js'
 import BMessage from '@/components/BMessage.vue'
@@ -56,7 +56,7 @@ export default defineComponent({
     selectedFormat: string,
     formats: { label: string,
     value: string }[],
-    editorPrefixes: string[],
+    editorPrefixes: string,
     } {
     return {
       csvw: Remote.loading(),
@@ -66,7 +66,7 @@ export default defineComponent({
         { label: 'Turtle', value: 'text/turtle' },
         { label: 'N-Triples', value: 'application/n-triples' },
       ],
-      editorPrefixes: ['hydra', 'rdf', 'rdfs', 'schema', 'xsd'],
+      editorPrefixes: ['hydra', 'rdf', 'rdfs', 'schema', 'xsd'].join(','),
     }
   },
 
@@ -102,7 +102,7 @@ export default defineComponent({
       const snippet = this.$refs.snippet as any
       const content = snippet.codeMirror.value
       await navigator.clipboard.writeText(content)
-      displayToast(this, {
+      displayToast({
         message: 'Copied 👍',
         variant: 'success',
       })

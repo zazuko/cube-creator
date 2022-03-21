@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import { mapGetters } from 'vuex'
 import BMessage from '../components/BMessage.vue'
 

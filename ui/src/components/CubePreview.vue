@@ -16,7 +16,12 @@
                 </div>
               </div>
               <div class="level-right">
-                <o-select :value="selectedLanguage" @input="$emit('selectLanguage', $event)" class="level-item" title="Language">
+                <o-select
+                  :model-value="selectedLanguage"
+                  @update:modelValue="$emit('selectLanguage', $event)"
+                  class="level-item"
+                  title="Language"
+                >
                   <option v-for="language in languages" :key="language" :value="language">
                     {{ language }}
                   </option>
@@ -135,7 +140,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import clownface from 'clownface'
 import { Collection } from 'alcaeus'
 import { hydra, qudt } from '@tpluscode/rdf-ns-builders'
@@ -183,6 +188,7 @@ export default defineComponent({
       required: true,
     },
   },
+  emits: ['selectLanguage', 'refreshDimensions'],
 
   data (): {
     languages: string[],

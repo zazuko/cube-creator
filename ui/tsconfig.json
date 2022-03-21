@@ -13,6 +13,7 @@
     "useDefineForClassFields": false,
     "sourceMap": true,
     "baseUrl": ".",
+    "downlevelIteration": true,
     "typeRoots": ["./types", "./node_modules/@types"],
     "allowJs": true,
     "types": [
@@ -34,8 +35,10 @@
   },
   "files": [
     "types/global.d.ts",
-    "types/vue-markdown.d.ts",
-    "types/vue-select.d.ts",
+    "types/oruga.d.ts",
+    "types/vuex.d.ts",
+    "types/vue-color.d.ts",
+    "types/vue-select.d.ts"
   ],
   "include": [
     "src/**/*.ts",

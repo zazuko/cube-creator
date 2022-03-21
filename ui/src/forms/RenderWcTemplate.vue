@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import type { TemplateResult } from 'lit'
 import { render } from 'lit'
 
@@ -22,13 +22,15 @@ export default defineComponent({
 
   watch: {
     templateResult (): void {
-      this.renderTemplate()
+      this.$nextTick(() => {
+        this.renderTemplate()
+      })
     },
   },
 
   methods: {
     renderTemplate (): void {
-      render(this.templateResult, this.$el as HTMLElement)
+      render(this.templateResult, this.$el)
     },
   },
 })

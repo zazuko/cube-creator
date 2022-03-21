@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import RdfResourceImpl from '@tpluscode/rdfine'
 import { RuntimeOperation } from 'alcaeus'
 import { GraphPointer } from 'clownface'
@@ -95,7 +95,7 @@ export default defineComponent({
       try {
         await api.invokeSaveOperation(operation, resource)
 
-        displayToast(this, {
+        displayToast({
           message: 'CSV file was successfully replaced',
           variant: 'success',
         })

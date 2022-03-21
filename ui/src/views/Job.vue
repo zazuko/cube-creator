@@ -6,7 +6,7 @@
         <job-status :job="job" :show-label="true" />
       </h2>
       <p class="has-text-grey-dark">
-        Triggered at {{ job.created | format-date }}
+        Triggered at {{ createdDate }}
       </p>
     </header>
     <div class="is-flex gap-1">
@@ -42,7 +42,7 @@
         {{ job.error.disambiguatingDescription }}
       </b-message>
       <b-message v-for="comment in job.comments" :key="comment" type="is-warning" class="mb-2">
-        <vue-markdown :source="comment" />
+        <markdown-render :source="comment" />
       </b-message>
       <a :disabled="!link" :href="link" target="_blank" rel="noopener noreferer" class="button is-small mb-1">
         <o-icon icon="book" />
@@ -60,21 +60,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import { Job } from '@cube-creator/model'
 import type { CreativeWork } from '@rdfine/schema'
 import { schema } from '@tpluscode/rdf-ns-builders'
-import VueMarkdown from 'vue-markdown/src/VueMarkdown'
 import BMessage from '@/components/BMessage.vue'
 import ExternalTerm from '@/components/ExternalTerm.vue'
 import JobStatus from '../components/JobStatus.vue'
 import LoadingBlock from '../components/LoadingBlock.vue'
+import MarkdownRender from '../components/MarkdownRender.vue'
 import ValidationReportDisplay from '../components/ValidationReportDisplay.vue'
 import { mapGetters } from 'vuex'
 
 export default defineComponent({
   name: 'JobView',
-  components: { BMessage, ExternalTerm, JobStatus, LoadingBlock, ValidationReportDisplay, VueMarkdown },
+  components: { BMessage, ExternalTerm, JobStatus, LoadingBlock, MarkdownRender, ValidationReportDisplay },
 
   computed: {
     ...mapGetters('project', {
@@ -92,6 +92,10 @@ export default defineComponent({
 
     link (): string | undefined {
       return this.job?.link?.id.value
+    },
+
+    createdDate (): string {
+      return this.job?.created.toLocaleString() ?? ''
     },
   },
 

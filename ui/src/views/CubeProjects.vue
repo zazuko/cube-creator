@@ -10,18 +10,17 @@
           :to="{ name: 'CubeProjectCreate' }"
           variant="default"
           size="normal"
-        >
-          {{ projectsCollection.actions.create.title }}
-        </hydra-operation-button>
+          :label="projectsCollection.actions.create.title"
+        />
       </div>
     </div>
     <div v-if="projectsCollection">
       <div class="panel-tabs">
-        <router-link :to="{ query: { creator: 'me' } }" exact-active-class="is-active" v-if="user">
-          Mine
+        <router-link :to="{ query: { creator: 'me' } }" v-if="user" v-slot="{ href, navigate, route }" custom>
+          <a :href="href" @click="navigate" :class="{ 'is-active': isRouteActive(route, $route) }">Mine</a>
         </router-link>
-        <router-link :to="{ query: { creator: 'all' } }" exact-active-class="is-active">
-          All
+        <router-link :to="{ query: { creator: 'all' } }" v-slot="{ href, navigate, route }" custom>
+          <a :href="href" @click="navigate" :class="{ 'is-active': isRouteActive(route, $route) }">All</a>
         </router-link>
       </div>
       <div v-if="projects.length > 0" class="panel">
@@ -43,13 +42,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import { Project } from '@cube-creator/model'
 import CubeProjectsItem from '@/components/CubeProjectsItem.vue'
 import PageContent from '@/components/PageContent.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import HydraOperationButton from '@/components/HydraOperationButton.vue'
 import { mapGetters, mapState } from 'vuex'
+import { isRouteActive } from '@/router'
 
 export default defineComponent({
   name: 'CubeProjectsView',
@@ -81,6 +81,10 @@ export default defineComponent({
         return projects.filter(({ creator }) => creator.name === this.user.name)
       }
     },
+  },
+
+  methods: {
+    isRouteActive,
   },
 })
 </script>

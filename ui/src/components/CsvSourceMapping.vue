@@ -76,8 +76,8 @@
           @mouseleave="unhighlightArrows(column)"
         >
           <o-checkbox
-            :value="selectedColumnsMap[column.clientPath]"
-            @input="selectedColumnsMap[column.clientPath] = $event"
+            :model-value="selectedColumnsMap[column.clientPath]"
+            @update:modelValue="selectedColumnsMap[column.clientPath] = $event"
             class="source-column-name"
           >
             {{ column.name }}
@@ -127,7 +127,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { mapGetters } from 'vuex'
 import { CsvSource, Table, TableCollection, CsvColumn, ColumnMapping } from '@cube-creator/model'
 import { isLiteralColumnMapping } from '@cube-creator/model/ColumnMapping'
@@ -157,6 +157,7 @@ export default defineComponent({
       required: true,
     }
   },
+  emits: ['highlight-arrows', 'unhighlight-arrows'],
 
   data () {
     const selectedColumnsMap = prepareSelectedColumnsMap(this.source)
@@ -208,7 +209,7 @@ export default defineComponent({
     },
 
     async deleteSource (source: CsvSource): Promise<void> {
-      confirmDialog(this, {
+      confirmDialog({
         title: source.actions.delete?.title,
         message: 'Are you sure you want to delete this CSV source?',
         confirmText: 'Delete',

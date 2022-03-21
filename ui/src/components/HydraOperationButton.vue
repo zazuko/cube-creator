@@ -8,27 +8,26 @@
       :size="size"
       :icon-left="iconName"
       :disabled="disabled"
-    >
-      <slot />
-    </o-button>
+      :label="label"
+    />
   </o-tooltip>
 </template>
 
 <script lang="ts">
 import { ColorsModifiers } from '@oruga-ui/oruga/types/helpers'
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { RuntimeOperation } from 'alcaeus'
-import { Location } from 'vue-router'
+import { RouteLocationRaw } from 'vue-router'
 
 export default defineComponent({
   name: 'HydraOperationButton',
   props: {
     operation: {
-      type: Object as PropType<RuntimeOperation | null>,
+      type: Object as PropType<RuntimeOperation>,
       default: null,
     },
     to: {
-      type: Object as PropType<Location | null>,
+      type: Object as PropType<RouteLocationRaw>,
       default: null,
     },
     variant: {
@@ -47,7 +46,12 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    label: {
+      type: String,
+      default: null,
+    },
   },
+  emits: ['click'],
 
   computed: {
     tag (): string {

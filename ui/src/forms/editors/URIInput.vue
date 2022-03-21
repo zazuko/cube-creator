@@ -1,11 +1,11 @@
 <template>
   <o-field :message="message">
-    <o-input :value="textValue" @blur="onUpdate" />
+    <o-input :model-value="textValue" @blur="onUpdate" />
   </o-field>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { NamedNode } from 'rdf-js'
 import * as $rdf from '@rdf-esm/data-model'
 import { api } from '@/api'

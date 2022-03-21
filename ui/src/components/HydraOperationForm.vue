@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent="$emit('submit', clone)">
-    <cc-form :resource.prop="clone" :shapes.prop="shapePointer" no-editor-switches />
+    <cc-form :resource="clone" :shapes="shapePointer" no-editor-switches />
 
     <loading-block v-if="!shape" />
 
@@ -18,7 +18,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { ColorsModifiers } from '@oruga-ui/oruga/types/helpers'
+import { defineComponent, PropType } from 'vue'
 import { RuntimeOperation } from 'alcaeus'
 import $rdf from 'rdf-ext'
 import clownface, { GraphPointer } from 'clownface'
@@ -61,10 +62,11 @@ export default defineComponent({
       default: undefined,
     },
     submitButtonVariant: {
-      type: String,
+      type: String as PropType<ColorsModifiers>,
       default: undefined,
     },
   },
+  emits: ['submit', 'cancel'],
 
   data (): { __clone: GraphPointer | null } {
     return {

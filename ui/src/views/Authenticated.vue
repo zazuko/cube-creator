@@ -4,8 +4,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
-import { Resource } from 'alcaeus'
+import { defineComponent } from 'vue'
+import { mapState } from 'vuex'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 
 export default defineComponent({
@@ -17,9 +17,9 @@ export default defineComponent({
   },
 
   computed: {
-    apiEntrypoint (): Resource {
-      return this.$store.state.api.entrypoint
-    }
+    ...mapState('api', {
+      apiEntrypoint: 'entrypoint',
+    }),
   },
 })
 </script>

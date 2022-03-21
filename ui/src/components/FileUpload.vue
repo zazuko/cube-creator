@@ -4,7 +4,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import AwsS3Multipart from '@uppy/aws-s3-multipart'
 import { Uppy, UppyFile } from '@uppy/core'
 import { Dashboard as UppyDashboard } from '@uppy/vue'
@@ -31,7 +31,7 @@ export default defineComponent({
   props: {
     afterUpload: {
       type: Function as PropType<(files: UploadedFile[]) => Promise<void>>,
-      default: undefined,
+      default: (files: UploadedFile[]) => files,
     },
     fileMeta: {
       type: Object as PropType<Record<string, unknown>>,
@@ -42,6 +42,7 @@ export default defineComponent({
       default: true,
     },
   },
+  emits: ['done'],
 
   data (): { uppy: Uppy | null, uppyDashboardOptions: any } {
     return {
@@ -80,11 +81,11 @@ export default defineComponent({
     this.uppy = uppy
   },
 
-  methods: {
-    beforeDestroy (): void {
-      this.uppy?.close()
-    },
+  beforeUnmount (): void {
+    this.uppy?.close()
+  },
 
+  methods: {
     onUploaded (fileIds: string[]): Promise<void> {
       const files = fileIds.map(id => toUploadedFile(this.uppy?.getFile(id)))
 

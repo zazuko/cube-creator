@@ -3,8 +3,8 @@
     :placeholder="placeholder"
     :options="_options"
     label="label"
-    :value="_value"
-    @input="onInput"
+    :model-value="_value"
+    @update:modelValue="onInput"
     :clearable="false"
     @search="onSearch"
     @search:focus="__load"
@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import type { PropertyShape } from '@rdfine/shacl'
 import { Term, NamedNode } from 'rdf-js'
 import { GraphPointer } from 'clownface'
@@ -55,6 +55,7 @@ export default defineComponent({
       default: 300,
     },
   },
+  emits: ['search'],
 
   data (): { searchValue: string, initialLoaded: boolean, onSearch: (query: string, loading: () => void) => void } {
     return {

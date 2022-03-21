@@ -1,7 +1,7 @@
-import Vue from 'vue'
+import { createApp } from 'vue'
 import * as Sentry from '@sentry/vue'
 import { Integrations } from '@sentry/tracing'
-import Oruga from '@oruga-ui/oruga'
+import Oruga from '@oruga-ui/oruga-next'
 import { bulmaConfig } from '@oruga-ui/theme-bulma'
 import App from './App.vue'
 import router from './router'
@@ -16,11 +16,16 @@ import store from './store'
 
 import('./forms')
 
+const app = createApp(App)
+
+app.use(router)
+app.use(store)
+
 iconsLibrary.add(fas)
 iconsLibrary.add(far)
-Vue.component('FontAwesomeIcon', FontAwesomeIcon)
+app.component('FontAwesomeIcon', FontAwesomeIcon)
 
-Vue.use(Oruga, {
+app.use(Oruga, {
   ...bulmaConfig,
   iconPack: 'fas',
   iconComponent: 'FontAwesomeIcon',
@@ -47,7 +52,7 @@ Vue.use(Oruga, {
 })
 
 Sentry.init({
-  Vue,
+  app,
   dsn: window.APP_CONFIG.sentry?.dsn,
   environment: window.APP_CONFIG.sentry?.environment,
   release: process.env.VUE_APP_SENTRY_RELEASE,
@@ -65,12 +70,6 @@ Sentry.init({
   }
 })
 
-Vue.config.productionTip = false
+app.mount('#app')
 
-Vue.filter('format-date', (date: Date) => date.toLocaleString())
-
-new Vue({
-  router,
-  store,
-  render: h => h(App)
-}).$mount('#app')
+export default app

@@ -6,14 +6,13 @@
     :icon-left="icon"
     :icon-class="iconClass"
     :disabled="disabled || loading"
-    v-on="$listeners"
   >
     <slot />
   </o-button>
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'ButtonLoading',

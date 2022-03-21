@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import { RuntimeOperation } from 'alcaeus'
 import { ColumnMapping, Table, CsvSource } from '@cube-creator/model'
 import { cc } from '@cube-creator/core/namespace'
@@ -98,7 +98,7 @@ export default defineComponent({
 
         this.$store.commit('project/storeUpdatedColumnMapping', { table: this.table, columnMapping })
 
-        displayToast(this, {
+        displayToast({
           message: 'Column mapping was successfully updated',
           variant: 'success',
         })

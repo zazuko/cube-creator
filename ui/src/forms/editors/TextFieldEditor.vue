@@ -1,9 +1,9 @@
 <template>
-  <o-input :value="value" @input="update" />
+  <o-input :model-value="value" @update:modelValue="update" />
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 
 export default defineComponent({
   name: 'TextFieldEditor',

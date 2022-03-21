@@ -1,5 +1,4 @@
-import Vue from 'vue'
-import VueRouter, { RouteConfig } from 'vue-router'
+import { createRouter, createWebHistory, LocationQuery, RouteLocation, RouteRecordRaw } from 'vue-router'
 import { vuexOidcCreateRouterMiddleware } from 'vuex-oidc'
 
 import OidcCallback from '@/components/auth/OidcCallback.vue'
@@ -42,9 +41,7 @@ import Hierarchies from '@/views/Hierarchies.vue'
 import HierarchyCreate from '@/views/HierarchyCreate.vue'
 import HierarchyEdit from '@/views/HierarchyEdit.vue'
 
-Vue.use(VueRouter)
-
-const routes: Array<RouteConfig> = [
+const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'Home',
@@ -247,11 +244,6 @@ const routes: Array<RouteConfig> = [
     component: OidcError,
   },
   {
-    path: '*',
-    name: 'PageNotFound',
-    component: PageNotFound,
-  },
-  {
     path: '/logout',
     name: 'Logout',
     component: Logout,
@@ -261,12 +253,16 @@ const routes: Array<RouteConfig> = [
     name: 'NotAuthorized',
     component: NotAuthorized,
   },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'PageNotFound',
+    component: PageNotFound,
+  },
 ]
 
-const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes
+const router = createRouter({
+  history: createWebHistory(process.env.BASE_URL),
+  routes,
 })
 
 if (!process.env.VUE_APP_E2E) {
@@ -274,3 +270,32 @@ if (!process.env.VUE_APP_E2E) {
 }
 
 export default router
+
+/**
+ * Replicates the route "active" matching behavior of vue-router 3.x.
+ *
+ * Copied from https://github.com/vuejs/rfcs/blob/master/active-rfcs/0028-router-active-link.md#motivation
+ */
+export function isRouteActive (route: RouteLocation, currentRoute: RouteLocation) {
+  return currentRoute.path.startsWith(route.path) && includesQuery(currentRoute.query, route.query)
+}
+
+function includesQuery (outter: LocationQuery, inner: LocationQuery): boolean {
+  for (const key in inner) {
+    const innerValue = inner[key]
+    const outterValue = outter[key]
+    if (typeof innerValue === 'string') {
+      if (innerValue !== outterValue) return false
+    } else {
+      if (
+        !Array.isArray(outterValue) ||
+        outterValue.length !== innerValue?.length ||
+        innerValue.some((value, i) => value !== outterValue[i])
+      ) {
+        return false
+      }
+    }
+  }
+
+  return true
+}

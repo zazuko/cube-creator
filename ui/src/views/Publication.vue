@@ -50,7 +50,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import JobForm from '@/components/JobForm.vue'
 import JobItem from '@/components/JobItem.vue'
@@ -71,7 +71,7 @@ export default defineComponent({
       return this.$store.state.app.language
     },
 
-    jobCollection (): JobCollection {
+    jobCollection (): JobCollection | null {
       return this.$store.state.project.jobCollection
     },
   },

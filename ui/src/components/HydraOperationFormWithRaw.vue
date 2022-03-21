@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import HydraRawRdfForm from '@/components/HydraRawRdfForm.vue'
 import clownface, { GraphPointer } from 'clownface'
@@ -62,8 +62,8 @@ export default defineComponent({
       required: true,
     },
     shape: {
-      type: Object as PropType<Shape | null>,
-      required: true,
+      type: Object as PropType<Shape>,
+      default: null,
     },
     error: {
       type: Object as PropType<ErrorDetails | null>,
@@ -82,6 +82,7 @@ export default defineComponent({
       default: undefined,
     },
   },
+  emits: ['submit', 'cancel'],
 
   data (): { isRawMode: boolean, internalResource: GraphPointer | null} {
     return {

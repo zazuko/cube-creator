@@ -3,9 +3,9 @@
     <radio-button
       v-for="option in choices"
       :key="option.value"
-      :value="_value"
+      :model-value="_value"
       :native-value="option.value"
-      @input="emit"
+      @update:modelValue="emit"
     >
       {{ label(option) }}
     </radio-button>
@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { GraphPointer, MultiPointer } from 'clownface'
 import { Term } from 'rdf-js'
 import { rdfs } from '@tpluscode/rdf-ns-builders'

@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import 'bulma-quickview/dist/css/bulma-quickview.min.css'
 
 export default defineComponent({
@@ -31,6 +31,7 @@ export default defineComponent({
       required: true,
     },
   },
+  emits: ['close'],
 
   data (): { width: string | null } {
     return {

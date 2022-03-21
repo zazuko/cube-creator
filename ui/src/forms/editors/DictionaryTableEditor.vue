@@ -14,10 +14,7 @@
       <tbody>
         <tr v-for="o in displayedObjects" :key="o.key" class="term-row">
           <td>
-            <render-wc-template
-              class="term-pair"
-              :template-result="renderer.renderFocusNode({ focusNode: o.object, shape: shape.node })"
-            />
+            <dictionary-table-editor-pair class="term-pair" :shape="shape" :renderer="renderer" :object="o" />
           </td>
           <td class="term-remove-col">
             <o-tooltip label="Remove value">
@@ -39,18 +36,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { PropertyObjectState } from '@hydrofoil/shaperone-core/models/forms'
 import { prov, sh } from '@tpluscode/rdf-ns-builders'
 import { Term } from 'rdf-js'
 import { PropertyShape } from '@rdfine/shacl'
 import { PropertyRenderer } from '@hydrofoil/shaperone-core/renderer'
 import RadioButton from '@/components/RadioButton.vue'
-import RenderWcTemplate from '../RenderWcTemplate.vue'
+import DictionaryTableEditorPair from './DictionaryTableEditorPair.vue'
 
 export default defineComponent({
   name: 'DictionaryTableEditor',
-  components: { RadioButton, RenderWcTemplate },
+  components: { DictionaryTableEditorPair, RadioButton },
   props: {
     objects: {
       type: Array as PropType<PropertyObjectState[]>,

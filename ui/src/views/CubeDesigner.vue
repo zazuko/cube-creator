@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import CubePreview from '@/components/CubePreview.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import { mapGetters, mapState } from 'vuex'

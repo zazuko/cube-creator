@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent } from 'vue'
 import PageContent from '@/components/PageContent.vue'
 
 export default defineComponent({
@@ -19,8 +19,8 @@ export default defineComponent({
   components: { PageContent },
 
   computed: {
-    link (): string | null {
-      return this.$route.params.link
+    link (): string {
+      return this.$route.params.link as string
     },
   },
 })

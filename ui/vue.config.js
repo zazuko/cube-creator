@@ -13,6 +13,11 @@ if (process.env.NO_WEBSOCKET === 'true') {
   websocketConfig.liveReload = false
 }
 
+const customElements = [
+  'cc-form',
+  'rdf-editor',
+]
+
 module.exports = {
   publicPath,
   devServer: {
@@ -36,5 +41,18 @@ module.exports = {
         Buffer: ['buffer', 'Buffer'],
       }),
     )
+  },
+  chainWebpack: config => {
+    config.module
+      .rule('vue')
+      .use('vue-loader')
+      .tap((options) => {
+        return {
+          ...options,
+          compilerOptions: {
+            isCustomElement: tag => customElements.includes(tag),
+          }
+        }
+      })
   },
 }

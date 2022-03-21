@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent, ref, Ref } from 'vue'
 import { RuntimeOperation } from 'alcaeus'
 import { Shape } from '@rdfine/shacl'
 import { GraphPointer } from 'clownface'
@@ -32,19 +32,19 @@ export default defineComponent({
   name: 'DimensionMappingView',
   components: { SidePane, HydraOperationForm },
 
-  data (): {
-    mappings: RdfResource | null,
-    resource: GraphPointer | null,
-    error: ErrorDetails | null,
-    isSubmitting: boolean,
-    shape: Shape | null,
-    } {
+  setup () {
+    const mappings: Ref<RdfResource | null> = ref(null)
+    const resource: Ref<GraphPointer | null> = ref(null)
+    const error: Ref<ErrorDetails | null> = ref(null)
+    const isSubmitting = ref(false)
+    const shape: Ref<Shape | null> = ref(null)
+
     return {
-      mappings: null,
-      resource: null,
-      error: null,
-      isSubmitting: false,
-      shape: null,
+      mappings,
+      resource,
+      error,
+      isSubmitting,
+      shape,
     }
   },
 
@@ -96,7 +96,7 @@ export default defineComponent({
 
         this.$store.dispatch('project/fetchDimensionMetadataCollection')
 
-        displayToast(this, {
+        displayToast({
           message: 'Mapping to shared dimension was saved',
           variant: 'success',
         })

@@ -5,8 +5,8 @@
   >
     <o-autocomplete
       ref="autocomplete"
-      :value="value"
-      @input="update"
+      :model-value="value"
+      @update:modelValue="update"
       @typing="onTyping"
       @select="onSelect"
       @blur="validate"
@@ -19,8 +19,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { CsvSource } from '@cube-creator/model'
 import { Term } from 'rdf-js'
 import { mapGetters, Store } from 'vuex'
@@ -56,6 +55,7 @@ export default defineComponent({
       default: true,
     },
   },
+  emits: ['input'],
 
   data () {
     return {
@@ -115,7 +115,7 @@ export default defineComponent({
 
   methods: {
     getInputElement (): HTMLInputElement | null {
-      const autocomplete = this.$refs.autocomplete as Vue
+      const autocomplete = this.$refs.autocomplete as any
       return autocomplete?.$el.querySelector('input') ?? null
     },
 

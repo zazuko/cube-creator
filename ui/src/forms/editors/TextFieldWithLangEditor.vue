@@ -1,7 +1,7 @@
 <template>
   <o-field>
-    <o-input :value="valueText" @input="updateValue" class="text-input" :type="inputType" />
-    <o-select :value="valueLanguage" @input="updateLanguage">
+    <o-input :model-value="valueText" @update:modelValue="updateValue" class="text-input" :type="inputType" />
+    <o-select :model-value="valueLanguage" @update:modelValue="updateLanguage">
       <option v-for="language in languages" :key="language">
         {{ language }}
       </option>
@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent, PropType } from 'vue'
 import { Literal } from 'rdf-js'
 import * as $rdf from '@rdf-esm/data-model'
 import { PropertyState } from '@hydrofoil/shaperone-core/models/forms'
