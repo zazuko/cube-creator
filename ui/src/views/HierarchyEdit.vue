@@ -1,7 +1,7 @@
 <template>
   <side-pane :title="title" @close="onCancel">
     <hydra-operation-form-with-raw
-      v-if="operation"
+      v-if="resource && operation"
       :operation="operation"
       :resource="resource"
       :shape="shape"
@@ -53,7 +53,7 @@ export default defineComponent({
 
   computed: {
     title (): string {
-      return this.operation?.title ?? ''
+      return this.operation?.title ?? '...'
     },
   },
 

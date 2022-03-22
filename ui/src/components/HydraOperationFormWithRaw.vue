@@ -62,7 +62,7 @@ export default defineComponent({
       required: true,
     },
     shape: {
-      type: Object as PropType<Shape>,
+      type: Object as PropType<Shape | null>,
       default: null,
     },
     error: {
@@ -84,7 +84,7 @@ export default defineComponent({
   },
   emits: ['submit', 'cancel'],
 
-  data (): { isRawMode: boolean, internalResource: GraphPointer | null} {
+  data () {
     return {
       isRawMode: false,
       internalResource: this.resource,
@@ -98,8 +98,6 @@ export default defineComponent({
     },
 
     async syncResource (): Promise<void> {
-      if (!this.internalResource) return
-
       if (this.isRawMode) {
         const rdfEditor = this.$refs.rdfEditor as any
         await rdfEditor.waitParsing()

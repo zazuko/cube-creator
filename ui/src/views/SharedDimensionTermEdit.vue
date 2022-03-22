@@ -7,7 +7,7 @@
       </a>
     </o-field>
     <hydra-operation-form-with-raw
-      v-if="operation"
+      v-if="resource && operation"
       :operation="operation"
       :resource="resource"
       :shape="shape"
@@ -68,7 +68,7 @@ export default defineComponent({
     }),
 
     title (): string {
-      return this.operation?.title ?? ''
+      return this.operation?.title ?? '...'
     },
 
     termUri (): string | null {

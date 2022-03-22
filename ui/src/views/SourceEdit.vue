@@ -1,5 +1,5 @@
 <template>
-  <side-pane :title="operation.title" @close="onCancel">
+  <side-pane :title="title" @close="onCancel">
     <hydra-operation-form
       v-if="operation"
       :operation="operation"
@@ -70,6 +70,10 @@ export default defineComponent({
       if (!this.source) return null
 
       return this.source.actions.edit
+    },
+
+    title (): string {
+      return this.operation?.title ?? '...'
     },
   },
 

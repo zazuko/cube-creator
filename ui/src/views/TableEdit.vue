@@ -74,7 +74,7 @@ export default defineComponent({
     },
 
     title (): string {
-      return this.operation?.title ?? 'Error: Missing operation'
+      return this.operation?.title ?? '...'
     },
   },
 

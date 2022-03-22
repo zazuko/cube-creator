@@ -63,7 +63,7 @@ export default defineComponent({
     },
 
     title (): string {
-      return this.operation?.title ?? ''
+      return this.operation?.title ?? '...'
     },
   },
 

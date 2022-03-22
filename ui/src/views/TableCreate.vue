@@ -1,5 +1,5 @@
 <template>
-  <side-pane :title="operation.title" @close="onCancel">
+  <side-pane :title="title" @close="onCancel">
     <hydra-operation-form
       v-if="operation"
       :operation="operation"
@@ -74,6 +74,10 @@ export default defineComponent({
 
     operation (): RuntimeOperation | null {
       return this.$store.state.project.tableCollection?.actions.create ?? null
+    },
+
+    title (): string {
+      return this.operation?.title ?? '...'
     },
 
     preselectedSource (): CsvSource | null {
