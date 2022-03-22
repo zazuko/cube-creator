@@ -1,5 +1,5 @@
 <template>
-  <side-pane :title="operation.title" @close="onCancel">
+  <side-pane :title="title" @close="onCancel">
     <literal-column-mapping-form
       v-if="isLiteral"
       :operation="operation"
@@ -82,6 +82,10 @@ export default defineComponent({
 
     operation (): RuntimeOperation | null {
       return this.columnMapping?.actions.edit ?? null
+    },
+
+    title (): string {
+      return this.operation?.title ?? '...'
     },
   },
 

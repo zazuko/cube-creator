@@ -38,7 +38,7 @@ export default defineComponent({
       required: true,
     },
     resource: {
-      type: Object as PropType<GraphPointer>,
+      type: Object as PropType<GraphPointer | null>,
       default: null,
     },
     shape: {

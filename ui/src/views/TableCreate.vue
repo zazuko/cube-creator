@@ -1,5 +1,5 @@
 <template>
-  <side-pane :title="operation.title" @close="onCancel">
+  <side-pane :title="title" @close="onCancel">
     <hydra-operation-form
       v-if="operation"
       :operation="operation"
@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref } from 'vue'
+import { defineComponent, ref, Ref, shallowRef, ShallowRef } from 'vue'
 import clownface, { GraphPointer } from 'clownface'
 import { RuntimeOperation } from 'alcaeus'
 import { dataset } from '@rdf-esm/dataset'
@@ -47,9 +47,9 @@ export default defineComponent({
 
   setup () {
     const resource: Ref<GraphPointer | null> = ref(clownface({ dataset: dataset() }).namedNode(''))
-    const error: Ref<ErrorDetails | null> = ref(null)
+    const error: ShallowRef<ErrorDetails | null> = shallowRef(null)
     const isSubmitting = ref(false)
-    const shape: Ref<Shape | null> = ref(null)
+    const shape: ShallowRef<Shape | null> = shallowRef(null)
 
     return {
       resource,
@@ -74,6 +74,10 @@ export default defineComponent({
 
     operation (): RuntimeOperation | null {
       return this.$store.state.project.tableCollection?.actions.create ?? null
+    },
+
+    title (): string {
+      return this.operation?.title ?? '...'
     },
 
     preselectedSource (): CsvSource | null {

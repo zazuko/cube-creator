@@ -1,5 +1,5 @@
 <template>
-  <side-pane :title="operation.title" @close="onCancel">
+  <side-pane :title="title" @close="onCancel">
     <o-field label="Column mapping type">
       <radio-button v-model="columnMappingType" native-value="literal">
         Literal value
@@ -85,6 +85,10 @@ export default defineComponent({
       return this.columnMappingType === 'literal'
         ? this.table?.actions.createLiteralColumnMapping ?? null
         : this.table?.actions.createReferenceColumnMapping ?? null
+    },
+
+    title (): string {
+      return this.operation?.title ?? '...'
     },
   },
 

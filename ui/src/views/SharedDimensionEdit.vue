@@ -1,7 +1,7 @@
 <template>
   <side-pane :title="title" @close="onCancel">
     <hydra-operation-form-with-raw
-      v-if="operation"
+      v-if="resource && operation"
       :operation="operation"
       :resource="resource"
       :shape="shape"
@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref } from 'vue'
+import { defineComponent, ref, Ref, shallowRef, ShallowRef } from 'vue'
 import { RuntimeOperation } from 'alcaeus'
 import { GraphPointer } from 'clownface'
 import type { Shape } from '@rdfine/shacl'
@@ -33,9 +33,9 @@ export default defineComponent({
   setup () {
     const resource: Ref<GraphPointer | null> = ref(null)
     const operation: Ref<RuntimeOperation | null> = ref(null)
-    const error: Ref<ErrorDetails | null> = ref(null)
+    const error: ShallowRef<ErrorDetails | null> = shallowRef(null)
     const isSubmitting = ref(false)
-    const shape: Ref<Shape | null> = ref(null)
+    const shape: ShallowRef<Shape | null> = shallowRef(null)
     const shapes: Ref<GraphPointer | null> = ref(null)
 
     return {
@@ -58,7 +58,7 @@ export default defineComponent({
     }),
 
     title (): string {
-      return this.operation?.title ?? ''
+      return this.operation?.title ?? '...'
     },
   },
 
