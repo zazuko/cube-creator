@@ -1,15 +1,29 @@
 <template>
   <div>
-    <o-field>
-      <radio-button
-        v-for="filter in filters"
-        :key="filter"
-        :native-value="filter"
-        v-model="selectedFilter"
-      >
-        {{ filter }}
-      </radio-button>
-    </o-field>
+    <o-collapse class="panel mb-4" :open="false">
+      <template #trigger="{ open }">
+        <header class="panel-heading filters-heading">
+          <o-button type="button" :icon-right="open ? 'chevron-down': 'chevron-right'">
+            Filters
+          </o-button>
+        </header>
+      </template>
+      <div class="panel-block">
+        <o-field>
+          <radio-button
+            v-for="filter in filters"
+            :key="filter"
+            :native-value="filter"
+            v-model="selectedFilter"
+          >
+            {{ filter }}
+          </radio-button>
+        </o-field>
+      </div>
+      <div class="panel-block">
+        <o-input placeholder="Type to filter values" v-model="textFilter" icon="filter" />
+      </div>
+    </o-collapse>
     <table class="terms-table">
       <tbody>
         <tr v-for="o in displayedObjects" :key="o.key" class="term-row">
@@ -67,6 +81,7 @@ export default defineComponent({
     return {
       filters: ['All', 'Mapped', 'Unmapped'],
       selectedFilter: 'All',
+      textFilter: '',
     }
   },
 
@@ -80,7 +95,12 @@ export default defineComponent({
     },
 
     displayedObjects (): PropertyObjectState[] {
-      const objects = [...this.objects].sort((obj1, obj2) => {
+      const filterText = (obj: PropertyObjectState) => {
+        const key = obj.object?.out(prov.pairKey).value ?? ''
+        return key.toLowerCase().startsWith(this.textFilter.toLocaleLowerCase())
+      }
+
+      const objects = [...this.objects].filter(filterText).sort((obj1, obj2) => {
         const key1 = obj1.object?.out(prov.pairKey).value ?? ''
         const key2 = obj2.object?.out(prov.pairKey).value ?? ''
         return key1.localeCompare(key2)
@@ -107,6 +127,21 @@ export default defineComponent({
 <style scoped>
 .terms-table {
   min-width: 100%;
+}
+
+.filters-heading {
+  position: relative;
+  padding: 0;
+}
+
+.filters-heading > button {
+  width: 100%;
+  margin: 0;
+
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  justify-content: flex-start;
 }
 </style>
 
