@@ -154,13 +154,13 @@ ${shapeId} {
       ${sh.equals} ${schema.description} ;
     ] ;
     ${sh.property} [
-      ${sh.name} "License" ;
+      ${sh.name} "Opendata.swiss License (otab)" ;
       ${sh.path} ${dcterms.rights} ;
       ${sh.minCount} 0 ;
       ${sh.nodeKind} ${sh.IRI} ;
       ${sh.class} ${dcterms.LicenseDocument} ;
       ${hydra.collection} ${lindasQuery(licenseQuery)} ;
-      ${sh.order} 25 ;
+      ${sh.order} 45 ;
       ${sh.description} "This is the published terms of use / license for this dataset.";
     ] ;
     ${sh.property} [
@@ -193,7 +193,7 @@ ${shapeId} {
         ${sh.description} "Choose the applications where the dataset shall be listed." ;
       ] ;
     ${sh.property} [
-      ${sh.name} "Data refresh interval" ;
+      ${sh.name} "Opendata.swiss Data refresh interval (otab)" ;
       ${sh.path} ${dcterms.accrualPeriodicity} ;
       ${sh.minCount} 0 ;
       ${sh.minLength} 1 ;
@@ -204,7 +204,7 @@ ${shapeId} {
       ${sh.description} "The intervall in which the dataset is updated with new values.";
     ] ;
     ${sh.property} [
-      ${sh.name} "Data period" ;
+      ${sh.name} "Opendata.swiss Data period (otab)" ;
       ${sh.path} ${dcterms.temporal} ;
       ${sh.minCount} 0 ;
       ${dash.editor} ${dash.DetailsEditor} ;
@@ -214,7 +214,7 @@ ${shapeId} {
       ${sh.description} "The period of time this dataset is covering.";
     ] ;
     ${sh.property} [
-      ${sh.name} "About" ;
+      ${sh.name} "About (atab)" ;
       ${sh.path} ${schema.about} ;
       ${sh.minCount} 0 ;
       ${sh.class} ${schema.DefinedTerm} ;
@@ -224,15 +224,16 @@ ${shapeId} {
       ${sh.description} "Category what about the dataset is.";
     ] ;
     ${sh.property} [
-      ${sh.name} "Opendata.swiss Publisher" ;
+      ${sh.name} "Opendata.swiss Publisher (otab)" ;
       ${sh.path} ${dcterms.publisher} ;
       ${sh.nodeKind} ${sh.Literal} ;
       ${sh.minCount} 0 ;
       ${sh.maxCount} 1 ;
       ${sh.order} 75 ;
+      ${sh.description} "The publisher in the Opendata.swiss Organisation. E.g. the office, or also external organisations.";
     ] ;
     ${sh.property} [
-      ${sh.name} "Opendata.swiss Organisation" ;
+      ${sh.name} "Opendata.swiss Organisation (otab)" ;
       ${sh.path} ${dcterms.creator} ;
       ${sh.minCount} 0 ;
       ${sh.class} ${schema.Organization} ;
@@ -242,7 +243,7 @@ ${shapeId} {
       ${sh.description} "This is the publishing organization used in opendata.swiss.";
     ] ;
     ${sh.property} [
-      ${sh.name} "Opendata.swiss Contact Point" ;
+      ${sh.name} "Contact Point" ;
       ${sh.path} ${dcat.contactPoint} ;
       ${sh.minCount} 1 ;
       ${dash.editor} ${dash.DetailsEditor} ;
@@ -251,18 +252,18 @@ ${shapeId} {
       ${sh.order} 90 ;
     ] ;
     ${sh.property} [
-      ${sh.name} "Opendata.swiss Category" ;
+      ${sh.name} "Category" ;
       ${sh.path} ${dcat.theme} ;
       ${sh.minCount} 1 ;
       ${sh.minLength} 1 ;
       ${sh.order} 100 ;
-      ${sh.description} "This is the category used in opendata.swiss.";
+      ${sh.description} "This is the category based on opendata.swiss.";
       ${sh.nodeKind} ${sh.IRI} ;
       ${sh.class} ${schema.DefinedTerm} ;
       ${hydra.collection} ${lindasQuery(themesQuery)} ;
     ] ;
     ${sh.property} [
-      ${sh.name} "EU Data Theme Category" ;
+      ${sh.name} "EU Data Theme Category (adata)" ;
       ${sh.path} <https://schema.ld.admin.ch/euDataTheme> ;
       ${sh.minLength} 1 ;
       ${sh.order} 105 ;
@@ -272,7 +273,7 @@ ${shapeId} {
       ${hydra.collection} ${lindasQuery(euThemesQuery)} ;
     ] ;
     ${sh.property} [
-      ${sh.name} "Opendata.swiss Keywords" ;
+      ${sh.name} "Opendata.swiss Keywords (otab)" ;
       ${sh.path} ${dcat.keyword} ;
       ${sh.datatype} ${rdf.langString} ;
       ${sh.languageIn} ( ${supportedLanguages} ) ;
@@ -282,7 +283,7 @@ ${shapeId} {
       ${dash.editor} ${editor.TagsWithLanguageEditor} ;
     ] ;
     ${sh.property} [
-      ${sh.name} "Opendata.swiss Landing page" ;
+      ${sh.name} "Opendata.swiss Landing page (otab)" ;
       ${sh.path} ${dcat.landingPage} ;
       ${sh.maxCount} 1 ;
       ${sh.minLength} 1 ;
@@ -290,7 +291,7 @@ ${shapeId} {
       ${sh.description} "A public website describing the dataset.";
     ] ;
     ${sh.property} [
-      ${sh.name} "Opendata.swiss Legal basis" ;
+      ${sh.name} "Opendata.swiss Legal basis (otab)" ;
       ${sh.path} ${dcterms.license} ;
       ${sh.minCount} 0 ;
       ${sh.nodeKind} ${sh.IRI} ;
@@ -298,7 +299,7 @@ ${shapeId} {
       ${sh.description} "A website describing the legal basis to publish this data";
     ] ;
    ${sh.property} [
-      ${sh.name} "Creation Date" ;
+      ${sh.name} "Opendatat.swiss Creation Date (otab)" ;
       ${sh.description} "Date when dataset has been assembled. It defaults to when project is created" ;
       ${sh.path} ${dcterms.issued} ;
       ${sh.maxCount} 1 ;
@@ -306,7 +307,7 @@ ${shapeId} {
       ${sh.order} 150 ;
     ] ;
     ${sh.property} [
-      ${sh.name} "Date published" ;
+      ${sh.name} "Opendatat.swiss Date published (otab)" ;
       ${sh.path} ${schema.datePublished} ;
       ${sh.description} "Date when dataset is first published to the portal. It is set automatically but can be changed later" ;
       ${sh.maxCount} 1 ;
@@ -314,7 +315,7 @@ ${shapeId} {
       ${sh.order} 160 ;
     ] ;
     ${sh.property} [
-      ${sh.name} "Creation Date" ;
+      ${sh.name} "Creation Date (atab)" ;
       ${sh.path} ${schema.dateCreated} ;
       ${sh.maxCount} 1 ;
       ${sh.datatype} ${xsd.date} ;

@@ -64,6 +64,7 @@ ${literalShapeId} {
       ${sh.path} ${cc.datatype} ;
       ${sh.maxCount} 1 ;
       ${sh.nodeKind} ${sh.IRI} ;
+      ${sh.defaultValue} ${xsd.string} ;
       ${sh.in} (
         ${datatypes.map(([id]) => id)}
       ) ;
@@ -83,7 +84,6 @@ ${literalShapeId} {
       ${sh.maxCount} 1 ;
       ${sh.order} 60 ;
     ] ;
-    ${keyOrMeasureDimension}
   .
 
   ${datatypes.map(([id, labels]) => labels.map(label => turtle`${id} ${rdfs.label} "${label}" .`))}
