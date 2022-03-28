@@ -22,7 +22,9 @@ export const textField: Lazy<SingleEditorComponent> = {
   async lazyRender () {
     await import('./TextFieldEditor.vue').then(createCustomElement('textfield-editor'))
 
-    return ({ value }, { update }) => html`<textfield-editor .value="${value.object?.value || ''}" .update="${update}"></textfield-editor>`
+    return ({ property, value }, { update }) => html`<textfield-editor .value="${value.object?.value || ''}"
+                                                                       .update="${update}"
+                                                                       ?readonly="${property.shape.readOnly}"></textfield-editor>`
   }
 }
 

@@ -5,6 +5,7 @@ import { PropertyTemplate, ObjectTemplate, FocusNodeTemplate, GroupTemplate } fr
 import { instancesSelector } from '@hydrofoil/shaperone-hydra/components'
 import { ShaperoneForm } from '@hydrofoil/shaperone-wc/ShaperoneForm'
 import * as Editors from './editors'
+import * as Viewers from './viewers'
 import * as Matchers from './matchers'
 import { Metadata } from './metadata'
 import { createCustomElement } from './custom-element'
@@ -12,6 +13,7 @@ import { dash } from '@tpluscode/rdf-ns-builders'
 import * as decorators from '@/forms/decorators'
 import * as dictionaryEditor from './templates/dictionaryEditor'
 import * as dynamicXone from './templates/dynamicXone'
+import emptyPropertyHider from './templates/emptyPropertyHider'
 
 export const focusNode: FocusNodeTemplate = (renderer, { focusNode }) => {
   const tabs = () => html`
@@ -73,11 +75,12 @@ object.loadDependencies = () => [
 
 renderer.setTemplates({
   focusNode: dynamicXone.focusNode(dictionaryEditor.focusNode(focusNode)),
-  property: dictionaryEditor.property(property),
+  property: emptyPropertyHider(dictionaryEditor.property(property)),
   object,
   group,
 })
 components.pushComponents(Editors)
+components.pushComponents(Viewers)
 components.decorate({
   ...instancesSelector.decorator(),
   applicableTo ({ editor }) {
