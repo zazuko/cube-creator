@@ -113,7 +113,7 @@ ${shape('dimension/metadata')} {
       ${sh.group} ${shape('dimension/metadata#coreGroup')} ;
     ] , [
       ${sh.name} "Dimension type" ;
-      ${sh.description} "The type is preselected to match the same selection made in the CSV Mapping tab (when applicable)" ;
+      ${sh.description} "See the [documentation](https://github.com/zazuko/cube-creator/wiki/3.-Cube-Designer#dimension-type) for details." ;
       ${sh.path} ${rdf.type} ;
       ${sh.in} (
         ${cube.MeasureDimension}
@@ -124,6 +124,7 @@ ${shape('dimension/metadata')} {
       ${sh.group} ${shape('dimension/metadata#coreGroup')} ;
     ], [
       ${sh.name} "Scale of measure" ;
+      ${sh.description} "See the [documentation](https://github.com/zazuko/cube-creator/wiki/3.-Cube-Designer#scale-of-measure) for details." ;
       ${sh.path} ${qudt.scaleType} ;
       ${sh.in} (
         ${qudt.NominalScale}
@@ -136,6 +137,7 @@ ${shape('dimension/metadata')} {
       ${sh.group} ${shape('dimension/metadata#coreGroup')} ;
     ] , [
       ${sh.name} "Unit" ;
+      ${sh.description} "Please also choose Number or Percent were applicable for Unit less dimensions. See the [documentation](https://github.com/zazuko/cube-creator/wiki/3.-Cube-Designer#dimension-type) for details." ;
       ${sh.path} ${qudt.unit} ;
       ${sh.order} 25 ;
       ${sh.maxCount} 1 ;
@@ -146,6 +148,7 @@ ${shape('dimension/metadata')} {
       ${sh.group} ${shape('dimension/metadata#coreGroup')} ;
     ] , [
       ${sh.name} "Data kind" ;
+      ${sh.description} "See the [documentation](https://github.com/zazuko/cube-creator/wiki/3.-Cube-Designer#data-kind) for details." ;
       ${sh.path} ${meta.dataKind} ;
       ${sh.maxCount} 1 ;
       ${sh.nodeKind} ${sh.BlankNode} ;
@@ -191,7 +194,7 @@ ${shape('dimension/metadata')} {
       ${sh.name} "Relation to another dimension" ;
       ${sh.path} ${meta.dimensionRelation} ;
       ${sh.nodeKind} ${sh.BlankNode} ;
-      ${sh.order} 50 ;
+      ${sh.order} 60 ;
       ${sh.group} ${shape('dimension/metadata#coreGroup')} ;
       ${sh.node} [
         ${sh.property} [
@@ -222,12 +225,12 @@ ${shape('dimension/metadata')} {
     ] ,
     [
       ${sh.name} "Order" ;
-      ${sh.description} "Numerical value defining the display order of this dimension compared to other dimensions." ;
+      ${sh.description} "An optional order which can be used to enforce an order of the dimensions for visualizations (e.g. in a table). Needs to be a numerical order." ;
       ${sh.path} ${sh.order} ;
       ${sh.datatype} ${xsd.integer} ;
       ${sh.minCount} 0 ;
       ${sh.maxCount} 1 ;
-      ${sh.order} 60 ;
+      ${sh.order} 50 ;
       ${sh.group} ${shape('dimension/metadata#coreGroup')} ;
     ] , [
       ${sh.path} ${schema.about} ;

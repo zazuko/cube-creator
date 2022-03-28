@@ -19,7 +19,7 @@ const commonProperties = turtle`
     ${sh.minCount} 1 ;
     ${sh.maxCount} 1 ;
     ${sh.defaultValue} ${false} ;
-    ${sh.order} 25 ;
+    ${sh.order} 10 ;
   ] ;
   ${sh.property} [
     ${sh.name} "Identifier template" ;
