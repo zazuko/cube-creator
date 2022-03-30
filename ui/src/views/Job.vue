@@ -44,10 +44,12 @@
       <b-message v-for="comment in job.comments" :key="comment" type="is-warning" class="mb-2">
         <markdown-render :source="comment" />
       </b-message>
-      <a :disabled="!link" :href="link" target="_blank" rel="noopener noreferer" class="button is-small mb-1">
-        <o-icon icon="book" />
-        <span>View full log</span>
-      </a>
+      <o-tooltip label="Only accessible for technical users" position="right">
+        <a :disabled="!link" :href="link" target="_blank" rel="noopener noreferer" class="button is-small mb-1">
+          <o-icon icon="book" />
+          <span>View full log</span>
+        </a>
+      </o-tooltip>
       <pre v-if="job.error && job.error.description" class="has-background-danger-light">
         {{ job.error.description }}
       </pre>
