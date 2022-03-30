@@ -59,6 +59,14 @@ export default defineComponent({
     window.removeEventListener('vuexoidc:userLoaded', this.onUserLoaded)
   },
 
+  errorCaptured (err: unknown): false | void {
+    if (err instanceof APIErrorAuthorization) {
+      const link = err.details?.link?.href ?? ''
+      this.$router.push({ name: 'NotAuthorized', params: { link } })
+      return false
+    }
+  },
+
   computed: {
     ...mapState('app', {
       isLoading: 'loading',
@@ -79,14 +87,6 @@ export default defineComponent({
 
     dismissMessage (message: Message): void {
       this.$store.dispatch('app/dismissMessage', message)
-    },
-
-    errorCaptured (err: Error): false | void {
-      if (err instanceof APIErrorAuthorization) {
-        const link = err.details?.link?.href ?? ''
-        this.$router.push({ name: 'NotAuthorized', params: { link } })
-        return false
-      }
     },
   },
 })
