@@ -9,7 +9,7 @@ Cube Creator is a tool to create RDF data Cubes (based on
 The tool is built with [Typescript](https://www.typescriptlang.org/) and is
 currently composed of two main parts: a Hydra API (built with
 [hydra-box](https://github.com/zazuko/hydra-box)) and a [Vue.js](https://vuejs.org/)
-user interface.
+user interface. See the [Architecture](docs/architecture.md) document for a high-level overview.
 
 ## Running locally
 
