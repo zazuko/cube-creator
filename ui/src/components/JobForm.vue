@@ -17,18 +17,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref, Ref } from 'vue'
-import { RuntimeOperation } from 'alcaeus'
-import clownface, { GraphPointer } from 'clownface'
-import { dataset } from '@rdf-esm/dataset'
-import type { Shape } from '@rdfine/shacl'
-import HydraOperationForm from '@/components/HydraOperationForm.vue'
-import { api } from '@/api'
-import { APIErrorValidation, ErrorDetails } from '@/api/errors'
+import type { ColorsModifiers } from '@oruga-ui/oruga/types/helpers'
 import { rdf, sh } from '@tpluscode/rdf-ns-builders'
-import { NamedNode } from 'rdf-js'
-import { displayToast } from '@/use-toast'
+import { RuntimeOperation } from 'alcaeus'
+import { defineComponent, PropType, toRefs } from 'vue'
+import { useStore } from 'vuex'
+
+import HydraOperationForm from '@/components/HydraOperationForm.vue'
+import { RootState } from '@/store/types'
 import { confirmDialog } from '@/use-dialog'
+import { useHydraForm } from '@/use-hydra-form'
+import { displayToast } from '@/use-toast'
 
 export default defineComponent({
   name: 'JobForm',
@@ -39,7 +38,7 @@ export default defineComponent({
       required: true,
     },
     submitButtonVariant: {
-      type: String,
+      type: String as PropType<ColorsModifiers>,
       default: undefined,
     },
     confirm: {
@@ -52,76 +51,16 @@ export default defineComponent({
     },
   },
 
-  setup () {
-    const resource: Ref<GraphPointer | null> = ref(null)
-    const shape: Ref<Shape | null> = ref(null)
-    const error: Ref<ErrorDetails | null> = ref(null)
-    const isSubmitting = ref(false)
+  setup (props) {
+    const { operation, confirm, confirmationMessage } = toRefs(props)
 
-    return {
-      resource,
-      shape,
-      error,
-      isSubmitting,
-    }
-  },
+    const store = useStore<RootState>()
 
-  created () {
-    this.resource = Object.freeze(clownface({ dataset: dataset() }).namedNode('').addOut(rdf.type, this.resourceType))
-  },
-
-  async mounted (): Promise<void> {
-    this.shape = await api.fetchOperationShape(this.operation)
-  },
-
-  computed: {
-    resourceType (): NamedNode {
-      const type = this.operation.expects.find((expect) => !expect.types.has(sh.Shape))
-
-      if (!type) throw new Error('Operation expected type not found')
-
-      return type.id as NamedNode
-    },
-  },
-
-  methods: {
-    async onSubmit (resource: GraphPointer): Promise<void> {
-      if (this.confirm) {
-        const confirmation = await this.askConfirmation()
-        if (!confirmation) return
-      }
-
-      this.error = null
-      this.isSubmitting = true
-
-      try {
-        const job = await this.$store.dispatch('api/invokeSaveOperation', {
-          operation: this.operation,
-          resource,
-        })
-
-        displayToast({
-          message: `${job.name} was started`,
-          variant: 'success',
-        })
-
-        this.$store.dispatch('project/fetchJobCollection')
-      } catch (e: any) {
-        this.error = e.details ?? { detail: e.toString() }
-
-        if (!(e instanceof APIErrorValidation)) {
-          console.error(e)
-        }
-      } finally {
-        this.isSubmitting = false
-      }
-    },
-
-    async askConfirmation (): Promise<boolean> {
+    const askConfirmation = async () => {
       return new Promise((resolve) => {
         confirmDialog({
-          title: this.operation.title,
-          message: this.confirmationMessage,
+          title: operation.value.title,
+          message: confirmationMessage.value,
           confirmText: 'Confirm',
           onConfirm () {
             resolve(true)
@@ -130,8 +69,32 @@ export default defineComponent({
             resolve(false)
           },
         })
-      })
-    },
+      }) as Promise<boolean>
+    }
+
+    const form = useHydraForm(operation, {
+      async beforeSubmit () {
+        if (!confirm.value) return true
+
+        return await askConfirmation()
+      },
+
+      afterSubmit (job: any) {
+        displayToast({
+          message: `${job.name} was started`,
+          variant: 'success',
+        })
+
+        store.dispatch('project/fetchJobCollection')
+      },
+    })
+
+    const resourceType = operation.value.expects.find((expect) => !expect.types.has(sh.Shape))
+    if (resourceType) {
+      form.resource.value?.addOut(rdf.type, resourceType.id)
+    }
+
+    return form
   },
 })
 </script>
