@@ -18,7 +18,9 @@ export default defineComponent({
     },
     update: {
       type: Function as PropType<(newValue: string) => void>,
-      required: true,
+      default: () => {
+        // do nothing
+      },
     },
   },
 })
