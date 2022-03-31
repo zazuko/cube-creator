@@ -2,14 +2,13 @@ import { DetailsEditor } from '@hydrofoil/shaperone-core/components'
 import { Term } from 'rdf-js'
 import clownface, { GraphPointer } from 'clownface'
 import { ComponentDecorator } from '@hydrofoil/shaperone-core/models/components/index'
-import { dash, sh } from '@tpluscode/rdf-ns-builders'
+import { dash } from '@tpluscode/rdf-ns-builders'
 import { api } from '@/api/index'
 import $rdf from 'rdf-ext'
 import { rdf, schema } from '@tpluscode/rdf-ns-builders/strict'
 import { meta } from '@cube-creator/core/namespace'
 
 interface DetailsEditorEx extends DetailsEditor {
-  shouldLoad(a: any): boolean
   loadHierarchy(arg: Term): Promise<GraphPointer>
 }
 
@@ -47,52 +46,33 @@ export const dimensionMetaHierarchySynchronizer: ComponentDecorator<DetailsEdito
 
         return copy
       },
-      shouldLoad ({ property, value }) {
-        if (property.shape.pointer.has(sh.path, meta.hasHierarchy).terms.length) {
-          const previouslySelected: Term | undefined = value.componentState.hierarchyId
-          const hierarchy = value.object?.out(schema.isBasedOn).term
-
-          return hierarchy && !hierarchy.equals(previouslySelected)
-        }
-
-        return false
-      },
-      init (params) {
+      init (params, { update }) {
         const { value, updateComponentState } = params
 
-        if (this.shouldLoad(params) && !value.componentState.loading) {
+        const hierarchyId = value.object?.out(schema.isBasedOn).term
+        if (!value.componentState.ready) {
           updateComponentState({
-            loading: true,
-          });
-          (async () => {
-            const hierarchyId = value.object?.out(schema.isBasedOn).term
-            if (hierarchyId) {
-              updateComponentState({
-                hierarchyId,
-                hierarchy: await this.loadHierarchy(hierarchyId),
-                ready: true,
-                loading: false,
-              })
-            }
-          })()
+            hierarchyId,
+            ready: true,
+          })
+          return true
+        }
 
+        const hierarchyIdChanged = hierarchyId && !hierarchyId.equals(value.componentState.hierarchyId)
+        if (hierarchyIdChanged && !value.componentState.loading) {
+          const loading = this.loadHierarchy(hierarchyId)
+            .then(hierarchy => {
+              update(hierarchy)
+              updateComponentState({
+                loading: undefined,
+              })
+            })
+
+          updateComponentState({ hierarchyId, loading })
           return false
         }
-        return !value.componentState.loading
-      },
-      _decorateRender (render) {
-        return function ({ property, value, updateComponentState, ...context }, { update, ...rest }) {
-          const currentBase = value.object?.out(schema.isBasedOn).term
-          const { previousBase } = value.componentState
-          if (currentBase && !currentBase?.equals(previousBase)) {
-            updateComponentState({
-              previousBase: currentBase
-            })
-            update(value.componentState.hierarchy)
-          }
 
-          return render({ property, value, updateComponentState, ...context }, { update, ...rest })
-        }
+        return !value.componentState.loading
       }
     }
   }
