@@ -83,12 +83,12 @@ export const enumSelect: Lazy<EnumSelectEditor> = {
 export const autoComplete: Lazy<InstancesSelectEditor> = {
   ...instancesSelectCore,
   editor: dash.AutoCompleteEditor,
-  init (params) {
+  init (params, actions) {
     const hasFreeTextQueryVariable = !!this.searchTemplate?.(params)?.mapping
       .some(({ property }) => property?.equals(hydra.freetextQuery))
 
     if (!hasFreeTextQueryVariable) {
-      return instancesSelectCore.init?.call(this, params) || true
+      return instancesSelectCore.init?.call(this, params, actions) || true
     }
 
     const { form, property, value, updateComponentState } = params
