@@ -1,5 +1,5 @@
 import { NamedNode } from 'rdf-js'
-import { CONSTRUCT } from '@tpluscode/sparql-builder'
+import { CONSTRUCT, SELECT } from '@tpluscode/sparql-builder'
 import { md, meta } from '@cube-creator/core/namespace'
 import clownface, { GraphPointer } from 'clownface'
 import { hydra, rdf, schema } from '@tpluscode/rdf-ns-builders'
@@ -9,15 +9,41 @@ import slugify from 'slugify'
 import { DomainError } from '@cube-creator/api-errors'
 import { SharedDimensionsStore } from '../store'
 import env from '../env'
+import { textSearch } from '../query'
 import { newId, replace } from './resource'
 
-export function getHierarchies() {
+interface GetHierarchies {
+  freetextQuery: string | undefined
+  limit: number
+  offset: number
+}
+
+export function getHierarchies({ freetextQuery, limit, offset }: GetHierarchies) {
+  const hierarchy = $rdf.variable('hierarchy')
+  const name = $rdf.variable('name')
+
+  let select = SELECT.DISTINCT`${hierarchy}`
+    .WHERE`
+      ${hierarchy} a ${md.Hierarchy} ; ${schema.name} ${name} .
+    `
+
+  if (freetextQuery) {
+    select = select
+      .WHERE`${textSearch(hierarchy, schema.name, freetextQuery)}`
+      .LIMIT(limit)
+      .OFFSET(offset)
+      .ORDER().BY(name)
+  }
+
   return CONSTRUCT`
-    ?h ?p ?o .
+    ${hierarchy} ?p ?o .
   `
     .WHERE`
-      ?h a ${md.Hierarchy} .
-      ?h ?p ?o .
+      {
+        ${select}
+      }
+
+      ${hierarchy} ?p ?o .
     `
 }
 

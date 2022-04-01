@@ -12,7 +12,7 @@ interface InstancesSelectEditorEx extends InstancesSelectEditor {
 export function loader (createQuery: (arg: GraphPointer) => string, editor: Lazy<InstancesSelectEditor>): Lazy<InstancesSelectEditorEx> {
   return {
     ...editor,
-    init (context) {
+    init (context, actions) {
       if (!context.value.componentState.client) {
         const source = context.property.shape.get(dcterms.source)
 
@@ -31,7 +31,7 @@ export function loader (createQuery: (arg: GraphPointer) => string, editor: Lazy
 
       this._init?.(context)
 
-      return editor.init?.call(this, context) || true
+      return editor.init?.call(this, context, actions) || true
     },
     shouldLoad ({ focusNode, value: { componentState } }) {
       // run query only when it's different from previous

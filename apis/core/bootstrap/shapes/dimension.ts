@@ -1,4 +1,4 @@
-import { cc, meta, shape, sh1, cube, md, relation } from '@cube-creator/core/namespace'
+import { cc, meta, shape, sh1, cube, md, relation, editor } from '@cube-creator/core/namespace'
 import { supportedLanguages } from '@cube-creator/core/languages'
 import { sparql, turtle } from '@tpluscode/rdf-string'
 import { dash, hydra, prov, rdf, rdfs, schema, sh, qudt, time, xsd } from '@tpluscode/rdf-ns-builders'
@@ -239,8 +239,131 @@ ${shape('dimension/metadata')} {
       ${sh.maxCount} 1 ;
       ${dash.hidden} true ;
       ${sh.group} ${shape('dimension/metadata#coreGroup')} ;
+    ] , [
+      ${sh.name} "Hierarchy" ;
+      ${sh.path} ${meta.hasHierarchy} ;
+      ${sh.group} ${shape('dimension/metadata#hierarchyGroup')} ;
+      ${sh.class} ${meta.Hierarchy} ;
+      ${sh.nodeKind} ${sh.BlankNode} ;
+      ${sh.maxCount} 1 ;
+      ${dash.editor} ${dash.DetailsEditor} ;
+      ${sh.node} [
+        ${sh.property} [
+          ${sh.name} "Copy from" ;
+          ${sh.path} ${schema.isBasedOn} ;
+          ${sh.minCount} 1 ;
+          ${sh.maxCount} 1 ;
+          ${sh.description} "Select a hierarchy to use as base" ;
+          ${dash.editor} ${dash.AutoCompleteEditor} ;
+          ${hydra.search} [
+            ${hydra.template} "/dimension/_hierarchies{?q}" ;
+            ${hydra.mapping} [
+              ${hydra.variable} "q" ;
+              ${hydra.property} ${hydra.freetextQuery} ;
+              ${sh.minLength} 0 ;
+            ] ;
+          ] ;
+          ${sh.nodeKind} ${sh.IRI} ;
+          ${sh.order} 0 ;
+        ] , [
+          ${sh.name} "Name" ;
+          ${dash.readOnly} true ;
+          ${sh.path} ${schema.name} ;
+          ${sh.minCount} 1 ;
+          ${sh.maxCount} 1 ;
+          ${dash.hidden} true ;
+          ${sh.order} 1 ;
+        ] , [
+          ${sh.name} "Root dimension" ;
+          ${dash.readOnly} true ;
+          ${sh.path} ${md.sharedDimension} ;
+          ${sh.minCount} 1 ;
+          ${sh.maxCount} 1 ;
+          ${sh.nodeKind} ${sh.IRI} ;
+          ${dash.editor} ${dash.LabelViewer} ;
+          ${sh.order} 2 ;
+          ${sh1.hideWithoutObjects} true ;
+        ] , [
+          ${sh.name} "Root" ;
+          ${sh.path} ${meta.hierarchyRoot} ;
+          ${dash.readOnly} true ;
+          ${sh.minCount} 1 ;
+          ${sh.maxCount} 1 ;
+          ${sh.nodeKind} ${sh.IRI} ;
+          ${dash.editor} ${dash.LabelViewer} ;
+          ${sh.order} 3 ;
+          ${sh1.hideWithoutObjects} true ;
+        ] , [
+          ${sh.name} "Next level" ;
+          ${sh.path} ${meta.nextInHierarchy} ;
+          ${sh.minCount} 1 ;
+          ${sh.maxCount} 1 ;
+          ${sh.nodeKind} ${sh.BlankNode} ;
+          ${dash.editor} ${dash.DetailsEditor} ;
+          ${sh.node} _:NextInHierarchyShape ;
+          ${sh.order} 4 ;
+          ${sh1.hideWithoutObjects} true ;
+          ${dash.readOnly} true ;
+        ] ;
+      ] ;
+      ${sh.order} 20 ;
     ] ,
     ${validateDataKindShape}
+  .
+
+  _:NextInHierarchyShape
+    a ${sh.NodeShape} ;
+    ${sh.property} [
+      ${sh.name} "Name" ;
+      ${sh.path} ${schema.name} ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+      ${sh.datatype} ${xsd.string} ;
+      ${dash.readOnly} true ;
+      ${sh1.hideWithoutObjects} true ;
+      ${sh.order} 1 ;
+    ] , [
+      ${sh.name} "Type" ;
+      ${sh.path} ${sh.targetClass} ;
+      ${sh.maxCount} 1 ;
+      ${sh.nodeKind} ${sh.IRI} ;
+      ${dash.readOnly} true ;
+      ${sh1.hideWithoutObjects} true ;
+      ${sh.order} 2 ;
+    ] , [
+      ${sh.name} "Property" ;
+      ${sh.path} ${sh.path} ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+      ${dash.readOnly} true ;
+      ${sh1.hideWithoutObjects} true ;
+      ${sh.order} 3 ;
+      ${dash.editor} ${editor.HierarchyPropertyViewer} ;
+      ${sh.node} [
+        ${sh.xone} (
+          [ ${sh.nodeKind} ${sh.IRI} ]
+          [
+            ${sh.nodeKind} ${sh.BlankNode} ;
+            ${sh.property} [
+              ${sh.path} ${sh.inversePath} ;
+              ${sh.nodeKind} ${sh.IRI} ;
+              ${sh.minCount} 1 ;
+              ${sh.maxCount} 1 ;
+            ] ;
+          ]
+        )
+      ];
+    ] , [
+      ${sh.name} "Next level" ;
+      ${sh.path} ${meta.nextInHierarchy} ;
+      ${dash.readOnly} true ;
+      ${sh1.hideWithoutObjects} true ;
+      ${sh.maxCount} 1 ;
+      ${sh.nodeKind} ${sh.BlankNode} ;
+      ${dash.editor} ${dash.DetailsEditor} ;
+      ${sh.node} _:NextInHierarchyShape ;
+      ${sh.order} 4 ;
+    ] ;
   .
 
   ${cube.MeasureDimension} ${rdfs.label} "Measure dimension"@en .

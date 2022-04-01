@@ -1444,10 +1444,10 @@
     rdf-loaders-registry "^0.2.0"
     sparql-http-client "^2.2.2"
 
-"@hydrofoil/shaperone-core@^0.8.2", "@hydrofoil/shaperone-core@^0.8.3", "@hydrofoil/shaperone-core@^0.8.5":
-  version "0.8.5"
-  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-core/-/shaperone-core-0.8.5.tgz#30a63423d21b5047c5c0033d70f82c4a96185a25"
-  integrity sha512-+kdyBavjsKj2UIEeTdrnqDecZB0Yl+ygDWA5lwg5cZKxgD1lnK5/cDKgc3fGwBi3oshdzLhepTcbLXKN1fKeqA==
+"@hydrofoil/shaperone-core@^0.8.2", "@hydrofoil/shaperone-core@^0.8.6":
+  version "0.8.6"
+  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-core/-/shaperone-core-0.8.6.tgz#a8237507d2ec2af6d90332eb09c86902fd9804b6"
+  integrity sha512-kLh4KMvpeWnJavDfvT2a8HIS9oty3/0xSDurFJLw0ukpP+71SRQ+UVTZYRbA8RajGfFMQwjIi1VxHeLoiMAPvQ==
   dependencies:
     "@captaincodeman/rdx" "^1.0.0-rc.8"
     "@rdf-esm/data-model" "^0.5.3"
@@ -1481,13 +1481,13 @@
     clownface "^1.2.0"
     clownface-shacl-path "^1.2.2"
 
-"@hydrofoil/shaperone-wc@^0.6.7":
-  version "0.6.7"
-  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-wc/-/shaperone-wc-0.6.7.tgz#19b1e837e43bfb753a266d70586633df37a40150"
-  integrity sha512-FAWU04UEJcxrSZYLL1LLMV+p5DwnTS6fiAQmKh1SjAn0p5d4tBl8zEy1uZdSkEv33YNCLqyWvoDsXxV1U65vAg==
+"@hydrofoil/shaperone-wc@^0.6.8":
+  version "0.6.8"
+  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-wc/-/shaperone-wc-0.6.8.tgz#1522e8add4a5b18d60defd0ac1b15059e471bf04"
+  integrity sha512-xABSZrtmkKxqZ2uKj4Vu5TElfth+2qB+X2olw5i+71daAwQTwLU22BGVinC1ZNqQ3f8aN4LF19VAkn+aF9OPvw==
   dependencies:
     "@captaincodeman/rdx" "^1.0.0-rc.8"
-    "@hydrofoil/shaperone-core" "^0.8.3"
+    "@hydrofoil/shaperone-core" "^0.8.6"
     "@rdf-esm/data-model" "^0.5.4"
     "@rdf-esm/dataset" "^0.5.1"
     "@rdf-esm/term-map" "^0.5.0"
