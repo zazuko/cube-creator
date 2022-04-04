@@ -37,7 +37,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { RuntimeOperation } from 'alcaeus'
+import { ResourceIdentifier, RuntimeOperation } from 'alcaeus'
 import { GraphPointer } from 'clownface'
 import { mapGetters } from 'vuex'
 import { CsvSource, Table } from '@cube-creator/model'
@@ -47,6 +47,7 @@ import ReferenceColumnMappingForm from '@/components/ReferenceColumnMappingForm.
 import LiteralColumnMappingForm from '@/components/LiteralColumnMappingForm.vue'
 import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 import { displayToast } from '@/use-toast'
+import { api } from '@/api'
 
 type ColumnMappingType = 'literal' | 'reference'
 
@@ -93,15 +94,12 @@ export default defineComponent({
   },
 
   methods: {
-    async onSubmit (resource: GraphPointer): Promise<void> {
+    async onSubmit (resource: GraphPointer<ResourceIdentifier>): Promise<void> {
       this.error = null
       this.isSubmitting = true
 
       try {
-        const columnMapping = await this.$store.dispatch('api/invokeSaveOperation', {
-          operation: this.operation,
-          resource,
-        })
+        const columnMapping = await api.invokeSaveOperation(this.operation, resource)
 
         this.$store.commit('project/storeNewColumnMapping', { table: this.table, columnMapping })
 

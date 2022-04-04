@@ -6,24 +6,22 @@
     :error="error"
     :is-submitting="isSubmitting"
     :submit-label="submitLabel"
-    @submit="onSubmit"
+    @submit="$emit('submit', $event)"
     @cancel="$emit('cancel')"
   />
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref, Ref } from 'vue'
-import { RuntimeOperation } from 'alcaeus'
-import clownface, { GraphPointer } from 'clownface'
 import { rdf, schema } from '@tpluscode/rdf-ns-builders'
-import $rdf from '@rdf-esm/dataset'
-import { mapGetters } from 'vuex'
-import { ReferenceColumnMapping, CsvSource, Table } from '@cube-creator/model'
+import { RuntimeOperation } from 'alcaeus'
+import { defineComponent, PropType, toRefs, watch } from 'vue'
+
 import { cc } from '@cube-creator/core/namespace'
-import HydraOperationForm from '@/components/HydraOperationForm.vue'
-import { api } from '@/api'
+import { ReferenceColumnMapping, CsvSource, Table } from '@cube-creator/model'
+
 import { ErrorDetails } from '@/api/errors'
-import { Shape } from '@rdfine/shacl'
+import HydraOperationForm from '@/components/HydraOperationForm.vue'
+import { useHydraForm } from '@/use-hydra-form'
 
 export default defineComponent({
   name: 'LiteralColumnMappingForm',
@@ -60,52 +58,29 @@ export default defineComponent({
   },
   emits: ['submit', 'cancel'],
 
-  setup () {
-    const resource: Ref<GraphPointer> = ref(clownface({ dataset: $rdf.dataset() }).namedNode('').addOut(rdf.type, cc.LiteralColumnMapping))
-    const shape: Ref<Shape | null> = ref(null)
+  setup (props) {
+    const { columnMapping, operation, source } = toRefs(props)
 
-    return {
-      resource,
-      shape,
-    }
-  },
+    const form = useHydraForm(operation)
 
-  async mounted (): Promise<void> {
-    if (!this.operation) return
+    form.resource.value?.addOut(rdf.type, cc.LiteralColumnMapping)
 
-    const shape = await api.fetchOperationShape(this.operation)
-
-    // Populate Column selector
-    if (shape && this.source) {
-      const source = this.source
-      if (source) {
-        source.columns.forEach((column) => {
+    watch(form.shape, (shape) => {
+      // Populate Column selector
+      if (shape && source.value) {
+        source.value.columns.forEach((column) => {
           shape.pointer.node(column.id)
             .addOut(schema.name, column.name)
             .addOut(rdf.type, column.pointer.out(rdf.type))
         })
       }
-    }
 
-    this.shape = shape
+      if (columnMapping.value) {
+        form.resource.value = columnMapping.value.pointer
+      }
+    })
 
-    if (this.columnMapping) {
-      this.resource = this.columnMapping.pointer
-    }
-  },
-
-  computed: {
-    ...mapGetters({
-      findTable: 'project/findTable',
-      findSource: 'project/findSource',
-      tables: 'project/tables',
-    }),
-  },
-
-  methods: {
-    onSubmit (resource: GraphPointer): void {
-      this.$emit('submit', resource)
-    },
+    return form
   },
 })
 </script>

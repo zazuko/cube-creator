@@ -15,108 +15,62 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref, shallowRef, ShallowRef } from 'vue'
-import { RuntimeOperation } from 'alcaeus'
-import { GraphPointer } from 'clownface'
-import type { Shape } from '@rdfine/shacl'
+import { computed, defineComponent, onMounted } from 'vue'
+import { useStore } from 'vuex'
+import { useRoute, useRouter } from 'vue-router'
+
+import { api } from '@/api'
 import SidePane from '@/components/SidePane.vue'
 import HydraOperationFormWithRaw from '@/components/HydraOperationFormWithRaw.vue'
-import { api } from '@/api'
-import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 import { displayToast } from '@/use-toast'
-import { mapState } from 'vuex'
+import { useHydraForm } from '@/use-hydra-form'
+import { RootState } from '@/store/types'
 
 export default defineComponent({
   name: 'SharedDimensionEditView',
   components: { SidePane, HydraOperationFormWithRaw },
 
   setup () {
-    const resource: Ref<GraphPointer | null> = ref(null)
-    const operation: Ref<RuntimeOperation | null> = ref(null)
-    const error: ShallowRef<ErrorDetails | null> = shallowRef(null)
-    const isSubmitting = ref(false)
-    const shape: ShallowRef<Shape | null> = shallowRef(null)
-    const shapes: Ref<GraphPointer | null> = ref(null)
+    const store = useStore<RootState>()
+    const router = useRouter()
+    const route = useRoute()
 
-    return {
-      resource,
-      operation,
-      error,
-      isSubmitting,
-      shape,
-      shapes,
-    }
-  },
+    const dimension = store.state.sharedDimension.dimension
+    if (!dimension) throw new Error('Dimension not loaded')
 
-  mounted (): void {
-    this.prepareForm()
-  },
+    const operation = computed(() => dimension.actions.replace)
 
-  computed: {
-    ...mapState('sharedDimension', {
-      dimension: 'dimension',
-    }),
-
-    title (): string {
-      return this.operation?.title ?? '...'
-    },
-  },
-
-  methods: {
-    async prepareForm (): Promise<void> {
-      this.resource = null
-      this.operation = null
-      this.shape = null
-
-      const dimensionId = this.$route.params.id as string
-      const dimension = await api.fetchResource(dimensionId)
-
-      this.resource = Object.freeze(dimension.pointer)
-      this.operation = dimension.actions.replace ?? null
-
-      if (this.operation) {
-        this.shape = await api.fetchOperationShape(this.operation)
-      }
-    },
-
-    async onSubmit (resource: GraphPointer): Promise<void> {
-      this.error = null
-      this.isSubmitting = true
-
-      try {
-        await this.$store.dispatch('api/invokeSaveOperation', {
-          operation: this.operation,
-          resource,
-        })
-
-        this.$store.dispatch('sharedDimensions/fetchCollection')
+    const form = useHydraForm(operation, {
+      afterSubmit (dimension: any) {
+        store.dispatch('sharedDimensions/fetchCollection').then(() =>
+          store.dispatch('sharedDimension/fetchDimension', dimension.clientPath)
+        )
 
         displayToast({
           message: 'Shared dimension successfully saved',
           variant: 'success',
         })
 
-        this.$router.push({ name: 'SharedDimension', params: { id: this.dimension.clientPath } })
-      } catch (e: any) {
-        this.error = e.details ?? { detail: e.toString() }
+        router.push({ name: 'SharedDimension', params: { id: dimension.clientPath } })
+      },
+    })
 
-        if (!(e instanceof APIErrorValidation)) {
-          console.error(e)
-        }
-      } finally {
-        this.isSubmitting = false
-      }
-    },
+    onMounted(async () => {
+      const dimensionId = route.params.id as string
+      const resource = await api.fetchResource(dimensionId)
+      form.resource.value = Object.freeze(resource.pointer)
+    })
 
+    return {
+      ...form,
+      dimension,
+    }
+  },
+
+  methods: {
     onCancel (): void {
       this.$router.push({ name: 'SharedDimension', params: { id: this.dimension.clientPath } })
     },
-  },
-
-  watch: {
-    $route () {
-      this.prepareForm()
-    }
   },
 })
 </script>

@@ -15,88 +15,44 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref, shallowRef, ShallowRef } from 'vue'
-import { RuntimeOperation } from 'alcaeus'
-import clownface, { GraphPointer } from 'clownface'
-import type { Shape } from '@rdfine/shacl'
-import { dataset } from '@rdf-esm/dataset'
-import SidePane from '@/components/SidePane.vue'
+import { defineComponent, shallowRef } from 'vue'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
+
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
-import { api } from '@/api'
-import { APIErrorValidation, ErrorDetails } from '@/api/errors'
+import SidePane from '@/components/SidePane.vue'
+import { RootState } from '@/store/types'
+import { useHydraForm } from '@/use-hydra-form'
 import { displayToast } from '@/use-toast'
-import { mapState } from 'vuex'
 
 export default defineComponent({
   name: 'HierarchyCreateView',
   components: { SidePane, HydraOperationForm },
 
   setup () {
-    const resource: Ref<GraphPointer | null> = ref(clownface({ dataset: dataset() }).namedNode(''))
-    const error: ShallowRef<ErrorDetails | null> = shallowRef(null)
-    const isSubmitting = ref(false)
-    const shape: ShallowRef<Shape | null> = shallowRef(null)
-    const shapes: Ref<GraphPointer | null> = ref(null)
+    const store = useStore<RootState>()
+    const router = useRouter()
 
-    return {
-      resource,
-      error,
-      isSubmitting,
-      shape,
-      shapes,
-    }
-  },
+    const collection = store.state.sharedDimensions.hierarchies
+    const operation = shallowRef(collection?.actions.create ?? null)
 
-  async mounted (): Promise<void> {
-    if (this.operation) {
-      this.shape = await api.fetchOperationShape(this.operation)
-    }
-  },
-
-  computed: {
-    ...mapState('sharedDimensions', {
-      collection: 'hierarchies',
-    }),
-
-    operation (): RuntimeOperation | null {
-      return this.collection.actions.create
-    },
-
-    title (): string {
-      return this.operation?.title ?? '...'
-    },
-  },
-
-  methods: {
-    async onSubmit (resource: GraphPointer): Promise<void> {
-      this.error = null
-      this.isSubmitting = true
-
-      try {
-        const hierarchy = await this.$store.dispatch('api/invokeSaveOperation', {
-          operation: this.operation,
-          resource,
-        })
-
-        await this.$store.dispatch('sharedDimensions/fetchHierarchies')
+    const form = useHydraForm(operation, {
+      async afterSubmit (hierarchy: any) {
+        await store.dispatch('sharedDimensions/fetchHierarchies')
 
         displayToast({
           message: `Hierarchy ${hierarchy.name} successfully created`,
           variant: 'success',
         })
 
-        this.$router.push({ name: 'Hierarchy', params: { id: hierarchy.clientPath } })
-      } catch (e: any) {
-        this.error = e.details ?? { detail: e.toString() }
+        router.push({ name: 'Hierarchy', params: { id: hierarchy.clientPath } })
+      },
+    })
 
-        if (!(e instanceof APIErrorValidation)) {
-          console.error(e)
-        }
-      } finally {
-        this.isSubmitting = false
-      }
-    },
+    return form
+  },
 
+  methods: {
     onCancel (): void {
       this.$router.push({ name: 'Hierarchies' })
     },

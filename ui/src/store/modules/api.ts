@@ -1,9 +1,7 @@
-import { RdfResource, RuntimeOperation } from 'alcaeus'
+import { RdfResource } from 'alcaeus'
 import { ActionTree, MutationTree, GetterTree } from 'vuex'
 import { api } from '@/api'
 import { RootState } from '../types'
-import { GraphPointer } from 'clownface'
-import RdfResourceImpl, { ResourceIdentifier } from '@tpluscode/rdfine'
 import { dcat } from '@tpluscode/rdf-ns-builders'
 
 export interface APIState {
@@ -25,12 +23,6 @@ const actions: ActionTree<APIState, RootState> = {
     const entrypoint = await api.fetchResource('/')
     context.commit('storeEntrypoint', entrypoint)
     return entrypoint
-  },
-
-  async invokeSaveOperation (context, { operation, resource, headers }: {operation: RuntimeOperation; resource: RdfResource | GraphPointer<ResourceIdentifier>; headers?: HeadersInit}) {
-    const data = 'toJSON' in resource ? resource : RdfResourceImpl.factory.createEntity(resource) as RdfResource
-
-    return api.invokeSaveOperation(operation, data, headers)
   },
 
   async invokeDeleteOperation (context, { operation, successMessage, callbackAction, callbackParams = {} }): Promise<void> {

@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType, ref, toRefs } from 'vue'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import HydraRawRdfForm from '@/components/HydraRawRdfForm.vue'
 import clownface, { GraphPointer } from 'clownface'
@@ -84,10 +84,15 @@ export default defineComponent({
   },
   emits: ['submit', 'cancel'],
 
-  data () {
+  setup (props) {
+    const { resource } = toRefs(props)
+
+    const isRawMode = ref(false)
+    const internalResource = ref(resource)
+
     return {
-      isRawMode: false,
-      internalResource: this.resource,
+      isRawMode,
+      internalResource,
     }
   },
 

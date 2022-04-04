@@ -15,81 +15,41 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref, shallowRef, ShallowRef } from 'vue'
-import { RuntimeOperation } from 'alcaeus'
-import clownface, { GraphPointer } from 'clownface'
-import type { Shape } from '@rdfine/shacl'
-import { dataset } from '@rdf-esm/dataset'
+import { defineComponent, shallowRef } from 'vue'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
+
 import SidePane from '@/components/SidePane.vue'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
-import { api } from '@/api'
-import { APIErrorValidation, ErrorDetails } from '@/api/errors'
 import { displayToast } from '@/use-toast'
+import { useHydraForm } from '@/use-hydra-form'
+import { RootState } from '@/store/types'
 
 export default defineComponent({
   name: 'CubeProjectCreateView',
   components: { SidePane, HydraOperationForm },
 
   setup () {
-    const resource: Ref<GraphPointer | null> = ref(clownface({ dataset: dataset() }).namedNode(''))
-    const error: ShallowRef<ErrorDetails | null> = shallowRef(null)
-    const isSubmitting = ref(false)
-    const shape: ShallowRef<Shape | null> = shallowRef(null)
-    const shapes: Ref<GraphPointer | null> = ref(null)
+    const store = useStore<RootState>()
+    const router = useRouter()
 
-    return {
-      resource,
-      error,
-      isSubmitting,
-      shape,
-      shapes,
-    }
-  },
+    const operation = shallowRef(store.state.projects.collection?.actions.create ?? null)
 
-  async mounted (): Promise<void> {
-    if (this.operation) {
-      this.shape = await api.fetchOperationShape(this.operation)
-    }
-  },
-
-  computed: {
-    operation (): RuntimeOperation | null {
-      return this.$store.state.projects.collection?.actions.create ?? null
-    },
-
-    title (): string {
-      return this.operation?.title ?? '...'
-    },
-  },
-
-  methods: {
-    async onSubmit (resource: GraphPointer): Promise<void> {
-      this.error = null
-      this.isSubmitting = true
-
-      try {
-        const project = await this.$store.dispatch('api/invokeSaveOperation', {
-          operation: this.operation,
-          resource,
-        })
-
+    const form = useHydraForm(operation, {
+      afterSubmit (savedResource: any) {
         displayToast({
-          message: `Project ${project.title} successfully created`,
+          message: `Project ${savedResource.title} successfully created`,
           variant: 'success',
         })
 
-        this.$router.push({ name: 'CubeProject', params: { id: project.clientPath } })
-      } catch (e: any) {
-        this.error = e.details ?? { detail: e.toString() }
+        router.push({ name: 'CubeProject', params: { id: savedResource.clientPath } })
+      },
+    })
 
-        if (!(e instanceof APIErrorValidation)) {
-          console.error(e)
-        }
-      } finally {
-        this.isSubmitting = false
-      }
-    },
+    return form
+  },
 
+  methods: {
     onCancel (): void {
       this.$router.push({ name: 'CubeProjects' })
     },

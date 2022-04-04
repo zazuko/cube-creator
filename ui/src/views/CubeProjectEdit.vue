@@ -10,7 +10,7 @@
         :shape="shape"
         :error="error"
         :is-submitting="isSubmitting"
-        @submit="updateProject"
+        @submit="onSubmit"
         :show-cancel="false"
         submit-label="Save project settings"
       />
@@ -40,79 +40,50 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref, shallowRef, ShallowRef } from 'vue'
-import HydraOperationForm from '@/components/HydraOperationForm.vue'
+import { defineComponent, shallowRef } from 'vue'
+import { useStore } from 'vuex'
+
 import DownloadButton from '@/components/DownloadButton.vue'
-import { GraphPointer } from 'clownface'
-import { Shape } from '@rdfine/shacl'
-import { api } from '@/api'
-import { APIErrorValidation, ErrorDetails } from '@/api/errors'
-import { displayToast } from '@/use-toast'
+import HydraOperationForm from '@/components/HydraOperationForm.vue'
+import { RootState } from '@/store/types'
 import { confirmDialog } from '@/use-dialog'
-import { mapState } from 'vuex'
+import { useHydraForm } from '@/use-hydra-form'
+import { displayToast } from '@/use-toast'
 
 export default defineComponent({
   name: 'CubeProjectEditView',
   components: { HydraOperationForm, DownloadButton },
 
   setup () {
-    const resource: Ref<GraphPointer | null> = ref(null)
-    const error: ShallowRef<ErrorDetails | null> = shallowRef(null)
-    const isSubmitting = ref(false)
-    const shape: ShallowRef<Shape | null> = shallowRef(null)
+    const store = useStore<RootState>()
 
-    return {
-      resource,
-      error,
-      isSubmitting,
-      shape,
-    }
-  },
+    const project = store.state.project.project
+    if (!project) throw new Error('Project not loaded')
 
-  async mounted (): Promise<void> {
-    const operation = this.project.actions.edit
+    const operation = shallowRef(project.actions.edit)
 
-    if (operation) {
-      this.shape = await api.fetchOperationShape(operation)
-    }
-
-    this.resource = Object.freeze(this.project.pointer)
-  },
-
-  computed: {
-    ...mapState('project', ['project']),
-  },
-
-  methods: {
-    async updateProject (resource: GraphPointer): Promise<void> {
-      const operation = this.project.actions.edit
-
-      this.error = null
-      this.isSubmitting = true
-
-      try {
-        const project = await this.$store.dispatch('api/invokeSaveOperation', {
-          operation: operation,
-          resource,
-        })
-
-        this.$store.commit('project/storeProject', project)
+    const form = useHydraForm(operation, {
+      afterSubmit (project: any) {
+        store.commit('project/storeProject', project)
 
         displayToast({
           message: 'Project settings were saved',
           variant: 'success',
         })
-      } catch (e: any) {
-        this.error = e.details ?? { detail: e.toString() }
+      },
+    })
 
-        if (!(e instanceof APIErrorValidation)) {
-          console.error(e)
-        }
-      } finally {
-        this.isSubmitting = false
-      }
-    },
+    if (project) {
+      form.resource.value = Object.freeze(project.pointer)
+    }
 
+    return {
+      ...form,
+      project,
+    }
+  },
+
+  methods: {
     async deleteProject (): Promise<void> {
       confirmDialog({
         title: this.project.actions.delete?.title,

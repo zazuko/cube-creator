@@ -29,7 +29,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { RuntimeOperation } from 'alcaeus'
+import { ResourceIdentifier, RuntimeOperation } from 'alcaeus'
 import { ColumnMapping, Table, CsvSource } from '@cube-creator/model'
 import { cc } from '@cube-creator/core/namespace'
 import { GraphPointer } from 'clownface'
@@ -39,6 +39,7 @@ import ReferenceColumnMappingForm from '@/components/ReferenceColumnMappingForm.
 import LiteralColumnMappingForm from '@/components/LiteralColumnMappingForm.vue'
 import { displayToast } from '@/use-toast'
 import { mapGetters } from 'vuex'
+import { api } from '@/api'
 
 export default defineComponent({
   name: 'ColumnMappingEditView',
@@ -90,15 +91,12 @@ export default defineComponent({
   },
 
   methods: {
-    async onSubmit (resource: GraphPointer): Promise<void> {
+    async onSubmit (resource: GraphPointer<ResourceIdentifier>): Promise<void> {
       this.error = null
       this.isSubmitting = true
 
       try {
-        const columnMapping = await this.$store.dispatch('api/invokeSaveOperation', {
-          operation: this.operation,
-          resource,
-        })
+        const columnMapping = await api.invokeSaveOperation(this.operation, resource)
 
         this.$store.commit('project/storeUpdatedColumnMapping', { table: this.table, columnMapping })
 

@@ -15,106 +15,66 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref, shallowRef, ShallowRef } from 'vue'
-import { GraphPointer } from 'clownface'
-import { RuntimeOperation } from 'alcaeus'
-import { Shape } from '@rdfine/shacl'
-import SidePane from '@/components/SidePane.vue'
-import HydraOperationForm from '@/components/HydraOperationForm.vue'
-import { api } from '@/api'
-import { APIErrorValidation, ErrorDetails } from '@/api/errors'
-import { Table } from '@cube-creator/model'
+import { computed, defineComponent, onMounted } from 'vue'
+import { useStore } from 'vuex'
+import { useRoute, useRouter } from 'vue-router'
+
 import { cc } from '@cube-creator/core/namespace'
+import { Table } from '@cube-creator/model'
+
+import { api } from '@/api'
+import HydraOperationForm from '@/components/HydraOperationForm.vue'
+import SidePane from '@/components/SidePane.vue'
+import { RootState } from '@/store/types'
+import { useHydraForm } from '@/use-hydra-form'
 import { displayToast } from '@/use-toast'
-import { mapGetters } from 'vuex'
 
 export default defineComponent({
   name: 'TableEditView',
   components: { SidePane, HydraOperationForm },
 
   setup () {
-    const resource: Ref<GraphPointer | null> = ref(null)
-    const error: ShallowRef<ErrorDetails | null> = shallowRef(null)
-    const isSubmitting = ref(false)
-    const shape: ShallowRef<Shape | null> = shallowRef(null)
+    const store = useStore<RootState>()
+    const router = useRouter()
+    const route = useRoute()
 
-    return {
-      resource,
-      error,
-      isSubmitting,
-      shape,
-    }
-  },
+    const findTable = store.getters['project/findTable']
 
-  async mounted (): Promise<void> {
-    if (this.operation) {
-      this.shape = await api.fetchOperationShape(this.operation)
-    }
+    const tableId = route.params.tableId as string
+    const table = findTable(tableId)
+    const operation = computed(() => table?.actions.edit ?? null)
 
-    // Fetch fresh table to avoid superfluous quads in the dataset
-    if (this.table) {
-      const table = await api.fetchResource<Table>(this.table.id.value)
-      this.resource = table.pointer
-        .addOut(cc.isObservationTable, table.isObservationTable)
-    }
-  },
-
-  computed: {
-    ...mapGetters('project', {
-      findTable: 'findTable',
-    }),
-
-    table (): Table | null {
-      const tableId = this.$route.params.tableId
-      return this.findTable(tableId)
-    },
-
-    operation (): RuntimeOperation | null {
-      return this.table?.actions.edit ?? null
-    },
-
-    title (): string {
-      return this.operation?.title ?? '...'
-    },
-  },
-
-  methods: {
-    async onSubmit (resource: GraphPointer): Promise<void> {
-      if (!this.table) return
-
-      this.error = null
-      this.isSubmitting = true
-
-      try {
-        const { identifierTemplate } = this.table
-        const table: Table = await this.$store.dispatch('api/invokeSaveOperation', {
-          operation: this.operation,
-          resource,
-        })
-
-        this.$store.commit('project/storeTable', table)
+    const form = useHydraForm(operation, {
+      afterSubmit (savedTable: any) {
+        store.commit('project/storeTable', savedTable)
 
         displayToast({
-          message: `Table ${table.name} was successfully created`,
+          message: `Table ${savedTable.name} was successfully created`,
           variant: 'success',
         })
 
-        if (table.identifierTemplate !== identifierTemplate) {
-          this.$store.dispatch('project/fetchCSVMapping')
+        if (savedTable.identifierTemplate !== table.identifierTemplate) {
+          store.dispatch('project/fetchCSVMapping')
         }
 
-        this.$router.push({ name: 'CSVMapping' })
-      } catch (e: any) {
-        this.error = e.details ?? { detail: e.toString() }
+        router.push({ name: 'CSVMapping' })
+      },
+    })
 
-        if (!(e instanceof APIErrorValidation)) {
-          console.error(e)
-        }
-      } finally {
-        this.isSubmitting = false
+    const fetchResource = async () => {
+      // Fetch fresh table to avoid superfluous quads in the dataset
+      if (table) {
+        const fetchedTable = await api.fetchResource<Table>(table.id.value)
+        form.resource.value = fetchedTable.pointer
+          .addOut(cc.isObservationTable, table.isObservationTable)
       }
-    },
+    }
+    onMounted(fetchResource)
 
+    return form
+  },
+
+  methods: {
     onCancel (): void {
       this.$router.push({ name: 'CSVMapping' })
     },

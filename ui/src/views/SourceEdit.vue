@@ -15,98 +15,49 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref, shallowRef, ShallowRef } from 'vue'
-import { GraphPointer } from 'clownface'
-import { RuntimeOperation } from 'alcaeus'
-import type { Shape } from '@rdfine/shacl'
-import { CsvSource } from '@cube-creator/model'
+import { computed, defineComponent } from 'vue'
+import { useStore } from 'vuex'
+import { useRoute, useRouter } from 'vue-router'
+
 import SidePane from '@/components/SidePane.vue'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
-import { api } from '@/api'
-import { APIErrorValidation, ErrorDetails } from '@/api/errors'
+import { useHydraForm } from '@/use-hydra-form'
 import { displayToast } from '@/use-toast'
-import { mapGetters, mapState } from 'vuex'
+import { RootState } from '@/store/types'
 
 export default defineComponent({
   name: 'CubeProjectEditView',
   components: { SidePane, HydraOperationForm },
 
   setup () {
-    const resource: Ref<GraphPointer | null> = ref(null)
-    const error: ShallowRef<ErrorDetails | null> = shallowRef(null)
-    const isSubmitting = ref(false)
-    const shape: ShallowRef<Shape | null> = shallowRef(null)
+    const store = useStore<RootState>()
+    const router = useRouter()
+    const route = useRoute()
 
-    return {
-      resource,
-      error,
-      isSubmitting,
-      shape,
-    }
-  },
+    const findSource = store.getters['project/findSource']
+    const sourceId = route.params.sourceId as string
+    const source = findSource(sourceId)
+    const operation = computed(() => source.actions.edit)
 
-  async mounted (): Promise<void> {
-    this.resource = Object.freeze(this.source.pointer)
-
-    if (this.operation) {
-      this.shape = await api.fetchOperationShape(this.operation)
-    }
-  },
-
-  computed: {
-    ...mapState('project', {
-      project: 'project',
-    }),
-    ...mapGetters('project', {
-      findSource: 'findSource',
-    }),
-
-    source (): CsvSource {
-      const sourceId = this.$route.params.sourceId
-      return this.findSource(sourceId)
-    },
-
-    operation (): RuntimeOperation | null {
-      if (!this.source) return null
-
-      return this.source.actions.edit
-    },
-
-    title (): string {
-      return this.operation?.title ?? '...'
-    },
-  },
-
-  methods: {
-    async onSubmit (resource: GraphPointer): Promise<void> {
-      this.error = null
-      this.isSubmitting = true
-
-      try {
-        await this.$store.dispatch('api/invokeSaveOperation', {
-          operation: this.operation,
-          resource,
-        })
-
-        this.$store.dispatch('project/refreshSourcesCollection')
+    const form = useHydraForm(operation, {
+      afterSubmit () {
+        store.dispatch('project/refreshSourcesCollection')
 
         displayToast({
           message: 'Settings successfully saved',
           variant: 'success',
         })
 
-        this.$router.push({ name: 'CSVMapping' })
-      } catch (e: any) {
-        this.error = e.details ?? { detail: e.toString() }
+        router.push({ name: 'CSVMapping' })
+      },
+    })
 
-        if (!(e instanceof APIErrorValidation)) {
-          console.error(e)
-        }
-      } finally {
-        this.isSubmitting = false
-      }
-    },
+    form.resource.value = Object.freeze(source.pointer)
 
+    return form
+  },
+
+  methods: {
     onCancel (): void {
       this.$router.push({ name: 'CSVMapping' })
     },
