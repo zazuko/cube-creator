@@ -37,5 +37,7 @@ declare module 'barnard59-core' {
     lastTransformed: { csv?: string; row?: number }
     messages: string[]
     originalValueQuads: DatasetExt
+    cubeCreatorVersion: string
+    cliVersion: string
   }
 }

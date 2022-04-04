@@ -49,6 +49,7 @@
                        <#countInputQuads>
                        <#injectCubeRevision>
                        <#injectObservedBy>
+                       <#injectSoftwareVersions>
                      ) ]
 .
 <#shaclValidate> a :Step ;
@@ -151,6 +152,11 @@ _:get
   code:implementedBy [ code:link <file:../lib/cube#injectRevision> ;
                        a         code:EcmaScript ] ;
   code:arguments     ( "jobUri"^^:VariableName ) .
+
+<#injectSoftwareVersions>
+  a :Step ;
+  code:implementedBy [ code:link <file:../lib/publish/versions#inject> ;
+                       a         code:EcmaScript ] .
 
 <#expirePreviousVersions>
   a :Step ;
