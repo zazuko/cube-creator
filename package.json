@@ -67,7 +67,6 @@
   },
   "resolutions": {
     "jsonld": "~1",
-    "@types/eslint": "^8",
-    "clownface": "zazuko/clownface#filter-return-value"
+    "@types/eslint": "^8"
   }
 }
