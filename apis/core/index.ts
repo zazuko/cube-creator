@@ -21,6 +21,7 @@ import './lib/domain'
 import upload from './lib/upload'
 import Loader from './lib/Loader'
 import * as s3 from './lib/storage/s3'
+import { version } from './package.json'
 
 const apiPath = path.resolve(__dirname, 'hydra')
 const codePath = path.resolve(__dirname, 'lib')
@@ -45,6 +46,11 @@ async function main() {
   })
 
   app.enable('trust proxy')
+
+  app.use((req, res, next) => {
+    res.setHeader('x-cube-creator', version)
+    next()
+  })
 
   app.use(cors({
     origin: '*',

@@ -120,6 +120,24 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
     expect(anyHydra).to.be.false
   }
 
+  async function addsSoftwareVersions() {
+    expect(cubePointer.namedNode(targetCube())).matchShape({
+      property: [{
+        path: schema.actionApplication,
+        minCount: 2,
+        maxCount: 2,
+        node: {
+          property: {
+            path: schema.softwareVersion,
+            minCount: 1,
+            maxCount: 1,
+            datatype: xsd.string,
+          },
+        },
+      }],
+    })
+  }
+
   describe('publishing published', () => {
     before(resetData)
     before(function makeCubePublished() {
@@ -170,6 +188,8 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
         }],
       })
     })
+
+    it('adds software versions', addsSoftwareVersions)
   })
 
   describe('publishing draft', () => {
@@ -178,6 +198,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
 
     it('removes hydra terms', removesHydraTerms)
     it('removes original values of mapped dimensions', removesMappingsOriginalValues)
+    it('adds software versions', addsSoftwareVersions)
 
     it('does not remove previously published triples', () => {
       const prevCube = cubePointer.namedNode(ns.baseCube('1'))
