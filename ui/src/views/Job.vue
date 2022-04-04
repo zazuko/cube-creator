@@ -62,43 +62,48 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import { Job } from '@cube-creator/model'
 import type { CreativeWork } from '@rdfine/schema'
 import { schema } from '@tpluscode/rdf-ns-builders'
+import { computed, defineComponent, shallowRef } from 'vue'
+import { useStore } from 'vuex'
+import { useRoute } from 'vue-router'
+
+import { api } from '@/api'
 import BMessage from '@/components/BMessage.vue'
 import ExternalTerm from '@/components/ExternalTerm.vue'
-import JobStatus from '../components/JobStatus.vue'
-import LoadingBlock from '../components/LoadingBlock.vue'
-import MarkdownRender from '../components/MarkdownRender.vue'
-import ValidationReportDisplay from '../components/ValidationReportDisplay.vue'
-import { mapGetters } from 'vuex'
+import JobStatus from '@/components/JobStatus.vue'
+import LoadingBlock from '@/components/LoadingBlock.vue'
+import MarkdownRender from '@/components/MarkdownRender.vue'
+import ValidationReportDisplay from '@/components/ValidationReportDisplay.vue'
+import { RootState } from '@/store/types'
+import { usePolling } from '@/use-polling'
 
 export default defineComponent({
   name: 'JobView',
   components: { BMessage, ExternalTerm, JobStatus, LoadingBlock, MarkdownRender, ValidationReportDisplay },
 
-  computed: {
-    ...mapGetters('project', {
-      findJob: 'findJob',
-    }),
+  setup () {
+    const store = useStore<RootState>()
+    const route = useRoute()
 
-    language (): string[] {
-      return this.$store.state.app.language
-    },
+    const findJob = store.getters['project/findJob']
+    const jobId = route.params.jobId as string
+    const job = shallowRef(findJob(jobId))
+    const link = computed(() => job.value?.link?.id.value)
+    const createdDate = computed(() => job.value?.created.toLocaleString() ?? '')
 
-    job (): Job | undefined {
-      const jobId = this.$route.params.jobId
-      return this.findJob(jobId)
-    },
+    usePolling(async () => {
+      job.value = await api.fetchResource(jobId)
+    })
 
-    link (): string | undefined {
-      return this.job?.link?.id.value
-    },
+    const language = store.state.app.language
 
-    createdDate (): string {
-      return this.job?.created.toLocaleString() ?? ''
-    },
+    return {
+      job,
+      language,
+      link,
+      createdDate,
+    }
   },
 
   methods: {

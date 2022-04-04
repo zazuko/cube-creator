@@ -57,18 +57,9 @@ export default defineComponent({
   name: 'CubeProjectView',
   components: { PageContent, LoadingBlock },
 
-  data (): { poller: number | null } {
-    return {
-      poller: null,
-    }
-  },
-
   async mounted (): Promise<void> {
     const id = this.$route.params.id
     await this.$store.dispatch('project/fetchProject', id)
-
-    // Poll jobs
-    this.poller = window.setInterval(this.pollJobs, 3000)
 
     if (this.$route.name === 'CubeProject') {
       if (this.hasCSVMapping) {
@@ -80,7 +71,6 @@ export default defineComponent({
   },
 
   beforeUnmount (): void {
-    this.stopPolling()
     this.$store.dispatch('project/reset')
   },
 
@@ -98,21 +88,6 @@ export default defineComponent({
 
   methods: {
     isRouteActive,
-
-    async pollJobs (): Promise<void> {
-      try {
-        await this.$store.dispatch('project/fetchJobCollection')
-      } catch (e) {
-        this.stopPolling()
-        throw e
-      }
-    },
-
-    stopPolling (): void {
-      if (this.poller) {
-        clearInterval(this.poller)
-      }
-    },
   },
 })
 </script>
