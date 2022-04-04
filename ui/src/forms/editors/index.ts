@@ -22,7 +22,9 @@ export const textField: Lazy<SingleEditorComponent> = {
   async lazyRender () {
     await import('./TextFieldEditor.vue').then(createCustomElement('textfield-editor'))
 
-    return ({ value }, { update }) => html`<textfield-editor .value="${value.object?.value || ''}" .update="${update}"></textfield-editor>`
+    return ({ property, value }, { update }) => html`<textfield-editor .value="${value.object?.value || ''}"
+                                                                       .update="${update}"
+                                                                       ?readonly="${property.shape.readOnly}"></textfield-editor>`
   }
 }
 
@@ -81,12 +83,12 @@ export const enumSelect: Lazy<EnumSelectEditor> = {
 export const autoComplete: Lazy<InstancesSelectEditor> = {
   ...instancesSelectCore,
   editor: dash.AutoCompleteEditor,
-  init (params) {
+  init (params, actions) {
     const hasFreeTextQueryVariable = !!this.searchTemplate?.(params)?.mapping
       .some(({ property }) => property?.equals(hydra.freetextQuery))
 
     if (!hasFreeTextQueryVariable) {
-      return instancesSelectCore.init?.call(this, params) || true
+      return instancesSelectCore.init?.call(this, params, actions) || true
     }
 
     const { form, property, value, updateComponentState } = params

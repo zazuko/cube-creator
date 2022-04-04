@@ -1,11 +1,11 @@
 import { Term } from 'rdf-js'
-import { CONSTRUCT, SELECT, sparql } from '@tpluscode/sparql-builder'
+import { CONSTRUCT, DESCRIBE, SELECT } from '@tpluscode/sparql-builder'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { md, meta } from '@cube-creator/core/namespace'
-import namespace from '@rdfjs/namespace'
 import $rdf from 'rdf-ext'
 import { toRdf } from 'rdf-literal'
 import env from '../env'
+import { textSearch } from '../query'
 
 export function getSharedDimensions() {
   return CONSTRUCT`
@@ -37,12 +37,13 @@ interface GetSharedTerms {
 export function getSharedTerms({ sharedDimensions, freetextQuery, validThrough, limit = 10, offset = 0 }: GetSharedTerms) {
   const term = $rdf.variable('term')
   const name = $rdf.variable('name')
+  const sharedDimension = $rdf.variable('sharedDimension')
 
   let select = SELECT.DISTINCT`${term}`
     .WHERE`
-      ?sharedDimension a ${meta.SharedDimension} .
-      VALUES ?sharedDimension { ${sharedDimensions} }
-      ${term} ${schema.inDefinedTermSet} ?sharedDimension .
+      ${sharedDimension} a ${meta.SharedDimension} .
+      VALUES ${sharedDimension} { ${sharedDimensions} }
+      ${term} ${schema.inDefinedTermSet} ${sharedDimension} .
       ${term} ${schema.name} ${name} .
     `
 
@@ -60,47 +61,15 @@ export function getSharedTerms({ sharedDimensions, freetextQuery, validThrough, 
     )`
   }
 
-  return CONSTRUCT`
-      ${term} ?p ?o .
+  return DESCRIBE`
+      ${term} ${sharedDimension}
     `
     .WHERE`
       {
-        ${select.LIMIT(limit).OFFSET(offset).ORDER().BY(name)}
+        ${select.LIMIT(limit).OFFSET(offset).ORDER().BY(sharedDimension).THEN.BY(name)}
       }
 
       ${term} ?p ?o .
+      ${term} ${schema.inDefinedTermSet} ${sharedDimension} .
     `
-}
-
-function textSearch(subject: Term, predicate: Term, textQuery: string) {
-  switch (env.maybe.MANAGED_DIMENSIONS_STORE_ENGINE) {
-    case 'stardog': {
-      const fts = namespace('tag:stardog:api:search:')
-      const variable = $rdf.variable('_s')
-      return sparql`
-        service ${fts.textMatch} {
-          [] ${fts.query} '${textQuery + '*'}';
-             ${fts.result} ${variable} ;
-        }
-        ${subject} ${predicate} ${variable} .
-      `
-    }
-    case 'fuseki': {
-      const variable = $rdf.variable('_s')
-      return sparql`
-        ${subject} <http://jena.apache.org/text#query> (${predicate} '${textQuery + '*'}') .
-
-        # Second filtering to make sure the word starts with the given query
-        ${subject} ${predicate} ${variable} .
-        FILTER (REGEX(${variable}, "^${textQuery}", "i"))
-      `
-    }
-    default: {
-      const variable = $rdf.variable('_s')
-      return sparql`
-        ${subject} ${predicate} ${variable} .
-        FILTER (REGEX(${variable}, "^${textQuery}", "i"))
-      `
-    }
-  }
 }

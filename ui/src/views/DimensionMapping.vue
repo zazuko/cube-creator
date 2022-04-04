@@ -14,105 +14,62 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref } from 'vue'
-import { RuntimeOperation } from 'alcaeus'
-import { Shape } from '@rdfine/shacl'
-import { GraphPointer } from 'clownface'
-import { Dataset, DimensionMetadata } from '@cube-creator/model'
+import { RdfResource } from '@tpluscode/rdfine/RdfResource'
+import { computed, defineComponent, onMounted, ref, Ref } from 'vue'
+import { useStore } from 'vuex'
+import { useRoute, useRouter } from 'vue-router'
+
+import { api } from '@/api'
 import SidePane from '@/components/SidePane.vue'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
-import { api } from '@/api'
-import { APIErrorValidation, ErrorDetails } from '@/api/errors'
-import { RdfResource } from '@tpluscode/rdfine/RdfResource'
-import { serializeResource } from '../store/serializers'
+import { serializeResource } from '@/store/serializers'
+import { RootState } from '@/store/types'
+import { useHydraForm } from '@/use-hydra-form'
 import { displayToast } from '@/use-toast'
-import { mapGetters } from 'vuex'
 
 export default defineComponent({
   name: 'DimensionMappingView',
   components: { SidePane, HydraOperationForm },
 
   setup () {
+    const store = useStore<RootState>()
+    const router = useRouter()
+    const route = useRoute()
+
+    const findDimension = store.getters['project/findDimension']
+    const dimension = findDimension(route.params.dimensionId)
+
     const mappings: Ref<RdfResource | null> = ref(null)
-    const resource: Ref<GraphPointer | null> = ref(null)
-    const error: Ref<ErrorDetails | null> = ref(null)
-    const isSubmitting = ref(false)
-    const shape: Ref<Shape | null> = ref(null)
 
-    return {
-      mappings,
-      resource,
-      error,
-      isSubmitting,
-      shape,
-    }
-  },
+    const operation = computed(() => mappings.value?.actions.replace ?? null)
 
-  async mounted (): Promise<void> {
-    if (this.dimension.mappings) {
-      const mappings = await api.fetchResource(this.dimension.mappings.value)
-      this.mappings = serializeResource(mappings)
-    }
-
-    if (this.operation) {
-      this.shape = await api.fetchOperationShape(this.operation)
-    }
-
-    this.resource = this.mappings?.pointer ?? null
-  },
-
-  computed: {
-    ...mapGetters('project', {
-      findDimension: 'findDimension',
-    }),
-
-    cubeMetadata (): Dataset | null {
-      return this.$store.state.project.cubeMetadata
-    },
-
-    dimension (): DimensionMetadata {
-      return this.findDimension(this.$route.params.dimensionId)
-    },
-
-    operation (): RuntimeOperation | null {
-      return this.mappings?.actions.replace ?? null
-    },
-
-    title (): string {
-      return this.operation?.title ?? 'Error: Missing operation'
-    },
-  },
-
-  methods: {
-    async onSubmit (resource: GraphPointer): Promise<void> {
-      this.error = null
-      this.isSubmitting = true
-
-      try {
-        await this.$store.dispatch('api/invokeSaveOperation', {
-          operation: this.operation,
-          resource,
-        })
-
-        this.$store.dispatch('project/fetchDimensionMetadataCollection')
+    const form = useHydraForm(operation, {
+      afterSubmit () {
+        store.dispatch('project/fetchDimensionMetadataCollection')
 
         displayToast({
           message: 'Mapping to shared dimension was saved',
           variant: 'success',
         })
 
-        this.$router.push({ name: 'CubeDesigner' })
-      } catch (e: any) {
-        this.error = e.details ?? { detail: e.toString() }
+        router.push({ name: 'CubeDesigner' })
+      },
+    })
 
-        if (!(e instanceof APIErrorValidation)) {
-          console.error(e)
-        }
-      } finally {
-        this.isSubmitting = false
-      }
-    },
+    onMounted(async () => {
+      const fetchedMappings = await api.fetchResource(dimension.mappings.value)
+      mappings.value = serializeResource(fetchedMappings)
 
+      form.resource.value = fetchedMappings.pointer
+    })
+
+    return {
+      ...form,
+      mappings,
+    }
+  },
+
+  methods: {
     onCancel (): void {
       this.$router.push({ name: 'CubeDesigner' })
     },

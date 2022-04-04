@@ -1,7 +1,7 @@
 import { Hydra } from 'alcaeus/web'
 import { HydraResponse, RdfResource, RuntimeOperation } from 'alcaeus'
 import { ResponseWrapper } from 'alcaeus/ResponseWrapper'
-import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
+import RdfResourceImpl, { RdfResourceCore, ResourceIdentifier } from '@tpluscode/rdfine/RdfResource'
 import { hydra, sh } from '@tpluscode/rdf-ns-builders'
 import { ShapeBundle } from '@rdfine/shacl/bundles'
 import { Shape, ValidationReportMixin, ValidationResultMixin } from '@rdfine/shacl'
@@ -134,7 +134,11 @@ export const api = {
     }
   },
 
-  async invokeSaveOperation<T extends RdfResource = RdfResource> (operation: RuntimeOperation | null, data: RdfResource, headers: HeadersInit = {}): Promise<T> {
+  async invokeSaveOperation<T extends RdfResource = RdfResource> (operation: RuntimeOperation | null, resource: RdfResource | GraphPointer<ResourceIdentifier>, headers: HeadersInit = {}): Promise<T> {
+    const data = 'toJSON' in resource
+      ? resource
+      : RdfResourceImpl.factory.createEntity(resource) as RdfResource
+
     if (!operation) throw new Error('Operation does not exist')
 
     const { body, contentHeaders } = this.prepareOperationBody(data, operation)
@@ -147,12 +151,12 @@ export const api = {
       throw await APIError.fromResponse(response)
     }
 
-    const resource = response.representation?.root
-    if (!resource) {
+    const responseResource = response.representation?.root
+    if (!responseResource) {
       throw new Error('Response does not contain created resource')
     }
 
-    return resource as T
+    return responseResource as T
   },
 
   async invokeDeleteOperation (operation: RuntimeOperation | null): Promise<void> {

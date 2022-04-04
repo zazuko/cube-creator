@@ -7,7 +7,7 @@
       </a>
     </o-field>
     <hydra-operation-form-with-raw
-      v-if="operation"
+      v-if="resource && operation"
       :operation="operation"
       :resource="resource"
       :shape="shape"
@@ -21,120 +21,83 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref } from 'vue'
-import { RuntimeOperation } from 'alcaeus'
-import { GraphPointer } from 'clownface'
-import type { Shape } from '@rdfine/shacl'
-import SidePane from '@/components/SidePane.vue'
-import HydraOperationFormWithRaw from '@/components/HydraOperationFormWithRaw.vue'
+import { computed, defineComponent, shallowRef, ShallowRef, watch } from 'vue'
+import { useStore } from 'vuex'
+import { RouteLocation, useRoute, useRouter } from 'vue-router'
+
 import { api } from '@/api'
-import { APIErrorValidation, ErrorDetails } from '@/api/errors'
-import { serializeSharedDimensionTerm } from '../store/serializers'
-import { SharedDimensionTerm } from '../store/types'
+import HydraOperationFormWithRaw from '@/components/HydraOperationFormWithRaw.vue'
+import SidePane from '@/components/SidePane.vue'
+import { serializeSharedDimensionTerm } from '@/store/serializers'
+import { RootState, SharedDimensionTerm } from '@/store/types'
+import { useHydraForm } from '@/use-hydra-form'
 import { displayToast } from '@/use-toast'
-import { mapState } from 'vuex'
 
 export default defineComponent({
   name: 'SharedDimensionTermEditView',
   components: { SidePane, HydraOperationFormWithRaw },
 
   setup () {
-    const resource: Ref<GraphPointer | null> = ref(null)
-    const term: Ref<SharedDimensionTerm | null> = ref(null)
-    const operation: Ref<RuntimeOperation | null> = ref(null)
-    const error: Ref<ErrorDetails | null> = ref(null)
-    const isSubmitting = ref(false)
-    const shape: Ref<Shape | null> = ref(null)
-    const shapes: Ref<GraphPointer | null> = ref(null)
+    const store = useStore<RootState>()
+    const router = useRouter()
+    const route = useRoute()
 
-    return {
-      resource,
-      term,
-      operation,
-      error,
-      isSubmitting,
-      shape,
-      shapes,
-    }
-  },
+    const dimension = store.state.sharedDimension.dimension
+    if (!dimension) throw new Error('Dimension not loaded')
 
-  mounted (): void {
-    this.prepareForm()
-  },
+    const term: ShallowRef<SharedDimensionTerm | null> = shallowRef(null)
+    const termUri = computed(() => term.value?.canonical?.value || term.value?.id.value || null)
+    const operation = computed(() => term.value?.actions.replace ?? null)
 
-  computed: {
-    ...mapState('sharedDimension', {
-      dimension: 'dimension',
-    }),
+    const form = useHydraForm(operation, {
+      fetchShapeParams: { targetClass: dimension.id },
+      saveHeaders: { Prefer: `target-class=${dimension.id.value}` },
 
-    title (): string {
-      return this.operation?.title ?? ''
-    },
-
-    termUri (): string | null {
-      return this.term?.canonical?.value || this.term?.id?.value || null
-    },
-  },
-
-  methods: {
-    async prepareForm (): Promise<void> {
-      this.resource = null
-      this.operation = null
-      this.shape = null
-
-      const termId = this.$route.params.termId as string
-      const term = await api.fetchResource(termId)
-
-      this.term = serializeSharedDimensionTerm(term)
-      this.resource = Object.freeze(term.pointer)
-      this.operation = term.actions.replace ?? null
-
-      if (this.operation) {
-        this.shape = await api.fetchOperationShape(this.operation, {
-          targetClass: this.dimension.id,
-        })
-      }
-    },
-
-    async onSubmit (resource: GraphPointer): Promise<void> {
-      this.error = null
-      this.isSubmitting = true
-
-      try {
-        const term = await this.$store.dispatch('api/invokeSaveOperation', {
-          operation: this.operation,
-          resource,
-          headers: { Prefer: `target-class=${this.dimension.id.value}` },
-        })
-
-        this.$store.dispatch('sharedDimension/updateTerm', term)
+      afterSubmit (savedTerm: any) {
+        store.dispatch('sharedDimension/updateTerm', savedTerm)
 
         displayToast({
           message: 'Shared dimension term successfully saved',
           variant: 'success',
         })
 
-        this.$router.push({ name: 'SharedDimension', params: { id: this.dimension.clientPath } })
-      } catch (e: any) {
-        this.error = e.details ?? { detail: e.toString() }
+        router.push({ name: 'SharedDimension', params: { id: dimension.clientPath } })
+      },
+    })
 
-        if (!(e instanceof APIErrorValidation)) {
-          console.error(e)
-        }
-      } finally {
-        this.isSubmitting = false
+    const fetchTerm = async () => {
+      const termId = route.params.termId as string
+      const fetchedTerm = await api.fetchResource(termId)
+
+      term.value = serializeSharedDimensionTerm(fetchedTerm)
+      form.resource.value = Object.freeze(term.value.pointer)
+    }
+
+    watch(route, (newRoute: RouteLocation) => {
+      if (newRoute.name === 'SharedDimensionTermEdit') {
+        fetchTerm()
       }
-    },
+    }, { immediate: true })
 
+    watch(term, () => {
+      if (term.value) {
+        form.resource.value = Object.freeze(term.value.pointer)
+      } else {
+        form.resource.value = null
+      }
+    })
+
+    return {
+      ...form,
+      dimension,
+      termUri,
+    }
+  },
+
+  methods: {
     onCancel (): void {
       this.$router.push({ name: 'SharedDimension', params: { id: this.dimension.clientPath } })
     },
-  },
-
-  watch: {
-    $route () {
-      this.prepareForm()
-    }
   },
 })
 </script>

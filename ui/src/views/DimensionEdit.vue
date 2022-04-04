@@ -18,51 +18,63 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref } from 'vue'
-import { RuntimeOperation } from 'alcaeus'
-import { Shape } from '@rdfine/shacl'
-import { GraphPointer } from 'clownface'
-import { DimensionMetadata } from '@cube-creator/model'
-import SidePane from '@/components/SidePane.vue'
-import HydraOperationFormWithRaw from '@/components/HydraOperationFormWithRaw.vue'
-import TermDisplay from '@/components/TermDisplay.vue'
-import { api } from '@/api'
-import { APIErrorValidation, ErrorDetails } from '@/api/errors'
-import { conciseBoundedDescription } from '@/graph'
 import { rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
+import { GraphPointer } from 'clownface'
+import { computed, defineComponent, shallowRef, watch } from 'vue'
+import { useStore } from 'vuex'
+import { useRoute, useRouter } from 'vue-router'
+
 import { meta } from '@cube-creator/core/namespace'
+import { DimensionMetadata } from '@cube-creator/model'
+
+import HydraOperationFormWithRaw from '@/components/HydraOperationFormWithRaw.vue'
+import SidePane from '@/components/SidePane.vue'
+import TermDisplay from '@/components/TermDisplay.vue'
+import { conciseBoundedDescription } from '@/graph'
+import { RootState } from '@/store/types'
+import { useHydraForm } from '@/use-hydra-form'
 import { displayToast } from '@/use-toast'
-import { mapGetters, mapState } from 'vuex'
 
 export default defineComponent({
   name: 'DimensionEditView',
   components: { SidePane, HydraOperationFormWithRaw, TermDisplay },
 
   setup () {
-    const resource: Ref<GraphPointer | null> = ref(null)
-    const error: Ref<ErrorDetails | null> = ref(null)
-    const isSubmitting = ref(false)
-    const shape: Ref<Shape | null> = ref(null)
+    const store = useStore<RootState>()
+    const router = useRouter()
+    const route = useRoute()
 
-    return {
-      resource,
-      error,
-      isSubmitting,
-      shape,
-    }
-  },
+    const cubeMetadata = store.state.project.cubeMetadata
+    const cubeUri = computed(() => cubeMetadata?.hasPart[0]?.id.value)
 
-  async mounted (): Promise<void> {
-    if (this.operation) {
-      const shape = await api.fetchOperationShape(this.operation)
+    const findDimension = store.getters['project/findDimension']
+    const dimensions = store.getters['project/dimensions']
 
-      if (!shape) throw new Error('Shape not found')
+    const dimension = findDimension(route.params.dimensionId)
+    const operation = shallowRef(dimension.actions.edit)
 
-      // Manually build the dimensions list because `addList` causes a blank
-      // node clash
+    const form = useHydraForm(operation, {
+      afterSubmit () {
+        store.dispatch('project/refreshDimensionMetadataCollection')
+
+        displayToast({
+          message: 'Dimension metadata was saved',
+          variant: 'success',
+        })
+
+        router.push({ name: 'CubeDesigner' })
+      },
+    })
+
+    // Populate dimensions selector
+    watch(form.shape, () => {
+      const shape = form.shape.value
+      if (!shape) return
+
+      // Manually build the dimensions list because `addList` causes a blank node clash
       const dimensionsList = shape.pointer.blankNode('_dimensions-0')
       let position: GraphPointer<any> = dimensionsList
-      this.dimensions.forEach((d: DimensionMetadata, index: number) => {
+      dimensions.forEach((d: DimensionMetadata, index: number) => {
         position
           .addOut(rdf.first, d.about, dimPtr => {
             dimPtr.addOut(schema.name, d.name)
@@ -79,69 +91,21 @@ export default defineComponent({
         .out(sh.property).has(sh.path, meta.relatesTo)
         // .addList(sh.in, this.dimensions.map(({ about }) => about))
         .addOut(sh.in, dimensionsList)
+    })
 
-      this.shape = shape
+    if (dimension) {
+      form.resource.value = conciseBoundedDescription(dimension.pointer)
     }
 
-    this.resource = conciseBoundedDescription(this.dimension.pointer)
-  },
-
-  computed: {
-    ...mapGetters('project', {
-      dimensions: 'dimensions',
-      findDimension: 'findDimension',
-    }),
-    ...mapState('project', {
-      cubeMetadata: 'cubeMetadata',
-    }),
-
-    cubeUri (): string | undefined {
-      return this.cubeMetadata?.hasPart[0]?.id.value
-    },
-
-    dimension (): DimensionMetadata {
-      return this.findDimension(this.$route.params.dimensionId)
-    },
-
-    operation (): RuntimeOperation | null {
-      return this.dimension.actions.edit
-    },
-
-    title (): string {
-      return this.operation?.title ?? 'Error: Missing operation'
-    },
+    return {
+      ...form,
+      dimension,
+      cubeMetadata,
+      cubeUri,
+    }
   },
 
   methods: {
-    async onSubmit (resource: GraphPointer): Promise<void> {
-      this.error = null
-      this.isSubmitting = true
-
-      try {
-        await this.$store.dispatch('api/invokeSaveOperation', {
-          operation: this.operation,
-          resource,
-        })
-
-        this.$store.dispatch('project/refreshDimensionMetadataCollection')
-
-        displayToast({
-          message: 'Dimension metadata was saved',
-          variant: 'success',
-        })
-
-        this.$router.push({ name: 'CubeDesigner' })
-      } catch (e: any) {
-        this.error = e.details ?? { detail: e.toString() }
-
-        if (!(e instanceof APIErrorValidation)) {
-          console.error(e)
-        }
-      } finally {
-        this.isSubmitting = false
-      }
-    },
-
     onCancel (): void {
       this.$router.push({ name: 'CubeDesigner' })
     },

@@ -15,91 +15,52 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref } from 'vue'
-import { RuntimeOperation } from 'alcaeus'
-import clownface, { GraphPointer } from 'clownface'
-import type { Shape } from '@rdfine/shacl'
-import { dataset } from '@rdf-esm/dataset'
+import { computed, defineComponent } from 'vue'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
+
 import SidePane from '@/components/SidePane.vue'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
-import { api } from '@/api'
-import { APIErrorValidation, ErrorDetails } from '@/api/errors'
+import { RootState } from '@/store/types'
+import { useHydraForm } from '@/use-hydra-form'
 import { displayToast } from '@/use-toast'
-import { mapState } from 'vuex'
 
 export default defineComponent({
   name: 'SHaredDimensionTermCreateView',
   components: { SidePane, HydraOperationForm },
 
   setup () {
-    const resource: Ref<GraphPointer | null> = ref(clownface({ dataset: dataset() }).namedNode(''))
-    const error: Ref<ErrorDetails | null> = ref(null)
-    const isSubmitting = ref(false)
-    const shape: Ref<Shape | null> = ref(null)
-    const shapes: Ref<GraphPointer | null> = ref(null)
+    const store = useStore<RootState>()
+    const router = useRouter()
 
-    return {
-      resource,
-      error,
-      isSubmitting,
-      shape,
-      shapes,
-    }
-  },
+    const dimension = store.state.sharedDimension.dimension
+    if (!dimension) throw new Error('Dimension not loaded')
 
-  async mounted (): Promise<void> {
-    if (this.operation) {
-      this.shape = await api.fetchOperationShape(this.operation, {
-        targetClass: this.dimension.id
-      })
-    }
-  },
+    const operation = computed(() => dimension.actions.create)
 
-  computed: {
-    ...mapState('sharedDimension', {
-      dimension: 'dimension',
-    }),
+    const form = useHydraForm(operation, {
+      fetchShapeParams: { targetClass: dimension.id },
+      saveHeaders: { Prefer: `target-class=${dimension.id.value}` },
 
-    operation (): RuntimeOperation | null {
-      return this.dimension.actions.create
-    },
-
-    title (): string {
-      return this.operation?.title ?? ''
-    },
-  },
-
-  methods: {
-    async onSubmit (resource: GraphPointer): Promise<void> {
-      this.error = null
-      this.isSubmitting = true
-
-      try {
-        const term = await this.$store.dispatch('api/invokeSaveOperation', {
-          operation: this.operation,
-          resource,
-          headers: { Prefer: `target-class=${this.dimension.id.value}` },
-        })
-
-        this.$store.dispatch('sharedDimension/addTerm', term)
+      afterSubmit (term: any) {
+        store.dispatch('sharedDimension/addTerm', term)
 
         displayToast({
           message: 'Shared dimension term successfully created',
           variant: 'success',
         })
 
-        this.$router.push({ name: 'SharedDimension', params: { id: this.dimension.clientPath } })
-      } catch (e: any) {
-        this.error = e.details ?? { detail: e.toString() }
+        router.push({ name: 'SharedDimension', params: { id: dimension.clientPath } })
+      },
+    })
 
-        if (!(e instanceof APIErrorValidation)) {
-          console.error(e)
-        }
-      } finally {
-        this.isSubmitting = false
-      }
-    },
+    return {
+      ...form,
+      dimension,
+    }
+  },
 
+  methods: {
     onCancel (): void {
       this.$router.push({ name: 'SharedDimension', params: { id: this.dimension.clientPath } })
     },

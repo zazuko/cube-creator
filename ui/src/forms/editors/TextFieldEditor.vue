@@ -1,5 +1,5 @@
 <template>
-  <o-input :model-value="value" @update:modelValue="update" />
+  <o-input :model-value="value" @update:modelValue="update" :readonly="readonly" />
 </template>
 
 <script lang="ts">
@@ -12,9 +12,15 @@ export default defineComponent({
       type: String,
       default: undefined,
     },
+    readonly: {
+      type: Boolean,
+      default: false,
+    },
     update: {
       type: Function as PropType<(newValue: string) => void>,
-      required: true,
+      default: () => {
+        // do nothing
+      },
     },
   },
 })

@@ -1,7 +1,7 @@
 <template>
   <side-pane :title="title" @close="onCancel">
     <hydra-operation-form-with-raw
-      v-if="operation"
+      v-if="resource && operation"
       :operation="operation"
       :resource="resource"
       :shape="shape"
@@ -15,14 +15,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref } from 'vue'
-import { RuntimeOperation } from 'alcaeus'
-import { GraphPointer } from 'clownface'
-import type { Shape } from '@rdfine/shacl'
-import SidePane from '@/components/SidePane.vue'
-import HydraOperationFormWithRaw from '@/components/HydraOperationFormWithRaw.vue'
+import { RdfResource } from 'alcaeus'
+import { computed, defineComponent, shallowRef, ShallowRef, watch } from 'vue'
+import { useStore } from 'vuex'
+import { useRoute, useRouter } from 'vue-router'
+
 import { api } from '@/api'
-import { APIErrorValidation, ErrorDetails } from '@/api/errors'
+import HydraOperationFormWithRaw from '@/components/HydraOperationFormWithRaw.vue'
+import SidePane from '@/components/SidePane.vue'
+import { RootState } from '@/store/types'
+import { useHydraForm } from '@/use-hydra-form'
 import { displayToast } from '@/use-toast'
 
 export default defineComponent({
@@ -30,91 +32,50 @@ export default defineComponent({
   components: { SidePane, HydraOperationFormWithRaw },
 
   setup () {
-    const resource: Ref<GraphPointer | null> = ref(null)
-    const operation: Ref<RuntimeOperation | null> = ref(null)
-    const error: Ref<ErrorDetails | null> = ref(null)
-    const isSubmitting = ref(false)
-    const shape: Ref<Shape | null> = ref(null)
-    const shapes: Ref<GraphPointer | null> = ref(null)
+    const store = useStore<RootState>()
+    const router = useRouter()
+    const route = useRoute()
 
-    return {
-      resource,
-      operation,
-      error,
-      isSubmitting,
-      shape,
-      shapes,
-    }
-  },
+    const hierarchy: ShallowRef<RdfResource | null> = shallowRef(null)
 
-  mounted (): void {
-    this.prepareForm()
-  },
-
-  computed: {
-    title (): string {
-      return this.operation?.title ?? ''
-    },
-  },
-
-  methods: {
-    async prepareForm (): Promise<void> {
-      this.resource = null
-      this.operation = null
-      this.shape = null
-
-      const hierarchyId = this.$route.params.id as string
-      const hierarchy = await api.fetchResource(hierarchyId)
-
-      this.resource = Object.freeze(hierarchy.pointer)
-      this.operation = hierarchy.actions.replace ?? null
-
-      if (this.operation) {
-        this.shape = await api.fetchOperationShape(this.operation)
+    watch(route, async (newRoute, oldRoute) => {
+      if ((!oldRoute || newRoute.name === oldRoute.name) && newRoute.params.id) {
+        const hierarchyId = newRoute.params.id as string
+        hierarchy.value = await api.fetchResource<RdfResource>(hierarchyId)
       }
-    },
+    }, { immediate: true })
 
-    async onSubmit (resource: GraphPointer): Promise<void> {
-      this.error = null
-      this.isSubmitting = true
+    const operation = computed(() => hierarchy.value?.actions.replace ?? null)
 
-      try {
-        await this.$store.dispatch('api/invokeSaveOperation', {
-          operation: this.operation,
-          resource,
-        })
-
-        this.$store.dispatch('sharedDimensions/fetchCollection')
+    const form = useHydraForm(operation, {
+      afterSubmit () {
+        store.dispatch('sharedDimensions/fetchCollection')
 
         displayToast({
           message: 'Hierarchy successfully saved',
           variant: 'success',
         })
 
-        this.$store.dispatch('sharedDimensions/fetchHierarchy', this.$route.params.id)
-        this.$router.push({ name: 'Hierarchy', params: { id: this.$route.params.id } })
-      } catch (e: any) {
-        this.error = e.details ?? { detail: e.toString() }
+        store.dispatch('sharedDimensions/fetchHierarchy', route.params.id)
+        router.push({ name: 'Hierarchy', params: { id: route.params.id } })
+      },
+    })
 
-        if (!(e instanceof APIErrorValidation)) {
-          console.error(e)
-        }
-      } finally {
-        this.isSubmitting = false
+    watch(hierarchy, () => {
+      if (hierarchy.value) {
+        form.resource.value = Object.freeze(hierarchy.value.pointer)
+      } else {
+        form.resource.value = null
       }
-    },
+    })
 
+    return form
+  },
+
+  methods: {
     onCancel (): void {
       this.$router.push({ name: 'Hierarchy', params: { id: this.$route.params.id } })
     },
-  },
-
-  watch: {
-    $route (newRoute, oldRoute) {
-      if (newRoute.name === oldRoute.name) {
-        this.prepareForm()
-      }
-    }
   },
 })
 </script>

@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType, ref, toRefs } from 'vue'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import HydraRawRdfForm from '@/components/HydraRawRdfForm.vue'
 import clownface, { GraphPointer } from 'clownface'
@@ -62,7 +62,7 @@ export default defineComponent({
       required: true,
     },
     shape: {
-      type: Object as PropType<Shape>,
+      type: Object as PropType<Shape | null>,
       default: null,
     },
     error: {
@@ -84,10 +84,15 @@ export default defineComponent({
   },
   emits: ['submit', 'cancel'],
 
-  data (): { isRawMode: boolean, internalResource: GraphPointer | null} {
+  setup (props) {
+    const { resource } = toRefs(props)
+
+    const isRawMode = ref(false)
+    const internalResource = ref(resource)
+
     return {
-      isRawMode: false,
-      internalResource: this.resource,
+      isRawMode,
+      internalResource,
     }
   },
 
@@ -98,8 +103,6 @@ export default defineComponent({
     },
 
     async syncResource (): Promise<void> {
-      if (!this.internalResource) return
-
       if (this.isRawMode) {
         const rdfEditor = this.$refs.rdfEditor as any
         await rdfEditor.waitParsing()

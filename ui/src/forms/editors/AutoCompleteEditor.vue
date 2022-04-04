@@ -9,7 +9,12 @@
     @search="onSearch"
     @search:focus="__load"
     :clear-search-on-blur="clearOnBlur"
-  />
+  >
+    <template #option="option">
+      {{ option.label }}
+      <cite v-if="option.helptext"><br>({{ option.helptext }})</cite>
+    </template>
+  </vue-select>
 </template>
 
 <script lang="ts">
@@ -19,6 +24,10 @@ import { Term, NamedNode } from 'rdf-js'
 import { GraphPointer } from 'clownface'
 import VueSelect from 'vue-select'
 import { debounce } from 'debounce'
+import { findNodes } from 'clownface-shacl-path'
+import { sh1 } from '@cube-creator/core/namespace'
+import only from 'clownface/filter'
+import { displayLanguage } from '@/store/serializers'
 
 interface Option {
   label: string
@@ -80,8 +89,22 @@ export default defineComponent({
 
   computed: {
     _options (): Option[] {
+      const helptextPath = this.property.pointer.out(sh1.itemHelptextPath)
+
       const options = this.options ?? []
-      return options.map(([pointer, label]) => ({ value: pointer.term.value, label, term: pointer.term }))
+      return options.map(([pointer, label]) => {
+        let helptext: string | undefined
+        if (helptextPath.value) {
+          [helptext] = findNodes(pointer, helptextPath).filter(only.taggedLiteral(displayLanguage)).values
+        }
+
+        return {
+          value: pointer.term.value,
+          label,
+          term: pointer.term,
+          helptext,
+        }
+      })
     },
 
     _value (): Option | null {

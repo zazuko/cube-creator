@@ -38,7 +38,7 @@ export default defineComponent({
       required: true,
     },
     resource: {
-      type: Object as PropType<GraphPointer>,
+      type: Object as PropType<GraphPointer | null>,
       default: null,
     },
     shape: {
@@ -68,20 +68,9 @@ export default defineComponent({
   },
   emits: ['submit', 'cancel'],
 
-  data (): { __clone: GraphPointer | null } {
-    return {
-      // eslint-disable-next-line vue/no-reserved-keys
-      __clone: null,
-    }
-  },
-
   computed: {
     clone (): GraphPointer | null {
-      const { __clone, resource } = this
-
-      if (__clone) {
-        return __clone
-      }
+      const { resource } = this
 
       if (!resource) {
         return resource
@@ -106,14 +95,6 @@ export default defineComponent({
 
     _submitLabel (): string {
       return this.submitLabel ?? this.operation.title ?? 'Save'
-    },
-  },
-
-  watch: {
-    resource (newResource: GraphPointer, oldResource: GraphPointer) {
-      if (newResource !== oldResource) {
-        this.__clone = null
-      }
     },
   },
 })

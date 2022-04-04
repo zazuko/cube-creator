@@ -175,7 +175,7 @@ export function serializeDimensionMetadata (dimension: DimensionMetadata): Dimen
 export function serializeJobCollection (collection: JobCollection): JobCollection {
   const members = collection.member ?? []
 
-  return Object.freeze({
+  return {
     ...serializeResource(collection),
     actions: {
       ...serializeActions(collection.actions),
@@ -185,7 +185,7 @@ export function serializeJobCollection (collection: JobCollection): JobCollectio
       createImport: collection.actions.createImport,
     },
     member: members.map(Object.freeze),
-  }) as unknown as JobCollection
+  } as unknown as JobCollection
 }
 
 export function serializeCubeMetadata (cubeMetadata: Dataset): Dataset {

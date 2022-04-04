@@ -67,6 +67,28 @@ md:Hierarchies
           a code:EcmaScript ;
           code:link <file:handlers/hierarchies#get> ;
         ] ;
+      hydra-box:variables
+        [
+          a hydra:IriTemplate ;
+          hydra:template "/_hierarchies{?q,pageSize,page}" ;
+          hydra:variableRepresentation hydra:ExplicitRepresentation ;
+          hydra:mapping
+            [
+              a hydra:IriTemplateMapping ;
+              hydra:property hydra:freetextQuery ;
+              hydra:variable "q" ;
+            ],
+            [
+              a hydra:IriTemplateMapping ;
+              hydra:property hydra:limit ;
+              hydra:variable "pageSize" ;
+            ],
+            [
+              a hydra:IriTemplateMapping ;
+              hydra:property hydra:pageIndex ;
+              hydra:variable "page" ;
+            ] ;
+        ] ;
     ],
     [
       a hydra:Operation, schema:CreateAction ;

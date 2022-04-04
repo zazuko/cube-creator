@@ -15,41 +15,43 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref } from 'vue'
-import { RuntimeOperation } from 'alcaeus'
-import type { Shape } from '@rdfine/shacl'
-import { GraphPointer } from 'clownface'
-import SidePane from '@/components/SidePane.vue'
-import HydraOperationFormWithRaw from '@/components/HydraOperationFormWithRaw.vue'
-import { api } from '@/api'
-import { APIErrorValidation, ErrorDetails } from '@/api/errors'
+import { computed, defineComponent } from 'vue'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
+
 import { cc, cube } from '@cube-creator/core/namespace'
+
+import HydraOperationFormWithRaw from '@/components/HydraOperationFormWithRaw.vue'
+import SidePane from '@/components/SidePane.vue'
 import { conciseBoundedDescription } from '@/graph'
+import { RootState } from '@/store/types'
+import { useHydraForm } from '@/use-hydra-form'
 import { displayToast } from '@/use-toast'
-import { mapState } from 'vuex'
 
 export default defineComponent({
   name: 'CubeMetadataEdit',
   components: { SidePane, HydraOperationFormWithRaw },
 
   setup () {
-    const resource: Ref<GraphPointer | null> = ref(null)
-    const shape: Ref<Shape | null> = ref(null)
-    const error: Ref<ErrorDetails | null> = ref(null)
-    const isSubmitting = ref(false)
+    const store = useStore<RootState>()
+    const router = useRouter()
 
-    return {
-      resource,
-      shape,
-      error,
-      isSubmitting,
-    }
-  },
+    const cubeMetadata = store.state.project.cubeMetadata
+    if (!cubeMetadata) throw new Error('Cube metadata not loaded')
+    const operation = computed(() => cubeMetadata?.actions?.edit ?? null)
 
-  async mounted (): Promise<void> {
-    if (this.operation) {
-      this.shape = await api.fetchOperationShape(this.operation)
-    }
+    const form = useHydraForm(operation, {
+      afterSubmit () {
+        store.dispatch('project/fetchCubeMetadata')
+
+        displayToast({
+          message: 'Cube metadata was saved',
+          variant: 'success',
+        })
+
+        router.push({ name: 'CubeDesigner' })
+      }
+    })
 
     // Since the /dataset resource is loaded with a bunch on inlined data,
     // the form will only be populated with the concise description of cube metadata,
@@ -59,53 +61,12 @@ export default defineComponent({
       cc.observations,
       cc.dimensionMetadata
     ]
-    this.resource = Object.freeze(conciseBoundedDescription(this.cubeMetadata.pointer, exclude))
-  },
+    form.resource.value = Object.freeze(conciseBoundedDescription(cubeMetadata.pointer, exclude))
 
-  computed: {
-    ...mapState('project', {
-      cubeMetadata: 'cubeMetadata',
-    }),
-
-    operation (): RuntimeOperation | null {
-      return this.cubeMetadata.actions.edit
-    },
-
-    title (): string {
-      return this.operation?.title ?? 'Error: Missing operation'
-    },
+    return form
   },
 
   methods: {
-    async onSubmit (resource: GraphPointer): Promise<void> {
-      this.error = null
-      this.isSubmitting = true
-
-      try {
-        await this.$store.dispatch('api/invokeSaveOperation', {
-          operation: this.operation,
-          resource,
-        })
-
-        this.$store.dispatch('project/fetchCubeMetadata')
-
-        displayToast({
-          message: 'Cube metadata was saved',
-          variant: 'success',
-        })
-
-        this.$router.push({ name: 'CubeDesigner' })
-      } catch (e: any) {
-        this.error = e.details ?? { detail: e.toString() }
-
-        if (!(e instanceof APIErrorValidation)) {
-          console.error(e)
-        }
-      } finally {
-        this.isSubmitting = false
-      }
-    },
-
     onCancel (): void {
       this.$router.push({ name: 'CubeDesigner' })
     },

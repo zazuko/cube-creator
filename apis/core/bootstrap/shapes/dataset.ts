@@ -11,6 +11,10 @@ const shapeId = shape('dataset/edit-metadata')
 const temporalFromTo = $rdf.namedNode(shapeId.value + '#temporalFromTo')
 const vcardOrganization = $rdf.namedNode(shapeId.value + '#vcardOrganization')
 
+const mainGroup = $rdf.blankNode()
+const opendataGroup = $rdf.blankNode()
+const aboutGroup = $rdf.blankNode()
+
 const themesQuery = sparql`construct {
   ?c a ${hydra.Collection} .
   ?c ${hydra.member} ?theme .
@@ -112,6 +116,10 @@ export const DatasetShape = turtle`
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 
 ${shapeId} {
+  ${mainGroup} ${rdfs.label} "Cube Metadata" ; ${sh.order} 1 .
+  ${opendataGroup} ${rdfs.label} "Opendata.swiss" ; ${sh.order} 2 .
+  ${aboutGroup} ${rdfs.label} "About" ; ${sh.order} 3 .
+
   ${shapeId} a ${sh.NodeShape}, ${hydra.Resource} ;
     ${sh.targetClass} ${_void.Dataset} ;
     ${rdfs.label} "Cube Metadata" ;
@@ -125,6 +133,7 @@ ${shapeId} {
       ${sh.uniqueLang} true ;
       ${sh.order} 10 ;
       ${sh.description} "A publishable title describing the cube. Please add entries for all [languages](https://github.com/zazuko/cube-creator/wiki/2.-Cube-Designer#languages)." ;
+      ${sh.group} ${mainGroup} ;
     ] ;
     ${sh.property} [
       ${sh.name} "Title (dcat)" ;
@@ -134,6 +143,7 @@ ${shapeId} {
       ${sh.datatype} ${rdf.langString} ;
       ${dash.hidden} true ;
       ${sh.equals} ${schema.name} ;
+      ${sh.group} ${mainGroup} ;
     ] ;
     ${sh.property} [
       ${sh.name} "Description" ;
@@ -144,6 +154,7 @@ ${shapeId} {
       ${sh.uniqueLang} true ;
       ${sh.order} 20 ;
       ${sh.description} "A short description about the provided cube." ;
+      ${sh.group} ${mainGroup} ;
     ] ;
     ${sh.property} [
       ${sh.name} "Description (dcat)" ;
@@ -152,6 +163,7 @@ ${shapeId} {
       ${sh.datatype} ${rdf.langString} ;
       ${dash.hidden} true ;
       ${sh.equals} ${schema.description} ;
+      ${sh.group} ${mainGroup} ;
     ] ;
     ${sh.property} [
       ${sh.name} "License" ;
@@ -160,8 +172,9 @@ ${shapeId} {
       ${sh.nodeKind} ${sh.IRI} ;
       ${sh.class} ${dcterms.LicenseDocument} ;
       ${hydra.collection} ${lindasQuery(licenseQuery)} ;
-      ${sh.order} 25 ;
+      ${sh.order} 45 ;
       ${sh.description} "This is the published terms of use / license for this dataset.";
+      ${sh.group} ${opendataGroup} ;
     ] ;
     ${sh.property} [
       ${sh.name} "Status" ;
@@ -177,6 +190,7 @@ ${shapeId} {
       ${sh.defaultValue} ${Draft} ;
       ${sh.order} 30 ;
       ${sh.description} "Only published datasets will be listed in the external tools. A draft will be nevertheless be public." ;
+      ${sh.group} ${mainGroup} ;
     ] ;
     ${sh.property} [
         ${sh.name} "Publish to" ;
@@ -191,6 +205,7 @@ ${shapeId} {
             ) ;
         ${sh.order} 40 ;
         ${sh.description} "Choose the applications where the dataset shall be listed." ;
+        ${sh.group} ${mainGroup} ;
       ] ;
     ${sh.property} [
       ${sh.name} "Data refresh interval" ;
@@ -202,6 +217,7 @@ ${shapeId} {
       ${hydra.collection} ${lindasQuery(frequencyQuery)} ;
       ${sh.order} 60 ;
       ${sh.description} "The intervall in which the dataset is updated with new values.";
+      ${sh.group} ${opendataGroup} ;
     ] ;
     ${sh.property} [
       ${sh.name} "Data period" ;
@@ -212,6 +228,7 @@ ${shapeId} {
       ${sh.class} ${dcterms.PeriodOfTime} ;
       ${sh.order} 70 ;
       ${sh.description} "The period of time this dataset is covering.";
+      ${sh.group} ${opendataGroup} ;
     ] ;
     ${sh.property} [
       ${sh.name} "About" ;
@@ -222,17 +239,20 @@ ${shapeId} {
       ${hydra.collection} ${lindasQuery(aboutQuery)} ;
       ${sh.order} 75 ;
       ${sh.description} "Category what about the dataset is.";
+      ${sh.group} ${aboutGroup} ;
     ] ;
     ${sh.property} [
-      ${sh.name} "Opendata.swiss Publisher" ;
+      ${sh.name} "Publisher" ;
       ${sh.path} ${dcterms.publisher} ;
       ${sh.nodeKind} ${sh.Literal} ;
       ${sh.minCount} 0 ;
       ${sh.maxCount} 1 ;
       ${sh.order} 75 ;
+      ${sh.description} "The publisher in the Opendata.swiss Organisation. E.g. the office, or also external organisations.";
+      ${sh.group} ${opendataGroup} ;
     ] ;
     ${sh.property} [
-      ${sh.name} "Opendata.swiss Organisation" ;
+      ${sh.name} "Organisation" ;
       ${sh.path} ${dcterms.creator} ;
       ${sh.minCount} 0 ;
       ${sh.class} ${schema.Organization} ;
@@ -240,26 +260,29 @@ ${shapeId} {
       ${hydra.collection} ${lindasQuery(orgQuery)} ;
       ${sh.order} 80 ;
       ${sh.description} "This is the publishing organization used in opendata.swiss.";
+      ${sh.group} ${opendataGroup} ;
     ] ;
     ${sh.property} [
-      ${sh.name} "Opendata.swiss Contact Point" ;
+      ${sh.name} "Contact Point" ;
       ${sh.path} ${dcat.contactPoint} ;
       ${sh.minCount} 1 ;
       ${dash.editor} ${dash.DetailsEditor} ;
       ${sh.node} ${vcardOrganization} ;
       ${sh.class} ${vcard.Organization} ;
       ${sh.order} 90 ;
+      ${sh.group} ${mainGroup} ;
     ] ;
     ${sh.property} [
-      ${sh.name} "Opendata.swiss Category" ;
+      ${sh.name} "Category" ;
       ${sh.path} ${dcat.theme} ;
       ${sh.minCount} 1 ;
       ${sh.minLength} 1 ;
       ${sh.order} 100 ;
-      ${sh.description} "This is the category used in opendata.swiss.";
+      ${sh.description} "This is the category based on opendata.swiss.";
       ${sh.nodeKind} ${sh.IRI} ;
       ${sh.class} ${schema.DefinedTerm} ;
       ${hydra.collection} ${lindasQuery(themesQuery)} ;
+      ${sh.group} ${mainGroup} ;
     ] ;
     ${sh.property} [
       ${sh.name} "EU Data Theme Category" ;
@@ -270,9 +293,10 @@ ${shapeId} {
       ${sh.nodeKind} ${sh.IRI} ;
       ${sh.class} <http://publications.europa.eu/ontology/euvoc#DataTheme> ;
       ${hydra.collection} ${lindasQuery(euThemesQuery)} ;
+      ${sh.group} ${aboutGroup} ;
     ] ;
     ${sh.property} [
-      ${sh.name} "Opendata.swiss Keywords" ;
+      ${sh.name} "Keywords" ;
       ${sh.path} ${dcat.keyword} ;
       ${sh.datatype} ${rdf.langString} ;
       ${sh.languageIn} ( ${supportedLanguages} ) ;
@@ -280,22 +304,25 @@ ${shapeId} {
       ${sh.order} 110 ;
       ${sh.description} "Additional keywords to classify datasets along ad-hoc categories.";
       ${dash.editor} ${editor.TagsWithLanguageEditor} ;
+      ${sh.group} ${opendataGroup} ;
     ] ;
     ${sh.property} [
-      ${sh.name} "Opendata.swiss Landing page" ;
+      ${sh.name} "Landing page" ;
       ${sh.path} ${dcat.landingPage} ;
       ${sh.maxCount} 1 ;
       ${sh.minLength} 1 ;
       ${sh.order} 120 ;
       ${sh.description} "A public website describing the dataset.";
+      ${sh.group} ${opendataGroup} ;
     ] ;
     ${sh.property} [
-      ${sh.name} "Opendata.swiss Legal basis" ;
+      ${sh.name} "Legal basis" ;
       ${sh.path} ${dcterms.license} ;
       ${sh.minCount} 0 ;
       ${sh.nodeKind} ${sh.IRI} ;
       ${sh.order} 130 ;
       ${sh.description} "A website describing the legal basis to publish this data";
+      ${sh.group} ${opendataGroup} ;
     ] ;
    ${sh.property} [
       ${sh.name} "Creation Date" ;
@@ -304,6 +331,7 @@ ${shapeId} {
       ${sh.maxCount} 1 ;
       ${sh.datatype} ${xsd.date} ;
       ${sh.order} 150 ;
+      ${sh.group} ${opendataGroup} ;
     ] ;
     ${sh.property} [
       ${sh.name} "Date published" ;
@@ -312,6 +340,7 @@ ${shapeId} {
       ${sh.maxCount} 1 ;
       ${sh.datatype} ${xsd.date} ;
       ${sh.order} 160 ;
+      ${sh.group} ${opendataGroup} ;
     ] ;
     ${sh.property} [
       ${sh.name} "Creation Date" ;
@@ -320,12 +349,14 @@ ${shapeId} {
       ${sh.datatype} ${xsd.date} ;
       ${dash.hidden} true ;
       ${sh.equals} ${dcterms.issued} ;
+      ${sh.group} ${aboutGroup} ;
     ] ;
     ${sh.property} [
       ${sh.path} ${dcterms.identifier} ;
       ${sh.maxCount} 0 ;
       ${dash.hidden} true ;
       ${sh.message} "Metadata must not have the dcterms:identifier property. Please remove it in advanced RDF editor" ;
+      ${sh.group} ${mainGroup} ;
     ] ;
   .
 
