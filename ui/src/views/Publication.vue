@@ -51,16 +51,24 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import LoadingBlock from '@/components/LoadingBlock.vue'
+import { mapGetters, useStore } from 'vuex'
+
+import { JobCollection } from '@cube-creator/model'
+
+import ExternalTerm from '@/components/ExternalTerm.vue'
 import JobForm from '@/components/JobForm.vue'
 import JobItem from '@/components/JobItem.vue'
-import ExternalTerm from '@/components/ExternalTerm.vue'
-import { JobCollection } from '@cube-creator/model'
-import { mapGetters } from 'vuex'
+import LoadingBlock from '@/components/LoadingBlock.vue'
+import { usePolling } from '@/use-polling'
 
 export default defineComponent({
   name: 'PublicationView',
   components: { ExternalTerm, LoadingBlock, JobForm, JobItem },
+
+  setup () {
+    const store = useStore()
+    usePolling(() => store.dispatch('project/fetchJobCollection'))
+  },
 
   computed: {
     ...mapGetters('project', {
