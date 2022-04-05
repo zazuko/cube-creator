@@ -8,7 +8,14 @@
           </h2>
         </div>
         <div class="is-flex is-align-items-center gap-1">
-          <hydra-operation-button :operation="hierarchy.actions.replace" :to="{ name: 'HierarchyEdit' }" />
+          <hydra-operation-button
+            v-if="hierarchy.actions.replace"
+            :operation="hierarchy.actions.replace"
+            :to="{ name: 'HierarchyEdit' }"
+            variant="default"
+            size="normal"
+            :label="hierarchy.actions.replace.title"
+          />
         </div>
       </div>
       <base-tree :tree-data="hierarchyTree" />
