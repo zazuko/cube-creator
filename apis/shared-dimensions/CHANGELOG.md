@@ -1,5 +1,13 @@
 # @cube-creator/shared-dimensions-api
 
+## 2.6.1
+
+### Patch Changes
+
+- cadcaa37: Missing ability to actually create a new hierarchy
+- 1c358a03: Display shared dimension name when mapping terms (closes #1112)
+- b1e11a9d: List of hierarchies would show instances used in individual cubes
+
 ## 2.6.0
 
 ### Minor Changes

@@ -1,5 +1,20 @@
 # @cube-creator/ui
 
+## 1.10.0
+
+### Minor Changes
+
+- 1cdb8955: Add hierarchy tab to dimension metadata
+
+### Patch Changes
+
+- cadcaa37: Missing ability to actually create a new hierarchy
+- d4e1a44c: Fix table CSVW view showing quads for the full API
+- 1c358a03: Display shared dimension name when mapping terms (closes #1112)
+- 75d58a4d: Fix authentication error handling (fixes #1148)
+- 913fdfc4: Add simple text filter for dimension mapping values
+- 2829ce23: Add explanation tooltip on job "View full log" button (fixes #1146)
+
 ## 1.9.0
 
 ### Minor Changes
