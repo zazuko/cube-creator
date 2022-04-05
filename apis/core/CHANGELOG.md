@@ -1,5 +1,20 @@
 # @cube-creator/core-api
 
+## 1.10.0
+
+### Minor Changes
+
+- 1cdb8955: Add hierarchy tab to dimension metadata
+
+### Patch Changes
+
+- 1c358a03: Display shared dimension name when mapping terms (closes #1112)
+- ee67e33f: Improve some forms (cube metadata, shared dimensions, table, column mapping)
+- Updated dependencies [cadcaa37]
+- Updated dependencies [1c358a03]
+- Updated dependencies [b1e11a9d]
+  - @cube-creator/shared-dimensions-api@2.6.1
+
 ## 1.9.7
 
 ### Patch Changes
