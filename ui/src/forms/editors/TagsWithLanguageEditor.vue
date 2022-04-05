@@ -2,7 +2,7 @@
   <div>
     <o-field v-for="([language, objects], languageIndex) in tags" :key="languageIndex" :addons="false" class="is-flex">
       <o-inputitems
-        :value="objects"
+        :model-value="objects"
         field="value"
         @add="addTag(languageIndex, language, $event)"
         @remove="removeTag(languageIndex, $event)"
