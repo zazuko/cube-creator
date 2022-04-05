@@ -1,7 +1,7 @@
 <template>
   <div>
     <o-field>
-      <o-checkbox :value="inverse" @input="__onInverseToggled">
+      <o-checkbox :model-value="inverse" @update:modelValue="__onInverseToggled">
         Inverse
       </o-checkbox>
     </o-field>
