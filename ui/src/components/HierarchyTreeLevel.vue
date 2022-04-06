@@ -15,6 +15,9 @@
         :next-level="nextLevel.nextInHierarchy"
         :endpoint-url="endpointUrl"
       />
+      <o-button v-if="children.isLoaded && mayHaveMore" @click="loadMore" variant="white">
+        ... Load more
+      </o-button>
       <loading-block v-else-if="children.isLoading" />
       <div v-else-if="children.error" class="message is-danger">
         <p class="message-body">
@@ -60,13 +63,23 @@ export default defineComponent({
     const isOpen = ref(false)
 
     const children: Ref<RemoteData<Term[]>> = ref(Remote.notLoaded())
+    const mayHaveMore = ref(false)
+    const pageSize = 7
+    const offset = ref(0)
 
-    const loadChildren = async () => {
-      children.value = Remote.loading()
-
+    const loadPage = async () => {
       try {
-        const childrenPointers = await hierarchy.children(endpointUrl.value, nextLevel.value, root.value)
-        children.value = Remote.loaded(childrenPointers.map(({ term }) => term))
+        const pagePointers = await hierarchy.children(
+          endpointUrl.value,
+          nextLevel.value,
+          root.value,
+          pageSize,
+          offset.value
+        )
+        const page = pagePointers.map(({ term }) => term)
+
+        mayHaveMore.value = page.length >= pageSize
+        children.value = Remote.loaded((children.value?.data ?? []).concat(page))
       } catch (e: any) {
         children.value = Remote.error(e.toString())
       }
@@ -78,14 +91,22 @@ export default defineComponent({
       isOpen.value = !isOpen.value
 
       if (isOpen.value && !children.value.isLoaded) {
-        loadChildren()
+        children.value = Remote.loading()
+        loadPage()
       }
+    }
+
+    const loadMore = () => {
+      offset.value = offset.value + pageSize
+      loadPage()
     }
 
     return {
       isOpen,
       children,
       toggleOpen,
+      mayHaveMore,
+      loadMore,
     }
   },
 })

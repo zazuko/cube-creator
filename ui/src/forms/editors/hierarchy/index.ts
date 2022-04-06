@@ -64,7 +64,7 @@ export function loader (createQuery: (arg: GraphPointer) => string, editor: Lazy
 
 export async function children (endpointUrl: string, level: NextInHierarchy, parent: NamedNode, limit = 10, offset = 0): Promise<GraphPointer[]> {
   const client = new StreamClient({ endpointUrl })
-  const query = queries.example(level.pointer, limit, offset, [parent])
+  const query = queries.children(level.pointer, parent, limit, offset)
   const stream = await client.query.construct(query)
   const dataset = await $rdf.dataset().import(stream)
 

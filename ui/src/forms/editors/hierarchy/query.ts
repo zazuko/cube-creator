@@ -151,3 +151,24 @@ export function example (focusNode: GraphPointer, limit = 1, offset = 0, parents
     .OFFSET(offset)
     .build()
 }
+
+export function children (level: GraphPointer, parent: Term, limit = 1, offset = 0, restrictTypes = true): string {
+  const path = level.out(sh.path)
+
+  const targetClass = level.out(sh.targetClass).term
+  let typePattern = sparql``
+  if (targetClass && restrictTypes) {
+    typePattern = sparql`?this a ${targetClass} .`
+  }
+
+  return DESCRIBE`?this`
+    .WHERE`
+      ${parent} ${toSparql(path)} ?this .
+      ${typePattern}
+
+      filter(isiri(?this))
+    `
+    .LIMIT(limit)
+    .OFFSET(offset)
+    .build()
+}
