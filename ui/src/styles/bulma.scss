@@ -45,3 +45,44 @@ $panel-radius: 0;
     border-color: $tabs-toggle-link-active-border-color;
     color: $tabs-toggle-link-active-color;
 }
+
+// Make Bulma colors accessible as CSS variables
+:root {
+    --color-black: #{$black};
+    --color-black-bis: #{$black-bis};
+    --color-black-ter: #{$black-ter};
+
+    --color-grey-darker: #{$grey-darker};
+    --color-grey-dark: #{$grey-dark};
+    --color-grey: #{$grey};
+    --color-grey-light: #{$grey-light};
+    --color-grey-lighter: #{$grey-lighter};
+    --color-grey-lightest: #{$grey-lightest};
+
+    --color-white-ter: #{$white-ter};
+    --color-white-bis: #{$white-bis};
+    --color-white: #{$white};
+
+    --color-primary: #{$primary};
+    --color-primary-light: #{$primary-light};
+    --color-primary-dark: #{$primary-dark};
+
+    --color-info: #{$info};
+    --color-info-light: #{$info-light};
+    --color-info-dark: #{$info-dark};
+
+    --color-success: #{$success};
+    --color-success-light: #{$success-light};
+    --color-success-dark: #{$success-dark};
+
+    --color-warning: #{$warning};
+    --color-warning-light: #{$warning-light};
+    --color-warning-dark: #{$warning-dark};
+
+    --color-danger: #{$danger};
+    --color-danger-light: #{$danger-light};
+    --color-danger-dark: #{$danger-dark};
+
+    --color-light: #{$light};
+    --color-dark: #{$dark};
+}

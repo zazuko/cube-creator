@@ -18,7 +18,25 @@
           />
         </div>
       </div>
-      <base-tree :tree-data="hierarchyTree" />
+
+      <section class="mb-4">
+        <h3 class="title is-size-5">
+          Definition
+        </h3>
+
+        <base-tree :tree-data="hierarchyTree" />
+      </section>
+
+      <section>
+        <h3 class="title is-size-5">
+          Sample data
+        </h3>
+
+        <hierarchy-tree
+          :roots="hierarchy.hierarchyRoot"
+          :next-level="hierarchy.nextInHierarchy"
+        />
+      </section>
 
       <router-view />
     </div>
@@ -29,6 +47,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import HydraOperationButton from '@/components/HydraOperationButton.vue'
+import HierarchyTree from '@/components/HierarchyTree.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import PageContent from '@/components/PageContent.vue'
 import { mapState } from 'vuex'
@@ -40,36 +59,10 @@ interface Node {
   children?: Node[]
 }
 
-function toNextLevelNode (level: NextInHierarchy): Node {
-  const text = level.name
-
-  const property = {
-    text: `Property: ${level.property.inversePath ? `^${level.property.inversePath.value}` : level.property.id.value}`
-  }
-
-  let types = level.targetType
-    .map(targetClass => ({
-      text: `Target type: ${targetClass.value}`
-    }))
-
-  if (!types.length) {
-    types = [{ text: 'Target type: any' }]
-  }
-
-  const children = [property, ...types]
-  if (level.nextInHierarchy) {
-    children.push(toNextLevelNode(level))
-  }
-
-  return {
-    text: `Next level: ${text}`,
-    children,
-  }
-}
-
 export default defineComponent({
   name: 'SharedDimensionView',
   components: {
+    HierarchyTree,
     HydraOperationButton,
     LoadingBlock,
     PageContent,
@@ -110,6 +103,33 @@ export default defineComponent({
     }
   },
 })
+
+function toNextLevelNode (level: NextInHierarchy): Node {
+  const text = level.name
+
+  const property = {
+    text: `Property: ${level.property.inversePath ? `^${level.property.inversePath.value}` : level.property.id.value}`
+  }
+
+  let types = level.targetType
+    .map(targetClass => ({
+      text: `Target type: ${targetClass.value}`
+    }))
+
+  if (!types.length) {
+    types = [{ text: 'Target type: any' }]
+  }
+
+  const children = [property, ...types]
+  if (level.nextInHierarchy) {
+    children.push(toNextLevelNode(level.nextInHierarchy))
+  }
+
+  return {
+    text: `Next level: ${text}`,
+    children,
+  }
+}
 </script>
 
 <style scoped>

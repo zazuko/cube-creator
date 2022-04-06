@@ -34,7 +34,7 @@ export interface Path extends RdfResourceCore {
   inversePath: NamedNode | undefined
 }
 
-export interface NextInHierarchy {
+export interface NextInHierarchy extends RdfResourceCore {
   name: string
   property: Path
   targetType: NamedNode[]
