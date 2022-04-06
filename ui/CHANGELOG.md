@@ -1,5 +1,11 @@
 # @cube-creator/ui
 
+## 1.10.1
+
+### Patch Changes
+
+- 8ae265cf: Fix issue with Transform and Publish buttons
+
 ## 1.10.0
 
 ### Minor Changes
