@@ -11,7 +11,7 @@
     "@rdfine/rdfs": "^0.6.4",
     "@rdfine/schema": "^0.6.3",
     "@rdfine/shacl": "^0.8",
-    "@rdfjs-elements/formats-pretty": "^0.3.2",
+    "@rdfjs-elements/formats-pretty": "^0.4.3",
     "@rdfjs/formats-common": "^2.1.0",
     "@rdfjs/namespace": "^1.1.0",
     "@rdfjs/term-map": "^1.0.0",
