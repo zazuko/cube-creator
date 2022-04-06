@@ -35,6 +35,7 @@
         <hierarchy-tree
           :roots="hierarchy.hierarchyRoot"
           :next-level="hierarchy.nextInHierarchy"
+          :endpoint-url="endpointUrl"
         />
       </section>
 
@@ -45,6 +46,7 @@
 </template>
 
 <script lang="ts">
+import { dcterms, sd } from '@tpluscode/rdf-ns-builders'
 import { defineComponent } from 'vue'
 import HydraOperationButton from '@/components/HydraOperationButton.vue'
 import HierarchyTree from '@/components/HierarchyTree.vue'
@@ -81,6 +83,10 @@ export default defineComponent({
     ...mapState('sharedDimensions', {
       hierarchy: 'hierarchy',
     }),
+
+    endpointUrl (): string {
+      return this.hierarchy.pointer.out(dcterms.source).out(sd.endpoint).value
+    },
 
     hierarchyTree (): Node[] {
       const hierarchy: Hierarchy | null = this.hierarchy

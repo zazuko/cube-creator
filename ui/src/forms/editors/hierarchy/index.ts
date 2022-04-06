@@ -62,8 +62,7 @@ export function loader (createQuery: (arg: GraphPointer) => string, editor: Lazy
   }
 }
 
-export async function children (level: NextInHierarchy, parent: NamedNode, limit = 10, offset = 0): Promise<GraphPointer[]> {
-  const endpointUrl = 'http://db.cube-creator.lndo.site/shared-dimensions/query'
+export async function children (endpointUrl: string, level: NextInHierarchy, parent: NamedNode, limit = 10, offset = 0): Promise<GraphPointer[]> {
   const client = new StreamClient({ endpointUrl })
   const query = queries.example(level.pointer, limit, offset, [parent])
   const stream = await client.query.construct(query)

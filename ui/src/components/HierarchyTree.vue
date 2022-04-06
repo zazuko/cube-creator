@@ -5,6 +5,7 @@
       :key="root.value"
       :root="root"
       :next-level="nextLevel"
+      :endpoint-url="endpointUrl"
     />
     <li v-if="roots.length === 0" class="has-text-grey">
       Empty
@@ -31,6 +32,10 @@ export default defineComponent({
     nextLevel: {
       type: Object as PropType<NextInHierarchy>,
       default: null,
+    },
+    endpointUrl: {
+      type: String,
+      required: true,
     },
   },
 })

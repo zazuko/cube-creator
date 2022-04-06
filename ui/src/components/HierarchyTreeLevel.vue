@@ -13,6 +13,7 @@
         v-if="children.isLoaded"
         :roots="children.data || []"
         :next-level="nextLevel.nextInHierarchy"
+        :endpoint-url="endpointUrl"
       />
       <loading-block v-else-if="children.isLoading" />
       <div v-else-if="children.error" class="message is-danger">
@@ -47,10 +48,14 @@ export default defineComponent({
       type: Object as PropType<NextInHierarchy>,
       default: null,
     },
+    endpointUrl: {
+      type: String,
+      required: true,
+    },
   },
 
   setup (props) {
-    const { nextLevel, root } = toRefs(props)
+    const { endpointUrl, nextLevel, root } = toRefs(props)
 
     const isOpen = ref(false)
 
@@ -60,7 +65,7 @@ export default defineComponent({
       children.value = Remote.loading()
 
       try {
-        const childrenPointers = await hierarchy.children(nextLevel.value, root.value)
+        const childrenPointers = await hierarchy.children(endpointUrl.value, nextLevel.value, root.value)
         children.value = Remote.loaded(childrenPointers.map(({ term }) => term))
       } catch (e: any) {
         children.value = Remote.error(e.toString())
