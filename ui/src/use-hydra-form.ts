@@ -24,13 +24,10 @@ export function useHydraForm (operation: Ref<RuntimeOperation | null>, options: 
   const isSubmitting = ref(false)
 
   const loadShape = async () => {
-    resource.value = initResource()
-    shape.value = null
-    error.value = null
-    isSubmitting.value = false
-
     if (operation.value) {
       shape.value = await api.fetchOperationShape(operation.value, options.fetchShapeParams)
+    } else {
+      shape.value = null
     }
   }
   watch(operation, loadShape, { immediate: true })
