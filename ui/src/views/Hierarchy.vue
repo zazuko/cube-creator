@@ -105,34 +105,22 @@ export default defineComponent({
         text: `Dimension: ${hierarchy.dimension.value}`,
       },
       ...roots,
-      nextLevel]
+      {
+        text: 'Levels:',
+        children: [nextLevel]
+      }]
     }
   },
 })
 
 function toNextLevelNode (level: NextInHierarchy): Node {
-  const text = level.name
-
-  const property = {
-    text: `Property: ${level.property.inversePath ? `^${level.property.inversePath.value}` : level.property.id.value}`
-  }
-
-  let types = level.targetType
-    .map(targetClass => ({
-      text: `Target type: ${targetClass.value}`
-    }))
-
-  if (!types.length) {
-    types = [{ text: 'Target type: any' }]
-  }
-
-  const children = [property, ...types]
+  const children = []
   if (level.nextInHierarchy) {
     children.push(toNextLevelNode(level.nextInHierarchy))
   }
 
   return {
-    text: `Next level: ${text}`,
+    text: `- ${level.name}`,
     children,
   }
 }
