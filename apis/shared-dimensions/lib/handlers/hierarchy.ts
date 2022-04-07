@@ -6,10 +6,12 @@ import env from '@cube-creator/core/env'
 export const get = asyncMiddleware(async (req, res) => {
   const hierarchy = await req.hydra.resource.clownface()
 
-  hierarchy.addOut(dcterms.source, source => {
-    source
-      .addOut(sd.endpoint, $rdf.namedNode(env.PUBLIC_QUERY_ENDPOINT))
-  })
+  if (!hierarchy.out(dcterms.source).terms.length) {
+    hierarchy.addOut(dcterms.source, source => {
+      source
+        .addOut(sd.endpoint, $rdf.namedNode(env.PUBLIC_QUERY_ENDPOINT))
+    })
+  }
 
   return res.dataset(hierarchy.dataset)
 })
