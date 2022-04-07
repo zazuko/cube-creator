@@ -82,7 +82,7 @@
                   </span>
                 </div>
                 <div>
-                  <shared-dimension-term-link :term="term" />
+                  <external-term-link :term="term" />
                   <hydra-operation-button
                     :operation="term.actions.replace"
                     :to="{ name: 'SharedDimensionTermEdit', params: { termId: term.clientPath } }"
@@ -140,7 +140,7 @@ import BMessage from '@/components/BMessage.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import PageContent from '@/components/PageContent.vue'
 import SharedDimensionTags from '@/components/SharedDimensionTags.vue'
-import SharedDimensionTermLink from '@/components/SharedDimensionTermLink.vue'
+import ExternalTermLink from '@/components/ExternalTermLink.vue'
 import TermDisplay from '@/components/TermDisplay.vue'
 import DownloadButton from '@/components/DownloadButton.vue'
 import { SharedDimension, SharedDimensionTerm } from '../store/types'
@@ -155,7 +155,7 @@ export default defineComponent({
     LoadingBlock,
     PageContent,
     SharedDimensionTags,
-    SharedDimensionTermLink,
+    ExternalTermLink,
     TermDisplay,
     DownloadButton
   },

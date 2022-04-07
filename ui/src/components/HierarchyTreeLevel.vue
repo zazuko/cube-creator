@@ -6,6 +6,7 @@
           <o-icon :icon="isOpen ? 'chevron-down' : 'chevron-right'" />
         </button>
         <external-term :resource="root" />
+        <external-term-link class="link" :term="root" />
       </div>
     </div>
     <div v-if="isOpen" class="tree-children">
@@ -35,13 +36,14 @@ import { NamedNode, Term } from 'rdf-js'
 import ExternalTerm from '@/components/ExternalTerm.vue'
 import HierarchyTree from '@/components/HierarchyTree.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
+import ExternalTermLink from '@/components/ExternalTermLink.vue'
 import * as hierarchy from '@/forms/editors/hierarchy'
 import { NextInHierarchy } from '@/store/types'
 import Remote, { RemoteData } from '@/remote'
 
 export default defineComponent({
   name: 'HiearchyTreeLevel',
-  components: { ExternalTerm, LoadingBlock, HierarchyTree },
+  components: { ExternalTerm, LoadingBlock, HierarchyTree, ExternalTermLink },
   props: {
     root: {
       type: Object as PropType<NamedNode>,
@@ -147,5 +149,10 @@ export default defineComponent({
 
 .tree-children {
   padding-left: 1.75em;
+}
+
+.link {
+  position: relative;
+  top: -3px;
 }
 </style>
