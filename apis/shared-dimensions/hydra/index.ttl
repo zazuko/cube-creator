@@ -241,6 +241,14 @@ md:Hierarchy
   a hydra:Class ;
   hydra:supportedOperation
     [
+      a hydra:Operation ;
+      hydra:method "GET" ;
+      code:implementedBy
+        [
+          a code:EcmaScript ;
+          code:link <file:handlers/hierarchy#get> ;
+        ] ;
+    ], [
       a hydra:SupportedOperation, schema:ReplaceAction ;
       hydra:method "PUT" ;
       hydra:title "Edit hierarchy" ;

@@ -56,7 +56,8 @@ export default defineComponent({
           variant: 'success',
         })
 
-        router.push({ name: 'Hierarchies' })
+        store.dispatch('sharedDimensions/fetchHierarchy', route.params.id)
+        router.push({ name: 'Hierarchy', params: { id: route.params.id } })
       },
     })
 
@@ -73,7 +74,7 @@ export default defineComponent({
 
   methods: {
     onCancel (): void {
-      this.$router.push({ name: 'Hierarchies' })
+      this.$router.push({ name: 'Hierarchy', params: { id: this.$route.params.id } })
     },
   },
 })

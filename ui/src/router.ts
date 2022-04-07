@@ -39,6 +39,7 @@ import SharedDimensionTermEdit from '@/views/SharedDimensionTermEdit.vue'
 import SharedDimensionEdit from '@/views/SharedDimensionEdit.vue'
 import Hierarchies from '@/views/Hierarchies.vue'
 import HierarchyCreate from '@/views/HierarchyCreate.vue'
+import Hierarchy from '@/views/Hierarchy.vue'
 import HierarchyEdit from '@/views/HierarchyEdit.vue'
 
 const routes: Array<RouteRecordRaw> = [
@@ -224,12 +225,17 @@ const routes: Array<RouteRecordRaw> = [
             name: 'HierarchyCreate',
             component: HierarchyCreate,
           },
-          {
-            path: ':id',
-            name: 'Hierarchy',
-            component: HierarchyEdit
-          },
         ],
+      },
+      {
+        path: '/hierarchies/:id',
+        name: 'Hierarchy',
+        component: Hierarchy,
+        children: [{
+          path: 'edit',
+          name: 'HierarchyEdit',
+          component: HierarchyEdit
+        }]
       }
     ],
   },

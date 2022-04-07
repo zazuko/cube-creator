@@ -14,6 +14,7 @@ function parent (level: number): Variable {
 interface GetHierarchyPatterns {
   restrictTypes?: boolean
   firstLevel(subject: Term, path: MultiPointer, level: number): SparqlTemplateResult
+  initialRoots?: Term[]
 }
 
 function anyPath (subject: Term, path: MultiPointer, level: number) {
@@ -29,9 +30,9 @@ function requiredPath (subject: Term, path: MultiPointer, level: number) {
   return sparql`${parent(level)} ${toSparql(path)} ${subject} .`
 }
 
-function getHierarchyPatterns (focusNode: MultiPointer, { restrictTypes = true, firstLevel }: GetHierarchyPatterns) {
+function getHierarchyPatterns (focusNode: MultiPointer, { restrictTypes = true, firstLevel, initialRoots = [] }: GetHierarchyPatterns) {
   let currentLevel = focusNode
-  let roots: Term[] = []
+  let roots: Term[] = initialRoots
   let patterns = sparql``
   let subject = variable('this')
   let level = 1
@@ -132,9 +133,10 @@ export function types (focusNode: GraphPointer): string {
     .build()
 }
 
-export function example (focusNode: GraphPointer, limit = 1): string {
+export function example (focusNode: GraphPointer, limit = 1, offset = 0, parents: Term[] = []): string {
   const patterns = getHierarchyPatterns(focusNode, {
     firstLevel: requiredPath,
+    initialRoots: parents,
   })
   if (!patterns) {
     return ''
@@ -146,5 +148,27 @@ export function example (focusNode: GraphPointer, limit = 1): string {
       filter(isiri(?this))
     `
     .LIMIT(limit)
+    .OFFSET(offset)
+    .build()
+}
+
+export function children (level: GraphPointer, parent: Term, limit = 1, offset = 0, restrictTypes = true): string {
+  const path = level.out(sh.path)
+
+  const targetClass = level.out(sh.targetClass).term
+  let typePattern = sparql``
+  if (targetClass && restrictTypes) {
+    typePattern = sparql`?this a ${targetClass} .`
+  }
+
+  return DESCRIBE`?this`
+    .WHERE`
+      ${parent} ${toSparql(path)} ?this .
+      ${typePattern}
+
+      filter(isiri(?this))
+    `
+    .LIMIT(limit)
+    .OFFSET(offset)
     .build()
 }
