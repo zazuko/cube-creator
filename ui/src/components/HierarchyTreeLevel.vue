@@ -66,7 +66,7 @@ export default defineComponent({
 
     const children: Ref<RemoteData<Term[]>> = ref(Remote.notLoaded())
     const mayHaveMore = ref(false)
-    const pageSize = 7
+    const pageSize = 10
     const offset = ref(0)
 
     const loadPage = async () => {
