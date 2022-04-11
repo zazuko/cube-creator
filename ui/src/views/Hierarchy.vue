@@ -64,7 +64,7 @@ interface Node {
 }
 
 export default defineComponent({
-  name: 'SharedDimensionView',
+  name: 'HierarchyView',
   components: {
     HierarchyTree,
     HydraOperationButton,
