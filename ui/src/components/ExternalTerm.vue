@@ -21,7 +21,7 @@ export default defineComponent({
   components: { TermWithLanguage, TermDisplay },
   props: {
     resource: {
-      type: Object as PropType<RdfResourceCore | NamedNode>,
+      type: Object as PropType<GraphPointer | RdfResourceCore | NamedNode>,
       required: true,
     },
     selectedLanguage: {
@@ -41,7 +41,9 @@ export default defineComponent({
   },
 
   mounted (): void {
-    if ('id' in this.resource) {
+    if (isGraphPointer(this.resource)) {
+      this.labels = getLabels(this.resource)
+    } else if ('id' in this.resource) {
       this.labels = getLabels(this.resource.pointer)
     }
 
@@ -59,7 +61,13 @@ export default defineComponent({
     }),
 
     node (): Term {
-      return 'id' in this.resource ? this.resource.pointer.term : this.resource
+      if (isGraphPointer(this.resource)) {
+        return this.resource.term
+      } else if ('id' in this.resource) {
+        return this.resource.pointer.term
+      } else {
+        return this.resource
+      }
     },
   },
 
@@ -135,6 +143,10 @@ export default defineComponent({
     },
   },
 })
+
+function isGraphPointer (pointer: any): pointer is GraphPointer {
+  return 'term' in pointer
+}
 
 function isLiteral (term: Term): term is Literal {
   return term.termType === 'Literal'

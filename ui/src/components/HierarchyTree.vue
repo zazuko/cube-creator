@@ -14,8 +14,8 @@
 </template>
 
 <script lang="ts">
+import { GraphPointer } from 'clownface'
 import { defineAsyncComponent, defineComponent, PropType } from 'vue'
-import { Term } from 'rdf-js'
 
 import { NextInHierarchy } from '@/store/types'
 
@@ -26,7 +26,7 @@ export default defineComponent({
   components: { HierarchyTreeLevel },
   props: {
     roots: {
-      type: Array as PropType<Term[]>,
+      type: Array as PropType<GraphPointer[]>,
       required: true,
     },
     nextLevel: {
