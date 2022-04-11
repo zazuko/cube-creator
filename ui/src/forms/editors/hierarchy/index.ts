@@ -4,15 +4,13 @@ import $rdf from 'rdf-ext'
 import clownface, { GraphPointer } from 'clownface'
 import StreamClient from 'sparql-http-client'
 import { Lazy, SingleEditorRenderParams } from '@hydrofoil/shaperone-core/models/components/index'
-import { NamedNode } from 'rdf-js'
-import * as queries from './query'
-import { NextInHierarchy } from '@/store/types'
+import { Construct } from '@tpluscode/sparql-builder'
 
 interface InstancesSelectEditorEx extends InstancesSelectEditor {
   _init?(context: SingleEditorRenderParams): void
 }
 
-export function loader (createQuery: (arg: GraphPointer) => string, editor: Lazy<InstancesSelectEditor>): Lazy<InstancesSelectEditorEx> {
+export function loader (createQuery: (arg: GraphPointer) => Construct | null, editor: Lazy<InstancesSelectEditor>): Lazy<InstancesSelectEditorEx> {
   return {
     ...editor,
     init (context, actions) {
@@ -38,41 +36,27 @@ export function loader (createQuery: (arg: GraphPointer) => string, editor: Lazy
     },
     shouldLoad ({ focusNode, value: { componentState } }) {
       // run query only when it's different from previous
-      const query = createQuery(focusNode)
+      const query = createQuery(focusNode)?.build()
       return !!query && query !== componentState.query
     },
     async loadChoices ({ value, focusNode, updateComponentState }) {
       const client = value.componentState.client
-      if (!client) {
-        return []
-      }
 
       // build query based on current hierarchy selection
       const query = createQuery(focusNode)
-      // memoize the query
-      updateComponentState({ query })
+      if (!client || !query) {
+        return []
+      }
 
-      const stream = await client.query.construct(query)
+      // memoize the query
+      updateComponentState({ query: query.build() })
+
+      const stream = await query.execute(client.query)
 
       const dataset = await $rdf.dataset().import(stream)
 
       // find in results resources with labels. these are the properties
       return clownface({ dataset }).has(rdfs.label).toArray()
     }
-  }
-}
-
-export async function children (endpointUrl: string, level: NextInHierarchy, parent: NamedNode, limit = 10, offset = 0): Promise<GraphPointer[]> {
-  const client = new StreamClient({ endpointUrl })
-  const query = queries.children(level.pointer, parent, limit, offset)
-  const stream = await client.query.construct(query)
-  const dataset = await $rdf.dataset().import(stream)
-
-  const parentNode = clownface({ dataset, term: parent })
-
-  if (level.property.inversePath) {
-    return parentNode.in(level.property.inversePath).toArray()
-  } else {
-    return parentNode.out(level.property.id).toArray()
   }
 }

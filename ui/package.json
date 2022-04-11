@@ -38,6 +38,7 @@
     "@uppy/aws-s3-multipart": "^2.2.0",
     "@uppy/core": "^2.1.4",
     "@uppy/vue": "^0.4.5",
+    "@zazuko/cube-hierarchy-query": "^1.0.0-pre.1",
     "@zazuko/rdf-vocabularies": "^2021.3.17",
     "alcaeus": "^2.1",
     "buffer": "^6.0.3",

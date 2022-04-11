@@ -2002,7 +2002,7 @@
     readable-stream "^3"
     string-to-stream "^3.0.1"
 
-"@rdfjs/data-model@^1.0.1", "@rdfjs/data-model@^1.1.0", "@rdfjs/data-model@^1.1.2", "@rdfjs/data-model@^1.2", "@rdfjs/data-model@^1.2.0", "@rdfjs/data-model@^1.3.2", "@rdfjs/data-model@^1.3.3", "@rdfjs/data-model@^1.3.4":
+"@rdfjs/data-model@1", "@rdfjs/data-model@^1.0.1", "@rdfjs/data-model@^1.1.0", "@rdfjs/data-model@^1.1.2", "@rdfjs/data-model@^1.2", "@rdfjs/data-model@^1.2.0", "@rdfjs/data-model@^1.3.2", "@rdfjs/data-model@^1.3.3", "@rdfjs/data-model@^1.3.4":
   version "1.3.4"
   resolved "https://registry.yarnpkg.com/@rdfjs/data-model/-/data-model-1.3.4.tgz#2b1b3e52755ab1283bf66aa2d3ac97fd8a0332c2"
   integrity sha512-iKzNcKvJotgbFDdti7GTQDCYmL7GsGldkYStiP0K8EYtN7deJu5t7U11rKTz+nR7RtesUggT+lriZ7BakFv8QQ==
@@ -2102,7 +2102,7 @@
     "@rdfjs/sink-map" "^1.0.0"
     rdfxml-streaming-parser "^1.4.0"
 
-"@rdfjs/namespace@^1.0.0", "@rdfjs/namespace@^1.1.0":
+"@rdfjs/namespace@1", "@rdfjs/namespace@^1.0.0", "@rdfjs/namespace@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@rdfjs/namespace/-/namespace-1.1.0.tgz#869cb9a9f37c4ab4c0a03b603baeb0b95487609f"
   integrity sha512-utO5rtaOKxk8B90qzaQ0N+J5WrCI28DtfAY/zExCmXE7cOfC5uRI/oMKbLaVEPj2P7uArekt/T4IPATtj7Tjug==
@@ -2441,7 +2441,7 @@
     commander "^7.2.0"
     fs-extra "^10.0.0"
 
-"@tpluscode/rdf-ns-builders@^1", "@tpluscode/rdf-ns-builders@^1.0.0":
+"@tpluscode/rdf-ns-builders@^1", "@tpluscode/rdf-ns-builders@^1.0.0", "@tpluscode/rdf-ns-builders@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@tpluscode/rdf-ns-builders/-/rdf-ns-builders-1.1.0.tgz#92baf7c2c08c080396161c7944081804507c9490"
   integrity sha512-/4mH/GL9DXKQLtAw+11DRtu67rsRiqB4XkShnaiNa1UTtyTbNWNOMr8Hxb8VsteuVOs/16wloLzxI1o6TwfS/g==
@@ -2475,10 +2475,10 @@
     clownface "^1"
     once "^1.4.0"
 
-"@tpluscode/sparql-builder@^0.3.15", "@tpluscode/sparql-builder@^0.3.17", "@tpluscode/sparql-builder@^0.3.9":
-  version "0.3.18"
-  resolved "https://registry.yarnpkg.com/@tpluscode/sparql-builder/-/sparql-builder-0.3.18.tgz#8b0d881b530c9836a49f3f915f2f7070a60404d6"
-  integrity sha512-jAsXLZ3vbWDnnkZeptogYPniHJWPNFRcUPj0N5I5w2grtIZg1gMNYSWUpgO7GNgCBe24p98xs1NBeO8x159j1w==
+"@tpluscode/sparql-builder@^0.3.15", "@tpluscode/sparql-builder@^0.3.17", "@tpluscode/sparql-builder@^0.3.19", "@tpluscode/sparql-builder@^0.3.9":
+  version "0.3.19"
+  resolved "https://registry.yarnpkg.com/@tpluscode/sparql-builder/-/sparql-builder-0.3.19.tgz#e609021b69b4be82852396d89a0b902c21311b4d"
+  integrity sha512-i3igK9kJcVqIsFqwfpGxfo0PbxQSN7elHjWKaXpGuYoyp9BxkhPUJPJK6CGwVQ5+10QtKOQOpHoSLOFvlI5VtQ==
   dependencies:
     "@rdf-esm/data-model" "^0.5.4"
     "@rdf-esm/term-set" "^0.5.0"
@@ -3156,7 +3156,7 @@
   dependencies:
     "@types/node" "*"
 
-"@types/sparql-http-client@^2", "@types/sparql-http-client@^2.2.5":
+"@types/sparql-http-client@^2", "@types/sparql-http-client@^2.2.5", "@types/sparql-http-client@^2.2.8":
   version "2.2.8"
   resolved "https://registry.yarnpkg.com/@types/sparql-http-client/-/sparql-http-client-2.2.8.tgz#c7b12eea9dbda1f539d0b415ea67532ecbe3ec6a"
   integrity sha512-l6kcSp57s0K4kGEWqjGR/LEe/Fya11Kd5S9Ta8gfIiRyESmvvA8JePPaTnq4r0MT6FKvNMJ7/KS15B85Fxm5ng==
@@ -4050,6 +4050,21 @@
   version "4.2.2"
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
+
+"@zazuko/cube-hierarchy-query@^1.0.0-pre.1":
+  version "1.0.0-pre.1"
+  resolved "https://registry.yarnpkg.com/@zazuko/cube-hierarchy-query/-/cube-hierarchy-query-1.0.0-pre.1.tgz#206deabda43e41d6e684a75f27bf02022dd495a7"
+  integrity sha512-610jPi3a1gWQCvfDyczVSI5CmdgvNA94GHflPdgiwxHiIQjcpC9Ol6IcuHv8wrJ0J1DfV8PpGv2G6MAlmCoCxQ==
+  dependencies:
+    "@rdfjs/data-model" "1"
+    "@rdfjs/namespace" "1"
+    "@tpluscode/rdf-ns-builders" "^1.1.0"
+    "@tpluscode/sparql-builder" "^0.3.19"
+    "@types/clownface" "^1.5.0"
+    "@types/sparql-http-client" "^2.2.8"
+    clownface "^1.5.1"
+    clownface-shacl-path "^1.3.1"
+    rdf-dataset-ext "^1.0.1"
 
 "@zazuko/node-fetch@^2.6.6":
   version "2.6.6"
@@ -5207,10 +5222,10 @@ clone@^1.0.2:
   resolved "https://registry.yarnpkg.com/clone/-/clone-1.0.4.tgz#da309cc263df15994c688ca902179ca3c7cd7c7e"
   integrity sha1-2jCcwmPfFZlMaIypAheco8fNfH4=
 
-clownface-shacl-path@^1.0.1, clownface-shacl-path@^1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/clownface-shacl-path/-/clownface-shacl-path-1.2.2.tgz#0a3b8d29b52402e5ed42521fbd8cbae4329e4ea4"
-  integrity sha512-vXrmPf5sM1M84k2r1O1ud14Zx/5yLBCWWqpam0y34r77tejEK5FwYjq5qXqrwSqosLEr53KbptbqHZvHKeFYjA==
+clownface-shacl-path@^1.0.1, clownface-shacl-path@^1.2.2, clownface-shacl-path@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/clownface-shacl-path/-/clownface-shacl-path-1.3.1.tgz#b8be44e3e2a01f6d0a9f4dbccf7dfe7c23620854"
+  integrity sha512-1dcLVRt+akwNbn4BCgzlHlDnUD9+7pxjB1lm2QwqqggcXUY9+nsh5i/yt6fuopAVLkGAWAlgUbuopOzVhVIhtQ==
   dependencies:
     "@rdf-esm/term-set" "^0.5.0"
     "@tpluscode/rdf-ns-builders" "^1.0.0"
@@ -10954,7 +10969,7 @@ rdf-data-factory@^1.0.4, rdf-data-factory@^1.1.0:
   dependencies:
     "@rdfjs/types" "*"
 
-rdf-dataset-ext@^1.0.0:
+rdf-dataset-ext@^1.0.0, rdf-dataset-ext@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/rdf-dataset-ext/-/rdf-dataset-ext-1.0.1.tgz#9df48566e57748f321e19c9ec713811badbd7ca5"
   integrity sha512-I08/j+w0zqNRmFXbFhqxexmKsdS9nGDno/cG/OaF5sLxkDNrhyP82OxWx35ZPrjd4FG8T+TsGaxZFZkVIS85eA==
