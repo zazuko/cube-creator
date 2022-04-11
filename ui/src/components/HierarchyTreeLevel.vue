@@ -6,7 +6,7 @@
           <o-icon :icon="isOpen ? 'chevron-down' : 'chevron-right'" />
         </button>
         <external-term :resource="root" />
-        <external-term-link class="link" :term="root" />
+        <external-term-link :term="root" />
       </div>
     </div>
     <div v-if="isOpen" class="tree-children">
@@ -138,6 +138,9 @@ export default defineComponent({
 
 .tree-level-label {
   flex-grow: 1;
+
+  display: flex;
+  align-items: center;
 }
 
 .tree-level-button {
@@ -149,10 +152,5 @@ export default defineComponent({
 
 .tree-children {
   padding-left: 1.75em;
-}
-
-.link {
-  position: relative;
-  top: -3px;
 }
 </style>
