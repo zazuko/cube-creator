@@ -6,6 +6,7 @@
           <o-icon :icon="isOpen ? 'chevron-down' : 'chevron-right'" />
         </button>
         <external-term :resource="root" />
+        <external-term-link :term="root.term" />
       </div>
     </div>
     <div v-if="isOpen" class="tree-children">
@@ -29,22 +30,24 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, Ref, ref, toRefs } from 'vue'
+import { GraphPointer } from 'clownface'
 import { NamedNode, Term } from 'rdf-js'
+import { defineComponent, PropType, Ref, ref, toRefs } from 'vue'
 
 import ExternalTerm from '@/components/ExternalTerm.vue'
 import HierarchyTree from '@/components/HierarchyTree.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
+import ExternalTermLink from '@/components/ExternalTermLink.vue'
 import * as hierarchy from '@/forms/editors/hierarchy'
 import { NextInHierarchy } from '@/store/types'
 import Remote, { RemoteData } from '@/remote'
 
 export default defineComponent({
   name: 'HiearchyTreeLevel',
-  components: { ExternalTerm, LoadingBlock, HierarchyTree },
+  components: { ExternalTerm, LoadingBlock, HierarchyTree, ExternalTermLink },
   props: {
     root: {
-      type: Object as PropType<NamedNode>,
+      type: Object as PropType<GraphPointer<NamedNode>>,
       required: true,
     },
     nextLevel: {
@@ -62,21 +65,20 @@ export default defineComponent({
 
     const isOpen = ref(false)
 
-    const children: Ref<RemoteData<Term[]>> = ref(Remote.notLoaded())
+    const children: Ref<RemoteData<GraphPointer[]>> = ref(Remote.notLoaded())
     const mayHaveMore = ref(false)
-    const pageSize = 7
+    const pageSize = 10
     const offset = ref(0)
 
     const loadPage = async () => {
       try {
-        const pagePointers = await hierarchy.children(
+        const page = await hierarchy.children(
           endpointUrl.value,
           nextLevel.value,
-          root.value,
+          root.value.term,
           pageSize,
           offset.value
         )
-        const page = pagePointers.map(({ term }) => term)
 
         mayHaveMore.value = page.length >= pageSize
         children.value = Remote.loaded((children.value?.data ?? []).concat(page))
@@ -136,6 +138,9 @@ export default defineComponent({
 
 .tree-level-label {
   flex-grow: 1;
+
+  display: flex;
+  align-items: center;
 }
 
 .tree-level-button {

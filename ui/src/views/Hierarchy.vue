@@ -33,7 +33,7 @@
         </h3>
 
         <hierarchy-tree
-          :roots="hierarchy.hierarchyRoot"
+          :roots="hierarchyRoots"
           :next-level="hierarchy.nextInHierarchy"
           :endpoint-url="endpointUrl"
         />
@@ -47,6 +47,8 @@
 
 <script lang="ts">
 import { dcterms, sd } from '@tpluscode/rdf-ns-builders'
+import { GraphPointer } from 'clownface'
+import { NamedNode } from 'rdf-js'
 import { defineComponent } from 'vue'
 import HydraOperationButton from '@/components/HydraOperationButton.vue'
 import HierarchyTree from '@/components/HierarchyTree.vue'
@@ -86,6 +88,10 @@ export default defineComponent({
 
     endpointUrl (): string {
       return this.hierarchy.pointer.out(dcterms.source).out(sd.endpoint).value
+    },
+
+    hierarchyRoots (): GraphPointer[] {
+      return this.hierarchy.hierarchyRoot.map((term: NamedNode) => this.hierarchy.pointer.node(term))
     },
 
     hierarchyTree (): Node[] {

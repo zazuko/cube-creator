@@ -161,7 +161,7 @@ export function children (level: GraphPointer, parent: Term, limit = 1, offset =
     typePattern = sparql`?this a ${targetClass} .`
   }
 
-  return DESCRIBE`?this`
+  return DESCRIBE`${parent} ?this`
     .WHERE`
       ${parent} ${toSparql(path)} ?this .
       ${typePattern}
