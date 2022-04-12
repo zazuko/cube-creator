@@ -1,4 +1,4 @@
-import { cc, cube, editor, shape } from '@cube-creator/core/namespace'
+import { cc, editor, shape } from '@cube-creator/core/namespace'
 import { supportedLanguages } from '@cube-creator/core/languages'
 import { datatypes } from '@cube-creator/core/datatypes'
 import { dash, hydra, rdfs, sh, csvw, xsd } from '@tpluscode/rdf-ns-builders'
@@ -8,23 +8,6 @@ import $rdf from 'rdf-ext'
 const literalShapeId = shape('column-mapping/literal')
 const referenceShapeId = shape('column-mapping/reference')
 const identifierMappingId = $rdf.namedNode(referenceShapeId.value + '#identifierMapping')
-
-const keyOrMeasureDimension = turtle`
-  ${sh.property} [
-    ${sh.name} "Dimension type" ;
-    ${sh.path} ${cc.dimensionType} ;
-    ${sh.in} (
-      ${cube.MeasureDimension}
-      ${cube.KeyDimension}
-    ) ;
-    ${sh.maxCount} 1 ;
-    ${sh.order} 70 ;
-  ] ;
-`
-
-const dimensionTypes = turtle`
-  ${cube.MeasureDimension} ${rdfs.label} "Measure dimension"@en .
-  ${cube.KeyDimension} ${rdfs.label} "Key dimension"@en .`
 
 export const ColumnMappingShape = turtle`
 ${literalShapeId} {
@@ -87,8 +70,6 @@ ${literalShapeId} {
   .
 
   ${datatypes.map(([id, labels]) => labels.map(label => turtle`${id} ${rdfs.label} "${label}" .`))}
-
-  ${dimensionTypes}
 }
 
 ${referenceShapeId} {
@@ -129,7 +110,6 @@ ${referenceShapeId} {
       ${dash.editor} ${dash.DetailsEditor} ;
       ${sh.order} 30 ;
     ] ;
-    ${keyOrMeasureDimension}
   .
 
   ${identifierMappingId} a ${sh.NodeShape} ;
@@ -156,7 +136,5 @@ ${referenceShapeId} {
       ${sh.order} 20 ;
     ] ;
   .
-
-  ${dimensionTypes}
 }
 `
