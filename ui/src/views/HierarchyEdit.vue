@@ -49,14 +49,12 @@ export default defineComponent({
 
     const form = useHydraForm(operation, {
       afterSubmit () {
-        store.dispatch('sharedDimensions/fetchCollection')
-
         displayToast({
           message: 'Hierarchy successfully saved',
           variant: 'success',
         })
 
-        store.dispatch('sharedDimensions/fetchHierarchy', route.params.id)
+        store.dispatch('hierarchy/fetchHierarchy', route.params.id)
         router.push({ name: 'Hierarchy', params: { id: route.params.id } })
       },
     })

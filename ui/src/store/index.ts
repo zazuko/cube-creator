@@ -2,6 +2,8 @@ import { createStore } from 'vuex'
 import { auth } from './modules/auth'
 import app from './modules/app'
 import api from './modules/api'
+import hierarchy from './modules/hierarchy'
+import hierarchies from './modules/hierarchies'
 import projects from './modules/projects'
 import project from './modules/project'
 import sharedDimensions from './modules/sharedDimensions'
@@ -13,6 +15,8 @@ export default createStore<RootState>({
     app,
     auth: auth(),
     api,
+    hierarchy,
+    hierarchies,
     projects,
     project,
     sharedDimensions,

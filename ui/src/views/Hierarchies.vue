@@ -53,14 +53,14 @@ export default defineComponent({
   components: { PageContent, LoadingBlock, HydraOperationButton },
 
   computed: {
-    ...mapState('sharedDimensions', {
-      collection: 'hierarchies',
-    })
+    ...mapState('hierarchies', {
+      collection: 'collection',
+    }),
   },
 
   async mounted (): Promise<void> {
     await this.$store.dispatch('sharedDimensions/fetchEntrypoint')
-    await this.$store.dispatch('sharedDimensions/fetchHierarchies')
+    await this.$store.dispatch('hierarchies/fetchCollection')
   },
 })
 </script>
