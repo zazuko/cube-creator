@@ -1,5 +1,14 @@
 # @cube-creator/core-api
 
+## 1.10.1
+
+### Patch Changes
+
+- 2e4a3512: Expose API version in a header
+- bffaa5e2: Security: update dependency `minimist`
+- Updated dependencies [bffaa5e2]
+  - @cube-creator/shared-dimensions-api@2.6.2
+
 ## 1.10.0
 
 ### Minor Changes

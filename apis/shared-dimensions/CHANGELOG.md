@@ -1,5 +1,11 @@
 # @cube-creator/shared-dimensions-api
 
+## 2.6.2
+
+### Patch Changes
+
+- bffaa5e2: Security: update dependency `minimist`
+
 ## 2.6.1
 
 ### Patch Changes
