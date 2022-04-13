@@ -16,7 +16,7 @@
     "@rdfine/hydra": "^0.8.0",
     "@rdfine/prov": "^0.1.1",
     "@rdfine/schema": "^0.6.3",
-    "@rdfjs-elements/formats-pretty": "^0.3.3",
+    "@rdfjs-elements/formats-pretty": "^0.4.3",
     "@rdfjs/express-handler": "^1.2.1",
     "@rdfjs/fetch": "^2.1.0",
     "@rdfjs/namespace": "^1.1.0",
