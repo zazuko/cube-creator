@@ -1,5 +1,12 @@
 # @cube-creator/cli
 
+## 1.10.6
+
+### Patch Changes
+
+- 2e4a3512: Save cube creator versions (API and pipeline) to the published cube (closes #1088)
+- bffaa5e2: Security: update dependency `minimist`
+
 ## 1.10.5
 
 ### Patch Changes
