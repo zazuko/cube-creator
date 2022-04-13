@@ -110,8 +110,8 @@ export default defineComponent({
           path.addOut(sh.inversePath, this.property)
         }
         this.update(path)
-      } else if (this.property) {
-        this.update(this.property)
+      } else {
+        this.update(this.property || pointer.namedNode('urn:placeholder:property'))
       }
     },
   },
