@@ -101,16 +101,11 @@ export default defineComponent({
         return []
       }
 
-      const roots = hierarchy.hierarchyRoot.map(root => ({
-        text: `Root: ${root.value}`
-      }))
-
       const nextLevel = toNextLevelNode(hierarchy.nextInHierarchy)
 
       return [{
         text: `Dimension: ${hierarchy.dimension.value}`,
       },
-      ...roots,
       {
         text: 'Levels:',
         children: [nextLevel]
