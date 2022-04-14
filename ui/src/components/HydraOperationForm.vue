@@ -1,19 +1,22 @@
 <template>
-  <form @submit.prevent="$emit('submit', clone)">
-    <cc-form :resource="clone" :shapes="shapePointer" no-editor-switches />
+  <form @submit.prevent="$emit('submit', value)">
+    <div v-if="!shape || !resource">
+      <loading-block />
+    </div>
+    <div v-else>
+      <cc-form :resource="value" :shapes="shapePointer" no-editor-switches />
 
-    <loading-block v-if="!shape" />
+      <hydra-operation-error :error="error" :shape="shape" class="mt-4" />
 
-    <hydra-operation-error :error="error" :shape="shape" class="mt-4" />
-
-    <form-submit-cancel
-      :submit-label="_submitLabel"
-      :is-submitting="isSubmitting"
-      :show-cancel="showCancel"
-      :submit-button-variant="submitButtonVariant"
-      :disabled="!shape"
-      @cancel="$emit('cancel')"
-    />
+      <form-submit-cancel
+        :submit-label="_submitLabel"
+        :is-submitting="isSubmitting"
+        :show-cancel="showCancel"
+        :submit-button-variant="submitButtonVariant"
+        :disabled="!shape"
+        @cancel="$emit('cancel')"
+      />
+    </div>
   </form>
 </template>
 
@@ -68,12 +71,40 @@ export default defineComponent({
   },
   emits: ['submit', 'cancel'],
 
-  computed: {
-    clone (): GraphPointer | null {
-      const { resource } = this
+  data (): { value?: GraphPointer | null; shapePointer?: GraphPointer } {
+    return {
+      value: null,
+      shapePointer: undefined
+    }
+  },
 
+  mounted () {
+    const { resource } = this
+
+    this.value = this.clone(resource)
+  },
+
+  watch: {
+    shape (shape) {
+      if (!this.shapePointer) {
+        this.shapePointer = shape?.pointer
+      }
+    },
+    resource (resource) {
+      this.value = this.clone(resource)
+    }
+  },
+
+  computed: {
+    _submitLabel (): string {
+      return this.submitLabel ?? this.operation.title ?? 'Save'
+    },
+  },
+
+  methods: {
+    clone (resource: GraphPointer | undefined | null) {
       if (!resource) {
-        return resource
+        return null
       }
 
       const { graph } = resource._context[0]
@@ -87,15 +118,7 @@ export default defineComponent({
         term: resource.term,
         graph,
       })
-    },
-
-    shapePointer (): GraphPointer | null {
-      return this.shape?.pointer ?? null
-    },
-
-    _submitLabel (): string {
-      return this.submitLabel ?? this.operation.title ?? 'Save'
-    },
+    }
   },
 })
 </script>

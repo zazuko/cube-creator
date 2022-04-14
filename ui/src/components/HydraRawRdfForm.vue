@@ -79,11 +79,22 @@ export default defineComponent({
   },
   emits: ['submit', 'cancel'],
 
-  data (): { parseError: string | null, editorQuads: Quad[] | null, editorPrefixes: string } {
+  data (): { parseError: string | null, editorQuads: Quad[] | null, editorPrefixes: string, value?: GraphPointer } {
     return {
       parseError: null,
       editorQuads: null,
       editorPrefixes: ['hydra', 'rdf', 'rdfs', 'schema', 'xsd'].join(','),
+      value: undefined
+    }
+  },
+
+  watch: {
+    editorQuads (editorQuads) {
+      this.value = clownface({
+        dataset: $rdf.dataset(editorQuads),
+        term: this.resource.term,
+        graph: this.graph,
+      })
     }
   },
 
@@ -98,16 +109,6 @@ export default defineComponent({
       return [
         ...this.resource.dataset.match(null, null, null, this.graph)
       ]
-    },
-
-    clone (): GraphPointer | null {
-      if (!this.resource || !this.editorQuads) return null
-
-      return clownface({
-        dataset: $rdf.dataset(this.editorQuads),
-        term: this.resource.term,
-        graph: this.graph,
-      })
     },
 
     _submitLabel (): string {
@@ -130,8 +131,8 @@ export default defineComponent({
     async onSubmit (): Promise<void> {
       await this.waitParsing()
 
-      if (this.clone) {
-        this.$emit('submit', this.clone)
+      if (this.value) {
+        this.$emit('submit', this.value)
       }
     },
 
