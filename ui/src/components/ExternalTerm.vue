@@ -10,7 +10,7 @@ import TermDisplay from './TermDisplay.vue'
 import { api } from '@/api'
 import { DESCRIBE } from '@tpluscode/sparql-builder'
 import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
-import { GraphPointer } from 'clownface'
+import { GraphPointer, MultiPointer } from 'clownface'
 import { Literal, NamedNode, Term } from 'rdf-js'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import TermWithLanguage from '@/components/TermWithLanguage.vue'
@@ -34,9 +34,9 @@ export default defineComponent({
     },
   },
 
-  data (): { labels: Literal[] } {
+  data (): { labels?: MultiPointer<Literal> } {
     return {
-      labels: [],
+      labels: undefined,
     }
   },
 
@@ -47,7 +47,7 @@ export default defineComponent({
       this.labels = getLabels(this.resource.pointer)
     }
 
-    if (!this.labels.length) {
+    if (!this.labels?.terms.length) {
       this.loadResource()
     }
   },
@@ -132,7 +132,8 @@ export default defineComponent({
       try {
         const resource = await api.fetchResource(url.toString())
         const pointer = resource.pointer.node(this.node)
-        if (getLabels(pointer).length === 0) {
+        const labels = getLabels(pointer)
+        if (!labels || labels.terms.length === 0) {
           return null
         }
 
@@ -148,15 +149,11 @@ function isGraphPointer (pointer: any): pointer is GraphPointer {
   return 'term' in pointer
 }
 
-function isLiteral (term: Term): term is Literal {
-  return term.termType === 'Literal'
+function isLiteral (ptr: GraphPointer): ptr is GraphPointer<Literal> {
+  return ptr.term.termType === 'Literal'
 }
 
-function getLabels (pointer: GraphPointer | null): Literal[] {
-  if (pointer) {
-    return pointer.out(schema.name).terms.filter(isLiteral) as Literal[]
-  }
-
-  return []
+function getLabels (pointer: GraphPointer | null): MultiPointer<Literal> | undefined {
+  return pointer?.out(schema.name).filter(isLiteral)
 }
 </script>
