@@ -1,6 +1,6 @@
 <template>
   <o-field class="file is-primary" :class="{'has-name': !!file}">
-    <o-upload v-model="file" class="file-label" @input="onFileSelected">
+    <o-upload v-model="file" class="file-label" @update:modelValue="onFileSelected">
       <span class="file-cta">
         <o-icon class="file-icon" icon="upload" />
         <span class="file-label">Select file</span>
