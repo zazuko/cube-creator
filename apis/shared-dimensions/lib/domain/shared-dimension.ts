@@ -163,11 +163,9 @@ export async function getExportedDimension({ resource, store, client = streamCli
     .filter(shape => !shape.in(sh.node).terms.length) // exclude nested shapes
   const patterns = getPatternsFromShape(shapes)
 
-  const quads = await CONSTRUCT`${patterns}`
+  const quads = await CONSTRUCT.WHERE`${patterns}`
     .FROM(store.graph)
-    .WHERE`
-      ${patterns}
-    `.execute(client.query, { operation: 'postUrlencoded' })
+    .execute(client.query, { operation: 'postUrlencoded' })
 
   const baseUriPattern = new RegExp(`^${env.MANAGED_DIMENSIONS_BASE}`)
   function removeBase<T extends Term>(term: T): T {
