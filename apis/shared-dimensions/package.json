@@ -19,7 +19,7 @@
     "@tpluscode/rdf-ns-builders": "^1.0.0",
     "@tpluscode/rdf-string": "^0.2.21",
     "@tpluscode/rdfine": "^0.5.25",
-    "@tpluscode/sparql-builder": "^0.3.15",
+    "@tpluscode/sparql-builder": "^0.3.21",
     "camouflage-rewrite": "^1.2.0",
     "clownface": "^1.4.0",
     "cors": "^2.8.5",
