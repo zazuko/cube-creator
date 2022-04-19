@@ -4,7 +4,7 @@ import { sparql, turtle } from '@tpluscode/rdf-string'
 import { dash, hydra, prov, rdf, rdfs, schema, sh, qudt, time, xsd } from '@tpluscode/rdf-ns-builders'
 import namespace from '@rdfjs/namespace'
 import $rdf from 'rdf-ext'
-import { lindasQuery } from '../lib/query'
+import { lindasQuery } from '@cube-creator/core/lindas'
 import { placeholderEntity } from '../../lib/domain/dimension-mapping/DimensionMapping'
 
 const sou = namespace('http://qudt.org/vocab/sou/')

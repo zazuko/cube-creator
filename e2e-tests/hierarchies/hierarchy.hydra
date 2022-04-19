@@ -1,0 +1,18 @@
+PREFIX meta: <https://cube.link/meta/>
+PREFIX md: <https://cube-creator.zazuko.com/shared-dimensions/vocab#>
+
+ENTRYPOINT "dimension/hierarchy/technologies"
+
+HEADERS {
+  x-user "john-doe"
+}
+
+With Class meta:Hierarchy {
+    Expect Property md:sharedDimension {
+        Expect Id <https://ld.admin.ch/cube/dimension/technologies>
+    }
+
+    Expect Property meta:hierarchyRoot {
+        Expect Id <https://ld.admin.ch/cube/dimension/technologies/sparql>
+    }
+}

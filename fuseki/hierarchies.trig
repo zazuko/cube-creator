@@ -52,3 +52,36 @@ graph <https://lindas.admin.ch/cube/dimension> {
       ] ;
   ] .
 }
+
+graph <https://lindas.admin.ch/cube/dimension> {
+  <technologies> a meta:Hierarchy, hydra:Resource, md:Hierarchy ;
+    schema:name "Technologies" ;
+    md:sharedDimension <https://ld.admin.ch/cube/dimension/technologies> ;
+    meta:hierarchyRoot <https://ld.admin.ch/cube/dimension/technologies/sparql> ;
+    meta:nextInHierarchy <urn:hierarchyLevel:tech> ;
+  .
+
+  <urn:hierarchyLevel:tech>
+    schema:name "First level" ;
+    sh:path rdf:type ;
+  .
+
+  [
+    sh:targetNode <technologies> ;
+    sh:property
+      [ sh:path rdf:type ],
+      [ sh:path schema:name ],
+      [ sh:path meta:hierarchyRoot ],
+      [ sh:path md:sharedDimension ],
+      [
+        sh:path meta:nextInHierarchy ;
+        sh:node
+          [
+            sh:targetNode <urn:hierarchyLevel:tech> ;
+            sh:property
+              [ sh:path schema:name ],
+              [ sh:path sh:path ];
+          ]
+      ] ;
+  ] .
+}

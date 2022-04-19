@@ -6,10 +6,37 @@ import { dash, dcterms, foaf, hydra, rdf, schema, sd, sh, xsd } from '@tpluscode
 import { editor, md, meta } from '@cube-creator/core/namespace'
 import { AnyPointer } from 'clownface'
 import env from '@cube-creator/core/env'
+import { lindasQuery } from '@cube-creator/core/lindas'
+import { CONSTRUCT } from '@tpluscode/sparql-builder'
+
+const sharedDimensionQuery = CONSTRUCT`
+  ?c a ${hydra.Collection} .
+  ?c ${hydra.member} ?dim .
+  ?dim ?p ?o .
+`.WHERE`
+  BIND ( iri('${env.API_CORE_BASE}dimensions') as ?c )
+
+  ?dim a ${md.SharedDimension} ; ?p ?o
+`._getTemplateResult()
+
+const hierarchyRootsQuery = lindasQuery(CONSTRUCT`
+  ?c a ${hydra.Collection} .
+  ?c ${hydra.member} ?term .
+  ?term ?p ?o .
+`.WHERE`
+  BIND ( iri('${env.API_CORE_BASE}dimensionTerms') as ?c )
+
+  ?term ${schema.inDefinedTermSet} <{dimension}> .
+  ?term ${schema.name} ?name ; ?p ?o .
+
+  filter(regex(?name, "{q}"))
+`
+  ._getTemplateResult()).value
+  .replace('%7Bq%7D', '{q}')
+  .replace('%7Bdimension%7D', '{dimension}')
 
 export default function ({ rdfTypeProperty = false }: { rdfTypeProperty?: boolean } = {}) {
   return (graph: AnyPointer): Initializer<NodeShape> => {
-    const sharedDimensionCollection = graph.namedNode('/dimension/_term-sets')
     const publicQueryEndpoint = graph.blankNode()
       .addOut(sd.endpoint, graph.namedNode(env.PUBLIC_QUERY_ENDPOINT))
       .addOut(foaf.page, env.TRIFID_UI)
@@ -79,7 +106,7 @@ export default function ({ rdfTypeProperty = false }: { rdfTypeProperty?: boolea
       maxCount: 1,
       nodeKind: sh.IRI,
       [dash.editor.value]: dash.InstancesSelectEditor,
-      [hydra.collection.value]: sharedDimensionCollection,
+      [hydra.collection.value]: lindasQuery(sharedDimensionQuery),
       order: 5,
     }, {
       name: 'Root',
@@ -90,7 +117,7 @@ export default function ({ rdfTypeProperty = false }: { rdfTypeProperty?: boolea
       order: 10,
       [hydra.search.value]: iriTemplate({
         variableRepresentation: hydra.ExplicitRepresentation,
-        template: '/dimension/_terms?dimension={dimension}{&q}',
+        template: hierarchyRootsQuery,
         mapping: [{
           variable: 'dimension',
           property: md.sharedDimension,

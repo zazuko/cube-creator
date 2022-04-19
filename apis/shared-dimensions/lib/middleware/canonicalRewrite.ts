@@ -15,20 +15,36 @@ export function rewriteTerm<T extends Term>(term: T): T {
   return term
 }
 
-/**
- * Rewrites quad to change canonical URIs with API namespace with the exception of oa:canonical property
- */
-function rewriteQuad({ subject, predicate, object, graph }: Quad): Quad {
-  return $rdf.quad(
-    rewriteTerm(subject),
-    rewriteTerm(predicate),
-    predicate.equals(oa.canonical) ? object : rewriteTerm(object),
-    rewriteTerm(graph),
-  )
+declare module 'express-serve-static-core' {
+  interface Response {
+    shouldRewrite(term: Term, quad: Quad): boolean
+  }
 }
 
+/**
+ * Rewrites quad to change canonical URIs with API namespace.
+ * By default, skips object oa:canonical property
+ * The condition can be changed by setting `res.shouldRewrite`
+ */
 export const patchResponseStream: express.RequestHandler = asyncMiddleware(async (req, res, next) => {
   const { quadStream } = res
+
+  res.shouldRewrite = (term, { predicate }) => !predicate.equals(oa.canonical)
+
+  function conditionalRewrite<T extends Term>(term: T, quad: Quad): T {
+    return res.shouldRewrite(term, quad) ? rewriteTerm(term) : term
+  }
+
+  function rewriteQuad(quad: Quad): Quad {
+    const { subject, predicate, object, graph } = quad
+
+    return $rdf.quad(
+      conditionalRewrite(subject, quad),
+      conditionalRewrite(predicate, quad),
+      conditionalRewrite(object, quad),
+      conditionalRewrite(graph, quad),
+    )
+  }
 
   res.quadStream = (stream: Stream & Readable) => {
     const rewriteTerms = through2.obj(function (chunk: Quad, enc, callback) {

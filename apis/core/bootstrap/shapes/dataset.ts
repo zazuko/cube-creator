@@ -5,7 +5,7 @@ import { sparql, turtle } from '@tpluscode/rdf-string'
 import $rdf from 'rdf-ext'
 import { Draft, Published } from '@cube-creator/model/Cube'
 import env from '@cube-creator/core/env'
-import { lindasQuery } from '../lib/query'
+import { lindasQuery } from '@cube-creator/core/lindas'
 
 const shapeId = shape('dataset/edit-metadata')
 const temporalFromTo = $rdf.namedNode(shapeId.value + '#temporalFromTo')
