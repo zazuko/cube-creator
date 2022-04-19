@@ -60,8 +60,6 @@ export const getTerms = asyncMiddleware(async (req, res, next) => {
     return next(new httpError.NotFound())
   }
 
-  res.locals.noRewrite = typeof req.query.canonical !== 'undefined'
-
   const pageSize = Number(query.out(hydra.limit).value || 10)
   const page = Number(query.out(hydra.pageIndex).value || 1)
   const offset = (page - 1) * pageSize

@@ -31,12 +31,6 @@ export const patchResponseStream: express.RequestHandler = asyncMiddleware(async
   const { quadStream } = res
 
   res.quadStream = (stream: Stream & Readable) => {
-    if (res.locals.noRewrite) {
-      // when set, res.locals.noRewrite prevents the rewrite of
-      // canonical terms to cube-creator URIs
-      return quadStream(stream)
-    }
-
     const rewriteTerms = through2.obj(function (chunk: Quad, enc, callback) {
       this.push(rewriteQuad(chunk))
 

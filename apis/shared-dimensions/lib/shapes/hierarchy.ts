@@ -90,7 +90,7 @@ export default function ({ rdfTypeProperty = false }: { rdfTypeProperty?: boolea
       order: 10,
       [hydra.search.value]: iriTemplate({
         variableRepresentation: hydra.ExplicitRepresentation,
-        template: '/dimension/_terms?canonical&dimension={dimension}{&q}',
+        template: '/dimension/_terms?dimension={dimension}{&q}',
         mapping: [{
           variable: 'dimension',
           property: md.sharedDimension,
