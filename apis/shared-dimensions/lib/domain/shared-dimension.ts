@@ -29,6 +29,10 @@ export async function create({ resource, store }: CreateSharedDimension): Promis
     throw new DomainError('Missing dimension identifier')
   }
 
+  if (identifier === 'hierarchy') {
+    throw new DomainError('`hierarchy` is not an allowed shared dimension identifier')
+  }
+
   const termSetId = newId(env.MANAGED_DIMENSIONS_BASE, `dimension/${identifier}`)
   if (await store.exists(termSetId, schema.DefinedTermSet)) {
     throw new httpError.Conflict(`Shared Dimension ${identifier} already exists`)
