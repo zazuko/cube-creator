@@ -2,6 +2,7 @@
   <side-pane :title="title" @close="onCancel">
     <hydra-operation-form
       v-if="operation"
+      :key="formGeneration"
       :operation="operation"
       :resource="resource"
       :shape="shape"
@@ -27,7 +28,7 @@
 
 <script lang="ts">
 import { csvw, hydra } from '@tpluscode/rdf-ns-builders'
-import { computed, defineComponent, onMounted, watch } from 'vue'
+import { computed, defineComponent, onMounted, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -107,6 +108,7 @@ export default defineComponent({
         .filter((column): column is CsvColumn => column !== null)
     })
 
+    const formGeneration = ref(0)
     const prepareResourceFromQueryParams = () => {
       const resource = form.resource.value
 
@@ -122,13 +124,14 @@ export default defineComponent({
         resource.addOut(csvw.column, column.id)
       })
 
-      return resource
+      formGeneration.value++
     }
     onMounted(prepareResourceFromQueryParams)
 
     return {
       ...form,
       preselectedColumns,
+      formGeneration,
     }
   },
 
