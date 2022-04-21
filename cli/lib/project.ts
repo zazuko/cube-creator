@@ -21,7 +21,7 @@ export async function loadProject(jobUri: string, { variables, logger }: Context
 
       logger.info(`Source graph <${project.cubeGraph.value}>`)
 
-      return project
+      return { project, job }
     } finally {
       span.end()
     }

@@ -21,7 +21,7 @@ interface Params {
  * which will be processed alongside the rest of cube metadata
  */
 export async function loadCube(this: Pipeline.Context, { jobUri, endpoint, user, password }: Params): Promise<Stream> {
-  const project = await loadProject(jobUri, this)
+  const { project } = await loadProject(jobUri, this)
 
   const patterns = sparql`
     ?cube a ${cube.Cube} ; !${cube.observationConstraint}* ?s .
