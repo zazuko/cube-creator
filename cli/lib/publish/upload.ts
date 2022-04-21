@@ -24,7 +24,7 @@ export function uploadCube(variables: VariableMap) {
         '-u', `${username}:${password}`,
         '-T',
         cubeFile,
-        '-H', 'content-type:application/n-quads',
+        '-H', 'content-type:text/turtle',
         '--fail',
       ],
       { stdio: [process.stdin, process.stdout, process.stderr] })
