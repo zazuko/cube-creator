@@ -151,17 +151,25 @@ async function * buildColumns({ cubeIdentifier, table, source, resources, organi
   }
 }
 
+function autoTemplate(source: CsvSource): string {
+  return source.columns
+    .sort((l, r) => l.order - r.order)
+    .map((column) => `{${column.name}}`)
+    .join('-')
+}
+
 export async function buildCsvw({ table, resources }: { table: Table; resources: ResourceStore }): Promise<Csvw.Table> {
   const source = await resources.getResource(table.csvSource)
   const { projectId, organizationId } = await findOrganization({ table })
   const organization = await resources.getResource<Organization>(organizationId)
   const { cubeIdentifier } = await resources.getResource<CsvProject>(projectId)
 
+  const identifierTemplate = table.identifierTemplate || autoTemplate(source)
   let template: string
   const column: Initializer<Csvw.Column>[] = []
 
   if (table.isObservationTable) {
-    template = `observation/${table.identifierTemplate}`
+    template = `observation/${identifierTemplate}`
     column.push({
       virtual: true,
       propertyUrl: cc.cube.value,
@@ -170,7 +178,7 @@ export async function buildCsvw({ table, resources }: { table: Table; resources:
       }).value,
     })
   } else {
-    template = table.identifierTemplate
+    template = identifierTemplate
   }
 
   for await (const csvwColumn of buildColumns({ cubeIdentifier, organization, table, source, resources })) {
