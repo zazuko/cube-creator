@@ -54,6 +54,16 @@ describe('lib/csvw-builder', () => {
         delimiter: '-',
         quoteChar: '""',
       },
+      columns: [{
+        name: 'id',
+        order: 1,
+      }, {
+        name: 'name',
+        order: 3,
+      }, {
+        name: 'sub_id',
+        order: 2,
+      }],
     })
 
     table = Table.create(graph.namedNode('table'), {
@@ -101,6 +111,18 @@ describe('lib/csvw-builder', () => {
 
     // then
     expect(csvw.tableSchema?.aboutUrl).to.eq('http://example.com/test-cube/observation/{id}-{sub_id}')
+  })
+
+  it('generates observation URI when table identifier is empty', async () => {
+    // given
+    table.types.add(cc.ObservationTable)
+    table.identifierTemplate = ''
+
+    // when
+    const csvw = await buildCsvw({ table, resources })
+
+    // then
+    expect(csvw.tableSchema?.aboutUrl).to.eq('http://example.com/test-cube/observation/{id}-{sub_id}-{name}')
   })
 
   it('does not add "/observation" segment to csvw:aboutUrl when it is not observation table', async () => {
