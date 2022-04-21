@@ -292,7 +292,9 @@ graph <cube-project/ubd/cube-data> {
     sh:maxCount  1 ;
     sh:minCount  1 ;
     sh:nodeKind  sh:Literal ;
-    sh:path      <https://environment.ld.admin.ch/foen/ubd/28/dimension/year> .
+    sh:path      <https://environment.ld.admin.ch/foen/ubd/28/dimension/year> ;
+    sh:or ( [ sh:datatype cube:Undefined ] [ sh:datatype xsd:gYear ] ) ;
+  .
 
   _:dimension-value
     sh:datatype  xsd:decimal ;

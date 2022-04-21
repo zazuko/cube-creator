@@ -46,8 +46,8 @@ export async function loadDataset(jobUri: string, Hydra: HydraClient) {
 interface Params {
   jobUri: string
   endpoint: string
-  user: string
-  password: string
+  user?: string
+  password?: string
 }
 
 interface QueryParams {
@@ -78,9 +78,11 @@ function sourceCubeAndShape({ project, revision, cubeIdentifier }: QueryParams) 
         ) as ?o1)
 
         # exclude properties of sh:in values (concept dimensions)
-        FILTER (NOT EXISTS {
-          [] ${rdf.first} ?s .
-        })
+        MINUS {
+          ?cube ${cube.observationConstraint}/${sh.property} ?prop .
+          ?prop ${sh.in}/${rdf.rest}*/${rdf.first} ?s .
+          ?s ?conceptP ?conceptO .
+        }
     }
   `
 }
@@ -161,8 +163,7 @@ export async function loadCubeMetadata(this: Context, { jobUri, endpoint, user, 
   const revision = toRdf(this.variables.get('revision'))
   const cubeIdentifier = this.variables.get('cubeIdentifier')
   const timestamp = this.variables.get('timestamp')
-  const job = this.variables.get('publish-job')
-  const project = await loadProject(jobUri, this)
+  const { project, job } = await loadProject(jobUri, this)
 
   const attributes = {
     baseCube: baseCube.value,
