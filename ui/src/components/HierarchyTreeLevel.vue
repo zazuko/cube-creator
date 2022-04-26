@@ -31,16 +31,18 @@
 
 <script lang="ts">
 import { GraphPointer } from 'clownface'
-import { NamedNode, Term } from 'rdf-js'
+import { NamedNode } from 'rdf-js'
 import { defineComponent, PropType, Ref, ref, toRefs } from 'vue'
 
 import ExternalTerm from '@/components/ExternalTerm.vue'
 import HierarchyTree from '@/components/HierarchyTree.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import ExternalTermLink from '@/components/ExternalTermLink.vue'
-import * as hierarchy from '@/forms/editors/hierarchy'
+import * as hierarchy from '@zazuko/cube-hierarchy-query/resources'
 import { NextInHierarchy } from '@/store/types'
 import Remote, { RemoteData } from '@/remote'
+import StreamClient from 'sparql-http-client'
+import $rdf from 'rdf-ext'
 
 export default defineComponent({
   name: 'HiearchyTreeLevel',
@@ -62,6 +64,9 @@ export default defineComponent({
 
   setup (props) {
     const { endpointUrl, nextLevel, root } = toRefs(props)
+    const client = new StreamClient({
+      endpointUrl: endpointUrl.value
+    })
 
     const isOpen = ref(false)
 
@@ -73,12 +78,13 @@ export default defineComponent({
     const loadPage = async () => {
       try {
         const page = await hierarchy.children(
-          endpointUrl.value,
-          nextLevel.value,
+          nextLevel.value?.pointer,
           root.value.term,
-          pageSize,
-          offset.value
-        )
+          {
+            limit: pageSize,
+            offset: offset.value,
+          }
+        )?.execute(client, $rdf) || []
 
         mayHaveMore.value = page.length >= pageSize
         children.value = Remote.loaded((children.value?.data ?? []).concat(page))

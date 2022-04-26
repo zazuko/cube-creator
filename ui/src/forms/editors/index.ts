@@ -11,7 +11,8 @@ import { FocusNode } from '@hydrofoil/shaperone-core'
 import { createCustomElement } from '../custom-element'
 import '@rdfine/dash/extensions/sh/PropertyShape'
 import { Literal } from 'rdf-js'
-import * as hierarchyQueries from './hierarchy/query'
+import * as hierarchyIntrospectionQueries from '@zazuko/cube-hierarchy-query/introspect'
+import * as hierarchyResourceQueries from '@zazuko/cube-hierarchy-query/resources'
 import { loader } from './hierarchy/index'
 import { SingleEditorRenderParams } from '@hydrofoil/shaperone-core/models/components/index'
 import { InstancesSelect } from '@hydrofoil/shaperone-core/lib/components/instancesSelect'
@@ -357,7 +358,7 @@ interface HierarchyPathEditor extends SingleEditorComponent<HierarchyPathCompone
 }
 
 export const hierarchyPath: Lazy<HierarchyPathEditor> = {
-  ...loader(hierarchyQueries.properties, instanceSelect),
+  ...loader(hierarchyIntrospectionQueries.properties, instanceSelect),
   editor: ns.editor.HierarchyPathEditor,
   _init (context) {
     if (context.value.object && !context.value.componentState.example) {
@@ -367,19 +368,19 @@ export const hierarchyPath: Lazy<HierarchyPathEditor> = {
   async loadExample ({ value, focusNode, updateComponentState }) {
     const client = value.componentState.client
     const queryUi = value.componentState.queryUi
-    const query = hierarchyQueries.example(focusNode)
+    const query = hierarchyResourceQueries.example(focusNode)
     if (!client || !query) return
 
     let moreExamples: URL | undefined
     if (queryUi) {
       moreExamples = new URL(queryUi)
       const params = new URLSearchParams({
-        query: hierarchyQueries.example(focusNode, 20)
+        query: hierarchyResourceQueries.example(focusNode)?.build() || ''
       })
       moreExamples.hash = params.toString()
     }
 
-    const stream = await client.query.construct(query)
+    const stream = await query.execute(client.query)
     const dataset = await $rdf.dataset().import(stream)
     updateComponentState({
       example: clownface({ dataset }).in().toArray().shift(),
@@ -407,6 +408,6 @@ export const hierarchyPath: Lazy<HierarchyPathEditor> = {
 }
 
 export const hierarchyLevelTarget: Lazy<InstancesSelectEditor> = {
-  ...loader(hierarchyQueries.types, instanceSelect),
+  ...loader(hierarchyIntrospectionQueries.types, instanceSelect),
   editor: ns.editor.HierarchyLevelTargetEditor,
 }
