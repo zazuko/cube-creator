@@ -1,5 +1,12 @@
 # @cube-creator/cli
 
+## 1.10.7
+
+### Patch Changes
+
+- 68909bd9: Upload published cube as Turtle (mitigates an issue where Stardog parses blank nodes wrong)
+- 25c1260a: Security: update node-forge
+
 ## 1.10.6
 
 ### Patch Changes

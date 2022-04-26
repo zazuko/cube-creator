@@ -1,5 +1,22 @@
 # @cube-creator/ui
 
+## 1.11.0
+
+### Minor Changes
+
+- 8f7ad191: Auto-fill and select URL when updating external CSV source (fixes #1188)
+
+### Patch Changes
+
+- 5b89e307: Inverse path would show all child resources when expanded on the hierarchy screen
+- 979a6808: Hierarchy preview: labels were not shown unless an English translation was present (fixes #1178)
+- 89b75aa9: Remove roots listed in the hierarchy definition
+- 64bba989: Shared dimension import would not work (fixes #1180)
+- fde464ee: Update redis (fixes vulnerability GHSL-2021-026)
+- f3e62e58: New hierarchy: toggling the "inverse" checkbox would stop working until a property was selected
+- 25c1260a: Security: update node-forge
+- 7e1e9a64: On some forms, switching tabs would immediately revert to the first tab (fixes #1177)
+
 ## 1.10.2
 
 ### Patch Changes

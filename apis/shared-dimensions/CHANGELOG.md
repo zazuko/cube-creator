@@ -1,5 +1,12 @@
 # @cube-creator/shared-dimensions-api
 
+## 2.6.4
+
+### Patch Changes
+
+- 25c1260a: Security: update node-forge
+- d5e95a6a: `Payload too large` when exporting shared dimensions (fixes #1184)
+
 ## 2.6.3
 
 ### Patch Changes
