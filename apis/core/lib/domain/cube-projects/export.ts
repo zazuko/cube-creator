@@ -57,13 +57,20 @@ export async function getExportedProject({ resource, store, client = streamClien
       GRAPH ?g {
         ?s a ${cc.CSVSource} .
         ?o ^${schema.associatedMedia} ?s .
+        FILTER ( EXISTS {
+          GRAPH ?g {
+            ?o ${cc.sourceKind} ${cc.MediaLocal} .
+          }
+        })
       }
     }
     MINUS {
       GRAPH ?g { ?s ?p ?o }
-      FILTER (
-        EXISTS { GRAPH ?g { [] ${schema.associatedMedia} ?s } }
-      )
+      FILTER ( EXISTS {
+        GRAPH ?g {
+          ?s ${cc.sourceKind} ${cc.MediaLocal} .
+        }
+      })
     }
 
     FILTER (

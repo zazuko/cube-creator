@@ -118,12 +118,27 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/export @SPARQL', () =>
       const sources = clownface({ dataset })
         .has(rdf.type, cc.CSVSource)
       const medias = clownface({ dataset })
+        .namedNode('csv-source/ubd')
         .has(schema.associatedMedia)
 
       // then
       expect(sources.terms).not.to.be.empty
-      expect(sources.out(schema.associatedMedia).terms).to.be.empty
       expect(medias.terms).to.be.empty
+    })
+
+    it('does export external csv links', () => {
+      // given
+      const sources = clownface({ dataset })
+        .has(rdf.type, cc.CSVSource)
+      const media = clownface({ dataset })
+        .namedNode('csv-source/external')
+        .out(schema.associatedMedia)
+        .out(schema.contentUrl)
+
+      // then
+      expect(sources.terms).not.to.be.empty
+      expect(media.term).to
+        .deep.eq($rdf.namedNode('https://raw.githubusercontent.com/Rdataflow/nycflights13/master/data-raw/airports.csv'))
     })
   })
 
