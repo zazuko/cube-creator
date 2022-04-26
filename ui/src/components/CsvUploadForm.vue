@@ -1,16 +1,16 @@
 <template>
   <o-tabs type="boxed" v-model="sourceKind">
-    <o-tab-item label="Upload" value="MediaLocal">
+    <o-tab-item label="Upload" :value="MediaLocal">
       <file-upload
         :file-meta="fileMeta"
         :after-upload="submitLocal"
         @done="close"
       />
     </o-tab-item>
-    <o-tab-item label="URL" value="MediaURL">
+    <o-tab-item label="URL" :value="MediaURL">
       <form @submit.prevent="submitUrl">
         <o-field label="URL">
-          <o-input v-model="fileUrl" type="url" required />
+          <o-input :model-value="fileUrl" type="url" required />
         </o-field>
         <button-loading native-type="submit" variant="primary" :loading="isLoading">
           Upload
@@ -26,7 +26,7 @@ import { defineComponent, PropType } from 'vue'
 import * as $rdf from '@rdfjs/dataset'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import clownface from 'clownface'
-
+import { CsvSource } from '@cube-creator/model'
 import { cc } from '@cube-creator/core/namespace'
 import ButtonLoading from './ButtonLoading.vue'
 import FileUpload, { UploadedFile } from './FileUpload.vue'
@@ -47,13 +47,34 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    source: {
+      type: Object as PropType<CsvSource>,
+      default: undefined,
+    }
   },
   emits: ['submit', 'close'],
 
   data () {
+    const MediaLocal = cc.MediaLocal.value
+    const MediaURL = cc.MediaURL.value
+
     return {
-      sourceKind: 'MediaLocal',
+      MediaLocal,
+      MediaURL,
+      sourceKind: MediaLocal,
       fileUrl: '',
+    }
+  },
+
+  mounted () {
+    const sourceMedia = this.source?.associatedMedia
+
+    if (sourceMedia) {
+      this.sourceKind = sourceMedia.sourceKind.value
+    }
+
+    if (sourceMedia?.contentUrl) {
+      this.fileUrl = sourceMedia.contentUrl.value
     }
   },
 

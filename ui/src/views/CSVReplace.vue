@@ -21,6 +21,7 @@
       :allow-multiple="false"
       :file-meta="fileMeta"
       :is-loading="isLoading"
+      :source="source"
       @submit="submit"
       @close="close"
     />
