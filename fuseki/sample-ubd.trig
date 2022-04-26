@@ -328,6 +328,7 @@ graph <cube-project/ubd/csv-mapping> {
   <cube-project/ubd/csv-mapping>
     a cc:CsvMapping , hydra:Resource ;
     cc:csvSource <cube-project/ubd/csv-source/ubd> ;
+    cc:csvSource <cube-project/ubd/csv-source/external> ;
     cc:csvSourceCollection <cube-project/ubd/csv-mapping/sources> ;
     cc:tables <cube-project/ubd/csv-mapping/tables> ;
   .
@@ -383,12 +384,45 @@ graph <cube-project/ubd/csv-source/canton> {
   .
 }
 
+<cube-project/ubd/csv-source/external> void:inDataset <ubd-example> .
+graph <cube-project/ubd/csv-source/external> {
+  <cube-project/ubd/csv-source/external>
+    a cc:CSVSource, hydra:Resource ;
+    schema:associatedMedia
+      [
+        a schema:MediaObject ;
+        schema:contentUrl <https://raw.githubusercontent.com/Rdataflow/nycflights13/master/data-raw/airports.csv> ;
+        cc:sourceKind cc:MediaURL ;
+      ] ;
+    schema:name "airports.csv" ;
+    cc:csvMapping <cube-project/ubd/csv-mapping> ;
+    csvw:dialect <cube-project/ubd/csv-source/external/dialect> ;
+    csvw:column <cube-project/ubd/csv-source/external/column/name> ;
+  .
+
+  <cube-project/ubd/csv-source/external/dialect>
+    csvw:quoteChar "\"" ;
+    csvw:delimiter "," ;
+    csvw:header    true ;
+  .
+
+  <cube-project/ubd/csv-source/external/column/name>
+    a csvw:Column ;
+    schema:name "name" ;
+    dtype:order 1 ;
+    cc:csvColumnSample "WAW" ;
+    cc:csvColumnSample "LHR" ;
+    cc:csvColumnSample "LAX" ;
+  .
+}
+
 <cube-project/ubd/csv-source/ubd> void:inDataset <ubd-example> .
 graph <cube-project/ubd/csv-source/ubd> {
   <cube-project/ubd/csv-source/ubd>
     a cc:CSVSource, hydra:Resource ;
     schema:associatedMedia  [ a  schema:MediaObject ;
                               schema:identifier "test-data/ubd28/input_CH_yearly_air_immission_basetable.csv";
+                              cc:sourceKind cc:MediaLocal ;
                             ] ;
     schema:name "ubd.csv" ;
     cc:csvMapping <cube-project/ubd/csv-mapping> ;
