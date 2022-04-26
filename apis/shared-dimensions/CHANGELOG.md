@@ -1,5 +1,17 @@
 # @cube-creator/shared-dimensions-api
 
+## 2.6.3
+
+### Patch Changes
+
+- ccc3116c: When editing a hierarchy, no properties would show for dimensions defined inside Cube Creator
+
+## 2.6.2
+
+### Patch Changes
+
+- bffaa5e2: Security: update dependency `minimist`
+
 ## 2.6.1
 
 ### Patch Changes

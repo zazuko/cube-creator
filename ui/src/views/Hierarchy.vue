@@ -64,7 +64,7 @@ interface Node {
 }
 
 export default defineComponent({
-  name: 'SharedDimensionView',
+  name: 'HierarchyView',
   components: {
     HierarchyTree,
     HydraOperationButton,
@@ -74,15 +74,15 @@ export default defineComponent({
   },
 
   mounted (): void {
-    this.$store.dispatch('sharedDimensions/fetchHierarchy', this.$route.params.id)
+    this.$store.dispatch('hierarchy/fetchHierarchy', this.$route.params.id)
   },
 
   unmounted () {
-    this.$store.dispatch('sharedDimensions/resetHierarchy')
+    this.$store.dispatch('hierarchy/reset')
   },
 
   computed: {
-    ...mapState('sharedDimensions', {
+    ...mapState('hierarchy', {
       hierarchy: 'hierarchy',
     }),
 
@@ -101,16 +101,11 @@ export default defineComponent({
         return []
       }
 
-      const roots = hierarchy.hierarchyRoot.map(root => ({
-        text: `Root: ${root.value}`
-      }))
-
       const nextLevel = toNextLevelNode(hierarchy.nextInHierarchy)
 
       return [{
         text: `Dimension: ${hierarchy.dimension.value}`,
       },
-      ...roots,
       {
         text: 'Levels:',
         children: [nextLevel]

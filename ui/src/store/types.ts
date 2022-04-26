@@ -5,6 +5,8 @@ import { APIState } from './modules/api'
 import { ProjectsState } from '@/store/modules/projects'
 import { ProjectState } from '@/store/modules/project'
 import { Actions } from '@/api/mixins/ApiResource'
+import { HierarchyState } from './modules/hierarchy'
+import { HierarchiesState } from './modules/hierarchies'
 import { SharedDimensionsState } from './modules/sharedDimensions'
 import { SharedDimensionState } from './modules/sharedDimension'
 import { GraphPointer } from 'clownface'
@@ -16,6 +18,8 @@ export interface RootState {
   app: AppState
   auth: VuexOidcState
   api: APIState
+  hierarchy: HierarchyState
+  hierarchies: HierarchiesState
   projects: ProjectsState
   project: ProjectState
   sharedDimensions: SharedDimensionsState

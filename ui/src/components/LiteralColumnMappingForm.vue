@@ -80,7 +80,10 @@ export default defineComponent({
       }
     })
 
-    return form
+    return {
+      shape: form.shape,
+      resource: form.resource,
+    }
   },
 })
 </script>

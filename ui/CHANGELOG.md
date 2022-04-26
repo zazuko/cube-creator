@@ -1,5 +1,15 @@
 # @cube-creator/ui
 
+## 1.10.2
+
+### Patch Changes
+
+- 3e8b3b0a: Add link to open hierarchy terms externally
+- bae3f28c: Hierarchy levels with direct path would not exapnd in preview
+- f5788c13: Dedicated page with hierarchy preview (closes #1134)
+- 00f2e5ae: Fix column mapping form error handling (fixes #1165)
+- bffaa5e2: Security: update dependency `minimist`
+
 ## 1.10.1
 
 ### Patch Changes

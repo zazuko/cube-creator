@@ -43,8 +43,7 @@
 import { defineComponent, PropType, ref, toRefs } from 'vue'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
 import HydraRawRdfForm from '@/components/HydraRawRdfForm.vue'
-import clownface, { GraphPointer } from 'clownface'
-import $rdf from '@rdf-esm/dataset'
+import { GraphPointer } from 'clownface'
 import { RuntimeOperation } from 'alcaeus'
 import { Shape } from '@rdfine/shacl'
 import { ErrorDetails } from '@/api/errors'
@@ -88,7 +87,7 @@ export default defineComponent({
     const { resource } = toRefs(props)
 
     const isRawMode = ref(false)
-    const internalResource = ref(resource)
+    const internalResource = resource.value
 
     return {
       isRawMode,
@@ -96,24 +95,28 @@ export default defineComponent({
     }
   },
 
-  methods: {
-    async toggleMode (): Promise<void> {
-      await this.syncResource()
-      this.isRawMode = !this.isRawMode
-    },
-
-    async syncResource (): Promise<void> {
-      if (this.isRawMode) {
-        const rdfEditor = this.$refs.rdfEditor as any
-        await rdfEditor.waitParsing()
-        this.internalResource = Object.freeze(clownface({
-          dataset: $rdf.dataset(rdfEditor.editorQuads || []),
-          term: this.internalResource.term,
-        }))
-      } else {
-        const form = this.$refs.form as any
-        this.internalResource = Object.freeze(form.clone)
+  watch: {
+    async resource (resource) {
+      if (this.internalResource?.term.equals(resource?.term)) {
+        return
       }
+      this.isRawMode = false
+      this.internalResource = null as any
+      await (this.$refs.form as any)?.updateComplete
+      this.internalResource = resource
+    }
+  },
+
+  methods: {
+    async toggleMode () {
+      if (this.isRawMode) {
+        this.internalResource = (this.$refs.rdfEditor as any).value
+      } else {
+        this.internalResource = null as any
+        await (this.$refs.form as any).updateComplete
+        this.internalResource = (this.$refs.form as any).value
+      }
+      this.isRawMode = !this.isRawMode
     },
   },
 })

@@ -70,7 +70,7 @@ describe('CSV mapping flow', () => {
 
     cy.get('form').submit()
 
-    cy.contains('Table My observations was successfully created').should('be.visible')
+    cy.contains('Cube: My observations').should('be.visible')
     cy.contains('.mapper-table', 'My observations')
       .should('be.visible')
       .should('contain.text', 'Cube:')

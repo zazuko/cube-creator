@@ -33,12 +33,12 @@ export default defineComponent({
     const store = useStore<RootState>()
     const router = useRouter()
 
-    const collection = store.state.sharedDimensions.hierarchies
+    const collection = store.state.hierarchies.collection
     const operation = shallowRef(collection?.actions.create ?? null)
 
     const form = useHydraForm(operation, {
       async afterSubmit (hierarchy: any) {
-        await store.dispatch('sharedDimensions/fetchHierarchies')
+        store.dispatch('hierarchies/fetchCollection')
 
         displayToast({
           message: `Hierarchy ${hierarchy.name} successfully created`,

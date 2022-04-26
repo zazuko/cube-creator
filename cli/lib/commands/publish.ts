@@ -7,6 +7,7 @@ import { isCsvProject } from '@cube-creator/model/Project'
 import $rdf from 'rdf-ext'
 import { logger } from '../log'
 import { uploadCube } from '../publish/upload'
+import { version } from '../../package.json'
 import * as runner from './runner'
 
 interface PublishRunOptions extends runner.RunOptions {
@@ -28,7 +29,7 @@ export default runner.create<PublishRunOptions>({
     const { publishStore, job: jobUri } = options
     const Hydra = variable.get('apiClient')
 
-    const { job, namespace, cubeIdentifier } = await getJob(jobUri, Hydra)
+    const { job, namespace, cubeIdentifier, cubeCreatorVersion } = await getJob(jobUri, Hydra)
 
     if (options.to === 'filesystem' && !variable.has('targetFile')) {
       variable.set('targetFile', tempy.file())
@@ -42,6 +43,11 @@ export default runner.create<PublishRunOptions>({
     variable.set('metadata', $rdf.dataset())
     // this should be possible as relative path in pipeline ttl but does not work
     variable.set('shapesPath', path.resolve(__dirname, '../../shapes.ttl'))
+
+    if (cubeCreatorVersion) {
+      variable.set('cubeCreatorVersion', cubeCreatorVersion)
+    }
+    variable.set('cliVersion', version)
 
     variable.set('target-graph', job.publishGraph.value)
     if (process.env.PUBLISH_GRAPH_OVERRIDE) {
@@ -70,8 +76,10 @@ async function getJob(jobUri: string, Hydra: HydraClient): Promise<{
   job: PublishJob
   namespace: string
   cubeIdentifier: string
+  cubeCreatorVersion: string | undefined | null
 }> {
   const jobResource = await Hydra.loadResource<PublishJob>(jobUri)
+  const cubeCreatorVersion = jobResource.response?.xhr.headers.get('x-cube-creator')
   const job = jobResource.representation?.root
   if (!job) {
     throw new Error(`Did not find representation of job ${jobUri}. Server responded ${jobResource.response?.xhr.status}`)
@@ -96,5 +104,6 @@ async function getJob(jobUri: string, Hydra: HydraClient): Promise<{
     job,
     namespace: datasetResource.representation?.root?.hasPart[0].id.value,
     cubeIdentifier,
+    cubeCreatorVersion,
   }
 }

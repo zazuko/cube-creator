@@ -6,12 +6,15 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
 import { Literal } from 'rdf-js'
+import { MultiPointer } from 'clownface'
+import { taggedLiteral } from 'clownface/filter'
+import { displayLanguage } from '@/store/serializers'
 
 export default defineComponent({
   name: 'TermWithLanguage',
   props: {
     values: {
-      type: Array as PropType<Literal[]>,
+      type: Object as PropType<MultiPointer<Literal> | Literal[]>,
       default: undefined,
     },
     selectedLanguage: {
@@ -22,9 +25,19 @@ export default defineComponent({
 
   computed: {
     value (): string | undefined {
-      const term =
-        this.values?.find(({ language }) => language === this.selectedLanguage) ||
-        this.values?.find(({ language }) => !language)
+      if (Array.isArray(this.values)) {
+        const term =
+          this.values?.find(({ language }) => language === this.selectedLanguage) ||
+          this.values?.find(({ language }) => !language)
+
+        return term?.value
+      }
+
+      const term = this.values?.filter(taggedLiteral([
+        this.selectedLanguage,
+        ...displayLanguage,
+        '*'
+      ]))
 
       return term?.value
     },

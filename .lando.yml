@@ -58,6 +58,7 @@ services:
     ssl: true
     services:
       image: zazuko/trifid
+      user: root
       command: tini -- /app/server.js --config=/config-sparql.json --sparql-endpoint-url=http://admin:password@db.cube-creator.lndo.site/cube-creator
       environment:
         DEBUG: "trifid*"

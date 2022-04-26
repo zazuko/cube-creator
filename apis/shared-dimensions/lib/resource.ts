@@ -56,13 +56,13 @@ export function getPatternsFromShape(shapes: AnyPointer, nextVariable = variable
     const childShapes = property.out(sh.node).toArray()
 
     const uniqueProperties = new TermSet(property.out(sh.path).terms)
-    const ownPatterns = [...uniqueProperties].map(path => {
-      return sparql`${node} ${path} ${nextVariable()} .`
-    })
+    const ownPatterns = [...uniqueProperties].reduce((patterns, path) => {
+      return sparql`${patterns} ${path} ${nextVariable()} ;`
+    }, sparql`${node}`)
     const childPatterns = childShapes.flatMap(child => getPatternsFromShape(child, nextVariable, seen))
 
     return [
-      ...ownPatterns,
+      sparql`${ownPatterns} .`,
       ...childPatterns,
     ]
   })
