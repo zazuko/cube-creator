@@ -112,6 +112,10 @@ export const autoComplete: Lazy<InstancesSelectEditor> = {
       })
 
       const loadInstance = async () => {
+        if (object?.value.startsWith('urn:')) {
+          return
+        }
+
         const instance = await this.loadInstance({ property: property.shape, value: object })
         if (instance) {
           const objectNode = property.shape.pointer.node(object)
