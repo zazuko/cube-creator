@@ -1,5 +1,18 @@
 # @cube-creator/core-api
 
+## 1.10.3
+
+### Patch Changes
+
+- 02222a05: Remove Dimension type from reference column mapping (closes #1167)
+- fde464ee: Update redis (fixes vulnerability GHSL-2021-026)
+- 56973c51: External CSV source URLs missing from project export (closes #1188)
+- 25c1260a: Security: update node-forge
+- 7a82067b: Update moment
+- Updated dependencies [25c1260a]
+- Updated dependencies [d5e95a6a]
+  - @cube-creator/shared-dimensions-api@2.6.4
+
 ## 1.10.2
 
 ### Patch Changes
