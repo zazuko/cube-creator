@@ -87,7 +87,7 @@ export default defineComponent({
   watch: {
     shape (shape) {
       if (!this.shapePointer) {
-        this.shapePointer = shape?.pointer
+        this.shapePointer = Object.freeze(shape?.pointer)
       }
     },
     resource (resource) {
