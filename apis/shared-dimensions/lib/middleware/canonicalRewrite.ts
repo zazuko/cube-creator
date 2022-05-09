@@ -16,6 +16,7 @@ export function rewriteTerm<T extends Term>(term: T): T {
 }
 
 export interface ShouldRewrite {
+  // eslint-disable-next-line no-unused-vars
   (quad: Quad): true | { [p in keyof Quad]?: false }
 }
 
