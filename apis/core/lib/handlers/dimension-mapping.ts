@@ -69,10 +69,5 @@ export const prepareEntries: Enrichment = async (req, pointer) => {
   const dictionary = fromPointer(pointer)
   const unmappedValues = await getUnmappedValues(dictionary.id, dictionary.about)
 
-  const entities = dictionary.pointer.out(prov.hadDictionaryMember).out(prov.pairEntity).terms
-  entities.forEach(entity => {
-    dictionary.pointer.node(entity).addOut(rdfs.label, 'test')
-  })
-
   dictionary.addMissingEntries(unmappedValues)
 }
