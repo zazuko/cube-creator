@@ -3,10 +3,7 @@ import { GraphPointer } from 'clownface'
 import error from 'http-errors'
 import { Dictionary } from '@rdfine/prov'
 import { fromPointer } from '@rdfine/prov/lib/Dictionary'
-import { cc } from '@cube-creator/core/namespace'
 import { ResourceStore } from '../../ResourceStore'
-import { replaceValueWithDefinedTerms } from '../queries/dimension-mappings'
-import * as log from '../../log'
 
 interface UpdateDimensionMapping {
   resource: NamedNode
@@ -32,14 +29,7 @@ export async function update({
   dimensionMappings.changeSharedDimensions(sharedDimensions)
 
   dimensionMappings.onlyValidTerms = newMappings.onlyValidTerms
-
-  const newEntries = dimensionMappings.replaceEntries(newMappings.hadDictionaryMember)
-
-  const { applyMappings } = cc
-  if (newEntries.size && mappings.out(applyMappings).value === 'true') {
-    replaceValueWithDefinedTerms({ dimensionMapping: resource, terms: newEntries })
-      .catch((err: Error) => log.error(`Failed to update observations: ${err.message}`))
-  }
+  dimensionMappings.replaceEntries(newMappings.hadDictionaryMember)
 
   return dimensionMappings.pointer
 }

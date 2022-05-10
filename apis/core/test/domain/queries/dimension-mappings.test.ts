@@ -1,14 +1,9 @@
-import { Term } from 'rdf-js'
 import { describe, it, beforeEach } from 'mocha'
-import sinon from 'sinon'
 import $rdf from 'rdf-ext'
 import { expect } from 'chai'
-import { DESCRIBE } from '@tpluscode/sparql-builder'
 import { ccClients } from '@cube-creator/testing/lib'
 import { insertTestProject } from '@cube-creator/testing/lib/seedData'
-import clownface from 'clownface'
-import TermMap from '@rdfjs/term-map'
-import { replaceValueWithDefinedTerms, getUnmappedValues } from '../../../lib/domain/queries/dimension-mappings'
+import { getUnmappedValues } from '../../../lib/domain/queries/dimension-mappings'
 
 describe('@cube-creator/core-api/lib/domain/queries/dimension-mappings @SPARQL', function () {
   this.timeout(20000)
@@ -17,47 +12,6 @@ describe('@cube-creator/core-api/lib/domain/queries/dimension-mappings @SPARQL',
 
   beforeEach(async () => {
     await insertTestProject()
-  })
-
-  describe('replaceValueWithDefinedTerms', () => {
-    let terms: Map<Term, Term>
-    const sparqlSpy = sinon.spy(ccClients.streamClient.query, 'update')
-
-    beforeEach(async () => {
-      terms = new TermMap()
-
-      sparqlSpy.resetHistory()
-    })
-
-    it('does nothing when called without any terms', async () => {
-    // when
-      await replaceValueWithDefinedTerms({ dimensionMapping, terms }, ccClients.streamClient)
-
-      // then
-      expect(sparqlSpy).not.to.have.been.called
-    })
-
-    it('updates observations', async () => {
-    // given
-      const observationId = $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/observation/blBAS-2003-annualmean')
-      const definedTerm = $rdf.namedNode('http://www.wikidata.org/entity/Q5282')
-      terms.set($rdf.literal('so2'), definedTerm)
-
-      // when
-      await replaceValueWithDefinedTerms({ dimensionMapping, terms }, ccClients.streamClient)
-
-      // then
-      const quads = await DESCRIBE`${observationId}`.execute(ccClients.parsingClient.query)
-      const observation = clownface({ dataset: $rdf.dataset(quads) }).namedNode(observationId)
-      expect(observation).to.matchShape({
-        property: {
-          path: $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/pollutant'),
-          hasValue: definedTerm,
-          minCount: 1,
-          maxCount: 1,
-        },
-      })
-    })
   })
 
   describe('getUnmappedValues', () => {

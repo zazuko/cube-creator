@@ -71,7 +71,6 @@ type CubeCreatorProperty =
   'dimensionMapping' |
   'sharedDimension' |
   'sharedDimensions' |
-  'applyMappings' |
   'dimensionType' |
   'CubeProject/sourceCube' |
   'CubeProject/sourceEndpoint' |
