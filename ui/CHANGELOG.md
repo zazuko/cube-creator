@@ -1,5 +1,11 @@
 # @cube-creator/ui
 
+## 1.11.1
+
+### Patch Changes
+
+- c1ad0eb0: Hierarchy Form would freeze when adding roots
+
 ## 1.11.0
 
 ### Minor Changes
