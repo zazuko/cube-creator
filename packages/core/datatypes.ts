@@ -19,5 +19,5 @@ export const datatypes: [NamedNode, string[]][] = [
   [xsd.gMonth, ['month']],
   // [xsd.gMonthDay, ['month+day']],
   [xsd.gYear, ['year']],
-  // [xsd.gYearMonth, ['year+month']],
+  [xsd.gYearMonth, ['year+month']],
 ]
