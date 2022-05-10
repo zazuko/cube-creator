@@ -1,5 +1,5 @@
 import { asyncMiddleware } from 'middleware-async'
-import { md, meta } from '@cube-creator/core/namespace'
+import { md } from '@cube-creator/core/namespace'
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 import clownface from 'clownface'
@@ -29,7 +29,7 @@ export const get = asyncMiddleware(async (req, res, next) => {
   const collection = await getCollection({
     memberQuads: await getHierarchies(queryParams).execute(parsingClient.query),
     collectionType: md.Hierarchies,
-    memberType: meta.Hierarchy,
+    memberType: md.Hierarchy,
     collection: req.hydra.resource.term,
   })
 
