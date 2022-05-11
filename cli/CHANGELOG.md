@@ -1,5 +1,11 @@
 # @cube-creator/cli
 
+## 1.10.8
+
+### Patch Changes
+
+- a9a9cd6f: When published, cube properties would have incomplete `sh:or` list of datatype alternatives (fixes #1189)
+
 ## 1.10.7
 
 ### Patch Changes
