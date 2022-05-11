@@ -304,7 +304,12 @@ ${shape('dimension/metadata')} {
           ${sh.order} 4 ;
           ${sh1.hideWithoutObjects} true ;
           ${dash.readOnly} true ;
-        ] ;
+        ], [
+          ${sh.path} ${rdf.type} ;
+          ${sh.hasValue} ${meta.Hierarchy} ;
+          ${sh.maxCount} 1 ;
+          ${dash.hidden} true ;
+        ]  ;
       ] ;
       ${sh.order} 20 ;
     ] ,
