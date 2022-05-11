@@ -1,5 +1,11 @@
 # @cube-creator/shared-dimensions-api
 
+## 2.6.5
+
+### Patch Changes
+
+- 360ee49e: Hierarchies instantiated in cubes would show in the list (fixes #1202)
+
 ## 2.6.4
 
 ### Patch Changes

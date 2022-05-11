@@ -1,5 +1,17 @@
 # @cube-creator/core-api
 
+## 1.11.0
+
+### Minor Changes
+
+- 65ffaeb9: Enable `xsd:gYearMonth` for selection in column mapping (re #1199)
+
+### Patch Changes
+
+- cb61e810: Labels would not show in mapping screen dropdowns
+- Updated dependencies [360ee49e]
+  - @cube-creator/shared-dimensions-api@2.6.5
+
 ## 1.10.3
 
 ### Patch Changes
