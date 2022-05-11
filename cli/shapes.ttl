@@ -1,3 +1,4 @@
+PREFIX meta: <https://krr.triply.cc/krr/sameas-meta/def/>
 PREFIX schema: <http://schema.org/>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX cube: <https://cube.link/>
@@ -135,5 +136,15 @@ base <https://cube-creator.zazuko.com/shape#>
     sh:maxCount 1 ;
     sh:message "a rdf:List can only have one rdf:rest node, multiples nodes need to be linked" ;
     #sh:node <restnode>;
+  ] ;
+.
+
+<NoMdHierarchy>
+  a sh:NodeShape ;
+  sh:targetSubjectsOf meta:hasHierarchy ;
+  sh:property [
+    sh:path rdf:type ;
+    sh:hasValue meta:Hierarchy ;
+    sh:maxCount 1 ;
   ] ;
 .
