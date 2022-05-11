@@ -52,6 +52,8 @@ export interface ResourceStore {
    * Removes the named graph from the triple store
    */
   delete(id: NamedNode): void
+
+  save(): Promise<void>
 }
 
 interface TripleStoreFacade {

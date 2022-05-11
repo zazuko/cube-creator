@@ -20,6 +20,7 @@ type ShapeTerms =
   'dimension/metadata#coreGroup' |
   'dimension/metadata#hierarchyGroup' |
   'dimension/shared-mapping' |
+  'dimension/shared-mapping-import' |
   'csv-source/s3Bucket'
 
 type ShapesNamespace = (term: ShapeTerms) => NamedNode

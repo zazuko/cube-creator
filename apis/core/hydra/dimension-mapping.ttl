@@ -1,3 +1,4 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 BASE <urn:hydra-box:api>
 prefix schema: <http://schema.org/>
 prefix hydra: <http://www.w3.org/ns/hydra/core#>
@@ -13,6 +14,10 @@ prov:Dictionary
     [
       a code:EcmaScript ;
       code:link <file:handlers/dimension-mapping#prepareEntries> ;
+    ] ;
+  hydra:supportedProperty
+    [
+      hydra:property cc:batchMapping ;
     ] ;
   hydra:supportedOperation
     [
@@ -30,3 +35,21 @@ prov:Dictionary
     ] .
 
 <shape/dimension/shared-mapping> a sh:Shape .
+
+cc:batchMapping
+  a rdf:Property ;
+  hydra:supportedOperation
+    [
+      a cc:BatchMappingAction ;
+      hydra:method "POST" ;
+      hydra:title "Map terms from a Shared Dimension" ;
+      hydra:expects <shape/dimension/shared-mapping-import> ;
+      code:implementedBy
+        [
+          a code:EcmaScript ;
+          code:link <file:handlers/dimension-mapping#importMappingsRequest> ;
+        ] ;
+    ] ;
+.
+
+<shape/dimension/shared-mapping-import> a sh:Shape .

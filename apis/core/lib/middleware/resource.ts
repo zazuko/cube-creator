@@ -1,11 +1,11 @@
 import express from 'express'
 import once from 'once'
-import ResourceStoreImpl, { SparqlStoreFacade } from '../ResourceStore'
+import ResourceStoreImpl, { ResourceStore, SparqlStoreFacade } from '../ResourceStore'
 import { streamClient } from '../query-client'
 
 declare module 'express-serve-static-core' {
   export interface Request {
-    resourceStore(): ResourceStoreImpl
+    resourceStore(): ResourceStore
   }
 }
 

@@ -34,7 +34,8 @@ type CubeCreatorClass =
   'ReplaceCSVAction' |
   'MediaLocal' |
   'MediaURL' |
-  'OriginalValuePredicate'
+  'OriginalValuePredicate' |
+  'BatchMappingAction'
 
 type CubeCreatorProperty =
   'projectSourceKind' |
@@ -77,7 +78,8 @@ type CubeCreatorProperty =
   'CubeProject/sourceGraph' |
   'export' |
   'projectDetails' |
-  'validationReport'
+  'validationReport' |
+  'batchMapping'
 
 type OtherTerms =
   'dash' |

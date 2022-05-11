@@ -13,12 +13,12 @@ const initResource = () => clownface({ dataset: $rdf.dataset() }).namedNode('')
 
 interface HydraFormOptions {
   beforeSubmit?: () => Promise<boolean> | boolean
-  afterSubmit?: (savedResource: RdfResource) => any
+  afterSubmit?: (savedResource: RdfResource | null | undefined) => any
   fetchShapeParams?: { targetClass?: Term }
   saveHeaders?: HeadersInit
 }
 
-export function useHydraForm (operation: Ref<RuntimeOperation | null>, options: HydraFormOptions = {}) {
+export function useHydraForm (operation: Ref<RuntimeOperation | null | undefined>, options: HydraFormOptions = {}) {
   const resource: Ref<GraphPointer | null> = ref(initResource())
   const shape: ShallowRef<Shape | null> = shallowRef(null)
   const error: ShallowRef<ErrorDetails | null> = shallowRef(null)

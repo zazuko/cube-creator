@@ -1,8 +1,5 @@
 <template>
   <side-pane :title="title" @close="onCancel">
-    <o-button v-if="batchMappingOperation" variant="primary" icon-left="magic" @click="importTerms">
-      Auto-fill from Shared Dimension
-    </o-button>
     <hydra-operation-form
       v-if="operation && resource"
       :operation="operation"
@@ -32,7 +29,7 @@ import { displayToast } from '@/use-toast'
 import { cc } from '@cube-creator/core/namespace'
 
 export default defineComponent({
-  name: 'DimensionMappingView',
+  name: 'DimensionMappingImportView',
   components: { SidePane, HydraOperationForm },
 
   setup () {
@@ -45,52 +42,46 @@ export default defineComponent({
 
     const mappings: Ref<RdfResource | null> = ref(null)
 
-    const operation = computed(() => mappings.value?.actions.replace ?? null)
-    const batchMappingOperation = computed(() =>
+    const operation = computed(() =>
       mappings.value?.get(cc.batchMapping).findOperations({
         bySupportedOperation: cc.BatchMappingAction
       }).shift())
 
     const form = useHydraForm(operation, {
       afterSubmit () {
-        store.dispatch('project/fetchDimensionMetadataCollection')
-
         displayToast({
-          message: 'Mapping to shared dimension was saved',
+          message: 'Mappings updated',
           variant: 'success',
         })
 
-        router.push({ name: 'DimensionMapping', params: { dimensionId: route.params.dimensionId } })
+        router.push({
+          name: 'DimensionMapping',
+          params: {
+            dimensionId: router.currentRoute.value.params.dimensionId
+          }
+        })
       },
     })
 
     onMounted(async () => {
       const fetchedMappings = await api.fetchResource(dimension.mappings.value)
       mappings.value = Object.freeze(fetchedMappings)
-
-      form.resource.value = fetchedMappings.pointer
     })
 
     return {
       ...form,
-      mappings,
-      batchMappingOperation
     }
   },
 
   methods: {
     onCancel (): void {
-      this.$router.push({ name: 'CubeDesigner' })
-    },
-
-    importTerms () {
       this.$router.push({
-        name: 'DimensionMappingImport',
+        name: 'DimensionMapping',
         params: {
           dimensionId: this.$router.currentRoute.value.params.dimensionId
         }
       })
-    }
+    },
   },
 })
 </script>

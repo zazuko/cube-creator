@@ -65,6 +65,22 @@ graph <http://example.com/dimension/chemicals> {
     schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
     schema:name "Chemical substances"@en, "Chemikalien"@de, "Substances chimiques"@fr, "Sostanze chimiche"@it ;
   .
+
+  <http://example.com/dimension/chemicals/sulphur-oxide>
+    a schema:DefinedTerm ;
+    schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
+    schema:inDefinedTermSet <http://example.com/dimension/chemicals> ;
+    schema:identifier "so2" ;
+    schema:name "Sulphur oxide"@en ;
+  .
+
+  <http://example.com/dimension/chemicals/ozone>
+    a schema:DefinedTerm ;
+    schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
+    schema:inDefinedTermSet <http://example.com/dimension/chemicals> ;
+    schema:identifier [ schema:value "O3" ] ;
+    schema:name "Ozone"@en ;
+  .
 }
 
 <http://example.com/dimension/countries> void:inDataset <shared-dimensions> .

@@ -443,6 +443,32 @@ ${shape('dimension/metadata')} {
 }
 `
 
+export const SharedDimensionMappingImportShape = turtle`
+${shape('dimension/shared-mapping-import')} {
+  ${shape('dimension/shared-mapping-import')}
+    a ${sh.NodeShape}, ${hydra.Resource} ;
+    ${sh.property} [
+      ${sh.path} ${cc.sharedDimension} ;
+      ${sh.name} "Shared dimension" ;
+      ${dash.editor} ${dash.AutoCompleteEditor} ;
+      ${hydra.collection} ${sharedDimensionCollection} ;
+      ${sh.nodeKind} ${sh.IRI} ;
+      ${sh.order} 10 ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+    ] , [
+      ${sh.path} ${rdf.predicate} ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+      ${sh.defaultValue} ${schema.identifier} ;
+      ${dash.editor} ${editor.PropertyEditor} ;
+      ${sh.nodeKind} ${sh.IRI} ;
+      ${sh.order} 20 ;
+    ];
+  .
+}
+`
+
 export const SharedDimensionMappingShape = turtle`
 ${shape('dimension/shared-mapping')} {
   ${shape('dimension/shared-mapping')}

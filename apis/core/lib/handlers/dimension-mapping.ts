@@ -6,9 +6,10 @@ import { fromPointer } from '@rdfine/prov/lib/Dictionary'
 import env from '@cube-creator/shared-dimensions-api/lib/env'
 import $rdf from 'rdf-ext'
 import clownface from 'clownface'
+import { Dictionary } from '@rdfine/prov'
 import { shaclValidate } from '../middleware/shacl'
 import { update } from '../domain/dimension-mapping/update'
-import { getUnmappedValues } from '../domain/queries/dimension-mappings'
+import { getUnmappedValues, importMappingsFromSharedDimension } from '../domain/queries/dimension-mappings'
 
 function rewrite<T extends Term>(term: T, from: string, to: string): T {
   if (term.termType === 'NamedNode') {
@@ -66,7 +67,19 @@ export const prepareEntries: Enrichment = async (req, pointer) => {
   }
 
   const dictionary = fromPointer(pointer)
-  const unmappedValues = await getUnmappedValues(dictionary.id, dictionary.about)
+  const unmappedValues = await getUnmappedValues(dictionary.id)
 
   dictionary.addMissingEntries(unmappedValues)
 }
+
+export const importMappingsRequest = protectedResource(
+  shaclValidate,
+  asyncMiddleware(async (req, res) => {
+    const store = req.resourceStore()
+    const dimensionMappings = await store.getResource<Dictionary>(req.hydra.resource.term)
+
+    await importMappingsFromSharedDimension(dimensionMappings)
+
+    res.end()
+  }),
+)

@@ -41,6 +41,10 @@ export function ProvDictionaryMixinEx<Base extends Constructor<Dictionary>>(Reso
       const newEntries = new TermMap()
 
       const newEntryMap = entries.reduce<Map<Term, Term | undefined>>((map, { pairKey, pairEntity }) => {
+        if (!pairEntity) {
+          return map
+        }
+
         return pairKey ? map.set(pairKey, pairEntity?.id) : map
       }, new TermMap())
 
