@@ -44,6 +44,7 @@ export const dimensionMetaHierarchySynchronizer: ComponentDecorator<DetailsEdito
 
         copyGraph(hierarchy.pointer, copy)
 
+        copy.deleteOut(rdf.type).addOut(rdf.type, meta.Hierarchy)
         return copy
       },
       init (params, { update }) {
