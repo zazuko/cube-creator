@@ -288,7 +288,6 @@ ${shape('dimension/metadata')} {
           ${sh.path} ${meta.hierarchyRoot} ;
           ${dash.readOnly} true ;
           ${sh.minCount} 1 ;
-          ${sh.maxCount} 1 ;
           ${sh.nodeKind} ${sh.IRI} ;
           ${dash.editor} ${dash.LabelViewer} ;
           ${sh.order} 3 ;
