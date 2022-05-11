@@ -1,5 +1,11 @@
 # @cube-creator/shared-dimensions-api
 
+## 2.6.6
+
+### Patch Changes
+
+- 382bd415: Hierarchy roots would be shown in wrong domain (cube-creator instead of `ld.admin.ch`)
+
 ## 2.6.5
 
 ### Patch Changes
