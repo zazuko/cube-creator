@@ -4,7 +4,8 @@ import type { RdfResource, ResourceIdentifier, RuntimeOperation } from 'alcaeus'
 import clownface, { GraphPointer } from 'clownface'
 import { computed, ref, Ref, shallowRef, ShallowRef, watch } from 'vue'
 import { Term } from 'rdf-js'
-
+import { sh1 } from '@cube-creator/core/namespace'
+import { sh } from '@tpluscode/rdf-ns-builders/strict'
 import { api } from './api'
 import { APIErrorValidation, ErrorDetails } from './api/errors'
 
@@ -26,6 +27,11 @@ export function useHydraForm (operation: Ref<RuntimeOperation | null>, options: 
   const loadShape = async () => {
     if (operation.value) {
       shape.value = await api.fetchOperationShape(operation.value, options.fetchShapeParams)
+      const minCounts = shape.value?.pointer.any()
+        .has(sh1.minCount)
+      minCounts?.forEach(minCount => {
+        minCount.addOut(sh.minCount, minCount.out(sh1.minCount))
+      })
     } else {
       shape.value = null
     }

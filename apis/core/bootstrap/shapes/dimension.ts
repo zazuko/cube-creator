@@ -5,7 +5,6 @@ import { dash, hydra, prov, rdf, rdfs, schema, sh, qudt, time, xsd } from '@tplu
 import namespace from '@rdfjs/namespace'
 import $rdf from 'rdf-ext'
 import { lindasQuery } from '../lib/query'
-import { placeholderEntity } from '../../lib/domain/dimension-mapping/DimensionMapping'
 
 const sou = namespace('http://qudt.org/vocab/sou/')
 
@@ -478,6 +477,7 @@ ${shape('dimension/shared-mapping')} {
       ${sh.path} ${prov.hadDictionaryMember} ;
       ${sh.node} _:keyEntityPair ;
       ${sh.name} "Mappings" ;
+      ${sh.description} "New mappings will only be applied after transformation is ran" ;
       ${sh.order} 20 ;
       ${dash.editor} ${dash.DetailsEditor} ;
       ${sh.class} ${prov.KeyEntityPair} ;
@@ -497,8 +497,7 @@ ${shape('dimension/shared-mapping')} {
       ${sh.name} "Shared Dimension term" ;
       ${dash.editor} ${dash.AutoCompleteEditor} ;
       ${sh.nodeKind} ${sh.IRI} ;
-      ${sh.defaultValue} ${placeholderEntity} ;
-      ${sh.minCount} 1 ;
+      ${sh1.minCount} 1 ; # sh1:minCount will be changed into sh:minCount in the client to force a dropdown being rendered
       ${sh.maxCount} 1 ;
       ${sh1.itemHelptextPath} ( ${schema.inDefinedTermSet} ${schema.name} ) ;
       ${hydra.search} [
@@ -523,6 +522,4 @@ ${shape('dimension/shared-mapping')} {
       ${sh.order} 20 ;
     ];
   .
-
-  ${placeholderEntity} ${rdfs.label} "Select" .
 }`
