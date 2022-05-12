@@ -1,4 +1,4 @@
-PREFIX meta: <https://krr.triply.cc/krr/sameas-meta/def/>
+PREFIX meta: <https://cube.link/meta/>
 PREFIX schema: <http://schema.org/>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX cube: <https://cube.link/>
