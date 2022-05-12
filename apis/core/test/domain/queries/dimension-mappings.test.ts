@@ -15,11 +15,9 @@ describe('@cube-creator/core-api/lib/domain/queries/dimension-mappings @SPARQL',
   })
 
   describe('getUnmappedValues', () => {
-    const dimension = $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/pollutant')
-
     it('returns combined unmapped values from shapes and observations', async () => {
       // when
-      const unmappedValues = await getUnmappedValues(dimensionMapping, dimension, ccClients.parsingClient)
+      const unmappedValues = await getUnmappedValues(dimensionMapping, ccClients.parsingClient)
 
       // then
       expect(unmappedValues).to.have.property('size', 3)
