@@ -1,29 +1,46 @@
 <template>
   <div>
-    <o-collapse class="panel mb-4" :open="false">
-      <template #trigger="{ open }">
-        <header class="panel-heading filters-heading">
-          <o-button type="button" :icon-right="open ? 'chevron-down': 'chevron-right'">
-            Filters
-          </o-button>
-        </header>
-      </template>
-      <div class="panel-block">
-        <o-field>
-          <radio-button
-            v-for="filter in filters"
-            :key="filter"
-            :native-value="filter"
-            v-model="selectedFilter"
-          >
-            {{ filter }}
-          </radio-button>
-        </o-field>
-      </div>
-      <div class="panel-block">
-        <o-input placeholder="Type to filter values" v-model="textFilter" icon="filter" />
-      </div>
-    </o-collapse>
+    <div class="panel-block">
+      <o-field label="Filter">
+        <radio-button
+          v-for="filter in filters"
+          :key="filter"
+          :native-value="filter"
+          v-model="selectedFilter"
+        >
+          {{ filter }}
+        </radio-button>
+      </o-field>
+    </div>
+    <div class="panel-block">
+      <o-input placeholder="Type to filter values" v-model="textFilter" icon="filter" />
+    </div>
+    <div class="panel is-flex is-align-items-center gap-1">
+      <o-tooltip label="Previous page">
+        <o-button
+          icon-left="chevron-left"
+          @click="page = page - 1"
+          :disabled="!hasPreviousPage"
+        />
+      </o-tooltip>
+      <o-tooltip label="Next page">
+        <o-button
+          icon-left="chevron-right"
+          @click="page = page + 1"
+          :disabled="!hasNextPage"
+        />
+      </o-tooltip>
+      <span class="ml-4">Page</span>
+      <o-input
+        v-model.number="page"
+        type="number"
+        min="1"
+        :max="totalPages"
+        class="is-inline-block w-20"
+      />
+      <span class="">of {{ totalPages }}</span>
+      <span class="ml-4">({{ filteredObjects.length }} rows)</span>
+    </div>
     <table class="terms-table">
       <tbody>
         <tr v-for="o in displayedObjects" :key="o.key" class="term-row">
@@ -82,7 +99,15 @@ export default defineComponent({
       filters: ['All', 'Mapped', 'Unmapped'],
       selectedFilter: 'All',
       textFilter: '',
+      limit: 15,
+      page: 1
     }
+  },
+
+  watch: {
+    selectedFilter () {
+      this.page = 1
+    },
   },
 
   computed: {
@@ -94,7 +119,7 @@ export default defineComponent({
         .term
     },
 
-    displayedObjects (): PropertyObjectState[] {
+    filteredObjects (): PropertyObjectState[] {
       const filterText = (obj: PropertyObjectState) => {
         const key = obj.object?.out(prov.pairKey).value ?? ''
         return key.toLowerCase().startsWith(this.textFilter.toLocaleLowerCase())
@@ -116,9 +141,26 @@ export default defineComponent({
         return objects.filter(isUnmapped)
       } else if (this.selectedFilter === 'Mapped') {
         return objects.filter(isMapped)
-      } else {
-        return objects
       }
+
+      return objects
+    },
+
+    displayedObjects (): PropertyObjectState[] {
+      const offset = (this.page - 1) * this.limit
+      return this.filteredObjects.slice(offset, offset + this.limit)
+    },
+
+    hasPreviousPage () {
+      return this.page > 1
+    },
+
+    hasNextPage () {
+      return this.page < this.totalPages
+    },
+
+    totalPages () {
+      return Math.ceil(this.filteredObjects.length / this.limit)
     },
   },
 })
