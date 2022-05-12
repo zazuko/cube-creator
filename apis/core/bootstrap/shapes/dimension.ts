@@ -458,6 +458,8 @@ ${shape('dimension/shared-mapping-import')} {
       ${sh.maxCount} 1 ;
     ] , [
       ${sh.path} ${rdf.predicate} ;
+      ${sh.name} "Identifier property" ;
+      ${sh.description} """Value of this property can be directly on the Shared Term or inside a \`schema:PropertyValue\` such as \`schema:identifier [ schema:value "ID" ] \`""" ;
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
       ${sh.defaultValue} ${schema.identifier} ;
