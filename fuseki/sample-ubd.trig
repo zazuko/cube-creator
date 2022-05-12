@@ -134,7 +134,7 @@ graph <cube-project/ubd/dimension-mapping/pollutant> {
     a prov:Dictionary, hydra:Resource ;
     schema:about <https://environment.ld.admin.ch/foen/ubd/28/pollutant> ;
     cc:sharedDimension <http://example.com/dimension/chemicals> ;
-    cc:batchMapping <cube-project/ubd/dimension-mapping/pollutant/_batch-mapping> ;
+    cc:batchMapping <cube-project/ubd/dimension-mapping/pollutant/_import-terms> ;
   .
 
   <cube-project/ubd/dimension-mapping/pollutant>
@@ -158,7 +158,7 @@ graph <cube-project/ubd/dimension-mapping/station> {
   <cube-project/ubd/dimension-mapping/station>
     a prov:Dictionary, hydra:Resource ;
     schema:about <https://environment.ld.admin.ch/foen/ubd/28/station> ;
-    cc:batchMapping <cube-project/ubd/dimension-mapping/station/_batch-mapping> ;
+    cc:batchMapping <cube-project/ubd/dimension-mapping/station/_import-terms> ;
   .
 }
 
@@ -168,7 +168,7 @@ graph <cube-project/ubd/dimension-mapping/unit> {
     a prov:Dictionary, hydra:Resource ;
     schema:about <https://environment.ld.admin.ch/foen/ubd/28/unit> ;
     cc:sharedDimension <http://example.com/dimension/units> ;
-    cc:batchMapping <cube-project/ubd/dimension-mapping/unit/_batch-mapping> ;
+    cc:batchMapping <cube-project/ubd/dimension-mapping/unit/_import-terms> ;
   .
 
   <cube-project/ubd/dimension-mapping/unit>

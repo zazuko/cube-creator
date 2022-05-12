@@ -25,7 +25,6 @@ import { useRoute, useRouter } from 'vue-router'
 import { api } from '@/api'
 import SidePane from '@/components/SidePane.vue'
 import HydraOperationForm from '@/components/HydraOperationForm.vue'
-import { serializeResource } from '@/store/serializers'
 import { RootState } from '@/store/types'
 import { useHydraForm } from '@/use-hydra-form'
 import { displayToast } from '@/use-toast'
@@ -47,7 +46,7 @@ export default defineComponent({
 
     const operation = computed(() => mappings.value?.actions.replace ?? null)
     const batchMappingOperation = computed(() =>
-      mappings.value?.get(cc.batchMapping).findOperations({
+      mappings.value?.get(cc.batchMapping, { strict: false })?.findOperations({
         bySupportedOperation: cc.BatchMappingAction
       }).shift())
 
