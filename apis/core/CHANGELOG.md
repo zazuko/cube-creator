@@ -1,5 +1,12 @@
 # @cube-creator/core-api
 
+## 1.11.2
+
+### Patch Changes
+
+- 443f5e3f: Cube hierarchy could not be saved it had multiple roots
+- 811aa261: Cube's hierarchy must only have a single RDF type `meta:Hierarchy`
+
 ## 1.11.1
 
 ### Patch Changes
