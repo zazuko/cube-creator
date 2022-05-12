@@ -1,5 +1,11 @@
 # @cube-creator/ui
 
+## 1.11.2
+
+### Patch Changes
+
+- 811aa261: Cube's hierarchy must only have a single RDF type `meta:Hierarchy`
+
 ## 1.11.1
 
 ### Patch Changes
