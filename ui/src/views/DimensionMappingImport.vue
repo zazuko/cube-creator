@@ -7,6 +7,7 @@
       :shape="shape"
       :error="error"
       :is-submitting="isSubmitting"
+      show-cancel
       @cancel="onCancel"
       @submit="onSubmit"
     />
