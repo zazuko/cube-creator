@@ -48,6 +48,7 @@
     "http-errors": "^2.0.0",
     "hydra-box": "^0.6.4",
     "hydra-box-middleware-shacl": "1.1.0",
+    "is-graph-pointer": "^1.2.0",
     "is-stream": "^2",
     "jwks-rsa": "^2.0.5",
     "merge2": "^1.4.1",

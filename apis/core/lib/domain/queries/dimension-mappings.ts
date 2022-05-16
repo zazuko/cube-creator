@@ -7,6 +7,7 @@ import TermSet from '@rdfjs/term-set'
 import { prov } from '@tpluscode/rdf-ns-builders/strict'
 import env from '@cube-creator/core/env'
 import { Dictionary } from '@rdfine/prov'
+import { GraphPointer } from 'clownface'
 import { parsingClient } from '../../query-client'
 
 async function findCubeGraph(dimensionMapping: Term, client: typeof parsingClient): Promise<NamedNode> {
@@ -83,7 +84,13 @@ export async function getUnmappedValues(dimensionMapping: Term, client = parsing
   return new TermSet(unmappedValues.map(result => result.value as any))
 }
 
-export async function importMappingsFromSharedDimension(dimensionMapping: Dictionary, client = parsingClient) {
+interface ImportMappingsFromSharedDimension {
+  dimensionMapping: Dictionary
+  dimension: GraphPointer
+  predicate: GraphPointer
+}
+
+export async function importMappingsFromSharedDimension({ dimensionMapping, dimension, predicate }: ImportMappingsFromSharedDimension, client = parsingClient) {
   const cubeGraph = await findCubeGraph(dimensionMapping.id, client)
 
   const unmappedValuesSelect = unmappedValuesQuery(cubeGraph, dimensionMapping.id)
@@ -101,17 +108,13 @@ export async function importMappingsFromSharedDimension(dimensionMapping: Dictio
       ${unmappedValuesSelect}
     }
 
-    GRAPH ${dimensionMapping.id} {
-      ${dimensionMapping.id} ${cc.sharedDimension} ?dimension
-    }
-
     SERVICE <${env.PUBLIC_QUERY_ENDPOINT}> {
       {
-        ?term ${schema.inDefinedTermSet} ?dimension ;
-              ${schema.identifier} ?value .
+        ?term ${schema.inDefinedTermSet} ${dimension.term} ;
+              ${predicate.term} ?value .
       } union {
-        ?term ${schema.inDefinedTermSet} ?dimension ;
-              ${schema.identifier}/${schema.value} ?value .
+        ?term ${schema.inDefinedTermSet} ${dimension.term} ;
+              ${predicate.term}/${schema.value} ?value .
       }
     }
   `
