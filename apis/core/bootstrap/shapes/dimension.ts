@@ -466,7 +466,16 @@ ${shape('dimension/shared-mapping-import')} {
       ${dash.editor} ${editor.PropertyEditor} ;
       ${sh.nodeKind} ${sh.IRI} ;
       ${sh.order} 20 ;
-    ];
+    ] , [
+      ${sh.path} ${md.onlyValidTerms} ;
+      ${sh.name} "Only current terms" ;
+      ${sh.description} "Uncheck to import all Shared Terms, including deprecated" ;
+      ${sh.datatype} ${xsd.boolean} ;
+      ${sh.defaultValue} true ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+      ${sh.order} 30 ;
+    ]  ;
   .
 }
 `

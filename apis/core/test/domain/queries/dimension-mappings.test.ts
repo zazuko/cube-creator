@@ -125,5 +125,41 @@ describe('@cube-creator/core-api/lib/domain/queries/dimension-mappings @SPARQL',
 
       expect(pairsCreated).to.be.true
     })
+
+    it('matches only valid terms if required', async () => {
+      // given
+      const unmappedValuesGraphPatterns = VALUES(
+        { value: '#00F' },
+        { value: '#F00' },
+      )
+
+      // when
+      await importMappingsFromSharedDimension({
+        dimensionMapping: testMapping,
+        dimension: $rdf.namedNode('http://example.com/dimension/colors'),
+        predicate: schema.identifier,
+        unmappedValuesGraphPatterns,
+        validThrough: new Date(2021, 5, 20),
+      })
+
+      // then
+      const blueMapped = await ASK`
+          ${testMapping} ${prov.hadDictionaryMember} [
+            ${prov.pairKey} "#00F" ;
+          ] .
+        `
+        .FROM(testMapping)
+        .execute(ccClients.parsingClient.query)
+      const redMapped = await ASK`
+          ${testMapping} ${prov.hadDictionaryMember} [
+            ${prov.pairKey} "#F00" ;
+          ] .
+        `
+        .FROM(testMapping)
+        .execute(ccClients.parsingClient.query)
+
+      expect(blueMapped).to.be.true
+      expect(redMapped).to.be.false
+    })
   })
 })

@@ -7,6 +7,7 @@ import TermSet from '@rdfjs/term-set'
 import { prov } from '@tpluscode/rdf-ns-builders/strict'
 import env from '@cube-creator/core/env'
 import { ResourceIdentifier } from '@tpluscode/rdfine'
+import { toRdf } from 'rdf-literal'
 import { parsingClient } from '../../query-client'
 
 async function findCubeGraph(dimensionMapping: Term, client: typeof parsingClient): Promise<NamedNode> {
@@ -87,6 +88,7 @@ interface ImportMappingsFromSharedDimension {
   dimensionMapping: ResourceIdentifier
   dimension: NamedNode
   predicate: NamedNode
+  validThrough?: Date
   /**
    * By default, the function will query the database to find unmapped cube values.
    * Override this in automatic tests to replace a subselect for example with static VALUES clause
@@ -94,7 +96,7 @@ interface ImportMappingsFromSharedDimension {
   unmappedValuesGraphPatterns?: SparqlTemplateResult | string
 }
 
-export async function importMappingsFromSharedDimension({ dimensionMapping, dimension, predicate, unmappedValuesGraphPatterns }: ImportMappingsFromSharedDimension, client = parsingClient) {
+export async function importMappingsFromSharedDimension({ dimensionMapping, dimension, predicate, unmappedValuesGraphPatterns, validThrough }: ImportMappingsFromSharedDimension, client = parsingClient) {
   let unmappedValuesSelect: SparqlTemplateResult | string
   if (unmappedValuesGraphPatterns != null) {
     unmappedValuesSelect = unmappedValuesGraphPatterns
@@ -103,6 +105,14 @@ export async function importMappingsFromSharedDimension({ dimensionMapping, dime
     unmappedValuesSelect = sparql`{
     ${unmappedValuesQuery(cubeGraph, dimensionMapping)}
   }`
+  }
+
+  let validThroughFilter: SparqlTemplateResult | string = ''
+  if (validThrough) {
+    validThroughFilter = sparql`
+      OPTIONAL { ?term ${schema.validThrough} ?validThrough }
+      FILTER (!bound(?validThrough) || ?validThrough >= ${toRdf(validThrough)})
+    `
   }
 
   const insert = INSERT`
@@ -126,6 +136,8 @@ export async function importMappingsFromSharedDimension({ dimensionMapping, dime
         ?term ${schema.inDefinedTermSet} ${dimension} ;
               ${predicate}/${schema.value} ?identifier .
       }
+
+      ${validThroughFilter}
     }
 
     FILTER (str(?value) = str(?identifier))
