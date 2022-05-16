@@ -127,16 +127,28 @@ describe('domain/dimension-mapping/update', () => {
       expect(dimensionMapping).to.matchShape({
         property: {
           path: prov.hadDictionaryMember,
-          minCount: 4,
-          maxCount: 4,
+          minCount: 3,
+          maxCount: 3,
           property: [{
-            path: prov.pairKey,
+            path: prov.pairEntity,
             minCount: 1,
             maxCount: 1,
+          }],
+          xone: [{
+            property: {
+              path: prov.pairKey,
+              hasValue: 'co',
+            },
           }, {
-            path: prov.pairEntity,
-            minCount: 0,
-            maxCount: 1,
+            property: {
+              path: prov.pairKey,
+              hasValue: 'As',
+            },
+          }, {
+            property: {
+              path: prov.pairKey,
+              hasValue: 'so2',
+            },
           }],
         },
       })
@@ -277,12 +289,11 @@ describe('domain/dimension-mapping/update', () => {
       })
     })
 
-    it('update dictionary entry', () => {
+    it('removes key/value pairs', () => {
       expect(dimensionMapping).to.matchShape({
         property: {
           path: prov.hadDictionaryMember,
-          minCount: 2,
-          maxCount: 2,
+          maxCount: 0,
         },
       })
       expect(dimensionMapping).to.matchShape({
