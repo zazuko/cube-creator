@@ -213,7 +213,7 @@ graph <cube-project/ubd/cube-data> {
     <https://environment.ld.admin.ch/foen/ubd/28/aggregation>     <https://environment.ld.admin.ch/foen/ubd/28/aggregation/annualmean> ;
     <https://environment.ld.admin.ch/foen/ubd/28/dimension/value> "6.1"^^xsd:decimal ;
     <https://environment.ld.admin.ch/foen/ubd/28/dimension/year>  "2002"^^xsd:gYear ;
-    <https://environment.ld.admin.ch/foen/ubd/28/pollutant>       "so2" ;
+    <https://environment.ld.admin.ch/foen/ubd/28/pollutant>       "O3" ;
     <https://environment.ld.admin.ch/foen/ubd/28/station>         <https://environment.ld.admin.ch/foen/ubd/28/station/blBAS> ;
     <https://environment.ld.admin.ch/foen/ubd/28/unit>            <http://qudt.org/vocab/unit/MicroGM-PER-M3> ;
   .

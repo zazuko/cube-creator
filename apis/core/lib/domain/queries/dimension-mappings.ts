@@ -1,13 +1,12 @@
 import { Literal, NamedNode, Term } from 'rdf-js'
 import { INSERT, SELECT } from '@tpluscode/sparql-builder'
-import { sparql } from '@tpluscode/rdf-string'
+import { sparql, SparqlTemplateResult } from '@tpluscode/rdf-string'
 import { rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { cc, cube } from '@cube-creator/core/namespace'
 import TermSet from '@rdfjs/term-set'
 import { prov } from '@tpluscode/rdf-ns-builders/strict'
 import env from '@cube-creator/core/env'
-import { Dictionary } from '@rdfine/prov'
-import { GraphPointer } from 'clownface'
+import { ResourceIdentifier } from '@tpluscode/rdfine'
 import { parsingClient } from '../../query-client'
 
 async function findCubeGraph(dimensionMapping: Term, client: typeof parsingClient): Promise<NamedNode> {
@@ -85,38 +84,51 @@ export async function getUnmappedValues(dimensionMapping: Term, client = parsing
 }
 
 interface ImportMappingsFromSharedDimension {
-  dimensionMapping: Dictionary
-  dimension: GraphPointer
-  predicate: GraphPointer
+  dimensionMapping: ResourceIdentifier
+  dimension: NamedNode
+  predicate: NamedNode
+  /**
+   * By default, the function will query the database to find unmapped cube values.
+   * Override this in automatic tests to replace a subselect for example with static VALUES clause
+   */
+  unmappedValuesGraphPatterns?: SparqlTemplateResult | string
 }
 
-export async function importMappingsFromSharedDimension({ dimensionMapping, dimension, predicate }: ImportMappingsFromSharedDimension, client = parsingClient) {
-  const cubeGraph = await findCubeGraph(dimensionMapping.id, client)
-
-  const unmappedValuesSelect = unmappedValuesQuery(cubeGraph, dimensionMapping.id)
+export async function importMappingsFromSharedDimension({ dimensionMapping, dimension, predicate, unmappedValuesGraphPatterns }: ImportMappingsFromSharedDimension, client = parsingClient) {
+  let unmappedValuesSelect: SparqlTemplateResult | string
+  if (unmappedValuesGraphPatterns != null) {
+    unmappedValuesSelect = unmappedValuesGraphPatterns
+  } else {
+    const cubeGraph = await findCubeGraph(dimensionMapping, client)
+    unmappedValuesSelect = sparql`{
+    ${unmappedValuesQuery(cubeGraph, dimensionMapping)}
+  }`
+  }
 
   const insert = INSERT`
-    GRAPH ${dimensionMapping.id} {
-      ${dimensionMapping.id} ${prov.hadDictionaryMember} [
+    GRAPH ${dimensionMapping} {
+      ${dimensionMapping} ${prov.hadDictionaryMember} [
         a ${prov.KeyEntityPair} ;
         ${prov.pairKey} ?value ;
         ${prov.pairEntity} ?term
       ]
     }
   `.WHERE`
-    {
-      ${unmappedValuesSelect}
-    }
+    ${unmappedValuesSelect}
 
     SERVICE <${env.PUBLIC_QUERY_ENDPOINT}> {
       {
-        ?term ${schema.inDefinedTermSet} ${dimension.term} ;
-              ${predicate.term} ?value .
+        ?term ${schema.inDefinedTermSet} ${dimension} ;
+              ${predicate} ?identifier .
+
+        FILTER (!isblank(?identifier))
       } union {
-        ?term ${schema.inDefinedTermSet} ${dimension.term} ;
-              ${predicate.term}/${schema.value} ?value .
+        ?term ${schema.inDefinedTermSet} ${dimension} ;
+              ${predicate}/${schema.value} ?identifier .
       }
     }
+
+    FILTER (str(?value) = str(?identifier))
   `
 
   await insert.execute(client.query)

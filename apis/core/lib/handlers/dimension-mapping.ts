@@ -10,7 +10,7 @@ import { Dictionary } from '@rdfine/prov'
 import { cc } from '@cube-creator/core/namespace'
 import { rdf } from '@tpluscode/rdf-ns-builders/strict'
 import error from 'http-errors'
-import { isGraphPointer } from 'is-graph-pointer'
+import { isNamedNode } from 'is-graph-pointer'
 import { shaclValidate } from '../middleware/shacl'
 import { update } from '../domain/dimension-mapping/update'
 import { getUnmappedValues, importMappingsFromSharedDimension } from '../domain/queries/dimension-mappings'
@@ -85,14 +85,14 @@ export const importMappingsRequest = protectedResource(
     const dimension = args.out(cc.sharedDimension)
     const predicate = args.out(rdf.predicate)
 
-    if (!isGraphPointer(dimension) || !isGraphPointer(predicate)) {
+    if (!isNamedNode(dimension) || !isNamedNode(predicate)) {
       return next(new error.BadRequest())
     }
 
     await importMappingsFromSharedDimension({
-      dimensionMapping,
-      dimension,
-      predicate,
+      dimensionMapping: dimensionMapping.id,
+      dimension: dimension.term,
+      predicate: predicate.term,
     })
 
     res.end()
