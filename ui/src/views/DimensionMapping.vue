@@ -59,7 +59,7 @@ export default defineComponent({
           variant: 'success',
         })
 
-        router.push({ name: 'DimensionMapping', params: { dimensionId: route.params.dimensionId } })
+        router.push({ name: 'CubeDesigner' })
       },
     })
 
