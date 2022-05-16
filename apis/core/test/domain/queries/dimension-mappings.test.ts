@@ -24,11 +24,12 @@ describe('@cube-creator/core-api/lib/domain/queries/dimension-mappings @SPARQL',
       const unmappedValues = await getUnmappedValues(pollutantMapping, ccClients.parsingClient)
 
       // then
-      expect(unmappedValues).to.have.property('size', 3)
+      expect(unmappedValues).to.have.property('size', 4)
       expect([...unmappedValues]).to.have.deep.members([
         $rdf.literal('so2'),
         $rdf.literal('As'),
         $rdf.literal('Pb'),
+        $rdf.literal('O3'),
       ])
     })
   })
