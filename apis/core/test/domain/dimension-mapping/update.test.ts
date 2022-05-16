@@ -76,7 +76,7 @@ describe('domain/dimension-mapping/update', () => {
       const mappings = namedNode(resource)
         .addOut(rdf.type, prov.Dictionary)
         .addOut(schema.about, dimension)
-        .addOut(cc.sharedDimension, ex('http://example.com/dimension/chemicals'))
+        .addOut(cc.sharedDimension, $rdf.namedNode('http://example.com/dimension/chemicals'))
         .addOut(prov.hadDictionaryMember, member => {
           member
             .addOut(prov.pairKey, 'co')
@@ -147,7 +147,7 @@ describe('domain/dimension-mapping/update', () => {
           }, {
             property: {
               path: prov.pairKey,
-              hasValue: 'so2',
+              hasValue: 'Pb',
             },
           }],
         },
