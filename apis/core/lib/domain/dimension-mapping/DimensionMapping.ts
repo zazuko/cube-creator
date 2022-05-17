@@ -22,8 +22,6 @@ declare module '@rdfine/prov' {
   }
 }
 
-export const placeholderEntity = $rdf.namedNode('urn:placeholder:entity')
-
 export function ProvDictionaryMixinEx<Base extends Constructor<Dictionary>>(Resource: Base) {
   class ProvDictionaryEx extends Resource implements DictionaryEx {
     @property({ path: schema.about })
@@ -43,7 +41,7 @@ export function ProvDictionaryMixinEx<Base extends Constructor<Dictionary>>(Reso
       const newEntries = new TermMap()
 
       const newEntryMap = entries.reduce<Map<Term, Term | undefined>>((map, { pairKey, pairEntity }) => {
-        if (pairEntity?.id.equals(placeholderEntity)) {
+        if (!pairEntity) {
           return map
         }
 

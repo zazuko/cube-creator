@@ -23,6 +23,7 @@ import CubeDesigner from '@/views/CubeDesigner.vue'
 import CubeMetadataEdit from '@/views/CubeMetadataEdit.vue'
 import DimensionEdit from '@/views/DimensionEdit.vue'
 import DimensionMapping from '@/views/DimensionMapping.vue'
+import DimensionMappingImport from '@/views/DimensionMappingImport.vue'
 import ResourcePreview from '@/views/ResourcePreview.vue'
 import Materialize from '@/views/Materialize.vue'
 import MaterializeJobs from '@/views/MaterializeJobs.vue'
@@ -154,6 +155,11 @@ const routes: Array<RouteRecordRaw> = [
                 path: 'dimension/:dimensionId/map',
                 name: 'DimensionMapping',
                 component: DimensionMapping,
+              },
+              {
+                path: 'dimension/:dimensionId/map-import',
+                name: 'DimensionMappingImport',
+                component: DimensionMappingImport,
               },
               {
                 path: 'resource/:resourceId',

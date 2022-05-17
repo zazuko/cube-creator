@@ -29,7 +29,7 @@ graph <http://example.com/dimension/cantons> {
 
   <http://example.com/dimension/canton/ZH>
     a schema:DefinedTerm, <http://example.com/vocab#Canton> ;
-    schema:identifier "ZH" ;
+    schema:identifier 19 ;
     schema:containedInPlace <http://example.com/dimension/countries/Switzerland> ;
     gn:parentFeature <http://example.com/dimension/countries/Switzerland> ;
     schema:name "Zurich"@en ;
@@ -64,6 +64,22 @@ graph <http://example.com/dimension/chemicals> {
     a schema:DefinedTermSet, meta:SharedDimension ;
     schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
     schema:name "Chemical substances"@en, "Chemikalien"@de, "Substances chimiques"@fr, "Sostanze chimiche"@it ;
+  .
+
+  <http://example.com/dimension/chemicals/sulphur-oxide>
+    a schema:DefinedTerm ;
+    schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
+    schema:inDefinedTermSet <http://example.com/dimension/chemicals> ;
+    schema:identifier "so2" ;
+    schema:name "Sulphur oxide"@en ;
+  .
+
+  <http://example.com/dimension/chemicals/ozone>
+    a schema:DefinedTerm ;
+    schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
+    schema:inDefinedTermSet <http://example.com/dimension/chemicals> ;
+    schema:identifier [ schema:value "O3" ] ;
+    schema:name "Ozone"@en ;
   .
 }
 

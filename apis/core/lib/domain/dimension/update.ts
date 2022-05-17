@@ -5,6 +5,7 @@ import $rdf from 'rdf-ext'
 import { DimensionMetadataCollection, Project } from '@cube-creator/model'
 import { createNoMeasureDimensionError, Error } from '@cube-creator/model/DimensionMetadata'
 import { prov, rdf, schema } from '@tpluscode/rdf-ns-builders'
+import { cc } from '@cube-creator/core/namespace'
 import { ResourceStore } from '../../ResourceStore'
 import * as id from '../identifiers'
 import { findProject } from '../cube-projects/queries'
@@ -50,6 +51,7 @@ export async function update({
     dimensionMapping
       .addOut(rdf.type, prov.Dictionary)
       .addOut(schema.about, dimension.about)
+      .addOut(cc.batchMapping, $rdf.namedNode(dimensionMapping.value + '/_import-terms'))
 
     dimension.mappings = dimensionMapping.term
   } else if (!canBeMappedToSharedDimension(dimension) && dimension.mappings) {

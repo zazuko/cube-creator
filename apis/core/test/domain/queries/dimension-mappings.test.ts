@@ -1,79 +1,166 @@
-import { Term } from 'rdf-js'
-import { describe, it, beforeEach } from 'mocha'
-import sinon from 'sinon'
+import { describe, it, beforeEach, afterEach } from 'mocha'
 import $rdf from 'rdf-ext'
 import { expect } from 'chai'
-import { DESCRIBE } from '@tpluscode/sparql-builder'
 import { ccClients } from '@cube-creator/testing/lib'
-import { insertTestProject } from '@cube-creator/testing/lib/seedData'
-import clownface from 'clownface'
-import TermMap from '@rdfjs/term-map'
-import { replaceValueWithDefinedTerms, getUnmappedValues } from '../../../lib/domain/queries/dimension-mappings'
+import { insertTestDimensions, insertTestProject } from '@cube-creator/testing/lib/seedData'
+import { dcterms, prov, schema } from '@tpluscode/rdf-ns-builders/strict'
+import { ASK, sparql } from '@tpluscode/sparql-builder'
+import { IN, VALUES } from '@tpluscode/sparql-builder/expressions'
+import { getUnmappedValues, importMappingsFromSharedDimension } from '../../../lib/domain/queries/dimension-mappings'
 
 describe('@cube-creator/core-api/lib/domain/queries/dimension-mappings @SPARQL', function () {
   this.timeout(20000)
 
-  const dimensionMapping = $rdf.namedNode('https://cube-creator.lndo.site/cube-project/ubd/dimension-mapping/pollutant')
+  const pollutantMapping = $rdf.namedNode('https://cube-creator.lndo.site/cube-project/ubd/dimension-mapping/pollutant')
 
   beforeEach(async () => {
     await insertTestProject()
-  })
-
-  describe('replaceValueWithDefinedTerms', () => {
-    let terms: Map<Term, Term>
-    const sparqlSpy = sinon.spy(ccClients.streamClient.query, 'update')
-
-    beforeEach(async () => {
-      terms = new TermMap()
-
-      sparqlSpy.resetHistory()
-    })
-
-    it('does nothing when called without any terms', async () => {
-    // when
-      await replaceValueWithDefinedTerms({ dimensionMapping, terms }, ccClients.streamClient)
-
-      // then
-      expect(sparqlSpy).not.to.have.been.called
-    })
-
-    it('updates observations', async () => {
-    // given
-      const observationId = $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/observation/blBAS-2003-annualmean')
-      const definedTerm = $rdf.namedNode('http://www.wikidata.org/entity/Q5282')
-      terms.set($rdf.literal('so2'), definedTerm)
-
-      // when
-      await replaceValueWithDefinedTerms({ dimensionMapping, terms }, ccClients.streamClient)
-
-      // then
-      const quads = await DESCRIBE`${observationId}`.execute(ccClients.parsingClient.query)
-      const observation = clownface({ dataset: $rdf.dataset(quads) }).namedNode(observationId)
-      expect(observation).to.matchShape({
-        property: {
-          path: $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/pollutant'),
-          hasValue: definedTerm,
-          minCount: 1,
-          maxCount: 1,
-        },
-      })
-    })
+    await insertTestDimensions()
   })
 
   describe('getUnmappedValues', () => {
-    const dimension = $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/pollutant')
-
     it('returns combined unmapped values from shapes and observations', async () => {
       // when
-      const unmappedValues = await getUnmappedValues(dimensionMapping, dimension, ccClients.parsingClient)
+      const unmappedValues = await getUnmappedValues(pollutantMapping, ccClients.parsingClient)
 
       // then
-      expect(unmappedValues).to.have.property('size', 3)
+      expect(unmappedValues).to.have.property('size', 4)
       expect([...unmappedValues]).to.have.deep.members([
         $rdf.literal('so2'),
         $rdf.literal('As'),
         $rdf.literal('Pb'),
+        $rdf.literal('O3'),
       ])
+    })
+  })
+
+  describe('importMappingsFromSharedDimension', () => {
+    const testMapping = $rdf.namedNode('https://cube-creator.lndo.site/cube-project/test/dimension-mapping/test')
+
+    afterEach(async () => {
+      await ccClients.parsingClient.query.update(sparql`DROP SILENT GRAPH ${testMapping}`.toString())
+    })
+
+    it('creates new pairs for matched identifiers', async () => {
+      // when
+      await importMappingsFromSharedDimension({
+        dimensionMapping: pollutantMapping,
+        dimension: $rdf.namedNode('http://example.com/dimension/chemicals'),
+        predicate: schema.identifier,
+      })
+
+      // then
+      const sulphurOxidePairCreated = ASK`
+          ${pollutantMapping} ${prov.hadDictionaryMember} [
+            ${prov.pairKey} "so2" ;
+            ${prov.pairEntity} <http://example.com/dimension/chemicals/sulphur-oxide> ;
+          ] , [
+            ${prov.pairKey} "O3" ;
+            ${prov.pairEntity} <http://example.com/dimension/chemicals/ozone> ;
+          ] .
+        `
+        .FROM(pollutantMapping)
+        .execute(ccClients.parsingClient.query)
+      const ozonePairCreated = ASK`
+          ${pollutantMapping} ${prov.hadDictionaryMember} [
+            ${prov.pairKey} "so2" ;
+            ${prov.pairEntity} <http://example.com/dimension/chemicals/sulphur-oxide> ;
+          ] , [
+            ${prov.pairKey} "O3" ;
+            ${prov.pairEntity} <http://example.com/dimension/chemicals/ozone> ;
+          ] .
+        `
+        .FROM(pollutantMapping)
+        .execute(ccClients.parsingClient.query)
+
+      await expect(sulphurOxidePairCreated).to.eventually.be.true
+      await expect(ozonePairCreated).to.eventually.be.true
+    })
+
+    it('does not create pairs if rdf:predicate does not match', async () => {
+      // when
+      await importMappingsFromSharedDimension({
+        dimensionMapping: pollutantMapping,
+        dimension: $rdf.namedNode('http://example.com/dimension/chemicals'),
+        predicate: dcterms.identifier,
+      })
+
+      // then
+      const pairsCreated = await ASK`
+          ${pollutantMapping} ${prov.hadDictionaryMember} [
+            ${prov.pairKey} ?key ;
+            ${prov.pairEntity} <http://example.com/dimension/chemicals/sulphur-oxide> ;
+          ] .
+
+          FILTER(?key ${IN('"O3"', '"so2"')})
+        `
+        .FROM(pollutantMapping)
+        .execute(ccClients.parsingClient.query)
+
+      expect(pairsCreated).to.be.false
+    })
+
+    it('matches shared terms on string value of literals', async () => {
+      // given
+      const unmappedValuesGraphPatterns = VALUES(
+        { value: '19' },
+      )
+
+      // when
+      await importMappingsFromSharedDimension({
+        dimensionMapping: testMapping,
+        dimension: $rdf.namedNode('http://example.com/dimension/cantons'),
+        predicate: schema.identifier,
+        unmappedValuesGraphPatterns,
+      })
+
+      // then
+      const pairsCreated = await ASK`
+          ${testMapping} ${prov.hadDictionaryMember} [
+            ${prov.pairKey} "19" ;
+            ${prov.pairEntity} <http://example.com/dimension/canton/ZH> ;
+          ] .
+        `
+        .FROM(testMapping)
+        .execute(ccClients.parsingClient.query)
+
+      expect(pairsCreated).to.be.true
+    })
+
+    it('matches only valid terms if required', async () => {
+      // given
+      const unmappedValuesGraphPatterns = VALUES(
+        { value: '#00F' },
+        { value: '#F00' },
+      )
+
+      // when
+      await importMappingsFromSharedDimension({
+        dimensionMapping: testMapping,
+        dimension: $rdf.namedNode('http://example.com/dimension/colors'),
+        predicate: schema.identifier,
+        unmappedValuesGraphPatterns,
+        validThrough: new Date(2021, 5, 20),
+      })
+
+      // then
+      const blueMapped = await ASK`
+          ${testMapping} ${prov.hadDictionaryMember} [
+            ${prov.pairKey} "#00F" ;
+          ] .
+        `
+        .FROM(testMapping)
+        .execute(ccClients.parsingClient.query)
+      const redMapped = await ASK`
+          ${testMapping} ${prov.hadDictionaryMember} [
+            ${prov.pairKey} "#F00" ;
+          ] .
+        `
+        .FROM(testMapping)
+        .execute(ccClients.parsingClient.query)
+
+      expect(blueMapped).to.be.true
+      expect(redMapped).to.be.false
     })
   })
 })

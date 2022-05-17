@@ -5,7 +5,6 @@ import { dash, hydra, prov, rdf, rdfs, schema, sh, qudt, time, xsd } from '@tplu
 import namespace from '@rdfjs/namespace'
 import $rdf from 'rdf-ext'
 import { lindasQuery } from '../lib/query'
-import { placeholderEntity } from '../../lib/domain/dimension-mapping/DimensionMapping'
 
 const sou = namespace('http://qudt.org/vocab/sou/')
 
@@ -448,6 +447,43 @@ ${shape('dimension/metadata')} {
 }
 `
 
+export const SharedDimensionMappingImportShape = turtle`
+${shape('dimension/shared-mapping-import')} {
+  ${shape('dimension/shared-mapping-import')}
+    a ${sh.NodeShape}, ${hydra.Resource} ;
+    ${sh.property} [
+      ${sh.path} ${cc.sharedDimension} ;
+      ${sh.name} "Shared dimension" ;
+      ${dash.editor} ${dash.AutoCompleteEditor} ;
+      ${hydra.collection} ${sharedDimensionCollection} ;
+      ${sh.nodeKind} ${sh.IRI} ;
+      ${sh.order} 10 ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+    ] , [
+      ${sh.path} ${rdf.predicate} ;
+      ${sh.name} "Identifier property" ;
+      ${sh.description} """Value of this property can be directly on the Shared Term or inside a \`schema:PropertyValue\` such as \`schema:identifier [ schema:value "ID" ] \`""" ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+      ${sh.defaultValue} ${schema.identifier} ;
+      ${dash.editor} ${editor.PropertyEditor} ;
+      ${sh.nodeKind} ${sh.IRI} ;
+      ${sh.order} 20 ;
+    ] , [
+      ${sh.path} ${md.onlyValidTerms} ;
+      ${sh.name} "Only current terms" ;
+      ${sh.description} "Uncheck to import all Shared Terms, including deprecated" ;
+      ${sh.datatype} ${xsd.boolean} ;
+      ${sh.defaultValue} true ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+      ${sh.order} 30 ;
+    ]  ;
+  .
+}
+`
+
 export const SharedDimensionMappingShape = turtle`
 ${shape('dimension/shared-mapping')} {
   ${shape('dimension/shared-mapping')}
@@ -482,18 +518,10 @@ ${shape('dimension/shared-mapping')} {
       ${sh.path} ${prov.hadDictionaryMember} ;
       ${sh.node} _:keyEntityPair ;
       ${sh.name} "Mappings" ;
+      ${sh.description} "New mappings will only be applied after transformation is ran" ;
       ${sh.order} 20 ;
       ${dash.editor} ${dash.DetailsEditor} ;
       ${sh.class} ${prov.KeyEntityPair} ;
-    ] , [
-      ${sh.path} ${cc.applyMappings} ;
-      ${sh.name} "Apply mappings" ;
-      ${sh.description} "If checked, the Cube will be immediately updated with new mappings. Otherwise, running the transformation/import will be necessary" ;
-      ${sh.order} 30 ;
-      ${sh.datatype} ${xsd.boolean} ;
-      ${sh.defaultValue} false ;
-      ${sh.minCount} 1 ;
-      ${sh.maxCount} 1 ;
     ]
   .
 
@@ -510,8 +538,7 @@ ${shape('dimension/shared-mapping')} {
       ${sh.name} "Shared Dimension term" ;
       ${dash.editor} ${dash.AutoCompleteEditor} ;
       ${sh.nodeKind} ${sh.IRI} ;
-      ${sh.defaultValue} ${placeholderEntity} ;
-      ${sh.minCount} 1 ;
+      ${sh1.minCount} 1 ; # sh1:minCount will be changed into sh:minCount in the client to force a dropdown being rendered
       ${sh.maxCount} 1 ;
       ${sh1.itemHelptextPath} ( ${schema.inDefinedTermSet} ${schema.name} ) ;
       ${hydra.search} [
@@ -536,6 +563,4 @@ ${shape('dimension/shared-mapping')} {
       ${sh.order} 20 ;
     ];
   .
-
-  ${placeholderEntity} ${rdfs.label} "Select" .
 }`

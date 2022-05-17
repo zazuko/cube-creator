@@ -5,7 +5,7 @@ import sinon from 'sinon'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import $rdf from 'rdf-ext'
 import { GraphPointer } from 'clownface'
-import { prov, rdf, schema, xsd } from '@tpluscode/rdf-ns-builders'
+import { prov, rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import namespace from '@rdfjs/namespace'
 import httpError from 'http-errors'
@@ -13,9 +13,7 @@ import { namedNode } from '@cube-creator/testing/clownface'
 import { ex } from '@cube-creator/testing/lib/namespace'
 import { update } from '../../../lib/domain/dimension-mapping/update'
 import { TestResourceStore } from '../../support/TestResourceStore'
-import * as queries from '../../../lib/domain/queries/dimension-mappings'
 import '../../../lib/domain'
-import { placeholderEntity } from '../../../lib/domain/dimension-mapping/DimensionMapping'
 
 const wtd = namespace('http://www.wikidata.org/entity/')
 
@@ -53,7 +51,6 @@ describe('domain/dimension-mapping/update', () => {
     ])
 
     sinon.restore()
-    sinon.stub(queries, 'replaceValueWithDefinedTerms').returns(Promise.resolve())
   })
 
   it('throws if dimension is missing', async () => {
@@ -79,8 +76,7 @@ describe('domain/dimension-mapping/update', () => {
       const mappings = namedNode(resource)
         .addOut(rdf.type, prov.Dictionary)
         .addOut(schema.about, dimension)
-        .addOut(cc.applyMappings, $rdf.literal('true', xsd.boolean))
-        .addOut(cc.sharedDimension, ex('http://example.com/dimension/chemicals'))
+        .addOut(cc.sharedDimension, $rdf.namedNode('http://example.com/dimension/chemicals'))
         .addOut(prov.hadDictionaryMember, member => {
           member
             .addOut(prov.pairKey, 'co')
@@ -103,7 +99,6 @@ describe('domain/dimension-mapping/update', () => {
         .addOut(prov.hadDictionaryMember, lead => {
           lead
             .addOut(prov.pairKey, 'Unmapped')
-            .addOut(prov.pairEntity, placeholderEntity)
         })
 
       // when
@@ -112,14 +107,6 @@ describe('domain/dimension-mapping/update', () => {
         mappings,
         store,
       })
-    })
-
-    it('calls update query to update cube shape and observations', async () => {
-      expect(queries.replaceValueWithDefinedTerms).to.have.been.calledWith(sinon.match(({ terms }: Parameters<typeof queries.replaceValueWithDefinedTerms>[0]) => {
-        return terms.size === 2 &&
-          terms.get($rdf.literal('As'))?.equals(wikidata.arsenic) &&
-          terms.get($rdf.literal('Pb'))?.equals(wikidata.lead)
-      }))
     })
 
     it('skips entries with have placeholder entity', () => {
@@ -140,16 +127,28 @@ describe('domain/dimension-mapping/update', () => {
       expect(dimensionMapping).to.matchShape({
         property: {
           path: prov.hadDictionaryMember,
-          minCount: 4,
-          maxCount: 4,
+          minCount: 3,
+          maxCount: 3,
           property: [{
-            path: prov.pairKey,
+            path: prov.pairEntity,
             minCount: 1,
             maxCount: 1,
+          }],
+          xone: [{
+            property: {
+              path: prov.pairKey,
+              hasValue: 'co',
+            },
           }, {
-            path: prov.pairEntity,
-            minCount: 0,
-            maxCount: 1,
+            property: {
+              path: prov.pairKey,
+              hasValue: 'As',
+            },
+          }, {
+            property: {
+              path: prov.pairKey,
+              hasValue: 'Pb',
+            },
           }],
         },
       })
@@ -202,7 +201,6 @@ describe('domain/dimension-mapping/update', () => {
       const mappings = namedNode(resource)
         .addOut(rdf.type, prov.Dictionary)
         .addOut(schema.about, dimension)
-        .addOut(cc.applyMappings, $rdf.literal('true', xsd.boolean))
         .addOut(cc.sharedDimension, ex('http://example.com/dimension/chemicals'))
         .addOut(prov.hadDictionaryMember, member => {
           member
@@ -221,12 +219,6 @@ describe('domain/dimension-mapping/update', () => {
         mappings,
         store,
       })
-    })
-
-    it('calls update query to update cube shape and observations', async () => {
-      expect(queries.replaceValueWithDefinedTerms).to.have.been.calledWith(sinon.match(({ dimensionMapping, terms }: Parameters<typeof queries.replaceValueWithDefinedTerms>[0]) => {
-        return dimensionMapping.equals(resource) && terms.size === 1 && terms.get($rdf.literal('so2'))?.equals(wikidata.sulphurDioxide)
-      }))
     })
 
     it('update dictionary entry', () => {
@@ -297,16 +289,11 @@ describe('domain/dimension-mapping/update', () => {
       })
     })
 
-    it('does not call sparql update', async () => {
-      expect(queries.replaceValueWithDefinedTerms).not.to.have.been.called
-    })
-
-    it('update dictionary entry', () => {
+    it('removes key/value pairs', () => {
       expect(dimensionMapping).to.matchShape({
         property: {
           path: prov.hadDictionaryMember,
-          minCount: 2,
-          maxCount: 2,
+          maxCount: 0,
         },
       })
       expect(dimensionMapping).to.matchShape({
@@ -361,10 +348,6 @@ describe('domain/dimension-mapping/update', () => {
         store,
       })
     })
-
-    it('does not call sparql update', async () => {
-      expect(queries.replaceValueWithDefinedTerms).not.to.have.been.called
-    })
   })
 
   describe('removing entries', () => {
@@ -386,10 +369,6 @@ describe('domain/dimension-mapping/update', () => {
         mappings,
         store,
       })
-    })
-
-    it('does not call sparql update', async () => {
-      expect(queries.replaceValueWithDefinedTerms).not.to.have.been.called
     })
 
     it('removes them from the graph', () => {

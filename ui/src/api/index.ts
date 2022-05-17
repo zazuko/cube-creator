@@ -134,7 +134,7 @@ export const api = {
     }
   },
 
-  async invokeSaveOperation<T extends RdfResource = RdfResource> (operation: RuntimeOperation | null, resource: RdfResource | GraphPointer<ResourceIdentifier>, headers: HeadersInit = {}): Promise<T> {
+  async invokeSaveOperation<T extends RdfResource = RdfResource> (operation: RuntimeOperation | null | undefined, resource: RdfResource | GraphPointer<ResourceIdentifier>, headers: HeadersInit = {}): Promise<T | null | undefined> {
     const data = 'toJSON' in resource
       ? resource
       : RdfResourceImpl.factory.createEntity(resource) as RdfResource
@@ -152,11 +152,11 @@ export const api = {
     }
 
     const responseResource = response.representation?.root
-    if (!responseResource) {
+    if (response.response.xhr.status === 201 && !responseResource) {
       throw new Error('Response does not contain created resource')
     }
 
-    return responseResource as T
+    return responseResource
   },
 
   async invokeDeleteOperation (operation: RuntimeOperation | null): Promise<void> {

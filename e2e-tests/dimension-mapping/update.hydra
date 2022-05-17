@@ -23,7 +23,6 @@ With Operation schema:ReplaceAction {
 
         <cube-project/ubd/dimension-mapping/pollutant>
             a prov:Dictionary ;
-            cc:applyMappings "false"^^xsd:boolean ;
             cc:sharedDimension <http://example.com/dimension/chemicals> ;
             md:onlyValidTerms true .
         ```
@@ -44,7 +43,6 @@ With Operation schema:ReplaceAction {
 
         <cube-project/ubd/dimension-mapping/pollutant>
             schema:about <https://environment.ld.admin.ch/foen/ubd/28/pollutant> ;
-            cc:applyMappings "false"^^xsd:boolean ;
             cc:sharedDimension <http://example.com/dimension/chemicals> ;
             md:onlyValidTerms true .
         ```
@@ -67,7 +65,6 @@ With Operation schema:ReplaceAction {
         <cube-project/ubd/dimension-mapping/pollutant>
             a prov:Dictionary ;
             schema:about <https://environment.ld.admin.ch/foen/ubd/28/pollutants> ;
-            cc:applyMappings "false"^^xsd:boolean ;
             cc:sharedDimension <http://example.com/dimension/chemicals> ;
             md:onlyValidTerms true .
         ```
@@ -91,7 +88,6 @@ With Operation schema:ReplaceAction {
             a prov:Dictionary ;
             schema:about <https://environment.ld.admin.ch/foen/ubd/28/pollutant> ;
             cc:sharedDimension <http://example.com/dimension/chemicals> ;
-            cc:applyMappings "false"^^xsd:boolean ;
             md:onlyValidTerms true ;
             prov:hadDictionaryMember [
                 a prov:KeyEntityPair ;

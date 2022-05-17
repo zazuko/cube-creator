@@ -4,7 +4,7 @@ import { DatasetShape } from './dataset'
 import { CSVSourceCreateShape, CSVSourceUpdateShape } from './csv-source'
 import { JobUpdateShape, JobTriggerShape } from './jobs'
 import { ColumnMappingShape } from './column-mapping'
-import { DimensionMetadataShape, SharedDimensionMappingShape } from './dimension'
+import { DimensionMetadataShape, SharedDimensionMappingShape, SharedDimensionMappingImportShape } from './dimension'
 
 export default [
   CubeProjectShape,
@@ -17,4 +17,5 @@ export default [
   JobTriggerShape,
   DimensionMetadataShape,
   SharedDimensionMappingShape,
+  SharedDimensionMappingImportShape,
 ]

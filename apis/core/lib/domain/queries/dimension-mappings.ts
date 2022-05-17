@@ -1,14 +1,17 @@
-import { Literal, Term } from 'rdf-js'
-import { DELETE, SELECT } from '@tpluscode/sparql-builder'
-import { sparql } from '@tpluscode/rdf-string'
+import { Literal, NamedNode, Term } from 'rdf-js'
+import { INSERT, SELECT } from '@tpluscode/sparql-builder'
+import { sparql, SparqlTemplateResult } from '@tpluscode/rdf-string'
 import { rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { cc, cube } from '@cube-creator/core/namespace'
-import TermMap from '@rdfjs/term-map'
 import TermSet from '@rdfjs/term-set'
-import { parsingClient, streamClient } from '../../query-client'
+import { prov } from '@tpluscode/rdf-ns-builders/strict'
+import env from '@cube-creator/core/env'
+import { ResourceIdentifier } from '@tpluscode/rdfine'
+import { toRdf } from 'rdf-literal'
+import { parsingClient } from '../../query-client'
 
-function patternsToFindCubeGraph(dimensionMapping: Term) {
-  return sparql`BIND ( ${dimensionMapping} as ?dimensionMapping )
+async function findCubeGraph(dimensionMapping: Term, client: typeof parsingClient): Promise<NamedNode> {
+  const patternsToFindCubeGraph = sparql`BIND ( ${dimensionMapping} as ?dimensionMapping )
 
   graph ?dimensionMapping {
       ?dimensionMapping ${schema.about} ?dimension .
@@ -29,79 +32,116 @@ function patternsToFindCubeGraph(dimensionMapping: Term) {
                ${cc.dataset} ?dataset ;
                ${cc.cubeGraph} ?cubeGraph .
     }`
+
+  const [{ cubeGraph }] = await SELECT`?cubeGraph`
+    .WHERE`${patternsToFindCubeGraph}`
+    .execute(client.query)
+
+  return cubeGraph as any
 }
 
-export async function replaceValueWithDefinedTerms({ dimensionMapping, terms }: { dimensionMapping: Term; terms: TermMap }, client = streamClient): Promise<void> {
-  if (terms.size === 0) {
-    return
+function unmappedValuesQuery(cubeGraph: NamedNode, dimensionMapping: Term) {
+  return SELECT.DISTINCT`?value`
+    .WHERE`
+      # find mapped dimension URL
+      GRAPH ${dimensionMapping} {
+        ${dimensionMapping} ${schema.about} ?dimension
+      }
+
+      # find all values from observation and shape
+      GRAPH ${cubeGraph} {
+        {
+          ?shape a ${cube.Constraint} ; ${sh.property} ?propShape .
+          ?propShape ${sh.path} ?dimension ;
+                     ${sh.in}/${rdf.rest}* ?listNode .
+          ?listNode ${rdf.first} ?value .
+        }
+        UNION
+        {
+          ?observation a ${cube.Observation} ; ?dimension ?value .
+        }
+
+        filter ( !isIRI(?value) )
+      }
+
+    # exclude values which are already mapped
+    FILTER ( NOT EXISTS {
+      GRAPH ${dimensionMapping} {
+        ${dimensionMapping} ${prov.hadDictionaryMember} [
+           ${prov.pairKey} ?value ; ${prov.pairEntity} []
+        ]
+      }
+    })
+    `
+}
+
+export async function getUnmappedValues(dimensionMapping: Term, client = parsingClient): Promise<Set<Literal>> {
+  const cubeGraph = await findCubeGraph(dimensionMapping, client)
+
+  const unmappedValues = await unmappedValuesQuery(cubeGraph, dimensionMapping)
+    .execute(client.query)
+
+  return new TermSet(unmappedValues.map(result => result.value as any))
+}
+
+interface ImportMappingsFromSharedDimension {
+  dimensionMapping: ResourceIdentifier
+  dimension: NamedNode
+  predicate: NamedNode
+  validThrough?: Date
+  /**
+   * By default, the function will query the database to find unmapped cube values.
+   * Override this in automatic tests to replace a subselect for example with static VALUES clause
+   */
+  unmappedValuesGraphPatterns?: SparqlTemplateResult | string
+}
+
+export async function importMappingsFromSharedDimension({ dimensionMapping, dimension, predicate, unmappedValuesGraphPatterns, validThrough }: ImportMappingsFromSharedDimension, client = parsingClient) {
+  let unmappedValuesSelect: SparqlTemplateResult | string
+  if (unmappedValuesGraphPatterns != null) {
+    unmappedValuesSelect = unmappedValuesGraphPatterns
+  } else {
+    const cubeGraph = await findCubeGraph(dimensionMapping, client)
+    unmappedValuesSelect = sparql`{
+    ${unmappedValuesQuery(cubeGraph, dimensionMapping)}
+  }`
   }
 
-  const pairs = [...terms.entries()].reduce((values, [originalValue, sharedTerm]) => {
-    return sparql`${values}\n    ( ${originalValue} ${sharedTerm} )`
-  }, sparql``)
+  let validThroughFilter: SparqlTemplateResult | string = ''
+  if (validThrough) {
+    validThroughFilter = sparql`
+      OPTIONAL { ?term ${schema.validThrough} ?validThrough }
+      FILTER (!bound(?validThrough) || ?validThrough >= ${toRdf(validThrough)})
+    `
+  }
 
-  await DELETE`
-    graph ?cubeGraph {
-      ?listNode ${rdf.first} ?originalValue .
-      ?observation ?dimension ?originalValue .
-    }
-  `.INSERT`
-    graph ?cubeGraph {
-      ?listNode ${rdf.first} ?sharedTerm .
-      ?observation ?dimension ?sharedTerm .
+  const insert = INSERT`
+    GRAPH ${dimensionMapping} {
+      ${dimensionMapping} ${prov.hadDictionaryMember} [
+        a ${prov.KeyEntityPair} ;
+        ${prov.pairKey} ?value ;
+        ${prov.pairEntity} ?term
+      ]
     }
   `.WHERE`
-   ${patternsToFindCubeGraph(dimensionMapping)}
-  `.WHERE`
-    VALUES ( ?originalValue ?sharedTerm ) {
-      ${pairs}
-    }
+    ${unmappedValuesSelect}
 
-    graph ?cubeGraph {
-      ?observation a ${cube.Observation} .
-      ?shapeProperty ${sh.path} ?dimension .
+    SERVICE <${env.PUBLIC_QUERY_ENDPOINT}> {
+      {
+        ?term ${schema.inDefinedTermSet} ${dimension} ;
+              ${predicate} ?identifier .
 
-      OPTIONAL { ?observation ?dimension ?originalValue . }
-      OPTIONAL {
-        ?shapeProperty ${sh.in}/${rdf.rest}* ?listNode .
-        ?listNode ${rdf.first} ?originalValue .
+        FILTER (!isblank(?identifier))
+      } union {
+        ?term ${schema.inDefinedTermSet} ${dimension} ;
+              ${predicate}/${schema.value} ?identifier .
       }
-    }
-  `.execute(client.query)
-}
 
-export async function getUnmappedValues(dimensionMapping: Term, dimension: Term, client = parsingClient): Promise<Set<Literal>> {
-  const [{ cubeGraph }] = await SELECT`?cubeGraph`
-    .WHERE`${patternsToFindCubeGraph(dimensionMapping)}`
-    .execute(client.query)
-
-  const results = await SELECT.DISTINCT`?value`
-    .FROM(cubeGraph as any)
-    .WHERE`{
-      SELECT ?value
-      WHERE {
-        ?shape a ${cube.Constraint} ; ${sh.property}  ?propShape .
-        ?propShape ${sh.path} ${dimension} ;
-                   ${sh.in}/${rdf.rest}* ?listNode .
-        ?listNode ${rdf.first} ?value .
-      }
-    }
-    UNION
-    {
-      SELECT ?value
-      WHERE {
-        ?observation a ${cube.Observation} ; ${dimension} ?value .
-      }
+      ${validThroughFilter}
     }
 
-    filter ( !isIRI(?value) )`
-    .execute(client.query)
+    FILTER (str(?value) = str(?identifier))
+  `
 
-  return results.reduce((missingValues, row) => {
-    if (row.value && row.value.termType === 'Literal') {
-      return missingValues.add(row.value)
-    }
-
-    return missingValues
-  }, new TermSet<Literal>())
+  await insert.execute(client.query)
 }
