@@ -7,13 +7,13 @@ import { dcterms, hydra, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { md, meta } from '@cube-creator/core/namespace'
 import { DomainError } from '@cube-creator/api-errors'
 import httpError from 'http-errors'
-import { CONSTRUCT, sparql, SparqlTemplateResult } from '@tpluscode/sparql-builder'
+import { CONSTRUCT, sparql } from '@tpluscode/sparql-builder'
 import { StreamClient } from 'sparql-http-client/StreamClient'
 import TermMap from '@rdfjs/term-map'
 import { streamClient } from '../sparql'
 import { SharedDimensionsStore } from '../store'
 import env from '../env'
-import { getPatternsFromShape, resourceShapePatterns } from '../resource'
+import { resourceShapePatterns } from '../resource'
 import { newId, replace } from './resource'
 
 export { importDimension } from './shared-dimension/import'
@@ -154,28 +154,16 @@ export async function getExportedDimension({ resource, store, client = streamCli
 
   const dimensionAndTerms = sparql`?term ${schema.inDefinedTermSet}* ${dimension.term} .`
 
-  const dataset = await $rdf.dataset().import(await CONSTRUCT`?s ?p ?o`
-    .FROM(store.graph)
-    .WHERE`${resourceShapePatterns(dimensionAndTerms, true)}`
-    .execute(client.query))
-  const shapes = clownface({ dataset })
-    .has(sh.targetNode)
-    .filter(shape => !shape.in(sh.node).terms.length) // exclude nested shapes
-  const patterns = getPatternsFromShape(shapes)
-
-  const union = patterns.reduce((union, pattern) => {
-    if (union === '') {
-      return sparql`{ ${pattern} }`
-    }
-
-    return sparql`${union}\nUNION { ${pattern} }`
-  }, '' as SparqlTemplateResult | string)
-
-  const quads = await CONSTRUCT`${patterns}`
+  const quads = await CONSTRUCT`?s ?p ?o`
     .FROM(store.graph)
     .WHERE`
-      ${union}
-    `.execute(client.query, { operation: 'postUrlencoded' })
+      ${resourceShapePatterns(dimensionAndTerms, true)}
+
+      ?shape ${sh.property} ?shProp .
+      ?shProp ${sh.path} ?p .
+      ?shape ${sh.targetNode} ?s .
+      ?s ?p ?o .
+  `.execute(client.query)
 
   const baseUriPattern = new RegExp(`^${env.MANAGED_DIMENSIONS_BASE}`)
   function removeBase<T extends Term>(term: T): T {

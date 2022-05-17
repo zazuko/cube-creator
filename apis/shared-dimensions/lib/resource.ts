@@ -32,8 +32,7 @@ export function resourceShapePatterns(resourceOrPattern: NamedNode | SparqlTempl
       ${selectRoot}
     }
 
-    ?rootShape (!${sh.targetNode})* ?s .
-    ?s ?p ?o .
+    ?rootShape (!${sh.targetNode})* ?shape .
   `
 }
 
@@ -69,9 +68,12 @@ export function getPatternsFromShape(shapes: AnyPointer, nextVariable = variable
 }
 
 async function getShape(id: NamedNode, graph: NamedNode, client: ParsingClient) {
-  const dataset = $rdf.dataset(await CONSTRUCT`?s ?p ?o`
+  const dataset = $rdf.dataset(await CONSTRUCT`?shape ?p ?o .`
     .FROM(graph)
-    .WHERE`${resourceShapePatterns(id)}`
+    .WHERE`
+      ${resourceShapePatterns(id)}
+      ?shape ?p ?o .
+    `
     .execute(client.query))
   return clownface({ dataset }).has(sh.targetNode, id)
 }
@@ -94,7 +96,10 @@ export async function resourceQuery(id: NamedNode, graph: NamedNode, client: Par
 }
 
 export function deleteShapesQuery(id: NamedNode, graph: NamedNode) {
-  return WITH(graph, DELETE`?s ?p ?o`.WHERE`${resourceShapePatterns(id, true)}`)
+  return WITH(graph, DELETE`?shape ?p ?o .`.WHERE`
+    ${resourceShapePatterns(id, true)}
+    ?shape ?p ?o .
+  `)
 }
 
 function isResource(arg: Term): arg is NamedNode | BlankNode {
