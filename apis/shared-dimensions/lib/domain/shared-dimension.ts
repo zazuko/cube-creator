@@ -2,14 +2,15 @@ import { BlankNode, NamedNode, Quad, Stream, Term } from 'rdf-js'
 import clownface, { GraphPointer, MultiPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import through2 from 'through2'
-import TermSet from '@rdfjs/term-set'
 import { dcterms, hydra, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { md, meta } from '@cube-creator/core/namespace'
 import { DomainError } from '@cube-creator/api-errors'
 import httpError from 'http-errors'
 import { CONSTRUCT, sparql } from '@tpluscode/sparql-builder'
+import { IN } from '@tpluscode/sparql-builder/expressions'
 import { StreamClient } from 'sparql-http-client/StreamClient'
 import TermMap from '@rdfjs/term-map'
+import { oa } from '@tpluscode/rdf-ns-builders/strict'
 import { streamClient } from '../sparql'
 import { SharedDimensionsStore } from '../store'
 import env from '../env'
@@ -115,17 +116,11 @@ interface ExportedDimension {
   data: Stream
 }
 
-const excludedProps = new TermSet<Term>([
+const excludedProps = [
   md.export,
   md.terms,
-])
-
-const filterProperties = () => through2.obj(function (chunk: Quad, _, next) {
-  if (!excludedProps.has(chunk.predicate)) {
-    this.push(chunk)
-  }
-  next()
-})
+  oa.canonical,
+]
 
 function urnToBlanks() {
   const urns = new TermMap<Term, BlankNode>()
@@ -163,6 +158,8 @@ export async function getExportedDimension({ resource, store, client = streamCli
       ?shProp ${sh.path} ?p .
       ?shape ${sh.targetNode} ?s .
       ?s ?p ?o .
+
+      FILTER (?p NOT ${IN(...excludedProps)})
   `.execute(client.query)
 
   const baseUriPattern = new RegExp(`^${env.MANAGED_DIMENSIONS_BASE}`)
@@ -185,7 +182,7 @@ export async function getExportedDimension({ resource, store, client = streamCli
   })
 
   const materialized = await $rdf.dataset()
-    .import(quads.pipe(filterProperties()).pipe(transformToQuads).pipe(urnToBlanks()))
+    .import(quads.pipe(transformToQuads).pipe(urnToBlanks()))
 
   return {
     dimension,
