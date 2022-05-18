@@ -149,15 +149,15 @@ export async function getExportedDimension({ resource, store, client = streamCli
 
   const dimensionAndTerms = sparql`?term ${schema.inDefinedTermSet}* ${dimension.term} .`
 
-  const quads = await CONSTRUCT`?s ?p ?o`
+  const quads = await CONSTRUCT`?dimensionTerm ?p ?o`
     .FROM(store.graph)
     .WHERE`
       ${resourceShapePatterns(dimensionAndTerms, true)}
 
       ?shape ${sh.property} ?shProp .
       ?shProp ${sh.path} ?p .
-      ?shape ${sh.targetNode} ?s .
-      ?s ?p ?o .
+      ?shape ${sh.targetNode} ?dimensionTerm .
+      ?dimensionTerm ?p ?o .
 
       FILTER (?p NOT ${IN(...excludedProps)})
   `.execute(client.query)
