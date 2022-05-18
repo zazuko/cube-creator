@@ -141,7 +141,7 @@ base <https://cube-creator.zazuko.com/shape#>
 
 <NoMdHierarchy>
   a sh:NodeShape ;
-  sh:targetSubjectsOf meta:hasHierarchy ;
+  sh:targetObjectsOf meta:hasHierarchy ;
   sh:property [
     sh:path rdf:type ;
     sh:hasValue meta:Hierarchy ;
