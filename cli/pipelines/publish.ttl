@@ -60,7 +60,11 @@
     ] ;
   code:arguments
     [ code:name "shape" ; code:value <#loadShapes> ] ,
-    [ code:name "maxErrors" ; code:value 100 ] ;
+    [ code:name "maxErrors" ; code:value 100 ] ,
+    [
+      code:name "onViolation" ;
+      code:value [ a code:EcmaScript ; code:link <file:../lib/log#prettyPrintReport> ]
+    ] ;
 .
 
 <#loadShapes>
