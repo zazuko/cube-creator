@@ -98,7 +98,7 @@ export const importMappingsRequest = protectedResource(
 
     await importMappingsFromSharedDimension({
       dimensionMapping: dimensionMapping.id,
-      dimension: dimension.term,
+      dimension: toCanonical(dimension.term),
       predicate: predicate.term,
       validThrough,
     })
