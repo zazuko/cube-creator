@@ -79,6 +79,8 @@ services:
     port: 80
     overrides:
       image: node:14
+      ports:
+        - "45681:45681"
       environment:
         TS_NODE_TRANSPILE_ONLY: "true"
         NODE_TLS_REJECT_UNAUTHORIZED: 0
