@@ -1,8 +1,5 @@
 <template>
   <side-pane :title="title" @close="onCancel">
-    <o-button v-if="batchMappingOperation" variant="primary" icon-left="magic" @click="importTerms">
-      Auto-fill from Shared Dimension
-    </o-button>
     <hydra-operation-form
       v-if="operation && resource"
       :operation="operation"
@@ -12,7 +9,17 @@
       :is-submitting="isSubmitting"
       @cancel="onCancel"
       @submit="onSubmit"
-    />
+    >
+      <template #buttons>
+        <o-field :addons="false">
+          <div class="control">
+            <o-button v-if="batchMappingOperation" variant="default" icon-left="magic" @click="importTerms">
+              Auto-fill from Shared Dimension
+            </o-button>
+          </div>
+        </o-field>
+      </template>
+    </hydra-operation-form>
   </side-pane>
 </template>
 
