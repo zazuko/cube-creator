@@ -1,5 +1,15 @@
 # @cube-creator/ui
 
+## 1.12.0
+
+### Minor Changes
+
+- 25dc8fd3: Importing dimension mappings from shared dimension
+
+### Patch Changes
+
+- ce8fdcf6: Add paging to dimension mapping screen
+
 ## 1.11.2
 
 ### Patch Changes

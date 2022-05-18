@@ -1,5 +1,12 @@
 # @cube-creator/cli
 
+## 1.10.9
+
+### Patch Changes
+
+- b6f2d73e: Prettier SHACL Report in pipeline output
+- 550a1ca0: Publishing would fail validation when dimension had a hierarchy
+
 ## 1.10.8
 
 ### Patch Changes

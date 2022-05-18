@@ -1,5 +1,11 @@
 # @cube-creator/shared-dimensions-api
 
+## 2.6.7
+
+### Patch Changes
+
+- 985a863f: Further reduce the Shared Dimension export query (re #1184)
+
 ## 2.6.6
 
 ### Patch Changes

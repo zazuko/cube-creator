@@ -1,5 +1,18 @@
 # @cube-creator/core-api
 
+## 1.12.0
+
+### Minor Changes
+
+- 25dc8fd3: Importing dimension mappings from shared dimension
+
+### Patch Changes
+
+- a877a5a1: `Identifier template:auto` would not produce the expected observations (fixes #1187)
+- 2182c7bb: Remove `applyMappings` box from dimension mapping form
+- Updated dependencies [985a863f]
+  - @cube-creator/shared-dimensions-api@2.6.7
+
 ## 1.11.2
 
 ### Patch Changes
