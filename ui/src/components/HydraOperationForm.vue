@@ -16,6 +16,9 @@
         :disabled="!shape"
         @cancel="$emit('cancel')"
       />
+      <div class="buttons">
+        <slot name="buttons" />
+      </div>
     </div>
   </form>
 </template>
@@ -122,3 +125,11 @@ export default defineComponent({
   },
 })
 </script>
+
+<style scoped>
+.buttons {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+}
+</style>
