@@ -1,5 +1,11 @@
 # @cube-creator/ui
 
+## 1.12.1
+
+### Patch Changes
+
+- 78cb647d: Put button to import mapping at the bottom
+
 ## 1.12.0
 
 ### Minor Changes
