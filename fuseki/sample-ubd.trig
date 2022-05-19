@@ -788,6 +788,7 @@ graph <cube-project/ubd/csv-mapping/jobs/failed-job> {
         schema:disambiguatingDescription "Failed to process for 1234" ;
         schema:description "The error stack trace" ;
       ] ;
+    cc:project <cube-project/ubd> ;
   .
 }
 
@@ -802,6 +803,7 @@ graph <cube-project/ubd/csv-mapping/jobs/hung-job> {
     dcterms:created "2020-10-29T12:01:54Z"^^xsd:dateTime ;
     dcterms:modified "2020-10-29T12:01:54Z"^^xsd:dateTime ;
     schema:actionStatus schema:ActiveActionStatus ;
+    cc:project <cube-project/ubd> ;
   .
 }
 

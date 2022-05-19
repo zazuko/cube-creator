@@ -16,7 +16,7 @@ import { deleteProject } from '../domain/cube-projects/delete'
 import { getExportedProject } from '../domain/cube-projects/export'
 import { getProjectDetails } from '../domain/cube-projects/details'
 import * as triggers from '../pipeline/trigger'
-import { streamClient } from '../query-client'
+import { parsingClient, streamClient } from '../query-client'
 import { postImportedProject } from './cube-projects/import'
 
 const trigger = (triggers as Record<string, (job: GraphPointer<NamedNode>, params?: GraphPointer) => void>)[env.PIPELINE_TYPE]
@@ -72,6 +72,7 @@ export const remove = protectedResource(
     await deleteProject({
       resource: project,
       store: req.resourceStore(),
+      client: parsingClient,
     })
     await req.resourceStore().save()
 
