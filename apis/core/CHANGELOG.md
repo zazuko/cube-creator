@@ -1,5 +1,11 @@
 # @cube-creator/core-api
 
+## 1.12.1
+
+### Patch Changes
+
+- 5d0615bc: Dimension auto-mapping would not work for shared dimensions managed by cube creator
+
 ## 1.12.0
 
 ### Minor Changes
