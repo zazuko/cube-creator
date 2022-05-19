@@ -4,7 +4,7 @@ import { expect } from 'chai'
 import sinon from 'sinon'
 import clownface, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
-import { csvw, hydra, rdf, schema, xsd } from '@tpluscode/rdf-ns-builders'
+import { csvw, hydra, rdf, schema, xsd, prov } from '@tpluscode/rdf-ns-builders/strict'
 import { cc } from '@cube-creator/core/namespace'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import { ColumnMapping } from '@cube-creator/model'
@@ -31,6 +31,7 @@ describe('domain/column-mapping/delete', () => {
   let columnMapping: GraphPointer<NamedNode, DatasetExt>
   let columnMappingObservation: GraphPointer<NamedNode, DatasetExt>
   let observationTable: GraphPointer<NamedNode, DatasetExt>
+  let dimensionMapping: GraphPointer<NamedNode, DatasetExt>
 
   beforeEach(() => {
     sinon.restore()
@@ -99,11 +100,16 @@ describe('domain/column-mapping/delete', () => {
       .addOut(cc.columnMapping, columnMappingObservation)
       .addOut(cc.columnMapping, columnMapping)
 
+    dimensionMapping = clownface({ dataset: $rdf.dataset() })
+      .namedNode('myDimensionMapping')
+      .addOut(rdf.type, prov.Dictionary)
+
     dimensionMetadataCollection = clownface({ dataset: $rdf.dataset() })
       .namedNode('dimensionMetadataCollection')
       .addOut(rdf.type, cc.DimensionMetadataCollection)
       .addOut(schema.hasPart, $rdf.namedNode('myDimension'), dim => {
         dim.addOut(schema.about, $rdf.namedNode('test'))
+          .addOut(cc.dimensionMapping, dimensionMapping)
       })
       .addOut(schema.hasPart, $rdf.namedNode('myDimension2'), dim => {
         dim.addOut(schema.about, $rdf.namedNode('test2'))
@@ -120,6 +126,7 @@ describe('domain/column-mapping/delete', () => {
       columnMappingObservation,
       project,
       organization,
+      dimensionMapping,
     ])
 
     sinon.restore()
@@ -182,5 +189,18 @@ describe('domain/column-mapping/delete', () => {
     expect(dimensionMetadataCollection.out(schema.hasPart).terms).to.have.length(dimensionsCount)
     expect(observationTable.out(cc.columnMapping).terms).to.have.length(columnMappingsCount - 1)
     expect(dimensionMetadataCollection.node($rdf.namedNode('myDimension')).out().values).to.have.length(dimensionMetadataCount)
+  })
+
+  it('deletes dimension mapping', async () => {
+    // give
+    const resourceId = $rdf.namedNode('columnMappingObservation')
+
+    // when
+    await deleteColumnMapping({ resource: resourceId, store, tableQueries, columnMappingQueries })
+    await store.save()
+
+    // then
+    const resource = await store.get(dimensionMapping.term, { allowMissing: true })
+    expect(resource).to.be.undefined
   })
 })
