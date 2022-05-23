@@ -1,4 +1,4 @@
-import { NamedNode, Quad } from 'rdf-js'
+import { NamedNode, Quad, Term } from 'rdf-js'
 import clownface, { GraphPointer } from 'clownface'
 import TermSet from '@rdfjs/term-set'
 import $rdf from 'rdf-ext'
@@ -60,20 +60,22 @@ export async function update({
   }
 
   if (!metadata.hasPart.some(dim => dim.isMeasureDimension)) {
-    if (!metadata.errors?.some(error => error.identifierLiteral === Error.MissingMeasureDimension)) {
-      metadata.errors = <any>[
-        ...metadata.errors!,
-        createNoMeasureDimensionError,
-      ]
-    }
+    metadata.addError(createNoMeasureDimensionError)
   } else {
-    metadata.pointer
-      .out(schema.error)
-      .has(schema.identifier, Error.MissingMeasureDimension)
-      .deleteOut()
-      .deleteIn()
+    metadata.removeError(Error.MissingMeasureDimension)
   }
 
   const dataset = $rdf.dataset([...extractSubgraph(metadata.pointer.node(dimensionMetadata.term))])
   return clownface({ dataset }).node(dimensionMetadata.term)
+}
+
+interface ClearDimensionChangedWarning {
+  id: Term
+  store: ResourceStore
+}
+
+export async function clearDimensionChangedWarning({ id, store }: ClearDimensionChangedWarning) {
+  const collection = await store.getResource<DimensionMetadataCollection>(id)
+
+  collection.removeError(Error.DimensionMappingChanged)
 }

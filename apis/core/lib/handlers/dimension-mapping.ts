@@ -12,9 +12,12 @@ import { rdf } from '@tpluscode/rdf-ns-builders/strict'
 import error from 'http-errors'
 import { isNamedNode } from 'is-graph-pointer'
 import { toRdf } from 'rdf-literal'
+import { DimensionMetadataCollection } from '@cube-creator/model'
+import { dimensionChangedWarning } from '@cube-creator/model/DimensionMetadata'
 import { shaclValidate } from '../middleware/shacl'
 import { update } from '../domain/dimension-mapping/update'
 import { getUnmappedValues, importMappingsFromSharedDimension } from '../domain/queries/dimension-mappings'
+import { findByDimensionMapping } from '../domain/queries/dimension-metadata'
 
 function rewrite<T extends Term>(term: T, from: string, to: string): T {
   if (term.termType === 'NamedNode') {
@@ -35,6 +38,7 @@ function fromCanonical<T extends Term>(term: T): T {
 export const put = protectedResource(
   shaclValidate,
   asyncMiddleware(async (req, res) => {
+    const store = req.resourceStore()
     const mappings = await req.resource()
     const dataset = $rdf.dataset([...mappings.dataset]).map(quad => {
       return $rdf.quad(
@@ -45,12 +49,20 @@ export const put = protectedResource(
       )
     })
 
-    const dimensionMapping = await update({
+    const { dimensionMapping, hasChanges } = await update({
       resource: req.hydra.resource.term,
       mappings: clownface({ dataset }).node(mappings.term),
       store: req.resourceStore(),
     })
-    await req.resourceStore().save()
+
+    if (hasChanges) {
+      const metadataId = await findByDimensionMapping(dimensionMapping.term)
+      const dimensionMetadata = await store.getResource<DimensionMetadataCollection>(metadataId)
+
+      dimensionMetadata.addError(dimensionChangedWarning)
+    }
+
+    await store.save()
 
     return res.dataset(dimensionMapping.dataset)
   }))

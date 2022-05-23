@@ -9,6 +9,19 @@ import type { Organization } from '@rdfine/schema'
 import { parsingClient } from '../../query-client'
 import { ResourceStore } from '../../ResourceStore'
 
+export async function findByDimensionMapping(dimensionMapping: Term, client = parsingClient) {
+  const [{ metadata }] = await SELECT`?metadata`
+    .WHERE`
+      graph ?metadata {
+        ?metadata ${schema.hasPart}/${cc.dimensionMapping} ${dimensionMapping}
+      }
+    `
+    .LIMIT(1)
+    .execute(client.query)
+
+  return metadata
+}
+
 export async function getDimensionMetaDataCollection(csvMapping: Term, client = parsingClient) {
   const results = await SELECT
     .DISTINCT`?dimensionMetadata`

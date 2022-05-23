@@ -11,11 +11,16 @@ interface UpdateDimensionMapping {
   store: ResourceStore
 }
 
+interface Updated {
+  dimensionMapping: GraphPointer
+  hasChanges: boolean
+}
+
 export async function update({
   resource,
   mappings,
   store,
-}: UpdateDimensionMapping): Promise<GraphPointer> {
+}: UpdateDimensionMapping): Promise<Updated> {
   const dimensionMappings = await store.getResource<Dictionary>(resource)
   const newMappings = fromPointer(mappings)
 
@@ -29,7 +34,10 @@ export async function update({
   dimensionMappings.changeSharedDimensions(sharedDimensions)
 
   dimensionMappings.onlyValidTerms = newMappings.onlyValidTerms
-  dimensionMappings.replaceEntries(newMappings.hadDictionaryMember)
+  const newEntries = dimensionMappings.replaceEntries(newMappings.hadDictionaryMember)
 
-  return dimensionMappings.pointer
+  return {
+    dimensionMapping: dimensionMappings.pointer,
+    hasChanges: newEntries.size > 0,
+  }
 }
