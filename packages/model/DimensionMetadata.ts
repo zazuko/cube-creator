@@ -4,6 +4,8 @@ import { Constructor, namespace, property, RdfResource } from '@tpluscode/rdfine
 import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import { qudt, schema, sh } from '@tpluscode/rdf-ns-builders'
 import * as Thing from '@rdfine/schema/lib/Thing'
+import type * as Schema from '@rdfine/schema'
+import { FullFactory } from '@tpluscode/rdfine/factory'
 import { cc, cube, meta } from '@cube-creator/core/namespace'
 import { initializer } from './lib/initializer'
 import './BaseResource'
@@ -73,11 +75,17 @@ DimensionMetadataCollectionMixin.appliesTo = cc.DimensionMetadataCollection
 
 export const Error = {
   MissingMeasureDimension: 'MissingMeasureDimension',
+  DimensionMappingChanged: 'DimensionMappingChanged',
 } as const
 
-export const createNoMeasureDimensionError = Thing.fromPointer({
+export const createNoMeasureDimensionError: FullFactory<Schema.Thing> = Thing.fromPointer({
   identifierLiteral: Error.MissingMeasureDimension,
   description: 'No Measure dimension defined',
+})
+
+export const dimensionChangedWarning: FullFactory<Schema.Thing> = Thing.fromPointer({
+  identifierLiteral: Error.DimensionMappingChanged,
+  description: 'Dimension mappings changed. It may be necessary to run transformation',
 })
 
 export const createCollection = initializer<DimensionMetadataCollection>(DimensionMetadataCollectionMixin, {

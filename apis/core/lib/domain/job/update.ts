@@ -7,6 +7,7 @@ import { schema } from '@tpluscode/rdf-ns-builders'
 import { ResourceStore } from '../../ResourceStore'
 import { insertDimensionCardinalityError, insertMissingDimensionsError } from '../errors'
 import { error } from '../../log'
+import { clearDimensionChangedWarning } from '../dimension/update'
 
 interface JobUpdateParams {
   resource: GraphPointer<NamedNode>
@@ -36,6 +37,7 @@ export async function update({ resource, store }: JobUpdateParams): Promise<Grap
         await Promise.all([
           insertMissingDimensionsError(job).catch(error),
           insertDimensionCardinalityError(job).catch(error),
+          clearDimensionChangedWarning({ id: job.dimensionMetadata.id, store }).catch(error),
         ])
       }
     }
