@@ -14,10 +14,11 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/delete @SPARQL', funct
   this.timeout(20000)
 
   const project = $rdf.namedNode('https://cube-creator.lndo.site/cube-project/ubd')
+  const deleteFile = sinon.stub()
 
   before(() => {
     sinon.stub(storage, 'getMediaStorage').returns({
-      delete: sinon.stub(),
+      delete: deleteFile,
     } as any)
   })
 
@@ -44,5 +45,21 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/delete @SPARQL', funct
 
     filter (strstarts(str(?g), "${project.value}"))`.execute(ccClients.parsingClient.query)
     await expect(anyGraph).to.eventually.deep.equal([])
+  })
+
+  it('removes sources', async () => {
+    // given
+    const store = new ResourceStore(ccClients.streamClient)
+
+    // when
+    await deleteProject({
+      resource: project,
+      store,
+      client: ccClients.parsingClient,
+    })
+    await store.save()
+
+    // then
+    expect(deleteFile).to.have.been.called
   })
 })

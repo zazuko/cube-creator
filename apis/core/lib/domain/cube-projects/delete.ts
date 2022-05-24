@@ -3,6 +3,7 @@ import { Project } from '@cube-creator/model'
 import { ParsingClient } from 'sparql-http-client/ParsingClient'
 import { SELECT } from '@tpluscode/sparql-builder'
 import { ResourceStore } from '../../ResourceStore'
+import { deleteMapping } from '../csv-mapping/delete'
 
 interface DeleteProjectCommand {
   resource: NamedNode
@@ -17,6 +18,11 @@ export async function deleteProject({
 }: DeleteProjectCommand): Promise<void> {
   const project = await store.getResource<Project>(resource, { allowMissing: true })
   if (!project) return
+
+  const { csvMapping } = project
+  if (csvMapping?.id.termType === 'NamedNode') {
+    await deleteMapping(csvMapping.id, store)
+  }
 
   const graphs: Array<{ graph?: NamedNode }> = await SELECT.DISTINCT`?graph`
     .WHERE`
