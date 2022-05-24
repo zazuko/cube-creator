@@ -175,6 +175,5 @@ describe('CSV mapping flow', () => {
       .click({ force: true })
 
     cy.contains('Project My project successfully deleted').should('be.visible')
-    cy.contains('My project', { timeout: 10000 }).should('not.be.visible')
   })
 })
