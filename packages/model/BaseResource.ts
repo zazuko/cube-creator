@@ -6,10 +6,10 @@ import * as Schema from '@rdfine/schema'
 import { cc } from '../core/namespace'
 
 declare module '@tpluscode/rdfine/RdfResource' {
-  interface RdfResource {
+  interface RdfResourceCore {
     errors?: Schema.Thing[]
-    addError(error: Schema.Thing | ((arg: GraphPointer) => Schema.Thing)): void
-    removeError(id: string): void
+    addError?(error: Schema.Thing | ((arg: GraphPointer) => Schema.Thing)): void
+    removeError?(id: string): void
   }
 }
 
