@@ -1,27 +1,40 @@
 import { NamedNode } from 'rdf-js'
-import { cc } from '@cube-creator/core/namespace'
+import { Project } from '@cube-creator/model'
+import { ParsingClient } from 'sparql-http-client/ParsingClient'
+import { SELECT } from '@tpluscode/sparql-builder'
 import { ResourceStore } from '../../ResourceStore'
 import { deleteMapping } from '../csv-mapping/delete'
 
 interface DeleteProjectCommand {
   resource: NamedNode
   store: ResourceStore
+  client: ParsingClient
 }
 
 export async function deleteProject({
   resource,
   store,
+  client,
 }: DeleteProjectCommand): Promise<void> {
-  const project = await store.get(resource, { allowMissing: true })
+  const project = await store.getResource<Project>(resource, { allowMissing: true })
   if (!project) return
 
-  const csvMapping = project.out(cc.csvMapping).term
-
-  // Find csv sources
-  if (csvMapping?.termType === 'NamedNode') {
-    await deleteMapping(csvMapping, store)
+  const { csvMapping } = project
+  if (csvMapping?.id.termType === 'NamedNode') {
+    await deleteMapping(csvMapping.id, store)
   }
 
-  // delete project graph
-  store.delete(project.term)
+  const graphs: Array<{ graph?: NamedNode }> = await SELECT.DISTINCT`?graph`
+    .WHERE`
+      graph ?graph {
+        ?s ?p ?o
+      }
+      filter(strstarts(str(?graph), "${project.id.value}"))
+    `.execute(client.query)
+
+  for (const { graph } of graphs) {
+    if (graph) {
+      store.delete(graph)
+    }
+  }
 }

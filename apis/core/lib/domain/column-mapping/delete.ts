@@ -40,6 +40,9 @@ export async function deleteColumnMapping({
     const dimension = dimensionMetaDataCollection.find({ cubeIdentifier, organization, targetProperty: columnMapping.targetProperty })
     const isInUse = await dimensionIsUsedByOtherMapping(columnMapping.id)
     if (dimension && dimension.id.termType === 'NamedNode' && !isInUse) {
+      if (dimension.mappings) {
+        store.delete(dimension.mappings)
+      }
       dimensionMetaDataCollection.deleteDimension(dimension)
     }
   }
