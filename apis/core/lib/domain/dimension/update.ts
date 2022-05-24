@@ -60,9 +60,9 @@ export async function update({
   }
 
   if (!metadata.hasPart.some(dim => dim.isMeasureDimension)) {
-    metadata.addError(createNoMeasureDimensionError)
+    metadata.addError?.(createNoMeasureDimensionError)
   } else {
-    metadata.removeError(Error.MissingMeasureDimension)
+    metadata.removeError?.(Error.MissingMeasureDimension)
   }
 
   const dataset = $rdf.dataset([...extractSubgraph(metadata.pointer.node(dimensionMetadata.term))])
@@ -77,5 +77,5 @@ interface ClearDimensionChangedWarning {
 export async function clearDimensionChangedWarning({ id, store }: ClearDimensionChangedWarning) {
   const collection = await store.getResource<DimensionMetadataCollection>(id)
 
-  collection.removeError(Error.DimensionMappingChanged)
+  collection.removeError?.(Error.DimensionMappingChanged)
 }
