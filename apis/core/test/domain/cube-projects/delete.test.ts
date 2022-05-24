@@ -1,10 +1,11 @@
 import { before, beforeEach, describe, it } from 'mocha'
 import sinon from 'sinon'
 import { expect } from 'chai'
-import { SELECT } from '@tpluscode/sparql-builder'
+import { ASK, SELECT } from '@tpluscode/sparql-builder'
 import $rdf from 'rdf-ext'
 import { ccClients } from '@cube-creator/testing/lib'
-import { insertTestProject } from '@cube-creator/testing/lib/seedData'
+import { insertPxCube, insertTestProject } from '@cube-creator/testing/lib/seedData'
+import { cc } from '@cube-creator/core/namespace'
 import { deleteProject } from '../../../lib/domain/cube-projects/delete'
 import ResourceStore from '../../../lib/ResourceStore'
 import '../../../lib/domain'
@@ -24,20 +25,21 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/delete @SPARQL', funct
 
   beforeEach(async () => {
     await insertTestProject()
+    await insertPxCube()
   })
 
-  it("removes all project's graphs", async () => {
-    // given
+  beforeEach(async () => {
     const store = new ResourceStore(ccClients.streamClient)
 
-    // when
     await deleteProject({
       resource: project,
       store,
       client: ccClients.parsingClient,
     })
     await store.save()
+  })
 
+  it("removes all project's graphs", async () => {
     // then
     const anyGraph = SELECT.DISTINCT`?g`.WHERE`graph ?g {
       ?s ?p ?o
@@ -47,18 +49,20 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/delete @SPARQL', funct
     await expect(anyGraph).to.eventually.deep.equal([])
   })
 
+  it('does not touch another project', async () => {
+    const pxCube = $rdf.namedNode('cube-project/px')
+    const otherProjectStillExists = ASK`graph ${pxCube} {
+      ${pxCube} a ${cc.CubeProject}
+    }`
+      .execute(ccClients.parsingClient.query, {
+        base: 'https://cube-creator.lndo.site/',
+      })
+
+    // then
+    await expect(otherProjectStillExists).to.eventually.be.true
+  })
+
   it('removes sources', async () => {
-    // given
-    const store = new ResourceStore(ccClients.streamClient)
-
-    // when
-    await deleteProject({
-      resource: project,
-      store,
-      client: ccClients.parsingClient,
-    })
-    await store.save()
-
     // then
     expect(deleteFile).to.have.been.called
   })
