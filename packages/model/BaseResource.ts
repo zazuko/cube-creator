@@ -8,7 +8,7 @@ import { cc } from '../core/namespace'
 declare module '@tpluscode/rdfine/RdfResource' {
   interface RdfResourceCore {
     errors?: Schema.Thing[]
-    addError?(error: Schema.Thing | ((arg: GraphPointer) => Schema.Thing)): void
+    addError?(error: ((arg: GraphPointer) => Schema.Thing)): void
     removeError?(id: string): void
   }
 }
@@ -24,8 +24,8 @@ export function BaseResourceMixin<Base extends Constructor>(base: Base): Constru
     })
     errors!: Schema.Thing[]
 
-    addError(errorOrFactory: Schema.Thing | ((arg: GraphPointer) => Schema.Thing)) {
-      const error = 'id' in errorOrFactory ? errorOrFactory : errorOrFactory(this.pointer.blankNode())
+    addError(errorOrFactory: ((arg: GraphPointer) => Schema.Thing)) {
+      const error = errorOrFactory(this.pointer.blankNode())
 
       if (this.errors.some(current => current.identifierLiteral === error.identifierLiteral)) {
         return

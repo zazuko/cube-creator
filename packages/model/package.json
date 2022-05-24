@@ -16,6 +16,7 @@
     "uri-template": "^1.0.1"
   },
   "devDependencies": {
+    "@cube-creator/testing": "^0.1.20",
     "@types/clownface": "^1",
     "@types/is-uri": "^1",
     "@types/rdf-js": "^4.0.0",
