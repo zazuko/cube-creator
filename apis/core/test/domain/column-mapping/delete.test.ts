@@ -158,7 +158,6 @@ describe('domain/column-mapping/delete', () => {
 
     const dimensionsCount = dimensionMetadataCollection.out(schema.hasPart).terms.length
     const columnMappingsCount = observationTable.out(cc.columnMapping).terms.length
-    const dimensionMetadataCount = dimensionMetadataCollection.node($rdf.namedNode('myDimension')).out().values.length
 
     await deleteColumnMapping({ resource: resourceId, store, tableQueries, columnMappingQueries })
     await store.save()
@@ -168,7 +167,7 @@ describe('domain/column-mapping/delete', () => {
 
     expect(dimensionMetadataCollection.out(schema.hasPart).terms).to.have.length(dimensionsCount - 1)
     expect(observationTable.out(cc.columnMapping).terms).to.have.length(columnMappingsCount - 1)
-    expect(dimensionMetadataCollection.node($rdf.namedNode('myDimension')).out().values).to.have.length(dimensionMetadataCount - 1)
+    expect(dimensionMetadataCollection.node($rdf.namedNode('myDimension')).out().values).to.be.empty
   })
 
   it('deletes a column mapping but not dimension stays untouched since shared', async () => {
