@@ -16,6 +16,7 @@ import TableMixin from './mixins/Table'
 import HierarchyMixin from './mixins/Hierarchy'
 import JobCollectionMixin from './mixins/JobCollection'
 import OperationMixin from './mixins/Operation'
+import SharedDimensionMixin from './mixins/SharedDimension'
 import * as Models from '@cube-creator/model'
 import { findNodes } from 'clownface-shacl-path'
 import { FileLiteral } from '@/forms/FileLiteral'
@@ -39,6 +40,7 @@ Hydra.resources.factory.addMixin(TableMixin)
 Hydra.resources.factory.addMixin(HierarchyMixin)
 Hydra.resources.factory.addMixin(JobCollectionMixin)
 Hydra.resources.factory.addMixin(OperationMixin)
+Hydra.resources.factory.addMixin(SharedDimensionMixin)
 Hydra.resources.factory.addMixin(...ShapeBundle)
 Hydra.resources.factory.addMixin(ThingMixin)
 Hydra.resources.factory.addMixin(ValidationReportMixin)

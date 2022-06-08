@@ -17,6 +17,8 @@ export function getSharedDimensions() {
       ?termSet a ${schema.DefinedTermSet}, ${meta.SharedDimension} .
       ?termSet ?p ?o .
 
+      MINUS { ?termSet ${md.export} ?o }
+
       BIND ( IRI(CONCAT("${env.MANAGED_DIMENSIONS_BASE}", "dimension/_terms?dimension=", ENCODE_FOR_URI(STR(?termSet)))) as ?terms )
 
       OPTIONAL {

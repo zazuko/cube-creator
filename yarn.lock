@@ -1940,7 +1940,7 @@
     "@tpluscode/rdf-ns-builders" "^1.0.0"
     "@tpluscode/rdfine" "^0.5.35"
 
-"@rdfine/shacl@^0.8", "@rdfine/shacl@^0.8.2", "@rdfine/shacl@^0.8.4", "@rdfine/shacl@^0.8.5":
+"@rdfine/shacl@^0.8", "@rdfine/shacl@^0.8.2", "@rdfine/shacl@^0.8.4", "@rdfine/shacl@^0.8.5", "@rdfine/shacl@^0.8.6":
   version "0.8.6"
   resolved "https://registry.yarnpkg.com/@rdfine/shacl/-/shacl-0.8.6.tgz#9305df02e3589463fe7148ebaf9167e6804d5465"
   integrity sha512-Bkx7W2ftQ+6oMw/4CIDeE1XjPSyugRYVH212ha5FkAdHOGzqLBJ2yLkeJb57HasMqv1W5UgrclXg3RLR7V8d+Q==
@@ -1980,6 +1980,14 @@
     "@rdfjs/serializer-jsonld-ext" "^3.0.0"
     "@tpluscode/rdf-ns-builders" "^1.0.0"
     readable-stream "^3.6.0"
+
+"@rdfjs-elements/lit-helpers@^0.2":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@rdfjs-elements/lit-helpers/-/lit-helpers-0.2.1.tgz#ded96998fdd8d6460904c0d933d97c580c4e8da6"
+  integrity sha512-x9nnocdknPGQ/Vq5GAKJ9OPPt7whHfkZkX3yW4Oq9x6psUNBig0XgpHQtyCNFNhFpzk/+JsBNDoVICplvKFuBg==
+  dependencies:
+    "@tpluscode/rdf-ns-builders" "^1"
+    lit "^2"
 
 "@rdfjs-elements/rdf-editor@^0.5":
   version "0.5.2"

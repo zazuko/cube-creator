@@ -5,7 +5,9 @@ import Oruga from '@oruga-ui/oruga-next'
 import { bulmaConfig } from '@oruga-ui/theme-bulma'
 import App from './App.vue'
 import router from './router'
-
+import './components/tagged-literal'
+import { setLanguages } from '@rdfjs-elements/lit-helpers/taggedLiteral.js'
+import { displayLanguage } from '@/store/serializers'
 import { library as iconsLibrary } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { far } from '@fortawesome/free-regular-svg-icons'
@@ -15,6 +17,8 @@ import './styles/app.scss'
 import store from './store'
 
 import('./forms')
+
+setLanguages(...displayLanguage)
 
 const app = createApp(App)
 

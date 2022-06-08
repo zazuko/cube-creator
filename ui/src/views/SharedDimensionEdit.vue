@@ -58,7 +58,7 @@ export default defineComponent({
     onMounted(async () => {
       const dimensionId = route.params.id as string
       const resource = await api.fetchResource(dimensionId)
-      form.resource.value = Object.freeze(resource.pointer)
+      form.resource.value = resource.pointer
     })
 
     return {

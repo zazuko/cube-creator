@@ -107,5 +107,5 @@ export const injectTermsLink: Enrichment = async (req, pointer) => {
 }
 
 export const injectExportLink: Enrichment = async (req, pointer) => {
-  pointer.addOut(md.export, pointer.namedNode(`${env.MANAGED_DIMENSIONS_BASE}dimension/_export?dimension=${pointer.value}`))
+  pointer.deleteOut(md.export).addOut(md.export, pointer.namedNode(`${env.MANAGED_DIMENSIONS_BASE}dimension/_export?dimension=${pointer.value}`))
 }

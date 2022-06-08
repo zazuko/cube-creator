@@ -25,7 +25,7 @@
           <div class="is-flex-grow-1 is-flex is-justify-content-space-between">
             <div class="is-flex is-justify-content-space-between">
               <p class="has-text-weight-bold">
-                {{ dimension.name }}
+                <tagged-literal :resource.prop="dimension.pointer" />
               </p>
             </div>
             <shared-dimension-tags :dimension="dimension" />
