@@ -2,7 +2,6 @@ import { ActionTree, MutationTree, GetterTree } from 'vuex'
 import { api } from '@/api'
 import { RootState } from '../types'
 import { cc, md } from '@cube-creator/core/namespace'
-import { serializeSharedDimensionCollection } from '../serializers'
 import { Collection, RdfResource } from 'alcaeus'
 
 export interface SharedDimensionsState {
@@ -51,7 +50,7 @@ const mutations: MutationTree<SharedDimensionsState> = {
   },
 
   storeCollection (state, collection) {
-    state.collection = collection ? serializeSharedDimensionCollection(collection) : null
+    state.collection = collection
   },
 }
 

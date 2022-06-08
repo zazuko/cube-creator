@@ -206,25 +206,6 @@ export function serializeCube (cube: Cube): Cube {
   } as Cube
 }
 
-export function serializeSharedDimensionCollection (collection: Collection): Collection {
-  return Object.freeze({
-    ...serializeResource(collection),
-    member: collection.member.map(serializeSharedDimension),
-  }) as unknown as Collection
-}
-
-export function serializeSharedDimension (dimension: RdfResource): SharedDimension {
-  const validThrough = dimension.pointer.out(schema.validThrough).value
-
-  return Object.freeze({
-    ...serializeResource(dimension),
-    name: dimension.pointer.out(schema.name, { language: displayLanguage }).value,
-    terms: dimension.pointer.out(md.terms).term,
-    validThrough: validThrough ? new Date(validThrough) : undefined,
-    export: dimension.get(md.export)
-  })
-}
-
 export function serializeSharedDimensionTerm (term: RdfResource): SharedDimensionTerm {
   const validThrough = term.pointer.out(schema.validThrough).value
 

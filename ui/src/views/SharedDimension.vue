@@ -4,7 +4,7 @@
       <div class="mb-4 is-flex is-justify-content-space-between is-align-items-center gap-2">
         <div class="is-flex is-align-items-center gap-2">
           <h2 class="title is-size-4 mb-0">
-            {{ dimension.name }}
+            <tagged-literal :resource.prop="dimension" />
           </h2>
           <shared-dimension-tags :dimension="dimension" />
         </div>

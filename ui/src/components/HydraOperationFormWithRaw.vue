@@ -3,7 +3,7 @@
     <hydra-raw-rdf-form
       ref="rdfEditor"
       :operation="operation"
-      :resource="internalResource"
+      :resource="resource"
       :shape="shape"
       :error="error"
       :is-submitting="isSubmitting"
@@ -22,7 +22,7 @@
     <hydra-operation-form
       ref="form"
       :operation="operation"
-      :resource="internalResource"
+      :resource="resource"
       :shape="shape"
       :error="error"
       :is-submitting="isSubmitting"
@@ -95,27 +95,8 @@ export default defineComponent({
     }
   },
 
-  watch: {
-    async resource (resource) {
-      if (this.internalResource?.term.equals(resource?.term)) {
-        return
-      }
-      this.isRawMode = false
-      this.internalResource = null as any
-      await (this.$refs.form as any)?.updateComplete
-      this.internalResource = resource
-    }
-  },
-
   methods: {
-    async toggleMode () {
-      if (this.isRawMode) {
-        this.internalResource = (this.$refs.rdfEditor as any).value
-      } else {
-        this.internalResource = null as any
-        await (this.$refs.form as any).updateComplete
-        this.internalResource = (this.$refs.form as any).value
-      }
+    toggleMode () {
       this.isRawMode = !this.isRawMode
     },
   },

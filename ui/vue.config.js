@@ -16,6 +16,7 @@ if (process.env.NO_WEBSOCKET === 'true') {
 const customElements = [
   'cc-form',
   'rdf-editor',
+  'tagged-literal'
 ]
 
 module.exports = {
