@@ -21,4 +21,8 @@ export class TaggedLiteral extends LitElement {
   protected render () {
     return html`${taggedLiteral(this.resource, { property: this.property })}`
   }
+
+  protected createRenderRoot () {
+    return this
+  }
 }
