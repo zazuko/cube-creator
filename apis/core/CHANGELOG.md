@@ -1,5 +1,15 @@
 # @cube-creator/core-api
 
+## 1.12.2
+
+### Patch Changes
+
+- b361613f: Removing a project would leave some leftover graphs
+- 612c5008: Dimension mappings would not have been deleted when column mapping is deleted
+- 3e180365: Add a message to cube designer when a dimension mapping changes to alert users that transformation may be required
+- Updated dependencies [15b15b12]
+  - @cube-creator/shared-dimensions-api@2.6.8
+
 ## 1.12.1
 
 ### Patch Changes
