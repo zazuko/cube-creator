@@ -1,5 +1,11 @@
 # @cube-creator/ui
 
+## 1.12.2
+
+### Patch Changes
+
+- 15b15b12: Improve shared dimension editing experience
+
 ## 1.12.1
 
 ### Patch Changes

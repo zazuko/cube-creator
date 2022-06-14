@@ -1,5 +1,11 @@
 # @cube-creator/shared-dimensions-api
 
+## 2.6.8
+
+### Patch Changes
+
+- 15b15b12: Improve shared dimension editing experience
+
 ## 2.6.7
 
 ### Patch Changes
