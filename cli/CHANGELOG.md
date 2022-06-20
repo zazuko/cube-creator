@@ -1,5 +1,11 @@
 # @cube-creator/cli
 
+## 1.10.10
+
+### Patch Changes
+
+- 5903bfee: Conflicting `curl` parameters caused a warning in pipeline
+
 ## 1.10.9
 
 ### Patch Changes
