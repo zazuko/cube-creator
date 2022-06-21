@@ -22,6 +22,7 @@ export async function sharedDimensions(): Promise<Router> {
       rewriteHeaders: true,
     }))
     .use(await hydraBox({
+      term: $rdf.namedNode(`${env.MANAGED_DIMENSIONS_API_BASE}dimension/api`),
       apiPath,
       codePath,
       baseUri: env.MANAGED_DIMENSIONS_API_BASE,
