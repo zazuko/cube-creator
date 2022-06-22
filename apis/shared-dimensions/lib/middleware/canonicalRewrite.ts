@@ -7,7 +7,7 @@ import { oa } from '@tpluscode/rdf-ns-builders'
 import $rdf from 'rdf-ext'
 import env from '../env'
 
-export function rewriteTerm<T extends Term>(term: T): T {
+function rewriteTerm<T extends Term>(term: T): T {
   if (term.termType === 'NamedNode') {
     return $rdf.namedNode(term.value.replace(env.MANAGED_DIMENSIONS_BASE, env.MANAGED_DIMENSIONS_API_BASE)) as any
   }

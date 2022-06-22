@@ -1431,10 +1431,10 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
-"@hydrofoil/labyrinth@^0.4.1":
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/@hydrofoil/labyrinth/-/labyrinth-0.4.1.tgz#405dce31a12d7d8bb16818eebd4ea1183c4dad35"
-  integrity sha512-TO9I3U+lQ8MHTCSRty6IP5Sy71ybxunMuL9N/PysmTcACOPHciAbsG0/Xpdmr+tqTyJqhcB9cvMsO1rHfBRy0g==
+"@hydrofoil/labyrinth@^0.4.1", "@hydrofoil/labyrinth@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@hydrofoil/labyrinth/-/labyrinth-0.4.2.tgz#5fe4ea9bab31fccd51f84082eee3baaef166da0b"
+  integrity sha512-tUIp30bcuoyXXAo7NgecExAomNe+ADy4E3c+gGX6J4q276nLMEh960HBStx3kRlxFq5dIl5edvclFE4tTARcHQ==
   dependencies:
     "@fcostarodrigo/walk" "^5.0.0"
     "@rdfine/hydra" "^0.6"
@@ -2917,10 +2917,10 @@
   resolved "https://registry.yarnpkg.com/@types/parse-json/-/parse-json-4.0.0.tgz#2f8bb441434d163b35fb8ffdccd7138927ffb8c0"
   integrity sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==
 
-"@types/parse-link-header@^1.0.0":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@types/parse-link-header/-/parse-link-header-1.0.1.tgz#6eade790736a050b9242c7c6b2fceda9b3dc394a"
-  integrity sha512-E2+Go9rQgPbmpkeA2iFXTWSTxX38KXlXwcdiIbt71Oorqr+G5QtH4AhpuDdxwRVyiTzdUrHnaaIumW/LhiZwVg==
+"@types/parse-link-header@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@types/parse-link-header/-/parse-link-header-2.0.0.tgz#a94d86ac2d13e3cdef4429c977217084e32378e7"
+  integrity sha512-KbqcQLdRaawDOfXnwqr6nvhe1MV+Uv/Ww+ViSx7Ujgw9X5qCgObLP52B1ZSJqZD8FK1y/4o+bJQTUrZOynegcg==
 
 "@types/parse-prefer-header@^1.0.0", "@types/parse-prefer-header@^1.0.1":
   version "1.0.1"
@@ -4218,10 +4218,10 @@ ajv@^8.0.0, ajv@^8.0.1, ajv@^8.8.0:
     require-from-string "^2.0.2"
     uri-js "^4.2.2"
 
-alcaeus@^2, alcaeus@^2.1, alcaeus@^2.2.0:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/alcaeus/-/alcaeus-2.2.1.tgz#c23b69355fd399ca0f2339ec9a5db64cf0a71bcf"
-  integrity sha512-41mYgOKy943xyurR5Ux08QB7n+aWrBTlcaMM0VYhMjLFbnV9Prr0eFscJbmG8EkxkQDzdB4Fvkck6dD0tu+TQA==
+alcaeus@^2, alcaeus@^2.2.0, alcaeus@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/alcaeus/-/alcaeus-2.2.2.tgz#66aae95a4db032ee6c92044d07b41415303aaa76"
+  integrity sha512-XoGn4gdK8t0Ew3Ywvc6+w5LUtc0imGvVd5j+ZB7fbNzzbXOwujt9SmyVMwtfdHTljmvhZBZoaiYZz/WN9senjw==
   dependencies:
     "@rdf-esm/data-model" "^0.5.3"
     "@rdf-esm/formats-common" "^0.5.6"
@@ -4235,7 +4235,7 @@ alcaeus@^2, alcaeus@^2.1, alcaeus@^2.2.0:
     "@rdfjs/types" "*"
     "@tpluscode/rdf-ns-builders" "^1.0.0"
     "@tpluscode/rdfine" "^0.5.29"
-    "@types/parse-link-header" "^1.0.0"
+    "@types/parse-link-header" "^2.0.0"
     clownface "^1.1.0"
     isomorphic-fetch "^3.0.0"
     isomorphic-form-data "^2.0.0"

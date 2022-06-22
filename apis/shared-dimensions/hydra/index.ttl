@@ -10,9 +10,19 @@ BASE <urn:hydra-box:api>
 @prefix query: <http://hypermedia.app/query#> .
 @prefix hex: <https://w3id.org/hydra/extension#> .
 
-<api>
+<dimension/api>
   a hydra:ApiDocumentation ;
   hydra:entrypoint <dimension/> ;
+  hydra:supportedClass
+    hydra:Resource ,
+    md:SharedDimensions ,
+    md:Hierarchies ,
+    sh:NodeShape ,
+    md:SharedDimensionExport ,
+    md:SharedDimensionTerms ,
+    md:SharedDimension ,
+    md:Hierarchy ,
+    md:SharedDimensionTerm
 .
 
 hydra:Resource
