@@ -6,20 +6,17 @@ import { logger } from '../log'
 export function uploadCube(variables: VariableMap) {
   return tracer.startActiveSpan('cube upload', span => {
     try {
-      const endpoint = variables.get('publish-graph-store-endpoint')
+      const endpoint = new URL(variables.get('publish-graph-store-endpoint'))
       const cubeFile = variables.get('targetFile')
       const username = variables.get('publish-graph-store-user')
       const password = variables.get('publish-graph-store-password')
       const graph = variables.get('target-graph')
 
-      const queryString = new URLSearchParams({
-        graph,
-      })
+      endpoint.searchParams.set('graph', graph)
 
       logger.info('Uploading cube to database')
       const exit = spawnSync('curl', [
-        endpoint,
-        '-d', queryString.toString(),
+        endpoint.toString(),
         '-X', 'POST',
         '-u', `${username}:${password}`,
         '-T',
