@@ -1,5 +1,6 @@
 import prefixes from '@zazuko/rdf-vocabularies/prefixes'
 import namespace from '@rdf-esm/namespace'
+import '@zazuko/vocabulary-extras'
 
 export { cube, meta } from '@zazuko/vocabulary-extras/builders'
 export { shape } from './namespaces/shapes'
