@@ -73,7 +73,7 @@ export async function getObservations({
 }
 
 async function getLabels(observations: Record<string, Term>[], loadResourceLabels: (ids: Term[]) => Promise<Quad[]>): Promise<Quad[]> {
-  const blackList = [rdf.type.value, ns.cube.observedBy.value]
+  const blackList: string[] = [rdf.type.value, ns.cube.observedBy.value]
   const resourceIds = new Set(observations.flatMap((observation) => {
     return Object.entries(observation)
       .filter(([key, value]) => !blackList.includes(key) && value.termType === 'NamedNode')

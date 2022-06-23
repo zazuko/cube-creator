@@ -1803,7 +1803,7 @@
     "@rdfjs/serializer-ntriples" "^1.0.3"
     rdfxml-streaming-parser "^1.5.0"
 
-"@rdf-esm/namespace@^0.5.1", "@rdf-esm/namespace@^0.5.2":
+"@rdf-esm/namespace@^0.5.1", "@rdf-esm/namespace@^0.5.2", "@rdf-esm/namespace@^0.5.3":
   version "0.5.5"
   resolved "https://registry.yarnpkg.com/@rdf-esm/namespace/-/namespace-0.5.5.tgz#932e2a752c348eccd2faea66e4180c85c67e3e1e"
   integrity sha512-JF26H4Mx+N93qIOu3KMsjdUW6As+dhvq9wP2Q03fjiS4l1rG+gKwfKUop8CHtVETVeDcNsO3+Srrq0wiQgAPDw==
@@ -4094,6 +4094,21 @@
     readable-stream "^3.6.0"
     string-to-stream "^3.0.1"
 
+"@zazuko/vocabulary-extras@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@zazuko/vocabulary-extras/-/vocabulary-extras-1.0.1.tgz#3e5c72f27f956412ffc4fc7fc2842547bfa2d8f9"
+  integrity sha512-b939jCXev7ZHBVelIRnQUMpYA5HmItrvlWom0cG3f/uL2KIWCW45SazGWWv0o3AViuyB2Nqj/ycPCREA4GIhdg==
+  dependencies:
+    "@rdf-esm/namespace" "^0.5.3"
+    "@rdfjs/parser-n3" "^1.1.4"
+    "@zazuko/rdf-vocabularies" "*"
+    commander "^5.0.0"
+    pkg-dir "^5.0.0"
+    rdf-ext "^1.3.1"
+    rdf-js "*"
+    readable-stream "^3.6.0"
+    string-to-stream "^3.0.1"
+
 abbrev@1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"
@@ -4218,7 +4233,7 @@ ajv@^8.0.0, ajv@^8.0.1, ajv@^8.8.0:
     require-from-string "^2.0.2"
     uri-js "^4.2.2"
 
-alcaeus@^2, alcaeus@^2.2.0, alcaeus@^2.2.2:
+alcaeus@^2, alcaeus@^2.1, alcaeus@^2.2.0:
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/alcaeus/-/alcaeus-2.2.2.tgz#66aae95a4db032ee6c92044d07b41415303aaa76"
   integrity sha512-XoGn4gdK8t0Ew3Ywvc6+w5LUtc0imGvVd5j+ZB7fbNzzbXOwujt9SmyVMwtfdHTljmvhZBZoaiYZz/WN9senjw==

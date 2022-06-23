@@ -1,6 +1,7 @@
 import prefixes from '@zazuko/rdf-vocabularies/prefixes'
 import namespace from '@rdf-esm/namespace'
 
+export { cube, meta } from '@zazuko/vocabulary-extras/builders'
 export { shape } from './namespaces/shapes'
 
 type CubeCreatorClass =
@@ -110,25 +111,10 @@ type SharedDimensionsTerms =
   'Hierarchies' |
   'Hierarchy'
 
-type MetaTerms =
-  'SharedDimension' |
-  'dataKind' |
-  'DimensionRelation' |
-  'dimensionRelation' |
-  'relatesTo' |
-  'hasHierarchy' |
-  'hierarchyRoot' |
-  'nextInHierarchy' |
-  'Hierarchy'
-
-prefixes.cube = 'https://cube.link/'
 prefixes.view = 'https://cube.link/view/'
-prefixes.meta = 'https://cube.link/meta/'
 prefixes.relation = 'https://cube.link/relation/'
 
 export const query = namespace('http://hypermedia.app/query#')
-export const cube = namespace(prefixes.cube)
-export const meta = namespace<MetaTerms>(prefixes.meta)
 export const view = namespace(prefixes.view)
 export const relation = namespace(prefixes.relation)
 export const hydraBox = namespace('http://hydra-box.org/schema/')

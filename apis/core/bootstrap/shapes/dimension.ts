@@ -240,7 +240,7 @@ ${shape('dimension/metadata')} {
       ${sh.group} ${shape('dimension/metadata#coreGroup')} ;
     ] , [
       ${sh.name} "Hierarchy" ;
-      ${sh.path} ${meta.hasHierarchy} ;
+      ${sh.path} ${meta.inHierarchy} ;
       ${sh.group} ${shape('dimension/metadata#hierarchyGroup')} ;
       ${sh.class} ${meta.Hierarchy} ;
       ${sh.nodeKind} ${sh.BlankNode} ;
