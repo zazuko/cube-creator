@@ -1,5 +1,11 @@
 # @cube-creator/shared-dimensions-api
 
+## 2.6.9
+
+### Patch Changes
+
+- c1819825: Problems with forms in Shared Dimensions (fixes #1233)
+
 ## 2.6.8
 
 ### Patch Changes
