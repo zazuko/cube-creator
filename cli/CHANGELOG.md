@@ -1,5 +1,11 @@
 # @cube-creator/cli
 
+## 1.10.11
+
+### Patch Changes
+
+- 8fafbb07: Publishing was failing due to change in newer version of curl
+
 ## 1.10.10
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @cube-creator/ui
 
+## 1.12.3
+
+### Patch Changes
+
+- c1819825: Updated alcaeus
+
 ## 1.12.2
 
 ### Patch Changes
