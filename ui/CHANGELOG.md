@@ -1,5 +1,11 @@
 # @cube-creator/ui
 
+## 1.12.4
+
+### Patch Changes
+
+- d2d929d0: It was impossible to save empty dimension mappings (fixes #1247)
+
 ## 1.12.3
 
 ### Patch Changes
