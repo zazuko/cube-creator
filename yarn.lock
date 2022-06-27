@@ -4218,7 +4218,7 @@ ajv@^8.0.0, ajv@^8.0.1, ajv@^8.8.0:
     require-from-string "^2.0.2"
     uri-js "^4.2.2"
 
-alcaeus@^2, alcaeus@^2.2.0, alcaeus@^2.2.2:
+alcaeus@^2, alcaeus@^2.1, alcaeus@^2.2.0:
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/alcaeus/-/alcaeus-2.2.2.tgz#66aae95a4db032ee6c92044d07b41415303aaa76"
   integrity sha512-XoGn4gdK8t0Ew3Ywvc6+w5LUtc0imGvVd5j+ZB7fbNzzbXOwujt9SmyVMwtfdHTljmvhZBZoaiYZz/WN9senjw==

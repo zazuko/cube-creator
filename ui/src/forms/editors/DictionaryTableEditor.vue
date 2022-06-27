@@ -36,6 +36,7 @@
         type="number"
         min="1"
         :max="totalPages"
+        :disabled="totalPages === 0"
         class="is-inline-block w-20"
       />
       <span class="">of {{ totalPages }}</span>
