@@ -126,9 +126,12 @@ function propertyMetadata({ project }: QueryParams) {
       optional {
         ?dimensionMetaDeepS ?dimensionMetaDeepP ?dimensionMetaDeepO .
       }
-      FILTER (
-        ?dimensionP NOT IN (${cc.dimensionMapping}, ${schema.about})
-      )
+      MINUS {
+        ?dimension ${cc.dimensionMapping} ?dimensionO .
+      }
+      MINUS {
+        ?dimension ${schema.about} ?dimensionO .
+      }
     }
   `
 }
