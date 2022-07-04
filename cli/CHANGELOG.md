@@ -1,5 +1,11 @@
 # @cube-creator/cli
 
+## 1.10.12
+
+### Patch Changes
+
+- 0aeed8f9: Some cubes failed to pass validation on publishing because dimension metadata would be loaded incomplete (fixes #1252)
+
 ## 1.10.11
 
 ### Patch Changes
