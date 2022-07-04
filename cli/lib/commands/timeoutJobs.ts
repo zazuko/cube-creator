@@ -7,6 +7,7 @@ import * as Models from '@cube-creator/model'
 import { parse, toSeconds } from 'iso8601-duration'
 import $rdf from 'rdf-ext'
 import { toRdf } from 'rdf-literal'
+import { IN } from '@tpluscode/sparql-builder/expressions'
 import { updateJobStatus } from '../job'
 import { setupAuthentication } from '../auth'
 import { logger } from '../log'
@@ -37,9 +38,10 @@ export async function timeoutJobs({
     .WHERE`
       graph ?job {
         ?job a ${cc.Job} .
-        ?job ${schema.actionStatus} ${schema.ActiveActionStatus} .
+        ?job ${schema.actionStatus} ?status .
         ?job ${dcterms.modified} ?modified .
 
+        filter ( ?status ${IN(schema.ActiveActionStatus, schema.PotentialActionStatus)} )
         filter (
           ?modified < ${toRdf(startDate)}
         )
