@@ -56,7 +56,7 @@ base <https://cube-creator.zazuko.com/shape#>
     sh:minCount 1 ;
     sh:maxCount 1 ;
     sh:datatype xsd:string ;
-    sh:message "schema:Dataset needs a schema:identifier" ;
+    sh:message "schema:Dataset must have exactly one dcterms:identifier" ;
   ] ;
 .
 
