@@ -1,0 +1,18 @@
+prefix cc: <https://cube-creator.zazuko.com/vocab#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX dash: <http://datashapes.org/dash#>
+PREFIX schema: <http://schema.org/>
+PREFIX sh: <http://www.w3.org/ns/shacl#>
+
+[
+  a sh:NodeShape ;
+  sh:targetClass cc:CubeProject ;
+  sh:property
+    [
+      sh:path ( <https://cube-creator.zazuko.com/vocab#dataset> dcterms:identifier ) ;
+      sh:maxCount 0 ;
+      dash:hidden true ;
+      sh:message "Project metadata must not have a dcterms:identifier" ;
+    ]
+]
+.

@@ -1,4 +1,4 @@
-import { Term, Quad, NamedNode } from 'rdf-js'
+import { Term, Quad, NamedNode, DatasetCore } from 'rdf-js'
 import { Request, Response } from 'express'
 import asyncMiddleware from 'middleware-async'
 import $rdf from 'rdf-ext'
@@ -9,10 +9,11 @@ import { ProblemDocument } from 'http-problem-details'
 import ValidationReport from 'rdf-validate-shacl/src/validation-report'
 
 interface ShaclMiddlewareOptions {
+  loadShapes?(req: Request): Promise<DatasetCore>
   loadResource(id: NamedNode, req: Request): Promise<GraphPointer<NamedNode> | null>
   loadResourcesTypes(ids: Term[]): Promise<Quad[]>
   getTargetNode?(req: Request, res: Response): NamedNode | undefined
-  parseResource?(req: Request): Promise<GraphPointer<NamedNode>>
+  parseResource?(req: Request, res: Response): Promise<GraphPointer<NamedNode>>
 }
 
 async function defaultParse(req: Request) {
@@ -52,26 +53,34 @@ export function validationReportResponse(res: Response, validationReport: Valida
   res.status(400).send(response)
 }
 
-export const shaclMiddleware = ({ getTargetNode, loadResource, loadResourcesTypes, parseResource = defaultParse }: ShaclMiddlewareOptions) => asyncMiddleware(async (req, res, next) => {
-  let resource = await parseResource(req)
+function defaultShapes(loadResource: ShaclMiddlewareOptions['loadResource'], targetNode: NamedNode, resource: GraphPointer) {
+  return async (req: Request): Promise<DatasetCore> => {
+    const shapes = $rdf.dataset()
+    await Promise.all(req.hydra.operation.out(hydra.expects).map(async (expects) => {
+      if (expects.term.termType !== 'NamedNode') return
+
+      const pointer = await loadResource(expects.term, req)
+      if (pointer?.has(rdf.type, [sh.NodeShape]).values.length) {
+        await shapes.addAll([...pointer.dataset])
+
+        if (pointer.out([sh.targetClass, sh.targetNode, sh.targetObjectsOf, sh.targetSubjectsOf]).values.length === 0) {
+          shapes.add($rdf.quad(pointer.term, sh.targetNode, targetNode))
+        }
+
+        resource.addOut(rdf.type, pointer.out(sh.targetClass))
+      }
+    }))
+
+    return shapes
+  }
+}
+
+export const shaclMiddleware = ({ getTargetNode, loadResource, loadShapes, loadResourcesTypes, parseResource = defaultParse }: ShaclMiddlewareOptions) => asyncMiddleware(async (req, res, next) => {
+  let resource = await parseResource(req, res)
   const targetNode = getTargetNode?.(req, res) || resource.term
   resource = resource.node(targetNode)
 
-  const shapes = $rdf.dataset()
-  await Promise.all(req.hydra.operation.out(hydra.expects).map(async (expects) => {
-    if (expects.term.termType !== 'NamedNode') return
-
-    const pointer = await loadResource(expects.term, req)
-    if (pointer?.has(rdf.type, [sh.NodeShape]).values.length) {
-      await shapes.addAll([...pointer.dataset])
-
-      if (pointer.out([sh.targetClass, sh.targetNode, sh.targetObjectsOf, sh.targetSubjectsOf]).values.length === 0) {
-        shapes.add($rdf.quad(pointer.term, sh.targetNode, targetNode))
-      }
-
-      resource.addOut(rdf.type, pointer.out(sh.targetClass))
-    }
-  }))
+  const shapes = await (loadShapes || defaultShapes(loadResource, targetNode, resource))(req)
 
   if (shapes.size === 0) {
     return next()

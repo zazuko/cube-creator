@@ -4,14 +4,15 @@ import ResourceStoreImpl from '../ResourceStore'
 import { streamClient } from '../query-client'
 import { loadResourcesTypes } from '../domain/queries/resources-types'
 
-type CreateMiddleware = Pick<Parameters<typeof expressMiddlewareShacl.shaclMiddleware>[0], 'parseResource'>
+type CreateMiddleware = Pick<Parameters<typeof expressMiddlewareShacl.shaclMiddleware>[0], 'parseResource' | 'loadShapes'>
 
-const createMiddleware = ({ parseResource }: CreateMiddleware = {}) => expressMiddlewareShacl.shaclMiddleware({
+const createMiddleware = ({ parseResource, loadShapes }: CreateMiddleware = {}) => expressMiddlewareShacl.shaclMiddleware({
   loadResource(id: NamedNode) {
     return new ResourceStoreImpl(streamClient).get(id, { allowMissing: true })
   },
   loadResourcesTypes,
   parseResource,
+  loadShapes,
 })
 
 type Middleware = typeof createMiddleware & {

@@ -11186,10 +11186,10 @@ rdf-validate-datatype@^0.1.3, rdf-validate-datatype@^0.1.4:
     "@rdfjs/namespace" "^1.1.0"
     "@rdfjs/to-ntriples" "^1.0.2"
 
-rdf-validate-shacl@^0.4.0, rdf-validate-shacl@^0.4.3:
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/rdf-validate-shacl/-/rdf-validate-shacl-0.4.3.tgz#aec756d9e032db7f9f0b011f4d79dc9491a62c80"
-  integrity sha512-Ff+vGSG9dmqsAmMqWJ7XEO2Syh24XOCl8dfaUO0KYB/WT6tzvIVcbRLvIH15e0HjsQSYToKxxhD3QS+GQ/eg0A==
+rdf-validate-shacl@^0.4.0, rdf-validate-shacl@^0.4.3, rdf-validate-shacl@^0.4.4:
+  version "0.4.4"
+  resolved "https://registry.yarnpkg.com/rdf-validate-shacl/-/rdf-validate-shacl-0.4.4.tgz#6f3d8b0bb30539a0f7575dc4f98a8bb7ea44c520"
+  integrity sha512-LuayoHFEN0VYv2YASBaHW2cAQVkFZS9FHZYY1QZPq0NmNQPff6v0vLWqnX32T2zPpz0CXu5I/iRrfsnO9nSL5A==
   dependencies:
     "@rdfjs/dataset" "^1.1.1"
     "@rdfjs/namespace" "^1.0.0"
