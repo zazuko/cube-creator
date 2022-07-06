@@ -2,7 +2,7 @@ import prefixes from '@zazuko/rdf-vocabularies/prefixes'
 import namespace from '@rdf-esm/namespace'
 import '@zazuko/vocabulary-extras'
 
-export { cube, meta } from '@zazuko/vocabulary-extras/builders'
+export { cube, meta, relation } from '@zazuko/vocabulary-extras/builders'
 export { shape } from './namespaces/shapes'
 
 type CubeCreatorClass =
@@ -113,11 +113,9 @@ type SharedDimensionsTerms =
   'Hierarchy'
 
 prefixes.view = 'https://cube.link/view/'
-prefixes.relation = 'https://cube.link/relation/'
 
 export const query = namespace('http://hypermedia.app/query#')
 export const view = namespace(prefixes.view)
-export const relation = namespace(prefixes.relation)
 export const hydraBox = namespace('http://hydra-box.org/schema/')
 export const cc = namespace<CubeCreatorTerms>('https://cube-creator.zazuko.com/vocab#')
 export const md = namespace<SharedDimensionsTerms>('https://cube-creator.zazuko.com/shared-dimensions/vocab#')

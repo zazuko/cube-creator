@@ -207,7 +207,7 @@ ${shape('dimension/metadata')} {
             ${relation.StandardError1SD}
             ${relation.StandardError2SD}
             ${relation.StandardError3SD}
-            ${relation.StandarDeviation}
+            ${relation.StandardDeviation}
           ) ;
           ${dash.editor} ${dash.EnumSelectEditor} ;
           ${sh.order} 10 ;
@@ -431,7 +431,7 @@ ${shape('dimension/metadata')} {
     ${schema.alternateName} "3SE" ;
   .
 
-  ${relation.StandarDeviation} a ${meta.DimensionRelation} ;
+  ${relation.StandardDeviation} a ${meta.DimensionRelation} ;
     ${schema.name} "Standard Deviation"@en ;
     ${schema.description} "Dispersion of the values of a random variable around its expected value."@en ;
     ${schema.about} <http://www.wikidata.org/entity/Q12483> ;
