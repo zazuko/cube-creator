@@ -4094,10 +4094,10 @@
     readable-stream "^3.6.0"
     string-to-stream "^3.0.1"
 
-"@zazuko/vocabulary-extras@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@zazuko/vocabulary-extras/-/vocabulary-extras-1.1.0.tgz#f474a9692b05e0697a49457b59e811c032983d62"
-  integrity sha512-SrSy4VPzbbvOtDKcdrng/RFiCZGZcQ+NnvMWlkqy6/QqpZhGen5IkaJxrmSCXYvc1v27CBTV3MGeTuG9xKBmqg==
+"@zazuko/vocabulary-extras@^1.2.3":
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/@zazuko/vocabulary-extras/-/vocabulary-extras-1.2.3.tgz#674aebddb33d495efd5b76221ef496de20c4e44f"
+  integrity sha512-BYFF2B+bbCVayzTNxMI7KlgaEz25laeQ1njaXwfruncbHou/R1gvAvtGkL5QK/5etZDEa/nVQJXuoEPPniUhMA==
   dependencies:
     "@rdf-esm/namespace" "^0.5.3"
     "@rdfjs/parser-n3" "^1.1.4"

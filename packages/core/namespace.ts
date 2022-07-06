@@ -1,6 +1,6 @@
 import prefixes from '@zazuko/rdf-vocabularies/prefixes'
 import namespace from '@rdf-esm/namespace'
-import '@zazuko/vocabulary-extras'
+import '@zazuko/vocabulary-extras/register'
 
 export { cube } from '@zazuko/vocabulary-extras/builders'
 export { meta, relation } from '@zazuko/vocabulary-extras/builders/loose' // TODO: do not use loose builders
