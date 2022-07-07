@@ -34,16 +34,11 @@ WHERE {
 
 ### `meta:inHierarchy`
 
-Until now, Cube Creator published with an incorrect property. To update, run:
+Until now, Cube Creator published with an incorrect property. Existing cubes may want to add the correct predicate, keeping the old one too for the sake of current consumers:
 
 ```sparql
 PREFIX meta: <https://cube.link/meta/>
 
-DELETE {
-    graph ?g {
-        ?s meta:hasHierarchy ?o
-    }
-}
 INSERT {
     graph ?g {
         ?s meta:inHierarchy ?o
