@@ -11170,7 +11170,7 @@ rdf-transform-triple-to-quad@^1.0.2:
     "@rdfjs/data-model" "^1.1.2"
     readable-stream "^3.5.0"
 
-rdf-utils-fs@^2.1.0, rdf-utils-fs@^2.2.0:
+rdf-utils-fs@^2.1.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/rdf-utils-fs/-/rdf-utils-fs-2.2.0.tgz#792aba0c32b541ab74cb2169751d381130328b06"
   integrity sha512-MByPTdMlQy0KkhFikdei6lBq94YM+Hd7q8YXzFeTlVSz0ldLfUGvycrnKXt1hYmlUeEcZq+e6M5lW85CDHiOtw==

@@ -1,14 +1,15 @@
-import path from 'path'
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
 import { multiPartResourceHandler } from '@cube-creator/express/multipart'
 import asyncMiddleware from 'middleware-async'
 import { INSERT } from '@tpluscode/sparql-builder'
 import clownface from 'clownface'
-import fromFile from 'rdf-utils-fs/fromFile'
 import $rdf from 'rdf-ext'
+import { parsers } from '@rdfjs-elements/formats-pretty'
+import toStream from 'string-to-stream'
 import { shaclValidate } from '../../middleware/shacl'
 import { importProject } from '../../domain/cube-projects/import'
 import { streamClient } from '../../query-client'
+import { DatasetShape } from '../../../bootstrap/shapes/dataset'
 
 export const postImportedProject = protectedResource(
   multiPartResourceHandler,
@@ -36,12 +37,13 @@ export const postImportedProject = protectedResource(
     next()
   }),
   shaclValidate.override({
+    disableShClass: true,
     async parseResource(req, res) {
       const { project, importedDataset } = res.locals
       return clownface({ dataset: importedDataset }).node(project.id)
     },
     async loadShapes() {
-      return $rdf.dataset().import(fromFile(path.resolve(__dirname, '../../domain/cube-projects/import.ttl')))
+      return $rdf.dataset().import(parsers.import('text/turtle', toStream(DatasetShape.toString()))!)
     },
   }),
   asyncMiddleware(async (req, res) => {
