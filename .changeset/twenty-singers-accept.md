@@ -13,21 +13,21 @@ This release will require existing cubes to be updated!
 In previous version, there was a typo in this term. To update existing cubes execute a SPARQL Update:
 
 ```sparql
-PREFIX meta: <https://cube.link/meta/>
+PREFIX relation: <https://cube.link/relation/>
 
 DELETE {
     graph ?g {
-        ?s ?p meta:StandarDeviation
+        ?s ?p relation:StandarDeviation
     }
 }
 INSERT {
     graph ?g {
-        ?s ?p meta:StandardDeviation
+        ?s ?p relation:StandardDeviation
     }
 }
 WHERE {
    graph ?g {        
-       ?s ?p meta:StandarDeviation    
+       ?s ?p relation:StandarDeviation    
    }
 }
 ```
