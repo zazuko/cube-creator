@@ -25,8 +25,8 @@ function copyGraph (from: GraphPointer, to: GraphPointer) {
 }
 
 /**
- * Decorates `dash:DetailsEditor` so that whenever a `meta:hasHierarchy/schema:isBasedOn` value changes
- * that resource will be dereferenced and replaced as the value of `meta:hasHierarchy` itself
+ * Decorates `dash:DetailsEditor` so that whenever a `meta:inHierarchy/schema:isBasedOn` value changes
+ * that resource will be dereferenced and replaced as the value of `meta:inHierarchy` itself
  */
 export const dimensionMetaHierarchySynchronizer: ComponentDecorator<DetailsEditorEx> = {
   applicableTo (component) {
