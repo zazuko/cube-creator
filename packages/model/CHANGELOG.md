@@ -1,5 +1,12 @@
 # @cube-creator/model
 
+## 0.1.27
+
+### Patch Changes
+
+- Updated dependencies [8ef2b8b4]
+  - @cube-creator/core@1.0.0
+
 ## 0.1.26
 
 ### Patch Changes

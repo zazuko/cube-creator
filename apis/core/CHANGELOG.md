@@ -1,5 +1,68 @@
 # @cube-creator/core-api
 
+## 2.0.0
+
+### Major Changes
+
+- 8ef2b8b4: Align usages of `https://cube.link/meta/` namespace with its vocabulary
+
+  This release will require existing cubes to be updated!
+
+  ### `meta:StandardDeviation`
+
+  In previous version, there was a typo in this term. To update existing cubes execute a SPARQL Update:
+
+  ```sparql
+  PREFIX relation: <https://cube.link/relation/>
+
+  DELETE {
+      graph ?g {
+          ?s ?p relation:StandarDeviation
+      }
+  }
+  INSERT {
+      graph ?g {
+          ?s ?p relation:StandardDeviation
+      }
+  }
+  WHERE {
+     graph ?g {
+         ?s ?p relation:StandarDeviation
+     }
+  }
+  ```
+
+  ### `meta:inHierarchy`
+
+  Until now, Cube Creator published with an incorrect property. Existing cubes may want to add the correct predicate, keeping the old one too for the sake of current consumers:
+
+  ```sparql
+  PREFIX meta: <https://cube.link/meta/>
+
+  INSERT {
+      graph ?g {
+          ?s meta:inHierarchy ?o
+      }
+  }
+  WHERE {
+     graph ?g {
+         ?s meta:hasHierarchy ?o
+     }
+  }
+  ```
+
+### Minor Changes
+
+- dd131763: Add minimal validation of imported project (closes #1227)
+
+### Patch Changes
+
+- Updated dependencies [8ef2b8b4]
+  - @cube-creator/core@1.0.0
+  - @cube-creator/api-errors@0.0.6
+  - @cube-creator/shared-dimensions-api@2.6.10
+  - @cube-creator/model@0.1.27
+
 ## 1.12.3
 
 ### Patch Changes
