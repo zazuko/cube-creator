@@ -1,5 +1,65 @@
 # @cube-creator/cli
 
+## 2.0.0
+
+### Major Changes
+
+- 8ef2b8b4: Align usages of `https://cube.link/meta/` namespace with its vocabulary
+
+  This release will require existing cubes to be updated!
+
+  ### `meta:StandardDeviation`
+
+  In previous version, there was a typo in this term. To update existing cubes execute a SPARQL Update:
+
+  ```sparql
+  PREFIX relation: <https://cube.link/relation/>
+
+  DELETE {
+      graph ?g {
+          ?s ?p relation:StandarDeviation
+      }
+  }
+  INSERT {
+      graph ?g {
+          ?s ?p relation:StandardDeviation
+      }
+  }
+  WHERE {
+     graph ?g {
+         ?s ?p relation:StandarDeviation
+     }
+  }
+  ```
+
+  ### `meta:inHierarchy`
+
+  Until now, Cube Creator published with an incorrect property. Existing cubes may want to add the correct predicate, keeping the old one too for the sake of current consumers:
+
+  ```sparql
+  PREFIX meta: <https://cube.link/meta/>
+
+  INSERT {
+      graph ?g {
+          ?s meta:inHierarchy ?o
+      }
+  }
+  WHERE {
+     graph ?g {
+         ?s meta:hasHierarchy ?o
+     }
+  }
+  ```
+
+### Patch Changes
+
+- 8ef2b8b4: Published cubes used an incorrect property `meta:hasDimension` (closes #1243)
+- 060b1482: Incorrect validation message; mentioned wrong predicate (re #1258)
+- 2f0ee4df: Unstarted jobs would not be marked as failed after timeout (fixes #1250)
+- Updated dependencies [8ef2b8b4]
+  - @cube-creator/core@1.0.0
+  - @cube-creator/model@0.1.27
+
 ## 1.10.12
 
 ### Patch Changes

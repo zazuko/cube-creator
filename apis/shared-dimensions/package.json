@@ -1,10 +1,10 @@
 {
   "name": "@cube-creator/shared-dimensions-api",
-  "version": "2.6.9",
+  "version": "2.6.10",
   "private": true,
   "dependencies": {
-    "@cube-creator/api-errors": "0.0.5",
-    "@cube-creator/core": "0.3.4",
+    "@cube-creator/api-errors": "0.0.6",
+    "@cube-creator/core": "1.0.0",
     "@cube-creator/express": "0.0.0",
     "@hydrofoil/labyrinth": "^0.4.2",
     "@rdfine/hydra": "^0.8.2",
@@ -41,7 +41,7 @@
     "through2": "^2.0.5"
   },
   "devDependencies": {
-    "@cube-creator/testing": "^0.1.20",
+    "@cube-creator/testing": "^0.1.21",
     "@types/camouflage-rewrite": "^1.2.0",
     "@types/clownface": "^1.2.6",
     "@types/parse-prefer-header": "^1.0.0",

@@ -1,6 +1,6 @@
 {
   "name": "@cube-creator/ui",
-  "version": "1.12.4",
+  "version": "1.12.5",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -12,8 +12,8 @@
   },
   "dependencies": {
     "@ckpack/vue-color": "^1.1.8",
-    "@cube-creator/core": "0.3.4",
-    "@cube-creator/model": "0.1.26",
+    "@cube-creator/core": "1.0.0",
+    "@cube-creator/model": "0.1.27",
     "@fortawesome/fontawesome-svg-core": "~1.2.32",
     "@fortawesome/free-regular-svg-icons": "^5.15.1",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
