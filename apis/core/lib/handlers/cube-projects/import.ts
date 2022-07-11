@@ -2,16 +2,21 @@ import { protectedResource } from '@hydrofoil/labyrinth/resource'
 import { multiPartResourceHandler } from '@cube-creator/express/multipart'
 import asyncMiddleware from 'middleware-async'
 import { INSERT } from '@tpluscode/sparql-builder'
+import clownface from 'clownface'
+import $rdf from 'rdf-ext'
+import { parsers } from '@rdfjs-elements/formats-pretty'
+import toStream from 'string-to-stream'
 import { shaclValidate } from '../../middleware/shacl'
 import { importProject } from '../../domain/cube-projects/import'
 import { streamClient } from '../../query-client'
+import { DatasetShape } from '../../../bootstrap/shapes/dataset'
 
 export const postImportedProject = protectedResource(
   multiPartResourceHandler,
   shaclValidate.override({
     parseResource: req => req.parseFromMultipart(),
   }),
-  asyncMiddleware(async (req, res) => {
+  asyncMiddleware(async function prepareImport(req, res, next) {
     const user = req.user?.id
     const userName = req.user?.name
 
@@ -27,6 +32,23 @@ export const postImportedProject = protectedResource(
       user,
       userName,
     })
+    res.locals.project = project
+    res.locals.importedDataset = importedDataset
+    next()
+  }),
+  shaclValidate.override({
+    disableShClass: true,
+    async parseResource(req, res) {
+      const { project, importedDataset } = res.locals
+      return clownface({ dataset: importedDataset }).node(project.id)
+    },
+    async loadShapes() {
+      return $rdf.dataset().import(parsers.import('text/turtle', toStream(DatasetShape.toString()))!)
+    },
+  }),
+  asyncMiddleware(async (req, res) => {
+    const { project, importedDataset } = res.locals
+
     await req.resourceStore().save()
     await INSERT.DATA`${importedDataset}`.execute(streamClient.query)
 
