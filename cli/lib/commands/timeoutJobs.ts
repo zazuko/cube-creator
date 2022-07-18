@@ -39,7 +39,7 @@ export async function timeoutJobs({
       graph ?job {
         ?job a ${cc.Job} .
         ?job ${schema.actionStatus} ?status .
-        ?job ${dcterms.modified} ?modified .
+        ?job ${dcterms.modified}|${dcterms.created} ?modified .
 
         filter ( ?status ${IN(schema.ActiveActionStatus, schema.PotentialActionStatus)} )
         filter (
