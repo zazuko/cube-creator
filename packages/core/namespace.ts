@@ -88,7 +88,8 @@ type OtherTerms =
   'dash' |
   'projectSourceKind/CSV' |
   'projectSourceKind/ExistingCube' |
-  'projectSourceKind/ExportedProject'
+  'projectSourceKind/ExportedProject' |
+  'CanceledJobStatus'
 
 type MetaDataProperty =
   'publishOnOpendata' |

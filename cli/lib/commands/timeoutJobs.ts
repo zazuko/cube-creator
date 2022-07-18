@@ -58,7 +58,7 @@ export async function timeoutJobs({
       jobUri: job.value,
       apiClient,
       modified: new Date(now()),
-      status: schema.FailedActionStatus,
+      status: cc.CanceledJobStatus,
       executionUrl: undefined,
       error: 'Job exceeded maximum running time',
     })
