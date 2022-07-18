@@ -34,7 +34,7 @@ export async function timeoutJobs({
 
   logger.info('Will expire jobs active since before %s', startDate.toISOString())
 
-  const overtimeJobs = await SELECT`?job`
+  const overtimeJobs = await SELECT.DISTINCT`?job`
     .WHERE`
       graph ?job {
         ?job a ${cc.Job} .
