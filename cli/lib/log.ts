@@ -3,7 +3,10 @@ import { OnViolation } from 'barnard59-validate-shacl'
 import { fromPointer } from '@rdfine/shacl/lib/ValidationReport'
 
 export const logger = winston.createLogger({
-  format: winston.format.simple(),
+  format: winston.format.combine(
+    winston.format.splat(),
+    winston.format.simple(),
+  ),
   transports: [
     new winston.transports.Console(),
   ],
