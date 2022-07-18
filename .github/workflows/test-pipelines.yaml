@@ -4,7 +4,9 @@ on: push
 
 jobs:
   pipeline:
+    continue-on-error: true
     strategy:
+      fail-fast: false
       matrix:
         command:
         - test:cli:transform
