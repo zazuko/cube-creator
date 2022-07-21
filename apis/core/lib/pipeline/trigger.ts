@@ -1,6 +1,6 @@
 import { URLSearchParams } from 'url'
 import { NamedNode } from 'rdf-js'
-import nodeFetch, { RequestInit } from 'node-fetch'
+import nodeFetch, { RequestInit, Response } from 'node-fetch'
 import env from '@cube-creator/core/env'
 import { GraphPointer } from 'clownface'
 import { dcterms, rdf } from '@tpluscode/rdf-ns-builders'
@@ -21,6 +21,8 @@ function trigger(triggerRequestInit: (job: GraphPointer<NamedNode>, params?: Gra
       const message = await res.text()
       throw new Error(`Pipeline failed: ${message}`)
     }
+
+    return res
   }
 }
 
@@ -101,3 +103,9 @@ export const github = trigger((job, params) => {
     },
   }
 })
+
+export const triggers: Record<string, (job: GraphPointer<NamedNode>, params: GraphPointer) => Promise<Response>> = {
+  local,
+  gitlab,
+  github,
+}

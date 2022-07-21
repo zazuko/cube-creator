@@ -6,17 +6,20 @@ import env from '@cube-creator/core/env'
 import express from 'express'
 import { shaclValidate } from '../middleware/shacl'
 import { createPublishJob, createUnlistJob, createTransformJob, createImportJob } from '../domain/job/create'
-import * as triggers from '../pipeline/trigger'
+import { triggers } from '../pipeline/trigger'
+import { callbacks as publishCallbacks } from '../pipeline/publishCallbacks'
 import { update } from '../domain/job/update'
 import { ResourceStore } from '../ResourceStore'
+import { TriggerCallbackMap } from '../pipeline/index'
+import { parsingClient } from '../query-client'
 
-const trigger = (triggers as Record<string, (job: GraphPointer<NamedNode>, params: GraphPointer) => void>)[env.PIPELINE_TYPE]
+const trigger = triggers[env.PIPELINE_TYPE]
 
 interface CreateJob {
   (params: { resource: NamedNode; store: ResourceStore }): Promise<GraphPointer<NamedNode>>
 }
 
-function createJobHandler(createJob: CreateJob): express.RequestHandler {
+function createJobHandler(createJob: CreateJob, callbacks?: TriggerCallbackMap): express.RequestHandler {
   return asyncMiddleware(async (req, res) => {
     if (!trigger) {
       throw new Error(`Trigger ${env.PIPELINE_TYPE} is not implemented`)
@@ -26,9 +29,18 @@ function createJobHandler(createJob: CreateJob): express.RequestHandler {
       resource: req.hydra.resource.term,
       store: req.resourceStore(),
     })
-    await req.resourceStore().save()
 
-    await trigger(job, await req.resource())
+    try {
+      const triggerResponse = await trigger(job, await req.resource())
+
+      callbacks?.[env.PIPELINE_TYPE]?.onSuccess?.({
+        res: triggerResponse,
+        client: parsingClient,
+        job,
+      })
+    } finally {
+      await req.resourceStore().save()
+    }
 
     res.status(201)
     res.header('Location', job.value)
@@ -43,7 +55,7 @@ export const transform = protectedResource(
 
 export const publish = protectedResource(
   shaclValidate,
-  createJobHandler(createPublishJob),
+  createJobHandler(createPublishJob, publishCallbacks),
 )
 
 export const unlist = protectedResource(

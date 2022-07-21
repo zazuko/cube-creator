@@ -840,6 +840,7 @@ graph <cube-project/ubd/csv-mapping/jobs/test-publish-job> {
     cc:project <cube-project/ubd> ;
     dcterms:created "2020-10-29T12:01:00"^^xsd:dateTime ;
     rdfs:seeAlso <https://github.com/zazuko/cube-creator/actions/runs/345020889> ;
+    <urn:gitlab:pipelineUrl> <https://gitlab.zauzko.com/pipeline/test-publish-job> ;
     schema:actionStatus schema:PotentialActionStatus ;
     cc:publishGraph <https://lindas.admin.ch/foen/cube> ;
     cc:revision 3 ;
@@ -855,6 +856,21 @@ graph <cube-project/ubd/csv-mapping/jobs/test-publish-job> {
       schema:url "https://visualize.admin.ch/create/new?cube=the-cube" ;
       schema:encodingFormat "Application/Sparql-query" ;
     ] ;
+  .
+}
+
+<cube-project/ubd/csv-mapping/jobs/another-project-publish-job> void:inDataset <ubd-example> .
+graph <cube-project/ubd/csv-mapping/jobs/another-project-publish-job> {
+  <cube-project/ubd/csv-mapping/jobs/another-project-publish-job>
+    a hydra:Resource, cc:Job, cc:PublishJob ;
+    cc:project <cube-project/another> ;
+    dcterms:created "2020-10-29T12:01:00"^^xsd:dateTime ;
+    rdfs:seeAlso <https://github.com/zazuko/cube-creator/actions/runs/345020889> ;
+    <urn:gitlab:pipelineUrl> <https://gitlab.zauzko.com/pipeline/test-publish-job> ;
+    schema:actionStatus schema:PotentialActionStatus ;
+    cc:publishGraph <https://lindas.admin.ch/foen/cube> ;
+    cc:revision 3 ;
+    schema:creativeWorkStatus <https://ld.admin.ch/vocabulary/CreativeWorkStatus/Draft> ;
   .
 }
 

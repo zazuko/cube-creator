@@ -12,6 +12,8 @@ The API is secured with a JWT middleware. To configure set these environment var
 | ENV variable | |
 | -- | -- |
 | `TRIFID_UI` | `/sparql` endpoint of a [Trifid](https://zazuko.com/products/trifid/) instance which will be linked from published cubes |
+| `GITLAB_TOKEN` | (optional) GitLab access token used to cancel concurrent deployments of same cube |
+| `GITLAB_API_URL` | (optional) GitLab address, for example `https://my.gitlab.app/api/v4/` |
 
 ### Dev environment
 
