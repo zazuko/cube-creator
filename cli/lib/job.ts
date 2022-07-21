@@ -43,7 +43,7 @@ async function loadTransformJob(jobUri: string, log: Logger, variables: Params['
 interface JobStatusUpdate {
   jobUri: string
   executionUrl: string | undefined
-  status: Schema.ActionStatusType
+  status: Schema.ActionStatusType | typeof cc.CanceledJobStatus
   modified: Date
   error?: Error | string
   apiClient: HydraClient<DatasetExt>
@@ -70,7 +70,7 @@ export async function updateJobStatus({ jobUri, executionUrl, lastTransformed, s
     }
 
     job.modified = modified
-    job.actionStatus = status
+    job.actionStatus = status as any
     job.comments = messages
     if (executionUrl) {
       job.seeAlso = $rdf.namedNode(executionUrl) as any

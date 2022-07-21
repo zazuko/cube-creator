@@ -1,7 +1,7 @@
 import { describe, beforeEach, it } from 'mocha'
 import sinon from 'sinon'
 import { expect } from 'chai'
-import { schema } from '@tpluscode/rdf-ns-builders/strict'
+import { cc } from '@cube-creator/core/namespace'
 import { insertTestProject } from '@cube-creator/testing/lib/seedData'
 import { timeoutJobs } from '../../../lib/commands'
 import { setupEnv } from '../../support/env'
@@ -30,7 +30,7 @@ describe('@cube-creator/cli/lib/commands/timeoutJobs', () => {
     expect(updateJob).to.have.been.calledOnce
     expect(updateJob).to.have.been.calledWithMatch({
       jobUri: 'https://cube-creator.lndo.site/cube-project/ubd/csv-mapping/jobs/hung-job',
-      status: schema.FailedActionStatus,
+      status: cc.CanceledJobStatus,
     })
   })
 })

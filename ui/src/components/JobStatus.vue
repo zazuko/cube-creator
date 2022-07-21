@@ -10,6 +10,7 @@
 import { defineComponent, PropType } from 'vue'
 import { Job } from '@cube-creator/model'
 import { schema } from '@tpluscode/rdf-ns-builders'
+import { cc } from '@cube-creator/core/namespace'
 
 export default defineComponent({
   name: 'JobStatus',
@@ -31,6 +32,7 @@ export default defineComponent({
 
     icon (): string {
       return {
+        [cc.CanceledJobStatus.value]: 'times-circle',
         [schema.CompletedActionStatus.value]: 'check-circle',
         [schema.PotentialActionStatus.value]: 'circle',
         [schema.ActiveActionStatus.value]: 'circle',
@@ -40,6 +42,7 @@ export default defineComponent({
 
     iconColorClass (): string {
       return {
+        [cc.CanceledJobStatus.value]: 'has-text-warning',
         [schema.CompletedActionStatus.value]: 'has-text-success',
         [schema.PotentialActionStatus.value]: 'has-text-grey-light blink',
         [schema.ActiveActionStatus.value]: 'has-text-info blink',
