@@ -10,7 +10,7 @@ import TermMap from '@rdfjs/term-map'
 const pipelineURI = env.PIPELINE_URI
 
 function trigger(triggerRequestInit: (job: GraphPointer<NamedNode>, params?: GraphPointer) => RequestInit) {
-  return async (job: GraphPointer<NamedNode>, params: GraphPointer, fetch = nodeFetch) => {
+  return async (job: GraphPointer<NamedNode>, params?: GraphPointer, fetch = nodeFetch) => {
     if (!job) {
       throw new Error('Job URI missing')
     }
@@ -104,7 +104,7 @@ export const github = trigger((job, params) => {
   }
 })
 
-export const triggers: Record<string, (job: GraphPointer<NamedNode>, params: GraphPointer) => Promise<Response>> = {
+export const triggers: Record<string, (job: GraphPointer<NamedNode>, params?: GraphPointer) => Promise<Response>> = {
   local,
   gitlab,
   github,
