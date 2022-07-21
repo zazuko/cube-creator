@@ -18,7 +18,7 @@ describe('@cube-creator/core/lib/pipeline/publishCallback @SPARQL', () => {
   })
 
   before(async () => {
-    process.env.GITLAB_URL = 'https://gitlab.zazuko.com'
+    process.env.GITLAB_API_URL = 'https://gitlab.zazuko.com'
     process.env.GITLAB_TOKEN = 'GITLAB_TOKEN'
 
     await insertTestProject()
