@@ -67,7 +67,6 @@
     ]
   },
   "resolutions": {
-    "@types/eslint": "^8",
-    "hydra-box": "hypermedia-app/hydra-box#loader-req"
+    "@types/eslint": "^8"
   }
 }

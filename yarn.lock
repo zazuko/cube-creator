@@ -2439,6 +2439,17 @@
     commander "^7.2.0"
     fs-extra "^10.0.0"
 
+"@tpluscode/rdf-ns-builders@^2.0.0":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@tpluscode/rdf-ns-builders/-/rdf-ns-builders-2.0.1.tgz#1074666a538f6ea2946bf67dac12da191fd2d928"
+  integrity sha512-P/pwfjhcj/JOZF3epheHiDd/f9tSkceydQBqBuqThpNX2NIg+4BSgwtG2YfKBa24mmGFfyzN6RVeFclhA8wZBw==
+  dependencies:
+    "@rdf-esm/data-model" "^0.5.4"
+    "@rdf-esm/namespace" "^0.5.1"
+    "@rdfjs/types" "*"
+    commander "^7.2.0"
+    fs-extra "^10.0.0"
+
 "@tpluscode/rdf-string@^0.2.16", "@tpluscode/rdf-string@^0.2.18", "@tpluscode/rdf-string@^0.2.21", "@tpluscode/rdf-string@^0.2.23", "@tpluscode/rdf-string@^0.2.24":
   version "0.2.25"
   resolved "https://registry.yarnpkg.com/@tpluscode/rdf-string/-/rdf-string-0.2.25.tgz#287672fdf2181c19d7394aa07ea4a6565a45a099"
@@ -8039,16 +8050,17 @@ human-signals@^2.1.0:
   resolved "https://registry.yarnpkg.com/human-signals/-/human-signals-2.1.0.tgz#dc91fcba42e4d06e4abaed33b3e7a3c02f514ea0"
   integrity sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==
 
-hydra-box@^0.6.2, hydra-box@^0.6.4, hydra-box@hypermedia-app/hydra-box#loader-req:
-  version "0.6.5"
-  resolved "https://codeload.github.com/hypermedia-app/hydra-box/tar.gz/a49ebfa22dc4e3d5825c8fd82fdd9706fb2bc157"
+hydra-box@^0.6.2, hydra-box@^0.6.6:
+  version "0.6.6"
+  resolved "https://registry.yarnpkg.com/hydra-box/-/hydra-box-0.6.6.tgz#132bfc6d08fdf52659d6753da061f62f856b5648"
+  integrity sha512-pMlJ6URgB6AIFPHH6Ls9KY1k6B9LpmPyQf26Q0t8QgfqVHljx09rW3tSNylmmrEGBhKlYq7figbgxlbklBrOsA==
   dependencies:
     "@rdfjs/data-model" "^1.1.2"
     "@rdfjs/dataset" "^1.0.1"
     "@rdfjs/express-handler" "^1.2.0"
     "@rdfjs/namespace" "^1.1.0"
     "@rdfjs/term-set" "^1.0.0"
-    "@tpluscode/rdf-ns-builders" "^1.0.0"
+    "@tpluscode/rdf-ns-builders" "^2.0.0"
     absolute-url "^1.2.2"
     clownface "^1"
     debug "^4.1.1"
