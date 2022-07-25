@@ -1,9 +1,7 @@
-import { NamedNode } from 'rdf-js'
 import asyncMiddleware from 'middleware-async'
 import conditional from 'express-conditional-middleware'
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
 import { serializers } from '@rdfjs-elements/formats-pretty'
-import { GraphPointer } from 'clownface'
 import env from '@cube-creator/core/env'
 import { cc, cube, meta } from '@cube-creator/core/namespace'
 import * as ns from '@tpluscode/rdf-ns-builders'
@@ -15,11 +13,11 @@ import { updateProject } from '../domain/cube-projects/update'
 import { deleteProject } from '../domain/cube-projects/delete'
 import { getExportedProject } from '../domain/cube-projects/export'
 import { getProjectDetails } from '../domain/cube-projects/details'
-import * as triggers from '../pipeline/trigger'
+import { triggers } from '../pipeline/trigger'
 import { parsingClient, streamClient } from '../query-client'
 import { postImportedProject } from './cube-projects/import'
 
-const trigger = (triggers as Record<string, (job: GraphPointer<NamedNode>, params?: GraphPointer) => void>)[env.PIPELINE_TYPE]
+const trigger = triggers[env.PIPELINE_TYPE]
 
 const postDirect = protectedResource(
   shaclValidate,

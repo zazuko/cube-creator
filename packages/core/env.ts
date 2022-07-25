@@ -48,6 +48,8 @@ type ENV_VARS =
   | 'TRIFID_UI'
   | 'VISUALIZE_UI'
   | 'UI_BASE'
+  | 'GITLAB_TOKEN'
+  | 'GITLAB_API_URL'
 
 type KnownVariables<T extends string> = {
   /* eslint-disable-next-line no-unused-vars */
