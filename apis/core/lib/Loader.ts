@@ -6,8 +6,10 @@ import { SELECT } from '@tpluscode/sparql-builder'
 import $rdf from 'rdf-ext'
 import TermSet from '@rdfjs/term-set'
 import TermMap from '@rdfjs/term-map'
-import { as } from '@tpluscode/rdf-ns-builders/strict'
-import { IN } from '@tpluscode/sparql-builder/expressions'
+import { as, hydra } from '@tpluscode/rdf-ns-builders'
+import { IN, VALUES } from '@tpluscode/sparql-builder/expressions'
+import clownface from 'clownface'
+import express from 'express'
 
 interface CreateResourceGetters {
   (term: NamedNode): Pick<Resource, 'dataset' | 'quadStream'>
@@ -21,12 +23,22 @@ interface CreateResourceGetters {
 const excludedProperties = [as.object]
 
 export default class Loader extends SparqlQueryLoader {
-  async forPropertyOperation(term: NamedNode): Promise<PropertyResource[]> {
+  async forPropertyOperation(...args: any[]): Promise<PropertyResource[]> {
+    const [term, req] = args as [NamedNode, express.Request]
+
     const client: ParsingClient = (this as any).__client
     const createDatasetGetters: CreateResourceGetters = (this as any).__createDatasetGetters.bind(this)
+    const supportedProperties = clownface(req.hydra.api)
+      .any()
+      .has(hydra.supportedProperty)
+      .out(hydra.supportedProperty)
+      .out(hydra.property)
+      .map(({ term }) => ({ link: term }))
 
     const links = await SELECT`?parent ?link`
       .WHERE`
+        ${VALUES(...supportedProperties)}
+
         graph ?parent {
           ?parent ?link ${term} .
 
@@ -53,24 +65,26 @@ export default class Loader extends SparqlQueryLoader {
       return set.set(parent, resource)
     }, new TermMap<NamedNode, PropertyResource>())
 
-    const typesQuery = [...resources.keys()].reduce((query, graph) => {
-      return query.FROM().NAMED(graph)
-    }, SELECT`?parent ?type`
-      .WHERE`
-        graph ?parent {
-          ?parent a ?type
-        }
-      `)
+    if (resources.size) {
+      const typesQuery = [...resources.keys()].reduce((query, graph) => {
+        return query.FROM().NAMED(graph)
+      }, SELECT`?parent ?type`
+        .WHERE`
+          graph ?parent {
+            ?parent a ?type
+          }
+        `)
 
-    const types = await typesQuery.execute(client.query)
-    for (const { parent, type } of types) {
-      if (parent.termType !== 'NamedNode' || type.termType !== 'NamedNode') {
-        continue
-      }
-      const resource = resources.get(parent)
-      resource?.types.add(type)
-      if (type.termType === 'NamedNode') {
+      const types = await typesQuery.execute(client.query)
+      for (const { parent, type } of types) {
+        if (parent.termType !== 'NamedNode' || type.termType !== 'NamedNode') {
+          continue
+        }
+        const resource = resources.get(parent)
         resource?.types.add(type)
+        if (type.termType === 'NamedNode') {
+          resource?.types.add(type)
+        }
       }
     }
 

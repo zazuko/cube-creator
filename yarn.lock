@@ -8039,10 +8039,9 @@ human-signals@^2.1.0:
   resolved "https://registry.yarnpkg.com/human-signals/-/human-signals-2.1.0.tgz#dc91fcba42e4d06e4abaed33b3e7a3c02f514ea0"
   integrity sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==
 
-hydra-box@^0.6.2, hydra-box@^0.6.4:
-  version "0.6.4"
-  resolved "https://registry.yarnpkg.com/hydra-box/-/hydra-box-0.6.4.tgz#b67f29b0b7d5928dd3cb5b4a71f844261903cbf6"
-  integrity sha512-ECxDlqgAZxzLU0etDmNns267K6aDWLG5Q4Yt2OGF4iKwh7tuv+KMbuCwlBOA30AzPzp+xQajmAVa+M67IePDig==
+hydra-box@^0.6.2, hydra-box@^0.6.4, hydra-box@hypermedia-app/hydra-box#loader-req:
+  version "0.6.5"
+  resolved "https://codeload.github.com/hypermedia-app/hydra-box/tar.gz/a49ebfa22dc4e3d5825c8fd82fdd9706fb2bc157"
   dependencies:
     "@rdfjs/data-model" "^1.1.2"
     "@rdfjs/dataset" "^1.0.1"
