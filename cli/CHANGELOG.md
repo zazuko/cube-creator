@@ -1,5 +1,12 @@
 # @cube-creator/cli
 
+## 2.0.1
+
+### Patch Changes
+
+- c382d6b6: Timeout pipeline skipped jobs which never actually started (or were never marked as such). This caused dangling jobs with blinking status
+- 87dd73e6: Add dedicated status for timed-out jobs and show them differently in the UI
+
 ## 2.0.0
 
 ### Major Changes
