@@ -1,5 +1,11 @@
 # @cube-creator/ui
 
+## 1.12.6
+
+### Patch Changes
+
+- 87dd73e6: Add dedicated status for timed-out jobs and show them differently in the UI
+
 ## 1.12.5
 
 ### Patch Changes

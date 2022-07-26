@@ -1,5 +1,17 @@
 # @cube-creator/core-api
 
+## 2.0.1
+
+### Patch Changes
+
+- ef54be5b: Fix slowness of most requests caused by a runaway query which grew alongside growing database (fixes #1265 fixes #1235)
+- 863a98db: Triggering publish multiple times should cancel running jobs for same version (fixes #1218)
+
+  To configure, two new environment variables are necessary (see readme in `apis/core`)
+
+  - `GITLAB_TOKEN`
+  - `GITLAB_API_URL`
+
 ## 2.0.0
 
 ### Major Changes
