@@ -39,6 +39,7 @@ jobs:
         with:
           images: ghcr.io/zazuko/cube-creator-cli
           strip-tag-prefix: cube-creator-cli/
+          include-pipeline-id: true
 
       - name: Build and push
         uses: docker/build-push-action@v2
