@@ -7,7 +7,6 @@
       </a>
     </o-field>
     <cc-hydra-operation-form-with-raw
-      v-if="resource && operation"
       :operation.prop="operation"
       :resource.prop="resource"
       :shape.prop="shape"
@@ -27,7 +26,6 @@ import { RouteLocation, useRoute, useRouter } from 'vue-router'
 import { api } from '@/api'
 import '@/customElements/HydraOperationFormWithRaw'
 import SidePane from '@/components/SidePane.vue'
-import { serializeSharedDimensionTerm } from '@/store/serializers'
 import { RootState, SharedDimensionTerm } from '@/store/types'
 import { useHydraForm } from '@/use-hydra-form'
 import { displayToast } from '@/use-toast'
@@ -66,25 +64,16 @@ export default defineComponent({
 
     const fetchTerm = async () => {
       const termId = route.params.termId as string
-      const fetchedTerm = await api.fetchResource(termId)
 
-      term.value = serializeSharedDimensionTerm(fetchedTerm)
-      form.resource.value = Object.freeze(term.value.pointer)
+      term.value = await api.fetchResource<any>(termId)
+      form.resource.value = Object.freeze(term.value!.pointer)
     }
 
     watch(route, (newRoute: RouteLocation) => {
-      if (newRoute.name === 'SharedDimensionTermEdit') {
+      if (newRoute.name === 'SharedDimensionTermEdit' && term.value?.clientPath !== newRoute.params.termId) {
         fetchTerm()
       }
     }, { immediate: true })
-
-    watch(term, () => {
-      if (term.value) {
-        form.resource.value = Object.freeze(term.value.pointer)
-      } else {
-        form.resource.value = null
-      }
-    })
 
     return {
       ...form,

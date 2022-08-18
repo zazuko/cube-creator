@@ -1,7 +1,6 @@
 <template>
   <side-pane :title="title" @close="onCancel">
     <cc-hydra-operation-form-with-raw
-      v-if="resource && operation"
       :operation.prop="operation"
       :resource.prop="resource"
       :shape.prop="shape"
