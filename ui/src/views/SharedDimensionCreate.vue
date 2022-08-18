@@ -1,12 +1,12 @@
 <template>
   <side-pane :title="title" @close="onCancel">
-    <hydra-operation-form
+    <cc-hydra-operation-form
       v-if="operation"
-      :operation="operation"
-      :resource="resource"
-      :shape="shape"
-      :error="error"
-      :is-submitting="isSubmitting"
+      :operation.prop="operation"
+      :resource.prop="resource"
+      :shape.prop="shape"
+      :error.prop="error"
+      :submitting.prop="isSubmitting"
       :submit-label="operation.title"
       @submit="onSubmit"
       @cancel="onCancel"
@@ -18,8 +18,7 @@
 import { computed, defineComponent } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
-
-import HydraOperationForm from '@/components/HydraOperationForm.vue'
+import '@/customElements/HydraOperationForm'
 import SidePane from '@/components/SidePane.vue'
 import { RootState } from '@/store/types'
 import { useHydraForm } from '@/use-hydra-form'
@@ -27,7 +26,7 @@ import { displayToast } from '@/use-toast'
 
 export default defineComponent({
   name: 'SharedDimensionCreateView',
-  components: { SidePane, HydraOperationForm },
+  components: { SidePane },
 
   setup () {
     const store = useStore<RootState>()

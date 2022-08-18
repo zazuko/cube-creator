@@ -1,12 +1,12 @@
 <template>
   <side-pane :title="title" @close="onCancel">
-    <hydra-operation-form-with-raw
+    <cc-hydra-operation-form-with-raw
       v-if="resource && operation"
-      :operation="operation"
-      :resource="resource"
-      :shape="shape"
-      :error="error"
-      :is-submitting="isSubmitting"
+      :operation.prop="operation"
+      :resource.prop="resource"
+      :shape.prop="shape"
+      :error.prop="error"
+      :submitting.prop="isSubmitting"
       submit-label="Save dimension"
       @submit="onSubmit"
       @cancel="onCancel"
@@ -18,17 +18,16 @@
 import { computed, defineComponent, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
-
 import { api } from '@/api'
 import SidePane from '@/components/SidePane.vue'
-import HydraOperationFormWithRaw from '@/components/HydraOperationFormWithRaw.vue'
+import '@/customElements/HydraOperationFormWithRaw'
 import { displayToast } from '@/use-toast'
 import { useHydraForm } from '@/use-hydra-form'
 import { RootState } from '@/store/types'
 
 export default defineComponent({
   name: 'SharedDimensionEditView',
-  components: { SidePane, HydraOperationFormWithRaw },
+  components: { SidePane },
 
   setup () {
     const store = useStore<RootState>()

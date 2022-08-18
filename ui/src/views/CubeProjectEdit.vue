@@ -4,14 +4,14 @@
       <h3 class="title is-5">
         {{ project.actions.edit.title }}
       </h3>
-      <hydra-operation-form
-        :operation="project.actions.edit"
-        :resource="resource"
-        :shape="shape"
-        :error="error"
-        :is-submitting="isSubmitting"
+      <cc-hydra-operation-form
+        :operation.prop="project.actions.edit"
+        :resource.prop="resource"
+        :shape.prop="shape"
+        :error.prop="error"
+        :submitting.prop="isSubmitting"
         @submit="onSubmit"
-        :show-cancel="false"
+        :show-cancel.prop="false"
         submit-label="Save project settings"
       />
     </div>
@@ -44,15 +44,16 @@ import { defineComponent, shallowRef } from 'vue'
 import { useStore } from 'vuex'
 
 import DownloadButton from '@/components/DownloadButton.vue'
-import HydraOperationForm from '@/components/HydraOperationForm.vue'
+import '@/customElements/HydraOperationForm'
 import { RootState } from '@/store/types'
 import { confirmDialog } from '@/use-dialog'
 import { useHydraForm } from '@/use-hydra-form'
 import { displayToast } from '@/use-toast'
+import LoadingBlock from '@/components/LoadingBlock.vue'
 
 export default defineComponent({
   name: 'CubeProjectEditView',
-  components: { HydraOperationForm, DownloadButton },
+  components: { DownloadButton },
 
   setup () {
     const store = useStore<RootState>()

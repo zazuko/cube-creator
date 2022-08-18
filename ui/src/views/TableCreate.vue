@@ -1,13 +1,13 @@
 <template>
   <side-pane :title="title" @close="onCancel">
-    <hydra-operation-form
+    <cc-hydra-operation-form
       v-if="operation"
       :key="formRenderKey"
-      :operation="operation"
-      :resource="resource"
-      :shape="shape"
-      :error="error"
-      :is-submitting="isSubmitting"
+      :operation.prop="operation"
+      :resource.prop="resource"
+      :shape.prop="shape"
+      :error.prop="error"
+      :submitting.prop="isSubmitting"
       @submit="onSubmit"
       @cancel="onCancel"
     />
@@ -31,11 +31,9 @@ import { csvw, hydra } from '@tpluscode/rdf-ns-builders'
 import { computed, defineComponent, onMounted, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
-
 import * as ns from '@cube-creator/core/namespace'
 import { CsvColumn } from '@cube-creator/model'
-
-import HydraOperationForm from '@/components/HydraOperationForm.vue'
+import '@/customElements/HydraOperationForm'
 import SidePane from '@/components/SidePane.vue'
 import { RootState } from '@/store/types'
 import { displayToast } from '@/use-toast'
@@ -43,7 +41,7 @@ import { useHydraForm } from '@/use-hydra-form'
 
 export default defineComponent({
   name: 'TableCreateView',
-  components: { SidePane, HydraOperationForm },
+  components: { SidePane },
 
   setup () {
     const store = useStore<RootState>()

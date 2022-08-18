@@ -14,7 +14,6 @@ if (process.env.NO_WEBSOCKET === 'true') {
 }
 
 const customElements = [
-  'cc-form',
   'rdf-editor',
   'tagged-literal'
 ]
@@ -51,7 +50,7 @@ module.exports = {
         return {
           ...options,
           compilerOptions: {
-            isCustomElement: tag => customElements.includes(tag),
+            isCustomElement: tag => customElements.includes(tag) || tag.startsWith('cc-'),
           }
         }
       })

@@ -3,14 +3,13 @@
     <p>
       {{ operation.description }}
     </p>
-    <hydra-operation-form
-      :operation="operation"
-      :resource="resource"
-      :shape="shape"
-      :error="error"
-      :is-submitting="isSubmitting"
-      @submit="onSubmit"
-      :show-cancel="false"
+    <cc-hydra-operation-form
+      :operation.prop="operation"
+      :resource.prop="resource"
+      :shape.prop="shape"
+      :error.prop="error"
+      :submitting.prop="isSubmitting"
+      @submit="e => onSubmit(e.detail.value)"
       :submit-button-variant="submitButtonVariant"
     />
   </div>
@@ -22,8 +21,7 @@ import { rdf, sh } from '@tpluscode/rdf-ns-builders'
 import { RuntimeOperation } from 'alcaeus'
 import { defineComponent, PropType, toRefs } from 'vue'
 import { useStore } from 'vuex'
-
-import HydraOperationForm from '@/components/HydraOperationForm.vue'
+import '@/customElements/HydraOperationForm'
 import { RootState } from '@/store/types'
 import { confirmDialog } from '@/use-dialog'
 import { useHydraForm } from '@/use-hydra-form'
@@ -31,7 +29,6 @@ import { displayToast } from '@/use-toast'
 
 export default defineComponent({
   name: 'JobForm',
-  components: { HydraOperationForm },
   props: {
     operation: {
       type: Object as PropType<RuntimeOperation>,

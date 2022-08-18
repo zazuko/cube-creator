@@ -1,25 +1,23 @@
 <template>
   <side-pane :title="title" @close="onCancel">
-    <hydra-operation-form
+    <cc-hydra-operation-form
       v-if="operation && resource"
-      :operation="operation"
-      :resource="resource"
-      :shape="shape"
-      :error="error"
-      :is-submitting="isSubmitting"
+      :operation.prop="operation"
+      :resource.prop="resource"
+      :shape.prop="shape"
+      :error.prop="error"
+      :submitting.prop="isSubmitting"
       @cancel="onCancel"
       @submit="onSubmit"
     >
-      <template #buttons>
-        <o-field :addons="false">
-          <div class="control">
-            <o-button v-if="batchMappingOperation" variant="default" icon-left="magic" @click="importTerms">
-              Auto-fill from Shared Dimension
-            </o-button>
-          </div>
-        </o-field>
-      </template>
-    </hydra-operation-form>
+      <o-field :addons="false">
+        <div class="control">
+          <o-button v-if="batchMappingOperation" variant="default" icon-left="magic" @click="importTerms">
+            Auto-fill from Shared Dimension
+          </o-button>
+        </div>
+      </o-field>
+    </cc-hydra-operation-form>
   </side-pane>
 </template>
 
@@ -31,7 +29,7 @@ import { useRoute, useRouter } from 'vue-router'
 
 import { api } from '@/api'
 import SidePane from '@/components/SidePane.vue'
-import HydraOperationForm from '@/components/HydraOperationForm.vue'
+import '@/customElements/HydraOperationForm'
 import { RootState } from '@/store/types'
 import { useHydraForm } from '@/use-hydra-form'
 import { displayToast } from '@/use-toast'
@@ -39,7 +37,7 @@ import { cc } from '@cube-creator/core/namespace'
 
 export default defineComponent({
   name: 'DimensionMappingView',
-  components: { SidePane, HydraOperationForm },
+  components: { SidePane },
 
   setup () {
     const store = useStore<RootState>()

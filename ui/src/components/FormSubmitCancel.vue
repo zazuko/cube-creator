@@ -4,7 +4,7 @@
     <o-field class="buttons" :addons="false">
       <div class="control">
         <button-loading
-          native-type="submit"
+          @click="$emit('submit')"
           :variant="submitButtonVariant"
           :disabled="disabled"
           :loading="isSubmitting"

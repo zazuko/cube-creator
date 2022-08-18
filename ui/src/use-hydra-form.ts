@@ -40,7 +40,9 @@ export function useHydraForm (operation: Ref<RuntimeOperation | null | undefined
 
   const title = computed(() => operation.value?.title ?? '...')
 
-  const onSubmit = async (data: GraphPointer<ResourceIdentifier>) => {
+  const onSubmit = async (arg: GraphPointer<ResourceIdentifier> | CustomEvent) => {
+    const data = 'dataset' in arg ? arg : arg.detail.value
+
     if (options.beforeSubmit) {
       const shouldContinue = await options.beforeSubmit()
       if (!shouldContinue) {
