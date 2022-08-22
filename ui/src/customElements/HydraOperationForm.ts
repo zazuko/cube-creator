@@ -35,7 +35,7 @@ export class HydraOperationForm extends HydraOperationFormBase {
           .showCancel="${this.showCancel}"
           submit-button-variant="${this.submitButtonVariant}"
           .disabled="${!this.shape}"
-          @submit="${this.onSubmit}"
+          @submit="${this.submit}"
           @cancel="${this.onCancel}"
         ></cc-form-submit-cancel>
       </div>`
@@ -45,7 +45,7 @@ export class HydraOperationForm extends HydraOperationFormBase {
     this.dispatchEvent(new Event('cancel', { bubbles: true, composed: true }))
   }
 
-  onSubmit () {
+  submit () {
     this.dispatchEvent(new CustomEvent('submit', {
       detail: {
         value: this.value,

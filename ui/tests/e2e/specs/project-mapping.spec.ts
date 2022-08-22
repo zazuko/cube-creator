@@ -23,7 +23,7 @@ describe('CSV mapping flow', () => {
       .find('input')
       .type('ubd/29')
 
-    cy.get('form').submit()
+    cy.$$('cc-hydra-operation-form').submit()
 
     cy.contains('successfully created').should('be.visible')
     cy.contains('h2', 'My project').should('be.visible')
@@ -68,7 +68,7 @@ describe('CSV mapping flow', () => {
     cy.contains('.label', 'Cube table')
       .click()
 
-    cy.get('form').submit()
+    cy.$$('cc-hydra-operation-form').submit()
 
     cy.contains('Cube: My observations').should('be.visible')
     cy.contains('.mapper-table', 'My observations')
@@ -100,7 +100,7 @@ describe('CSV mapping flow', () => {
       // Click somewhere to validate the datatype selection
       .click()
 
-    cy.get('form')
+    cy.$$('cc-hydra-operation-form')
       .submit()
 
     cy.contains('Column mapping was successfully created').should('be.visible')
@@ -122,7 +122,7 @@ describe('CSV mapping flow', () => {
       .find('input')
       .type('{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}column2{}}')
 
-    cy.get('form').submit()
+    cy.$$('cc-hydra-operation-form').submit()
 
     cy.contains('Table My secondary table was successfully created').should('be.visible')
     cy.contains('.mapper-table', 'My secondary table')
@@ -144,7 +144,7 @@ describe('CSV mapping flow', () => {
     cy.contains('.field', 'Using the property')
       .type('{selectall}the-other')
 
-    cy.get('form')
+    cy.$$('cc-hydra-operation-form')
       .submit()
 
     cy.contains('Column mapping was successfully created').should('be.visible')

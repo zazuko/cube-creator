@@ -51,7 +51,7 @@ export default defineComponent({
       default: 'primary',
     },
   },
-  emits: ['cancel'],
+  emits: ['submit', 'cancel'],
 
   computed: {
     _submitLabel (): string {
