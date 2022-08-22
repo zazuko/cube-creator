@@ -16,6 +16,16 @@ export class HydraOperationForm extends HydraOperationFormBase {
   @property({ type: Object })
   value?: GraphPointer | null
 
+  constructor () {
+    super()
+    this.addEventListener('submit', (e) => {
+      if (e.target instanceof HTMLFormElement) {
+        e.preventDefault()
+        this.onSubmit()
+      }
+    })
+  }
+
   protected updated (_changedProperties: PropertyValues) {
     if (_changedProperties.has('resource')) {
       this.value = clone(this.resource)
@@ -24,21 +34,23 @@ export class HydraOperationForm extends HydraOperationFormBase {
 
   renderForm () {
     return html`
-      <cc-form .resource="${this.value}" .shapes="${this.shape!.pointer}" no-editor-switches ></cc-form>
+      <form>
+        <cc-form .resource="${this.value}" .shapes="${this.shape!.pointer}" no-editor-switches ></cc-form>
 
-      <cc-hydra-operation-error .error="${this.error}" .shape="${this.shape}" class="mt-4" ></cc-hydra-operation-error>
+        <cc-hydra-operation-error .error="${this.error}" .shape="${this.shape}" class="mt-4" ></cc-hydra-operation-error>
 
-      <div style="display: flex; flex-direction: row-reverse; justify-content: flex-start;">
-        <cc-form-submit-cancel
-          submit-label="${this._submitLabel}"
-          .isSubmitting="${this.submitting}"
-          .showCancel="${this.showCancel}"
-          submit-button-variant="${this.submitButtonVariant}"
-          .disabled="${!this.shape}"
-          @submit="${this.onSubmit}"
-          @cancel="${this.onCancel}"
-        ></cc-form-submit-cancel>
-      </div>`
+        <div style="display: flex; flex-direction: row-reverse; justify-content: flex-start;">
+          <cc-form-submit-cancel
+            submit-label="${this._submitLabel}"
+            .isSubmitting="${this.submitting}"
+            .showCancel="${this.showCancel}"
+            submit-button-variant="${this.submitButtonVariant}"
+            .disabled="${!this.shape}"
+            @submit="${this.onSubmit}"
+            @cancel="${this.onCancel}"
+          ></cc-form-submit-cancel>
+        </div>
+      </form>`
   }
 
   onCancel () {

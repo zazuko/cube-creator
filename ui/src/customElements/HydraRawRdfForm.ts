@@ -25,6 +25,16 @@ export class HydraRawRdfForm extends HydraOperationFormBase {
   @property({ type: Object })
   graph?: Graph
 
+  constructor () {
+    super()
+    this.addEventListener('submit', (e) => {
+      if (e.target instanceof HTMLFormElement) {
+        e.preventDefault()
+        this.onSubmit()
+      }
+    })
+  }
+
   get value () {
     return clownface({
       dataset: $rdf.dataset(this.editor.quads),
