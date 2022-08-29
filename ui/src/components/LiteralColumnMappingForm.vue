@@ -1,10 +1,10 @@
 <template>
-  <hydra-operation-form
-    :operation="operation"
-    :resource="resource"
-    :shape="shape"
-    :error="error"
-    :is-submitting="isSubmitting"
+  <cc-hydra-operation-form
+    :operation.prop="operation"
+    :resource.prop="resource"
+    :shape.prop="shape"
+    :error.prop="error"
+    :submitting.prop="isSubmitting"
     :submit-label="submitLabel"
     @submit="$emit('submit', $event)"
     @cancel="$emit('cancel')"
@@ -20,12 +20,11 @@ import { cc } from '@cube-creator/core/namespace'
 import { ReferenceColumnMapping, CsvSource, Table } from '@cube-creator/model'
 
 import { ErrorDetails } from '@/api/errors'
-import HydraOperationForm from '@/components/HydraOperationForm.vue'
+import '@/customElements/HydraOperationForm'
 import { useHydraForm } from '@/use-hydra-form'
 
 export default defineComponent({
   name: 'LiteralColumnMappingForm',
-  components: { HydraOperationForm },
   props: {
     table: {
       type: Object as PropType<Table>,

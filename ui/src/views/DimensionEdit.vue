@@ -3,13 +3,13 @@
     <o-field label="Dimension property">
       <term-display v-if="dimension.about" :term="dimension.about" :base="cubeUri" />
     </o-field>
-    <hydra-operation-form-with-raw
+    <cc-hydra-operation-form-with-raw
       v-if="resource && operation"
-      :operation="operation"
-      :resource="resource"
-      :shape="shape"
-      :error="error"
-      :is-submitting="isSubmitting"
+      :operation.prop="operation"
+      :resource.prop="resource"
+      :shape.prop="shape"
+      :error.prop="error"
+      :submitting.prop="isSubmitting"
       submit-label="Update dimension metadata"
       @submit="onSubmit"
       @cancel="onCancel"
@@ -23,11 +23,9 @@ import { GraphPointer } from 'clownface'
 import { computed, defineComponent, shallowRef, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
-
 import { meta } from '@cube-creator/core/namespace'
 import { DimensionMetadata } from '@cube-creator/model'
-
-import HydraOperationFormWithRaw from '@/components/HydraOperationFormWithRaw.vue'
+import '@/customElements/HydraOperationFormWithRaw'
 import SidePane from '@/components/SidePane.vue'
 import TermDisplay from '@/components/TermDisplay.vue'
 import { conciseBoundedDescription } from '@/graph'
@@ -37,7 +35,7 @@ import { displayToast } from '@/use-toast'
 
 export default defineComponent({
   name: 'DimensionEditView',
-  components: { SidePane, HydraOperationFormWithRaw, TermDisplay },
+  components: { SidePane, TermDisplay },
 
   setup () {
     const store = useStore<RootState>()

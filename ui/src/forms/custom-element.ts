@@ -2,7 +2,7 @@ import { defineCustomElement } from './vue-custom-element'
 
 export function createCustomElement (tag: string) {
   return async function (componentModule: any): Promise<void> {
-    const component = componentModule.default
+    const component = 'default' in componentModule ? componentModule.default : componentModule
 
     const customElement = defineCustomElement(component, { shadowRoot: false })
 

@@ -8,7 +8,10 @@
         {{ title }}
       </p>
     </header>
-    <section class="message-body" v-if="$slots.default">
+    <section class="message-body" v-if="text">
+      {{ text }}
+    </section>
+    <section class="message-body" v-else-if="$slots.default">
       <slot />
     </section>
   </article>
@@ -29,6 +32,10 @@ export default defineComponent({
       default: undefined,
     },
     title: {
+      type: String,
+      default: undefined,
+    },
+    text: {
       type: String,
       default: undefined,
     },

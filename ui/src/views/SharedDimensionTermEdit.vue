@@ -6,13 +6,12 @@
         <o-icon icon="external-link-alt" />
       </a>
     </o-field>
-    <hydra-operation-form-with-raw
-      v-if="resource && operation"
-      :operation="operation"
-      :resource="resource"
-      :shape="shape"
-      :error="error"
-      :is-submitting="isSubmitting"
+    <cc-hydra-operation-form-with-raw
+      :operation.prop="operation"
+      :resource.prop="resource"
+      :shape.prop="shape"
+      :error.prop="error"
+      :submitting.prop="isSubmitting"
       submit-label="Save term"
       @submit="onSubmit"
       @cancel="onCancel"
@@ -24,18 +23,16 @@
 import { computed, defineComponent, shallowRef, ShallowRef, watch } from 'vue'
 import { useStore } from 'vuex'
 import { RouteLocation, useRoute, useRouter } from 'vue-router'
-
 import { api } from '@/api'
-import HydraOperationFormWithRaw from '@/components/HydraOperationFormWithRaw.vue'
+import '@/customElements/HydraOperationFormWithRaw'
 import SidePane from '@/components/SidePane.vue'
-import { serializeSharedDimensionTerm } from '@/store/serializers'
 import { RootState, SharedDimensionTerm } from '@/store/types'
 import { useHydraForm } from '@/use-hydra-form'
 import { displayToast } from '@/use-toast'
 
 export default defineComponent({
   name: 'SharedDimensionTermEditView',
-  components: { SidePane, HydraOperationFormWithRaw },
+  components: { SidePane },
 
   setup () {
     const store = useStore<RootState>()
@@ -67,25 +64,16 @@ export default defineComponent({
 
     const fetchTerm = async () => {
       const termId = route.params.termId as string
-      const fetchedTerm = await api.fetchResource(termId)
 
-      term.value = serializeSharedDimensionTerm(fetchedTerm)
-      form.resource.value = Object.freeze(term.value.pointer)
+      term.value = await api.fetchResource<any>(termId)
+      form.resource.value = Object.freeze(term.value!.pointer)
     }
 
     watch(route, (newRoute: RouteLocation) => {
-      if (newRoute.name === 'SharedDimensionTermEdit') {
+      if (newRoute.name === 'SharedDimensionTermEdit' && term.value?.clientPath !== newRoute.params.termId) {
         fetchTerm()
       }
     }, { immediate: true })
-
-    watch(term, () => {
-      if (term.value) {
-        form.resource.value = Object.freeze(term.value.pointer)
-      } else {
-        form.resource.value = null
-      }
-    })
 
     return {
       ...form,

@@ -1,12 +1,12 @@
 <template>
   <side-pane :title="title" @close="onCancel">
-    <hydra-operation-form
+    <cc-hydra-operation-form
       v-if="operation && resource"
-      :operation="operation"
-      :resource="resource"
-      :shape="shape"
-      :error="error"
-      :is-submitting="isSubmitting"
+      :operation.prop="operation"
+      :resource.prop="resource"
+      :shape.prop="shape"
+      :error.prop="error"
+      :submitting.prop="isSubmitting"
       show-cancel
       @cancel="onCancel"
       @submit="onSubmit"
@@ -22,7 +22,7 @@ import { useRoute, useRouter } from 'vue-router'
 
 import { api } from '@/api'
 import SidePane from '@/components/SidePane.vue'
-import HydraOperationForm from '@/components/HydraOperationForm.vue'
+import '@/customElements/HydraOperationForm'
 import { RootState } from '@/store/types'
 import { useHydraForm } from '@/use-hydra-form'
 import { displayToast } from '@/use-toast'
@@ -30,7 +30,7 @@ import { cc } from '@cube-creator/core/namespace'
 
 export default defineComponent({
   name: 'DimensionMappingImportView',
-  components: { SidePane, HydraOperationForm },
+  components: { SidePane },
 
   setup () {
     const store = useStore<RootState>()

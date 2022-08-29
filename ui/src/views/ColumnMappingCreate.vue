@@ -94,7 +94,9 @@ export default defineComponent({
   },
 
   methods: {
-    async onSubmit (resource: GraphPointer<ResourceIdentifier>): Promise<void> {
+    async onSubmit (arg: GraphPointer<ResourceIdentifier> | CustomEvent): Promise<void> {
+      const resource = 'dataset' in arg ? arg : arg.detail.value
+
       this.error = null
       this.isSubmitting = true
 
