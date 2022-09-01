@@ -1,5 +1,12 @@
 # @cube-creator/ui
 
+## 1.12.7
+
+### Patch Changes
+
+- ee6e9e97: It was impossible to switch back from "advanced RDF editor" (fixes #1179)
+- 4a82e859: Dynamic properties tab kept switching back to main tab (fixes #1272)
+
 ## 1.12.6
 
 ### Patch Changes
