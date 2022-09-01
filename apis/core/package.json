@@ -11,7 +11,7 @@
     "@cube-creator/express": "0.0.0",
     "@cube-creator/model": "0.1.27",
     "@cube-creator/shared-dimensions-api": "2.6.10",
-    "@hydrofoil/labyrinth": "^0.4.1",
+    "@hydrofoil/labyrinth": "^0.4.3",
     "@rdfine/csvw": "^0.6.3",
     "@rdfine/hydra": "^0.8.0",
     "@rdfine/prov": "^0.1.1",
