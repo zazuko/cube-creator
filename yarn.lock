@@ -1431,10 +1431,10 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
-"@hydrofoil/labyrinth@^0.4.1", "@hydrofoil/labyrinth@^0.4.2":
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/@hydrofoil/labyrinth/-/labyrinth-0.4.2.tgz#5fe4ea9bab31fccd51f84082eee3baaef166da0b"
-  integrity sha512-tUIp30bcuoyXXAo7NgecExAomNe+ADy4E3c+gGX6J4q276nLMEh960HBStx3kRlxFq5dIl5edvclFE4tTARcHQ==
+"@hydrofoil/labyrinth@^0.4.2", "@hydrofoil/labyrinth@^0.4.3":
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/@hydrofoil/labyrinth/-/labyrinth-0.4.3.tgz#d696e8a77da7bd80d83b78c313b6e3155490bfa2"
+  integrity sha512-BCKUUL+IvsLxacktXw2+EIRG0pV3YO2JwAuZmkb0jKmdk5uPZmwwE6YhtZ8dMK3ltZo0Ykioff+4jVmp1saVaQ==
   dependencies:
     "@fcostarodrigo/walk" "^5.0.0"
     "@rdfine/hydra" "^0.6"
@@ -1445,7 +1445,7 @@
     "@tpluscode/rdf-ns-builders" "^0.4.0"
     "@tpluscode/rdf-string" "^0.2.18"
     "@tpluscode/rdfine" "^0.5.15"
-    "@tpluscode/sparql-builder" "^0.3.9"
+    "@tpluscode/sparql-builder" "^0.3.23"
     "@types/hydra-box" "^0.6.0"
     clownface "^1.1.0"
     cors "^2.8.5"
@@ -2439,7 +2439,7 @@
     commander "^7.2.0"
     fs-extra "^10.0.0"
 
-"@tpluscode/rdf-ns-builders@^2.0.0":
+"@tpluscode/rdf-ns-builders@^2", "@tpluscode/rdf-ns-builders@^2.0.0":
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/@tpluscode/rdf-ns-builders/-/rdf-ns-builders-2.0.1.tgz#1074666a538f6ea2946bf67dac12da191fd2d928"
   integrity sha512-P/pwfjhcj/JOZF3epheHiDd/f9tSkceydQBqBuqThpNX2NIg+4BSgwtG2YfKBa24mmGFfyzN6RVeFclhA8wZBw==
@@ -2450,15 +2450,15 @@
     commander "^7.2.0"
     fs-extra "^10.0.0"
 
-"@tpluscode/rdf-string@^0.2.16", "@tpluscode/rdf-string@^0.2.18", "@tpluscode/rdf-string@^0.2.21", "@tpluscode/rdf-string@^0.2.23", "@tpluscode/rdf-string@^0.2.24":
-  version "0.2.25"
-  resolved "https://registry.yarnpkg.com/@tpluscode/rdf-string/-/rdf-string-0.2.25.tgz#287672fdf2181c19d7394aa07ea4a6565a45a099"
-  integrity sha512-oggYq6sh7HvAEeW6r1+wE5qziPI2YQ4UfcgFBXx5JmesLJ2Jlhh//lm8A851bfIMc+JiV14a078HuSftDK07OQ==
+"@tpluscode/rdf-string@^0.2.18", "@tpluscode/rdf-string@^0.2.21", "@tpluscode/rdf-string@^0.2.23", "@tpluscode/rdf-string@^0.2.24", "@tpluscode/rdf-string@^0.2.26":
+  version "0.2.26"
+  resolved "https://registry.yarnpkg.com/@tpluscode/rdf-string/-/rdf-string-0.2.26.tgz#cdc827d0869c19125358d1cc280dc83375bf6ce1"
+  integrity sha512-zfNGMmY8D9jVuJ9qHwNrIWMwhibIkO42/1KtCfo59m4vXYTfJrXcn1ny9pj5kuhbpSubRbJ69zmYxP4UrXVPQw==
   dependencies:
     "@rdf-esm/data-model" "^0.5.3"
     "@rdf-esm/term-map" "^0.5.0"
     "@rdfjs/types" "*"
-    "@tpluscode/rdf-ns-builders" "^1"
+    "@tpluscode/rdf-ns-builders" "^2"
     "@zazuko/rdf-vocabularies" "*"
 
 "@tpluscode/rdfine@^0.5.15", "@tpluscode/rdfine@^0.5.19", "@tpluscode/rdfine@^0.5.23", "@tpluscode/rdfine@^0.5.25", "@tpluscode/rdfine@^0.5.27", "@tpluscode/rdfine@^0.5.29", "@tpluscode/rdfine@^0.5.33", "@tpluscode/rdfine@^0.5.34", "@tpluscode/rdfine@^0.5.35":
@@ -2474,16 +2474,16 @@
     clownface "^1"
     once "^1.4.0"
 
-"@tpluscode/sparql-builder@^0.3.15", "@tpluscode/sparql-builder@^0.3.17", "@tpluscode/sparql-builder@^0.3.19", "@tpluscode/sparql-builder@^0.3.21", "@tpluscode/sparql-builder@^0.3.9":
-  version "0.3.21"
-  resolved "https://registry.yarnpkg.com/@tpluscode/sparql-builder/-/sparql-builder-0.3.21.tgz#d094f4476d2f982d41b57cded3987b9f9609f25e"
-  integrity sha512-cbKPB1lqD6D9MeHMLET9bQSmqA5d2hCjE2i5tsWfKPelhefveYrfAtJyVjTH1RQPpzFQddqGgU+fMEtiEVwxHA==
+"@tpluscode/sparql-builder@^0.3.15", "@tpluscode/sparql-builder@^0.3.17", "@tpluscode/sparql-builder@^0.3.19", "@tpluscode/sparql-builder@^0.3.21", "@tpluscode/sparql-builder@^0.3.23":
+  version "0.3.23"
+  resolved "https://registry.yarnpkg.com/@tpluscode/sparql-builder/-/sparql-builder-0.3.23.tgz#a1c0a2dd0f3d42c04742f417a56f2837435e9561"
+  integrity sha512-qJYMAn5MNUcna+8fwloZTVbI7BZ1KjPLhuGluddC0GvcKo3VDqFFD3AwNCKsKdw9MHu5j2kiUufcZJpejOyBRw==
   dependencies:
     "@rdf-esm/data-model" "^0.5.4"
     "@rdf-esm/term-set" "^0.5.0"
     "@rdfjs/types" "*"
-    "@tpluscode/rdf-ns-builders" "^1.0.0"
-    "@tpluscode/rdf-string" "^0.2.16"
+    "@tpluscode/rdf-ns-builders" "^2.0.0"
+    "@tpluscode/rdf-string" "^0.2.26"
     debug "^4.1.1"
 
 "@transloadit/prettier-bytes@0.0.7":
