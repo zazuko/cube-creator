@@ -1,5 +1,11 @@
 # @cube-creator/core-api
 
+## 2.0.2
+
+### Patch Changes
+
+- 81099d79: Improve performance of queries, particularly the loading of projects list (fixes #1281)
+
 ## 2.0.1
 
 ### Patch Changes
