@@ -152,7 +152,7 @@ export async function getExportedDimension({ resource, store, client = streamCli
   const quads = await CONSTRUCT`?dimensionTerm ?p ?o`
     .FROM(store.graph)
     .WHERE`
-      ${resourceShapePatterns(dimensionAndTerms, true)}
+      ${resourceShapePatterns(dimensionAndTerms)}
 
       ?shape ${sh.property} ?shProp .
       ?shProp ${sh.path} ?p .
