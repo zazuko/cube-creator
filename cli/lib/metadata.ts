@@ -1,7 +1,7 @@
 import { Literal, NamedNode, Quad } from 'rdf-js'
 import { obj } from 'through2'
 import $rdf from 'rdf-ext'
-import { dcat, dcterms, rdf, schema, sh, _void } from '@tpluscode/rdf-ns-builders'
+import { dcat, dcterms, rdf, schema, sh, _void, foaf } from '@tpluscode/rdf-ns-builders'
 import { cc, cube } from '@cube-creator/core/namespace'
 import { Dataset, Project, PublishJob } from '@cube-creator/model'
 import { HydraClient } from 'alcaeus/alcaeus'
@@ -209,7 +209,7 @@ export async function loadCubeMetadata(this: Context, { jobUri, endpoint, user, 
     ${(job.status?.equals(Published) && maintainer.dataset)
     ? sparql`
       # add </.well-known/void> link to cubes with published status
-      ${maintainer.dataset} ${schema.dataset} ?cubeVersion .`
+      ${maintainer.dataset} ${schema.dataset} ?cubeVersion ; ${foaf.topic} ?cubeVersion.`
     : ''}
 
     ?cubeVersion ?cubeMetaP ?cubeMetaO ; ?cubeProp ?cubeMeta.

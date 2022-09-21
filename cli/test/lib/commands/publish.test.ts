@@ -5,7 +5,7 @@ import { expect } from 'chai'
 import $rdf from 'rdf-ext'
 import { prefixes } from '@zazuko/rdf-vocabularies'
 import { ASK, CONSTRUCT, DELETE, SELECT, WITH } from '@tpluscode/sparql-builder'
-import { csvw, dcat, dcterms, qudt, rdf, schema, sh, vcard, xsd, _void } from '@tpluscode/rdf-ns-builders'
+import { csvw, dcat, dcterms, qudt, rdf, schema, sh, vcard, xsd, _void, foaf } from '@tpluscode/rdf-ns-builders'
 import { ccClients } from '@cube-creator/testing/lib'
 import { insertTestProject } from '@cube-creator/testing/lib/seedData'
 import { cc, cube } from '@cube-creator/core/namespace'
@@ -162,8 +162,16 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
       expect(trailingSlashCubeExists).to.be.false
     })
 
-    it('adds a link to void dataset', async () => {
+    it('adds a schema:dataset link to void dataset', async () => {
       const hasVoidLink = await ASK`<https://environment.ld.admin.ch/.well-known/void> ${schema.dataset} ${targetCube()}`
+        .FROM(targetGraph)
+        .execute(ccClients.streamClient.query)
+
+      expect(hasVoidLink).to.be.true
+    })
+
+    it('adds a foaf:topic link to void dataset', async () => {
+      const hasVoidLink = await ASK`<https://environment.ld.admin.ch/.well-known/void> ${foaf.topic} ${targetCube()}`
         .FROM(targetGraph)
         .execute(ccClients.streamClient.query)
 
