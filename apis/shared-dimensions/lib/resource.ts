@@ -5,15 +5,15 @@ import clownface, { AnyPointer, GraphPointer } from 'clownface'
 import { nanoid } from 'nanoid'
 import TermSet from '@rdfjs/term-set'
 import $rdf from 'rdf-ext'
-import { CONSTRUCT, DELETE, SELECT, WITH } from '@tpluscode/sparql-builder'
+import { CONSTRUCT, DELETE, DESCRIBE, SELECT, WITH } from '@tpluscode/sparql-builder'
 import ParsingClient from 'sparql-http-client/ParsingClient'
 
-export function resourceShapePatterns(resourceOrPattern: NamedNode | SparqlTemplateResult, all = false) {
+export function resourceShapePatterns(resourceOrPattern: NamedNode | SparqlTemplateResult) {
   const termPattern = 'termType' in resourceOrPattern
     ? sparql`BIND( ${resourceOrPattern} as ?term )`
     : resourceOrPattern
 
-  let selectRoot = SELECT`?rootShape`
+  const selectRoot = SELECT`?rootShape`
     .WHERE`
       ${termPattern}
       ?rootShape ${sh.targetNode} ?term .
@@ -23,16 +23,12 @@ export function resourceShapePatterns(resourceOrPattern: NamedNode | SparqlTempl
       }
     `
 
-  if (!all) {
-    selectRoot = selectRoot.LIMIT(1)
-  }
-
   return sparql`
     {
       ${selectRoot}
     }
 
-    ?rootShape (!${sh.targetNode})* ?shape .
+    ?rootShape (${sh.property}/${sh.node}?)* ?shape .
   `
 }
 
@@ -50,12 +46,17 @@ export function getPatternsFromShape(shapes: AnyPointer, nextVariable = variable
       return []
     }
 
-    seen.add(node)
     const property = shape.out(sh.property)
     const childShapes = property.out(sh.node).toArray()
 
-    const uniqueProperties = new TermSet(property.out(sh.path).terms)
-    const ownPatterns = [...uniqueProperties].reduce((patterns, path) => {
+    const uniquePredicates = new TermSet(property.out(sh.path).terms)
+    if (uniquePredicates.size === 0) {
+      // empty shape? skipping
+      return []
+    }
+
+    seen.add(node)
+    const ownPatterns = [...uniquePredicates].reduce((patterns, path) => {
       return sparql`${patterns} ${path} ${nextVariable()} ;`
     }, sparql`${node}`)
     const childPatterns = childShapes.flatMap(child => getPatternsFromShape(child, nextVariable, seen))
@@ -68,11 +69,10 @@ export function getPatternsFromShape(shapes: AnyPointer, nextVariable = variable
 }
 
 async function getShape(id: NamedNode, graph: NamedNode, client: ParsingClient) {
-  const dataset = $rdf.dataset(await CONSTRUCT`?shape ?p ?o .`
+  const dataset = $rdf.dataset(await DESCRIBE`?shape`
     .FROM(graph)
     .WHERE`
       ${resourceShapePatterns(id)}
-      ?shape ?p ?o .
     `
     .execute(client.query))
   return clownface({ dataset }).has(sh.targetNode, id)
@@ -97,7 +97,7 @@ export async function resourceQuery(id: NamedNode, graph: NamedNode, client: Par
 
 export function deleteShapesQuery(id: NamedNode, graph: NamedNode) {
   return WITH(graph, DELETE`?shape ?p ?o .`.WHERE`
-    ${resourceShapePatterns(id, true)}
+    ${resourceShapePatterns(id)}
     ?shape ?p ?o .
   `)
 }
