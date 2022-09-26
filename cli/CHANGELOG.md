@@ -1,5 +1,11 @@
 # @cube-creator/cli
 
+## 2.0.2
+
+### Patch Changes
+
+- 7247edae: Add `foaf:topic` to cube's void resource (closes #1240)
+
 ## 2.0.1
 
 ### Patch Changes
