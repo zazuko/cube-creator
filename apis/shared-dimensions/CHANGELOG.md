@@ -1,5 +1,11 @@
 # @cube-creator/shared-dimensions-api
 
+## 2.6.11
+
+### Patch Changes
+
+- b9069bfb: When editing some shared dimension terms, the form would not load (fixes #1276)
+
 ## 2.6.10
 
 ### Patch Changes
