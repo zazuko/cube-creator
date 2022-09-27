@@ -23,6 +23,8 @@ import SidePane from '@/components/SidePane.vue'
 import { RootState } from '@/store/types'
 import { useHydraForm } from '@/use-hydra-form'
 import { displayToast } from '@/use-toast'
+import { schema } from '@tpluscode/rdf-ns-builders'
+import { getLocalizedLabel } from '@rdfjs-elements/lit-helpers'
 
 export default defineComponent({
   name: 'SharedDimensionCreateView',
@@ -40,7 +42,7 @@ export default defineComponent({
         await store.dispatch('sharedDimensions/fetchCollection')
 
         displayToast({
-          message: `Shared dimension ${dimension.name} successfully created`,
+          message: `Shared dimension ${getLocalizedLabel(dimension.pointer.out(schema.name))} successfully created`,
           variant: 'success',
         })
 
