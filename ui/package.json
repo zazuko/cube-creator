@@ -28,7 +28,7 @@
     "@rdf-esm/dataset": "^0.5.1",
     "@rdfine/schema": "^0.6.3",
     "@rdfine/shacl": "^0.8",
-    "@rdfjs-elements/lit-helpers": "^0.2",
+    "@rdfjs-elements/lit-helpers": "^0.3.5",
     "@rdfjs-elements/rdf-editor": "^0.5",
     "@rdfjs/term-set": "^1.0.1",
     "@sentry/tracing": "^6.2.0",

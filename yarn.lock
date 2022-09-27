@@ -1981,12 +1981,14 @@
     "@tpluscode/rdf-ns-builders" "^1.0.0"
     readable-stream "^3.6.0"
 
-"@rdfjs-elements/lit-helpers@^0.2":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@rdfjs-elements/lit-helpers/-/lit-helpers-0.2.1.tgz#ded96998fdd8d6460904c0d933d97c580c4e8da6"
-  integrity sha512-x9nnocdknPGQ/Vq5GAKJ9OPPt7whHfkZkX3yW4Oq9x6psUNBig0XgpHQtyCNFNhFpzk/+JsBNDoVICplvKFuBg==
+"@rdfjs-elements/lit-helpers@^0.3.5":
+  version "0.3.5"
+  resolved "https://registry.yarnpkg.com/@rdfjs-elements/lit-helpers/-/lit-helpers-0.3.5.tgz#a9095395cd6cc16c86c45d276491d34bdc5de9f4"
+  integrity sha512-mOpdZO6YzDj0cSCXEQLGIEzdbscjhrSlNRmnD9EUcJjLnDQO+DKlcDKHS40ujdf0MyBjZdBS+LWRM0XACst13w==
   dependencies:
-    "@tpluscode/rdf-ns-builders" "^1"
+    "@tpluscode/rdf-ns-builders" "^2"
+    "@ungap/event-target" "^0.2.3"
+    clownface "^1.5.1"
     lit "^2"
 
 "@rdfjs-elements/rdf-editor@^0.5":
@@ -2429,7 +2431,7 @@
     commander "^7.2.0"
     fs-extra "^10.0.0"
 
-"@tpluscode/rdf-ns-builders@^1", "@tpluscode/rdf-ns-builders@^1.0.0", "@tpluscode/rdf-ns-builders@^1.1.0":
+"@tpluscode/rdf-ns-builders@^1.0.0", "@tpluscode/rdf-ns-builders@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@tpluscode/rdf-ns-builders/-/rdf-ns-builders-1.1.0.tgz#92baf7c2c08c080396161c7944081804507c9490"
   integrity sha512-/4mH/GL9DXKQLtAw+11DRtu67rsRiqB4XkShnaiNa1UTtyTbNWNOMr8Hxb8VsteuVOs/16wloLzxI1o6TwfS/g==
@@ -3332,6 +3334,11 @@
   dependencies:
     "@typescript-eslint/types" "5.14.0"
     eslint-visitor-keys "^3.0.0"
+
+"@ungap/event-target@^0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@ungap/event-target/-/event-target-0.2.3.tgz#be682c681126dca2371c4e1a1721f8e8bb400905"
+  integrity sha512-7Bz0qdvxNGV9n0f+xcMKU7wsEfK6PNzo8IdAcOiBgMNyCuU0Mk9dv0Hbd/Kgr+MFFfn4xLHFbuOt820egT5qEA==
 
 "@ungap/promise-all-settled@1.1.2":
   version "1.1.2"
