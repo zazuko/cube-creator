@@ -1,5 +1,5 @@
 # First step: build the assets
-FROM node:lts-alpine AS builder
+FROM node:16-alpine AS builder
 
 WORKDIR /app
 ADD package.json yarn.lock ./
@@ -17,7 +17,7 @@ ADD ./packages/shacl-middleware/package.json ./packages/shacl-middleware/
 # ADD ./packages/foo/package.json ./packages/foo/
 
 # install and build backend
-RUN yarn install --frozen-lockfile
+RUN yarn install --frozen-lockfile && yarn cache clean
 
 COPY . .
 RUN rm -rf ./ui
@@ -43,7 +43,7 @@ ADD ./packages/shacl-middleware/package.json ./packages/shacl-middleware/
 # for every new package foo add
 #ADD ./packages/foo/package.json ./packages/foo/
 
-RUN yarn install --production --frozen-lockfile
+RUN yarn install --production --frozen-lockfile && yarn cache clean
 COPY --from=builder /app/dist/apis ./apis/
 COPY --from=builder /app/dist/packages/ ./packages/
 
