@@ -1,5 +1,11 @@
 # @cube-creator/core-api
 
+## 2.0.4
+
+### Patch Changes
+
+- b1ef5df8: Reduce the size of the API image
+
 ## 2.0.3
 
 ### Patch Changes
