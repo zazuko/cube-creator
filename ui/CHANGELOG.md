@@ -1,5 +1,11 @@
 # @cube-creator/ui
 
+## 1.12.8
+
+### Patch Changes
+
+- d4c9bdd7: An error was displayed when a shared dimension would be (successfully) imported with multiple names
+
 ## 1.12.7
 
 ### Patch Changes
