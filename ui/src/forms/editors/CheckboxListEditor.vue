@@ -5,7 +5,7 @@
       :key="term.value"
       :native-value="term.value"
       v-model="selected"
-      @input="emit"
+      @update:modelValue="emit"
     >
       <span>{{ label }}</span>
     </o-checkbox>
