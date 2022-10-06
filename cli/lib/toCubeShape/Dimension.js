@@ -97,7 +97,7 @@ class Dimension {
       if (this.in.size < this.inListThreshold) {
         ptr.addList(ns.sh.in, [...this.in.values()])
       } else {
-        this.messages.push(`Dimension \`<${this.predicate.value}>\` contains ${this.in.size} unique values. At this size they will not be listed in cube's [code list](https://zazuko.github.io/rdf-cube-schema/#usage-of-code-lists) constraint. This may be a indication of a numeric or temporal dimension not mapped to its correct data type`)
+        this.messages.push(`Dimension \`<${this.predicate.value}>\` contains ${this.in.size} unique values. At this size they will not be listed in cube's [code list](https://cube.link/#usage-of-code-lists) constraint. This may be a indication of a numeric or temporal dimension not mapped to its correct data type`)
       }
     }
 
