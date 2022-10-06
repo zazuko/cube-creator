@@ -2,6 +2,7 @@ import { turtle } from '@tpluscode/rdf-string'
 import { shape } from '@cube-creator/core/namespaces/shapes'
 import { dcterms, hydra, rdfs, schema, sh } from '@tpluscode/rdf-ns-builders'
 import env from '@cube-creator/core/env'
+import { cc } from '@cube-creator/core/namespace'
 
 let jobTriggerProperties = turtle``
 if (env.PIPELINE_TYPE === 'github') {
@@ -36,6 +37,7 @@ ${shape('job/update')} {
       ${schema.ActiveActionStatus}
       ${schema.FailedActionStatus}
       ${schema.CompletedActionStatus}
+      ${cc.CanceledJobStatus}
     )
   ] ;
 }`
