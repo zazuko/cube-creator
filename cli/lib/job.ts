@@ -96,10 +96,17 @@ export async function updateJobStatus({ jobUri, executionUrl, lastTransformed, s
       }
     }
 
-    logger.info(`Updating job status to ${status.value}`)
-    await operation.invoke(JSON.stringify(job.toJSON()), {
+    logger.info(`Updating job  ${jobUri} status to ${status.value}`)
+    const { response } = await operation.invoke(JSON.stringify(job.toJSON()), {
       'Content-Type': 'application/ld+json',
     })
+
+    if (response?.xhr.ok) {
+      logger.info('Updated job %s', jobUri)
+    } else {
+      const body = await response?.xhr.text()
+      logger.warn(`Failed to update job (status ${response?.xhr.status}). Server response was:\n${body}`)
+    }
   } catch (e: any) {
     logger.error(`Failed to update job status: ${e.message}`)
   }

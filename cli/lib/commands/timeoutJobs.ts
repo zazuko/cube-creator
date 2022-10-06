@@ -62,6 +62,5 @@ export async function timeoutJobs({
       executionUrl: undefined,
       error: 'Job exceeded maximum running time',
     })
-    logger.info('Updated job %s', job.value)
   }
 }
