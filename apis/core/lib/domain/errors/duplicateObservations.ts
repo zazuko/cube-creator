@@ -1,4 +1,4 @@
-import { DELETE, SELECT } from '@tpluscode/sparql-builder'
+import { DELETE, INSERT, SELECT, sparql } from '@tpluscode/sparql-builder'
 import { cc, cube } from '@cube-creator/core/namespace'
 import { Error } from '@cube-creator/model/Dataset'
 import { TransformJob } from '@cube-creator/model/Job'
@@ -19,9 +19,18 @@ function findDuplicateObservations(job: TransformJob) {
 }
 
 export async function insertDimensionCardinalityError(job: TransformJob, client = streamClient): Promise<void> {
-  const update = DELETE`
+  const deleteCurrent = DELETE`
     graph ?dataset { ?s ?p ?o }
-  `.INSERT`
+  `.WHERE`
+    graph ?dataset {
+      ?dataset ${cc.dimensionMetadata} ${job.dimensionMetadata.id} ; ${schema.error} ?currentError .
+      ?currentError ${schema.identifier} "${Error.MultipleDimensionValues}" .
+      ?currentError (<>|!<>)* ?s .
+      ?s ?p ?o .
+    }
+  `
+
+  const insertNew = INSERT`
     graph ?dataset {
       ?dataset ${schema.error} ?error .
       ?error
@@ -31,17 +40,6 @@ export async function insertDimensionCardinalityError(job: TransformJob, client 
       .
     }
   `.WHERE`
-    optional {
-      SELECT * {
-        graph ?dataset {
-          ?dataset ${cc.dimensionMetadata} ${job.dimensionMetadata.id} ; ${schema.error} ?currentError .
-          ?currentError ${schema.identifier} "${Error.MultipleDimensionValues}" .
-          ?currentError (<>|!<>)* ?s .
-          ?s ?p ?o .
-        }
-      }
-    }
-
     graph ?dataset {
       ?dataset ${cc.dimensionMetadata} ${job.dimensionMetadata.id} ; a ${schema.Dataset}
     }
@@ -54,5 +52,10 @@ export async function insertDimensionCardinalityError(job: TransformJob, client 
     BIND(IRI(CONCAT(STR(?dataset), "#non-unique-observations")) as ?error)
   `
 
-  return update.execute(client.query)
+  const updateError = sparql`
+    ${deleteCurrent};
+    ${insertNew}
+  `
+
+  return client.query.update(updateError.toString())
 }
