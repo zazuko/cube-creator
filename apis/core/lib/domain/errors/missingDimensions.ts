@@ -1,4 +1,4 @@
-import { DELETE, SELECT } from '@tpluscode/sparql-builder'
+import { DELETE, INSERT, SELECT, sparql } from '@tpluscode/sparql-builder'
 import { cc, cube } from '@cube-creator/core/namespace'
 import { Error } from '@cube-creator/model/Dataset'
 import { TransformJob } from '@cube-creator/model/Job'
@@ -30,9 +30,18 @@ function countMissingObservationValues(job: TransformJob) {
 }
 
 export async function insertMissingDimensionsError(job: TransformJob, client = streamClient): Promise<void> {
-  const update = DELETE`
+  const deleteCurrent = DELETE`
     graph ?dataset { ?s ?p ?o }
-  `.INSERT`
+  `.WHERE`
+    graph ?dataset {
+      ?dataset ${cc.dimensionMetadata} ${job.dimensionMetadata.id} ; ${schema.error} ?currentError .
+      ?currentError ${schema.identifier} "${Error.MissingObservationValues}" .
+      ?currentError (<>|!<>)* ?s .
+      ?s ?p ?o .
+    }
+  `
+
+  const insertNew = INSERT`
     graph ?dataset {
       ?dataset ${schema.error} ?error .
       ?error
@@ -46,17 +55,6 @@ export async function insertMissingDimensionsError(job: TransformJob, client = s
       .
     }
   `.WHERE`
-    optional {
-      SELECT * {
-        graph ?dataset {
-          ?dataset ${cc.dimensionMetadata} ${job.dimensionMetadata.id} ; ${schema.error} ?currentError .
-          ?currentError ${schema.identifier} "${Error.MissingObservationValues}" .
-          ?currentError (<>|!<>)* ?s .
-          ?s ?p ?o .
-        }
-      }
-    }
-
     {
       ${countMissingObservationValues(job)}
     }
@@ -65,5 +63,10 @@ export async function insertMissingDimensionsError(job: TransformJob, client = s
     BIND(IRI(CONCAT(STR(?dataset), "#missing-values-error/", md5(str(?dim)))) as ?errorDim)
   `
 
-  return update.execute(client.query)
+  const updateError = sparql`
+    ${deleteCurrent};
+    ${insertNew}
+  `
+
+  return client.query.update(updateError.toString())
 }
