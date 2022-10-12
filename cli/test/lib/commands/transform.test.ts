@@ -24,8 +24,9 @@ describe('@cube-creator/cli/lib/commands/transform', function () {
   })
 
   describe('successful job', () => {
-    const job = `${env.API_CORE_BASE}cube-project/ubd/csv-mapping/jobs/test-job`
-    const expectedGraph = $rdf.namedNode(`${env.API_CORE_BASE}cube-project/ubd/cube-data`)
+    const projectNs = namespace(`${env.API_CORE_BASE}cube-project/ubd/`)
+    const job = `${projectNs().value}csv-mapping/jobs/test-job`
+    const expectedGraph = projectNs('cube-data')
     const cubeBase = 'https://environment.ld.admin.ch/foen/ubd/28/'
     const cubeNs = namespace(cubeBase)
     const cubeShape = cubeNs('shape/')
@@ -44,6 +45,20 @@ describe('@cube-creator/cli/lib/commands/transform', function () {
       const shape = await ASK`?shape a ${sh.NodeShape}`.FROM(expectedGraph).execute(ccClients.streamClient.query)
 
       expect(shape).to.be.true
+    })
+
+    it('removes previous errors from dataset', async () => {
+      const datasetGraph = projectNs.dataset
+
+      const hasPreviousErrors = ASK`
+        <dataset> schema:error <dataset#non-unique-observations> .
+        <dataset> schema:error <dataset#missing-values-error> ; ${schema.description} "Test message" .
+      `
+        .FROM(datasetGraph)
+        .prologue`BASE ${projectNs()}`
+        .execute(ccClients.parsingClient.query)
+
+      await expect(hasPreviousErrors).to.eventually.be.false
     })
 
     it('adds no sh:in to large dimension', async () => {

@@ -65,7 +65,11 @@ graph <cube-project/ubd/dataset> {
     schema:workExample <https://ld.admin.ch/application/visualize> ;
     schema:creativeWorkStatus <https://ld.admin.ch/vocabulary/CreativeWorkStatus/Draft> ;
     dcterms:creator <http://example.com/organization-id> ;
+    schema:error <cube-project/ubd/dataset#missing-values-error> ;
+    schema:error <cube-project/ubd/dataset#non-unique-observations> ;
   .
+
+  <cube-project/ubd/dataset#missing-values-error> schema:description "Test message" .
 
   <https://environment.ld.admin.ch/foen/ubd/28>
     a cube:Cube ;
