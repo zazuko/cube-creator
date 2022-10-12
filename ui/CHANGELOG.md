@@ -1,5 +1,11 @@
 # @cube-creator/ui
 
+## 1.12.9
+
+### Patch Changes
+
+- 131d8d16: Languages of a dynamic property were not being persisted (fixes #1303)
+
 ## 1.12.8
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @cube-creator/cli
 
+## 2.0.3
+
+### Patch Changes
+
+- 7b689c27: Message was linking to an old documentation page which no longer exists (fixes #1292)
+- d354f436: Show response when job update fails from timeout job
+
 ## 2.0.2
 
 ### Patch Changes
