@@ -1,9 +1,10 @@
-import { DELETE, INSERT, SELECT, sparql } from '@tpluscode/sparql-builder'
+import { INSERT, SELECT, sparql } from '@tpluscode/sparql-builder'
 import { cc, cube } from '@cube-creator/core/namespace'
 import { Error } from '@cube-creator/model/Dataset'
 import { TransformJob } from '@cube-creator/model/Job'
 import { schema } from '@tpluscode/rdf-ns-builders/strict'
 import { streamClient } from '../../query-client'
+import { deleteCurrentError } from './deleteCurrent'
 
 function countMissingObservationValues(job: TransformJob) {
   return SELECT`?dataset ?dim (COUNT(?undef) as ?totalUndefined)`
@@ -30,22 +31,10 @@ function countMissingObservationValues(job: TransformJob) {
 }
 
 export async function insertMissingDimensionsError(job: TransformJob, client = streamClient): Promise<void> {
-  const deleteCurrent = DELETE`
-    graph ?dataset { ?s ?p ?o }
-  `.WHERE`
-    graph ?dataset {
-      ?dataset ${cc.dimensionMetadata} ${job.dimensionMetadata.id} ; ${schema.error} ?currentError .
-      ?currentError ${schema.identifier} "${Error.MissingObservationValues}" .
-      ?currentError (<>|!<>)* ?s .
-      ?s ?p ?o .
-    }
-  `
-
   const insertNew = INSERT`
     graph ?dataset {
       ?dataset ${schema.error} ?error .
       ?error
-          ${schema.identifier} "${Error.MissingObservationValues}" ;
           ${schema.description} "There are observation values missing for some dimensions" ;
           ${schema.additionalProperty} ?errorDim .
       ?errorDim
@@ -59,12 +48,12 @@ export async function insertMissingDimensionsError(job: TransformJob, client = s
       ${countMissingObservationValues(job)}
     }
 
-    BIND(IRI(CONCAT(STR(?dataset), "#missing-values-error")) as ?error)
-    BIND(IRI(CONCAT(STR(?dataset), "#missing-values-error/", md5(str(?dim)))) as ?errorDim)
+    BIND(IRI(CONCAT(STR(?dataset), "#${Error.MissingObservationValues}")) as ?error)
+    BIND(IRI(CONCAT(STR(?dataset), "#${Error.MissingObservationValues}", md5(str(?dim)))) as ?errorDim)
   `
 
   const updateError = sparql`
-    ${deleteCurrent};
+    ${deleteCurrentError(Error.MissingObservationValues, job.dimensionMetadata.id)};
     ${insertNew}
   `
 
