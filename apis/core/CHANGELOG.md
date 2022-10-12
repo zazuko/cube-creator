@@ -1,5 +1,13 @@
 # @cube-creator/core-api
 
+## 2.0.5
+
+### Patch Changes
+
+- 4bc9e629: Cube errors were not cleared as expected after transformation (fixes #1290)
+- e4c83bbf: Prevent cube warnings without any text from appearing
+- ebcc1f2c: Update job would fail when updating to status "canceled" (fixes #1295)
+
 ## 2.0.4
 
 ### Patch Changes
