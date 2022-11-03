@@ -27,6 +27,11 @@
               <p class="has-text-weight-bold">
                 <tagged-literal :resource.prop="dimension.pointer" />
               </p>
+              <p class="abbreviations">
+                <span v-for="(abbreviation, index) in dimension.abbreviation" :key="index">
+                  <term-display :key="abbreviation.value" :term="abbreviation" :show-language="true" />
+                </span>
+              </p>
             </div>
             <shared-dimension-tags :dimension="dimension" />
           </div>
@@ -49,10 +54,11 @@ import LoadingBlock from '@/components/LoadingBlock.vue'
 import HydraOperationButton from '@/components/HydraOperationButton.vue'
 import SharedDimensionTags from '@/components/SharedDimensionTags.vue'
 import { mapGetters, mapState } from 'vuex'
+import TermDisplay from '@/components/TermDisplay.vue'
 
 export default defineComponent({
   name: 'CubeProjectsView',
-  components: { PageContent, LoadingBlock, HydraOperationButton, SharedDimensionTags },
+  components: { PageContent, LoadingBlock, HydraOperationButton, SharedDimensionTags, TermDisplay },
 
   async mounted (): Promise<void> {
     await this.$store.dispatch('sharedDimensions/fetchEntrypoint')
@@ -69,3 +75,9 @@ export default defineComponent({
   },
 })
 </script>
+
+<style scoped>
+.abbreviations span {
+  margin-left: 20px
+}
+</style>

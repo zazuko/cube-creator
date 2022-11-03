@@ -18,8 +18,7 @@ import { IdentifierMapping, LiteralColumnMapping, ReferenceColumnMapping } from 
 import { Link } from '@cube-creator/model/lib/Link'
 import { dcterms, oa, rdf, rdfs, schema } from '@tpluscode/rdf-ns-builders'
 import { RdfResource, ResourceIdentifier } from '@tpluscode/rdfine/RdfResource'
-import { Collection } from 'alcaeus'
-import { ProjectDetails, SharedDimension, SharedDimensionTerm } from './types'
+import { ProjectDetails, SharedDimensionTerm } from './types'
 
 export const displayLanguage = ['en', 'de', 'fr', '']
 
