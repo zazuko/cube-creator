@@ -58,6 +58,7 @@ export interface SharedDimension extends Resource {
   terms?: Term
   validThrough?: Date
   export?: Resource
+  deprecated: boolean
 }
 
 export interface SharedDimensionTerm extends Resource {

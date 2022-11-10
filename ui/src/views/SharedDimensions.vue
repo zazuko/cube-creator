@@ -15,14 +15,20 @@
         />
       </div>
       <language-select
+        style="margin-left: 15px;"
         :selected-language="selectedLanguage"
         @language-selected="selectLanguage"
       />
     </div>
     <div v-if="collection">
+      <div class="panel-block is-flex is-justify-content-center">
+        <o-checkbox :model-value="showAll" @update:modelValue="toggleDisplay">
+          show deprecated
+        </o-checkbox>
+      </div>
       <div v-if="dimensions.length > 0" class="panel">
         <router-link
-          v-for="dimension in dimensions"
+          v-for="dimension in displayed"
           :key="dimension.id.value"
           :to="{ name: 'SharedDimension', params: { id: dimension.clientPath } }"
           class="panel-block"
@@ -61,6 +67,7 @@ import SharedDimensionTags from '@/components/SharedDimensionTags.vue'
 import { mapGetters, mapState } from 'vuex'
 import LanguageSelect from '@/components/LanguageSelect.vue'
 import TermWithLanguage from '@/components/TermWithLanguage.vue'
+import { SharedDimension } from '@/store/types'
 
 export default defineComponent({
   name: 'CubeProjectsView',
@@ -71,6 +78,12 @@ export default defineComponent({
     HydraOperationButton,
     SharedDimensionTags,
     LanguageSelect
+  },
+
+  data () {
+    return {
+      showAll: false
+    }
   },
 
   async mounted (): Promise<void> {
@@ -88,12 +101,22 @@ export default defineComponent({
     ...mapGetters('sharedDimensions', {
       dimensions: 'dimensions',
     }),
+    displayed (): SharedDimension[] {
+      if (this.showAll) { return this.dimensions }
+
+      return this.dimensions
+        .filter((dimension: any) => !dimension.deprecated)
+    },
   },
 
   methods: {
     selectLanguage (language: string): void {
       this.$store.dispatch('app/selectLanguage', language)
     },
+
+    toggleDisplay () {
+      this.showAll = !this.showAll
+    }
   }
 })
 </script>
@@ -101,9 +124,5 @@ export default defineComponent({
 <style scoped>
 .abbreviations span {
   margin-right: 20px
-}
-
-#language {
-  margin-left: 20px;
 }
 </style>
