@@ -1,4 +1,4 @@
-import { shape, editor } from '@cube-creator/core/namespace'
+import { shape, editor, lindasSchema } from '@cube-creator/core/namespace'
 import { supportedLanguages } from '@cube-creator/core/languages'
 import { hydra, rdfs, sh, dcat, dcterms, xsd, rdf, vcard, schema, _void, dash, skos } from '@tpluscode/rdf-ns-builders'
 import { sparql, turtle } from '@tpluscode/rdf-string'
@@ -133,6 +133,24 @@ ${shapeId} {
       ${sh.uniqueLang} true ;
       ${sh.order} 10 ;
       ${sh.description} "A publishable title describing the cube. Please add entries for all [languages](https://github.com/zazuko/cube-creator/wiki/2.-Cube-Designer#languages)." ;
+      ${sh.group} ${mainGroup} ;
+    ] ;
+    ${sh.property} [
+      ${sh.name} "Abbreviation" ;
+      ${sh.path} ${schema.alternateName} ;
+      ${sh.datatype} ${rdf.langString} ;
+      ${sh.languageIn} ( ${supportedLanguages} ) ;
+      ${sh.uniqueLang} true ;
+      ${sh.order} 15 ;
+      ${sh.group} ${mainGroup} ;
+    ] ;
+    ${sh.property} [
+      ${sh.name} "Subtitle" ;
+      ${sh.path} ${schema.disambiguatingDescription} ;
+      ${sh.datatype} ${rdf.langString} ;
+      ${sh.languageIn} ( ${supportedLanguages} ) ;
+      ${sh.uniqueLang} true ;
+      ${sh.order} 15 ;
       ${sh.group} ${mainGroup} ;
     ] ;
     ${sh.property} [
@@ -273,6 +291,14 @@ ${shapeId} {
       ${sh.group} ${mainGroup} ;
     ] ;
     ${sh.property} [
+      ${sh.name} "Planned update" ;
+      ${sh.path} ${lindasSchema.datasetNextDateModified} ;
+      ${sh.maxCount} 1 ;
+      ${sh.datatype} ${xsd.date} ;
+      ${sh.order} 100 ;
+      ${sh.group} ${mainGroup} ;
+    ] ;
+    ${sh.property} [
       ${sh.name} "Category" ;
       ${sh.path} ${dcat.theme} ;
       ${sh.minCount} 1 ;
@@ -286,7 +312,7 @@ ${shapeId} {
     ] ;
     ${sh.property} [
       ${sh.name} "EU Data Theme Category" ;
-      ${sh.path} <https://schema.ld.admin.ch/euDataTheme> ;
+      ${sh.path} ${lindasSchema.euDataTheme} ;
       ${sh.minLength} 1 ;
       ${sh.order} 105 ;
       ${sh.description} "The Data Theme Category for the classification in the European Data Catalogs.";
