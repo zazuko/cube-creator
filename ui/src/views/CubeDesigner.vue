@@ -25,9 +25,11 @@ export default defineComponent({
   components: { CubePreview, LoadingBlock },
 
   computed: {
+    ...mapState('app', [
+      'selectedLanguage',
+    ]),
     ...mapState('project', [
       'cubeMetadata',
-      'selectedLanguage',
       'dimensionMetadataCollection',
     ]),
     ...mapGetters('project', {
@@ -42,7 +44,7 @@ export default defineComponent({
 
   methods: {
     selectLanguage (language: string): void {
-      this.$store.dispatch('project/selectLanguage', language)
+      this.$store.dispatch('app/selectLanguage', language)
     },
 
     refreshDimensions (): void {

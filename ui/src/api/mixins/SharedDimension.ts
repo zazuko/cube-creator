@@ -8,6 +8,9 @@ import { schema } from '@tpluscode/rdf-ns-builders/strict'
 
 export default function mixin<Base extends Constructor> (base: Base) {
   class Impl extends ThingMixin(base) implements Partial<Hierarchy> {
+    @property({ path: schema.name, values: 'array' })
+    names!: Term[]
+
     @property({ path: schema.alternateName, values: 'array' })
     abbreviation!: Term[]
 
