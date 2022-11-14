@@ -16,16 +16,10 @@
                 </div>
               </div>
               <div class="level-right">
-                <o-select
-                  :model-value="selectedLanguage"
-                  @update:modelValue="$emit('selectLanguage', $event)"
-                  class="level-item"
-                  title="Language"
-                >
-                  <option v-for="language in languages" :key="language" :value="language">
-                    {{ language }}
-                  </option>
-                </o-select>
+                <language-select
+                  :selected-language="selectedLanguage"
+                  @language-selected="$emit('selectLanguage', $event)"
+                />
               </div>
             </div>
           </th>
@@ -148,7 +142,6 @@ import * as Schema from '@rdfine/schema'
 import * as $rdf from '@rdf-esm/dataset'
 import { debounce } from 'debounce'
 import type { Cube, Dataset, DimensionMetadata, DimensionMetadataCollection } from '@cube-creator/model'
-import { supportedLanguages } from '@cube-creator/core/languages'
 import { api } from '@/api'
 import Remote, { RemoteData } from '@/remote'
 import BMessage from './BMessage.vue'
@@ -157,6 +150,7 @@ import TermWithLanguage from './TermWithLanguage.vue'
 import LoadingBlock from './LoadingBlock.vue'
 import CubePreviewDimension from './CubePreviewDimension.vue'
 import CubePreviewValue from './CubePreviewValue.vue'
+import LanguageSelect from './LanguageSelect.vue'
 
 const debounceRefreshDelay = 500
 
@@ -169,6 +163,7 @@ export default defineComponent({
     HydraOperationButton,
     LoadingBlock,
     TermWithLanguage,
+    LanguageSelect
   },
   props: {
     cubeMetadata: {
@@ -191,7 +186,6 @@ export default defineComponent({
   emits: ['selectLanguage', 'refreshDimensions'],
 
   data (): {
-    languages: string[],
     pageSize: number,
     page: number,
     pageSizes: number[],
@@ -200,7 +194,6 @@ export default defineComponent({
     debouncedFetchCubeData: () => Promise<void>,
     } {
     return {
-      languages: supportedLanguages.map(({ value }) => value),
       pageSize: 10,
       page: 1,
       pageSizes: [10, 20, 50, 100],

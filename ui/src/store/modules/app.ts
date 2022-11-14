@@ -14,6 +14,7 @@ export interface AppState {
   messages: Message[]
   loading: boolean
   commonRDFProperties: string[]
+  selectedLanguage: string
 }
 
 const initialState = {
@@ -21,6 +22,7 @@ const initialState = {
   messages: [],
   loading: false,
   commonRDFProperties: [],
+  selectedLanguage: 'en',
 }
 
 const getters: GetterTree<AppState, RootState> = {
@@ -39,6 +41,10 @@ const actions: ActionTree<AppState, RootState> = {
     const properties = await loadCommonProperties()
     context.commit('storeCommonRDFProperties', properties)
   },
+
+  selectLanguage (context, language) {
+    context.commit('storeSelectedLanguage', language)
+  },
 }
 
 const mutations: MutationTree<AppState> = {
@@ -56,6 +62,10 @@ const mutations: MutationTree<AppState> = {
 
   storeCommonRDFProperties (state, properties) {
     state.commonRDFProperties = properties
+  },
+
+  storeSelectedLanguage (state, language) {
+    state.selectedLanguage = language
   },
 }
 

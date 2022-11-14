@@ -1,6 +1,6 @@
 <template>
   <div class="is-flex gap-1">
-    <span v-if="dimension.validThrough <= new Date()" class="tag is-warning is-light">
+    <span v-if="dimension.deprecated" class="tag is-warning is-light">
       deprecated
     </span>
     <span v-if="!dimension.actions.replace" class="tag is-light">

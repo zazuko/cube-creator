@@ -54,9 +54,11 @@ export interface Hierarchy extends Resource {
 
 export interface SharedDimension extends Resource {
   name?: string
+  abbreviation: Term[]
   terms?: Term
   validThrough?: Date
   export?: Resource
+  deprecated: boolean
 }
 
 export interface SharedDimensionTerm extends Resource {

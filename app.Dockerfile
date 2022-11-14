@@ -1,5 +1,5 @@
 # First step: build the assets
-FROM node:lts-alpine AS builder
+FROM node:16-alpine AS builder
 
 # Do not install Cypress
 ENV CYPRESS_INSTALL_BINARY=0

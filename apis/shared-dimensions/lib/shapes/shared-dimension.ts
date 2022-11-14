@@ -24,12 +24,20 @@ const properties: Initializer<PropertyShape>[] = [{
   path: schema.name,
   uniqueLang: true,
   minCount: 1,
-  maxCount: 4,
+  maxCount: supportedLanguages.length,
   languageIn: supportedLanguages,
   order: 10,
   group: propertyGroup(defaultGroup, {
     label: 'Dimension',
   }),
+}, {
+  name: 'Abbreviation',
+  path: schema.alternateName,
+  languageIn: supportedLanguages,
+  maxCount: supportedLanguages.length,
+  uniqueLang: true,
+  order: 15,
+  group: defaultGroup,
 }, {
   name: 'Valid from',
   path: schema.validFrom,

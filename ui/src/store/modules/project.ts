@@ -43,7 +43,6 @@ export interface ProjectState {
   cubeMetadata: null | Dataset
   dimensionMetadataCollection: null | DimensionMetadataCollection
   jobCollection: null | JobCollection
-  selectedLanguage: string
 }
 
 const getInitialState = () => ({
@@ -57,7 +56,6 @@ const getInitialState = () => ({
   cubeMetadata: null,
   dimensionMetadataCollection: null,
   jobCollection: null,
-  selectedLanguage: 'en',
 })
 
 const getters: GetterTree<ProjectState, RootState> = {
@@ -301,10 +299,6 @@ const actions: ActionTree<ProjectState, RootState> = {
 
     return collection
   },
-
-  selectLanguage (context, language) {
-    context.commit('storeSelectedLanguage', language)
-  },
 }
 
 const mutations: MutationTree<ProjectState> = {
@@ -371,10 +365,6 @@ const mutations: MutationTree<ProjectState> = {
 
   storeJobCollection (state, collection) {
     state.jobCollection = collection ? serializeJobCollection(collection) : null
-  },
-
-  storeSelectedLanguage (state, language) {
-    state.selectedLanguage = language
   },
 
   reset (state) {
