@@ -3,6 +3,7 @@ import $rdf from 'rdf-ext'
 import { CONSTRUCT, sparql } from '@tpluscode/sparql-builder'
 import { SparqlGraphQueryExecutable, SparqlQuery, SparqlQueryExecutable } from '@tpluscode/sparql-builder/lib'
 import { schema } from '@tpluscode/rdf-ns-builders/strict'
+import { lindasSchema } from '@cube-creator/core/namespace'
 import * as DetailParts from './details/index'
 
 export interface ProjectDetailPart {
@@ -34,6 +35,7 @@ export function getProjectDetails({
         ${schema.name} ${labels} ;
         ${schema.value} ${variable} ;
         ${schema.about} ${project} ;
+        ${lindasSchema.datasetNextDateModified} ?dateNextModified ;
       .`,
       patterns: sparql`${patterns}
 
