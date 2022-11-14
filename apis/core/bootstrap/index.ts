@@ -5,8 +5,9 @@ import { cubeProjects } from './cube-projects'
 import { entrypoint } from './entrypoint'
 import { organizations } from './organizations'
 import shapes from './shapes'
+import { users } from './users'
 
-const resources = [cubeProjects, entrypoint, organizations, ...shapes]
+const resources = [cubeProjects, entrypoint, organizations, ...shapes, users]
 
 export async function bootstrap(storeUrl: string, base: string) {
   log('Bootstrapping API resources')

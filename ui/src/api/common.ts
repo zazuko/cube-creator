@@ -24,6 +24,7 @@ export function getOperation (resource: RdfResource, idOrType: NamedNode): Runti
 }
 
 export const commonActions = (resource: RdfResource, additionalActions: Record<string, NamedNode> = {}): Actions => ({
+  get: findOperation(resource, schema.DownloadAction),
   create: findOperation(resource, schema.CreateAction),
   edit: findOperation(resource, schema.UpdateAction),
   replace: findOperation(resource, schema.ReplaceAction),

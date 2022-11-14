@@ -1,5 +1,5 @@
 import { ActionTree, MutationTree, GetterTree } from 'vuex'
-import { api } from '@/api'
+import { api, rootURL } from '@/api'
 import { RootState } from '../types'
 import * as ns from '@cube-creator/core/namespace'
 import { Project, ProjectsCollection } from '@cube-creator/model'
@@ -25,13 +25,22 @@ const getters: GetterTree<ProjectsState, RootState> = {
 }
 
 const actions: ActionTree<ProjectsState, RootState> = {
-  async fetchCollection (context) {
+  async fetchCollection (context, query) {
     const entrypoint = context.rootState.api.entrypoint
     const collectionURI = entrypoint?.get(ns.cc.projects)?.id
 
     if (!collectionURI) throw new Error('Missing projects collection in entrypoint')
 
-    const collection = await api.fetchResource(collectionURI.value)
+    let params: URLSearchParams
+    if (query) {
+      params = new URLSearchParams(query)
+    } else {
+      params = new URLSearchParams({
+        author: `${rootURL}user/${context.rootState.auth.user.sub}`,
+      })
+    }
+
+    const collection = await api.fetchResource(collectionURI.value + '?' + params.toString())
     context.commit('storeCollection', collection)
   },
 

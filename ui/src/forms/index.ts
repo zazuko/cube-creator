@@ -41,7 +41,7 @@ export const group: GroupTemplate = (renderer, { properties }) => {
   const activeClass = renderer.group.selected ? '' : 'is-hidden'
 
   return html`
-  <div class="${activeClass}">
+  <div class="${activeClass}" style="display: var(--cc-form-group-display); justify-content: var(--cc-form-group-justify-content)">
     ${repeat(properties, property => renderer.renderProperty({ property }))}
   </div>
   `

@@ -54,3 +54,9 @@ export default defineComponent({
   },
 })
 </script>
+
+<style>
+.select, select {
+   width: 100%;
+}
+</style>

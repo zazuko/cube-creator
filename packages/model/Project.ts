@@ -42,9 +42,8 @@ export interface ImportProject extends Project {
 
 export type CubeProject = CsvProject | ImportProject
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ProjectsCollection extends Collection<CsvProject | ImportProject> {
-
+  searchParams: GraphPointer
 }
 
 export const isCsvProject = (project: CsvProject | ImportProject): project is CsvProject => {

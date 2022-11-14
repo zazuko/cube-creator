@@ -3,7 +3,7 @@ import { supportedLanguages } from '@cube-creator/core/languages'
 import { hydra, rdfs, sh, dcat, dcterms, xsd, rdf, vcard, schema, _void, dash, skos } from '@tpluscode/rdf-ns-builders'
 import { sparql, turtle } from '@tpluscode/rdf-string'
 import $rdf from 'rdf-ext'
-import { Draft, Published } from '@cube-creator/model/Cube'
+import { Draft } from '@cube-creator/model/Cube'
 import env from '@cube-creator/core/env'
 import { lindasQuery } from '../lib/query'
 
@@ -200,11 +200,8 @@ ${shapeId} {
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
       ${sh.nodeKind} ${sh.IRI} ;
-      ${sh.in}
-          (
-              ${Draft}
-              ${Published}
-          ) ;
+      ${dash.editor} ${dash.InstancesSelectEditor} ;
+      ${hydra.collection} </cube-projects/status> ;
       ${sh.defaultValue} ${Draft} ;
       ${sh.order} 30 ;
       ${sh.description} "Only published datasets will be listed in the external tools. A draft will be nevertheless be public." ;
@@ -430,12 +427,6 @@ ${shapeId} {
 
 <https://ld.admin.ch/application/opendataswiss> a skos:Concept ;
   rdfs:label "opendata.swiss" .
-
-${Published} a schema:DefinedTerm;
-  rdfs:label "Published" .
-
-${Draft} a schema:DefinedTerm;
-  rdfs:label "Draft" .
 
 }
 `

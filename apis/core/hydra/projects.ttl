@@ -7,6 +7,8 @@ prefix sh:     <http://www.w3.org/ns/shacl#>
 PREFIX schema: <http://schema.org/>
 prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix hex:    <https://w3id.org/hydra/extension#>
+prefix hydra-box: <http://hydra-box.org/schema/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
 
 cc:CubeProject
   a
@@ -79,6 +81,7 @@ cc:dataset
 cc:ProjectsCollection
   a
     hydra:Class ;
+  query:include dcterms:creator ;
   hydra:supportedOperation
     [
       a
@@ -99,6 +102,58 @@ cc:ProjectsCollection
             <file:handlers/cube-projects#post> ;
         ] ;
       hex:multiPartPath cc:export ;
+    ],
+    [
+      a hydra:Operation, schema:DownloadAction ;
+      hydra:method "GET" ;
+      hydra:title "Search" ;
+      code:implementedBy
+        [
+          a
+            code:EcmaScript ;
+          code:link
+            <node:@hydrofoil/labyrinth/collection#get>
+        ] ;
+      hydra:expects <shape/cube-project/search> ;
+      hydra-box:variables
+        [
+          a
+            hydra:IriTemplate ;
+          hydra:variableRepresentation hydra:ExplicitRepresentation ;
+          hydra:template
+            "/cube-projects{?author,status,q}" ;
+          hydra:mapping
+            [
+              a hydra:IriTemplateMapping ;
+              hydra:property hydra:freetextQuery ;
+              hydra:variable "q" ;
+              query:filter
+                [
+                  a code:EcmaScript ;
+                  code:link <file:domain/cube-projects/search#byFreeText> ;
+                ] ;
+            ],
+            [
+              a hydra:IriTemplateMapping ;
+              hydra:property dcterms:creator ;
+              hydra:variable "author" ;
+              query:filter
+                [
+                  a code:EcmaScript ;
+                  code:link <file:domain/cube-projects/search#byUser> ;
+                ] ;
+            ],
+            [
+              a hydra:IriTemplateMapping ;
+              hydra:property schema:creativeWorkStatus ;
+              hydra:variable "status" ;
+              query:filter
+                [
+                  a code:EcmaScript ;
+                  code:link <file:domain/cube-projects/search#byStatus> ;
+                ] ;
+            ] ;
+        ]
     ] .
 
 <shape/cube-project/create>
@@ -106,6 +161,10 @@ cc:ProjectsCollection
     sh:Shape .
 
 <shape/cube-project/update>
+  a
+    sh:Shape .
+
+<shape/cube-project/search>
   a
     sh:Shape .
 

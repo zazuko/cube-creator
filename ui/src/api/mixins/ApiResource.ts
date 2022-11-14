@@ -8,6 +8,7 @@ import { rdfs } from '@tpluscode/rdf-ns-builders'
 
 export interface Actions {
   [key: string]: RuntimeOperation | null
+  get: RuntimeOperation | null
   create: RuntimeOperation | null
   edit: RuntimeOperation | null
   replace: RuntimeOperation | null

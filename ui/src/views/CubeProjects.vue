@@ -15,13 +15,14 @@
       </div>
     </div>
     <div v-if="projectsCollection">
-      <div class="panel-tabs">
-        <router-link :to="{ query: { creator: 'me' } }" v-if="user" v-slot="{ href, navigate, route }" custom>
-          <a :href="href" @click="navigate" :class="{ 'is-active': isRouteActive(route, $route) }">Mine</a>
-        </router-link>
-        <router-link :to="{ query: { creator: 'all' } }" v-slot="{ href, navigate, route }" custom>
-          <a :href="href" @click="navigate" :class="{ 'is-active': isRouteActive(route, $route) }">All</a>
-        </router-link>
+      <div class="panel-block">
+        <cc-hydra-operation-form
+          inline clearable
+          :operation.prop="operation"
+          :resource.prop="searchParams"
+          :shape.prop="shape"
+          @submit="onSearch"
+        />
       </div>
       <div v-if="projects.length > 0" class="panel">
         <cube-projects-item
@@ -42,7 +43,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, shallowRef } from 'vue'
 import { Project } from '@cube-creator/model'
 import CubeProjectsItem from '@/components/CubeProjectsItem.vue'
 import PageContent from '@/components/PageContent.vue'
@@ -50,6 +51,10 @@ import LoadingBlock from '@/components/LoadingBlock.vue'
 import HydraOperationButton from '@/components/HydraOperationButton.vue'
 import { mapGetters, mapState } from 'vuex'
 import { isRouteActive } from '@/router'
+import { useHydraForm } from '@/use-hydra-form'
+import '@/customElements/HydraOperationForm'
+import { hydraBox } from '@cube-creator/core/namespace'
+import { IriTemplate } from 'alcaeus'
 
 export default defineComponent({
   name: 'CubeProjectsView',
@@ -58,9 +63,18 @@ export default defineComponent({
   async mounted (): Promise<void> {
     await this.$store.dispatch('projects/fetchCollection')
 
-    // Default to filter "my" projects
-    if (!this.$route.query.creator && this.user) {
-      this.$router.replace({ query: { creator: 'me' } })
+    this.operation = this.projectsCollection.actions.get
+    this.searchParams = this.projectsCollection.searchParams
+  },
+
+  setup () {
+    const operation = shallowRef()
+
+    const form = useHydraForm(operation)
+
+    return {
+      ...form,
+      searchParams: shallowRef()
     }
   },
 
@@ -73,18 +87,36 @@ export default defineComponent({
     }),
 
     projects (): Project[] {
-      const projects: Project[] = this.projectsCollection?.member ?? []
-
-      if (this.$route.query.creator === 'all' || !this.user) {
-        return projects
-      } else {
-        return projects.filter(({ creator }) => creator.name === this.user.name)
-      }
+      return this.projectsCollection?.member ?? []
     },
+  },
+
+  async beforeRouteUpdate (to) {
+    await this.$store.dispatch('projects/fetchCollection', to.query)
+    this.searchParams = this.projectsCollection.searchParams
   },
 
   methods: {
     isRouteActive,
+
+    onSearch (e: CustomEvent) {
+      const template = this.operation?.get<IriTemplate>(hydraBox.variables)
+      if (template && e.detail?.value) {
+        const url = template.expand(e.detail.value)
+        const search = new URLSearchParams(url.substring(url.indexOf('?')))
+        const entries = [...search.entries()].filter(([, value]) => !!value && value !== '""')
+
+        this.$router.push({
+          query: Object.fromEntries(entries),
+        })
+      }
+    }
   },
 })
 </script>
+
+<style scoped>
+cc-hydra-operation-form {
+  width: 100%;
+}
+</style>

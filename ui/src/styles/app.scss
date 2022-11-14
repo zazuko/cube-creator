@@ -9,6 +9,7 @@
 form-property {
     display: block;
     margin-bottom: 0.75rem;
+    flex-grow: var(--cc-form-property-flex-grow);
 }
 
 form-object {

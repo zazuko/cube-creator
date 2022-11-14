@@ -7,6 +7,7 @@ export const baseUri = env.maybe.API_CORE_BASE || ''
 type ShapeTerms =
   'cube-project/create' |
   'cube-project/update' |
+  'cube-project/search' |
   'table/create' |
   'table/update' |
   'csv-source/create' |

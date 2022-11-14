@@ -45,6 +45,11 @@ With Class api:EntryPoint {
                     Expect Property schema:hasPart
                 }
 
+                Expect Link dcterms:author {
+                    Expect Type schema:Person
+                    Expect Property schema:name "john-doe"
+                }
+
                 // Project dataset
                 Expect Link cc:dataset {
                   Expect Property schema:hasPart {

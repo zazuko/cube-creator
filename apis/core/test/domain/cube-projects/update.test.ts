@@ -22,7 +22,6 @@ import * as orgQueries from '../../../lib/domain/organization/query'
 describe('domain/cube-projects/update', () => {
   let store: TestResourceStore
   const user = $rdf.namedNode('userId')
-  const userName = 'User Name'
   const projectsCollection = clownface({ dataset: $rdf.dataset() }).namedNode('projects')
   let projectExists: sinon.SinonStub
   let previouslyPublished: sinon.SinonStub
@@ -62,7 +61,7 @@ describe('domain/cube-projects/update', () => {
 
     beforeEach(async () => {
       const resource = projectPointer()
-      project = (await createProject({ resource, store, projectsCollection, user, userName })).project.pointer as any
+      project = (await createProject({ resource, store, projectsCollection, user })).project.pointer as any
 
       const datasetBefore = await store.get(project.out(cc.dataset).term)
       datasetBefore.out(schema.hasPart)
@@ -331,7 +330,7 @@ describe('domain/cube-projects/update', () => {
         .addOut(dcterms.identifier, 'new/cube')
 
       // when
-      const promise = createProject({ resource, store, projectsCollection, user, userName })
+      const promise = createProject({ resource, store, projectsCollection, user })
 
       // then
       await expect(promise).eventually.rejectedWith(DomainError)
@@ -347,7 +346,7 @@ describe('domain/cube-projects/update', () => {
         .addOut(schema.maintainer, bar.id)
 
       // when
-      const promise = createProject({ resource, store, projectsCollection, user, userName })
+      const promise = createProject({ resource, store, projectsCollection, user })
 
       // then
       await expect(promise).eventually.rejectedWith(DomainError)
@@ -368,7 +367,7 @@ describe('domain/cube-projects/update', () => {
 
     beforeEach(async () => {
       const resource = projectPointer()
-      project = (await createProject({ resource, store, projectsCollection, user, userName })).project.pointer as any
+      project = (await createProject({ resource, store, projectsCollection, user })).project.pointer as any
 
       const datasetBefore = await store.get(project.out(cc.dataset).term)
       datasetBefore.out(schema.hasPart)
