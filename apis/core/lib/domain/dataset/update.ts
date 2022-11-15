@@ -1,19 +1,22 @@
 import { NamedNode } from 'rdf-js'
-import { cc } from '@cube-creator/core/namespace'
+import { cc, lindasSchema } from '@cube-creator/core/namespace'
 import { dcat, hydra, rdf, schema, vcard, _void } from '@tpluscode/rdf-ns-builders'
 import { GraphPointer } from 'clownface'
 import { ResourceStore } from '../../ResourceStore'
+import * as projectQuery from '../cube-projects/queries'
 
 interface AddMetaDataCommand {
   dataset: GraphPointer<NamedNode>
   resource: GraphPointer
   store: ResourceStore
+  findProject?(arg: { dataset: GraphPointer }): Promise<NamedNode | undefined>
 }
 
 export async function update({
   dataset,
   resource,
   store,
+  findProject = projectQuery.findProject,
 }: AddMetaDataCommand): Promise<GraphPointer> {
   const datasetResource = await store.get(dataset.term)
 
@@ -54,6 +57,11 @@ export async function update({
       }
     })
   })
+
+  const project = await store.get(await findProject({ dataset }), { allowMissing: true })
+  project
+    ?.deleteOut(lindasSchema.datasetNextDateModified)
+    .addOut(lindasSchema.datasetNextDateModified, datasetResource.out(lindasSchema.datasetNextDateModified))
 
   return datasetResource
 }
