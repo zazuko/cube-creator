@@ -150,7 +150,7 @@ ${shapeId} {
       ${sh.datatype} ${rdf.langString} ;
       ${sh.languageIn} ( ${supportedLanguages} ) ;
       ${sh.uniqueLang} true ;
-      ${sh.order} 15 ;
+      ${sh.order} 16 ;
       ${sh.group} ${mainGroup} ;
     ] ;
     ${sh.property} [
