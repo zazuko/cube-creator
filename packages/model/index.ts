@@ -1,5 +1,5 @@
 export { OrganizationMixin } from './Organization'
-export type { CsvProject, ImportProject, Project, ProjectsCollection } from './Project'
+export type { CsvProject, ImportProject, Project, CubeProject, ProjectsCollection } from './Project'
 export { ProjectMixin } from './Project'
 export type { CsvMapping } from './CsvMapping'
 export { CsvMappingMixin } from './CsvMapping'

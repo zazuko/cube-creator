@@ -1,8 +1,9 @@
 import { Actions } from '@/api/mixins/ApiResource'
-import { cc, cube, md } from '@cube-creator/core/namespace'
+import { cc, cube } from '@cube-creator/core/namespace'
 import {
   ColumnMapping,
   CsvColumn,
+  CubeProject,
   CsvSource,
   Cube,
   Dataset,
@@ -25,8 +26,22 @@ export const displayLanguage = ['en', 'de', 'fr', '']
 export function serializeProjectsCollection (collection: ProjectsCollection): ProjectsCollection {
   return Object.freeze({
     ...serializeResource(collection),
-    member: collection.member.sort((a, b) => a.label.localeCompare(b.label)),
+    member: collection.member.sort(sortProject),
   }) as ProjectsCollection
+}
+
+function sortProject (a: CubeProject, b: CubeProject) {
+  const aPlannedUpdate = a.plannedNextUpdate?.toISOString()
+  if (!aPlannedUpdate) {
+    return 1
+  }
+
+  const bPlannedUpdate = b.plannedNextUpdate?.toISOString()
+  if (!bPlannedUpdate) {
+    return -1
+  }
+
+  return aPlannedUpdate.localeCompare(bPlannedUpdate) || a.label.localeCompare(b.label)
 }
 
 export function serializeProjectDetails (details: RdfResource): ProjectDetails {

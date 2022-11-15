@@ -1,7 +1,7 @@
 <template>
   <div class="is-flex is-flex-direction-column is-align-items-stretch p-0">
-    <div class="is-flex is-justify-content-space-between p-2">
-      <div class="is-flex-grow-1">
+    <div class="grid p-2">
+      <div>
         <router-link
           :to="{ name: 'CubeProject', params: { id: project.clientPath } }"
           class="is-block has-text-weight-bold"
@@ -13,7 +13,15 @@
           {{ project.cubeIdentifier || (project.sourceCube && project.sourceCube.value) }}
         </p>
       </div>
-      <div class="is-flex is-align-items-center gap-2">
+      <div>
+        <div v-if="project.plannedNextUpdate">
+          <p>Next update in</p>
+          <span :class="nextUpdateWarning(project.plannedNextUpdate)">
+            {{ timeUntilNextUpdate(project.plannedNextUpdate) }}
+          </span>
+        </div>
+      </div>
+      <div class="is-flex is-align-items-center gap-2 owners">
         <div v-if="project.maintainer" class="is-flex is-flex-direction-column is-align-items-flex-end">
           <p class="tag">
             {{ project.maintainer.displayLabel }}
@@ -52,12 +60,16 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
 import { mapGetters } from 'vuex'
-
+import humanizeDuration, { HumanizerOptions } from 'humanize-duration'
 import { Project } from '@cube-creator/model'
 import { RdfResource } from 'alcaeus'
 
 import LoadingBlock from '../components/LoadingBlock.vue'
 import ExternalTerm from '../components/ExternalTerm.vue'
+
+const msInDay = /* hours */ 24 * /* seconds */ 3600 * /* milliseconds */ 1000
+const twentyDays = 20 * msInDay
+const thirtyDays = 30 * msInDay
 
 export default defineComponent({
   name: 'CubeProjectsItem',
@@ -93,6 +105,42 @@ export default defineComponent({
 
       this.detailsShown = !this.detailsShown
     },
+
+    timeUntilNextUpdate (nextUpdate: Date) {
+      const duration = nextUpdate.valueOf() - new Date().valueOf()
+
+      let sign = ''
+      if (duration < 0) {
+        sign = '- '
+      }
+
+      const options: HumanizerOptions = { largest: 1, round: true }
+      if (duration < thirtyDays) {
+        options.units = ['d']
+      }
+
+      return sign + humanizeDuration(duration, options)
+    },
+
+    nextUpdateWarning (nextUpdate: Date) {
+      const duration = nextUpdate.valueOf() - new Date().valueOf()
+      if (duration < twentyDays) {
+        return 'has-background-warning'
+      }
+
+      return ''
+    }
   },
 })
 </script>
+
+<style>
+.grid {
+  display: grid;
+  grid-template-columns: 5fr 2fr 1fr;
+}
+
+.owners {
+  text-align: right;
+}
+</style>
