@@ -34,6 +34,8 @@ const actions: ActionTree<ProjectsState, RootState> = {
     let params: URLSearchParams
     if (query) {
       params = new URLSearchParams(query)
+    } else if (location.search) {
+      params = new URLSearchParams(location.search)
     } else {
       params = new URLSearchParams({
         author: `${rootURL}user/${context.rootState.auth.user.sub}`,
