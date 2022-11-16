@@ -4,7 +4,7 @@ import { Constructor, namespace, property, RdfResource, ResourceIdentifier } fro
 import type { GraphPointer } from 'clownface'
 import RdfResourceImpl, { Initializer, RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
-import { cc } from '@cube-creator/core/namespace'
+import { cc, lindasSchema } from '@cube-creator/core/namespace'
 import { dcterms, schema } from '@tpluscode/rdf-ns-builders'
 import { Organization, Person, PersonMixin } from '@rdfine/schema'
 import type { Collection } from '@rdfine/hydra'
@@ -27,6 +27,7 @@ export interface Project extends RdfResource {
   sourceKind: NamedNode
   export: Link
   details: Link
+  plannedNextUpdate?: Date
 }
 
 export interface CsvProject extends Project {
@@ -38,6 +39,8 @@ export interface ImportProject extends Project {
   sourceGraph: NamedNode | undefined
   sourceEndpoint: NamedNode
 }
+
+export type CubeProject = CsvProject | ImportProject
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ProjectsCollection extends Collection<CsvProject | ImportProject> {
@@ -92,6 +95,9 @@ export function ProjectMixin<Base extends Constructor>(base: Base): Mixin {
 
     @property.resource({ path: cc.projectDetails, initial: childResource('details') })
     details!: Link
+
+    @property.literal({ path: lindasSchema.datasetNextDateModified, type: Date })
+    plannedNextUpdate?: Date
   }
 
   return Impl

@@ -30,7 +30,7 @@ graph <cube-project/ubd> {
     dcterms:identifier "ubd/28" ;
     cc:latestPublishedRevision 1 ;
     cc:csvMapping <cube-project/ubd/csv-mapping> ;
-    dcterms:creator <user> ;
+    dcterms:creator <user/ubd-test> ;
     rdfs:label "UBD28 Project" ;
     cc:jobCollection <cube-project/ubd/jobs> ;
     cc:projectSourceKind <https://cube-creator.zazuko.com/vocab#projectSourceKind/CSV> ;
@@ -67,6 +67,7 @@ graph <cube-project/ubd/dataset> {
     dcterms:creator <http://example.com/organization-id> ;
     schema:error <cube-project/ubd/dataset#missing-values-error> ;
     schema:error <cube-project/ubd/dataset#non-unique-observations> ;
+    <https://schema.ld.admin.ch/datasetNextDateModified> "2023-03-03"^^xsd:date ;
   .
 
   <cube-project/ubd/dataset#missing-values-error> schema:description "Test message" .

@@ -5,20 +5,38 @@ import $rdf from 'rdf-ext'
 import { cc } from '@cube-creator/core/namespace'
 import { DimensionMetadataCollection, Project } from '@cube-creator/model'
 import { sparql, SparqlTemplateResult } from '@tpluscode/rdf-string'
+import { GraphPointer } from 'clownface'
 import { parsingClient } from '../../query-client'
 
-export async function findProject(metadataCollection: DimensionMetadataCollection): Promise<NamedNode | undefined> {
-  const result = await SELECT`?project`
-    .WHERE`
-      GRAPH ?dataset {
-        ?dataset ${cc.dimensionMetadata} ${metadataCollection.id}
-      }
+type FindProject = {
+  metadataCollection: DimensionMetadataCollection
+} | {
+  dataset: GraphPointer
+}
 
-      GRAPH ?project {
-        ?project ${cc.dataset} ?dataset .
+export async function findProject(arg: FindProject): Promise<NamedNode | undefined> {
+  let query = SELECT`?project`
+
+  let dataset: Term
+  if ('dataset' in arg) {
+    dataset = arg.dataset.term
+  } else {
+    dataset = $rdf.variable('dataset')
+    query = query.WHERE`
+      GRAPH ${dataset} {
+        ${dataset} ${cc.dimensionMetadata} ${arg.metadataCollection.id}
       }
     `
-    .execute(parsingClient.query)
+  }
+
+  query = query
+    .WHERE`
+      GRAPH ?project {
+        ?project ${cc.dataset} ${dataset} .
+      }
+    `
+
+  const result = await query.execute(parsingClient.query)
 
   return result[0]?.project as any
 }

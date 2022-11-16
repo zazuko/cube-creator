@@ -44,7 +44,7 @@ export async function update({
   const dimension = metadata.updateDimension(dimensionMetadata)
 
   if (canBeMappedToSharedDimension(dimension) && !dimension.mappings) {
-    const project = await store.getResource<Project>(await findProject(metadata))
+    const project = await store.getResource<Project>(await findProject({ metadataCollection: metadata }))
 
     const slug = dimension.id.value.substring(dimension.id.value.lastIndexOf('/') + 1)
     const dimensionMapping = store.create(id.dimensionMapping(project, slug))

@@ -1,12 +1,14 @@
 import { NamedNode } from 'rdf-js'
 import { describe, it, beforeEach } from 'mocha'
 import { expect } from 'chai'
+import sinon from 'sinon'
 import clownface, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import { dcat, dcterms, hydra, rdf, schema, sh, vcard, _void, xsd } from '@tpluscode/rdf-ns-builders'
-import { cc, cube } from '@cube-creator/core/namespace'
+import { cc, cube, lindasSchema } from '@cube-creator/core/namespace'
 import { ex } from '@cube-creator/testing/lib/namespace'
+import { namedNode } from '@cube-creator/testing/clownface'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import { update } from '../../../lib/domain/dataset/update'
 
@@ -14,31 +16,37 @@ describe('domain/dataset/update', () => {
   let store: TestResourceStore
   let dataset: GraphPointer<NamedNode, DatasetExt>
   let organization: GraphPointer<NamedNode, DatasetExt>
+  let project: GraphPointer<NamedNode, DatasetExt>
+  let findProject: sinon.SinonStub
 
   beforeEach(() => {
-    dataset = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('dataset') })
+    dataset = namedNode('dataset')
       .addOut(dcterms.title, 'My Title')
       .addOut(dcat.keyword, 'Test')
     dataset.namedNode('cube')
       .addOut(rdf.type, cube.Cube)
       .addIn(schema.hasPart, dataset)
-    organization = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('organization/myorg') })
+    project = namedNode('project')
+      .addOut(cc.dataset, dataset)
+    organization = namedNode('organization/myorg')
     store = new TestResourceStore([
       dataset,
       organization,
+      project,
     ])
+    findProject = sinon.stub()
   })
 
   it('update, adds, deletes and  elements', async () => {
     // given
     const title = 'My New Title'
     const description = 'Bla bla bla'
-    const updatedResource = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('dataset') })
+    const updatedResource = namedNode('dataset')
       .addOut(dcterms.title, title)
       .addOut(dcterms.description, description)
 
     // when
-    const result = await update({ dataset, resource: updatedResource, store })
+    const result = await update({ dataset, resource: updatedResource, store, findProject })
 
     // then
     expect(result.out(dcterms.title).value).to.eq(title)
@@ -62,7 +70,7 @@ describe('domain/dataset/update', () => {
         .addOut(dcterms.startDate, $rdf.literal('2010-10-10', xsd.date))
         .addOut(dcterms.endDate, $rdf.literal('2020-10-10', xsd.date))
     })
-    const updatedResource = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('dataset') })
+    const updatedResource = namedNode('dataset')
       .addOut(dcterms.title, 'title')
       .addOut(dcterms.temporal, temporal => {
         temporal
@@ -71,7 +79,7 @@ describe('domain/dataset/update', () => {
       })
 
     // when
-    const result = await update({ dataset, resource: updatedResource, store })
+    const result = await update({ dataset, resource: updatedResource, store, findProject })
 
     // then
     expect(result).to.matchShape({
@@ -103,7 +111,7 @@ describe('domain/dataset/update', () => {
 
   it('excludes named node children from stored resource', async () => {
     // given
-    const updatedResource = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('dataset') })
+    const updatedResource = namedNode('dataset')
       .addOut(dcterms.title, 'title')
       .addOut(schema.hasPart, dataset.namedNode('cube'), cube => {
         cube.addOut(cc.observations, template => {
@@ -115,7 +123,7 @@ describe('domain/dataset/update', () => {
       })
 
     // when
-    const result = await update({ dataset, resource: updatedResource, store })
+    const result = await update({ dataset, resource: updatedResource, store, findProject })
 
     // then
     const cubeTriples = result.dataset.match(dataset.namedNode('cube').term)
@@ -125,11 +133,11 @@ describe('domain/dataset/update', () => {
   it('does not keep quads which do not exist in request payload', async () => {
     // given
     dataset.namedNode('foo').addOut(rdf.type, schema.Person)
-    const updatedResource = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('dataset') })
+    const updatedResource = namedNode('dataset')
       .addOut(dcterms.title, 'title')
 
     // when
-    const result = await update({ dataset, resource: updatedResource, store })
+    const result = await update({ dataset, resource: updatedResource, store, findProject })
 
     // then
     expect(result.namedNode('foo').out().terms).to.have.length(0)
@@ -149,13 +157,13 @@ describe('domain/dataset/update', () => {
 
   it('ignores schema:hasPart and cc:dimensionMetadata from the request', async () => {
     // given
-    const updatedResource = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('dataset') })
+    const updatedResource = namedNode('dataset')
       .addOut(dcterms.title, 'title')
       .addOut(schema.hasPart, ex.Foo)
       .addOut(cc.dimensionMetadata, ex.Bar)
 
     // when
-    const result = await update({ dataset, resource: updatedResource, store })
+    const result = await update({ dataset, resource: updatedResource, store, findProject })
 
     // then
     expect(result.out(schema.hasPart).terms).to.not.deep.contain.members([ex.Foo])
@@ -174,7 +182,7 @@ describe('domain/dataset/update', () => {
       })
 
     // when
-    const result = await update({ dataset, resource: updatedResource, store })
+    const result = await update({ dataset, resource: updatedResource, store, findProject })
 
     // then
     expect(result).to.matchShape({
@@ -201,6 +209,48 @@ describe('domain/dataset/update', () => {
           }],
         },
       }],
+    })
+  })
+
+  describe('sync project next planned update', () => {
+    beforeEach(() => {
+      findProject.resolves(project.term)
+    })
+
+    it('copies value form dataset and replaces previous', async () => {
+      // given
+      project.addOut(lindasSchema.datasetNextDateModified, '2000-10-10')
+      const updatedResource = namedNode(dataset.term)
+        .addOut(lindasSchema.datasetNextDateModified, $rdf.literal('2022-10-10', xsd.date))
+
+      // when
+      await update({ dataset, resource: updatedResource, store, findProject })
+
+      // then
+      expect(project).to.matchShape({
+        property: [{
+          path: lindasSchema.datasetNextDateModified,
+          maxCount: 1,
+          hasValue: $rdf.literal('2022-10-10', xsd.date),
+        }],
+      })
+    })
+
+    it('remove previous value', async () => {
+      // given
+      project.addOut(lindasSchema.datasetNextDateModified, '2000-10-10')
+      const updatedResource = namedNode(dataset.term)
+
+      // when
+      await update({ dataset, resource: updatedResource, store, findProject })
+
+      // then
+      expect(project).to.matchShape({
+        property: [{
+          path: lindasSchema.datasetNextDateModified,
+          maxCount: 0,
+        }],
+      })
     })
   })
 })
