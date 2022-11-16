@@ -20,7 +20,6 @@ import { createProject } from '../../../lib/domain/cube-projects/create'
 describe('domain/cube-projects/create', () => {
   let store: TestResourceStore
   const user = $rdf.namedNode('userId')
-  const userName = 'User Name'
   const projectsCollection = namedNode('projects')
   let projectExists: sinon.SinonStub
 
