@@ -22,6 +22,7 @@
           :resource.prop="searchParams"
           :shape.prop="shape"
           @submit="onSearch"
+          submit-when-cleared
         />
       </div>
       <div v-if="projects.length > 0" class="panel">

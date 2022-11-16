@@ -23,6 +23,9 @@ export class HydraOperationForm extends HydraOperationFormBase {
   @property({ type: Boolean })
   clearable = false
 
+  @property({ type: Boolean, attribute: 'submit-when-cleared' })
+  submitWhenCleared = false
+
   constructor () {
     super()
     this.addEventListener('submit', (e) => {
@@ -92,6 +95,9 @@ export class HydraOperationForm extends HydraOperationFormBase {
 
   onClear () {
     this.value = clownface({ dataset: $rdf.dataset() }).blankNode()
+    if (this.submitWhenCleared) {
+      this.onSubmit()
+    }
   }
 
   onSubmit () {
