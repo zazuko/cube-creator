@@ -5,7 +5,7 @@ import fetch from 'node-fetch'
 import jwt from 'express-jwt'
 import jwksRsa from 'jwks-rsa'
 import { DELETE } from '@tpluscode/sparql-builder'
-import { schema } from '@tpluscode/rdf-ns-builders'
+import { hydra, schema } from '@tpluscode/rdf-ns-builders'
 import TermSet from '@rdfjs/term-set'
 import { log, warning } from './log'
 import * as idOf from './domain/identifiers'
@@ -106,7 +106,7 @@ function updateUserResource(): RequestHandler {
           }
         `.INSERT`
           GRAPH ${id} {
-            ${id} ${schema.name} "${name || sub}"; a ${schema.Person} .
+            ${id} ${schema.name} "${name || sub}"; a ${schema.Person} , ${hydra.Resource} .
           }
         `.WHERE`
             OPTIONAL {
