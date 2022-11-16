@@ -5,7 +5,7 @@ import { cc } from '@cube-creator/core/namespace'
 
 export function byFreeText({ subject, object }: Pattern) {
   return sparql`
-    ${subject} ${rdfs.label}/${schema.alternateName}/${schema.disambiguatingDescription} ?freetextSearched .
+    ${subject} ${rdfs.label}|${schema.alternateName}|${schema.disambiguatingDescription} ?freetextSearched .
 
     FILTER(REGEX(?freetextSearched, "${object.value}", "i"))
   `
