@@ -189,7 +189,7 @@ ${shape('cube-project/update')} {
 ${shape('cube-project/search')} {
   ${shape('cube-project/search')} a ${sh.NodeShape}, ${hydra.Resource} ;
     ${sh.property} [
-      ${sh.name} "Content" ;
+      ${sh.name} "Keyword Search" ;
       ${sh.order} 10 ;
       ${sh.path} ${hydra.freetextQuery} ;
       ${sh.minCount} 1 ;
