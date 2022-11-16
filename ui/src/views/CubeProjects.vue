@@ -56,13 +56,24 @@ import { useHydraForm } from '@/use-hydra-form'
 import '@/customElements/HydraOperationForm'
 import { hydraBox } from '@cube-creator/core/namespace'
 import { IriTemplate } from 'alcaeus'
+import { rootURL } from '@/api/index'
 
 export default defineComponent({
   name: 'CubeProjectsView',
   components: { CubeProjectsItem, PageContent, LoadingBlock, HydraOperationButton },
 
   async mounted (): Promise<void> {
-    await this.$store.dispatch('projects/fetchCollection')
+    const emptyQuery = Object.entries(this.$route.query).length === 0
+
+    if (emptyQuery) {
+      await this.$router.replace({
+        query: {
+          author: `${rootURL}user/${this.user.sub}`
+        }
+      })
+    } else {
+      await this.$store.dispatch('projects/fetchCollection')
+    }
 
     this.operation = this.projectsCollection.actions.get
     this.searchParams = this.projectsCollection.searchParams

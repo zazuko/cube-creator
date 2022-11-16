@@ -31,15 +31,11 @@ const actions: ActionTree<ProjectsState, RootState> = {
 
     if (!collectionURI) throw new Error('Missing projects collection in entrypoint')
 
-    let params: URLSearchParams
+    let params = new URLSearchParams()
     if (query) {
       params = new URLSearchParams(query)
     } else if (location.search) {
       params = new URLSearchParams(location.search)
-    } else {
-      params = new URLSearchParams({
-        author: `${rootURL}user/${context.rootState.auth.user.sub}`,
-      })
     }
 
     const collection = await api.fetchResource(collectionURI.value + '?' + params.toString())
