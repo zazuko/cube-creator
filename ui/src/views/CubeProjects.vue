@@ -51,11 +51,9 @@ import PageContent from '@/components/PageContent.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import HydraOperationButton from '@/components/HydraOperationButton.vue'
 import { mapGetters, mapState } from 'vuex'
-import { isRouteActive } from '@/router'
+import { getRouteSearchParamsFromTemplatedOperation, isRouteActive } from '@/router'
 import { useHydraForm } from '@/use-hydra-form'
 import '@/customElements/HydraOperationForm'
-import { hydraBox } from '@cube-creator/core/namespace'
-import { IriTemplate } from 'alcaeus'
 import { rootURL } from '@/api/index'
 
 export default defineComponent({
@@ -112,14 +110,9 @@ export default defineComponent({
     isRouteActive,
 
     onSearch (e: CustomEvent) {
-      const template = this.operation?.get<IriTemplate>(hydraBox.variables)
-      if (template && e.detail?.value) {
-        const url = template.expand(e.detail.value)
-        const search = new URLSearchParams(url.substring(url.indexOf('?')))
-        const entries = [...search.entries()].filter(([, value]) => !!value && value !== '""')
-
+      if (this.operation && e.detail?.value) {
         this.$router.push({
-          query: Object.fromEntries(entries),
+          query: getRouteSearchParamsFromTemplatedOperation(this.operation, e.detail?.value),
         })
       }
     }

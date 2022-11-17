@@ -42,6 +42,9 @@ import Hierarchies from '@/views/Hierarchies.vue'
 import HierarchyCreate from '@/views/HierarchyCreate.vue'
 import Hierarchy from '@/views/Hierarchy.vue'
 import HierarchyEdit from '@/views/HierarchyEdit.vue'
+import { IriTemplate, RuntimeOperation } from 'alcaeus'
+import { GraphPointer } from 'clownface'
+import { hydraBox } from '@cube-creator/core/namespace'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -290,6 +293,15 @@ export default router
  */
 export function isRouteActive (route: RouteLocation, currentRoute: RouteLocation) {
   return currentRoute.path.startsWith(route.path) && includesQuery(currentRoute.query, route.query)
+}
+
+export function getRouteSearchParamsFromTemplatedOperation (operation: RuntimeOperation, searchPointer: GraphPointer) {
+  const template = operation.get<IriTemplate>(hydraBox.variables)
+  const url = template.expand(searchPointer)
+  const search = new URLSearchParams(url.substring(url.indexOf('?')))
+  const entries = [...search.entries()].filter(([, value]) => !!value && value !== '""')
+
+  return Object.fromEntries(entries)
 }
 
 function includesQuery (outter: LocationQuery, inner: LocationQuery): boolean {
