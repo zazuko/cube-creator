@@ -1,9 +1,12 @@
-import { Router, Request, Response, NextFunction } from 'express'
+import { Router, Request, Response, NextFunction, RequestHandler } from 'express'
 import error from 'http-errors'
 import env from '@cube-creator/core/env'
 import fetch from 'node-fetch'
 import jwt from 'express-jwt'
 import jwksRsa from 'jwks-rsa'
+import { DELETE } from '@tpluscode/sparql-builder'
+import { hydra, schema } from '@tpluscode/rdf-ns-builders'
+import TermSet from '@rdfjs/term-set'
 import { log, warning } from './log'
 import * as idOf from './domain/identifiers'
 
@@ -83,7 +86,38 @@ export default async () => {
     router.use(devAuthHandler)
   }
 
-  router.use(setUserId)
+  router.use(setUserId).use(updateUserResource())
 
   return router
+}
+
+function updateUserResource(): RequestHandler {
+  const users = new TermSet()
+
+  return (req, res, next) => {
+    if (req.user?.id && !users.has(req.user.id)) {
+      const { id, name, sub } = req.user
+      users.add(id)
+
+      req.once('end', () => {
+        DELETE`
+          GRAPH ${id} {
+            ${id} ${schema.name} ?name .
+          }
+        `.INSERT`
+          GRAPH ${id} {
+            ${id} ${schema.name} "${name || sub}"; a ${schema.Person} , ${hydra.Resource} .
+          }
+        `.WHERE`
+            OPTIONAL {
+              GRAPH ${id} {
+                ${id} ${schema.name} ?name .
+              }
+            }
+        `.execute(req.labyrinth.sparql.query)
+          .catch(warning)
+      })
+    }
+    next()
+  }
 }

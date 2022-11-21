@@ -37,7 +37,11 @@ graph <cube-project/ubd> {
     cc:export <cube-project/ubd/export> ;
     cc:projectDetails <cube-project/ubd/details> ;
   .
-  <user> schema:name "User Name"
+}
+
+<user/ubd-test> void:inDataset <ubd-example> .
+graph <user/ubd-test> {
+  <user/ubd-test> schema:name "UBD User" ; a schema:Person, hydra:Resource .
 }
 
 <https://lindas.admin.ch/foen/cube> void:inDataset <ubd-example> .

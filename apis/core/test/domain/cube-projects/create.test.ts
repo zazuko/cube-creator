@@ -20,7 +20,6 @@ import { createProject } from '../../../lib/domain/cube-projects/create'
 describe('domain/cube-projects/create', () => {
   let store: TestResourceStore
   const user = $rdf.namedNode('userId')
-  const userName = 'User Name'
   const projectsCollection = namedNode('projects')
   let projectExists: sinon.SinonStub
 
@@ -56,13 +55,12 @@ describe('domain/cube-projects/create', () => {
       .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
 
     // when
-    const { project } = await createProject({ resource, store, projectsCollection, user, userName })
+    const { project } = await createProject({ resource, store, projectsCollection, user })
 
     // then
     expect(project.label).to.eq('Foo bar project')
     expect(project.id.value).to.match(/\/cube-project\/foo-bar-project-(.+)$/)
     expect(project.creator.id).to.deep.eq(user)
-    expect(project.creator.name).to.eq(userName)
   })
 
   describe('initializes a void:Dataset resource', () => {
@@ -78,7 +76,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
 
       // when
-      ;({ project } = await createProject({ resource, store, projectsCollection, user, userName }))
+      ;({ project } = await createProject({ resource, store, projectsCollection, user }))
     })
 
     it('creates metadata placeholders', async () => {
@@ -135,7 +133,7 @@ describe('domain/cube-projects/create', () => {
       .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
 
     // when
-    const { project } = await createProject({ resource, store, projectsCollection, user, userName })
+    const { project } = await createProject({ resource, store, projectsCollection, user })
 
     // then
     const dataset = await store.getResource<Dataset>(project.dataset.id)
@@ -160,7 +158,7 @@ describe('domain/cube-projects/create', () => {
       .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
 
     // when
-    const { project } = await createProject({ resource, store, projectsCollection, user, userName })
+    const { project } = await createProject({ resource, store, projectsCollection, user })
 
     // then
     const jobs = await store.get(project.jobCollection.id)
@@ -210,7 +208,7 @@ describe('domain/cube-projects/create', () => {
       .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
 
     // when
-    const promise = createProject({ resource, store, projectsCollection, user, userName })
+    const promise = createProject({ resource, store, projectsCollection, user })
 
     // then
     await expect(promise).eventually.rejectedWith(DomainError)
@@ -227,7 +225,7 @@ describe('domain/cube-projects/create', () => {
       .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
 
     // when
-    const { project } = await createProject({ resource, store, projectsCollection, user, userName })
+    const { project } = await createProject({ resource, store, projectsCollection, user })
 
     // then
     expect(project.sourceKind).to.deep.eq(cc['projectSourceKind/CSV'])
@@ -244,7 +242,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
 
       // when
-      const { project } = await createProject({ resource, store, projectsCollection, user, userName })
+      const { project } = await createProject({ resource, store, projectsCollection, user })
 
       // then
       expect(project.csvMapping).to.be.ok
@@ -260,7 +258,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
 
       // when
-      const { project } = await createProject({ resource, store, projectsCollection, user, userName })
+      const { project } = await createProject({ resource, store, projectsCollection, user })
 
       // then
       expect(project.export).to.be.ok
@@ -276,7 +274,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
 
       // when
-      const { project } = await createProject({ resource, store, projectsCollection, user, userName })
+      const { project } = await createProject({ resource, store, projectsCollection, user })
 
       // then
       expect(project.details).to.be.ok
@@ -293,7 +291,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
 
       // when
-      const { project } = await createProject({ resource, store, projectsCollection, user, userName })
+      const { project } = await createProject({ resource, store, projectsCollection, user })
 
       // then
       expect(project).to.matchShape({
@@ -323,7 +321,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(schema.maintainer, organization.id)
 
       // when
-      const { project } = await createProject({ resource, store, projectsCollection, user, userName })
+      const { project } = await createProject({ resource, store, projectsCollection, user })
 
       // then
       const csvMapping = await store.get(project.csvMapping?.id as NamedNode)
@@ -355,7 +353,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(schema.maintainer, organization.id)
 
       // when
-      const { project } = await createProject({ resource, store, projectsCollection, user, userName })
+      const { project } = await createProject({ resource, store, projectsCollection, user })
 
       // then
       const dataset = await store.get(project.dataset.id)
@@ -393,7 +391,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(schema.maintainer, organization.id)
 
       // when
-      const { project } = await createProject({ resource, store, projectsCollection, user, userName })
+      const { project } = await createProject({ resource, store, projectsCollection, user })
       const mapping = await store.get(project.csvMapping?.id as NamedNode)
       const sourceCollection = await store.get(mapping?.out(cc.csvSourceCollection).term as NamedNode)
 
@@ -440,7 +438,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(schema.maintainer, organization.id)
 
       // when
-      const { project } = await createProject({ resource, store, projectsCollection, user, userName })
+      const { project } = await createProject({ resource, store, projectsCollection, user })
       const mapping = await store.get(project.csvMapping?.id as NamedNode)
       const tableCollection = await store.get(mapping?.out(cc.tables).term as NamedNode)
 
@@ -490,7 +488,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(schema.maintainer, organization.id)
 
       // when
-      const { project } = await createProject({ resource, store, projectsCollection, user, userName })
+      const { project } = await createProject({ resource, store, projectsCollection, user })
 
       // then
       expect(project.csvMapping).to.be.undefined
@@ -507,7 +505,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(schema.maintainer, organization.id)
 
       // when
-      const { project } = await createProject({ resource, store, projectsCollection, user, userName })
+      const { project } = await createProject({ resource, store, projectsCollection, user })
 
       // then
       expect(project.export).to.be.ok
@@ -523,7 +521,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(cc.projectSourceKind, cc['projectSourceKind/ExistingCube'])
 
       // when
-      const promise = createProject({ resource, store, projectsCollection, user, userName })
+      const promise = createProject({ resource, store, projectsCollection, user })
 
       // then
       await expect(promise).to.be.eventually.rejected
@@ -540,7 +538,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(cc.projectSourceKind, cc['projectSourceKind/ExistingCube'])
 
       // when
-      const promise = createProject({ resource, store, projectsCollection, user, userName })
+      const promise = createProject({ resource, store, projectsCollection, user })
 
       // then
       await expect(promise).to.be.eventually.rejected
@@ -556,7 +554,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(cc.projectSourceKind, cc['projectSourceKind/ExistingCube'])
 
       // when
-      const promise = createProject({ resource, store, projectsCollection, user, userName })
+      const promise = createProject({ resource, store, projectsCollection, user })
 
       // then
       await expect(promise).to.be.eventually.rejected
@@ -574,7 +572,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(cc.projectSourceKind, cc['projectSourceKind/ExistingCube'])
 
       // when
-      const { project } = await createProject({ resource, store, projectsCollection, user, userName })
+      const { project } = await createProject({ resource, store, projectsCollection, user })
 
       // then
       expect(project).to.matchShape({

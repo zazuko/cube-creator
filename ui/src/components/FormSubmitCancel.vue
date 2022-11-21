@@ -1,6 +1,6 @@
 <template>
   <o-field :addons="false">
-    <hr>
+    <hr v-if="!inline">
     <o-field class="buttons" :addons="false">
       <div class="control">
         <button-loading
@@ -15,6 +15,11 @@
       <div class="control" v-if="showCancel">
         <o-button @click="$emit('cancel')">
           Cancel
+        </o-button>
+      </div>
+      <div class="control" v-if="showClear">
+        <o-button @click="$emit('clear')">
+          Clear
         </o-button>
       </div>
     </o-field>
@@ -46,12 +51,20 @@ export default defineComponent({
       type: Boolean,
       default: true,
     },
+    showClear: {
+      type: Boolean,
+      default: true,
+    },
+    inline: {
+      type: Boolean,
+      default: false,
+    },
     submitButtonVariant: {
       type: String as PropType<ColorsModifiers>,
       default: 'primary',
     },
   },
-  emits: ['cancel'],
+  emits: ['cancel', 'clear'],
 
   computed: {
     _submitLabel (): string {
@@ -66,6 +79,11 @@ export default defineComponent({
   display: flex;
   flex-direction: row-reverse;
   justify-content: flex-start;
+  padding-top: 28px;
+}
+
+hr + .buttons {
+  padding-top: 0;
 }
 
 .buttons > .control:not(:last-child) {

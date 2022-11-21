@@ -1,5 +1,6 @@
 import { html, PropertyValues } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
+import { styleMap } from 'lit/directives/style-map.js'
 import clownface, { GraphPointer } from 'clownface'
 import './FormSubmitCancel'
 import './LoadingBlock'
@@ -15,6 +16,15 @@ export class HydraOperationForm extends HydraOperationFormBase {
 
   @property({ type: Object })
   value?: GraphPointer | null
+
+  @property({ type: Boolean })
+  inline = false
+
+  @property({ type: Boolean })
+  clearable = false
+
+  @property({ type: Boolean, attribute: 'submit-when-cleared' })
+  submitWhenCleared = false
 
   constructor () {
     super()
@@ -34,27 +44,60 @@ export class HydraOperationForm extends HydraOperationFormBase {
 
   renderForm () {
     return html`
-      <form>
-        <cc-form .resource="${this.value}" .shapes="${this.shape!.pointer}" no-editor-switches ></cc-form>
+      <form style="${styleMap(this.wrapperStyle)}">
+        <cc-form style="${styleMap(this.formStyle)}" .resource="${this.value}" .shapes="${this.shape!.pointer}" no-editor-switches ></cc-form>
 
         <cc-hydra-operation-error .error="${this.error}" .shape="${this.shape}" class="mt-4" ></cc-hydra-operation-error>
 
         <div style="display: flex; flex-direction: row-reverse; justify-content: flex-start;">
           <cc-form-submit-cancel
+            ?inline="${this.inline}"
             submit-label="${this._submitLabel}"
             .isSubmitting="${this.submitting}"
+            .showClear="${this.clearable}"
             .showCancel="${this.showCancel}"
             submit-button-variant="${this.submitButtonVariant}"
             .disabled="${!this.shape}"
             @submit="${this.onSubmit}"
+            @clear="${this.onClear}"
             @cancel="${this.onCancel}"
           ></cc-form-submit-cancel>
         </div>
       </form>`
   }
 
+  get wrapperStyle () {
+    if (this.inline) {
+      return {
+        display: 'flex',
+        '--cc-form-group-display': 'flex',
+        '--cc-form-group-justify-content': 'space-around',
+        '--cc-form-property-flex-grow': '1'
+      }
+    }
+
+    return {}
+  }
+
+  get formStyle () {
+    if (this.inline) {
+      return {
+        'flex-grow': '1'
+      }
+    }
+
+    return {}
+  }
+
   onCancel () {
     this.dispatchEvent(new Event('cancel', { bubbles: true, composed: true }))
+  }
+
+  onClear () {
+    this.value = clownface({ dataset: $rdf.dataset() }).blankNode()
+    if (this.submitWhenCleared) {
+      this.onSubmit()
+    }
   }
 
   onSubmit () {

@@ -50,7 +50,6 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/import', () => {
         projectsCollection,
         resource,
         user: $rdf.namedNode('john-doe'),
-        userName: 'John Doe',
         store,
         files,
       })

@@ -20,12 +20,14 @@ import { Link } from '@cube-creator/model/lib/Link'
 import { dcterms, oa, rdf, rdfs, schema } from '@tpluscode/rdf-ns-builders'
 import { RdfResource, ResourceIdentifier } from '@tpluscode/rdfine/RdfResource'
 import { ProjectDetails, SharedDimensionTerm } from './types'
+import { clone } from '@/store/searchParams'
 
 export const displayLanguage = ['en', 'de', 'fr', '']
 
 export function serializeProjectsCollection (collection: ProjectsCollection): ProjectsCollection {
   return Object.freeze({
     ...serializeResource(collection),
+    searchParams: clone(collection.pointer),
     member: collection.member.sort(sortProject),
   }) as ProjectsCollection
 }
@@ -251,6 +253,7 @@ export function serializeLink<T extends RdfResource> (resource: Link<T>): Link<T
 
 export function serializeActions (actions: Actions): Actions {
   return Object.freeze({
+    get: actions.get,
     create: actions.create,
     edit: actions.edit,
     replace: actions.replace,

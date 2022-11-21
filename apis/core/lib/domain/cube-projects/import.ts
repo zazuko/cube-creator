@@ -22,7 +22,6 @@ interface ImportProject {
   files: Files
   store: ResourceStore
   user: NamedNode
-  userName: string
 }
 
 interface ImportedProject {
@@ -89,7 +88,6 @@ export async function importProject({
   resource,
   files,
   user,
-  userName,
 }: ImportProject): Promise<ImportedProject> {
   const label = resource.out(rdfs.label).value
   if (!label) {
@@ -103,7 +101,7 @@ export async function importProject({
   const projectNode = await store.createMember(projectsCollection.term, id.cubeProject(label))
 
   const project = createMinimalProject(projectNode, {
-    creator: { id: user, name: userName },
+    creator: user,
     maintainer,
     label,
   })

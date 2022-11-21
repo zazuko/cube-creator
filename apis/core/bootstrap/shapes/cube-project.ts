@@ -185,4 +185,34 @@ ${shape('cube-project/update')} {
     ${projectProperties} ;
   .
 }
+
+${shape('cube-project/search')} {
+  ${shape('cube-project/search')} a ${sh.NodeShape}, ${hydra.Resource} ;
+    ${sh.property} [
+      ${sh.name} "Keyword Search" ;
+      ${sh.order} 10 ;
+      ${sh.path} ${hydra.freetextQuery} ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+    ],
+    [
+      ${sh.name} "Author" ;
+      ${sh.path} ${dcterms.creator} ;
+      ${sh.order} 20 ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+      ${dash.editor} ${dash.InstancesSelectEditor} ;
+      ${hydra.collection} </users> ;
+    ],
+    [
+      ${sh.name} "Status" ;
+      ${sh.path} ${schema.creativeWorkStatus} ;
+      ${sh.order} 30 ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;
+      ${dash.editor} ${dash.InstancesSelectEditor} ;
+      ${hydra.collection} </cube-projects/status> ;
+    ] ;
+  .
+}
 `

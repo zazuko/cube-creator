@@ -18,7 +18,6 @@ interface CreateProjectCommand {
   resource: GraphPointer
   store: ResourceStore
   user: NamedNode
-  userName: string
 }
 
 interface CreateProjectResource extends Omit<CreateProjectCommand, 'projectsCollection'> {
@@ -27,7 +26,7 @@ interface CreateProjectResource extends Omit<CreateProjectCommand, 'projectsColl
   projectNode: GraphPointer<NamedNode>
 }
 
-async function createCsvProjectResource({ user, userName, projectNode, store, label, maintainer, resource }: CreateProjectResource) {
+async function createCsvProjectResource({ user, projectNode, store, label, maintainer, resource }: CreateProjectResource) {
   const cubeIdentifier = resource.out(dcterms.identifier).value
   if (!cubeIdentifier) {
     throw new Error('Missing cube identifier name')
@@ -43,7 +42,7 @@ async function createCsvProjectResource({ user, userName, projectNode, store, la
   }
 
   const project = Project.createCsvProject(projectNode, {
-    creator: { id: user, name: userName },
+    creator: user,
     label,
     maintainer,
     cubeIdentifier,
@@ -61,7 +60,7 @@ async function createCsvProjectResource({ user, userName, projectNode, store, la
   return { project, dataset }
 }
 
-async function createImportProjectResources({ resource, user, userName, projectNode, store, label, maintainer }: CreateProjectResource) {
+async function createImportProjectResources({ resource, user, projectNode, store, label, maintainer }: CreateProjectResource) {
   const sourceCube = resource.out(cc['CubeProject/sourceCube']).term
   if (sourceCube?.termType !== 'NamedNode') {
     throw new Error('Missing cube identifier')
@@ -89,7 +88,7 @@ async function createImportProjectResources({ resource, user, userName, projectN
   }
 
   const project = Project.createImportProject(projectNode, {
-    creator: { id: user, name: userName },
+    creator: user,
     label,
     maintainer,
     sourceCube,
@@ -116,7 +115,6 @@ export async function createProject({
   resource,
   store,
   user,
-  userName,
 }: CreateProjectCommand): Promise<CreatedProject> {
   const label = resource.out(rdfs.label).value
   if (!label) {
@@ -138,7 +136,6 @@ export async function createProject({
   if (isCsvProject) {
     ({ project, dataset } = await createCsvProjectResource({
       user,
-      userName,
       projectNode,
       store,
       label,
@@ -148,7 +145,6 @@ export async function createProject({
   } else if (isImportProject) {
     ({ project, dataset } = await createImportProjectResources({
       user,
-      userName,
       projectNode,
       store,
       resource,

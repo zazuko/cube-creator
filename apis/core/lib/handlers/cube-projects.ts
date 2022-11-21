@@ -23,9 +23,8 @@ const postDirect = protectedResource(
   shaclValidate,
   asyncMiddleware(async (req, res) => {
     const user = req.user?.id
-    const userName = req.user?.name
 
-    if (!user || !userName) {
+    if (!user) {
       throw new Error('User is not defined')
     }
 
@@ -33,7 +32,6 @@ const postDirect = protectedResource(
       projectsCollection: await req.hydra.resource.clownface(),
       resource: await req.resource(),
       user,
-      userName,
       store: req.resourceStore(),
     })
     await req.resourceStore().save()

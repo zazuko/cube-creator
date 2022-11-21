@@ -18,9 +18,8 @@ export const postImportedProject = protectedResource(
   }),
   asyncMiddleware(async function prepareImport(req, res, next) {
     const user = req.user?.id
-    const userName = req.user?.name
 
-    if (!user || !userName) {
+    if (!user) {
       throw new Error('User is not defined')
     }
 
@@ -30,7 +29,6 @@ export const postImportedProject = protectedResource(
       files: req.multipartFileQuadsStreams(),
       store: req.resourceStore(),
       user,
-      userName,
     })
     res.locals.project = project
     res.locals.importedDataset = importedDataset
