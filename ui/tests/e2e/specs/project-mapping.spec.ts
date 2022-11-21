@@ -23,7 +23,7 @@ describe('CSV mapping flow', () => {
       .find('input')
       .type('ubd/29')
 
-    cy.get('form').submit()
+    cy.get('div.quickview-body form').submit()
 
     cy.contains('successfully created').should('be.visible')
     cy.contains('h2', 'My project').should('be.visible')
