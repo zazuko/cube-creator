@@ -63,7 +63,7 @@ export default defineComponent({
   async mounted (): Promise<void> {
     const emptyQuery = Object.entries(this.$route.query).length === 0
 
-    if (emptyQuery) {
+    if (emptyQuery && this.user) {
       await this.$router.replace({
         query: {
           author: `${rootURL}user/${this.user.sub}`
