@@ -51,7 +51,7 @@ export const create = (): Initializer<NodeShape> => ({
       description: 'A lowercase, alphanumeric value which identifies a shared dimension term',
       path: dcterms.identifier,
       order: 0,
-      pattern: '^[a-z0-9-]+$',
+      pattern: '^[a-z0-9-_]+$',
       minCount: 1,
       maxCount: 1,
       group: defaultGroup,

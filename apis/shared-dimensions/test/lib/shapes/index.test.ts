@@ -45,6 +45,23 @@ describe('@cube-creator/shared-dimensions-api/lib/shapes', () => {
         // then
         expect(resource).to.matchShape(shape)
       })
+
+      it('is valid when identifier has underscores', () => {
+        // given
+        const resource = blankNode()
+          .addOut(md.createAs, 'New dimension')
+          .addOut(dcterms.identifier, $rdf.literal('foo_bar'))
+          .addOut(schema.name, $rdf.literal('Test', 'en'))
+          .addOut(sh.property, prop => {
+            prop
+              .addOut(qudt.scaleType, qudt.NominalScale)
+              .addOut(rdf.type, schema.GeoShape)
+              .addOut(schema.name, $rdf.literal('Test', 'en'))
+          })
+
+        // then
+        expect(resource).to.matchShape(shape)
+      })
     })
 
     describe('Import', () => {
@@ -104,6 +121,16 @@ describe('@cube-creator/shared-dimensions-api/lib/shapes', () => {
         .addOut(dcterms.identifier, $rdf.literal('test'))
         .addOut(schema.name, $rdf.literal('Foo', 'en'))
         .addOut(schema.identifier, ['a', 'b', 'c'])
+
+      // then
+      expect(resource).to.matchShape(shape)
+    })
+
+    it('is valid when a term identifier has underscores', () => {
+      // given
+      const resource = blankNode()
+        .addOut(dcterms.identifier, 'a_b_c')
+        .addOut(schema.name, $rdf.literal('Foo', 'en'))
 
       // then
       expect(resource).to.matchShape(shape)
