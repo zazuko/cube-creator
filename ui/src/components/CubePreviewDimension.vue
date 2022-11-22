@@ -29,6 +29,15 @@
       <o-tooltip v-show="description" :label="description">
         <o-icon icon="comment-alt" pack="far" variant="primary" />
       </o-tooltip>
+      <o-tooltip v-if="dimension.hierarchies.length" class="tag is-rounded is-primary">
+        <o-icon icon="sitemap" />
+        <template #content>
+          Hierarchies:
+          <ul v-for="hierarchy of dimension.hierarchies" :key="hierarchy.id.value">
+            <li>{{ hierarchy.name }}</li>
+          </ul>
+        </template>
+      </o-tooltip>
     </div>
   </div>
 </template>

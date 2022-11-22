@@ -1,5 +1,5 @@
 import { Actions } from '@/api/mixins/ApiResource'
-import { cc, cube } from '@cube-creator/core/namespace'
+import { cc, cube, meta } from '@cube-creator/core/namespace'
 import {
   ColumnMapping,
   CsvColumn,
@@ -185,6 +185,7 @@ export function serializeDimensionMetadata (dimension: DimensionMetadata): Dimen
     isKeyDimension: dimension.isKeyDimension,
     isMeasureDimension: dimension.isMeasureDimension,
     order: dimension.order,
+    hierarchies: dimension.getArray(meta.inHierarchy)
   })
 }
 
