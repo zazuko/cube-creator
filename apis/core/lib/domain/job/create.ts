@@ -167,9 +167,8 @@ function lindasWebQueryLink(cube: NamedNode, version: number, cubeGraph: NamedNo
 }
 
 function visualizeLink(cube: NamedNode) {
-  const language = 'en'
-  const visualizeLink = new URL(`/${language}/browse/dataset/${encodeURIComponent(cube.value)}`, env.VISUALIZE_UI)
-
+  const visualizeLink = new URL(env.VISUALIZE_UI)
+  visualizeLink.searchParams.set('dataset', cube.value)
   return visualizeLink.toString()
 }
 
