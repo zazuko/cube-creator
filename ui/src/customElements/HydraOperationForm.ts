@@ -58,7 +58,7 @@ export class HydraOperationForm extends HydraOperationFormBase {
             .showCancel="${this.showCancel}"
             submit-button-variant="${this.submitButtonVariant}"
             .disabled="${!this.shape}"
-            @submit="${this.onSubmit}"
+            @cc-submit="${this.onSubmit}"
             @clear="${this.onClear}"
             @cancel="${this.onCancel}"
           ></cc-form-submit-cancel>

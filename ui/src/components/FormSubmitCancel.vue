@@ -4,10 +4,10 @@
     <o-field class="buttons" :addons="false">
       <div class="control">
         <button-loading
-          native-type="submit"
           :variant="submitButtonVariant"
           :disabled="disabled"
           :loading="isSubmitting"
+          @click="_submit"
         >
           {{ _submitLabel }}
         </button-loading>
@@ -64,13 +64,19 @@ export default defineComponent({
       default: 'primary',
     },
   },
-  emits: ['cancel', 'clear'],
+  emits: ['cancel', 'clear', 'cc-submit'],
 
   computed: {
     _submitLabel (): string {
       return this.submitLabel || 'Save'
-    },
+    }
   },
+
+  methods: {
+    _submit () {
+      this.$emit('cc-submit')
+    }
+  }
 })
 </script>
 
