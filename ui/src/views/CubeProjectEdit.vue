@@ -64,8 +64,8 @@ export default defineComponent({
     const operation = shallowRef(project.actions.edit)
 
     const form = useHydraForm(operation, {
-      afterSubmit (project: any) {
-        store.commit('project/storeProject', project)
+      afterSubmit (project) {
+        store.dispatch('project/fetchProject', project!.id.value)
 
         displayToast({
           message: 'Project settings were saved',
