@@ -34,7 +34,7 @@ export const textFieldWithLang: Lazy<SingleEditorComponent> = {
   async lazyRender () {
     await import('./TextFieldWithLangEditor.vue').then(createCustomElement('cc-text-field-with-lang'))
 
-    return ({ value, property }, { update }) => html`<cc-text-field-with-lang
+    return ({ value, property }, { update }) => html`<cc-text-field-with-lang style="width: 100%"
       .value="${value.object?.term}"
       .property="${property}"
       .update="${update}"
@@ -61,7 +61,9 @@ export const instanceSelect: Lazy<InstancesSelectEditor> = {
   async lazyRender () {
     await import('./SelectEditor.vue').then(createCustomElement('select-editor'))
 
-    return ({ property, value }, { update }) => html`<select-editor .property="${property.shape}"
+    return ({ property, value }, { update }) => html`<select-editor
+                          style="width: 100%"
+                          .property="${property.shape}"
                           .update="${update}"
                           .options="${value.componentState.instances}"
                           .value="${value.object?.term}"></select-editor>`

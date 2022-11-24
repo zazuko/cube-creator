@@ -56,7 +56,7 @@ export default defineComponent({
 </script>
 
 <style>
-.select, select {
+select-editor .control.select {
    width: 100%;
 }
 </style>
