@@ -190,7 +190,7 @@ export default defineComponent({
 
 <style>
 .term-pair {
-  display: flex;
+  --cc-form-group-display: flex;
 }
 
 .term-pair > * {
