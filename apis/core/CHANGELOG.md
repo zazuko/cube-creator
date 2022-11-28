@@ -1,5 +1,27 @@
 # @cube-creator/core-api
 
+## 2.1.0
+
+### Minor Changes
+
+- fb7eaed5: Project search functionality (fixes #1326)
+
+### Patch Changes
+
+- f72fcb57: Added new fields to cube metadata:
+
+  - `Planned update https://schema.ld.admin.ch/datasetNextDateModified>`
+  - `Abbreviation <schema:alternateName>`
+  - `Subtitle <schema:disambiguatingDescription>`
+
+  closes #1324
+
+- 7ed36318: Updated help text for metadata fields "Title", "Abbreviation", "Subtitle" and "Planned update"
+- 492ff51b: Use updated scheme for Visualize links (re #1335)
+- Updated dependencies [537106b3]
+- Updated dependencies [66006fc8]
+  - @cube-creator/shared-dimensions-api@2.7.0
+
 ## 2.0.5
 
 ### Patch Changes

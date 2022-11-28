@@ -1,5 +1,15 @@
 # @cube-creator/shared-dimensions-api
 
+## 2.7.0
+
+### Minor Changes
+
+- 537106b3: Added abbreviation property to Shared Dimensions (closes #1321)
+
+### Patch Changes
+
+- 66006fc8: Allow underscores in shared dimension identifiers (fixes #1319)
+
 ## 2.6.11
 
 ### Patch Changes

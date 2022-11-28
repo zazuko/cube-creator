@@ -1,5 +1,22 @@
 # @cube-creator/ui
 
+## 1.13.0
+
+### Minor Changes
+
+- 537106b3: Added abbreviation property to Shared Dimensions (closes #1321)
+- fb7eaed5: Project search functionality (fixes #1326)
+
+### Patch Changes
+
+- 9a904dec: Filter for "deprecated" shared dimensions (now hidden by default)
+- c87db73b: Saving a project would break the properties on CSM Mapping tab (fixes #1291)
+- df8987d9: Display icon, marking dimension which are using hierarchies (fixes #1294)
+- 2884d36f: Fixes errors found in console after submitting Project settings form
+- 5f2c6028: On the Shared Dimension mapping screen, the key/value pair would display one on top of the other and not next to each other
+- 0f1cf60d: Selecting display language on Shared Dimensions screen (in sync with project list)
+- 860a1379: Correct an inadvertent change of language selector in translated form fields (re #1338)
+
 ## 1.12.9
 
 ### Patch Changes
