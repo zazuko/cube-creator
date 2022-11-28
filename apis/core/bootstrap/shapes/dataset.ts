@@ -132,11 +132,12 @@ ${shapeId} {
       ${sh.languageIn} ( ${supportedLanguages} ) ;
       ${sh.uniqueLang} true ;
       ${sh.order} 10 ;
-      ${sh.description} "A publishable title describing the cube. Please add entries for all [languages](https://github.com/zazuko/cube-creator/wiki/2.-Cube-Designer#languages)." ;
+      ${sh.description} "A publishable title describing the cube. Please add entries for all [languages](https://github.com/zazuko/cube-creator/wiki/1.-CSV-Mapping#language-and-translations)." ;
       ${sh.group} ${mainGroup} ;
     ] ;
     ${sh.property} [
       ${sh.name} "Abbreviation" ;
+      ${sh.description} "If the dataset has an acronym, add it here instead and use the full name in the Title field" ;
       ${sh.path} ${schema.alternateName} ;
       ${sh.datatype} ${rdf.langString} ;
       ${sh.languageIn} ( ${supportedLanguages} ) ;
@@ -146,6 +147,7 @@ ${shapeId} {
     ] ;
     ${sh.property} [
       ${sh.name} "Subtitle" ;
+      ${sh.description} "If there are mutliple datasets with the same Title, use the the Subtitle to distinguish them.";
       ${sh.path} ${schema.disambiguatingDescription} ;
       ${sh.datatype} ${rdf.langString} ;
       ${sh.languageIn} ( ${supportedLanguages} ) ;
@@ -289,6 +291,7 @@ ${shapeId} {
     ] ;
     ${sh.property} [
       ${sh.name} "Planned update" ;
+      ${sh.description} "The next date, an update of the dataset is planned.";
       ${sh.path} ${lindasSchema.datasetNextDateModified} ;
       ${sh.maxCount} 1 ;
       ${sh.datatype} ${xsd.date} ;
