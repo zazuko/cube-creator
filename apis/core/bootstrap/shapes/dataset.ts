@@ -147,7 +147,7 @@ ${shapeId} {
     ] ;
     ${sh.property} [
       ${sh.name} "Subtitle" ;
-      ${sh.description} "If there are mutliple datasets with the same Title, use the the Subtitle to distinguish them.";
+      ${sh.description} "If there are mutliple datasets with the same Title, use the Subtitle to distinguish them.";
       ${sh.path} ${schema.disambiguatingDescription} ;
       ${sh.datatype} ${rdf.langString} ;
       ${sh.languageIn} ( ${supportedLanguages} ) ;
