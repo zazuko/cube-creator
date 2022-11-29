@@ -1,5 +1,11 @@
 # @cube-creator/cli
 
+## 2.0.4
+
+### Patch Changes
+
+- 1c90c035: Bump version to trigger release
+
 ## 2.0.3
 
 ### Patch Changes
