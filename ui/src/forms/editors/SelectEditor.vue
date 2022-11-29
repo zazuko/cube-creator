@@ -1,11 +1,11 @@
 <template>
   <o-select class="select-editor" placeholder="Select" @update:modelValue="onInput" :model-value="valueStr">
     <option
-      v-for="[option, label] in options"
+      v-for="option in options"
       :value="option.term.value"
       :key="option.value"
     >
-      {{ label }}
+      {{ label(option) }}
     </option>
   </o-select>
 </template>
@@ -20,6 +20,9 @@
 import { defineComponent, PropType } from 'vue'
 import { Term, NamedNode } from 'rdf-js'
 import { GraphPointer } from 'clownface'
+import '@/components/tagged-literal'
+import { getLocalizedLabel } from '@rdfjs-elements/lit-helpers'
+import { rdfs, schema } from '@tpluscode/rdf-ns-builders'
 
 export default defineComponent({
   name: 'SelectEditor',
@@ -33,7 +36,7 @@ export default defineComponent({
       default: undefined,
     },
     options: {
-      type: Array as PropType<[GraphPointer, string][]>,
+      type: Array as PropType<GraphPointer[]>,
       default: () => [],
     },
   },
@@ -46,11 +49,15 @@ export default defineComponent({
 
   methods: {
     onInput (value: string): void {
-      const selected = this.options.find(opt => opt[0].value === value)?.[0]
+      const selected = this.options.find(opt => opt.value === value)
       if (selected) {
         this.update(selected.term)
       }
     },
+
+    label (pointer: GraphPointer) {
+      return getLocalizedLabel(pointer.out([rdfs.label, schema.name])) || pointer.value
+    }
   },
 })
 </script>

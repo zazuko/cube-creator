@@ -1,15 +1,14 @@
-import { renderer, components, editors } from '@hydrofoil/shaperone-wc/configure'
+import * as Shaperone from '@hydrofoil/shaperone-wc/configure'
 import { html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import { PropertyTemplate, ObjectTemplate, FocusNodeTemplate, GroupTemplate } from '@hydrofoil/shaperone-wc/templates'
-import { instancesSelector } from '@hydrofoil/shaperone-hydra/components'
+import setup from '@hydrofoil/shaperone-hydra'
 import { ShaperoneForm } from '@hydrofoil/shaperone-wc/ShaperoneForm'
 import * as Editors from './editors'
 import * as Viewers from './viewers'
 import * as Matchers from './matchers'
 import { Metadata } from './metadata'
 import { createCustomElement } from './custom-element'
-import { dash } from '@tpluscode/rdf-ns-builders'
 import * as decorators from '@/forms/decorators'
 import * as dictionaryEditor from './templates/dictionaryEditor'
 import * as dynamicXone from './templates/dynamicXone'
@@ -73,25 +72,19 @@ object.loadDependencies = () => [
   import('./FormObject.vue').then(createCustomElement('form-object')),
 ]
 
-renderer.setTemplates({
+Shaperone.renderer.setTemplates({
   focusNode: dynamicXone.focusNode(dictionaryEditor.focusNode(focusNode)),
   property: emptyPropertyHider(dictionaryEditor.property(property)),
   object,
   group,
 })
-components.pushComponents(Editors)
-components.pushComponents(Viewers)
-components.decorate({
-  ...instancesSelector.decorator(),
-  applicableTo ({ editor }) {
-    return editor.equals(dash.InstancesSelectEditor) || editor.equals(dash.AutoCompleteEditor)
-  },
-})
-Object.values(decorators).forEach(components.decorate)
+Shaperone.components.pushComponents(Editors)
+Shaperone.components.pushComponents(Viewers)
+setup(Shaperone)
+Object.values(decorators).forEach(Shaperone.components.decorate)
 
-editors.addMetadata(Metadata)
-editors.addMatchers(Matchers)
-editors.decorate(instancesSelector.matcher)
+Shaperone.editors.addMetadata(Metadata)
+Shaperone.editors.addMatchers(Matchers)
 
 class Form extends ShaperoneForm {
   protected createRenderRoot (): Element | ShadowRoot {

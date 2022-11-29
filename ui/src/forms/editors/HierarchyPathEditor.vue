@@ -25,7 +25,6 @@ import { Term } from 'rdf-js'
 import { dataset } from '@rdf-esm/dataset'
 import clownface, { GraphPointer } from 'clownface'
 import { sh, schema, rdfs } from '@tpluscode/rdf-ns-builders/strict'
-import { Item } from '@hydrofoil/shaperone-core/components'
 import InstancesSelect from './SelectEditor.vue'
 
 function getProperty (value: GraphPointer | undefined) {
@@ -58,7 +57,7 @@ export default defineComponent({
       default: undefined,
     },
     properties: {
-      type: Array as PropType<Item[]>,
+      type: Array as PropType<GraphPointer[]>,
       default: undefined,
     },
     update: {

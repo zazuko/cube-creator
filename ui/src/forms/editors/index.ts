@@ -1,7 +1,8 @@
 import { html, SingleEditorComponent, Lazy, MultiEditorComponent } from '@hydrofoil/shaperone-wc'
 import {
   EnumSelectEditor, enumSelect as enumSelectCore,
-  InstancesSelectEditor, instancesSelect as instancesSelectCore, Item
+  InstancesSelectEditor, instancesSelect as instancesSelectCore,
+  AutoCompleteEditor, autoComplete as autoCompleteCore,
 } from '@hydrofoil/shaperone-core/components'
 import * as ns from '@cube-creator/core/namespace'
 import { dash, hydra, rdfs, schema, xsd } from '@tpluscode/rdf-ns-builders/strict'
@@ -17,6 +18,7 @@ import { loader } from './hierarchy/index'
 import { SingleEditorRenderParams } from '@hydrofoil/shaperone-core/models/components/index'
 import { InstancesSelect } from '@hydrofoil/shaperone-core/lib/components/instancesSelect'
 import StreamClient from 'sparql-http-client'
+import { shrink } from '@/rdf-properties'
 
 export const textField: Lazy<SingleEditorComponent> = {
   editor: dash.TextFieldEditor,
@@ -83,88 +85,32 @@ export const enumSelect: Lazy<EnumSelectEditor> = {
   }
 }
 
-export const autoComplete: Lazy<InstancesSelectEditor> = {
-  ...instancesSelectCore,
+export const autoComplete: Lazy<AutoCompleteEditor> = {
+  ...autoCompleteCore,
   editor: dash.AutoCompleteEditor,
   init (params, actions) {
-    const hasFreeTextQueryVariable = !!this.searchTemplate?.(params)?.mapping
-      .some(({ property }) => property?.equals(hydra.freetextQuery))
+    autoCompleteCore.init?.call(this, params, actions)
 
-    if (!hasFreeTextQueryVariable) {
-      return instancesSelectCore.init?.call(this, params, actions) || true
-    }
-
-    const { form, property, value, updateComponentState } = params
-    const { object } = value
-
-    function updateLoadingState ({ loading = false, ready = true } = {}) {
-      updateComponentState({
-        loading,
-        ready,
-      })
-    }
-
-    const componentNotLoaded = !value.componentState.ready && !value.componentState.loading
-    const hasNoLabel = object?.term.termType === 'NamedNode' && !object?.out(form.labelProperties).terms.length
-
-    if (componentNotLoaded && object && hasNoLabel) {
-      updateLoadingState({
-        loading: true,
-        ready: false,
-      })
-
-      const loadInstance = async () => {
-        if (object?.value.startsWith('urn:')) {
-          return
-        }
-
-        const instance = await this.loadInstance({ property: property.shape, value: object })
-        if (instance) {
-          const objectNode = property.shape.pointer.node(object)
-          for (const labelProperty of form.labelProperties) {
-            objectNode.addOut(labelProperty, instance.out(labelProperty))
-          }
-        }
-      }
-
-      loadInstance().then(() => updateLoadingState()).catch(updateLoadingState)
-
-      return false
-    }
-    if (!value.componentState.ready) {
-      updateLoadingState()
-    }
-
-    return !!value.componentState.ready
+    return true
   },
   async lazyRender () {
     await import('./AutoCompleteEditor.vue').then(createCustomElement('auto-complete'))
 
     return (params, { update }) => {
-      const { property, value, form } = params
-      async function load (this: typeof autoComplete, e: CustomEvent) {
-        const [filter, loading] = e.detail
+      const { property, value } = params
+      function load (this: typeof autoComplete, e: CustomEvent) {
+        const [freetextQuery] = e.detail
 
-        if (!this.shouldLoad(params, filter)) {
-          return
-        }
-
-        loading?.(true)
-        const pointers = await this.loadChoices(params, filter)
-        const instances = pointers.map<Item>(p => [p, this.label(p, params.form)])
         params.updateComponentState({
-          instances,
+          freetextQuery,
         })
-        loading?.(false)
       }
-
-      const label = value.object ? this.label(property.shape.pointer.node(value.object), form) : 'Select'
 
       return html`<auto-complete .property="${property.shape}"
                             .update="${update}"
                             .options="${value.componentState.instances}"
                             .value="${value.object?.term}"
-                            .placeholder="${label}"
+                            .loading="${value.componentState.loading}"
                             @search="${load.bind(this)}"></auto-complete>`
     }
   }

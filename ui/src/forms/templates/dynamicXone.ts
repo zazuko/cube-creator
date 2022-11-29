@@ -56,7 +56,10 @@ export const focusNode = decorate((wrapped: FocusNodeTemplate): FocusNodeTemplat
 
           requestAnimationFrame(() => {
             if (!isSelectedGroup) {
-              properties.filter(({ hidden }) => !hidden).forEach(shape => actions.hideProperty(shape))
+              properties.filter(({ hidden }) => !hidden).forEach(shape => {
+                actions.clearProperty(shape)
+                actions.hideProperty(shape)
+              })
             } else {
               properties.filter(({ hidden }) => !hidden).forEach(shape => actions.showProperty(shape))
             }
