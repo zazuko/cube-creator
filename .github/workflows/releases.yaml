@@ -50,7 +50,8 @@ jobs:
           private_key: ${{ secrets.GH_PRIVATE_KEY }}
 
       - name: Tag Core API
-        uses: tpluscode/action-autotag@min-version-21
+        uses: ButlerLogic/action-autotag@master
+        continue-on-error: true
         with:
           root: apis/core
           tag_prefix: cube-creator-api/v
@@ -59,7 +60,8 @@ jobs:
           GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
 
       - name: Tag UI
-        uses: tpluscode/action-autotag@min-version-21
+        uses: ButlerLogic/action-autotag@master
+        continue-on-error: true
         with:
           root: ui
           tag_prefix: cube-creator-app/v
@@ -68,7 +70,8 @@ jobs:
           GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
 
       - name: Tag CLI
-        uses: tpluscode/action-autotag@min-version-21
+        uses: ButlerLogic/action-autotag@master
+        continue-on-error: true
         with:
           root: cli
           tag_prefix: cube-creator-cli/v
