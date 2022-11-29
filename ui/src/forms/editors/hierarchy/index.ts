@@ -5,6 +5,7 @@ import clownface, { GraphPointer } from 'clownface'
 import StreamClient from 'sparql-http-client'
 import { Lazy, SingleEditorRenderParams } from '@hydrofoil/shaperone-core/models/components/index'
 import { Construct } from '@tpluscode/sparql-builder'
+import { shrink } from '@/rdf-properties'
 
 interface InstancesSelectEditorEx extends InstancesSelectEditor {
   _init?(context: SingleEditorRenderParams): void
@@ -56,7 +57,12 @@ export function loader (createQuery: (arg: GraphPointer) => Construct | null, ed
       const dataset = await $rdf.dataset().import(stream)
 
       // find in results resources with labels. these are the properties
-      return clownface({ dataset }).has(rdfs.label).toArray()
+      const choices = clownface({ dataset }).has(rdfs.label).toArray()
+      choices.forEach(pointer => {
+        pointer.deleteOut(rdfs.label).addOut(rdfs.label, shrink(pointer.value))
+      })
+
+      return choices
     }
   }
 }

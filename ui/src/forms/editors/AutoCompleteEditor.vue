@@ -1,14 +1,13 @@
 <template>
   <vue-select
-    :placeholder="placeholder"
+    placeholder="Select"
     :options="_options"
     label="label"
     :model-value="_value"
     @update:modelValue="onInput"
     :clearable="false"
+    :loading="loading"
     @search="onSearch"
-    @search:focus="__load"
-    :clear-search-on-blur="clearOnBlur"
   >
     <template #option="option">
       {{ option.label }}
@@ -28,6 +27,8 @@ import { findNodes } from 'clownface-shacl-path'
 import { sh1 } from '@cube-creator/core/namespace'
 import only from 'clownface/filter'
 import { displayLanguage } from '@/store/serializers'
+import { getLocalizedLabel } from '@rdfjs-elements/lit-helpers'
+import { rdfs, schema } from '@tpluscode/rdf-ns-builders'
 
 interface Option {
   label: string
@@ -51,22 +52,22 @@ export default defineComponent({
       type: Object as PropType<NamedNode>,
       default: undefined,
     },
-    placeholder: {
-      type: String,
-      required: true,
-    },
     options: {
-      type: Array as PropType<[GraphPointer, string][]>,
+      type: Array as PropType<GraphPointer[]>,
       default: undefined,
     },
     debounceWait: {
       type: Number,
       default: 300,
     },
+    loading: {
+      type: Boolean,
+      default: false,
+    },
   },
   emits: ['search'],
 
-  data (): { searchValue: string, initialLoaded: boolean, onSearch: (query: string, loading: () => void) => void } {
+  data (): { searchValue: string, initialLoaded: boolean, onSearch: (query: string) => void } {
     return {
       searchValue: '',
       initialLoaded: false,
@@ -76,14 +77,14 @@ export default defineComponent({
   },
 
   created () {
-    this.onSearch = debounce((freetextQuery: string, loading: () => void): void => {
+    this.onSearch = debounce((freetextQuery: string): void => {
       if (this.initialLoaded && !freetextQuery) {
         return
       }
 
       this.searchValue = freetextQuery
       this.initialLoaded = true
-      this.$emit('search', freetextQuery, loading)
+      this.$emit('search', freetextQuery)
     }, this.debounceWait)
   },
 
@@ -92,7 +93,7 @@ export default defineComponent({
       const helptextPath = this.property.pointer.out(sh1.itemHelptextPath)
 
       const options = this.options ?? []
-      return options.map(([pointer, label]) => {
+      return options.map((pointer) => {
         let helptext: string | undefined
         if (helptextPath.value) {
           [helptext] = findNodes(pointer, helptextPath).filter(only.taggedLiteral(displayLanguage)).values
@@ -100,7 +101,7 @@ export default defineComponent({
 
         return {
           value: pointer.term.value,
-          label,
+          label: getLocalizedLabel(pointer.out([rdfs.label, schema.name])),
           term: pointer.term,
           helptext,
         }
@@ -115,14 +116,6 @@ export default defineComponent({
   methods: {
     onInput (value: Option | null): void {
       this.update(value?.term ?? null)
-    },
-
-    clearOnBlur (): boolean {
-      return false
-    },
-
-    __load (): void {
-      this.$emit('search', this.searchValue)
     },
   },
 })

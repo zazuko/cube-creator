@@ -51,7 +51,7 @@ export const clearInstance: ComponentDecorator<InstancesSelectEditor> = {
               return rendered
             }
 
-            const hasValue = value.componentState.instances?.some(([inst]) => inst.term.equals(object.term))
+            const hasValue = value.componentState.instances?.some((inst) => inst.term.equals(object.term))
             if (!hasValue && defaultValue && !object.term.equals(defaultValue)) {
               update(defaultValue)
             } else if (!hasValue) {
