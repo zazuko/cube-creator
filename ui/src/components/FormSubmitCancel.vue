@@ -85,7 +85,7 @@ export default defineComponent({
   display: flex;
   flex-direction: row-reverse;
   justify-content: flex-start;
-  padding-top: 28px;
+  padding-top: 32px;
 }
 
 hr + .buttons {

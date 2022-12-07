@@ -15,6 +15,10 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import './customElements'
 import './styles/app.scss'
 import store from './store'
+import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path.js'
+import './forms/plugins'
+
+setBasePath('/shoelace')
 
 import('./forms')
 

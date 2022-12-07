@@ -73,14 +73,14 @@ import BMessage from '@/components/BMessage.vue'
 import ExternalTerm from '@/components/ExternalTerm.vue'
 import JobStatus from '@/components/JobStatus.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
-import MarkdownRender from '@/components/MarkdownRender.vue'
+import '@/customElements/MarkdownRender'
 import ValidationReportDisplay from '@/components/ValidationReportDisplay.vue'
 import { RootState } from '@/store/types'
 import { usePolling } from '@/use-polling'
 
 export default defineComponent({
   name: 'JobView',
-  components: { BMessage, ExternalTerm, JobStatus, LoadingBlock, MarkdownRender, ValidationReportDisplay },
+  components: { BMessage, ExternalTerm, JobStatus, LoadingBlock, ValidationReportDisplay },
 
   setup () {
     const store = useStore<RootState>()

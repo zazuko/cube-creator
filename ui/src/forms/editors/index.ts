@@ -1,11 +1,8 @@
 import { html, SingleEditorComponent, Lazy, MultiEditorComponent } from '@hydrofoil/shaperone-wc'
-import {
-  EnumSelectEditor, enumSelect as enumSelectCore,
-  InstancesSelectEditor, instancesSelect as instancesSelectCore,
-  AutoCompleteEditor, autoComplete as autoCompleteCore,
-} from '@hydrofoil/shaperone-core/components'
+import { InstancesSelectEditor } from '@hydrofoil/shaperone-core/components'
+import { instancesSelect } from '@hydrofoil/shaperone-wc-shoelace/components.js'
 import * as ns from '@cube-creator/core/namespace'
-import { dash, hydra, rdfs, schema, xsd } from '@tpluscode/rdf-ns-builders/strict'
+import { dash, rdfs, schema, xsd } from '@tpluscode/rdf-ns-builders/strict'
 import $rdf from 'rdf-ext'
 import clownface, { GraphPointer } from 'clownface'
 import { FocusNode } from '@hydrofoil/shaperone-core'
@@ -18,7 +15,6 @@ import { loader } from './hierarchy/index'
 import { SingleEditorRenderParams } from '@hydrofoil/shaperone-core/models/components/index'
 import { InstancesSelect } from '@hydrofoil/shaperone-core/lib/components/instancesSelect'
 import StreamClient from 'sparql-http-client'
-import { shrink } from '@/rdf-properties'
 
 export const textField: Lazy<SingleEditorComponent> = {
   editor: dash.TextFieldEditor,
@@ -58,63 +54,11 @@ export const textAreaWithLang: Lazy<SingleEditorComponent> = {
   }
 }
 
-export const instanceSelect: Lazy<InstancesSelectEditor> = {
-  ...instancesSelectCore,
-  async lazyRender () {
-    await import('./SelectEditor.vue').then(createCustomElement('select-editor'))
-
-    return ({ property, value }, { update }) => html`<select-editor
-                          style="width: 100%"
-                          .property="${property.shape}"
-                          .update="${update}"
-                          .options="${value.componentState.instances}"
-                          .value="${value.object?.term}"></select-editor>`
-  }
-}
-
-export const enumSelect: Lazy<EnumSelectEditor> = {
-  ...enumSelectCore,
-  async lazyRender () {
-    await import('./SelectEditor.vue').then(createCustomElement('select-editor'))
-
-    return ({ property, value }, { update }) =>
-      html`<select-editor .property="${property.shape}"
-                          .update="${update}"
-                          .options="${value.componentState.choices}"
-                          .value="${value.object?.term}"></select-editor>`
-  }
-}
-
-export const autoComplete: Lazy<AutoCompleteEditor> = {
-  ...autoCompleteCore,
-  editor: dash.AutoCompleteEditor,
-  init (params, actions) {
-    autoCompleteCore.init?.call(this, params, actions)
-
-    return true
-  },
-  async lazyRender () {
-    await import('./AutoCompleteEditor.vue').then(createCustomElement('auto-complete'))
-
-    return (params, { update }) => {
-      const { property, value } = params
-      function load (this: typeof autoComplete, e: CustomEvent) {
-        const [freetextQuery] = e.detail
-
-        params.updateComponentState({
-          freetextQuery,
-        })
-      }
-
-      return html`<auto-complete .property="${property.shape}"
-                            .update="${update}"
-                            .options="${value.componentState.instances}"
-                            .value="${value.object?.term}"
-                            .loading="${value.componentState.loading}"
-                            @search="${load.bind(this)}"></auto-complete>`
-    }
-  }
-}
+export {
+  instancesSelect,
+  enumSelect,
+  autocomplete,
+} from '@hydrofoil/shaperone-wc-shoelace/components.js'
 
 export const radioButtons: Lazy<SingleEditorComponent> = {
   editor: ns.editor.RadioButtons,
@@ -310,7 +254,7 @@ interface HierarchyPathEditor extends SingleEditorComponent<HierarchyPathCompone
 }
 
 export const hierarchyPath: Lazy<HierarchyPathEditor> = {
-  ...loader(hierarchyIntrospectionQueries.properties, instanceSelect),
+  ...loader(hierarchyIntrospectionQueries.properties, instancesSelect),
   editor: ns.editor.HierarchyPathEditor,
   _init (context) {
     if (context.value.object && !context.value.componentState.example) {
@@ -360,6 +304,6 @@ export const hierarchyPath: Lazy<HierarchyPathEditor> = {
 }
 
 export const hierarchyLevelTarget: Lazy<InstancesSelectEditor> = {
-  ...loader(hierarchyIntrospectionQueries.types, instanceSelect),
+  ...loader(hierarchyIntrospectionQueries.types, instancesSelect),
   editor: ns.editor.HierarchyLevelTargetEditor,
 }

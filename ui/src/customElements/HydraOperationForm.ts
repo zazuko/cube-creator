@@ -72,7 +72,8 @@ export class HydraOperationForm extends HydraOperationFormBase {
         display: 'flex',
         '--cc-form-group-display': 'flex',
         '--cc-form-group-justify-content': 'space-around',
-        '--cc-form-property-flex-grow': '1'
+        '--cc-form-property-flex': '1 1 0px',
+        '--cc-property-object-padding': '0 5px'
       }
     }
 
