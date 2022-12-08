@@ -17,7 +17,9 @@ describe('CSV mapping flow', () => {
 
     cy.contains('form-property', 'Publishing profile')
       .find('sl-select')
-      .select('https://cube-creator.lndo.site/organization/bafu')
+      .click()
+      .contains('sl-menu-item', 'Federal Office for the Environment')
+      .click()
 
     cy.contains('form-property', 'Cube identifier')
       .find('input')
@@ -85,7 +87,9 @@ describe('CSV mapping flow', () => {
 
     cy.contains('Source Column')
       .find('sl-select')
-      .select('column2')
+      .click()
+      .contains('sl-menu-item', 'column2')
+      .click()
 
     cy.contains('Target Property')
       .find('input')
@@ -94,7 +98,9 @@ describe('CSV mapping flow', () => {
     cy.contains('Data type')
       .click()
       .find('sl-select')
-      .select('string')
+      .click()
+      .contains('sl-menu-item', 'Federal Office for the Environment')
+      .click()
 
     cy.contains('Data type')
       // Click somewhere to validate the datatype selection
