@@ -16,15 +16,15 @@ describe('Shared dimensions', () => {
 
     cy.contains('.button', 'Create shared dimension').click()
 
-    cy.contains('.form-property', 'Identifier')
+    cy.contains('form-property', 'Identifier')
       .find('input')
       .type(toIdentifier(dimensionName))
 
-    cy.contains('.form-property', 'Name')
+    cy.contains('form-property', 'Name')
       .find('input')
       .type(dimensionName)
 
-    cy.contains('.form-property', 'Name')
+    cy.contains('form-property', 'Name')
       .find('select')
       .select('en')
 
@@ -39,15 +39,15 @@ describe('Shared dimensions', () => {
 
     cy.contains('.button', 'Add term').click()
 
-    cy.contains('.form-property', 'Identifier')
+    cy.contains('form-property', 'Identifier')
       .find('input')
       .type(toIdentifier(termName))
 
-    cy.contains('.form-property', 'Name')
+    cy.contains('form-property', 'Name')
       .find('input')
       .type(termName)
 
-    cy.contains('.form-property', 'Name')
+    cy.contains('form-property', 'Name')
       .find('select')
       .select('en')
 

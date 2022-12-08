@@ -11,15 +11,15 @@ describe('CSV mapping flow', () => {
   it('Creates a new project', () => {
     cy.contains('.button', 'New project').click()
 
-    cy.contains('.form-property', 'Project name')
+    cy.contains('form-property', 'Project name')
       .find('input')
       .type('My project')
 
-    cy.contains('.form-property', 'Publishing profile')
-      .find('select')
+    cy.contains('form-property', 'Publishing profile')
+      .find('sl-select')
       .select('https://cube-creator.lndo.site/organization/bafu')
 
-    cy.contains('.form-property', 'Cube identifier')
+    cy.contains('form-property', 'Cube identifier')
       .find('input')
       .type('ubd/29')
 
@@ -61,7 +61,7 @@ describe('CSV mapping flow', () => {
 
     cy.contains('.button', 'Create table from selected columns').click()
 
-    cy.contains('.form-property', 'Table name')
+    cy.contains('form-property', 'Table name')
       .find('input')
       .type('My observations')
 
@@ -84,7 +84,7 @@ describe('CSV mapping flow', () => {
     cy.contains('Literal value').click()
 
     cy.contains('Source Column')
-      .find('select')
+      .find('sl-select')
       .select('column2')
 
     cy.contains('Target Property')
@@ -93,7 +93,7 @@ describe('CSV mapping flow', () => {
 
     cy.contains('Data type')
       .click()
-      .find('select')
+      .find('sl-select')
       .select('string')
 
     cy.contains('Data type')
@@ -114,11 +114,11 @@ describe('CSV mapping flow', () => {
       .find('select')
       .select('test.csv')
 
-    cy.contains('.form-property', 'Table name')
+    cy.contains('form-property', 'Table name')
       .find('input')
       .type('My secondary table')
 
-    cy.contains('.form-property', 'Identifier template')
+    cy.contains('form-property', 'Identifier template')
       .find('input')
       .type('{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}column2{}}')
 
