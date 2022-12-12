@@ -1,5 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const webpack = require('webpack')
+const CopyPlugin = require('copy-webpack-plugin')
+const { resolve } = require('path')
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 process.env.VUE_APP_VERSION = require('./package.json').version
@@ -15,7 +17,10 @@ if (process.env.NO_WEBSOCKET === 'true') {
 
 const customElements = [
   'rdf-editor',
-  'tagged-literal'
+  'tagged-literal',
+  'markdown-render',
+  'form-object',
+  'form-property'
 ]
 
 module.exports = {
@@ -40,6 +45,14 @@ module.exports = {
         process: 'process/browser',
         Buffer: ['buffer', 'Buffer'],
       }),
+      new CopyPlugin({
+        patterns: [
+          {
+            from: resolve(__dirname, '../node_modules/@shoelace-style/shoelace/dist/assets'),
+            to: resolve(__dirname, 'dist/shoelace/assets')
+          }
+        ]
+      })
     )
   },
   chainWebpack: config => {

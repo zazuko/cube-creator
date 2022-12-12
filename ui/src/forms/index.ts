@@ -8,7 +8,6 @@ import * as Editors from './editors'
 import * as Viewers from './viewers'
 import * as Matchers from './matchers'
 import { Metadata } from './metadata'
-import { createCustomElement } from './custom-element'
 import * as decorators from '@/forms/decorators'
 import * as dictionaryEditor from './templates/dictionaryEditor'
 import * as dynamicXone from './templates/dynamicXone'
@@ -47,29 +46,43 @@ export const group: GroupTemplate = (renderer, { properties }) => {
 }
 
 const property: PropertyTemplate = (renderer, { property }) => {
+  const linkAttrs = {
+    target: '_blank',
+    rel: 'noopener noreferrer nofollow',
+  }
+
+  const controls = property.selectedEditor
+    ? renderer.renderMultiEditor()
+    : property.objects.map(object => html`${renderer.renderObject({ object })}`)
+
   return html`<form-property
-    .property="${Object.freeze(property)}"
-    .renderObject="${renderer.renderObject.bind(renderer)}"
+    .canAdd="${property.canAdd}"
     .actions="${renderer.actions}"
-    .renderMultiEditor="${renderer.renderMultiEditor.bind(renderer)}"
-  ></form-property>`
+    @add="${renderer.actions.addObject}"
+  >
+    <span class="label" slot="label">
+      ${property.name}
+    </span>
+    <markdown-render slot="help-text" class="help" .anchorAttributes="${linkAttrs}" .source="${property.shape.description}" ></markdown-render>
+    ${controls}
+  </form-property>`
 }
 
 property.loadDependencies = () => [
-  import('./FormProperty.vue').then(createCustomElement('form-property')),
+  import('../customElements/FormProperty'),
 ]
 
-export const object: ObjectTemplate = (renderer, { object }) => {
+export const object: ObjectTemplate = (renderer) => {
   return html`<form-object
-    .object="${object}"
-    .property="${Object.freeze(renderer.property)}"
-    .actions="${renderer.actions}"
-    .renderEditor="${renderer.renderEditor.bind(renderer)}"
-  />`
+    .canRemove="${renderer.property.canRemove}"
+    @remove="${renderer.actions.remove}"
+  >
+    ${renderer.renderEditor()}
+  </form-object>`
 }
 
 object.loadDependencies = () => [
-  import('./FormObject.vue').then(createCustomElement('form-object')),
+  import('../customElements/FormObject')
 ]
 
 Shaperone.renderer.setTemplates({

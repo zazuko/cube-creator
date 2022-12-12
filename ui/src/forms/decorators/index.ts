@@ -4,8 +4,6 @@ import { dash, sh } from '@tpluscode/rdf-ns-builders'
 import { sh1 } from '@cube-creator/core/namespace'
 import { InstancesSelectEditor } from '@hydrofoil/shaperone-core/components'
 
-export { dimensionMetaHierarchySynchronizer } from './dimensionMetaHierarchySynchronizer'
-
 export const fieldIf: ComponentDecorator<SingleEditorComponent | Lazy<SingleEditorComponent>> = {
   applicableTo (): boolean {
     return true

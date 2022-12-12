@@ -1,3 +1,5 @@
+import { nanoid } from 'nanoid'
+
 describe('CSV mapping flow', () => {
   it('Visits the app root url', () => {
     cy.visit('/')
@@ -11,17 +13,19 @@ describe('CSV mapping flow', () => {
   it('Creates a new project', () => {
     cy.contains('.button', 'New project').click()
 
-    cy.contains('.form-property', 'Project name')
+    cy.contains('form-property', 'Project name')
       .find('input')
       .type('My project')
 
-    cy.contains('.form-property', 'Publishing profile')
-      .find('select')
-      .select('https://cube-creator.lndo.site/organization/bafu')
+    cy.contains('form-property', 'Publishing profile')
+      .find('sl-select')
+      .click()
+      .contains('sl-menu-item', 'Federal Office for the Environment')
+      .click()
 
-    cy.contains('.form-property', 'Cube identifier')
+    cy.contains('form-property', 'Cube identifier')
       .find('input')
-      .type('ubd/29')
+      .type('ubd/' + nanoid())
 
     cy.get('div.quickview-body form').submit()
 
@@ -46,6 +50,9 @@ describe('CSV mapping flow', () => {
 
     cy.contains('Done').click()
 
+    cy.contains('uploaded').should('be.visible')
+    cy.reload()
+
     cy.contains('test.csv').should('be.visible')
     cy.contains('column1').should('be.visible')
     cy.contains('(value 1)').should('be.visible')
@@ -61,11 +68,14 @@ describe('CSV mapping flow', () => {
 
     cy.contains('.button', 'Create table from selected columns').click()
 
-    cy.contains('.form-property', 'Table name')
+    cy.contains('form-property', 'Table name')
       .find('input')
       .type('My observations')
 
     cy.contains('.label', 'Cube table')
+      .siblings('form-object')
+      .find('cc-checkbox')
+      .should('be.visible')
       .click()
 
     cy.get('form').submit()
@@ -84,17 +94,30 @@ describe('CSV mapping flow', () => {
     cy.contains('Literal value').click()
 
     cy.contains('Source Column')
-      .find('select')
-      .select('column2')
+      .siblings('form-object')
+      .find('sl-select')
+      .should('be.visible')
+      .click()
+      .contains('sl-menu-item', 'column2')
+      .click()
 
     cy.contains('Target Property')
+      .siblings('form-object')
       .find('input')
       .type('schema:identifier')
 
     cy.contains('Data type')
+      .parent('form-property')
+      .shadow()
+      .find('[name=plus]')
       .click()
-      .find('select')
-      .select('string')
+
+    cy.contains('Data type')
+      .siblings('form-object')
+      .find('sl-select')
+      .click()
+      .contains('sl-menu-item', 'string')
+      .click()
 
     cy.contains('Data type')
       // Click somewhere to validate the datatype selection
@@ -111,14 +134,18 @@ describe('CSV mapping flow', () => {
     cy.get('[data-testid=create-table]').click()
 
     cy.contains('Source CSV file')
-      .find('select')
-      .select('test.csv')
+      .siblings('form-object')
+      .find('sl-select')
+      .should('be.visible')
+      .click()
+      .contains('sl-menu-item', 'test.csv')
+      .click()
 
-    cy.contains('.form-property', 'Table name')
+    cy.contains('form-property', 'Table name')
       .find('input')
       .type('My secondary table')
 
-    cy.contains('.form-property', 'Identifier template')
+    cy.contains('form-property', 'Identifier template')
       .find('input')
       .type('{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}column2{}}')
 
