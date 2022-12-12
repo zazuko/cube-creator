@@ -1,3 +1,5 @@
+import { nanoid } from 'nanoid'
+
 describe('CSV mapping flow', () => {
   it('Visits the app root url', () => {
     cy.visit('/')
@@ -23,7 +25,7 @@ describe('CSV mapping flow', () => {
 
     cy.contains('form-property', 'Cube identifier')
       .find('input')
-      .type('ubd/29')
+      .type('ubd/' + nanoid())
 
     cy.get('div.quickview-body form').submit()
 
@@ -48,6 +50,9 @@ describe('CSV mapping flow', () => {
 
     cy.contains('Done').click()
 
+    cy.contains('uploaded').should('be.visible')
+    cy.reload()
+
     cy.contains('test.csv').should('be.visible')
     cy.contains('column1').should('be.visible')
     cy.contains('(value 1)').should('be.visible')
@@ -68,6 +73,9 @@ describe('CSV mapping flow', () => {
       .type('My observations')
 
     cy.contains('.label', 'Cube table')
+      .siblings('form-object')
+      .find('cc-checkbox')
+      .should('be.visible')
       .click()
 
     cy.get('form').submit()
@@ -86,20 +94,29 @@ describe('CSV mapping flow', () => {
     cy.contains('Literal value').click()
 
     cy.contains('Source Column')
+      .siblings('form-object')
       .find('sl-select')
+      .should('be.visible')
       .click()
       .contains('sl-menu-item', 'column2')
       .click()
 
     cy.contains('Target Property')
+      .siblings('form-object')
       .find('input')
       .type('schema:identifier')
 
     cy.contains('Data type')
+      .parent('form-property')
+      .shadow()
+      .find('[name=plus]')
       .click()
+
+    cy.contains('Data type')
+      .siblings('form-object')
       .find('sl-select')
       .click()
-      .contains('sl-menu-item', 'Federal Office for the Environment')
+      .contains('sl-menu-item', 'string')
       .click()
 
     cy.contains('Data type')
@@ -117,8 +134,12 @@ describe('CSV mapping flow', () => {
     cy.get('[data-testid=create-table]').click()
 
     cy.contains('Source CSV file')
-      .find('select')
-      .select('test.csv')
+      .siblings('form-object')
+      .find('sl-select')
+      .should('be.visible')
+      .click()
+      .contains('sl-menu-item', 'test.csv')
+      .click()
 
     cy.contains('form-property', 'Table name')
       .find('input')
