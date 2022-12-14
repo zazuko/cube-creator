@@ -61,9 +61,6 @@
         </tr>
       </tbody>
     </table>
-    <o-tooltip label="Add value">
-      <o-button icon-left="plus" @click.prevent="renderer.actions.addObject" variant="white" />
-    </o-tooltip>
   </div>
 </template>
 
