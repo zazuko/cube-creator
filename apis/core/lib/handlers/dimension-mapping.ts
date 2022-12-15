@@ -14,6 +14,7 @@ import { isNamedNode } from 'is-graph-pointer'
 import { toRdf } from 'rdf-literal'
 import { DimensionMetadataCollection } from '@cube-creator/model'
 import { dimensionChangedWarning } from '@cube-creator/model/DimensionMetadata'
+import parsePreferHeader from 'parse-prefer-header'
 import { shaclValidate } from '../middleware/shacl'
 import { update } from '../domain/dimension-mapping/update'
 import { getUnmappedValues, importMappingsFromSharedDimension } from '../domain/queries/dimension-mappings'
@@ -68,7 +69,9 @@ export const put = protectedResource(
   }))
 
 export const prepareEntries: Enrichment = async (req, pointer) => {
-  if (req.headers.prefer !== 'return=canonical') {
+  const preferences = parsePreferHeader(req.headers.prefer)
+
+  if (preferences.return !== 'canonical') {
     for (const quad of [...pointer.dataset]) {
       const remapped = $rdf.quad(
         fromCanonical(quad.subject),
@@ -83,10 +86,12 @@ export const prepareEntries: Enrichment = async (req, pointer) => {
     }
   }
 
-  const dictionary = fromPointer(pointer)
-  const unmappedValues = await getUnmappedValues(dictionary.id)
+  if (!preferences.onlyMapped) {
+    const dictionary = fromPointer(pointer)
+    const unmappedValues = await getUnmappedValues(dictionary.id)
 
-  dictionary.addMissingEntries(unmappedValues)
+    dictionary.addMissingEntries(unmappedValues)
+  }
 }
 
 export const importMappingsRequest = protectedResource(

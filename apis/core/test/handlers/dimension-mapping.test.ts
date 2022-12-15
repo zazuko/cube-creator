@@ -86,6 +86,42 @@ describe('lib/handlers/dimension-mapping', () => {
       })
     })
 
+    it('does not add empty values for unmapped keys when preference is set', async () => {
+      // given
+      req.headers.prefer = 'only-mapped'
+      unmappedTerms.add($rdf.literal('Pb'))
+      const sharedDimension = ex.dimension
+      const mappings = namedNode('mappings')
+      fromPointer(mappings, {
+        sharedDimension,
+        hadDictionaryMember: [{
+          pairKey: 'so2',
+          pairEntity: $rdf.namedNode('https://ld.admin.ch/cube/dimension/foo/bar'),
+        }],
+      })
+
+      // when
+      await prepareEntries(req, mappings)
+
+      // then
+      expect(mappings).to.matchShape({
+        property: {
+          path: prov.hadDictionaryMember,
+          node: {
+            property: [{
+              path: prov.pairKey,
+              minCount: 1,
+              maxCount: 1,
+            }, {
+              path: prov.pairEntity,
+              minCount: 1,
+              maxCount: 1,
+            }],
+          },
+        },
+      })
+    })
+
     it('does not map canonical IRIs when prefer header is set', async () => {
       // given
       req.headers.prefer = 'return=canonical'
@@ -119,7 +155,7 @@ describe('lib/handlers/dimension-mapping', () => {
       })
     })
 
-    it('does not map IRIs which are not in the canonical namesace', async () => {
+    it('does not map IRIs which are not in the canonical namespace', async () => {
       // given
       const sharedDimension = ex.dimension
       const mappings = namedNode('mappings')

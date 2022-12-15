@@ -53,7 +53,7 @@ async function loadMetadata(jobUri: string, Hydra: HydraClient) {
 
 export async function loadDimensionMapping(mappingUri: string, Hydra: HydraClient) {
   const mappingResource = await load<Dictionary>(mappingUri, Hydra, {
-    Prefer: 'return=canonical',
+    Prefer: 'return=canonical, only-mapped',
   })
   if (!mappingResource.representation) {
     throw new Error(`Mapping ${mappingUri} not loaded`)
