@@ -1,10 +1,11 @@
 import { Literal, NamedNode, Term } from 'rdf-js'
 import { Constructor, property } from '@tpluscode/rdfine'
-import { prov, schema } from '@tpluscode/rdf-ns-builders'
+import { prov, rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { Dictionary, KeyEntityPair } from '@rdfine/prov'
 import { cc, md } from '@cube-creator/core/namespace'
 import TermMap from '@rdfjs/term-map'
 import $rdf from 'rdf-ext'
+import TermSet from '@rdfjs/term-set'
 
 interface DictionaryEx {
   about: NamedNode
@@ -81,21 +82,21 @@ export function ProvDictionaryMixinEx<Base extends Constructor<Dictionary>>(Reso
     }
 
     addMissingEntries(unmappedValues: Set<Literal>) {
-      const currentEntries = this.hadDictionaryMember
-      const newEntries: any[] = []
+      const currentKeys = new TermSet(this.pointer
+        .out(prov.hadDictionaryMember)
+        .out(prov.pairKey)
+        .terms)
 
       for (const key of unmappedValues) {
-        if (!currentEntries.some(({ pairKey }) => pairKey?.equals(key))) {
-          newEntries.push({
-            pairKey: key,
-          })
+        if (!currentKeys.has(key)) {
+          this.pointer
+            .addOut(prov.hadDictionaryMember, entry => {
+              entry
+                .addOut(rdf.type, prov.KeyEntityPair)
+                .addOut(prov.pairKey, key)
+            })
         }
       }
-
-      this.hadDictionaryMember = [
-        ...currentEntries,
-        ...newEntries,
-      ]
     }
 
     renameDimension(oldCube: NamedNode, newCube: NamedNode | undefined) {

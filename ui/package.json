@@ -22,7 +22,7 @@
     "@hydrofoil/shaperone-core": "^0.10.1",
     "@hydrofoil/shaperone-hydra": "0.3.15",
     "@hydrofoil/shaperone-wc": "^0.7.11",
-    "@hydrofoil/shaperone-wc-shoelace": "^0.3",
+    "@hydrofoil/shaperone-wc-shoelace": "^0.3.1",
     "@oruga-ui/oruga-next": "^0.5.4",
     "@oruga-ui/theme-bulma": "^0.2.3",
     "@rdf-esm/data-model": "^0.5.3",
