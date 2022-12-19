@@ -75,4 +75,20 @@ export const organizations = turtle`
     ${cube.observedBy} <https://ld.admin.ch/FCh> ;
   .
 }
+
+<organization/agroscope> {
+  <organization/agroscope>
+    a ${schema.Organization} ;
+    ${cc.publishGraph}  <https://lindas.admin.ch/agroscope/cube> ;
+    ${cc.namespace} <https://agriculture.ld.admin.ch/agroscope/> ;
+    ${schema.dataset} <https://agriculture.ld.admin.ch/.well-known/void> ;
+    ${rdfs.label} "Agroscope"@en ;
+    ${rdfs.label} "Agroscope"@de ;
+    ${rdfs.label} "Agroscope"@it ;
+    ${rdfs.label} "Agroscope"@fr ;
+    ${dcat.accessURL} <https://agriculture.ld.admin.ch/sparql> ;
+    ${_void.sparqlEndpoint} <https://agriculture.ld.admin.ch/query> ;
+    ${cube.observedBy} <https://register.ld.admin.ch/staatskalender/organization/10003634> ;
+  .
+}
 `
