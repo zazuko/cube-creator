@@ -88,7 +88,7 @@ export const organizations = turtle`
     ${rdfs.label} "Agroscope"@fr ;
     ${dcat.accessURL} <https://agriculture.ld.admin.ch/sparql> ;
     ${_void.sparqlEndpoint} <https://agriculture.ld.admin.ch/query> ;
-    ${cube.observedBy} <https://register.ld.admin.ch/opendataswiss/org/agroscope> ;
+    ${cube.observedBy} <https://register.ld.admin.ch/staatskalender/organization/10003634> ;
   .
 }
 `
