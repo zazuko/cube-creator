@@ -1,5 +1,11 @@
 # @cube-creator/cli
 
+## 2.0.5
+
+### Patch Changes
+
+- 839bf93e: Fixes transformations failing when there is a large nominal dimension with many unmapped value. In such case, the pipeline should only request those mappings which are complete key/value pairs (closes #1328)
+
 ## 2.0.4
 
 ### Patch Changes

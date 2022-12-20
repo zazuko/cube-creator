@@ -1,5 +1,14 @@
 # @cube-creator/ui
 
+## 1.13.1
+
+### Patch Changes
+
+- 92191ca1: Use a prettier control for dropdowns and search boxes
+- 7aed3a1c: (+) button showed twice on dimension mapping screen
+- 2eb6e38c: Switching the "Value type" of dimension's term properties would result in validation error (fixes #1299)
+- 92191ca1: The possibility to clear dropdowns in project search without clearing entire form (fixes #1341)
+
 ## 1.13.0
 
 ### Minor Changes

@@ -1,5 +1,17 @@
 # @cube-creator/core-api
 
+## 2.2.0
+
+### Minor Changes
+
+- 49d8bddf: Added Agroscope publishing profile
+
+### Patch Changes
+
+- 45427607: Possible fix for the failing requests to get dimension mapping of a large dimension (re #1288)
+- 839bf93e: Fixes transformations failing when there is a large nominal dimension with many unmapped value. In such case, the pipeline should only request those mappings which are complete key/value pairs (closes #1328)
+- 92191ca1: The possibility to clear dropdowns in project search without clearing entire form (fixes #1341)
+
 ## 2.1.0
 
 ### Minor Changes
