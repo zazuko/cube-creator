@@ -1,5 +1,12 @@
 # @cube-creator/ui
 
+## 1.13.2
+
+### Patch Changes
+
+- 43d183d2: Attempted fix for #1347
+- f2b27449: Some icons were not being displayed
+
 ## 1.13.1
 
 ### Patch Changes
