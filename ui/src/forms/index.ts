@@ -1,3 +1,4 @@
+import { Hydra } from 'alcaeus/web'
 import * as Shaperone from '@hydrofoil/shaperone-wc/configure'
 import { html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
@@ -93,7 +94,7 @@ Shaperone.renderer.setTemplates({
 })
 Shaperone.components.pushComponents(Editors)
 Shaperone.components.pushComponents(Viewers)
-setup(Shaperone)
+setup(Shaperone, { client: Hydra })
 Object.values(decorators).forEach(Shaperone.components.decorate)
 
 Shaperone.editors.addMetadata(Metadata)
