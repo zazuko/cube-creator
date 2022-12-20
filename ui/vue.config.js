@@ -40,6 +40,10 @@ module.exports = {
       util: require.resolve('util'),
     }
 
+    const shoelaceAssets = process.env.NODE_ENV === 'production'
+      ? 'dist/shoelace/assets'
+      : 'dist/app/shoelace/assets'
+
     config.plugins.push(
       new webpack.ProvidePlugin({
         process: 'process/browser',
@@ -49,7 +53,7 @@ module.exports = {
         patterns: [
           {
             from: resolve(__dirname, '../node_modules/@shoelace-style/shoelace/dist/assets'),
-            to: resolve(__dirname, 'dist/shoelace/assets')
+            to: resolve(__dirname, shoelaceAssets)
           }
         ]
       })

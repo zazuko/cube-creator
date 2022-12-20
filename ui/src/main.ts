@@ -18,7 +18,7 @@ import store from './store'
 import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path.js'
 import './forms/plugins'
 
-setBasePath('/shoelace')
+setBasePath('/app/shoelace')
 
 import('./forms')
 
