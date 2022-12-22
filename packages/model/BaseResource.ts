@@ -4,6 +4,7 @@ import type { GraphPointer } from 'clownface'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import * as Schema from '@rdfine/schema'
 import { cc } from '../core/namespace'
+import { JobErrorMixin } from './Job'
 
 declare module '@tpluscode/rdfine/RdfResource' {
   interface RdfResourceCore {
@@ -19,7 +20,7 @@ export function BaseResourceMixin<Base extends Constructor>(base: Base): Constru
     @property.resource({
       path: schema.error,
       values: 'array',
-      as: [Schema.ThingMixin],
+      as: [JobErrorMixin],
       filter: term => term.termType === 'NamedNode' || term.termType === 'BlankNode',
     })
     errors!: Schema.Thing[]

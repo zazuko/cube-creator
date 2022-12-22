@@ -86,9 +86,6 @@ export function JobMixin<Base extends Constructor<RdfResource>>(base: Base): Mix
 
     @property.literal({ path: rdfs.comment, values: 'array' })
     comments!: string[]
-
-    @property.resource({ path: schema.error, as: [JobErrorMixin] })
-    error?: JobError
   }
 
   return Impl

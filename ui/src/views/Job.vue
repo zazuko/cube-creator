@@ -38,8 +38,8 @@
       </a>
     </div>
     <div>
-      <b-message v-if="job.error && job.error.disambiguatingDescription" type="is-danger" class="mb-2">
-        {{ job.error.disambiguatingDescription }}
+      <b-message v-if="error.disambiguatingDescription" type="is-danger" class="mb-2">
+        {{ error.disambiguatingDescription }}
       </b-message>
       <b-message v-for="comment in job.comments" :key="comment" type="is-warning" class="mb-2">
         <markdown-render :source="comment" />
@@ -50,11 +50,11 @@
           <span>View full log</span>
         </a>
       </o-tooltip>
-      <pre v-if="job.error && job.error.description" class="has-background-danger-light">
-        {{ job.error.description }}
+      <pre v-if="error.description" class="has-background-danger-light">
+        {{ error.description }}
       </pre>
-      <b-message v-if="job.error && job.error.validationReport" type="is-danger" title="Validation error">
-        <validation-report-display :report="job.error.validationReport" />
+      <b-message v-if="error.validationReport" type="is-danger" title="Validation error">
+        <validation-report-display :report="error.validationReport" />
       </b-message>
     </div>
   </div>
@@ -91,6 +91,7 @@ export default defineComponent({
     const job = shallowRef(findJob(jobId))
     const link = computed(() => job.value?.link?.id.value)
     const createdDate = computed(() => job.value?.created.toLocaleString() ?? '')
+    const error = computed(() => job.value?.errors[0] || {})
 
     usePolling(async () => {
       job.value = await api.fetchResource(jobId)
@@ -100,6 +101,7 @@ export default defineComponent({
 
     return {
       job,
+      error,
       language,
       link,
       createdDate,
