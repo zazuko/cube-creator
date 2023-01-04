@@ -69,12 +69,16 @@ export default defineComponent({
       meta: this.fileMeta,
     })
 
-    uppy.use(AwsS3Multipart, { companionUrl: uploadURL })
+    uppy.use(AwsS3Multipart, {
+      companionUrl: uploadURL,
+      companionHeaders: prepareHeaders(uploadURL, this.$store)
+    })
     uppy.addPreProcessor(async () => {
       // Hack to set fresh auth token before each upload
-      const headers = prepareHeaders(uploadURL, this.$store)
-      const plugin = uppy.getPlugin('AwsS3Multipart') as any
-      plugin.client.opts.companionHeaders = headers
+      const plugin = uppy.getPlugin<AwsS3Multipart>('AwsS3Multipart')
+      plugin?.setOptions({
+        companionHeaders: prepareHeaders(uploadURL, this.$store)
+      })
     })
     uppy.addPostProcessor(this.onUploaded)
 
