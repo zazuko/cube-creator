@@ -1,6 +1,6 @@
 import os from 'os'
 import express from 'express'
-import companion from '@uppy/companion'
+import * as companion from '@uppy/companion'
 import env from '@cube-creator/core/env'
 import bodyParser from 'body-parser'
 import { nanoid } from 'nanoid'
@@ -31,18 +31,16 @@ app.post('/s3/multipart', async (req, res, next) => {
 })
 
 app.use(companion.app({
-  providerOptions: {
-    s3: {
-      awsClientOptions: {
-        endpoint: env.AWS_S3_ENDPOINT,
-        s3ForcePathStyle: true,
-      },
-      key: env.AWS_ACCESS_KEY_ID,
-      secret: env.AWS_SECRET_ACCESS_KEY,
-      bucket: env.AWS_S3_BUCKET,
-      acl: 'private',
-      getKey: (req: express.Request, filename: string, metadata: Record<string, string>) => buildKey(filename, metadata),
+  s3: {
+    awsClientOptions: {
+      endpoint: env.AWS_S3_ENDPOINT,
+      s3ForcePathStyle: true,
     },
+    key: env.AWS_ACCESS_KEY_ID,
+    secret: env.AWS_SECRET_ACCESS_KEY,
+    bucket: env.AWS_S3_BUCKET,
+    acl: 'private',
+    getKey: (req: express.Request, filename: string, metadata: Record<string, string>) => buildKey(filename, metadata),
   },
   server: {
     host: apiURL.host,
@@ -52,7 +50,7 @@ app.use(companion.app({
   },
   filePath: os.tmpdir(),
   secret: nanoid(30),
-}))
+}).app)
 
 function buildKey(filename: string, metadata: Record<string, string>) {
   const isReplace = !!metadata.replace
