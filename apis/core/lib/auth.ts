@@ -2,8 +2,8 @@ import { Router, Request, Response, NextFunction, RequestHandler } from 'express
 import error from 'http-errors'
 import env from '@cube-creator/core/env'
 import fetch from 'node-fetch'
-import jwt from 'express-jwt'
-import jwksRsa from 'jwks-rsa'
+import { expressjwt } from 'express-jwt'
+import { expressJwtSecret, GetVerificationKey } from 'jwks-rsa'
 import { DELETE } from '@tpluscode/sparql-builder'
 import { hydra, schema } from '@tpluscode/rdf-ns-builders'
 import TermSet from '@rdfjs/term-set'
@@ -18,11 +18,11 @@ declare module '@hydrofoil/labyrinth' {
   }
 }
 
-const createJwtHandler = (credentialsRequired: boolean, jwksUri: string) => jwt({
+const createJwtHandler = (credentialsRequired: boolean, jwksUri: string) => expressjwt({
   // Dynamically provide a signing key
   // based on the kid in the header and
   // the signing keys provided by the JWKS endpoint.
-  secret: jwksRsa.expressJwtSecret({
+  secret: <GetVerificationKey>expressJwtSecret({
     cache: true,
     rateLimit: true,
     jwksRequestsPerMinute: 5,
@@ -33,6 +33,7 @@ const createJwtHandler = (credentialsRequired: boolean, jwksUri: string) => jwt(
   audience: env.AUTH_AUDIENCE,
   issuer: env.AUTH_ISSUER,
   algorithms: ['RS256'],
+  requestProperty: 'user',
   credentialsRequired,
 })
 
