@@ -1,13 +1,15 @@
 name: CI
 
-on: [push, pull_request]
+on:
+  - push
+  - pull_request
 
 jobs:
   unit-test:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ./.github/workflows/setup-env
       - run: yarn test
       - run: yarn test:queries
@@ -18,18 +20,18 @@ jobs:
         if: ${{ failure() }}
         run: lando logs -s core
       - name: Codecov
-        uses: codecov/codecov-action@v1.0.5
+        uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2.4.0
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: 16
-          cache: 'yarn'
+          cache: "yarn"
       - run: yarn install --ci
       - run: yarn lint
       - run: yarn workspace @cube-creator/ui lint
@@ -38,7 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set e2e environment variables
         run: echo -e "\nVUE_APP_E2E=true\nVUE_APP_X_USER=john-doe\nVUE_APP_X_PERMISSION=pipelines:read,pipelines:write" >> .local.env
       - uses: ./.github/workflows/setup-env
@@ -56,13 +58,13 @@ jobs:
       - name: UI e2e tests
         run: yarn workspace @cube-creator/ui test:e2e --url https://app.cube-creator.lndo.site --headless
       - name: Save Cypress videos
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: failure()
         with:
           name: cypress-videos
           path: ui/tests/e2e/videos/*
       - name: Save Cypress screenshots
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: failure()
         with:
           name: cypress-screenshots

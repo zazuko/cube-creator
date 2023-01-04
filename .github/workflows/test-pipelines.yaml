@@ -9,15 +9,15 @@ jobs:
       fail-fast: false
       matrix:
         command:
-        - test:cli:transform
-        - test:cli:publish
-        - test:cli:import
-        - test:cli:timeoutJobs
+          - test:cli:transform
+          - test:cli:publish
+          - test:cli:import
+          - test:cli:timeoutJobs
 
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ./.github/workflows/setup-env
       - run: yarn ${{ matrix.command }}
         env:
@@ -26,6 +26,6 @@ jobs:
         if: ${{ failure() }}
         run: lando logs
       - name: Codecov
-        uses: codecov/codecov-action@v1.0.5
+        uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}

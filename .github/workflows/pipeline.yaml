@@ -4,11 +4,12 @@ on:
   workflow_dispatch:
     inputs:
       transform_job:
-        description: 'Job URL'
+        description: "Job URL"
       publish_job:
-        description: 'Job URL'
+        description: "Job URL"
       to:
-        default: 'graph-store'
+        description: "To"
+        default: "graph-store"
 
 jobs:
   pipeline:
@@ -28,11 +29,11 @@ jobs:
       SENTRY_ENVIRONMENT: ${{ secrets.SENTRY_ENVIRONMENT }}
       EXECUTION_URL: "https://${{ github.repository }}/actions/runs/${{ github.run_id }}"
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2.4.0
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: 16
-          cache: 'yarn'
+          cache: "yarn"
 
       - run: yarn install --ci --prefer-offline
 
@@ -48,7 +49,7 @@ jobs:
 
       - name: Output artifact
         if: github.event.inputs.to == 'filesystem'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: transformed.nt
           path: cli/output/transformed.nt
