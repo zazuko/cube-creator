@@ -191,7 +191,7 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension/import
       await expect(promise).to.eventually.be.rejectedWith(/already exists/)
     })
 
-    it('inserts dimension data to database without blank nodes @SPARQL', async () => {
+    it('inserts dimension data to database with blank nodes preserved @SPARQL', async () => {
       // given
       const dimension = $rdf.namedNode(`${env.MANAGED_DIMENSIONS_BASE}dim-${nanoid()}`)
       resource.addOut(md.export, 'dim.ttl')
@@ -230,8 +230,8 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension/import
         ${dimension} a ${md.SharedDimension} ; ${sh.property} ?defaultMeta .
         ?shape ${sh.targetNode} ${dimension} .
 
-        FILTER ( isIRI(?defaultMeta) )
-        FILTER ( isIRI(?shape) )
+        FILTER ( isBlank(?defaultMeta) )
+        FILTER ( isBlank(?shape) )
       `
         .FROM($rdf.namedNode(env.MANAGED_DIMENSIONS_GRAPH))
         .execute(mdClients.streamClient.query)

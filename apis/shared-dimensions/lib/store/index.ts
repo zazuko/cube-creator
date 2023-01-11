@@ -73,7 +73,11 @@ export default class implements SharedDimensionsStore {
 
     const graph = shapes.has(sh.targetClass, types.map(b => b.type))
     if (!isGraphPointer(graph)) {
-      throw new Error(`No unique shape found for resource <${term.value}>`)
+      return clownface({ dataset: $rdf.dataset() })
+        .blankNode()
+        .addOut(sh.property, shp => {
+          shp.addOut(sh.path, rdf.type)
+        })
     }
 
     let shape: GraphPointer = graph

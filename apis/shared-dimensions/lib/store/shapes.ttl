@@ -152,14 +152,6 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 ] .
 
 [
-  sh:targetClass md:SharedDimensions, md:SharedDimensionTerms, md:SharedDimensionExport, md:Hierarchies, sh:NodeShape ;
-  sh:property
-    [
-      sh:path rdf:type ;
-    ] ;
-] .
-
-[
   sh:targetClass md:Entrypoint ;
   sh:property
     [
