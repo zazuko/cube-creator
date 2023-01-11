@@ -145,6 +145,9 @@ graph <http://example.com/dimension/colors> {
 }
 
 <technologies> a void:rootResource .
+<technologies/rdf> a void:rootResource .
+<technologies/sparql> a void:rootResource .
+<technologies/shacl> a void:rootResource .
 
 graph <https://lindas.admin.ch/cube/dimension> {
   <technologies>

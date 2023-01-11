@@ -29,7 +29,7 @@ export default class implements SharedDimensionsStore {
 
     const query = construct(shape, {
       focusNode: term,
-    })
+    }).FROM(this.graph)
 
     const quads = await query.execute(this.client.query, {
       operation: 'postDirect',
