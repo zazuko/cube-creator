@@ -1,4 +1,4 @@
-import { BlankNode, NamedNode, Quad, Stream, Term } from 'rdf-js'
+import { NamedNode, Quad, Stream, Term } from 'rdf-js'
 import clownface, { GraphPointer, MultiPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import through2 from 'through2'
@@ -6,16 +6,15 @@ import { dcterms, hydra, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { md, meta } from '@cube-creator/core/namespace'
 import { DomainError } from '@cube-creator/api-errors'
 import httpError from 'http-errors'
-import { CONSTRUCT, sparql } from '@tpluscode/sparql-builder'
-import { IN } from '@tpluscode/sparql-builder/expressions'
+import { DESCRIBE } from '@tpluscode/sparql-builder'
 import { StreamClient } from 'sparql-http-client/StreamClient'
-import TermMap from '@rdfjs/term-map'
 import { oa } from '@tpluscode/rdf-ns-builders/strict'
+import TermSet from '@rdfjs/term-set'
 import { streamClient } from '../sparql'
 import { SharedDimensionsStore } from '../store'
 import env from '../env'
-import { resourceShapePatterns } from '../resource'
 import { newId, replace } from './resource'
+import * as queries from './shared-dimension/queries'
 
 export { importDimension } from './shared-dimension/import'
 
@@ -81,6 +80,7 @@ interface UpdateSharedDimension {
   resource: GraphPointer<NamedNode>
   store: SharedDimensionsStore
   shape: MultiPointer | undefined
+  queries?: typeof queries
 }
 
 function removeSubgraph(pointer: GraphPointer, predicate?: Term) {
@@ -92,7 +92,7 @@ function removeSubgraph(pointer: GraphPointer, predicate?: Term) {
   }
 }
 
-export async function update({ resource, store, shape }: UpdateSharedDimension): Promise<GraphPointer> {
+export async function update({ resource, store, shape, queries }: UpdateSharedDimension): Promise<GraphPointer> {
   const ignoredProperties = shape
     ?.out(sh.ignoredProperties)
     .list() || []
@@ -101,7 +101,14 @@ export async function update({ resource, store, shape }: UpdateSharedDimension):
     removeSubgraph(resource, ignoredProperty.term)
   }
 
+  const current = await store.load(resource.term)
+  const deletedProperties = new TermSet(current.out(schema.additionalProperty).out(rdf.predicate).terms)
+  for (const prop of resource.out(schema.additionalProperty).out(rdf.predicate).terms) {
+    deletedProperties.delete(prop)
+  }
+
   await store.save(resource)
+  await queries?.deleteDynamicTerms(resource.term, [...deletedProperties])
   return resource
 }
 
@@ -122,44 +129,13 @@ const excludedProps = [
   oa.canonical,
 ]
 
-function urnToBlanks() {
-  const urns = new TermMap<Term, BlankNode>()
-
-  return through2.obj(function (quad: Quad, _, next) {
-    let { subject, predicate, object, graph } = quad
-
-    if (subject.value.startsWith('urn:')) {
-      const blank = urns.get(subject) || $rdf.blankNode()
-      urns.set(subject, blank)
-      subject = blank
-    }
-    if (object.value.startsWith('urn:')) {
-      const blank = urns.get(object) || $rdf.blankNode()
-      urns.set(object, blank)
-      object = blank
-    }
-
-    this.push($rdf.quad(subject, predicate, object, graph))
-    next()
-  })
-}
-
 export async function getExportedDimension({ resource, store, client = streamClient }: GetExportedDimension): Promise<ExportedDimension> {
   const dimension = await store.load(resource)
 
-  const dimensionAndTerms = sparql`?term ${schema.inDefinedTermSet}* ${dimension.term} .`
-
-  const quads = await CONSTRUCT`?dimensionTerm ?p ?o`
+  const quads = await DESCRIBE`${resource} ?term`
     .FROM(store.graph)
     .WHERE`
-      ${resourceShapePatterns(dimensionAndTerms)}
-
-      ?shape ${sh.property} ?shProp .
-      ?shProp ${sh.path} ?p .
-      ?shape ${sh.targetNode} ?dimensionTerm .
-      ?dimensionTerm ?p ?o .
-
-      FILTER (?p NOT ${IN(...excludedProps)})
+      ?term ${schema.inDefinedTermSet} ${resource}
   `.execute(client.query)
 
   const baseUriPattern = new RegExp(`^${env.MANAGED_DIMENSIONS_BASE}`)
@@ -182,7 +158,11 @@ export async function getExportedDimension({ resource, store, client = streamCli
   })
 
   const materialized = await $rdf.dataset()
-    .import(quads.pipe(transformToQuads).pipe(urnToBlanks()))
+    .import(quads.pipe(transformToQuads))
+
+  for (const excludedProp of excludedProps) {
+    materialized.removeMatches(null, excludedProp)
+  }
 
   return {
     dimension,

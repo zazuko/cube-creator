@@ -9,6 +9,8 @@ import { md, meta } from '@cube-creator/core/namespace'
 import $rdf from 'rdf-ext'
 import httpError from 'http-errors'
 import clownface from 'clownface'
+import sinon from 'sinon'
+import { ex } from '@cube-creator/testing/lib/namespace'
 import { create, createTerm, update, getExportedDimension } from '../../../lib/domain/shared-dimension'
 import { SharedDimensionsStore } from '../../../lib/store'
 import { testStore } from '../../support/store'
@@ -195,6 +197,38 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () =
       // expect
       expect(saved.dataset).to.have.property('size', 1)
       expect(saved.out(schema.name).value).to.eq('Term set')
+    })
+
+    it('deletes term properties triples when removed from dimensions', async () => {
+      // given
+      const queries = {
+        deleteDynamicTerms: sinon.spy(),
+      }
+      const before = namedNode('')
+        .addOut(dcterms.identifier, 'foo')
+        .addOut(schema.name, 'Term set')
+        .addOut(schema.additionalProperty, dyn => dyn.addOut(rdf.predicate, ex.foo))
+        .addOut(schema.additionalProperty, dyn => dyn.addOut(rdf.predicate, ex.bar))
+      const after = namedNode('')
+        .addOut(dcterms.identifier, 'foo')
+        .addOut(schema.name, 'Term set')
+        .addOut(schema.additionalProperty, dyn => dyn.addOut(rdf.predicate, ex.bar))
+      const store = testStore()
+      await store.save(before)
+
+      // when
+      await update({
+        store,
+        shape: blankNode(),
+        resource: after,
+        queries,
+      })
+
+      // then
+      expect(queries.deleteDynamicTerms).to.have.been.calledWithMatch(
+        before.term,
+        [ex.foo],
+      )
     })
   })
 

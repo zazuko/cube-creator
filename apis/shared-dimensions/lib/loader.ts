@@ -8,8 +8,8 @@ import $rdf from 'rdf-ext'
 import { ParsingClient } from 'sparql-http-client/ParsingClient'
 import { StreamClient } from 'sparql-http-client/StreamClient'
 import once from 'once'
-import { resourceQuery } from './store'
-import { restoreBnodes } from './rewrite'
+import toStream from 'rdf-dataset-ext/toStream'
+import { store } from './store'
 
 interface LoaderOptions {
   graph: NamedNode
@@ -39,9 +39,8 @@ export default class Loader implements HydraBox.ResourceLoader {
     }))
 
     const fullDataset = async () => {
-      const query = await resourceQuery(term, this.options.graph, this.options.sparql)
-      const stream = await query.execute(this.options.stream.query)
-      return stream.pipe(restoreBnodes())
+      const pointer = await store().load(term)
+      return toStream(pointer.dataset)
     }
 
     return [{

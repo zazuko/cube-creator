@@ -9,6 +9,7 @@ import { shaclValidate } from '../middleware/shacl'
 import shapes from '../shapes/index'
 import { update } from '../domain/shared-dimension'
 import { rewrite } from '../rewrite'
+import * as queries from '../domain/shared-dimension/queries'
 
 export const DELETE = protectedResource(asyncMiddleware(async (req, res) => {
   await cascadeDelete({
@@ -31,6 +32,7 @@ export const put = protectedResource(shaclValidate, asyncMiddleware(async (req, 
     resource: rewrite(await req.resource()),
     store: store(),
     shape,
+    queries,
   })
 
   return res.dataset(dimension.dataset)
