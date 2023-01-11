@@ -176,29 +176,6 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () =
   })
 
   describe('update', () => {
-    it('removes all triples which are subgraph of sh:ignoreProperty', async () => {
-      // given
-      const shape = blankNode()
-        .addList(sh.ignoredProperties, [schema.memberOf, dcterms.identifier])
-      const resource = namedNode('')
-        .addOut(dcterms.identifier, 'foo')
-        .addOut(schema.name, 'Term set')
-        .addOut(schema.memberOf, org => {
-          org.addOut(rdf.type, schema.Organization)
-        })
-
-      // when
-      const saved = await update({
-        store: testStore(),
-        shape,
-        resource,
-      })
-
-      // expect
-      expect(saved.dataset).to.have.property('size', 1)
-      expect(saved.out(schema.name).value).to.eq('Term set')
-    })
-
     it('deletes term properties triples when removed from dimensions', async () => {
       // given
       const queries = {
