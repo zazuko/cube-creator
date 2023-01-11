@@ -225,10 +225,11 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () =
       })
 
       // then
-      expect(queries.deleteDynamicTerms).to.have.been.calledWithMatch(
-        before.term,
-        [ex.foo],
-      )
+      expect(queries.deleteDynamicTerms).to.have.been.calledWithMatch({
+        dimension: before.term,
+        properties: [ex.foo],
+        graph: 'https://lindas.admin.ch/cube/dimension',
+      })
     })
   })
 

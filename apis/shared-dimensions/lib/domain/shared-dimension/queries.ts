@@ -1,15 +1,22 @@
 import { NamedNode, Term } from 'rdf-js'
-import { DELETE } from '@tpluscode/sparql-builder'
+import { DELETE, WITH } from '@tpluscode/sparql-builder'
 import { VALUES } from '@tpluscode/sparql-builder/expressions'
-import { md } from '@cube-creator/core/namespace'
+import { schema } from '@tpluscode/rdf-ns-builders/strict'
 import { streamClient } from '../../sparql'
 
-export async function deleteDynamicTerms(dimension: NamedNode, properties: Array<Term>) {
+interface DeleteDynamicTerms {
+  graph: string
+  dimension: NamedNode
+  properties: Array<Term>
+}
+
+export async function deleteDynamicTerms({ dimension, properties, graph }: DeleteDynamicTerms) {
   const values = properties.map(prop => ({ prop }))
 
-  await DELETE`
+  await WITH(graph, DELETE`
+    ?term ?prop ?o .
+  `.WHERE`
     ${VALUES(...values)}
-
-    ?term ?prop ?o ; ${md.sharedDimension} ${dimension} .
-  `.execute(streamClient.query)
+    ?term ?prop ?o ; ${schema.inDefinedTermSet} ${dimension} .
+  `).execute(streamClient.query)
 }

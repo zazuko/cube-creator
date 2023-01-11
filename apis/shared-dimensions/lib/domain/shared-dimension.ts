@@ -108,7 +108,11 @@ export async function update({ resource, store, shape, queries }: UpdateSharedDi
   }
 
   await store.save(resource)
-  await queries?.deleteDynamicTerms(resource.term, [...deletedProperties])
+  await queries?.deleteDynamicTerms({
+    dimension: resource.term,
+    properties: [...deletedProperties],
+    graph: env.MANAGED_DIMENSIONS_GRAPH,
+  })
   return resource
 }
 
