@@ -61,7 +61,6 @@ import FormSubmitCancel from '@/components/FormSubmitCancel.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import HydraOperationError from '@/components/HydraOperationError.vue'
 import PropertyInput from '@/forms/editors/PropertyInput.vue'
-import RadioButtons from '@/forms/editors/RadioButtons.vue'
 import { ErrorDetails } from '@/api/errors'
 import { Link } from '@cube-creator/model/lib/Link'
 import { api } from '@/api'
@@ -80,7 +79,7 @@ interface FormData {
 
 export default defineComponent({
   name: 'ReferenceColumnMappingForm',
-  components: { FormSubmitCancel, HydraOperationError, LoadingBlock, PropertyInput, RadioButtons },
+  components: { FormSubmitCancel, HydraOperationError, LoadingBlock, PropertyInput },
   props: {
     table: {
       type: Object as PropType<Table>,
