@@ -171,8 +171,8 @@ describe('CSV mapping flow', () => {
     cy.contains('.field', 'Using the property')
       .type('{selectall}the-other')
 
-    cy.get('form')
-      .submit()
+    cy.contains('Create link')
+      .click()
 
     cy.contains('Column mapping was successfully created').should('be.visible')
     cy.contains('.mapper-table', 'the-other').should('be.visible')

@@ -2,6 +2,7 @@
   "name": "@zazuko/cube-creator",
   "private": true,
   "scripts": {
+    "prepare": "husky install",
     "postinstall": "patch-package",
     "lint": "eslint . --ext .ts,.vue,.tsx --quiet --ignore-path .gitignore",
     "test": "c8 -o coverage/apis mocha --recursive apis/**/*.test.ts packages/**/*.test.ts --grep @SPARQL --invert",
@@ -42,6 +43,8 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-vue": "^9.8.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.1.0",
     "npm-run-all": "^4.1.5",
     "standard": "^16.0.0",
     "ts-node": "^9.0.0",
@@ -73,5 +76,10 @@
   },
   "resolutions": {
     "@types/eslint": "^8"
+  },
+  "lint-staged": {
+    "*.{js,ts,vue}": [
+      "eslint --fix --quiet"
+    ]
   }
 }
