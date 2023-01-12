@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="onSubmit">
+  <form>
     <o-field label="Link to table">
       <o-select v-model="data.referencedTable" placeholder="Select a table">
         <option v-for="optionTable in tables" :key="optionTable.clientPath" :value="optionTable">
@@ -36,21 +36,13 @@
       <loading-block v-else />
     </o-field>
 
-    <o-field label="Dimension type">
-      <radio-buttons
-        class="has-addons"
-        :options="dimensionTypes"
-        :value="data.dimensionType"
-        :update="(value) => data.dimensionType = value"
-      />
-    </o-field>
-
     <hydra-operation-error :error="error" class="mt-4" />
 
     <form-submit-cancel
       :submit-label="submitLabel"
       :is-submitting="isSubmitting"
       @cancel="$emit('cancel')"
+      @cc-submit="onSubmit"
     />
   </form>
 </template>
@@ -69,7 +61,6 @@ import FormSubmitCancel from '@/components/FormSubmitCancel.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import HydraOperationError from '@/components/HydraOperationError.vue'
 import PropertyInput from '@/forms/editors/PropertyInput.vue'
-import RadioButtons from '@/forms/editors/RadioButtons.vue'
 import { ErrorDetails } from '@/api/errors'
 import { Link } from '@cube-creator/model/lib/Link'
 import { api } from '@/api'
@@ -88,7 +79,7 @@ interface FormData {
 
 export default defineComponent({
   name: 'ReferenceColumnMappingForm',
-  components: { FormSubmitCancel, HydraOperationError, LoadingBlock, PropertyInput, RadioButtons },
+  components: { FormSubmitCancel, HydraOperationError, LoadingBlock, PropertyInput },
   props: {
     table: {
       type: Object as PropType<Table>,

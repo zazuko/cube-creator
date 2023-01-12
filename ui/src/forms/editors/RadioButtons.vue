@@ -28,7 +28,7 @@ export default defineComponent({
       default: undefined,
     },
     value: {
-      type: Object as PropType<GraphPointer>,
+      type: Object as PropType<GraphPointer | Term>,
       default: undefined,
     },
     update: {
