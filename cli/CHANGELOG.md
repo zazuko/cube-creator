@@ -1,5 +1,11 @@
 # @cube-creator/cli
 
+## 2.0.6
+
+### Patch Changes
+
+- c181c776: Updated [luxon](https://github.com/moment/luxon)
+
 ## 2.0.5
 
 ### Patch Changes
