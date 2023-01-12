@@ -1,5 +1,13 @@
 # @cube-creator/ui
 
+## 1.13.3
+
+### Patch Changes
+
+- 16313a61: Publishing validation errors would not be displayed (fixes #1286)
+- a64699a5: It was not possible to create a "Link to another table" column (fixes #1358)
+- 5cb550e6: Updated `express` and `@uppy` packages
+
 ## 1.13.2
 
 ### Patch Changes

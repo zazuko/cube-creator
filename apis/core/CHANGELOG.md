@@ -1,5 +1,13 @@
 # @cube-creator/core-api
 
+## 2.2.1
+
+### Patch Changes
+
+- c181c776: Updated [luxon](https://github.com/moment/luxon)
+- 5cb550e6: Updated `express` and `@uppy` packages
+- 0a018397: Update JWT auth packages
+
 ## 2.2.0
 
 ### Minor Changes
