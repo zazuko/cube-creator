@@ -11,6 +11,10 @@ interface DeleteDynamicTerms {
 }
 
 export async function deleteDynamicTerms({ dimension, properties, graph }: DeleteDynamicTerms) {
+  if (properties.length === 0) {
+    return
+  }
+
   const values = properties.map(prop => ({ prop }))
 
   await WITH(graph, DELETE`
