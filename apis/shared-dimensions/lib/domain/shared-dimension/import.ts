@@ -16,8 +16,6 @@ import { md } from '@cube-creator/core/namespace'
 import env from '../../env'
 import { SharedDimensionsStore } from '../../store'
 import { streamClient } from '../../sparql'
-import { removeBnodes } from '../../rewrite'
-import { extractShape } from '../../resource'
 
 interface ImportedDimension {
   termSet: GraphPointer
@@ -83,15 +81,7 @@ export async function importDimension({
     throw new httpError.Conflict(`Shared Dimension '${identifier}' already exists`)
   }
 
-  const withoutBnodes = removeBnodes(termSet)
-
-  const shapesGraph = clownface({ dataset: withoutBnodes.dataset, graph })
-  extractShape(withoutBnodes, shapesGraph)
-  for (const term of withoutBnodes.in(schema.inDefinedTermSet).toArray()) {
-    extractShape(term, shapesGraph)
-  }
-
-  await INSERT.DATA`${withoutBnodes.dataset}`.execute(client.query)
+  await INSERT.DATA`${termSet.dataset}`.execute(client.query)
 
   return {
     termSet: await store.load(termSet.term),

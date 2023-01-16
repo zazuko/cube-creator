@@ -112,7 +112,8 @@ type SharedDimensionsTerms =
   'dynamicPropertyType' |
   'hierarchies' |
   'Hierarchies' |
-  'Hierarchy'
+  'Hierarchy' |
+  'Entrypoint'
 
 prefixes.view = 'https://cube.link/view/'
 

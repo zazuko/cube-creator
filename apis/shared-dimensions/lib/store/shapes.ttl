@@ -1,0 +1,166 @@
+PREFIX time: <http://www.w3.org/2006/time#>
+PREFIX qudt: <http://qudt.org/schema/qudt/>
+PREFIX meta: <https://cube.link/meta/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX hydra: <http://www.w3.org/ns/hydra/core#>
+PREFIX schema: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix md: <https://cube-creator.zazuko.com/shared-dimensions/vocab#>
+PREFIX sh: <http://www.w3.org/ns/shacl#>
+
+[
+  sh:targetClass md:SharedDimension ;
+  sh:property
+    [
+      sh:path rdf:type ;
+    ],
+    [
+      sh:path schema:name ;
+    ],
+    [
+      sh:path schema:validFrom ;
+    ],
+    [
+      sh:path schema:validThrough ;
+    ],
+    [
+      sh:path schema:alternateName ;
+    ],
+    [
+      sh:path sh:property ;
+      sh:node
+        [
+          sh:property
+            [
+              sh:path schema:name ;
+            ],
+            [
+              sh:path qudt:scaleType ;
+            ],
+            [
+              sh:path meta:dataKind ;
+              sh:node
+                [
+                  sh:property
+                    [
+                      sh:path rdf:type ;
+                    ],
+                    [
+                      sh:path time:unitType ;
+                    ] ;
+                ] ;
+            ] ;
+        ] ;
+    ],
+    [
+      sh:path schema:additionalProperty ;
+      sh:node
+        [
+          sh:property
+            [
+              sh:path hydra:required ;
+            ],
+            [
+              sh:path md:dynamicPropertyType ;
+            ],
+            [
+              sh:path sh:class ;
+            ],
+            [
+              sh:path rdf:predicate ;
+            ],
+            [
+              sh:path schema:multipleValues ;
+            ],
+            [
+              sh:path rdfs:label ;
+            ],
+            [
+              sh:path sh:datatype ;
+            ],
+            [
+              sh:path sh:languageIn ;
+            ] ;
+        ] ;
+    ] ;
+] .
+
+[
+  sh:targetClass md:SharedDimensionTerm ;
+  sh:property
+    [
+      sh:path rdf:type ;
+    ],
+    [
+      sh:path schema:identifier ;
+    ],
+    [
+      sh:path schema:inDefinedTermSet ;
+    ],
+    [
+      sh:path schema:name ;
+    ],
+    [
+      sh:path schema:validFrom ;
+    ],
+    [
+      sh:path schema:validThrough ;
+    ] ;
+] .
+
+[
+  sh:targetClass md:Hierarchy ;
+  sh:property
+    [
+      sh:path rdf:type ;
+    ],
+    [
+      sh:path schema:name ;
+    ],
+    [
+      sh:path md:sharedDimension ;
+    ],
+    [
+      sh:path meta:hierarchyRoot ;
+    ],
+    [
+      sh:path [ sh:zeroOrMorePath meta:nextInHierarchy ] ;
+      sh:node
+        [
+          sh:property
+            [
+              sh:path rdf:type ;
+            ],
+            [
+              sh:path schema:name ;
+            ],
+            [
+              sh:path sh:targetClass ;
+            ],
+            [
+              sh:path sh:path ;
+              sh:node
+                [
+                  sh:property
+                    [
+                      sh:path sh:inversePath ;
+                    ] ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+] .
+
+[
+  sh:targetClass md:Entrypoint ;
+  sh:property
+    [
+      sh:path rdf:type ;
+    ],
+    [
+      sh:path md:sharedDimensions ;
+    ],
+    [
+      sh:path md:hierarchies ;
+    ] ;
+] .

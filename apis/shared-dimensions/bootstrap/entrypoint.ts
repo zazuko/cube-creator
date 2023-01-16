@@ -4,6 +4,6 @@ import { NamespaceBuilder } from '@rdfjs/namespace'
 import type { BootstrappedResourceFactory } from './index'
 
 export const entrypoint = (ptr: BootstrappedResourceFactory, ns: NamespaceBuilder) =>
-  ptr('').addOut(rdf.type, hydra.Resource)
+  ptr('').addOut(rdf.type, [hydra.Resource, md.Entrypoint])
     .addOut(md.sharedDimensions, ns('_term-sets'))
     .addOut(md.hierarchies, ns('_hierarchies'))

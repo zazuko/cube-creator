@@ -5,10 +5,12 @@ import ParsingClient from 'sparql-http-client/ParsingClient'
 import StreamClient from 'sparql-http-client/StreamClient'
 import { parsers } from '@rdfjs/formats-common'
 import $rdf from 'rdf-ext'
-import { xsd, _void } from '@tpluscode/rdf-ns-builders'
+import { xsd, _void, rdf } from '@tpluscode/rdf-ns-builders'
 import { sparql } from '@tpluscode/rdf-string'
 import RdfPxParser from 'rdf-parser-px'
 import TripleToQuadTransform from 'rdf-transform-triple-to-quad'
+import { DELETE } from '@tpluscode/sparql-builder'
+import { VALUES } from '@tpluscode/sparql-builder/expressions'
 import { ccClients, mdClients } from './index'
 
 async function removeTestGraphs(client: ParsingClient, dataset: DatasetCore) {
@@ -18,6 +20,25 @@ async function removeTestGraphs(client: ParsingClient, dataset: DatasetCore) {
   return client.query.update(dropGraphs)
 }
 
+async function removeRootResources(client: ParsingClient, dataset: DatasetCore) {
+  const rootResources = [...dataset.match(null, rdf.type, _void.rootResource)]
+    .map(quad => ({ root: quad.subject }))
+  if (rootResources.length) {
+    await DELETE`GRAPH ?g { ?s ?p ?o }`
+      .WHERE`
+        GRAPH ?g {
+          ${VALUES(...rootResources)}
+
+          ?root (<>|!<>)* ?s .
+
+          ?s ?p ?o .
+          FILTER (?s = ?root || isblank(?s))
+        }
+      `
+      .execute(client.query)
+  }
+}
+
 const insertTestData = async (pathName: string, { parsingClient, streamClient }: { parsingClient: ParsingClient; streamClient: StreamClient }) => {
   const file = fs.createReadStream(path.resolve(process.cwd(), pathName))
   const stream = parsers.import('application/trig', file)
@@ -25,6 +46,7 @@ const insertTestData = async (pathName: string, { parsingClient, streamClient }:
   if (stream) {
     const ds = await $rdf.dataset().import(stream)
     await removeTestGraphs(parsingClient, ds)
+    await removeRootResources(parsingClient, ds)
     await streamClient.store.post(ds.toStream())
   }
 }

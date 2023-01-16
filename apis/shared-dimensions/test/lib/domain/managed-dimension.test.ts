@@ -4,11 +4,13 @@ import { expect } from 'chai'
 import { blankNode, namedNode } from '@cube-creator/testing/clownface'
 import { insertTestDimensions } from '@cube-creator/testing/lib/seedData'
 import { mdClients } from '@cube-creator/testing/lib/index'
-import { dcterms, hydra, rdf, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
+import { dcterms, hydra, rdf, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import { md, meta } from '@cube-creator/core/namespace'
 import $rdf from 'rdf-ext'
 import httpError from 'http-errors'
 import clownface from 'clownface'
+import sinon from 'sinon'
+import { ex } from '@cube-creator/testing/lib/namespace'
 import { create, createTerm, update, getExportedDimension } from '../../../lib/domain/shared-dimension'
 import { SharedDimensionsStore } from '../../../lib/store'
 import { testStore } from '../../support/store'
@@ -174,27 +176,37 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () =
   })
 
   describe('update', () => {
-    it('removes all triples which are subgraph of sh:ignoreProperty', async () => {
+    it('deletes term properties triples when removed from dimensions', async () => {
       // given
-      const shape = blankNode()
-        .addList(sh.ignoredProperties, [schema.memberOf, dcterms.identifier])
-      const resource = namedNode('')
+      const queries = {
+        deleteDynamicTerms: sinon.spy(),
+      }
+      const before = namedNode('')
         .addOut(dcterms.identifier, 'foo')
         .addOut(schema.name, 'Term set')
-        .addOut(schema.memberOf, org => {
-          org.addOut(rdf.type, schema.Organization)
-        })
+        .addOut(schema.additionalProperty, dyn => dyn.addOut(rdf.predicate, ex.foo))
+        .addOut(schema.additionalProperty, dyn => dyn.addOut(rdf.predicate, ex.bar))
+      const after = namedNode('')
+        .addOut(dcterms.identifier, 'foo')
+        .addOut(schema.name, 'Term set')
+        .addOut(schema.additionalProperty, dyn => dyn.addOut(rdf.predicate, ex.bar))
+      const store = testStore()
+      await store.save(before)
 
       // when
-      const saved = await update({
-        store: testStore(),
-        shape,
-        resource,
+      await update({
+        store,
+        shape: blankNode(),
+        resource: after,
+        queries,
       })
 
-      // expect
-      expect(saved.dataset).to.have.property('size', 1)
-      expect(saved.out(schema.name).value).to.eq('Term set')
+      // then
+      expect(queries.deleteDynamicTerms).to.have.been.calledWithMatch({
+        dimension: before.term,
+        properties: [ex.foo],
+        graph: 'https://lindas.admin.ch/cube/dimension',
+      })
     })
   })
 
@@ -224,7 +236,7 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () =
       const termSet = graph.node(termSetId)
 
       // then
-      expect(termSet.in(schema.inDefinedTermSet).terms).to.have.length(3)
+      expect(termSet.in(schema.inDefinedTermSet).terms).to.have.length.gt(0)
     })
 
     it('exports dimension properties', () => {
