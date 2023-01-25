@@ -22,7 +22,7 @@ export function uploadCube(variables: VariableMap) {
         '-T',
         cubeFile,
         '-H', 'content-type:text/turtle',
-        '--fail',
+        '--fail-with-body',
       ],
       { stdio: [process.stdin, process.stdout, process.stderr] })
 
