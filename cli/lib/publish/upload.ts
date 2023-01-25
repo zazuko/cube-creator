@@ -17,13 +17,12 @@ export function uploadCube(variables: VariableMap) {
       logger.info('Uploading cube to database')
       const exit = spawnSync('curl', [
         endpoint.toString(),
-        '-v',
         '-X', 'POST',
         '-u', `${username}:${password}`,
         '-T',
         cubeFile,
         '-H', 'content-type:text/turtle',
-        '--fail',
+        '--fail-with-body',
       ],
       { stdio: [process.stdin, process.stdout, process.stderr] })
 
