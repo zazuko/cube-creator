@@ -10,6 +10,7 @@ import { shaclValidate } from '../../middleware/shacl'
 import { importProject } from '../../domain/cube-projects/import'
 import { streamClient } from '../../query-client'
 import { DatasetShape } from '../../../bootstrap/shapes/dataset'
+import { ColumnMappingShape } from '../../../bootstrap/shapes/column-mapping'
 
 export const postImportedProject = protectedResource(
   multiPartResourceHandler,
@@ -41,7 +42,12 @@ export const postImportedProject = protectedResource(
       return clownface({ dataset: importedDataset }).node(project.id)
     },
     async loadShapes() {
-      return $rdf.dataset().import(parsers.import('text/turtle', toStream(DatasetShape.toString()))!)
+      const shapes = [
+        DatasetShape,
+        ColumnMappingShape,
+      ].map(ttlStr => ttlStr.toString()).join('\n')
+
+      return $rdf.dataset().import(parsers.import('text/turtle', toStream(shapes))!)
     },
   }),
   asyncMiddleware(async (req, res) => {
