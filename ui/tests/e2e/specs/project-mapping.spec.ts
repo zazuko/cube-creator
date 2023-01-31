@@ -33,7 +33,16 @@ describe('CSV mapping flow', () => {
     cy.contains('h2', 'My project').should('be.visible')
   })
 
+  it('Updates project without changes', () => {
+    cy.contains('.project-title', 'My project').click()
+    cy.contains('.button', 'Save project settings').click()
+
+    cy.contains('Project settings were saved').should('be.visible')
+  })
+
   it('Uploads a CSV file', () => {
+    cy.contains('1. CSV Mapping').click()
+
     cy.get('[data-testid="upload-source"]').click()
 
     cy.contains('browse files').click()
