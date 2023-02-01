@@ -53,7 +53,16 @@
       <pre v-if="error.description" class="has-background-danger-light">
         {{ error.description }}
       </pre>
-      <b-message v-if="error.validationReport" type="is-danger" title="Validation error">
+      <b-message v-if="error.validationReport" type="is-danger">
+        <template #header>
+          <p>
+            Validation error
+            <a v-if="error.url" :href="error.url.value" target="_blank">
+              Open in SHACL UI
+              <o-icon icon="external-link-alt" />
+            </a>
+          </p>
+        </template>
         <validation-report-display :report="error.validationReport" />
       </b-message>
     </div>

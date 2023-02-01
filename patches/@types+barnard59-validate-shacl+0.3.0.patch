@@ -1,0 +1,14 @@
+diff --git a/node_modules/@types/barnard59-validate-shacl/lib/errors.d.ts b/node_modules/@types/barnard59-validate-shacl/lib/errors.d.ts
+new file mode 100644
+index 0000000..3b95da0
+--- /dev/null
++++ b/node_modules/@types/barnard59-validate-shacl/lib/errors.d.ts
+@@ -0,0 +1,8 @@
++import { DatasetCore } from 'rdf-js';
++import ValidationReport from 'rdf-validate-shacl/src/validation-report';
++
++export interface ValidationError extends Error {
++  report: ValidationReport
++  shapesGraph: DatasetCore
++  dataGraph: DatasetCore
++}
