@@ -4887,10 +4887,10 @@ barnard59-rdf@^1.0.0:
     rdf-transform-triple-to-quad "^1.0.2"
     readable-stream "^3.6.0"
 
-barnard59-validate-shacl@^0.3.7:
-  version "0.3.7"
-  resolved "https://registry.yarnpkg.com/barnard59-validate-shacl/-/barnard59-validate-shacl-0.3.7.tgz#f38c4fc1595c4a5b85e6f9d6cd517bda02852e11"
-  integrity sha512-WD2BhV1wSnz1C4xuApN3LqhyW1NY2Sb3/I1dveErkuh9O+j/g6sqtFJaT3TVnNgI5vSgpcK1uv+YypXSXJ2uhw==
+barnard59-validate-shacl@^0.3.8:
+  version "0.3.8"
+  resolved "https://registry.yarnpkg.com/barnard59-validate-shacl/-/barnard59-validate-shacl-0.3.8.tgz#a4f0389d1592993e4181ec39a4ce751016e69434"
+  integrity sha512-fTDzQ6fAJZEX3d4szlCpX5zDCKL0H3Hu2/sXM/+JNjuZ2CXdezW/1aXFvS0fYgQeiZGH0M1U+xsjrEERJHROzA==
   dependencies:
     "@rdfjs/fetch" "^3.0.0"
     is-stream "^3.0.0"
