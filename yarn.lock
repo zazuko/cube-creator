@@ -2682,10 +2682,10 @@
     "@types/readable-stream" "*"
     rdf-js "^4.0.2"
 
-"@types/barnard59-validate-shacl@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@types/barnard59-validate-shacl/-/barnard59-validate-shacl-0.3.0.tgz#163672816df48852390a5e2ee72a3a672a8e5585"
-  integrity sha512-iOyM97LQe/sb2T6Q/DRLWqvfGRt01f1AH22+QQN++tXTtAKnVEhbGa9RIJiQWox/ln7HybMAQCer3Hj0w/0KCg==
+"@types/barnard59-validate-shacl@^0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@types/barnard59-validate-shacl/-/barnard59-validate-shacl-0.3.2.tgz#ca74a1b53990cfb0350f8c6b1ef498863948c7d9"
+  integrity sha512-7Z6HbzD9kFv9p79bgPbIm0guEdGbnNiyzTcBD1HbixBhaVEkL2WBOoKpCrpWu+UAsYsoy6h/YQ7yfgvdsTBayA==
   dependencies:
     "@types/barnard59-core" "*"
     "@types/rdf-validate-shacl" "*"
