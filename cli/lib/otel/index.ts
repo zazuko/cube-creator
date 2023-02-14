@@ -1,15 +1,19 @@
-import { CollectorTraceExporter, CollectorMetricExporter } from '@opentelemetry/exporter-collector'
+import { JaegerExporter } from '@opentelemetry/exporter-jaeger'
+import { PrometheusExporter } from '@opentelemetry/exporter-prometheus'
 import { HttpInstrumentation } from '@opentelemetry/instrumentation-http'
 import { WinstonInstrumentation } from '@opentelemetry/instrumentation-winston'
-import { Resource, envDetector, processDetector } from '@opentelemetry/resources'
+import { Resource } from '@opentelemetry/resources'
 import { NodeSDK } from '@opentelemetry/sdk-node'
 import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions'
+
+const jaegerExporter = new JaegerExporter()
+const prometheusExporter = new PrometheusExporter()
 
 const sdk = new NodeSDK({
   // Automatic detection is disabled, see comment below
   autoDetectResources: false,
-  traceExporter: new CollectorTraceExporter(),
-  metricExporter: new CollectorMetricExporter(),
+  traceExporter: jaegerExporter,
+  metricReader: prometheusExporter,
   instrumentations: [
     new HttpInstrumentation(),
     new WinstonInstrumentation(),
@@ -35,7 +39,7 @@ const onError = async (err: Error) => {
 
 export async function opentelemetry() {
   try {
-    await sdk.detectResources({ detectors: [envDetector, processDetector] })
+    await sdk.detectResources()
 
     await sdk.start()
 
