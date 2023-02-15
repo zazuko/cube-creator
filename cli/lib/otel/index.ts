@@ -1,20 +1,14 @@
-import { PeriodicExportingMetricReader } from '@opentelemetry/sdk-metrics'
-import { OTLPMetricExporter } from '@opentelemetry/exporter-metrics-otlp-http'
 import { HttpInstrumentation } from '@opentelemetry/instrumentation-http'
 import { WinstonInstrumentation } from '@opentelemetry/instrumentation-winston'
 import { Resource } from '@opentelemetry/resources'
 import { NodeSDK } from '@opentelemetry/sdk-node'
 import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions'
-
-const otlpMetricExporter = new OTLPMetricExporter()
+import { metricReader } from './metrics'
 
 const sdk = new NodeSDK({
   // Automatic detection is disabled, see comment below
   autoDetectResources: false,
-  metricReader: new PeriodicExportingMetricReader({
-    exporter: otlpMetricExporter,
-    exportIntervalMillis: 1000,
-  }),
+  metricReader,
   instrumentations: [
     new HttpInstrumentation(),
     new WinstonInstrumentation(),
