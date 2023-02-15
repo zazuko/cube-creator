@@ -3,12 +3,10 @@ import { WinstonInstrumentation } from '@opentelemetry/instrumentation-winston'
 import { Resource } from '@opentelemetry/resources'
 import { NodeSDK } from '@opentelemetry/sdk-node'
 import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions'
-import { metricReader } from './metrics'
 
 const sdk = new NodeSDK({
   // Automatic detection is disabled, see comment below
   autoDetectResources: false,
-  metricReader,
   instrumentations: [
     new HttpInstrumentation(),
     new WinstonInstrumentation(),
