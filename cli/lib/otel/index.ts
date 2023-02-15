@@ -12,8 +12,7 @@ const prometheusExporter = new PrometheusExporter()
 const sdk = new NodeSDK({
   // Automatic detection is disabled, see comment below
   autoDetectResources: false,
-  traceExporter: jaegerExporter,
-  metricReader: prometheusExporter,
+  metricReader: otlpMetricExporter,
   instrumentations: [
     new HttpInstrumentation(),
     new WinstonInstrumentation(),
