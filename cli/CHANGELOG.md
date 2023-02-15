@@ -1,5 +1,11 @@
 # @cube-creator/cli
 
+## 2.0.7
+
+### Patch Changes
+
+- 42dbf60f: When cube upload fails, print the server response to job logs (fixes #1362)
+
 ## 2.0.6
 
 ### Patch Changes
