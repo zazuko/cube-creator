@@ -8,6 +8,7 @@ import cors from 'cors'
 import bodyParser from 'body-parser'
 import dotenv from 'dotenv'
 import * as command from './lib/commands'
+import { opentelemetry } from './lib/otel/index'
 
 dotenv.config({
   path: path.resolve(__dirname, '.env'),
@@ -16,7 +17,11 @@ dotenv.config({
   path: path.resolve(__dirname, '.test.env'),
 })
 
+let shutdownOtel: () => Promise<void> | undefined
+
 async function main() {
+  shutdownOtel = await opentelemetry()
+
   const log = debug('cube-creator')
 
   const app = express()
@@ -61,4 +66,6 @@ async function main() {
   http.createServer(app).listen(80, () => log('Api ready'))
 }
 
-main()
+main().finally(() => {
+  shutdownOtel()
+})
