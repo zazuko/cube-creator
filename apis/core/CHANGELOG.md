@@ -1,5 +1,14 @@
 # @cube-creator/core-api
 
+## 2.2.2
+
+### Patch Changes
+
+- ace57340: When importing a project, validate that column mappings are correct (re #1366)
+- 5a7262e9: When editing a project, the form would inadvertently remove the value of Cube Identifier, even though it remained filled in the input control (re #1365)
+- Updated dependencies [df579c67]
+  - @cube-creator/shared-dimensions-api@3.0.0
+
 ## 2.2.1
 
 ### Patch Changes

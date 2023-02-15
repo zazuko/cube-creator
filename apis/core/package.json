@@ -1,6 +1,6 @@
 {
   "name": "@cube-creator/core-api",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "private": true,
   "scripts": {
     "build": "tsc"
@@ -10,7 +10,7 @@
     "@cube-creator/core": "1.0.0",
     "@cube-creator/express": "0.0.0",
     "@cube-creator/model": "0.1.27",
-    "@cube-creator/shared-dimensions-api": "2.7.0",
+    "@cube-creator/shared-dimensions-api": "3.0.0",
     "@hydrofoil/labyrinth": "^0.4.4",
     "@rdfine/csvw": "^0.6.3",
     "@rdfine/hydra": "^0.8.0",
