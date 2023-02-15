@@ -1765,7 +1765,7 @@
     "@opentelemetry/resources" "0.24.0"
     "@opentelemetry/tracing" "0.24.0"
 
-"@opentelemetry/exporter-jaeger@1.9.1", "@opentelemetry/exporter-jaeger@^1.9.1":
+"@opentelemetry/exporter-jaeger@1.9.1":
   version "1.9.1"
   resolved "https://registry.yarnpkg.com/@opentelemetry/exporter-jaeger/-/exporter-jaeger-1.9.1.tgz#941d39c2d425021c734354bbc280a4ae19f95aad"
   integrity sha512-6F10NMOtBT3HdxpT0IwYf1BX8RzZB7SpqHTvZsB2vzUvxVAyoLX8+cuo6Ke9sHS9YMqoTA3rER5x9kC6NOxEMQ==
@@ -1775,12 +1775,14 @@
     "@opentelemetry/semantic-conventions" "1.9.1"
     jaeger-client "^3.15.0"
 
-"@opentelemetry/exporter-prometheus@^0.35.1":
+"@opentelemetry/exporter-metrics-otlp-http@^0.35.1":
   version "0.35.1"
-  resolved "https://registry.yarnpkg.com/@opentelemetry/exporter-prometheus/-/exporter-prometheus-0.35.1.tgz#c2fd5fcd17dac8106b33e5d354d98c47ebaa8804"
-  integrity sha512-HeCM+1C19Ccj1D3lz450HaPZSxHvd9nGalRKMYUWc4ipga6rJIUHDAaIm4uanRaEgesrRnullkO4/G0dJsYKsg==
+  resolved "https://registry.yarnpkg.com/@opentelemetry/exporter-metrics-otlp-http/-/exporter-metrics-otlp-http-0.35.1.tgz#497939ed9bf80f50cba0e96d84c21f3f9edc2e8a"
+  integrity sha512-BnPFYHX0Qfby+Cv0/X6QaR+FTaHtMiYQMzolFANc2S6wybx+yOYVW/scMIZBsV/BiCLYwsxk96SGx5vyIR0lyw==
   dependencies:
     "@opentelemetry/core" "1.9.1"
+    "@opentelemetry/otlp-exporter-base" "0.35.1"
+    "@opentelemetry/otlp-transformer" "0.35.1"
     "@opentelemetry/resources" "1.9.1"
     "@opentelemetry/sdk-metrics" "1.9.1"
 
@@ -2011,7 +2013,7 @@
     "@opentelemetry/core" "0.26.0"
     "@opentelemetry/semantic-conventions" "0.26.0"
 
-"@opentelemetry/sdk-metrics@1.9.1":
+"@opentelemetry/sdk-metrics@1.9.1", "@opentelemetry/sdk-metrics@^1.9.1":
   version "1.9.1"
   resolved "https://registry.yarnpkg.com/@opentelemetry/sdk-metrics/-/sdk-metrics-1.9.1.tgz#babc162a81df9884c16b1e67c2dd26ab478f3080"
   integrity sha512-AyhKDcA8NuV7o1+9KvzRMxNbATJ8AcrutKilJ6hWSo9R5utnzxgffV4y+Hp4mJn84iXxkv+CBb99GOJ2A5OMzA==
