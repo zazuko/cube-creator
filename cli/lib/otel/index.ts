@@ -1,5 +1,4 @@
-import { JaegerExporter } from '@opentelemetry/exporter-jaeger'
-import { PrometheusExporter } from '@opentelemetry/exporter-prometheus'
+import { OTLPMetricExporter } from '@opentelemetry/exporter-metrics-otlp-http'
 import { HttpInstrumentation } from '@opentelemetry/instrumentation-http'
 import { WinstonInstrumentation } from '@opentelemetry/instrumentation-winston'
 import { Resource } from '@opentelemetry/resources'
