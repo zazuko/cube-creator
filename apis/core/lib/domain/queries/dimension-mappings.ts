@@ -5,10 +5,10 @@ import { rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { cc, cube } from '@cube-creator/core/namespace'
 import TermSet from '@rdfjs/term-set'
 import { prov } from '@tpluscode/rdf-ns-builders/strict'
-import env from '@cube-creator/core/env'
 import { ResourceIdentifier } from '@tpluscode/rdfine'
 import { toRdf } from 'rdf-literal'
-import { parsingClient } from '../../query-client'
+import { VALUES } from '@tpluscode/sparql-builder/expressions'
+import { parsingClient, publicClient } from '../../query-client'
 
 async function findCubeGraph(dimensionMapping: Term, client: typeof parsingClient): Promise<NamedNode> {
   const patternsToFindCubeGraph = sparql`BIND ( ${dimensionMapping} as ?dimensionMapping )
@@ -107,14 +107,6 @@ export async function importMappingsFromSharedDimension({ dimensionMapping, dime
   }`
   }
 
-  let validThroughFilter: SparqlTemplateResult | string = ''
-  if (validThrough) {
-    validThroughFilter = sparql`
-      OPTIONAL { ?term ${schema.validThrough} ?validThrough }
-      FILTER (!bound(?validThrough) || ?validThrough >= ${toRdf(validThrough)})
-    `
-  }
-
   const insert = INSERT`
     GRAPH ${dimensionMapping} {
       ${dimensionMapping} ${prov.hadDictionaryMember} [
@@ -126,7 +118,31 @@ export async function importMappingsFromSharedDimension({ dimensionMapping, dime
   `.WHERE`
     ${unmappedValuesSelect}
 
-    SERVICE <${env.PUBLIC_QUERY_ENDPOINT}> {
+    ${VALUES(...await getSharedDimensionTerms({ dimension, predicate, validThrough }))}
+
+    FILTER (str(?value) = str(?identifier))
+  `
+
+  await insert.execute(client.query)
+}
+
+interface GetSharedDimensionTerms {
+  dimension: NamedNode
+  predicate: NamedNode
+  validThrough?: Date
+}
+
+function getSharedDimensionTerms({ dimension, predicate, validThrough }: GetSharedDimensionTerms) {
+  let validThroughFilter: SparqlTemplateResult | string = ''
+  if (validThrough) {
+    validThroughFilter = sparql`
+      OPTIONAL { ?term ${schema.validThrough} ?validThrough }
+      FILTER (!bound(?validThrough) || ?validThrough >= ${toRdf(validThrough)})
+    `
+  }
+
+  return SELECT`?term ?identifier`
+    .WHERE`
       {
         ?term ${schema.inDefinedTermSet} ${dimension} ;
               ${predicate} ?identifier .
@@ -138,10 +154,6 @@ export async function importMappingsFromSharedDimension({ dimensionMapping, dime
       }
 
       ${validThroughFilter}
-    }
-
-    FILTER (str(?value) = str(?identifier))
-  `
-
-  await insert.execute(client.query)
+    `
+    .execute(publicClient.query)
 }
