@@ -1,8 +1,12 @@
 import stream from 'readable-stream'
 import type Pipeline from 'barnard59-core/lib/Pipeline'
-import { bufferObserver } from './otel/metrics'
+import { metrics } from '@opentelemetry/api'
 
 const { finished } = stream as any
+
+const meter = metrics.getMeter('@cube-creator/cli')
+
+export const bufferObserver = meter.createHistogram('buffer')
 
 function bufferStatePair({ state, step }: any): { key: string; value: number } {
   const key = step.ptr.value // `[${index}] (${mode}) ${step.ptr.value} (${state.length}/${state.highWaterMark})`

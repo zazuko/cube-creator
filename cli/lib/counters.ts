@@ -3,7 +3,11 @@ import type { Context } from 'barnard59-core/lib/Pipeline'
 import { PassThrough } from 'readable-stream'
 import through2 from 'through2'
 import { csvw } from '@tpluscode/rdf-ns-builders/strict'
-import { quadCounter } from './otel/metrics'
+import { metrics } from '@opentelemetry/api'
+
+const meter = metrics.getMeter('@cube-creator/cli')
+
+export const quadCounter = meter.createCounter('quads')
 
 export function quads(this: Context, name: string) {
   const jobUri = this.variables.get('jobUri')
