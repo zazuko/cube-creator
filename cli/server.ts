@@ -30,7 +30,7 @@ async function main() {
 
   app.use(cors())
 
-  app.use(bodyParser.urlencoded())
+  app.use(bodyParser.urlencoded({ extended: true }))
 
   app.get('/', (req, res) => res.status(204).end())
 
