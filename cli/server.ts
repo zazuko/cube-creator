@@ -1,3 +1,6 @@
+// eslint-disable-next-line import/order
+import { opentelemetry } from './lib/otel/index'
+
 /* eslint-disable import/no-extraneous-dependencies */
 import * as http from 'http'
 import * as path from 'path'
@@ -8,7 +11,6 @@ import cors from 'cors'
 import bodyParser from 'body-parser'
 import dotenv from 'dotenv'
 import * as command from './lib/commands'
-import { opentelemetry } from './lib/otel/index'
 
 dotenv.config({
   path: path.resolve(__dirname, '.env'),
@@ -17,10 +19,8 @@ dotenv.config({
   path: path.resolve(__dirname, '.test.env'),
 })
 
-let shutdownOtel: () => Promise<void> | undefined
-
 async function main() {
-  shutdownOtel = await opentelemetry()
+  await opentelemetry()
 
   const log = debug('cube-creator')
 
@@ -66,6 +66,4 @@ async function main() {
   http.createServer(app).listen(80, () => log('Api ready'))
 }
 
-main().finally(() => {
-  shutdownOtel()
-})
+main()
