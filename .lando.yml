@@ -57,7 +57,7 @@ services:
     app_mount: false
     ssl: true
     services:
-      image: zazuko/trifid
+      image: ghcr.io/zazuko/trifid:v2
       user: root
       command: tini -- /app/server.js --config=/config-sparql.json --sparql-endpoint-url=http://admin:password@db.cube-creator.lndo.site/cube-creator
       environment:
