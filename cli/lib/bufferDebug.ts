@@ -1,9 +1,12 @@
 import stream from 'readable-stream'
 import type Pipeline from 'barnard59-core/lib/Pipeline'
-import type { BoundBaseObserver } from '@opentelemetry/api-metrics'
-import { bufferObserver } from './otel/metrics'
+import { metrics } from '@opentelemetry/api'
 
 const { finished } = stream as any
+
+const meter = metrics.getMeter('@cube-creator/cli')
+
+export const bufferObserver = meter.createHistogram('buffer')
 
 function bufferStatePair({ state, step }: any): { key: string; value: number } {
   const key = step.ptr.value // `[${index}] (${mode}) ${step.ptr.value} (${state.length}/${state.highWaterMark})`
@@ -54,19 +57,6 @@ function bufferDebug(pipeline: Pipeline, jobUri: string, { interval = 10 } = {})
   })
 
   const pid = process.pid.toString()
-  const boundMeters = new Map<string, BoundBaseObserver>()
-  function getMeter(step: string) {
-    const bound = boundMeters.get(step) || bufferObserver.bind({
-      job_uri: jobUri,
-      pipeline: pipeline.ptr.value,
-      step,
-      pid,
-    })
-
-    boundMeters.set(step, bound)
-
-    return bound
-  }
 
   const next = async () => {
     if (done) {
@@ -77,7 +67,12 @@ function bufferDebug(pipeline: Pipeline, jobUri: string, { interval = 10 } = {})
 
     if (data) {
       [...Object.entries(data)].forEach(([step, value]) => {
-        getMeter(step).update(value)
+        bufferObserver.record(value, {
+          job_uri: jobUri,
+          pipeline: pipeline.ptr.value,
+          step,
+          pid,
+        })
       })
     }
 

@@ -1,3 +1,6 @@
+// eslint-disable-next-line import/order
+import { opentelemetry } from './lib/otel/index'
+
 /* eslint-disable import/no-extraneous-dependencies */
 import * as http from 'http'
 import * as path from 'path'
@@ -17,6 +20,8 @@ dotenv.config({
 })
 
 async function main() {
+  await opentelemetry()
+
   const log = debug('cube-creator')
 
   const app = express()

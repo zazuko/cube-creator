@@ -57,7 +57,7 @@ services:
     app_mount: false
     ssl: true
     services:
-      image: zazuko/trifid
+      image: ghcr.io/zazuko/trifid:v2
       user: root
       command: tini -- /app/server.js --config=/config-sparql.json --sparql-endpoint-url=http://admin:password@db.cube-creator.lndo.site/cube-creator
       environment:
@@ -106,7 +106,7 @@ services:
     type: compose
     scanner: false
     services:
-      image: jaegertracing/all-in-one:1.22
+      image: jaegertracing/all-in-one:1.42
       command: /go/bin/all-in-one-linux --sampling.strategies-file=/etc/jaeger/sampling_strategies.json
       healthcheck:
         test: wget -nv -t1 --spider localhost:14269/ || exit 1
@@ -117,7 +117,7 @@ services:
     type: compose
     scanner: false
     services:
-      image: prom/prometheus:v2.26.0
+      image: prom/prometheus:v2.33.4
       command: /bin/prometheus --config.file=/prometheus.yaml --web.enable-lifecycle
       volumes:
         - ./otel/prometheus.yaml:/prometheus.yaml:ro
