@@ -1,8 +1,0 @@
-{
-  "name": "@zazuko/shacl-playground",
-  "version": "0.0.0",
-  "dependencies": {
-    "@tpluscode/rdf-string": "^0.2",
-    "node-fetch": "^2.6.7"
-  }
-}

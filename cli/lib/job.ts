@@ -13,6 +13,7 @@ import { GraphPointer } from 'clownface'
 import { ValidationError } from 'barnard59-validate-shacl/lib/errors'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import { createPlaygroundUrl } from '@zazuko/shacl-playground'
+import { shorten } from '@zazuko/s'
 import { logger } from './log'
 
 interface Params {
@@ -95,7 +96,7 @@ export async function updateJobStatus({ jobUri, executionUrl, lastTransformed, s
         job.error.pointer.addOut(cc.validationReport, mergedReport.term)
         try {
           job.error.pointer.addOut(schema.url, $rdf.namedNode(
-            await createPlaygroundUrl(error.shapesGraph, error.dataGraph),
+            await shorten(createPlaygroundUrl(error.shapesGraph, error.dataGraph)),
           ))
         } catch (e) {
           logger.warn(e)
