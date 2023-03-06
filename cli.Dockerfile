@@ -7,7 +7,6 @@ ADD ./cli/package.json ./cli/
 ADD ./packages/core/package.json ./packages/core/
 ADD ./packages/model/package.json ./packages/model/
 ADD ./packages/testing/package.json ./packages/testing/
-ADD ./packages/shacl-playground/package.json ./packages/shacl-playground/
 ADD ./patches ./patches
 
 # for every new package foo add:
@@ -37,7 +36,6 @@ ADD ./cli/pipelines ./cli/pipelines/
 ADD ./packages/core/package.json ./packages/core/
 ADD ./packages/model/package.json ./packages/model/
 ADD ./packages/testing/package.json ./packages/testing/
-ADD ./packages/shacl-playground/package.json ./packages/shacl-playground/
 
 # for every new package foo add
 #ADD ./packages/foo/package.json ./packages/foo/
