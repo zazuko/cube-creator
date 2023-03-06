@@ -32,6 +32,7 @@ The easiest way it to start a local dockerized environment which will run the da
 2. Run `yarn` to install packages
 3. Run `lando start` inside the repo
    * Docker daemon is also started automatically
+4. (Optional) Run `yarn bootstrap` to add sample projects to the database
 
 Docker containers will start and the services will be available under the these URLs:
 
