@@ -101,8 +101,8 @@ function cubeMetadata({ project, revision }: QueryParams) {
         ${project.dataset.id} ${schema.hasPart}|${cc.dimensionMetadata} ?cubeMeta
     }
 
+    ?cubeMeta !<>* ?deepMetaS .
     optional {
-      ?cubeMeta !<>* ?deepMetaS .
       ?deepMetaS ?deepMetaP ?deepMetaO .
     }
   }

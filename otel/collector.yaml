@@ -2,16 +2,21 @@ receivers:
   otlp:
     protocols:
       grpc:
+        endpoint: 0.0.0.0:4317
+        max_recv_msg_size_mib: 100
       http:
+        endpoint: 0.0.0.0:55681
 
 exporters:
   jaeger:
     endpoint: jaeger:14250
-    insecure: true
+    tls:
+      insecure: true
   prometheus:
     endpoint: "0.0.0.0:8889"
     resource_to_telemetry_conversion:
       enabled: true
+  logging:
 
 processors:
   batch:
@@ -25,4 +30,4 @@ service:
     metrics:
       receivers: [otlp]
       processors: [batch]
-      exporters: [prometheus]
+      exporters: [prometheus, logging]

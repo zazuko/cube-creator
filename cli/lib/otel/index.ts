@@ -1,15 +1,23 @@
-import { CollectorTraceExporter, CollectorMetricExporter } from '@opentelemetry/exporter-collector'
+import { NodeSDK } from '@opentelemetry/sdk-node'
+import { Resource } from '@opentelemetry/resources'
 import { HttpInstrumentation } from '@opentelemetry/instrumentation-http'
 import { WinstonInstrumentation } from '@opentelemetry/instrumentation-winston'
-import { Resource, envDetector, processDetector } from '@opentelemetry/resources'
-import { NodeSDK } from '@opentelemetry/sdk-node'
 import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions'
+import { PeriodicExportingMetricReader } from '@opentelemetry/sdk-metrics'
+import { OTLPMetricExporter } from '@opentelemetry/exporter-metrics-otlp-http'
+import { diag, DiagConsoleLogger, DiagLogLevel } from '@opentelemetry/api'
+
+diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.ERROR)
+
+export const metricReader = new PeriodicExportingMetricReader({
+  exporter: new OTLPMetricExporter(),
+  exportIntervalMillis: 1000,
+})
 
 const sdk = new NodeSDK({
   // Automatic detection is disabled, see comment below
   autoDetectResources: false,
-  traceExporter: new CollectorTraceExporter(),
-  metricExporter: new CollectorMetricExporter(),
+  metricReader,
   instrumentations: [
     new HttpInstrumentation(),
     new WinstonInstrumentation(),
@@ -35,7 +43,7 @@ const onError = async (err: Error) => {
 
 export async function opentelemetry() {
   try {
-    await sdk.detectResources({ detectors: [envDetector, processDetector] })
+    await sdk.detectResources()
 
     await sdk.start()
 
