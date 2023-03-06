@@ -48,10 +48,10 @@ export const create = (): Initializer<NodeShape> => ({
     ...commonProperties,
     {
       name: 'Identifier',
-      description: 'A lowercase, alphanumeric value which identifies a shared dimension term',
+      description: 'An alphanumeric value which identifies a shared dimension term',
       path: dcterms.identifier,
       order: 0,
-      pattern: '^[a-z0-9-_]+$',
+      pattern: '^[a-zA-Z0-9-_]+$',
       minCount: 1,
       maxCount: 1,
       group: defaultGroup,
