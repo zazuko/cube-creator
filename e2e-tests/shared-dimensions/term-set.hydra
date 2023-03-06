@@ -54,7 +54,7 @@ With Class meta:SharedDimension {
             PREFIX md: <https://cube-creator.zazuko.com/shared-dimensions/vocab#>
 
             <> schema:name "node.js"@en ;
-               dcterms:identifier "NodeJs" ;
+               dcterms:identifier "Node Js" ;
                schema:validThrough "2022-01-01T00:00:00Z"^^xsd:dateTime .
             ```
         } => {
