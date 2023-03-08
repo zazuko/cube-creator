@@ -174,6 +174,65 @@ describe('domain/table/create', () => {
     })
   })
 
+  it('allows concept table columns to have same name', async () => {
+    // given
+    const resource = clownface({ dataset: $rdf.dataset() })
+      .node($rdf.namedNode(''))
+      .addOut(schema.name, 'the name')
+      .addOut(schema.color, '#ababab')
+      .addOut(cc.identifierTemplate, '{id}')
+      .addOut(cc.csvSource, $rdf.namedNode('foo'))
+      .addOut(csvw.column, [$rdf.namedNode('source-column-1'), $rdf.namedNode('source-column-2')])
+    csvSource.addOut(csvw.column, $rdf.namedNode('source-column-1'), column => column.addOut(schema.name, 'column'))
+    csvSource.addOut(csvw.column, $rdf.namedNode('source-column-2'), column => column.addOut(schema.name, 'column'))
+
+    // when
+    const table = await createTable({ resource, store, tableCollection })
+
+    // then
+    expect(table).to.be.ok
+  })
+
+  it('does not allow cube table columns to have same name', async () => {
+    // given
+    const resource = clownface({ dataset: $rdf.dataset() })
+      .node($rdf.namedNode(''))
+      .addOut(schema.name, 'the name')
+      .addOut(schema.color, '#ababab')
+      .addOut(cc.identifierTemplate, '{id}')
+      .addOut(cc.csvSource, $rdf.namedNode('foo'))
+      .addOut(cc.isObservationTable, true)
+      .addOut(csvw.column, [$rdf.namedNode('source-column-1'), $rdf.namedNode('source-column-2')])
+    csvSource.addOut(csvw.column, $rdf.namedNode('source-column-1'), column => column.addOut(schema.name, 'column'))
+    csvSource.addOut(csvw.column, $rdf.namedNode('source-column-2'), column => column.addOut(schema.name, 'column'))
+
+    // when
+    const promiseToCreateTable = createTable({ resource, store, tableCollection })
+
+    // then
+    await expect(promiseToCreateTable).to.have.eventually.rejected
+  })
+
+  it('does not allow cube table columns to have same name, generated from CSV columns with special characters', async () => {
+    // given
+    const resource = clownface({ dataset: $rdf.dataset() })
+      .node($rdf.namedNode(''))
+      .addOut(schema.name, 'the name')
+      .addOut(schema.color, '#ababab')
+      .addOut(cc.identifierTemplate, '{id}')
+      .addOut(cc.csvSource, $rdf.namedNode('foo'))
+      .addOut(cc.isObservationTable, true)
+      .addOut(csvw.column, [$rdf.namedNode('source-column-1'), $rdf.namedNode('source-column-2')])
+    csvSource.addOut(csvw.column, $rdf.namedNode('source-column-1'), column => column.addOut(schema.name, 'Bewegungen LFZ >= 8.6 To'))
+    csvSource.addOut(csvw.column, $rdf.namedNode('source-column-2'), column => column.addOut(schema.name, 'Bewegungen LFZ < 8.6 To'))
+
+    // when
+    const promiseToCreateTable = createTable({ resource, store, tableCollection })
+
+    // then
+    await expect(promiseToCreateTable).to.have.eventually.rejected
+  })
+
   it('turns column names into URL-safe slugs', async () => {
     // given
     const resource = clownface({ dataset: $rdf.dataset() })

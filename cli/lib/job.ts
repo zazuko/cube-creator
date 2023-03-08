@@ -10,8 +10,10 @@ import $rdf from 'rdf-ext'
 import { cc } from '@cube-creator/core/namespace'
 import TermMap from '@rdfjs/term-map'
 import { GraphPointer } from 'clownface'
-import type ValidationReport from 'rdf-validate-shacl/src/validation-report'
+import { ValidationError } from 'barnard59-validate-shacl/lib/errors'
 import DatasetExt from 'rdf-ext/lib/Dataset'
+import { createPlaygroundUrl } from '@zazuko/shacl-playground'
+import { shorten } from '@zazuko/s'
 import { logger } from './log'
 
 interface Params {
@@ -89,10 +91,16 @@ export async function updateJobStatus({ jobUri, executionUrl, lastTransformed, s
         disambiguatingDescription,
       } as any
 
-      const validationReport = (error as any)?.report as ValidationReport | undefined
-      if (validationReport && job.error) {
-        const mergedReport = mergeDatasetIn(job.error.pointer, validationReport.pointer)
-        job.error?.pointer.addOut(cc.validationReport, mergedReport.term)
+      if (isValidationError(error) && job.error) {
+        const mergedReport = mergeDatasetIn(job.error.pointer, error.report.pointer)
+        job.error.pointer.addOut(cc.validationReport, mergedReport.term)
+        try {
+          job.error.pointer.addOut(schema.url, $rdf.namedNode(
+            await shorten(createPlaygroundUrl(error.shapesGraph, error.dataGraph)),
+          ))
+        } catch (e) {
+          logger.warn(e)
+        }
       }
     }
 
@@ -110,6 +118,10 @@ export async function updateJobStatus({ jobUri, executionUrl, lastTransformed, s
   } catch (e: any) {
     logger.error(`Failed to update job status: ${e.message}`)
   }
+}
+
+function isValidationError(error: string | Error): error is ValidationError {
+  return typeof error !== 'string' && 'report' in error
 }
 
 function mergeDatasetIn(target: GraphPointer, toMerge: GraphPointer): GraphPointer {

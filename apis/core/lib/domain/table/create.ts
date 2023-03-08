@@ -3,8 +3,18 @@ import { GraphPointer } from 'clownface'
 import { csvw, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import $rdf from 'rdf-ext'
-import { CsvColumn, CsvMapping, CsvSource, DimensionMetadataCollection, CsvProject } from '@cube-creator/model'
+import {
+  CsvColumn,
+  CsvMapping,
+  CsvSource,
+  DimensionMetadataCollection,
+  CsvProject,
+  ColumnMapping,
+  Table,
+} from '@cube-creator/model'
 import type { Organization } from '@rdfine/schema'
+import TermSet from '@rdfjs/term-set'
+import { DomainError } from '@cube-creator/api-errors'
 import * as DimensionMetadataQueries from '../queries/dimension-metadata'
 import { ResourceStore } from '../../ResourceStore'
 import { findOrganization } from '../organization/query'
@@ -82,7 +92,34 @@ export async function createTable({
       return columnMapping
     })
 
+  if (table.isObservationTable) {
+    await assertNoDuplicateTargetProperties(
+      table,
+      store,
+      organization,
+      cubeIdentifier,
+    )
+  }
+
   return table.pointer
+}
+
+async function assertNoDuplicateTargetProperties(table: Table, store: ResourceStore, organization: Organization, cubeIdentifier: string) {
+  const targetProperties = new TermSet(
+    await Promise.all(
+      table.columnMappings.map(async link => {
+        const columnMapping = await store.getResource<ColumnMapping>(link.id)
+        return organization.createIdentifier({
+          cubeIdentifier,
+          termName: columnMapping.targetProperty,
+        })
+      }),
+    ),
+  )
+
+  if (targetProperties.size < table.columnMappings.length) {
+    throw new DomainError('Cannot create table with duplicate target properties')
+  }
 }
 
 function getTemplate(template: string | undefined, columns: CsvColumn[]): string {
