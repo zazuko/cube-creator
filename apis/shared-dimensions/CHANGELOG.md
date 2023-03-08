@@ -1,5 +1,11 @@
 # @cube-creator/shared-dimensions-api
 
+## 3.0.1
+
+### Patch Changes
+
+- bb8d1fc2: Allow upper case letters in share dimensions (fixes #1386)
+
 ## 3.0.0
 
 ### Major Changes

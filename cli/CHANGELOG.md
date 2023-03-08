@@ -1,5 +1,13 @@
 # @cube-creator/cli
 
+## 2.0.8
+
+### Patch Changes
+
+- 91483e47: When publishing fails, include a link to [SHACL Playground](https://shacl-playground.zazuko.com/), allowing to inspect the SHACL report
+- 38a01143: Pipeline traces were not showing in jeager
+- ed04ae13: After upgrade to Stardog 8.2.2 publication would fail (fixes #1382)
+
 ## 2.0.7
 
 ### Patch Changes

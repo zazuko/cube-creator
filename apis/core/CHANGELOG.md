@@ -1,5 +1,14 @@
 # @cube-creator/core-api
 
+## 2.2.3
+
+### Patch Changes
+
+- 2de8d5cd: Auto-mapping dimensions fails when the cross product of unmapped terms and shared dimension terms is sufficiently large (fixes #1372)
+- 4b7989ed: When creating an output table from multiple columns, it was possible for multiple columns to assume same `target property`, which resulted in a broken cube (fixes #1365)
+- Updated dependencies [bb8d1fc2]
+  - @cube-creator/shared-dimensions-api@3.0.1
+
 ## 2.2.2
 
 ### Patch Changes

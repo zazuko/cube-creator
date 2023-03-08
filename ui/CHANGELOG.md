@@ -1,5 +1,11 @@
 # @cube-creator/ui
 
+## 1.13.4
+
+### Patch Changes
+
+- 91483e47: When publishing fails, include a link to [SHACL Playground](https://shacl-playground.zazuko.com/), allowing to inspect the SHACL report
+
 ## 1.13.3
 
 ### Patch Changes
