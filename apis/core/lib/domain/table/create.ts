@@ -18,6 +18,7 @@ import { DomainError } from '@cube-creator/api-errors'
 import * as DimensionMetadataQueries from '../queries/dimension-metadata'
 import { ResourceStore } from '../../ResourceStore'
 import { findOrganization } from '../organization/query'
+import * as TableQueries from '../queries/table'
 
 const trueTerm = $rdf.literal('true', xsd.boolean)
 
@@ -26,6 +27,7 @@ interface CreateTableCommand {
   resource: GraphPointer
   store: ResourceStore
   dimensionMetadataQueries?: Pick<typeof DimensionMetadataQueries, 'getDimensionMetaDataCollection'>
+  tableQueries?: Pick<typeof TableQueries, 'getCubeTable'>
 }
 
 export async function createTable({
@@ -33,6 +35,7 @@ export async function createTable({
   resource,
   store,
   dimensionMetadataQueries: { getDimensionMetaDataCollection } = DimensionMetadataQueries,
+  tableQueries: { getCubeTable } = TableQueries,
 }: CreateTableCommand): Promise<GraphPointer> {
   const label = resource.out(schema.name)
   if (!label?.value) {
@@ -99,6 +102,11 @@ export async function createTable({
       organization,
       cubeIdentifier,
     )
+
+    const currentCubeTable = await getCubeTable(csvMapping)
+    if (currentCubeTable) {
+      throw new DomainError('A project can have only one cube table')
+    }
   }
 
   return table.pointer

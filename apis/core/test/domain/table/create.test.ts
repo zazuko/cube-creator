@@ -10,10 +10,12 @@ import { cc } from '@cube-creator/core/namespace'
 import * as Organization from '@cube-creator/model/Organization'
 import { namedNode } from '@cube-creator/testing/clownface'
 import * as Project from '@cube-creator/model/Project'
+import { DomainError } from '@cube-creator/api-errors'
 import { createTable } from '../../../lib/domain/table/create'
 import { TestResourceStore } from '../../support/TestResourceStore'
 import * as DimensionMetadataQueries from '../../../lib/domain/queries/dimension-metadata'
 import '../../../lib/domain'
+import * as TableQueries from '../../../lib/domain/queries/table'
 import * as orgQueries from '../../../lib/domain/organization/query'
 
 describe('domain/table/create', () => {
@@ -21,6 +23,7 @@ describe('domain/table/create', () => {
   let tableCollection: GraphPointer<NamedNode, DatasetExt>
   let csvSource: GraphPointer<NamedNode, DatasetExt>
   let dimensionMetadata: GraphPointer<NamedNode, DatasetExt>
+  let getTableQueries: sinon.SinonStub
 
   beforeEach(() => {
     sinon.restore()
@@ -56,6 +59,7 @@ describe('domain/table/create', () => {
 
     sinon.restore()
     sinon.stub(DimensionMetadataQueries, 'getDimensionMetaDataCollection').resolves(dimensionMetadata.term)
+    getTableQueries = sinon.stub(TableQueries, 'getCubeTable').resolves(undefined)
 
     sinon.stub(orgQueries, 'findOrganization').resolves({
       projectId: project.id,
@@ -137,6 +141,27 @@ describe('domain/table/create', () => {
         minCount: 1,
       }],
     })
+  })
+
+  it('does not allow multiple Cube Tables', async () => {
+    // given
+    const resource = clownface({ dataset: $rdf.dataset() })
+      .node($rdf.namedNode(''))
+      .addOut(cc.isObservationTable, true)
+      .addOut(schema.name, 'the name')
+      .addOut(schema.color, '#ababab')
+      .addOut(cc.identifierTemplate, '{id}')
+      .addOut(cc.csvSource, $rdf.namedNode('foo'))
+    getTableQueries.resolves($rdf.namedNode('cube-table'))
+
+    // then
+    await expect(createTable(
+      {
+        resource,
+        store,
+        tableCollection,
+      }),
+    ).to.eventually.be.rejectedWith(DomainError)
   })
 
   it('creates a ColumnMapping resources for selected source columns', async () => {
