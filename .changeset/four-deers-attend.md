@@ -1,5 +1,5 @@
 ---
-@cube-creator/ui
+@cube-creator/ui: patch
 ---
 
 build: update webpack
