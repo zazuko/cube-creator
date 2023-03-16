@@ -1,5 +1,11 @@
 # @cube-creator/core-api
 
+## 2.2.4
+
+### Patch Changes
+
+- 602f7c0e: Update moment-timezone
+
 ## 2.2.3
 
 ### Patch Changes

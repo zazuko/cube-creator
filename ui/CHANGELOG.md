@@ -1,5 +1,11 @@
 # @cube-creator/ui
 
+## 1.13.5
+
+### Patch Changes
+
+- 94e0b54d: build: update webpack
+
 ## 1.13.4
 
 ### Patch Changes
