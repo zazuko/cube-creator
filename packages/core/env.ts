@@ -22,6 +22,11 @@ const handler = {
 
     return value
   },
+
+  set(obj: typeof process.env, prop: string, value: string | undefined) {
+    obj[prop] = value
+    return true
+  },
 }
 
 type ENV_VARS =
