@@ -1,5 +1,5 @@
 # First step: build the assets
-FROM node:16-alpine AS builder
+FROM node:18-alpine AS builder
 
 # Do not install Cypress
 ENV CYPRESS_INSTALL_BINARY=0
@@ -38,10 +38,10 @@ ENV VUE_APP_COMMIT=$COMMIT
 ENV VUE_APP_SENTRY_RELEASE=cube-creator-app@$COMMIT
 RUN yarn build
 
-FROM nginx:1.19.0-alpine
+FROM nginx:1.23.3-alpine
 HEALTHCHECK --timeout=1s --retries=99 \
         CMD wget -q --spider http://127.0.0.1:80/ \
-         || exit 1
+        || exit 1
 
 ARG PUBLIC_PATH
 
