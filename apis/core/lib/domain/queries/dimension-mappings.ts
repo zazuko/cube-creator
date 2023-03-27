@@ -1,5 +1,6 @@
 import { Literal, NamedNode, Term } from 'rdf-js'
-import { INSERT, SELECT } from '@tpluscode/sparql-builder'
+import { Readable } from 'stream'
+import { SELECT } from '@tpluscode/sparql-builder'
 import { sparql, SparqlTemplateResult } from '@tpluscode/rdf-string'
 import { rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { cc, cube } from '@cube-creator/core/namespace'
@@ -7,10 +8,13 @@ import TermSet from '@rdfjs/term-set'
 import { prov } from '@tpluscode/rdf-ns-builders/strict'
 import { ResourceIdentifier } from '@tpluscode/rdfine'
 import { toRdf } from 'rdf-literal'
-import { VALUES } from '@tpluscode/sparql-builder/expressions'
-import { parsingClient, publicClient } from '../../query-client'
+import through2 from 'through2'
+import clownface from 'clownface'
+import $rdf from 'rdf-ext'
+import getStream from 'get-stream'
+import { publicClient, streamClient } from '../../query-client'
 
-async function findCubeGraph(dimensionMapping: Term, client: typeof parsingClient): Promise<NamedNode> {
+async function findCubeGraph(dimensionMapping: Term, client: typeof streamClient): Promise<NamedNode> {
   const patternsToFindCubeGraph = sparql`BIND ( ${dimensionMapping} as ?dimensionMapping )
 
   graph ?dimensionMapping {
@@ -33,14 +37,15 @@ async function findCubeGraph(dimensionMapping: Term, client: typeof parsingClien
                ${cc.cubeGraph} ?cubeGraph .
     }`
 
-  const [{ cubeGraph }] = await SELECT`?cubeGraph`
+  const stream = await SELECT`?cubeGraph`
     .WHERE`${patternsToFindCubeGraph}`
     .execute(client.query)
 
-  return cubeGraph as any
+  const [{ cubeGraph }] = await getStream.array<{ cubeGraph: NamedNode }>(stream)
+  return cubeGraph
 }
 
-function unmappedValuesQuery(cubeGraph: NamedNode, dimensionMapping: Term) {
+function unmappedValuesFromQuery(cubeGraph: NamedNode, dimensionMapping: Term) {
   return SELECT.DISTINCT`?value`
     .WHERE`
       # find mapped dimension URL
@@ -75,13 +80,14 @@ function unmappedValuesQuery(cubeGraph: NamedNode, dimensionMapping: Term) {
     `
 }
 
-export async function getUnmappedValues(dimensionMapping: Term, client = parsingClient): Promise<Set<Literal>> {
+export async function getUnmappedValues(dimensionMapping: Term, client = streamClient): Promise<Set<Literal>> {
   const cubeGraph = await findCubeGraph(dimensionMapping, client)
 
-  const unmappedValues = await unmappedValuesQuery(cubeGraph, dimensionMapping)
+  const stream = await unmappedValuesFromQuery(cubeGraph, dimensionMapping)
     .execute(client.query)
 
-  return new TermSet(unmappedValues.map(result => result.value as any))
+  const unmappedValues = await getStream.array<{ value: Literal }>(stream)
+  return new TermSet(unmappedValues.map(result => result.value))
 }
 
 interface ImportMappingsFromSharedDimension {
@@ -90,40 +96,50 @@ interface ImportMappingsFromSharedDimension {
   predicate: NamedNode
   validThrough?: Date
   /**
-   * By default, the function will query the database to find unmapped cube values.
-   * Override this in automatic tests to replace a subselect for example with static VALUES clause
+   * By default, a function will query the database to find unmapped cube values.
+   * Override this in automatic tests to with static values
    */
-  unmappedValuesGraphPatterns?: SparqlTemplateResult | string
+  unmappedValuesSource?: Literal[]
 }
 
-export async function importMappingsFromSharedDimension({ dimensionMapping, dimension, predicate, unmappedValuesGraphPatterns, validThrough }: ImportMappingsFromSharedDimension, client = parsingClient) {
-  let unmappedValuesSelect: SparqlTemplateResult | string
-  if (unmappedValuesGraphPatterns != null) {
-    unmappedValuesSelect = unmappedValuesGraphPatterns
+export async function importMappingsFromSharedDimension({
+  dimensionMapping,
+  dimension,
+  predicate,
+  unmappedValuesSource,
+  validThrough,
+}: ImportMappingsFromSharedDimension, client = streamClient) {
+  let unmappedValues: Parameters<(typeof Readable)['from']>[0]
+  if (unmappedValuesSource != null) {
+    unmappedValues = unmappedValuesSource.map(value => ({ value }))
   } else {
     const cubeGraph = await findCubeGraph(dimensionMapping, client)
-    unmappedValuesSelect = sparql`{
-    ${unmappedValuesQuery(cubeGraph, dimensionMapping)}
-  }`
+    unmappedValues = await unmappedValuesFromQuery(cubeGraph, dimensionMapping).execute(client.query)
   }
 
-  const insert = INSERT`
-    GRAPH ${dimensionMapping} {
-      ${dimensionMapping} ${prov.hadDictionaryMember} [
-        a ${prov.KeyEntityPair} ;
-        ${prov.pairKey} ?value ;
-        ${prov.pairEntity} ?term
-      ]
+  const terms = await getSharedDimensionTerms({ dimension, predicate, validThrough })
+  const newMappings = through2.obj(function ({ value }: { value: Literal }, _, next) {
+    const pair = terms.get(value.value)
+    if (!pair) {
+      return next()
     }
-  `.WHERE`
-    ${unmappedValuesSelect}
 
-    ${VALUES(...await getSharedDimensionTerms({ dimension, predicate, validThrough }))}
+    const pointer = clownface({ dataset: $rdf.dataset(), graph: dimensionMapping })
+      .node(dimensionMapping)
+      .addOut(prov.hadDictionaryMember, member => {
+        member
+          .addOut(rdf.type, prov.KeyEntityPair)
+          .addOut(prov.pairKey, pair.key)
+          .addOut(prov.pairEntity, pair.entity)
+      })
 
-    FILTER (str(?value) = str(?identifier))
-  `
+    for (const quad of pointer.dataset) {
+      this.push(quad)
+    }
+    return next()
+  })
 
-  await insert.execute(client.query)
+  await client.store.post(Readable.from(unmappedValues).pipe(newMappings))
 }
 
 interface GetSharedDimensionTerms {
@@ -132,7 +148,7 @@ interface GetSharedDimensionTerms {
   validThrough?: Date
 }
 
-function getSharedDimensionTerms({ dimension, predicate, validThrough }: GetSharedDimensionTerms) {
+async function getSharedDimensionTerms({ dimension, predicate, validThrough }: GetSharedDimensionTerms): Promise<Map<string, { entity: Term; key: Literal }>> {
   let validThroughFilter: SparqlTemplateResult | string = ''
   if (validThrough) {
     validThroughFilter = sparql`
@@ -141,7 +157,7 @@ function getSharedDimensionTerms({ dimension, predicate, validThrough }: GetShar
     `
   }
 
-  return SELECT`?term ?identifier`
+  const bindings: Array<{ term: Term; identifier: Literal }> = await SELECT`?term ?identifier`
     .WHERE`
       {
         ?term ${schema.inDefinedTermSet} ${dimension} ;
@@ -155,5 +171,7 @@ function getSharedDimensionTerms({ dimension, predicate, validThrough }: GetShar
 
       ${validThroughFilter}
     `
-    .execute(publicClient.query)
+    .execute(publicClient.query) as any
+
+  return new Map(bindings.map(({ identifier, term }) => [identifier.value, { key: identifier, entity: term }]))
 }

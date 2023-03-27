@@ -3,9 +3,9 @@ import $rdf from 'rdf-ext'
 import { expect } from 'chai'
 import { ccClients } from '@cube-creator/testing/lib'
 import { insertTestDimensions, insertTestProject } from '@cube-creator/testing/lib/seedData'
-import { dcterms, prov, schema } from '@tpluscode/rdf-ns-builders/strict'
+import { dcterms, prov, schema, xsd } from '@tpluscode/rdf-ns-builders/strict'
 import { ASK, sparql } from '@tpluscode/sparql-builder'
-import { IN, VALUES } from '@tpluscode/sparql-builder/expressions'
+import { IN } from '@tpluscode/sparql-builder/expressions'
 import { getUnmappedValues, importMappingsFromSharedDimension } from '../../../lib/domain/queries/dimension-mappings'
 
 describe('@cube-creator/core-api/lib/domain/queries/dimension-mappings @SPARQL', function () {
@@ -21,7 +21,7 @@ describe('@cube-creator/core-api/lib/domain/queries/dimension-mappings @SPARQL',
   describe('getUnmappedValues', () => {
     it('returns combined unmapped values from shapes and observations', async () => {
       // when
-      const unmappedValues = await getUnmappedValues(pollutantMapping, ccClients.parsingClient)
+      const unmappedValues = await getUnmappedValues(pollutantMapping, ccClients.streamClient)
 
       // then
       expect(unmappedValues).to.have.property('size', 4)
@@ -102,22 +102,49 @@ describe('@cube-creator/core-api/lib/domain/queries/dimension-mappings @SPARQL',
 
     it('matches shared terms on string value of literals', async () => {
       // given
-      const unmappedValuesGraphPatterns = VALUES(
-        { value: '19' },
-      )
+      const unmappedValuesSource = [
+        $rdf.literal('19'),
+      ]
 
       // when
       await importMappingsFromSharedDimension({
         dimensionMapping: testMapping,
         dimension: $rdf.namedNode('http://example.com/dimension/cantons'),
         predicate: schema.identifier,
-        unmappedValuesGraphPatterns,
+        unmappedValuesSource,
       })
 
       // then
       const pairsCreated = await ASK`
           ${testMapping} ${prov.hadDictionaryMember} [
-            ${prov.pairKey} "19" ;
+            ${prov.pairKey} 19 ;
+            ${prov.pairEntity} <http://example.com/dimension/canton/ZH> ;
+          ] .
+        `
+        .FROM(testMapping)
+        .execute(ccClients.parsingClient.query)
+
+      expect(pairsCreated).to.be.true
+    })
+
+    it('matches shared terms on typed literals', async () => {
+      // given
+      const unmappedValuesSource = [
+        $rdf.literal('19', xsd.integer),
+      ]
+
+      // when
+      await importMappingsFromSharedDimension({
+        dimensionMapping: testMapping,
+        dimension: $rdf.namedNode('http://example.com/dimension/cantons'),
+        predicate: schema.identifier,
+        unmappedValuesSource,
+      })
+
+      // then
+      const pairsCreated = await ASK`
+          ${testMapping} ${prov.hadDictionaryMember} [
+            ${prov.pairKey} 19 ;
             ${prov.pairEntity} <http://example.com/dimension/canton/ZH> ;
           ] .
         `
@@ -129,17 +156,17 @@ describe('@cube-creator/core-api/lib/domain/queries/dimension-mappings @SPARQL',
 
     it('matches only valid terms if required', async () => {
       // given
-      const unmappedValuesGraphPatterns = VALUES(
-        { value: '#00F' },
-        { value: '#F00' },
-      )
+      const unmappedValuesSource = [
+        $rdf.literal('#00F'),
+        $rdf.literal('#F00'),
+      ]
 
       // when
       await importMappingsFromSharedDimension({
         dimensionMapping: testMapping,
         dimension: $rdf.namedNode('http://example.com/dimension/colors'),
         predicate: schema.identifier,
-        unmappedValuesGraphPatterns,
+        unmappedValuesSource,
         validThrough: new Date(2021, 5, 20),
       })
 
