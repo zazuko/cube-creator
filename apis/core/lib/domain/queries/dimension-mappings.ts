@@ -99,19 +99,13 @@ interface ImportMappingsFromSharedDimension {
    * By default, a function will query the database to find unmapped cube values.
    * Override this in automatic tests to with static values
    */
-  unmappedValuesSource?: Literal[]
+  unmappedValuesOverride?: Literal[]
 }
 
-export async function importMappingsFromSharedDimension({
-  dimensionMapping,
-  dimension,
-  predicate,
-  unmappedValuesSource,
-  validThrough,
-}: ImportMappingsFromSharedDimension, client = streamClient) {
-  let unmappedValues: Parameters<(typeof Readable)['from']>[0]
-  if (unmappedValuesSource != null) {
-    unmappedValues = unmappedValuesSource.map(value => ({ value }))
+export async function importMappingsFromSharedDimension({ dimensionMapping, dimension, predicate, unmappedValuesOverride, validThrough }: ImportMappingsFromSharedDimension, client = streamClient) {
+  let unmappedValues: AsyncIterable<{ value: Literal }> | Iterable<{ value: Literal }>
+  if (unmappedValuesOverride != null) {
+    unmappedValues = unmappedValuesOverride.map(value => ({ value }))
   } else {
     const cubeGraph = await findCubeGraph(dimensionMapping, client)
     unmappedValues = await unmappedValuesFromQuery(cubeGraph, dimensionMapping).execute(client.query)

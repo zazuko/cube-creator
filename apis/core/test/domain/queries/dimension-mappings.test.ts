@@ -102,7 +102,7 @@ describe('@cube-creator/core-api/lib/domain/queries/dimension-mappings @SPARQL',
 
     it('matches shared terms on string value of literals', async () => {
       // given
-      const unmappedValuesSource = [
+      const unmappedValuesOverride = [
         $rdf.literal('19'),
       ]
 
@@ -111,7 +111,7 @@ describe('@cube-creator/core-api/lib/domain/queries/dimension-mappings @SPARQL',
         dimensionMapping: testMapping,
         dimension: $rdf.namedNode('http://example.com/dimension/cantons'),
         predicate: schema.identifier,
-        unmappedValuesSource,
+        unmappedValuesOverride,
       })
 
       // then
@@ -129,7 +129,7 @@ describe('@cube-creator/core-api/lib/domain/queries/dimension-mappings @SPARQL',
 
     it('matches shared terms on typed literals', async () => {
       // given
-      const unmappedValuesSource = [
+      const unmappedValuesOverride = [
         $rdf.literal('19', xsd.integer),
       ]
 
@@ -138,7 +138,7 @@ describe('@cube-creator/core-api/lib/domain/queries/dimension-mappings @SPARQL',
         dimensionMapping: testMapping,
         dimension: $rdf.namedNode('http://example.com/dimension/cantons'),
         predicate: schema.identifier,
-        unmappedValuesSource,
+        unmappedValuesOverride,
       })
 
       // then
@@ -156,7 +156,7 @@ describe('@cube-creator/core-api/lib/domain/queries/dimension-mappings @SPARQL',
 
     it('matches only valid terms if required', async () => {
       // given
-      const unmappedValuesSource = [
+      const unmappedValuesOverride = [
         $rdf.literal('#00F'),
         $rdf.literal('#F00'),
       ]
@@ -166,7 +166,7 @@ describe('@cube-creator/core-api/lib/domain/queries/dimension-mappings @SPARQL',
         dimensionMapping: testMapping,
         dimension: $rdf.namedNode('http://example.com/dimension/colors'),
         predicate: schema.identifier,
-        unmappedValuesSource,
+        unmappedValuesOverride,
         validThrough: new Date(2021, 5, 20),
       })
 
