@@ -91,4 +91,20 @@ export const organizations = turtle`
     ${cube.observedBy} <https://register.ld.admin.ch/staatskalender/organization/10003634> ;
   .
 }
+
+<organization/ofcom> {
+  <organization/ofcom>
+    a ${schema.Organization} ;
+    ${cc.publishGraph}  <https://lindas.admin.ch/ofcom/cube> ;
+    ${cc.namespace} <https://communication.ld.admin.ch/ofcom/> ;
+    ${schema.dataset} <https://communication.ld.admin.ch/.well-known/void> ;
+    ${rdfs.label} "Federal Office of Communications OFCOM"@en ;
+    ${rdfs.label} "Bundesamt für Kommunikation BAKOM"@de ;
+    ${rdfs.label} "Ufficio federale delle comunicazioni UFCOM"@it ;
+    ${rdfs.label} "Office fédéral de la communication OFCOM"@fr ;
+    ${dcat.accessURL} <https://communication.ld.admin.ch/sparql> ;
+    ${_void.sparqlEndpoint} <https://communication.ld.admin.ch/query> ;
+    ${cube.observedBy} <https://register.ld.admin.ch/opendataswiss/org/bundesamt-fur-kommunikation-bakom> ;
+  .
+}
 `
