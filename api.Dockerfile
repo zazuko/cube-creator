@@ -1,5 +1,5 @@
 # First step: build the assets
-FROM node:16-alpine AS builder
+FROM node:18-alpine AS builder
 
 WORKDIR /app
 ADD package.json yarn.lock ./
@@ -25,7 +25,7 @@ RUN rm -rf ./cli
 
 RUN yarn tsc --outDir dist --module CommonJS
 
-FROM node:14-alpine
+FROM node:18-alpine
 
 WORKDIR /app
 

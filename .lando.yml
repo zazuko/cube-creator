@@ -5,10 +5,10 @@ env_file:
 services:
   core:
     type: node:custom
-    command: npx nodemon -w packages -w apis --verbose --ext ts,ttl,js,trig --ignore **/*.test.ts --ignore **/*.spec-graphs.ts --exec node --inspect=0.0.0.0:45671 -r ts-node/register --inspect apis/core/index.ts
+    command: mkdir -p /var/www/.npm-global/lib && npx nodemon -w packages -w apis --verbose --ext ts,ttl,js,trig --ignore **/*.test.ts --ignore **/*.spec-graphs.ts --exec node --inspect=0.0.0.0:45671 -r ts-node/register --inspect apis/core/index.ts
     ssl: true
     overrides:
-      image: node:14
+      image: node:18
       ports:
         - "45671:45671"
       environment:
@@ -22,7 +22,7 @@ services:
     moreHttpPorts:
       - 45671
   ui:
-    type: node:16
+    type: node:18
     command: (cd ui; yarn serve --public app.cube-creator.lndo.site --hostname 0.0.0.0 --port 80)
     ssl: true
     overrides:
@@ -75,10 +75,10 @@ services:
         - ./minio:/data/
   pipeline:
     type: node:custom
-    command: npx nodemon -w packages -w cli --verbose --ext ts,ttl,js,trig --ignore **/*.spec.ts --ignore **/*.spec-graphs.ts --exec node --inspect=0.0.0.0:45681 -r ts-node/register --inspect cli/server.ts
+    command: mkdir -p /var/www/.npm-global/lib && npx nodemon -w packages -w cli --verbose --ext ts,ttl,js,trig --ignore **/*.spec.ts --ignore **/*.spec-graphs.ts --exec node --inspect=0.0.0.0:45681 -r ts-node/register --inspect cli/server.ts
     port: 80
     overrides:
-      image: node:14
+      image: node:18
       ports:
         - "45681:45681"
       environment:
