@@ -1,5 +1,11 @@
 # @cube-creator/cli
 
+## 2.0.9
+
+### Patch Changes
+
+- c921176a: Add a metric counting quads produced from the `transform` pipeline
+
 ## 2.0.8
 
 ### Patch Changes

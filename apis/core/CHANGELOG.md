@@ -1,5 +1,11 @@
 # @cube-creator/core-api
 
+## 2.2.5
+
+### Patch Changes
+
+- fad7127a: Improve insert performance of new dimension mappings (re #1398)
+
 ## 2.2.4
 
 ### Patch Changes
