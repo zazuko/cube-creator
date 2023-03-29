@@ -4,7 +4,7 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 
 <#Main> a :Pipeline ;
-  :steps [ :stepList ( <#loadMetadata> <#doTransform> <#validate> <#StreamOutput> ) ] .
+  :steps [ :stepList ( <#loadMetadata> <#doTransform> <#validate> <#countOutputQuads> <#StreamOutput> ) ] .
 
 <#StreamOutput>
   a :Pipeline, :WritableObjectMode .
@@ -46,6 +46,15 @@
                        a         code:EcmaScriptModule ] ;
   code:arguments     ( <#SelectAndRunTransformation> "transformed" ) .
 
+<#countOutputQuads>
+  a :Step ;
+  code:implementedBy
+    [
+      a code:EcmaScript ;
+      code:link <file:../lib/counters#quads>
+    ] ;
+  code:arguments ( "out" ) ;
+.
 
 # ------------------------------
 #
