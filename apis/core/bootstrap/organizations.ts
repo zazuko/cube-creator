@@ -104,7 +104,7 @@ export const organizations = turtle`
     ${rdfs.label} "Office fédéral de la communication OFCOM"@fr ;
     ${dcat.accessURL} <https://communication.ld.admin.ch/sparql> ;
     ${_void.sparqlEndpoint} <https://communication.ld.admin.ch/query> ;
-    ${cube.observedBy} <https://ld.admin.ch/office/V.1.7> ;
+    ${cube.observedBy} <https://register.ld.admin.ch/opendataswiss/org/bundesamt-fur-kommunikation-bakom> ;
   .
 }
 `
