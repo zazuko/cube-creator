@@ -210,6 +210,7 @@ ${shape('cube-project/search')} {
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
       ${dash.editor} ${dash.InstancesSelectEditor} ;
+      ${sh1.orderBy} ( ${schema.name} ) ;
       ${hydra.collection} </users> ;
       ${sh1.clearable} true ;
     ],
