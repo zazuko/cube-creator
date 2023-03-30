@@ -13,7 +13,7 @@ on:
 
 jobs:
   pipeline:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     env:
       TS_NODE_TRANSPILE_ONLY: "true"
       AUTH_RUNNER_CLIENT_ID: ${{ secrets.AUTH_RUNNER_CLIENT_ID }}
