@@ -465,6 +465,7 @@ ${shape('dimension/shared-mapping-import')} {
       ${sh.name} "Shared dimension" ;
       ${dash.editor} ${dash.AutoCompleteEditor} ;
       ${hydra.collection} ${sharedDimensionCollection} ;
+      ${sh1.orderBy} ( ${schema.name} ) ;
       ${sh.nodeKind} ${sh.IRI} ;
       ${sh.order} 10 ;
       ${sh.minCount} 1 ;
@@ -512,6 +513,7 @@ ${shape('dimension/shared-mapping')} {
       ${sh.name} "Shared dimensions" ;
       ${dash.editor} ${dash.AutoCompleteEditor} ;
       ${hydra.collection} ${sharedDimensionCollection} ;
+      ${sh1.orderBy} ( ${schema.name} ) ;
       ${sh.nodeKind} ${sh.IRI} ;
       ${sh.order} 10 ;
     ] , [
