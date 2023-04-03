@@ -142,6 +142,7 @@ describe('domain/column-mapping/update', () => {
       getTablesForMapping,
       getTableForColumnMapping,
       getTableReferences: sinon.stub(),
+      getCubeTable: sinon.stub(),
     }
 
     sinon.stub(orgQueries, 'findOrganization').resolves({
