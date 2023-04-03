@@ -13,5 +13,5 @@ export function lindasQueryTemplate(query: SparqlTemplateResult, ...variables: s
 }
 
 function replacePlaceholders(prev: string, variable: string) {
-  return prev.replaceAll(`_${variable}_`, `{${variable}}`)
+  return prev.replace(new RegExp(`_${variable}_`, 'g'), `{${variable}}`)
 }
