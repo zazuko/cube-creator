@@ -59,7 +59,7 @@ describe('domain/table/create', () => {
 
     sinon.restore()
     sinon.stub(DimensionMetadataQueries, 'getDimensionMetaDataCollection').resolves(dimensionMetadata.term)
-    getTableQueries = sinon.stub(TableQueries, 'getCubeTable').resolves(undefined)
+    getTableQueries = sinon.stub(TableQueries, 'getCubeTables').resolves([])
 
     sinon.stub(orgQueries, 'findOrganization').resolves({
       projectId: project.id,
@@ -152,7 +152,7 @@ describe('domain/table/create', () => {
       .addOut(schema.color, '#ababab')
       .addOut(cc.identifierTemplate, '{id}')
       .addOut(cc.csvSource, $rdf.namedNode('foo'))
-    getTableQueries.resolves($rdf.namedNode('cube-table'))
+    getTableQueries.resolves([$rdf.namedNode('cube-table')])
 
     // then
     await expect(createTable(

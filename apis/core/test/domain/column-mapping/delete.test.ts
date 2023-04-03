@@ -138,7 +138,7 @@ describe('domain/column-mapping/delete', () => {
       getTablesForMapping,
       getTableForColumnMapping,
       getTableReferences: sinon.stub(),
-      getCubeTable: sinon.stub(),
+      getCubeTables: sinon.stub(),
     }
 
     dimensionIsUsedByOtherMapping = sinon.stub().resolves(false)

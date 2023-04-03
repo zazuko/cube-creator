@@ -89,7 +89,7 @@ export async function getTableForColumnMapping(columnMapping: NamedNode, client 
   return results[0].table
 }
 
-export async function getCubeTable(csvMapping: CsvMapping): Promise<Term | undefined> {
+export async function getCubeTables(csvMapping: CsvMapping): Promise<Term[]> {
   const bindings = await SELECT`?table`
     .WHERE`
       GRAPH ?table {
@@ -99,5 +99,5 @@ export async function getCubeTable(csvMapping: CsvMapping): Promise<Term | undef
     `
     .execute(parsingClient.query)
 
-  return bindings.shift()?.table
+  return bindings.map(b => b.table)
 }

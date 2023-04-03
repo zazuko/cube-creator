@@ -27,7 +27,7 @@ interface CreateTableCommand {
   resource: GraphPointer
   store: ResourceStore
   dimensionMetadataQueries?: Pick<typeof DimensionMetadataQueries, 'getDimensionMetaDataCollection'>
-  tableQueries?: Pick<typeof TableQueries, 'getCubeTable'>
+  tableQueries?: Pick<typeof TableQueries, 'getCubeTables'>
 }
 
 export async function createTable({
@@ -35,7 +35,7 @@ export async function createTable({
   resource,
   store,
   dimensionMetadataQueries: { getDimensionMetaDataCollection } = DimensionMetadataQueries,
-  tableQueries: { getCubeTable } = TableQueries,
+  tableQueries: { getCubeTables } = TableQueries,
 }: CreateTableCommand): Promise<GraphPointer> {
   const label = resource.out(schema.name)
   if (!label?.value) {
@@ -103,7 +103,7 @@ export async function createTable({
       cubeIdentifier,
     )
 
-    const currentCubeTable = await getCubeTable(csvMapping)
+    const currentCubeTable = (await getCubeTables(csvMapping)).shift()
     if (currentCubeTable) {
       throw new DomainError('A project can have only one cube table')
     }
