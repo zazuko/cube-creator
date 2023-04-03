@@ -10,7 +10,7 @@ runs:
     - run: yarn install --ci
       shell: bash
     - name: Set up Docker
-      uses: docker-practice/actions-setup-docker@1.0.11
+      uses: docker-practice/actions-setup-docker@master
       with:
         docker_version: 20.10.23
     - name: Set up Docker Buildx
