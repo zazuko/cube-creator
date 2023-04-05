@@ -65,6 +65,11 @@ export function ProvDictionaryMixinEx<Base extends Constructor<Dictionary>>(Reso
         newEntryMap.delete(entry.pairKey)
       }
 
+      this.pointer.any()
+        .has(rdf.type, prov.Entity)
+        .filter(entity => entity.in().values.length === 0)
+        .forEach(entity => entity.deleteOut())
+
       // Insert new entries
       this.hadDictionaryMember = [
         ...this.hadDictionaryMember,
