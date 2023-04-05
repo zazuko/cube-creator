@@ -80,29 +80,30 @@ export async function mapDimensions(this: Pick<Context, 'variables'>) {
     return mappingTerm
   }
 
-  const valueCache = new TermMap<Term, TermMap<Term, Term | undefined>>()
+  const valueCache = new TermMap<Term, Map<string, Term | undefined>>()
   const getMappedValue = async (mappingTerm: string, object: Term) => {
     const dict = await loadDimensionMapping(mappingTerm, this.variables.get('apiClient'))
     if (!dict) {
       return undefined
     }
 
+    const { value } = object
     let valueMap = valueCache.get(dict.term)
     if (!valueMap) {
-      valueMap = new TermMap()
+      valueMap = new Map()
       valueCache.set(dict.term, valueMap)
     }
 
-    let value = valueMap.get(object)
-    if (!value) {
-      value = dict.out(prov.hadDictionaryMember)
-        .has(prov.pairKey, object)
+    let mappedValue = valueMap.get(value)
+    if (!mappedValue) {
+      mappedValue = dict.out(prov.hadDictionaryMember)
+        .has(prov.pairKey, value)
         .out(prov.pairEntity)
         .term
-      valueMap.set(object, value)
+      valueMap.set(value, mappedValue)
     }
 
-    return value
+    return mappedValue
   }
 
   // We store original value quads in memory and inject them into the stream
