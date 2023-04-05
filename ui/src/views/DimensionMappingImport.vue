@@ -54,6 +54,8 @@ export default defineComponent({
           variant: 'success',
         })
 
+        store.dispatch('project/fetchDimensionMetadataCollection')
+
         router.push({
           name: 'DimensionMapping',
           params: {
