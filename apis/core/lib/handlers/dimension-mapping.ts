@@ -120,6 +120,11 @@ export const importMappingsRequest = protectedResource(
       validThrough,
     })
 
+    const metadataId = await findByDimensionMapping(dimensionMapping.id)
+    const dimensionMetadata = await store.getResource<DimensionMetadataCollection>(metadataId)
+    dimensionMetadata.addError?.(dimensionChangedWarning)
+    await store.save()
+
     res.end()
   }),
 )
