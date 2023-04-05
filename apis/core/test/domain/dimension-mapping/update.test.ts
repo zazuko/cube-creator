@@ -45,6 +45,10 @@ describe('domain/dimension-mapping/update', () => {
         member
           .addOut(prov.pairKey, 'so2')
       })
+    dimensionMapping.node(wikidata.carbonMonoxide)
+      .addOut(rdf.type, prov.Entity)
+    dimensionMapping.node(wikidata.sulphurDioxide)
+      .addOut(rdf.type, prov.Entity)
 
     store = new TestResourceStore([
       dimensionMapping,
@@ -321,6 +325,14 @@ describe('domain/dimension-mapping/update', () => {
         },
       })
     })
+
+    it('removes rdf:type prov:Entity triples of removed pairs', () => {
+      expect(dimensionMapping.node(wikidata.carbonMonoxide).out().terms).to.be.empty
+    })
+
+    it('removes all superfluous rdf:type prov:Entity triples', () => {
+      expect(dimensionMapping.node(wikidata.sulphurDioxide).out().terms).to.be.empty
+    })
   })
 
   describe('updating with "applyMapping" flag set to false', () => {
@@ -386,6 +398,10 @@ describe('domain/dimension-mapping/update', () => {
         },
       })
       expect(dimensionMapping.any().has([prov.pairKey, prov.pairEntity]).terms).to.have.length(2)
+    })
+
+    it('keeps rdf:type prov:Entity triples of remaining pairs', () => {
+      expect(dimensionMapping.node(wikidata.carbonMonoxide).out(rdf.type).term).to.deep.eq(prov.Entity)
     })
   })
 
