@@ -6,6 +6,7 @@ import { cube } from '@cube-creator/core/namespace'
 import { insertTestProject } from '@cube-creator/testing/lib/seedData'
 import { Hydra } from 'alcaeus/node'
 import * as Models from '@cube-creator/model'
+import { xsd } from '@tpluscode/rdf-ns-builders'
 import { setupEnv } from '../support/env'
 import { mapDimensions } from '../../lib/output-mapper'
 
@@ -38,6 +39,27 @@ describe('lib/output-mapper', function () {
           obsId,
           predicate,
           $rdf.literal('co'),
+          cube.Cube),
+      ]).toStream()
+
+      // when
+      const map = await mapDimensions.call(context)
+      const mapped = await $rdf.dataset().import(quads.pipe(map))
+
+      // then
+      const match = mapped.match(obsId, predicate, $rdf.namedNode('http://www.wikidata.org/entity/Q2025'))
+      expect(match.size).to.equal(1)
+    })
+
+    it('mapped value is taken at face value', async () => {
+      // given
+
+      const obsId = $rdf.namedNode('observation')
+      const quads = $rdf.dataset([
+        $rdf.quad(
+          obsId,
+          predicate,
+          $rdf.literal('co', xsd.anyAtomicType),
           cube.Cube),
       ]).toStream()
 
