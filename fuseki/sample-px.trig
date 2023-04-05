@@ -80,7 +80,7 @@ graph <cube-project/px/dimension-mapping/measure-11> {
     prov:hadDictionaryMember
       [
         a prov:KeyEntityPair ;
-        prov:pairKey "0"^^xsd:decimal ;
+        prov:pairKey "0" ;
         prov:pairEntity <http://example.com/dimension/colors/red> ;
       ] ;
   .
