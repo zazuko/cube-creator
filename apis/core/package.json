@@ -27,7 +27,7 @@
     "@sentry/tracing": "^6.2.0",
     "@tpluscode/rdf-ns-builders": "^1.0.0",
     "@tpluscode/rdf-string": "^0.2.23",
-    "@tpluscode/rdfine": "^0.5.23",
+    "@tpluscode/rdfine": "^0.5.43",
     "@tpluscode/sparql-builder": "^0.3.24",
     "@uppy/companion": "^4.1.1",
     "@zazuko/rdf-vocabularies": ">=2021.3.17",

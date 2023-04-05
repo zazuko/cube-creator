@@ -34,10 +34,10 @@ export async function update({
   dimensionMappings.changeSharedDimensions(sharedDimensions)
 
   dimensionMappings.onlyValidTerms = newMappings.onlyValidTerms
-  const newEntries = dimensionMappings.replaceEntries(newMappings.hadDictionaryMember)
+  const entriesChanged = dimensionMappings.replaceEntries(newMappings.hadDictionaryMember)
 
   return {
     dimensionMapping: dimensionMappings.pointer,
-    hasChanges: newEntries.size > 0,
+    hasChanges: entriesChanged,
   }
 }
