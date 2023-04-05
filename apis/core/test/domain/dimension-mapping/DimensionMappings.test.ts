@@ -1,14 +1,17 @@
 import { NamedNode } from 'rdf-js'
 import { describe, it, beforeEach } from 'mocha'
 import { fromPointer } from '@rdfine/prov/lib/Dictionary'
+import { fromPointer as keyEntityPair } from '@rdfine/prov/lib/KeyEntityPair'
 import { GraphPointer } from 'clownface'
 import { expect } from 'chai'
 import $rdf from 'rdf-ext'
 import namespace from '@rdfjs/namespace'
 import TermSet from '@rdfjs/term-set'
 import { prov } from '@tpluscode/rdf-ns-builders'
-import { namedNode } from '@cube-creator/testing/clownface'
+import { blankNode, namedNode } from '@cube-creator/testing/clownface'
 import '../../../lib/domain'
+import { Initializer } from '@tpluscode/rdfine/RdfResource'
+import { KeyEntityPair } from '@rdfine/prov'
 
 const wtd = namespace('http://www.wikidata.org/entity/')
 
@@ -129,6 +132,79 @@ describe('lib/domain/DimensionMappings', () => {
           },
         },
       })
+    })
+  })
+
+  describe('replaceEntries', () => {
+    it('returns true when entries are added', () => {
+      // given
+      const dictionary = fromPointer(pointer, {
+        hadDictionaryMember: [{
+          pairKey: 'so2',
+          pairEntity: wikidata.sulphurDioxide,
+        }],
+      })
+
+      // when
+      const result = dictionary.replaceEntries([
+        keyEntityPair(blankNode(), {
+          pairKey: 'so2',
+          pairEntity: wikidata.sulphurDioxide,
+        }),
+        keyEntityPair(blankNode(), {
+          pairKey: 'co',
+          pairEntity: wikidata.carbonMonoxide,
+        }),
+      ])
+
+      // then
+      expect(result).to.be.true
+    })
+
+    it('returns true when entries are removed', () => {
+      // given
+      const dictionary = fromPointer(pointer, {
+        hadDictionaryMember: [{
+          pairKey: 'so2',
+          pairEntity: wikidata.sulphurDioxide,
+        }, {
+          pairKey: 'co',
+          pairEntity: wikidata.carbonMonoxide,
+        }],
+      })
+
+      // when
+      const result = dictionary.replaceEntries([
+        keyEntityPair(blankNode(), {
+          pairKey: 'co',
+          pairEntity: wikidata.carbonMonoxide,
+        }),
+      ])
+
+      // then
+      expect(result).to.be.true
+    })
+
+    it('returns true when entries are exactly the same', () => {
+      // given
+      const dictionary = fromPointer(pointer, {
+        hadDictionaryMember: [{
+          pairKey: 'co',
+          pairEntity: wikidata.carbonMonoxide,
+        }],
+      })
+
+      // when
+      const so: Initializer<KeyEntityPair> = {
+        pairKey: 'co',
+        pairEntity: wikidata.carbonMonoxide,
+      }
+      const result = dictionary.replaceEntries([
+        keyEntityPair(blankNode(), so),
+      ])
+
+      // then
+      expect(result).to.be.false
     })
   })
 })

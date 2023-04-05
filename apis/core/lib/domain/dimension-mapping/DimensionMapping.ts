@@ -11,7 +11,7 @@ interface DictionaryEx {
   about: NamedNode
   sharedDimensions: NamedNode[]
   onlyValidTerms: boolean
-  replaceEntries(entries: KeyEntityPair[]): Map<Term, Term>
+  replaceEntries(entries: KeyEntityPair[]): boolean
   changeSharedDimensions(sharedDimensions: NamedNode[]): void
   addMissingEntries(unmappedValues: Set<Literal>): void
   renameDimension(oldCube: NamedNode, newCube: NamedNode): void
@@ -38,7 +38,7 @@ export function ProvDictionaryMixinEx<Base extends Constructor<Dictionary>>(Reso
       this.sharedDimensions = sharedDimensions
     }
 
-    replaceEntries(entries: KeyEntityPair[]): Map<Term, Term> {
+    replaceEntries(entries: KeyEntityPair[]): boolean {
       const newEntries = new TermMap()
 
       const newEntryMap = entries.reduce<Map<Term, Term | undefined>>((map, { pairKey, pairEntity }) => {
@@ -49,9 +49,11 @@ export function ProvDictionaryMixinEx<Base extends Constructor<Dictionary>>(Reso
         return pairKey ? map.set(pairKey, pairEntity?.id) : map
       }, new TermMap())
 
+      let entriesRemoved = false
       // Set values for current entries or remove
       for (const entry of this.hadDictionaryMember) {
         if (!entry.pairKey || !newEntryMap.has(entry.pairKey)) {
+          entriesRemoved = true
           entry.pointer.deleteIn().deleteOut()
           continue
         }
@@ -78,7 +80,7 @@ export function ProvDictionaryMixinEx<Base extends Constructor<Dictionary>>(Reso
         newEntries.set(pairKey, pairEntity)
       }
 
-      return newEntries
+      return newEntries.size > 0 || entriesRemoved
     }
 
     addMissingEntries(unmappedValues: Set<Literal>) {
