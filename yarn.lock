@@ -1529,10 +1529,10 @@
     "@tpluscode/sparql-builder" "^0.3"
     is-graph-pointer "^1.2.2"
 
-"@hydrofoil/shaperone-core@^0.10.0", "@hydrofoil/shaperone-core@^0.10.1", "@hydrofoil/shaperone-core@^0.10.3":
-  version "0.10.3"
-  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-core/-/shaperone-core-0.10.3.tgz#27cbc437081f4d9d6bf563543715fa47f12a0497"
-  integrity sha512-i3HN7p4Bw87Q2Q9XMAiaByksyKa6fGNnlLrys8qLPhFJ73apyP9H6oLT9I8mM3CQuJxSXxhyuFhzm4nAhDW38w==
+"@hydrofoil/shaperone-core@^0.11", "@hydrofoil/shaperone-core@^0.11.0":
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-core/-/shaperone-core-0.11.0.tgz#6d85d9178ea0aec0e93b9359f1050e3e797c7182"
+  integrity sha512-I97vaaXJSB9yPELpSd66qz6Pa+Lz+yMlnO3+pydIxIVpH/RP7Gd3sYpDQjWPjZtDbqnmI8geERlZLCYNDuCF1w==
   dependencies:
     "@captaincodeman/rdx" "^1.0.0-rc.8"
     "@rdf-esm/data-model" "^0.5.3"
@@ -1554,12 +1554,12 @@
     is-graph-pointer "^1.2.2"
     nanoid "^4"
 
-"@hydrofoil/shaperone-hydra@0.3.15":
-  version "0.3.15"
-  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-hydra/-/shaperone-hydra-0.3.15.tgz#64da4f40c6dfe883bc4c39a6c15890cc634a69ef"
-  integrity sha512-m/4hyzeQ9+dKI5mtsra6MGDa9b1CaFHVfjVyw2MRRFt150T3DTqlHs44VL+vz4CRCF4bhbjwm6Am0YX4oUcA2A==
+"@hydrofoil/shaperone-hydra@0.3.16":
+  version "0.3.16"
+  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-hydra/-/shaperone-hydra-0.3.16.tgz#a23c656e092cb262e2c0f6a98c3a9792c740015b"
+  integrity sha512-tu6JcPpgnlhsPQo0puEWVBxoiVdTxyYF6h80uSgsQ5lEM1zv1ESHn/9lPuN8Rok+PUbE0Tp62cw8JMK1iFKbPg==
   dependencies:
-    "@hydrofoil/shaperone-core" "^0.10.0"
+    "@hydrofoil/shaperone-core" "^0.11.0"
     "@rdf-esm/dataset" "^0.5.0"
     "@rdf-esm/term-map" "^0.5.0"
     "@rdfine/hydra" "^0.8.5"
@@ -1569,13 +1569,13 @@
     clownface "^1.2.0"
     clownface-shacl-path "^1.3.2"
 
-"@hydrofoil/shaperone-wc-shoelace@^0.3.1":
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-wc-shoelace/-/shaperone-wc-shoelace-0.3.1.tgz#26727fc79e54a72cca1453c51c48542bceb3414b"
-  integrity sha512-qVe52Zt1uO4qI+yjKaFBEkZPUtJjqtIfekM6G6nsa21vQKPsiO57fDqH5CgjEmsa2x8DMwExr0ARnVfSBIrYvw==
+"@hydrofoil/shaperone-wc-shoelace@^0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-wc-shoelace/-/shaperone-wc-shoelace-0.3.2.tgz#69ee96ca7184e4f9625fe8d902d6f5c800ab8e96"
+  integrity sha512-9V0i25rA2/XEbgVdTBk9x1kNEOqvyosGQ0oeNH1KG3tbLtUcO1mTv9aGLbLoV8oczOx6EPDYuypV18rkOysslQ==
   dependencies:
-    "@hydrofoil/shaperone-core" "^0.10.1"
-    "@hydrofoil/shaperone-wc" "^0.7.11"
+    "@hydrofoil/shaperone-core" "^0.11.0"
+    "@hydrofoil/shaperone-wc" "^0.7.13"
     "@rdfine/shacl" "^0.8.7"
     "@rdfjs-elements/lit-helpers" "^0.3.5"
     "@rdfjs/data-model" "^2"
@@ -1585,13 +1585,13 @@
     lit "^2"
     p-debounce "^4"
 
-"@hydrofoil/shaperone-wc@^0.7.11":
-  version "0.7.12"
-  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-wc/-/shaperone-wc-0.7.12.tgz#e31edcae1193a69de5c528dab0d483501aca8acb"
-  integrity sha512-1DHgXE5pZ8uSZSKOy6IQliJXRfN113mu/WqrCnV6pNjiU4aeFG4ARK0hVWFEsFvYWVmnwDnqSJ2SJ0LMbmvZFw==
+"@hydrofoil/shaperone-wc@^0.7.13":
+  version "0.7.13"
+  resolved "https://registry.yarnpkg.com/@hydrofoil/shaperone-wc/-/shaperone-wc-0.7.13.tgz#eabf631e18a593041c32598116e8d544a61912c9"
+  integrity sha512-Q+02FeORNsoY8rrRIBmjUv2uMf4Nyd/gM5Yqb3Kv/HrwTwZdawp8+p/d5Kf9ywbdDuDmRf9nTmnia+in15+tCA==
   dependencies:
     "@captaincodeman/rdx" "^1.0.0-rc.8"
-    "@hydrofoil/shaperone-core" "^0.10.3"
+    "@hydrofoil/shaperone-core" "^0.11.0"
     "@rdf-esm/data-model" "^0.5.4"
     "@rdf-esm/dataset" "^0.5.1"
     "@rdf-esm/term-map" "^0.5.0"

@@ -4,7 +4,7 @@ import { sparql, turtle } from '@tpluscode/rdf-string'
 import { dash, hydra, prov, rdf, rdfs, schema, sh, qudt, time, xsd } from '@tpluscode/rdf-ns-builders'
 import namespace from '@rdfjs/namespace'
 import $rdf from 'rdf-ext'
-import { lindasQuery } from '../lib/query'
+import { lindasQueryTemplate } from '../lib/query'
 
 const sou = namespace('http://qudt.org/vocab/sou/')
 
@@ -36,6 +36,8 @@ WHERE
               FILTER NOT EXISTS {?unit ${qudt.unitOfSystem} ${sou.SOU_IMPERIAL} . }
               FILTER NOT EXISTS {?unit ${qudt.unitOfSystem} ${sou.SOU_USCS} . }
               FILTER NOT EXISTS {?unit ${qudt.unitOfSystem} ${sou.SOU_PLANCK} . }
+
+              FILTER(REGEX(?name, "_NAME_", "i"))
             }
         }
       ORDER BY ASC(?ucumCount) ASC(?name)
@@ -142,7 +144,14 @@ ${shape('dimension/metadata')} {
       ${sh.maxCount} 1 ;
       ${sh.nodeKind} ${sh.IRI} ;
       ${sh.class} ${qudt.Unit} ;
-      ${hydra.collection} ${lindasQuery(unitsQuery)} ;
+      ${hydra.search} [
+        ${hydra.template} "${lindasQueryTemplate(unitsQuery, 'NAME')}" ;
+        ${hydra.mapping} [
+          ${hydra.property} ${hydra.freetextQuery} ;
+          ${hydra.variable} "NAME" ;
+          ${sh.minLength} 3 ;
+        ] ;
+      ] ;
       ${dash.editor} ${dash.AutoCompleteEditor} ;
       ${sh.group} ${shape('dimension/metadata#coreGroup')} ;
     ] , [
@@ -456,6 +465,7 @@ ${shape('dimension/shared-mapping-import')} {
       ${sh.name} "Shared dimension" ;
       ${dash.editor} ${dash.AutoCompleteEditor} ;
       ${hydra.collection} ${sharedDimensionCollection} ;
+      ${sh1.orderBy} ( ${schema.name} ) ;
       ${sh.nodeKind} ${sh.IRI} ;
       ${sh.order} 10 ;
       ${sh.minCount} 1 ;
@@ -503,6 +513,7 @@ ${shape('dimension/shared-mapping')} {
       ${sh.name} "Shared dimensions" ;
       ${dash.editor} ${dash.AutoCompleteEditor} ;
       ${hydra.collection} ${sharedDimensionCollection} ;
+      ${sh1.orderBy} ( ${schema.name} ) ;
       ${sh.nodeKind} ${sh.IRI} ;
       ${sh.order} 10 ;
     ] , [
