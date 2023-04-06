@@ -11,7 +11,7 @@ interface DictionaryEx {
   about: NamedNode
   sharedDimensions: NamedNode[]
   onlyValidTerms: boolean
-  replaceEntries(entries: KeyEntityPair[]): boolean
+  replaceEntries(entries: KeyEntityPair[]): { entriesChanged: boolean }
   changeSharedDimensions(sharedDimensions: NamedNode[]): void
   addMissingEntries(unmappedValues: Set<Literal>): void
   renameDimension(oldCube: NamedNode, newCube: NamedNode): void
@@ -38,7 +38,7 @@ export function ProvDictionaryMixinEx<Base extends Constructor<Dictionary>>(Reso
       this.sharedDimensions = sharedDimensions
     }
 
-    replaceEntries(entries: KeyEntityPair[]): boolean {
+    replaceEntries(entries: KeyEntityPair[]) {
       const newEntries = new TermMap()
 
       const newEntryMap = entries.reduce<Map<Term, Term | undefined>>((map, { pairKey, pairEntity }) => {
@@ -85,7 +85,9 @@ export function ProvDictionaryMixinEx<Base extends Constructor<Dictionary>>(Reso
         newEntries.set(pairKey, pairEntity)
       }
 
-      return newEntries.size > 0 || entriesRemoved
+      return {
+        entriesChanged: newEntries.size > 0 || entriesRemoved,
+      }
     }
 
     addMissingEntries(unmappedValues: Set<Literal>) {

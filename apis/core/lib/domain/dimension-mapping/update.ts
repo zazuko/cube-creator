@@ -34,7 +34,7 @@ export async function update({
   dimensionMappings.changeSharedDimensions(sharedDimensions)
 
   dimensionMappings.onlyValidTerms = newMappings.onlyValidTerms
-  const entriesChanged = dimensionMappings.replaceEntries(newMappings.hadDictionaryMember)
+  const { entriesChanged } = dimensionMappings.replaceEntries(newMappings.hadDictionaryMember)
 
   return {
     dimensionMapping: dimensionMappings.pointer,

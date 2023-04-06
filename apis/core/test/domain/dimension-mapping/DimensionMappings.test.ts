@@ -146,7 +146,7 @@ describe('lib/domain/DimensionMappings', () => {
       })
 
       // when
-      const result = dictionary.replaceEntries([
+      const { entriesChanged } = dictionary.replaceEntries([
         keyEntityPair(blankNode(), {
           pairKey: 'so2',
           pairEntity: wikidata.sulphurDioxide,
@@ -158,7 +158,7 @@ describe('lib/domain/DimensionMappings', () => {
       ])
 
       // then
-      expect(result).to.be.true
+      expect(entriesChanged).to.be.true
     })
 
     it('returns true when entries are removed', () => {
@@ -174,7 +174,7 @@ describe('lib/domain/DimensionMappings', () => {
       })
 
       // when
-      const result = dictionary.replaceEntries([
+      const { entriesChanged } = dictionary.replaceEntries([
         keyEntityPair(blankNode(), {
           pairKey: 'co',
           pairEntity: wikidata.carbonMonoxide,
@@ -182,7 +182,7 @@ describe('lib/domain/DimensionMappings', () => {
       ])
 
       // then
-      expect(result).to.be.true
+      expect(entriesChanged).to.be.true
     })
 
     it('returns true when entries are exactly the same', () => {
@@ -199,12 +199,12 @@ describe('lib/domain/DimensionMappings', () => {
         pairKey: 'co',
         pairEntity: wikidata.carbonMonoxide,
       }
-      const result = dictionary.replaceEntries([
+      const { entriesChanged } = dictionary.replaceEntries([
         keyEntityPair(blankNode(), so),
       ])
 
       // then
-      expect(result).to.be.false
+      expect(entriesChanged).to.be.false
     })
   })
 })
