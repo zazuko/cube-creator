@@ -209,9 +209,16 @@ ${shape('cube-project/search')} {
       ${sh.order} 20 ;
       ${sh.minCount} 1 ;
       ${sh.maxCount} 1 ;
-      ${dash.editor} ${dash.InstancesSelectEditor} ;
+      ${dash.editor} ${dash.AutoCompleteEditor} ;
       ${sh1.orderBy} ( ${schema.name} ) ;
-      ${hydra.collection} </users> ;
+      ${hydra.search} [
+        ${hydra.template} "/users?name={name}" ;
+        ${hydra.mapping} [
+          ${hydra.property} ${hydra.freetextQuery} ;
+          ${hydra.variable} "name" ;
+          ${sh.minLength} 3 ;
+        ] ;
+      ] ;
       ${sh1.clearable} true ;
     ],
     [

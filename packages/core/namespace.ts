@@ -38,7 +38,8 @@ type CubeCreatorClass =
   'MediaLocal' |
   'MediaURL' |
   'OriginalValuePredicate' |
-  'BatchMappingAction'
+  'BatchMappingAction' |
+  'UserCollection'
 
 type CubeCreatorProperty =
   'projectSourceKind' |

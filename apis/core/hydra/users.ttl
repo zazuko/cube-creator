@@ -1,0 +1,40 @@
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix hydra: <http://www.w3.org/ns/hydra/core#>
+prefix hydra-box: <http://hydra-box.org/schema/>
+PREFIX cc: <https://cube-creator.zazuko.com/vocab#>
+prefix query: <http://hypermedia.app/query#>
+prefix code: <https://code.described.at/>
+
+cc:UserCollection
+  a hydra:Class ;
+  rdfs:subClassOf hydra:Collection ;
+  hydra:supportedOperation
+    [
+      hydra:method "GET" ;
+      code:implementedBy
+        [
+          a
+            code:EcmaScript ;
+          code:link
+            <node:@hydrofoil/labyrinth/collection#get>
+        ] ;
+      hydra-box:variables
+        [
+          a
+            hydra:IriTemplate ;
+          hydra:template
+            "/users{?name}" ;
+          hydra:mapping
+            [
+              a hydra:IriTemplateMapping ;
+              hydra:property hydra:freetextQuery ;
+              hydra:variable "name" ;
+              query:filter
+                [
+                  a code:EcmaScript ;
+                  code:link <file:domain/users/search#byName> ;
+                ] ;
+            ] ;
+        ]
+    ] ;
+.
