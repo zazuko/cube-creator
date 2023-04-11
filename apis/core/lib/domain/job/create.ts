@@ -22,7 +22,7 @@ interface StartTransformationCommand {
 interface StartPublicationCommand {
   resource: NamedNode
   store: ResourceStore
-  queries?: Pick<typeof TableQueries, 'getCubeTables'>
+  queries?: Pick<typeof TableQueries, 'getCubeTable'>
 }
 
 interface StartImportCommand {
@@ -53,7 +53,7 @@ export async function createTransformJob({
 export async function createPublishJob({
   resource,
   store,
-  queries: { getCubeTables } = TableQueries,
+  queries: { getCubeTable } = TableQueries,
 }: StartPublicationCommand): Promise<GraphPointer<NamedNode>> {
   const jobCollection = (await store.get(resource))!
   const projectPointer = jobCollection.out(cc.project).term
@@ -69,8 +69,8 @@ export async function createPublishJob({
     throw new DomainError('Cannot publish cube. Project does not have publish graph')
   }
 
-  const tables = await getCubeTables(project.csvMapping!)
-  if (tables.length !== 1) {
+  const table = await getCubeTable(project.csvMapping!)
+  if (!table) {
     throw new DomainError('Cannot publish cube. It must have exactly one cube table')
   }
 

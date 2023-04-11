@@ -59,7 +59,7 @@ describe('domain/table/create', () => {
 
     sinon.restore()
     sinon.stub(DimensionMetadataQueries, 'getDimensionMetaDataCollection').resolves(dimensionMetadata.term)
-    getTableQueries = sinon.stub(TableQueries, 'getCubeTables').resolves([])
+    getTableQueries = sinon.stub(TableQueries, 'getCubeTable').resolves(undefined)
 
     sinon.stub(orgQueries, 'findOrganization').resolves({
       projectId: project.id,

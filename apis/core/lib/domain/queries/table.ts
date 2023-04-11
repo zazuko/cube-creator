@@ -3,6 +3,7 @@ import { SELECT } from '@tpluscode/sparql-builder'
 import { CsvMapping, Table } from '@cube-creator/model'
 import { cc } from '@cube-creator/core/namespace'
 import { ResourceIdentifier } from '@tpluscode/rdfine'
+import { DomainError } from '@cube-creator/api-errors'
 import { parsingClient } from '../../query-client'
 
 export async function * getTablesForMapping(csvMapping: NamedNode, client = parsingClient) {
@@ -89,7 +90,7 @@ export async function getTableForColumnMapping(columnMapping: NamedNode, client 
   return results[0].table
 }
 
-export async function getCubeTables(csvMapping: CsvMapping): Promise<Term[]> {
+export async function getCubeTable(csvMapping: CsvMapping): Promise<Term | undefined> {
   const bindings = await SELECT`?table`
     .WHERE`
       GRAPH ?table {
@@ -99,5 +100,10 @@ export async function getCubeTables(csvMapping: CsvMapping): Promise<Term[]> {
     `
     .execute(parsingClient.query)
 
-  return bindings.map(b => b.table)
+  const [first, ...rest] = bindings
+  if (rest.length) {
+    throw new DomainError('A project can have only one cube table')
+  }
+
+  return first.table
 }

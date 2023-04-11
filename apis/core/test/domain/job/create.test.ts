@@ -71,11 +71,11 @@ describe('domain/job/create', () => {
   })
 
   describe('createPublishJob', () => {
-    let queries: Pick<typeof TableQueries, 'getCubeTables'>
+    let queries: Pick<typeof TableQueries, 'getCubeTable'>
 
     beforeEach(() => {
       queries = {
-        getCubeTables: sinon.stub().resolves([$rdf.namedNode('observations')]),
+        getCubeTable: sinon.stub().resolves($rdf.namedNode('observations')),
       }
     })
 
