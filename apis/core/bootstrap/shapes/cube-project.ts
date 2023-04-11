@@ -219,7 +219,6 @@ ${shape('cube-project/search')} {
           ${sh.minLength} 3 ;
         ] ;
       ] ;
-      ${sh1.clearable} true ;
     ],
     [
       ${sh.name} "Status" ;
@@ -229,7 +228,6 @@ ${shape('cube-project/search')} {
       ${sh.maxCount} 1 ;
       ${dash.editor} ${dash.InstancesSelectEditor} ;
       ${hydra.collection} </cube-projects/status> ;
-      ${sh1.clearable} true ;
     ] ;
   .
 }
