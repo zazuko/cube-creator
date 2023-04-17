@@ -98,13 +98,45 @@ export const organizations = turtle`
     ${cc.publishGraph}  <https://lindas.admin.ch/ofcom/cube> ;
     ${cc.namespace} <https://communication.ld.admin.ch/ofcom/> ;
     ${schema.dataset} <https://communication.ld.admin.ch/.well-known/void> ;
-    ${rdfs.label} "Federal Office of Communications OFCOM"@en ;
-    ${rdfs.label} "Bundesamt für Kommunikation BAKOM"@de ;
-    ${rdfs.label} "Ufficio federale delle comunicazioni UFCOM"@it ;
-    ${rdfs.label} "Office fédéral de la communication OFCOM"@fr ;
+    ${rdfs.label} "Federal Office of Communications"@en ;
+    ${rdfs.label} "Bundesamt für Kommunikation"@de ;
+    ${rdfs.label} "Ufficio federale delle comunicazioni"@it ;
+    ${rdfs.label} "Office fédéral de la communication"@fr ;
     ${dcat.accessURL} <https://communication.ld.admin.ch/sparql> ;
     ${_void.sparqlEndpoint} <https://communication.ld.admin.ch/query> ;
-    ${cube.observedBy} <https://register.ld.admin.ch/opendataswiss/org/bundesamt-fur-kommunikation-bakom> ;
+    ${cube.observedBy} <https://ld.admin.ch/office/VII.1.6> ;
+  .
+}
+
+<organization/fsvo> {
+  <organization/fsvo>
+    a ${schema.Organization} ;
+    ${cc.publishGraph}  <https://lindas.admin.ch/fsvo/cube> ;
+    ${cc.namespace} <https://health.ld.admin.ch/fsvo/> ;
+    ${schema.dataset} <https://health.ld.admin.ch/.well-known/void> ;
+    ${rdfs.label} "Federal Food Safety and Veterinary"@en ;
+    ${rdfs.label} "Bundesamt für Lebensmittelsicherheit und Veterinärwesen"@de ;
+    ${rdfs.label} "Ufficio federale della sicurezza alimentare e di veterinaria"@it ;
+    ${rdfs.label} "Office fédéral de la sécurité alimentaire et des affaires vétérinaires"@fr ;
+    ${dcat.accessURL} <https://health.ld.admin.ch/sparql> ;
+    ${_void.sparqlEndpoint} <https://health.ld.admin.ch/query> ;
+    ${cube.observedBy} <https://ld.admin.ch/office/II.1.9> ;
+  .
+}
+
+<organization/foca> {
+  <organization/foca>
+    a ${schema.Organization} ;
+    ${cc.publishGraph}  <https://lindas.admin.ch/foca/cube> ;
+    ${cc.namespace} <https://transport.ld.admin.ch/foca/> ;
+    ${schema.dataset} <https://transport.ld.admin.ch/.well-known/void> ;
+    ${rdfs.label} "Federal Office of Civil Aviation"@en ;
+    ${rdfs.label} "Bundesamt für Zivilluftfahrt"@de ;
+    ${rdfs.label} "Ufficio federale dell'aviazione civile"@it ;
+    ${rdfs.label} "Office fédéral de l'aviation civile"@fr ;
+    ${dcat.accessURL} <https://transport.ld.admin.ch/sparql> ;
+    ${_void.sparqlEndpoint} <https://transport.ld.admin.ch/query> ;
+    ${cube.observedBy} <https://ld.admin.ch/office/VII.1.3> ;
   .
 }
 `
