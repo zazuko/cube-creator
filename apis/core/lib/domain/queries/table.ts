@@ -105,5 +105,5 @@ export async function getCubeTable(csvMapping: CsvMapping): Promise<Term | undef
     throw new DomainError('A project can have only one cube table')
   }
 
-  return first.table
+  return first?.table
 }
