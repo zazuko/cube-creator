@@ -120,8 +120,7 @@
     "dotenv-cli": "^5.0.0",
     "mocha": "^9.0.0",
     "sinon": "^13.0.0",
-    "sinon-chai": "^3.5.0",
-    "winston2": "npm:winston@2.4.5"
+    "sinon-chai": "^3.5.0"
   },
   "repository": {
     "type": "git",
