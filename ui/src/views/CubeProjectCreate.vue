@@ -51,7 +51,7 @@ export default defineComponent({
 
   methods: {
     onCancel (): void {
-      this.$router.push({ name: 'CubeProjects' })
+      this.$router.push({ name: 'CubeProjects', query: this.$route.query })
     },
   },
 })

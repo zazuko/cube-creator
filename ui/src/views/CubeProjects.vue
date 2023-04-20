@@ -7,7 +7,7 @@
       <div v-if="projectsCollection">
         <hydra-operation-button
           :operation="projectsCollection.actions.create"
-          :to="{ name: 'CubeProjectCreate' }"
+          :to="{ name: 'CubeProjectCreate', query: this.$route.query }"
           variant="default"
           size="normal"
           :label="projectsCollection.actions.create.title"
