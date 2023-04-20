@@ -50,7 +50,7 @@ jobs:
           private_key: ${{ secrets.GH_PRIVATE_KEY }}
 
       - name: Tag Core API
-        uses: ButlerLogic/action-autotag@master
+        uses: ButlerLogic/action-autotag@stable
         continue-on-error: true
         with:
           root: apis/core
@@ -59,7 +59,7 @@ jobs:
           GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
 
       - name: Tag UI
-        uses: ButlerLogic/action-autotag@master
+        uses: ButlerLogic/action-autotag@stable
         continue-on-error: true
         with:
           root: ui
@@ -68,7 +68,7 @@ jobs:
           GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
 
       - name: Tag CLI
-        uses: ButlerLogic/action-autotag@master
+        uses: ButlerLogic/action-autotag@stable
         continue-on-error: true
         with:
           root: cli
