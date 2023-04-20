@@ -152,7 +152,7 @@ describe('domain/table/create', () => {
       .addOut(schema.color, '#ababab')
       .addOut(cc.identifierTemplate, '{id}')
       .addOut(cc.csvSource, $rdf.namedNode('foo'))
-    getTableQueries.resolves($rdf.namedNode('cube-table'))
+    getTableQueries.resolves([$rdf.namedNode('cube-table')])
 
     // then
     await expect(createTable(

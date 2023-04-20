@@ -1,5 +1,20 @@
 # @cube-creator/core-api
 
+## 2.2.6
+
+### Patch Changes
+
+- 00e96fb9: Unit combobox in dimension metadata is now searchable (re #1401)
+- 038b3505: When dimension was mapped automatically, the warning was not shown instructing the user to transform
+- 351b7426: When dimension mapping entries were only removed but not added, the cube warning would not have been displayed (fixes #1413)
+- 6f03fac1: Added profile for Federal Office of Communications (OFCOM)
+- a15bf3d2: Users in project search form were randomly ordered (re #1403)
+- 93fb6869: Prevent the creation of multiple cube tables (closes #1391)
+- 972e34e4: Sort Shared Dimensions by labels in select boxes (re #1401)
+- 3de7a975: Added profiles for [FSVO](https://www.blv.admin.ch/) and [FOCA](https://www.bazl.admin.ch/)
+- 48b85275: When dimension mappings were removed, `<> a prov:Entity` were not cleaned up (fixes #1314)
+- 7617575a: Publishing is not prevented when the project does not have exactly one cube (closes #1404)
+
 ## 2.2.5
 
 ### Patch Changes

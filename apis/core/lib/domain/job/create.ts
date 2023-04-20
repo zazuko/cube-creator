@@ -12,6 +12,7 @@ import { schema } from '@tpluscode/rdf-ns-builders'
 import { isCsvProject } from '@cube-creator/model/Project'
 import * as id from '../identifiers'
 import { ResourceStore } from '../../ResourceStore'
+import * as TableQueries from '../queries/table'
 
 interface StartTransformationCommand {
   resource: NamedNode
@@ -21,6 +22,7 @@ interface StartTransformationCommand {
 interface StartPublicationCommand {
   resource: NamedNode
   store: ResourceStore
+  queries?: Pick<typeof TableQueries, 'getCubeTable'>
 }
 
 interface StartImportCommand {
@@ -51,6 +53,7 @@ export async function createTransformJob({
 export async function createPublishJob({
   resource,
   store,
+  queries: { getCubeTable } = TableQueries,
 }: StartPublicationCommand): Promise<GraphPointer<NamedNode>> {
   const jobCollection = (await store.get(resource))!
   const projectPointer = jobCollection.out(cc.project).term
@@ -64,6 +67,11 @@ export async function createPublishJob({
 
   if (!organization.publishGraph) {
     throw new DomainError('Cannot publish cube. Project does not have publish graph')
+  }
+
+  const table = await getCubeTable(project.csvMapping!)
+  if (!table) {
+    throw new DomainError('Cannot publish cube. It must have exactly one cube table')
   }
 
   const metadata = await store.getResource(project.dataset)

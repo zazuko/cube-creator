@@ -12,6 +12,7 @@ import * as Project from '@cube-creator/model/Project'
 import { ex } from '@cube-creator/testing/lib/namespace'
 import { createPublishJob, createTransformJob } from '../../../lib/domain/job/create'
 import { TestResourceStore } from '../../support/TestResourceStore'
+import * as TableQueries from '../../../lib/domain/queries/table'
 
 describe('domain/job/create', () => {
   let store: TestResourceStore
@@ -70,9 +71,17 @@ describe('domain/job/create', () => {
   })
 
   describe('createPublishJob', () => {
+    let queries: Pick<typeof TableQueries, 'getCubeTable'>
+
+    beforeEach(() => {
+      queries = {
+        getCubeTable: sinon.stub().resolves($rdf.namedNode('observations')),
+      }
+    })
+
     it('creates a job resource', async () => {
       // when
-      const job = await createPublishJob({ resource: jobCollection.term, store })
+      const job = await createPublishJob({ resource: jobCollection.term, store, queries })
 
       // then
       expect(job.has(rdf.type, cc.PublishJob).values.length).to.eq(1)
@@ -92,7 +101,7 @@ describe('domain/job/create', () => {
       project.pointer.addOut(cc.latestPublishedRevision, 3)
 
       // when
-      const job = await createPublishJob({ resource: jobCollection.term, store })
+      const job = await createPublishJob({ resource: jobCollection.term, store, queries })
 
       // then
       expect(job.out(cc.revision).term).to.deep.eq($rdf.literal('4', xsd.integer))
@@ -100,7 +109,7 @@ describe('domain/job/create', () => {
 
     it('sets lindas web query link', async () => {
       // when
-      const job = await createPublishJob({ resource: jobCollection.term, store })
+      const job = await createPublishJob({ resource: jobCollection.term, store, queries })
 
       // then
       const links = job.out(schema.workExample).map(example => example.out(schema.url).value).filter(Boolean)
@@ -116,7 +125,7 @@ describe('domain/job/create', () => {
       organization.pointer.deleteOut(cc.publishGraph)
 
       // when
-      const promise = createPublishJob({ resource: jobCollection.term, store })
+      const promise = createPublishJob({ resource: jobCollection.term, store, queries })
 
       // then
       await expect(promise).rejectedWith(DomainError)

@@ -1,6 +1,7 @@
 import { css, html, LitElement } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
 import '@shoelace-style/shoelace/dist/components/icon-button/icon-button.js'
+import { ValidationResultState } from '@hydrofoil/shaperone-core/models/forms/index'
 import './MarkdownRender'
 
 @customElement('form-property')
@@ -19,6 +20,22 @@ export class FormProperty extends LitElement {
       slot[name=help-text]::slotted(*) {
         margin-bottom: 0.75rem;
       }
+
+      [has-violations] {
+        border: 1px solid red;
+        padding: 4px;
+        margin: -5px;
+      }
+
+      [has-violations] slot[name=label]::slotted(*) {
+        color: red !important;
+      }
+
+      .errors {
+        list-style: none;
+        padding: 0;
+        color: red;
+      }
     `
   }
 
@@ -27,6 +44,13 @@ export class FormProperty extends LitElement {
 
   @property({ type: String })
   name?: string
+
+  @property({ type: Object })
+  violations: Array<ValidationResultState> = []
+
+  get hasViolations () {
+    return this.violations.length > 0
+  }
 
   get linkAttrs () {
     return {
@@ -42,8 +66,9 @@ export class FormProperty extends LitElement {
     }
 
     return html`
-      <label class="form-property">
+      <label class="form-property" ?has-violations="${this.hasViolations}">
         <slot name="label"></slot>
+        ${this.renderErrors()}
         <slot name="help-text"></slot>
         <slot></slot>
         <div id="button">
@@ -51,6 +76,18 @@ export class FormProperty extends LitElement {
         </div>
       </label>
     `
+  }
+
+  private renderErrors () {
+    let summary = html``
+    const propertyErrors = this.violations.filter(({ matchedTo }) => matchedTo !== 'object')
+    if (propertyErrors.length) {
+      summary = html`<ul class="errors">
+        ${propertyErrors.map(({ result }) => html`<li>${result.resultMessage}</li>`)}
+      </ul>`
+    }
+
+    return summary
   }
 
   private onAdd () {
