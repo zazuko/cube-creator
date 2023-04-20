@@ -31,7 +31,7 @@
     "@tpluscode/sparql-builder": "^0.3.24",
     "@uppy/companion": "^4.1.1",
     "@zazuko/rdf-vocabularies": ">=2021.3.17",
-    "aws-sdk": "^2.1048.0",
+    "aws-sdk": "^2.1361.0",
     "body-parser": "^1.19.0",
     "clownface": "^1.0.0",
     "commander": "^6.1.0",
