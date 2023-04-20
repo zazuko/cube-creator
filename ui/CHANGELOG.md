@@ -1,5 +1,14 @@
 # @cube-creator/ui
 
+## 1.13.6
+
+### Patch Changes
+
+- 038b3505: When dimension was mapped automatically, the warning was not shown instructing the user to transform
+- 069f832d: Project search was cleared when clicking on "+ New project" (re #1403)
+- 972e34e4: Sort Shared Dimensions by labels in select boxes (re #1401)
+- 431e48ff: Show (some) errors inline in the form and mark required fields (re #1405)
+
 ## 1.13.5
 
 ### Patch Changes

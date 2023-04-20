@@ -1,5 +1,11 @@
 # @cube-creator/cli
 
+## 2.0.10
+
+### Patch Changes
+
+- 5aff4739: Mapping dimensions would not work when the dimension values were typed literals (re #1413)
+
 ## 2.0.9
 
 ### Patch Changes
