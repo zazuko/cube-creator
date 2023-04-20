@@ -55,7 +55,6 @@ jobs:
         with:
           root: apis/core
           tag_prefix: cube-creator-api/v
-          minVersion: 0.1.15
         env:
           GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
 
@@ -65,7 +64,6 @@ jobs:
         with:
           root: ui
           tag_prefix: cube-creator-app/v
-          minVersion: 0.1.15
         env:
           GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
 
@@ -75,6 +73,5 @@ jobs:
         with:
           root: cli
           tag_prefix: cube-creator-cli/v
-          minVersion: 0.1.15
         env:
           GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
