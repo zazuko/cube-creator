@@ -1,5 +1,5 @@
 <template>
-  <o-datepicker :model-value="dateValue" @update:modelValue="onUpdate" icon="calendar-alt" />
+  <o-datepicker :model-value="dateValue" @update:modelValue="onUpdate" icon="calendar-alt" editable />
 </template>
 
 <script lang="ts">
