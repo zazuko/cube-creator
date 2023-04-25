@@ -22,10 +22,11 @@ services:
     moreHttpPorts:
       - 45671
   ui:
-    type: node:18
+    type: node:custom
     command: (cd ui; yarn serve --public app.cube-creator.lndo.site --hostname 0.0.0.0 --port 80)
     ssl: true
     overrides:
+      image: node:18
       environment:
         NO_WEBSOCKET: "true"
   store:
