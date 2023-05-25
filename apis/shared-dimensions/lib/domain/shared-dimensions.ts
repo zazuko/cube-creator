@@ -1,11 +1,18 @@
-import { Term } from 'rdf-js'
-import { CONSTRUCT, DESCRIBE, SELECT } from '@tpluscode/sparql-builder'
-import { schema } from '@tpluscode/rdf-ns-builders'
+import { Quad, Stream, Term } from 'rdf-js'
+import path from 'path'
+import { CONSTRUCT } from '@tpluscode/sparql-builder'
+import { hydra, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { md, meta } from '@cube-creator/core/namespace'
 import $rdf from 'rdf-ext'
 import { toRdf } from 'rdf-literal'
+import { fromFile } from 'rdf-utils-fs'
+import clownface from 'clownface'
+import { isGraphPointer } from 'is-graph-pointer'
+import { StreamClient } from 'sparql-http-client/StreamClient'
+import { ParsingClient } from 'sparql-http-client/ParsingClient'
 import env from '../env'
-import { textSearch } from '../query'
+import shapeToQuery from '../shapeToQuery'
+import { getDynamicProperties } from './shared-dimension'
 
 export function getSharedDimensions() {
   return CONSTRUCT`
@@ -36,42 +43,52 @@ interface GetSharedTerms {
   validThrough?: Date
 }
 
-export function getSharedTerms({ sharedDimensions, freetextQuery, validThrough, limit = 10, offset = 0 }: GetSharedTerms) {
-  const term = $rdf.variable('term')
-  const name = $rdf.variable('name')
-  const sharedDimension = $rdf.variable('sharedDimension')
+export async function getSharedTerms<C extends StreamClient | ParsingClient>({ sharedDimensions, freetextQuery, validThrough, limit = 10, offset = 0 }: GetSharedTerms, client: C): Promise<C extends StreamClient ? Stream : Quad[]> {
+  const shape = await loadShape()
+  if (!isGraphPointer(shape)) {
+    throw new Error('Multiple shapes found')
+  }
 
-  let select = SELECT.DISTINCT`${term}`
-    .WHERE`
-      ${sharedDimension} a ${meta.SharedDimension} .
-      VALUES ${sharedDimension} { ${sharedDimensions} }
-      ${term} ${schema.inDefinedTermSet} ${sharedDimension} .
-      ${term} ${schema.name} ${name} .
-    `
+  shape.any().has(sh.limit).deleteOut(sh.limit).addOut(sh.limit, limit)
+  shape.any().has(sh.offset).deleteOut(sh.offset).addOut(sh.offset, offset)
+
+  const filterShape = shape.any().has(sh.filterShape).out(sh.filterShape)
+
+  const dynamicProperties = await getDynamicProperties(sharedDimensions)
+  dynamicProperties.forEach(predicate => {
+    shape.out(sh.property).out(sh.node).addOut(sh.property, propertyShape => {
+      propertyShape.addOut(sh.path, predicate)
+    })
+  })
+
+  filterShape
+    .out(sh.property)
+    .has(sh.path, schema.inDefinedTermSet)
+    .addList(sh.in, sharedDimensions)
 
   if (freetextQuery) {
-    select = select.WHERE`${textSearch(term, schema.name, freetextQuery)}`
+    filterShape
+      .out(sh.property)
+      .has(sh.path, schema.name)
+      .addOut(hydra.freetextQuery, freetextQuery)
   }
 
   if (validThrough) {
-    select = select.WHERE`OPTIONAL {
-      ${term} ${schema.validThrough} ?validThrough .
-    }
-
-    FILTER (
-      !bound(?validThrough) || ?validThrough >= ${toRdf(validThrough)}
-    )`
+    const placeholder = $rdf.literal('VALID-THROUGH')
+    filterShape.out(sh.expression).deleteOut(sh.deactivated)
+    filterShape.dataset.match(null, null, placeholder).forEach((quad) => {
+      filterShape.dataset.delete(quad).add($rdf.quad(quad.subject, quad.predicate, toRdf(validThrough), quad.graph))
+    })
   }
 
-  return DESCRIBE`
-      ${term} ${sharedDimension}
-    `
-    .WHERE`
-      {
-        ${select.LIMIT(limit).OFFSET(offset).ORDER().BY(sharedDimension).THEN.BY(name)}
-      }
+  const { constructQuery } = await shapeToQuery()
+  return constructQuery(shape).execute(client.query) as any
+}
 
-      ${term} ?p ?o .
-      ${term} ${schema.inDefinedTermSet} ${sharedDimension} .
-    `
+async function loadShape() {
+  const dataset = await $rdf.dataset().import(fromFile(path.resolve(__dirname, '../shapes/terms-query-shape.ttl')))
+
+  return clownface({
+    dataset,
+  }).has(rdf.type, sh.NodeShape)
 }

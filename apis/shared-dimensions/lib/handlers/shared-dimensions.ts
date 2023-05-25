@@ -74,7 +74,7 @@ export const getTerms = asyncMiddleware(async (req, res, next) => {
   }
 
   const collection = await getCollection({
-    memberQuads: await getSharedTerms(queryParams).execute(parsingClient.query),
+    memberQuads: await getSharedTerms(queryParams, parsingClient),
     memberType: schema.DefinedTerm,
     collectionType: md.SharedDimensionTerms,
     collection: termsCollectionId(sharedDimensions, queryParams.freetextQuery),
