@@ -1,0 +1,102 @@
+@prefix sparql: <http://datashapes.org/sparql#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix hydra: <http://www.w3.org/ns/hydra/core#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix schema: <http://schema.org/> .
+@prefix meta: <https://cube.link/meta/> .
+@prefix s2q: <https://hypermedia.app/shape-to-query#> .
+
+[
+  a sh:NodeShape ;
+  sh:property
+    [
+      sh:path schema:hasDefinedTerm ;
+      sh:node _:termShape ;
+      sh:values
+        [
+          sh:distinct
+            [
+              sh:limit 10 ;
+              sh:nodes
+                [
+                  sh:offset 0 ;
+                  sh:nodes
+                    [
+                      sh:orderBy
+                        [
+                          sh:path schema:name ;
+                        ] ;
+                      sh:nodes
+                        [
+                          sh:orderBy
+                            [
+                              sh:path schema:inDefinedTermSet ;
+                            ] ;
+                          sh:nodes
+                            [
+                              sh:filterShape
+                                [
+                                  sh:property
+                                    [
+                                      sh:path schema:inDefinedTermSet ;
+                                    ] ;
+                                  sh:property
+                                    [
+                                      sh:path schema:name ;
+                                    ] ;
+                                  sh:expression
+                                    [
+                                      sh:deactivated true ;
+                                      sparql:or
+                                        (
+                                          [ sparql:not ( [ sparql:bound ( _:validThrough ) ] ) ]
+                                          [ sparql:ge ( _:validThrough "VALID-THROUGH" ) ]
+                                        )
+                                    ] ;
+                                ] ;
+                            ] ;
+                        ] ;
+                    ] ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+] .
+
+_:validThrough s2q:optional [ sh:path schema:validThrough ; ] .
+
+_:termShape
+  sh:property
+    [
+      sh:path rdf:type ;
+    ] ;
+  sh:property
+    [
+      sh:path schema:validFrom ;
+    ] ;
+  sh:property
+    [
+      sh:path schema:validThrough ;
+    ] ;
+  sh:property
+    [
+      sh:path schema:name ;
+    ] ;
+  sh:property
+    [
+      sh:path schema:alternateName ;
+    ] ;
+  sh:property
+    [
+      sh:path schema:identifier ;
+    ] ;
+  sh:property
+    [
+      sh:path schema:inDefinedTermSet ;
+    ] ;
+  sh:property
+    [
+      sh:path <http://www.opengis.net/ont/geosparql#hasGeometry> ;
+    ]
+.

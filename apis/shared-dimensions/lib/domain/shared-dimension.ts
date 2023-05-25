@@ -6,11 +6,11 @@ import { dcterms, hydra, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { md, meta } from '@cube-creator/core/namespace'
 import { DomainError } from '@cube-creator/api-errors'
 import httpError from 'http-errors'
-import { DESCRIBE } from '@tpluscode/sparql-builder'
+import { DESCRIBE, SELECT } from '@tpluscode/sparql-builder'
 import { StreamClient } from 'sparql-http-client/StreamClient'
 import { oa } from '@tpluscode/rdf-ns-builders/strict'
 import TermSet from '@rdfjs/term-set'
-import { streamClient } from '../sparql'
+import { parsingClient, streamClient } from '../sparql'
 import { SharedDimensionsStore } from '../store'
 import env from '../env'
 import { newId, replace } from './resource'
@@ -172,4 +172,14 @@ export async function getExportedDimension({ resource, store, client = streamCli
     dimension,
     data: materialized.toStream(),
   }
+}
+
+export async function getDynamicProperties(sharedDimensions: Term[], client = parsingClient): Promise<Term[]> {
+  const bindings = await SELECT`?property`
+    .WHERE`
+      ?dimension ${schema.additionalProperty}/${rdf.predicate} ?property
+    `
+    .execute(client.query)
+
+  return bindings.map(b => b.property)
 }

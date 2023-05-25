@@ -5,10 +5,10 @@ import { ASK, INSERT, SELECT } from '@tpluscode/sparql-builder'
 import { rdf, schema, sh } from '@tpluscode/rdf-ns-builders/strict'
 import onetime from 'onetime'
 import { isGraphPointer } from 'is-graph-pointer'
-import { construct, deleteQuery } from '@hydrofoil/shape-to-query'
 import $rdf from 'rdf-ext'
 import { sparql } from '@tpluscode/rdf-string'
 import { SharedDimensionsStore } from '../store'
+import shapeToQuery from '../shapeToQuery'
 import { loadShapes } from './shapes'
 
 export default class implements SharedDimensionsStore {
@@ -27,7 +27,8 @@ export default class implements SharedDimensionsStore {
   async load(term: NamedNode): Promise<GraphPointer<NamedNode>> {
     const shape = await this.getShape(term)
 
-    const query = construct(shape, {
+    const { constructQuery } = await shapeToQuery()
+    const query = constructQuery(shape, {
       focusNode: term,
     }).FROM(this.graph)
 
@@ -49,7 +50,7 @@ export default class implements SharedDimensionsStore {
 
     if (await this.exists(resource.term)) {
       const shape = await this.getShape(resource.term)
-      const deleteQuery = this.deleteQuery(shape, resource.term)
+      const deleteQuery = await this.deleteQuery(shape, resource.term)
       updateQuery = sparql`${deleteQuery};\n${updateQuery}`
     }
 
@@ -58,10 +59,11 @@ export default class implements SharedDimensionsStore {
 
   async delete(id: NamedNode): Promise<void> {
     const shape = await this.getShape(id)
-    await this.deleteQuery(shape, id).execute(this.client.query)
+    await (await this.deleteQuery(shape, id)).execute(this.client.query)
   }
 
-  private deleteQuery(shape: GraphPointer, focusNode: NamedNode) {
+  private async deleteQuery(shape: GraphPointer, focusNode: NamedNode) {
+    const { deleteQuery } = await shapeToQuery()
     return deleteQuery(shape, { focusNode, graph: this.graph })
   }
 

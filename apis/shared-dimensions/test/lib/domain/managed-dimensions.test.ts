@@ -1,9 +1,9 @@
-import { describe, it, before } from 'mocha'
+import { before, describe, it } from 'mocha'
 import { expect } from 'chai'
 import $rdf from 'rdf-ext'
 import { mdClients } from '@cube-creator/testing/lib'
 import { insertTestDimensions } from '@cube-creator/testing/lib/seedData'
-import { rdf, schema } from '@tpluscode/rdf-ns-builders'
+import { rdf, rdfs, schema } from '@tpluscode/rdf-ns-builders'
 import { getSharedDimensions, getSharedTerms } from '../../../lib/domain/shared-dimensions'
 
 describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimensions @SPARQL', () => {
@@ -28,18 +28,16 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimensions @SPAR
   })
 
   describe('getSharedTerms', () => {
-    const sharedDimension = $rdf.namedNode('http://example.com/dimension/colors')
-
     it('returns terms for a given dimension', async () => {
       // given
       const search = {
-        sharedDimensions: [sharedDimension],
+        sharedDimensions: [$rdf.namedNode('http://example.com/dimension/colors')],
         freetextQuery: undefined,
       }
 
       // when
       const dataset = await $rdf.dataset()
-        .import(await getSharedTerms(search).execute(mdClients.streamClient.query))
+        .import(await getSharedTerms(search, mdClients.streamClient))
 
       // then
       expect(dataset.match(null, rdf.type, schema.DefinedTerm))
@@ -48,7 +46,7 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimensions @SPAR
         targetClass: schema.DefinedTerm,
         property: [{
           path: schema.inDefinedTermSet,
-          hasValue: sharedDimension,
+          hasValue: $rdf.namedNode('http://example.com/dimension/colors'),
           minCount: 1,
           maxCount: 1,
         }, {
@@ -61,17 +59,52 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimensions @SPAR
       })
     })
 
+    it('returns terms with dynamic properties', async () => {
+      // given
+      const search = {
+        sharedDimensions: [$rdf.namedNode('https://ld.admin.ch/cube/dimension/technologies')],
+        freetextQuery: 'sparql',
+      }
+
+      // when
+      const dataset = await $rdf.dataset()
+        .import(await getSharedTerms(search, mdClients.streamClient))
+
+      // then
+      expect(dataset.match(null, rdf.type, schema.DefinedTerm))
+        .to.have.property('size', 1)
+      expect(dataset).to.matchShape({
+        targetClass: schema.DefinedTerm,
+        property: [{
+          path: schema.color,
+          hasValue: $rdf.namedNode('http://example.com/dimension/colors/red'),
+          minCount: 1,
+          maxCount: 1,
+        }, {
+          path: rdfs.comment,
+          hasValue: $rdf.literal('This term has dynamic properties', 'en'),
+          minCount: 1,
+          maxCount: 1,
+        }, {
+          path: $rdf.namedNode('http://purl.org/linked-data/cube#order'),
+          hasValue: 10,
+          minCount: 1,
+          maxCount: 1,
+        }],
+      })
+    })
+
     it('returns top N terms', async () => {
       // given
       const search = {
-        sharedDimensions: [sharedDimension],
+        sharedDimensions: [$rdf.namedNode('http://example.com/dimension/colors')],
         freetextQuery: undefined,
         limit: 1,
       }
 
       // when
       const dataset = await $rdf.dataset()
-        .import(await getSharedTerms(search).execute(mdClients.streamClient.query))
+        .import(await getSharedTerms(search, mdClients.streamClient))
 
       // then
       expect(dataset.match(null, rdf.type, schema.DefinedTerm))
@@ -81,12 +114,12 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimensions @SPAR
     it('returns terms filtered by input, case-insensitive', async () => {
       // given
       const search = {
-        sharedDimensions: [sharedDimension],
+        sharedDimensions: [$rdf.namedNode('http://example.com/dimension/colors')],
         freetextQuery: 'r',
       }
       // when
       const dataset = await $rdf.dataset()
-        .import(await getSharedTerms(search).execute(mdClients.streamClient.query))
+        .import(await getSharedTerms(search, mdClients.streamClient))
 
       // then
       const [term, ...more] = dataset.match(null, rdf.type, schema.DefinedTerm)
@@ -97,13 +130,13 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimensions @SPAR
     it('returns terms only valid terms', async () => {
       // given
       const search = {
-        sharedDimensions: [sharedDimension],
+        sharedDimensions: [$rdf.namedNode('http://example.com/dimension/colors')],
         freetextQuery: undefined,
         validThrough: new Date(Date.parse('2021-04-15')),
       }
       // when
       const dataset = await $rdf.dataset()
-        .import(await getSharedTerms(search).execute(mdClients.streamClient.query))
+        .import(await getSharedTerms(search, mdClients.streamClient))
 
       // then
       const terms = [...dataset.match(null, rdf.type, schema.DefinedTerm)].map(({ subject }) => subject)
