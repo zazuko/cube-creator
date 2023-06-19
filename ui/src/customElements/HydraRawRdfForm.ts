@@ -66,7 +66,7 @@ export class HydraRawRdfForm extends HydraOperationFormBase {
           .submitting="${this.submitting}"
           .showCancel="${this.showCancel}"
           ?disabled="${!this.shape}"
-          @submit="${this.onSubmit}"
+          @cc-submit="${this.onSubmit}"
           @cancel="${this.dispatchEvent(new Event('cancel'))}"
         ></cc-form-submit-cancel>`
   }
