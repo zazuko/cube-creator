@@ -70,7 +70,7 @@ async function defineConstraintComponents() {
         const fts = namespace('tag:stardog:api:search:')
         return sparql`
         service ${fts.textMatch} {
-          [] ${fts.query} '${this.pattern + '*'}';
+          [] ${fts.query} """${this.pattern + '*'}""";
              ${fts.result} ${valueNode} ;
         }
         ${focusNode} ${propertyPath} ${valueNode} .
@@ -79,7 +79,7 @@ async function defineConstraintComponents() {
 
       if (this.vendor === 'fuseki') {
         return sparql`
-        ${focusNode} <http://jena.apache.org/text#query> (${propertyPath} '${this.pattern + '*'}') .
+        ${focusNode} <http://jena.apache.org/text#query> (${propertyPath} """${this.pattern + '*'}""") .
 
         # Second filtering to make sure the word starts with the given query
         ${focusNode} ${propertyPath} ${valueNode} .

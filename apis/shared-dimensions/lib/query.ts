@@ -11,7 +11,7 @@ export function textSearch(subject: Term, predicate: Term, textQuery: string) {
       const variable = $rdf.variable('_s')
       return sparql`
         service ${fts.textMatch} {
-          [] ${fts.query} '${textQuery + '*'}';
+          [] ${fts.query} """${textQuery + '*'}""";
              ${fts.result} ${variable} ;
         }
         ${subject} ${predicate} ${variable} .
@@ -20,7 +20,7 @@ export function textSearch(subject: Term, predicate: Term, textQuery: string) {
     case 'fuseki': {
       const variable = $rdf.variable('_s')
       return sparql`
-        ${subject} <http://jena.apache.org/text#query> (${predicate} '${textQuery + '*'}') .
+        ${subject} <http://jena.apache.org/text#query> (${predicate} """${textQuery + '*'}""") .
 
         # Second filtering to make sure the word starts with the given query
         ${subject} ${predicate} ${variable} .

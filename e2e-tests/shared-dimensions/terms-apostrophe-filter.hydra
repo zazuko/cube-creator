@@ -1,0 +1,17 @@
+PREFIX md: <https://cube-creator.zazuko.com/shared-dimensions/vocab#>
+PREFIX hydra: <http://www.w3.org/ns/hydra/core#>
+PREFIX schema: <http://schema.org/>
+PREFIX qudt: <http://qudt.org/schema/qudt/>
+PREFIX meta: <https://cube.link/meta/>
+PREFIX sh: <http://www.w3.org/ns/shacl#>
+
+ENTRYPOINT "dimension/_terms?dimension=http%3A%2F%2Fexample.com%2Fdimension%2Fcolors&q=%22L%27Abb%22"
+
+HEADERS {
+  x-user "john-doe"
+  x-permission "pipelines:write"
+}
+
+With Class md:SharedDimensionTerms {
+    Expect Property hydra:totalItems 0
+}
