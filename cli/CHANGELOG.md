@@ -1,5 +1,11 @@
 # @cube-creator/cli
 
+## 2.0.11
+
+### Patch Changes
+
+- e9046fcd: Update async
+
 ## 2.0.10
 
 ### Patch Changes

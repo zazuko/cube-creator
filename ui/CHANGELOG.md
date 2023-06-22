@@ -1,5 +1,13 @@
 # @cube-creator/ui
 
+## 1.13.7
+
+### Patch Changes
+
+- 241e8b9a: Updated vue
+- 7196417c: Clicking the submit button in "Edit raw RDF" mode did nothinig (fixes #1436)
+- 29536f54: Added the ability to edit dates by hand (re #1402)
+
 ## 1.13.6
 
 ### Patch Changes
