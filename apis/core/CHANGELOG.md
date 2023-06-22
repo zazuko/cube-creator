@@ -1,5 +1,19 @@
 # @cube-creator/core-api
 
+## 2.3.0
+
+### Minor Changes
+
+- 3b17aac1: The "Author" field on project list is now searchable (re #1403)
+
+### Patch Changes
+
+- 509f7599: Disabled individual clear buttons on project search
+- 83e83257: Update AWS SDK
+- Updated dependencies [4f98fed7]
+- Updated dependencies [52daab58]
+  - @cube-creator/shared-dimensions-api@3.0.2
+
 ## 2.2.6
 
 ### Patch Changes

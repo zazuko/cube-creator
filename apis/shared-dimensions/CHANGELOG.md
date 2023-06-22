@@ -1,5 +1,12 @@
 # @cube-creator/shared-dimensions-api
 
+## 3.0.2
+
+### Patch Changes
+
+- 4f98fed7: Shared dimension terms could not be found if they contained an apostrophe (fixes #1435)
+- 52daab58: Improve performance of shared terms query (fixes #1432)
+
 ## 3.0.1
 
 ### Patch Changes
