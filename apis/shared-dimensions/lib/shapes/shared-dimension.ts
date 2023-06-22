@@ -244,6 +244,7 @@ const properties: Initializer<PropertyShape>[] = [{
         maxCount: 1,
         nodeKind: sh.IRI,
         order: 30,
+        message: 'Datatype must be one of the listed xsd types',
       }],
     }), nodeShape({
       closed: true,
