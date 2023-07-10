@@ -70,13 +70,13 @@ function unmappedValuesFromQuery(cubeGraph: NamedNode, dimensionMapping: Term) {
       }
 
     # exclude values which are already mapped
-    FILTER ( NOT EXISTS {
+    MINUS {
       GRAPH ${dimensionMapping} {
         ${dimensionMapping} ${prov.hadDictionaryMember} [
            ${prov.pairKey} ?value ; ${prov.pairEntity} []
         ]
       }
-    })
+    }
     `
 }
 
@@ -123,7 +123,7 @@ export async function importMappingsFromSharedDimension({ dimensionMapping, dime
       .addOut(prov.hadDictionaryMember, member => {
         member
           .addOut(rdf.type, prov.KeyEntityPair)
-          .addOut(prov.pairKey, pair.key)
+          .addOut(prov.pairKey, pair.key.value)
           .addOut(prov.pairEntity, pair.entity)
       })
 
