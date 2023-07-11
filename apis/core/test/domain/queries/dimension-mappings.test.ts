@@ -117,7 +117,7 @@ describe('@cube-creator/core-api/lib/domain/queries/dimension-mappings @SPARQL',
       // then
       const pairsCreated = await ASK`
           ${testMapping} ${prov.hadDictionaryMember} [
-            ${prov.pairKey} 19 ;
+            ${prov.pairKey} "19" ;
             ${prov.pairEntity} <http://example.com/dimension/canton/ZH> ;
           ] .
         `
@@ -144,7 +144,7 @@ describe('@cube-creator/core-api/lib/domain/queries/dimension-mappings @SPARQL',
       // then
       const pairsCreated = await ASK`
           ${testMapping} ${prov.hadDictionaryMember} [
-            ${prov.pairKey} 19 ;
+            ${prov.pairKey} "19" ;
             ${prov.pairEntity} <http://example.com/dimension/canton/ZH> ;
           ] .
         `
