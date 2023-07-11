@@ -7,7 +7,7 @@ import { expect } from 'chai'
 import $rdf from 'rdf-ext'
 import namespace from '@rdfjs/namespace'
 import TermSet from '@rdfjs/term-set'
-import { prov } from '@tpluscode/rdf-ns-builders'
+import { prov, xsd } from '@tpluscode/rdf-ns-builders'
 import { blankNode, namedNode } from '@cube-creator/testing/clownface'
 import '../../../lib/domain'
 import { Initializer } from '@tpluscode/rdfine/RdfResource'
@@ -78,6 +78,46 @@ describe('lib/domain/DimensionMappings', () => {
                 hasValue: wikidata.sulphurDioxide,
                 minCount: 1,
                 maxCount: 1,
+              }],
+            }],
+          },
+        },
+      })
+    })
+
+    it('uses string value for keys', () => {
+      // given
+      const dictionary = fromPointer(pointer)
+      const unmappedKeys = new TermSet([
+        $rdf.literal('1', xsd.integer),
+        $rdf.literal('foobar', xsd.anyAtomicType),
+      ])
+
+      // when
+      dictionary.addMissingEntries(unmappedKeys)
+
+      // then
+      expect(dictionary).to.matchShape({
+        property: {
+          path: prov.hadDictionaryMember,
+          minCount: 2,
+          maxCount: 2,
+          node: {
+            xone: [{
+              property: [{
+                path: prov.pairKey,
+                hasValue: '1',
+              }, {
+                path: prov.pairEntity,
+                maxCount: 0,
+              }],
+            }, {
+              property: [{
+                path: prov.pairKey,
+                hasValue: 'foobar',
+              }, {
+                path: prov.pairEntity,
+                maxCount: 0,
               }],
             }],
           },
