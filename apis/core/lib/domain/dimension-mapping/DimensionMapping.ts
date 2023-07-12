@@ -81,6 +81,7 @@ export function ProvDictionaryMixinEx<Base extends Constructor<Dictionary>>(Reso
           this.pointer.addOut(prov.hadDictionaryMember, entry => {
             entry.addOut(prov.pairKey, key)
               .addOut(prov.pairEntity, entity)
+              .addOut(rdf.type, prov.KeyEntityPair)
           })
         }
       }
