@@ -6,7 +6,7 @@ import { expect } from 'chai'
 import $rdf from 'rdf-ext'
 import namespace from '@rdfjs/namespace'
 import TermSet from '@rdfjs/term-set'
-import { prov, xsd } from '@tpluscode/rdf-ns-builders'
+import { prov, rdf, xsd } from '@tpluscode/rdf-ns-builders'
 import { blankNode, namedNode } from '@cube-creator/testing/clownface'
 import '../../../lib/domain'
 
@@ -173,6 +173,28 @@ describe('lib/domain/DimensionMappings', () => {
   })
 
   describe('replaceEntries', () => {
+    it('adds rdf:type to all dictionary entries', () => {
+      // given
+      const dictionary = fromPointer(pointer)
+
+      // when
+      const newEntries = blankNode()
+      fromPointer(newEntries, {
+        hadDictionaryMember: [{
+          pairKey: 'so2',
+          pairEntity: wikidata.sulphurDioxide,
+        }, {
+          pairKey: 'co',
+          pairEntity: wikidata.carbonMonoxide,
+        }],
+      })
+      dictionary.replaceEntries(newEntries)
+
+      // then
+      expect(dictionary.pointer.out(prov.hadDictionaryMember).has(rdf.type, prov.KeyEntityPair).terms)
+        .have.length(2)
+    })
+
     it('returns true when entries are added', () => {
       // given
       const dictionary = fromPointer(pointer, {
