@@ -1,17 +1,18 @@
 import { Literal, NamedNode, Term } from 'rdf-js'
 import { Constructor, property } from '@tpluscode/rdfine'
 import { prov, rdf, schema } from '@tpluscode/rdf-ns-builders'
-import { Dictionary, KeyEntityPair } from '@rdfine/prov'
+import { Dictionary } from '@rdfine/prov'
 import { cc, md } from '@cube-creator/core/namespace'
 import TermMap from '@rdfjs/term-map'
 import $rdf from 'rdf-ext'
 import TermSet from '@rdfjs/term-set'
+import { GraphPointer } from 'clownface'
 
 interface DictionaryEx {
   about: NamedNode
   sharedDimensions: NamedNode[]
   onlyValidTerms: boolean
-  replaceEntries(entries: KeyEntityPair[]): { entriesChanged: boolean }
+  replaceEntries(dictionary: GraphPointer): { entriesChanged: boolean }
   changeSharedDimensions(sharedDimensions: NamedNode[]): void
   addMissingEntries(unmappedValues: Set<Literal>): void
   renameDimension(oldCube: NamedNode, newCube: NamedNode): void
@@ -38,33 +39,35 @@ export function ProvDictionaryMixinEx<Base extends Constructor<Dictionary>>(Reso
       this.sharedDimensions = sharedDimensions
     }
 
-    replaceEntries(entries: KeyEntityPair[]) {
-      const newEntries = new TermMap()
+    replaceEntries(dictionary: GraphPointer) {
+      let entriesAdded = false
 
-      const newEntryMap = entries.reduce<Map<Term, Term | undefined>>((map, { pairKey, pairEntity }) => {
+      const newEntries = dictionary.out(prov.hadDictionaryMember).toArray().reduce<Map<Term, Term | undefined>>((map, entryPtr) => {
+        const pairEntity = entryPtr.out(prov.pairEntity).term
         if (!pairEntity) {
           return map
         }
 
-        return pairKey ? map.set(pairKey, pairEntity?.id) : map
+        const pairKey = entryPtr.out(prov.pairKey).term
+        const currentEntry = this.pointer.out(prov.hadDictionaryMember).has(prov.pairKey, pairKey)
+        if (!currentEntry.term || !currentEntry.out(prov.pairEntity).term) {
+          entriesAdded = true
+        }
+        return pairKey ? map.set(pairKey, pairEntity) : map
       }, new TermMap())
 
       let entriesRemoved = false
       // Set values for current entries or remove
-      for (const entry of this.hadDictionaryMember) {
-        if (!entry.pairKey || !newEntryMap.has(entry.pairKey)) {
+      for (const entryPtr of this.pointer.out(prov.hadDictionaryMember).toArray()) {
+        const pairKey = entryPtr.out(prov.pairKey).term
+
+        // mark as removed when not in the new map
+        if (pairKey && !newEntries.has(pairKey)) {
           entriesRemoved = true
-          entry.pointer.deleteIn().deleteOut()
-          continue
         }
 
-        const newPairEntity = newEntryMap.get(entry.pairKey)
-        if (!entry.pairEntity && newPairEntity) {
-          newEntries.set(entry.pairKey, newPairEntity)
-        }
-
-        entry.pairEntity = newPairEntity as any
-        newEntryMap.delete(entry.pairKey)
+        // remove form current graph
+        entryPtr.deleteIn().deleteOut()
       }
 
       this.pointer.any()
@@ -73,20 +76,17 @@ export function ProvDictionaryMixinEx<Base extends Constructor<Dictionary>>(Reso
         .forEach(entity => entity.deleteOut())
 
       // Insert new entries
-      this.hadDictionaryMember = [
-        ...this.hadDictionaryMember,
-        ...[...newEntryMap].reduce<KeyEntityPair[]>((arr, [pairKey, pairEntity]) => [...arr, {
-          pairKey,
-          pairEntity,
-        } as KeyEntityPair], []),
-      ]
-
-      for (const [pairKey, pairEntity] of newEntryMap) {
-        newEntries.set(pairKey, pairEntity)
+      for (const [key, entity] of newEntries) {
+        if (entity) {
+          this.pointer.addOut(prov.hadDictionaryMember, entry => {
+            entry.addOut(prov.pairKey, key)
+              .addOut(prov.pairEntity, entity)
+          })
+        }
       }
 
       return {
-        entriesChanged: newEntries.size > 0 || entriesRemoved,
+        entriesChanged: entriesAdded || entriesRemoved,
       }
     }
 

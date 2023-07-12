@@ -2,7 +2,9 @@ import { NamedNode } from 'rdf-js'
 import { GraphPointer } from 'clownface'
 import error from 'http-errors'
 import { Dictionary } from '@rdfine/prov'
-import { fromPointer } from '@rdfine/prov/lib/Dictionary'
+import { cc, md } from '@cube-creator/core/namespace'
+import { isNamedNode } from 'is-graph-pointer'
+import { schema } from '@tpluscode/rdf-ns-builders'
 import { ResourceStore } from '../../ResourceStore'
 
 interface UpdateDimensionMapping {
@@ -22,10 +24,9 @@ export async function update({
   store,
 }: UpdateDimensionMapping): Promise<Updated> {
   const dimensionMappings = await store.getResource<Dictionary>(resource)
-  const newMappings = fromPointer(mappings)
 
-  const sharedDimensions = newMappings.sharedDimensions
-  const dimension = newMappings.about
+  const sharedDimensions = mappings.out(cc.sharedDimension).filter(isNamedNode).terms
+  const dimension = mappings.out(schema.about).term!
 
   if (!dimension || !dimension.equals(dimensionMappings.about)) {
     throw new error.BadRequest('Unexpected value of schema:about')
@@ -33,8 +34,8 @@ export async function update({
 
   dimensionMappings.changeSharedDimensions(sharedDimensions)
 
-  dimensionMappings.onlyValidTerms = newMappings.onlyValidTerms
-  const { entriesChanged } = dimensionMappings.replaceEntries(newMappings.hadDictionaryMember)
+  dimensionMappings.onlyValidTerms = mappings.out(md.onlyValidTerms).value === 'true'
+  const { entriesChanged } = dimensionMappings.replaceEntries(mappings)
 
   return {
     dimensionMapping: dimensionMappings.pointer,

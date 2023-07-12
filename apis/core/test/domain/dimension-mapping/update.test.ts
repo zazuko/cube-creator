@@ -400,8 +400,8 @@ describe('domain/dimension-mapping/update', () => {
       expect(dimensionMapping.any().has([prov.pairKey, prov.pairEntity]).terms).to.have.length(2)
     })
 
-    it('keeps rdf:type prov:Entity triples of remaining pairs', () => {
-      expect(dimensionMapping.node(wikidata.carbonMonoxide).out(rdf.type).term).to.deep.eq(prov.Entity)
+    it('removes rdf:type prov:Entity triples of remaining pairs', () => {
+      expect(dimensionMapping.node(wikidata.carbonMonoxide).out(rdf.type).terms).to.be.empty
     })
   })
 
