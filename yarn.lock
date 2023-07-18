@@ -2994,9 +2994,9 @@
     once "^1.4.0"
 
 "@tpluscode/sparql-builder@^0.3.15", "@tpluscode/sparql-builder@^0.3.21", "@tpluscode/sparql-builder@^0.3.22", "@tpluscode/sparql-builder@^0.3.23", "@tpluscode/sparql-builder@^0.3.24":
-  version "0.3.30"
-  resolved "https://registry.yarnpkg.com/@tpluscode/sparql-builder/-/sparql-builder-0.3.30.tgz#ddf2693688eada0c89e9d89d5673feada817f834"
-  integrity sha512-TS3+gKMHiF+SpF4rHfclAhT130+nH6IcJODgpKgu5OKBcSCiBs5tooAAf5Mj5zNn2F+a6GGS1w3DYQ0fTYahIg==
+  version "0.3.31"
+  resolved "https://registry.yarnpkg.com/@tpluscode/sparql-builder/-/sparql-builder-0.3.31.tgz#4946c8b4e25b119ee2242b24cbb43847d12bf84d"
+  integrity sha512-Q5D5sdo2hx2yfP/8mf6B2vEFJydpC/2qVqZqsl8jyFys8CYVGQY8+JcbiiLwZsxgQ4rJOrsf6hxjtlaOKggLCA==
   dependencies:
     "@rdf-esm/data-model" "^0.5.4"
     "@rdf-esm/term-set" "^0.5.0"
