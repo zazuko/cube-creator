@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "prepare": "husky install",
-    "postinstall": "patch-package",
+    "postinstall": "patch-package; yarn-deduplicate",
     "lint": "eslint . --ext .ts,.vue,.tsx --quiet --ignore-path .gitignore",
     "c8": "c8 --reporter lcovonly",
     "test": "yarn c8 -o coverage/apis mocha --recursive apis/**/*.test.ts packages/**/*.test.ts --grep @SPARQL --invert",
@@ -25,7 +25,8 @@
   ],
   "dependencies": {
     "patch-package": "^6.5.0",
-    "postinstall-postinstall": "^2.1.0"
+    "postinstall-postinstall": "^2.1.0",
+    "yarn-deduplicate": "^6.0.2"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.0",
