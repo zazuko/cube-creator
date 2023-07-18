@@ -84,10 +84,11 @@ export default defineComponent({
             limit: pageSize,
             offset: offset.value,
           }
-        )?.execute(client, $rdf) || []
+        )?.execute(client, $rdf)
+        const loadedChildren = page?.children || []
 
-        mayHaveMore.value = page.length >= pageSize
-        children.value = Remote.loaded((children.value?.data ?? []).concat(page))
+        mayHaveMore.value = loadedChildren.length >= pageSize
+        children.value = Remote.loaded((children.value?.data ?? []).concat(loadedChildren))
       } catch (e: any) {
         children.value = Remote.error(e.toString())
       }
