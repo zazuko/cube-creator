@@ -49,6 +49,8 @@ export async function getSharedTerms<C extends StreamClient | ParsingClient>({ s
     throw new Error('Multiple shapes found')
   }
 
+  shape.addOut(sh.targetNode, sharedDimensions)
+
   shape.any().has(sh.limit).deleteOut(sh.limit).addOut(sh.limit, limit)
   shape.any().has(sh.offset).deleteOut(sh.offset).addOut(sh.offset, offset)
 
@@ -60,11 +62,6 @@ export async function getSharedTerms<C extends StreamClient | ParsingClient>({ s
       propertyShape.addOut(sh.path, predicate)
     })
   })
-
-  filterShape
-    .out(sh.property)
-    .has(sh.path, schema.inDefinedTermSet)
-    .addList(sh.in, sharedDimensions)
 
   if (freetextQuery) {
     filterShape

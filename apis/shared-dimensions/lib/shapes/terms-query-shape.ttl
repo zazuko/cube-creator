@@ -31,16 +31,16 @@
                         [
                           sh:orderBy
                             [
-                              sh:path schema:inDefinedTermSet ;
+                              sh:path [ sh:inversePath schema:inDefinedTermSet ] ;
                             ] ;
                           sh:nodes
                             [
+                              sh:nodes
+                                [
+                                  sh:path [ sh:inversePath schema:inDefinedTermSet ] ;
+                                ] ;
                               sh:filterShape
                                 [
-                                  sh:property
-                                    [
-                                      sh:path schema:inDefinedTermSet ;
-                                    ] ;
                                   sh:property
                                     [
                                       sh:path schema:name ;
@@ -57,9 +57,9 @@
                                 ] ;
                             ] ;
                         ] ;
-                    ] ;
-                ] ;
-            ] ;
+                    ]
+                ]
+            ]
         ] ;
     ] ;
 ] .
