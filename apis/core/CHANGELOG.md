@@ -1,5 +1,16 @@
 # @cube-creator/core-api
 
+## 2.3.1
+
+### Patch Changes
+
+- 509f4e02: Reduce memory usage which would cause high memory spikes when saving large dimensions mappings (fixes #1444)
+- fd24cb05: Improve performace of the dimension mapping screen (re #1442)
+- fd24cb05: Mapping would not work when dimension is mapped to a datatype other than string (re #1444)
+- Updated dependencies [5a3ead58]
+- Updated dependencies [a9caebfd]
+  - @cube-creator/shared-dimensions-api@3.0.3
+
 ## 2.3.0
 
 ### Minor Changes

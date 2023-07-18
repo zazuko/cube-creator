@@ -1,5 +1,12 @@
 # @cube-creator/shared-dimensions-api
 
+## 3.0.3
+
+### Patch Changes
+
+- 5a3ead58: Missing functionality for search when selecting Shared Dimension terms in dynamic properties (fixes #1450)
+- a9caebfd: Added a better validation message to literal column's datatype (fixes #1434)
+
 ## 3.0.2
 
 ### Patch Changes
