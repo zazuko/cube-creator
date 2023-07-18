@@ -14,14 +14,12 @@ export interface DynamicPropertiesQuery {
 }
 
 const dynamicPropertiesFromStore: DynamicPropertiesQuery = async function (targetClass, shape) {
-  return CONSTRUCT`
+  const basicProperties = CONSTRUCT`
     ${shape} ${sh.property} ?shProperty .
     ?shProperty ${sh.name} ?name ;
       ${sh.maxCount} ?maxCount ;
       ${sh.minCount} ?minCount ;
       ${sh.path} ?predicate ;
-      ${hydra.collection} ?collection ;
-      ${dash.editor} ?editor ;
       ${sh.datatype} ?dt ;
       ${sh.nodeKind} ?nodeKind ;
       ${sh.languageIn} ?lang ;
@@ -44,12 +42,6 @@ const dynamicPropertiesFromStore: DynamicPropertiesQuery = async function (targe
       BIND( IF(?required, 1, 0) as ?minCount )
 
       optional {
-        ?property ${sh.class} ?termSet .
-
-        BIND ( ${dash.AutoCompleteEditor} as ?editor )
-        BIND (IRI(CONCAT("${env.MANAGED_DIMENSIONS_BASE}", "dimension/_terms?dimension=", ENCODE_FOR_URI(STR(?termSet)))) as ?collection)
-      }
-      optional {
         ?property ${sh.datatype} ?dt .
         FILTER (?dt != ${xsd.anyURI})
       }
@@ -69,6 +61,34 @@ const dynamicPropertiesFromStore: DynamicPropertiesQuery = async function (targe
       BIND (IF(!BOUND(?multipleValues) || ?multipleValues = false, 1, ?UNDEF) as ?maxCount)
     `
     .execute(parsingClient.query)
+
+  const collectionSearchTemplates = CONSTRUCT`
+    ${shape} ${sh.property} ?shProperty .
+    ?shProperty ${sh.name} ?name ;
+      ${dash.editor} ${dash.AutoCompleteEditor} ;
+      ${hydra.search} [
+        a ${hydra.IriTemplate} ;
+        ${hydra.template} ?collectionSearch ;
+        ${hydra.mapping} [
+          ${hydra.property} ${hydra.freetextQuery} ;
+          ${hydra.variable} "q" ;
+          ${sh.minLength} 0 ;
+        ] ;
+      ];
+  `
+    .FROM($rdf.namedNode(env.MANAGED_DIMENSIONS_GRAPH))
+    .WHERE`
+    ${targetClass} a ${md.SharedDimension} ;
+                   ${schema.additionalProperty} ?property .
+    ?property ${sh.class} ?termSet .
+
+    BIND(IRI(CONCAT("urn:property:", str(?property))) as ?shProperty)
+    BIND (CONCAT("${env.MANAGED_DIMENSIONS_API_BASE}", "dimension/_terms?dimension=", ENCODE_FOR_URI(STR(?termSet)), "{&q}") as ?collectionSearch)
+  `.execute(parsingClient.query)
+
+  const quads = await Promise.all([basicProperties, collectionSearchTemplates])
+
+  return quads.flatMap(q => q)
 }
 
 function buildShaclLists(pointer: AnyPointer) {
