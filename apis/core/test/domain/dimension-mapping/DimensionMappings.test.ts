@@ -1,17 +1,14 @@
 import { NamedNode } from 'rdf-js'
 import { describe, it, beforeEach } from 'mocha'
 import { fromPointer } from '@rdfine/prov/lib/Dictionary'
-import { fromPointer as keyEntityPair } from '@rdfine/prov/lib/KeyEntityPair'
 import { GraphPointer } from 'clownface'
 import { expect } from 'chai'
 import $rdf from 'rdf-ext'
 import namespace from '@rdfjs/namespace'
 import TermSet from '@rdfjs/term-set'
-import { prov, xsd } from '@tpluscode/rdf-ns-builders'
+import { prov, rdf, xsd } from '@tpluscode/rdf-ns-builders'
 import { blankNode, namedNode } from '@cube-creator/testing/clownface'
 import '../../../lib/domain'
-import { Initializer } from '@tpluscode/rdfine/RdfResource'
-import { KeyEntityPair } from '@rdfine/prov'
 
 const wtd = namespace('http://www.wikidata.org/entity/')
 
@@ -176,6 +173,28 @@ describe('lib/domain/DimensionMappings', () => {
   })
 
   describe('replaceEntries', () => {
+    it('adds rdf:type to all dictionary entries', () => {
+      // given
+      const dictionary = fromPointer(pointer)
+
+      // when
+      const newEntries = blankNode()
+      fromPointer(newEntries, {
+        hadDictionaryMember: [{
+          pairKey: 'so2',
+          pairEntity: wikidata.sulphurDioxide,
+        }, {
+          pairKey: 'co',
+          pairEntity: wikidata.carbonMonoxide,
+        }],
+      })
+      dictionary.replaceEntries(newEntries)
+
+      // then
+      expect(dictionary.pointer.out(prov.hadDictionaryMember).has(rdf.type, prov.KeyEntityPair).terms)
+        .have.length(2)
+    })
+
     it('returns true when entries are added', () => {
       // given
       const dictionary = fromPointer(pointer, {
@@ -186,16 +205,17 @@ describe('lib/domain/DimensionMappings', () => {
       })
 
       // when
-      const { entriesChanged } = dictionary.replaceEntries([
-        keyEntityPair(blankNode(), {
+      const newEntries = blankNode()
+      fromPointer(newEntries, {
+        hadDictionaryMember: [{
           pairKey: 'so2',
           pairEntity: wikidata.sulphurDioxide,
-        }),
-        keyEntityPair(blankNode(), {
+        }, {
           pairKey: 'co',
           pairEntity: wikidata.carbonMonoxide,
-        }),
-      ])
+        }],
+      })
+      const { entriesChanged } = dictionary.replaceEntries(newEntries)
 
       // then
       expect(entriesChanged).to.be.true
@@ -214,12 +234,14 @@ describe('lib/domain/DimensionMappings', () => {
       })
 
       // when
-      const { entriesChanged } = dictionary.replaceEntries([
-        keyEntityPair(blankNode(), {
+      const newEntries = blankNode()
+      fromPointer(newEntries, {
+        hadDictionaryMember: [{
           pairKey: 'co',
           pairEntity: wikidata.carbonMonoxide,
-        }),
-      ])
+        }],
+      })
+      const { entriesChanged } = dictionary.replaceEntries(newEntries)
 
       // then
       expect(entriesChanged).to.be.true
@@ -235,13 +257,14 @@ describe('lib/domain/DimensionMappings', () => {
       })
 
       // when
-      const so: Initializer<KeyEntityPair> = {
-        pairKey: 'co',
-        pairEntity: wikidata.carbonMonoxide,
-      }
-      const { entriesChanged } = dictionary.replaceEntries([
-        keyEntityPair(blankNode(), so),
-      ])
+      const newEntries = blankNode()
+      fromPointer(newEntries, {
+        hadDictionaryMember: [{
+          pairKey: 'co',
+          pairEntity: wikidata.carbonMonoxide,
+        }],
+      })
+      const { entriesChanged } = dictionary.replaceEntries(newEntries)
 
       // then
       expect(entriesChanged).to.be.false
