@@ -110,7 +110,7 @@ describe('@cube-creator/shared-dimensions-api/lib/shapes/dynamic-properties @SPA
         minCount: 1,
         maxCount: 1,
       }, {
-        path: hydra.collection,
+        path: hydra.search,
         minCount: 1,
         maxCount: 1,
       }, {
