@@ -45,6 +45,11 @@
                                     [
                                       sh:path schema:name ;
                                     ] ;
+                                  sh:property
+                                    [
+                                      sh:path rdf:type ;
+                                      sh:hasValue schema:DefinedTerm ;
+                                    ] ;
                                   sh:expression
                                     [
                                       sh:deactivated true ;
