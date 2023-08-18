@@ -1,5 +1,11 @@
 # @cube-creator/shared-dimensions-api
 
+## 3.0.4
+
+### Patch Changes
+
+- 090df410: Fixes a problem with shared dimension terms not appearing when they did not have the type `schema:DefinedTerm` as was the case with municipalities
+
 ## 3.0.3
 
 ### Patch Changes
