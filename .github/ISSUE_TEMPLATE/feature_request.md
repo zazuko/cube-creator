@@ -3,7 +3,7 @@ name: Feature request
 about: Suggest an idea for Cube Creator
 title: ''
 labels: ''
-assignees: dabo505
+assignees: MartinaElsawy
 
 ---
 
