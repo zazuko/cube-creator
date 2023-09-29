@@ -22,8 +22,16 @@ WHERE
     { SELECT  ?unit ?name
       WHERE
         { GRAPH <https://lindas.admin.ch/ontologies>
-            { ?unit  a ${qudt.Unit} ;
-                     ${rdfs.label} ?label .
+            {
+              {
+                ?unit a ${qudt.Unit}
+              }
+              UNION
+              {
+                ?unit a ${qudt.CurrencyUnit}
+              }
+
+              ?unit ${rdfs.label} ?label .
 
               OPTIONAL { ?unit  ${qudt.symbol}  ?symbol }
               OPTIONAL { ?unit  ${qudt.ucumCode}  ?ucumCode }
