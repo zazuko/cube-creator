@@ -1,5 +1,11 @@
 # @cube-creator/core-api
 
+## 2.3.3
+
+### Patch Changes
+
+- 871d44fd: Currencies were not listed for selection in units dimension metadata (fixes #1463) (re https://gitlab.ldbar.ch/zazuko/misc/-/issues/162)
+
 ## 2.3.2
 
 ### Patch Changes
