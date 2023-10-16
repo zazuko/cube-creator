@@ -59,12 +59,35 @@
       code:link <node:barnard59-validate-shacl/validate.js#shacl>
     ] ;
   code:arguments
-    [ code:name "shape" ; code:value <#loadShapes> ] ,
+    [ code:name "shape" ; code:value <#concatShapes> ] ,
     [ code:name "maxErrors" ; code:value 100 ] ,
     [
       code:name "onViolation" ;
       code:value [ a code:EcmaScript ; code:link <file:../lib/log#prettyPrintReport> ]
     ] ;
+.
+
+<#concatShapes> a :Pipeline, :ReadableObjectMode ;
+  :steps [
+    :stepList
+    (
+      <#loadAllShapes>
+    )
+  ].
+
+
+<#loadAllShapes>
+  a :Step ;
+  code:implementedBy
+    [
+      a code:EcmaScriptModule ;
+      code:link <node:barnard59-base/concat.js#object>
+    ] ;
+  code:arguments
+    (
+      <#loadShapes>
+      <#loadCubeShapes>
+    )
 .
 
 <#loadShapes>
@@ -81,6 +104,32 @@
                 a code:EcmaScriptModule ;
               ] ;
             code:arguments ( "shapesPath"^^:VariableName )
+          ]
+          [
+            a :Step ;
+            code:implementedBy
+              [
+                code:link <node:barnard59-formats/n3.js#parse> ;
+                a code:EcmaScriptModule ;
+              ] ;
+          ]
+        )
+    ] .
+
+<#loadCubeShapes>
+  a :Pipeline, :ReadableObjectMode ;
+  :steps
+    [
+      :stepList
+        (
+          [
+            a :Step ;
+            code:implementedBy
+              [
+                code:link <node:fs#createReadStream> ;
+                a code:EcmaScriptModule ;
+              ] ;
+            code:arguments ( "cubeShapesPath"^^:VariableName )
           ]
           [
             a :Step ;
