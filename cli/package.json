@@ -46,6 +46,7 @@
     "barnard59-base": "^1.1.0",
     "barnard59-formats": "^1.1.0",
     "barnard59-graph-store": "^1.0.0",
+    "barnard59-http": "^1.1.1",
     "barnard59-rdf": "^1.0.0",
     "barnard59-validate-shacl": "^0.3.8",
     "body-parser": "^1.19.0",

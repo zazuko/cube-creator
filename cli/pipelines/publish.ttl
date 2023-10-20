@@ -122,25 +122,63 @@
     [
       :stepList
         (
-          [
-            a :Step ;
-            code:implementedBy
-              [
-                code:link <node:fs#createReadStream> ;
-                a code:EcmaScriptModule ;
-              ] ;
-            code:arguments ( "cubeShapesPath"^^:VariableName )
-          ]
-          [
-            a :Step ;
-            code:implementedBy
-              [
-                code:link <node:barnard59-formats/n3.js#parse> ;
-                a code:EcmaScriptModule ;
-              ] ;
-          ]
+          <#shapeURLs>
+          <#getShapes>
         )
     ] .
+
+<#shapeURLs> a :Step   ;
+    code:implementedBy [ 
+      a code:EcmaScriptModule  ;
+      code:link <node:stream#Readable.from> ;     
+    ] ;
+     code:arguments (
+      """[
+        'https://cube.link/v0.0.5/shape/standalone-constraint-constraint',
+        // 'https://cube.link/v0.0.5/shape/datacatalog-constraint',        
+      ]"""^^code:EcmaScript  
+     )
+    .
+
+<#getShapes>  a :Step ;
+    code:implementedBy [ 
+      a code:EcmaScriptModule  ;
+      code:link <node:barnard59-base/forEach.js#default> ;     
+    ] ;
+    code:arguments ( <#getShape> "shapeURL" ) 
+  .
+
+<#getShape> a :Pipeline , :ReadableObjectMode;
+  :steps
+    [
+      :stepList
+        (
+          <#fetch>
+          <#parse>
+        ) 
+    ] .
+
+<#fetch>  a :Step ;
+    code:implementedBy
+    [
+      a code:EcmaScriptModule ;
+      code:link <node:barnard59-http/get.js#default>
+    ] ;
+    code:arguments
+    [
+      code:name "url";
+      code:value "shapeURL"^^:VariableName ;
+    ]
+.
+
+<#parse>  a :Step ;
+  code:implementedBy
+    [
+      code:link <node:barnard59-formats/n3.js#parse> ;
+      a code:EcmaScriptModule ;
+    ] 
+  .
+
 
 <#flatten> a :Step ;
   code:implementedBy

@@ -43,7 +43,6 @@ export default runner.create<PublishRunOptions>({
     variable.set('metadata', $rdf.dataset())
     // this should be possible as relative path in pipeline ttl but does not work
     variable.set('shapesPath', path.resolve(__dirname, '../../shapes.ttl'))
-    variable.set('cubeShapesPath', path.resolve(__dirname, '../../standalone-constraint-constraint.ttl'))
 
     if (cubeCreatorVersion) {
       variable.set('cubeCreatorVersion', cubeCreatorVersion)
