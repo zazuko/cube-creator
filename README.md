@@ -21,7 +21,7 @@ To be able to run transform/publish pipelines locally, an OIDC secret must be ad
 AUTH_RUNNER_CLIENT_SECRET=foo-bar
 ```
 
-It is obtained from [keycloak](https://keycloak.zazukoians.org/admin/master/console/#/realms/zazuko-dev/clients/64f92868-71e3-48e1-9d8b-7bfaf5fac2bd/credentials)
+It is obtained from [keycloak](https://keycloak.zazukoians.org/admin/master/console/#/zazuko-dev/clients/64f92868-71e3-48e1-9d8b-7bfaf5fac2bd/credentials)
 
 ### Starting
 
