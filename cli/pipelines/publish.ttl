@@ -37,6 +37,7 @@
     [
       :stepList (
                   <#loadCubeMetadata>
+                  <#addQudtUnit>
                   <#shaclValidate>
                   <#flatten>
                 ) ;
@@ -192,6 +193,23 @@ _:get
       code:name "password" ;
       code:value "graph-store-password"^^:VariableName
     ] .
+
+<#addQudtUnit>
+  a :Step ;
+  code:implementedBy
+    [
+      a code:EcmaScriptModule ;
+      code:link <node:barnard59-base/map.js#default> ;
+    ] ;
+  code:arguments
+    (
+      [
+        code:link <file:../lib/publish/patch-stream#addQudtHasUnit> ;
+        a code:EcmaScript ;
+      ]
+    )
+.
+
 
 <#uniqueBnodes>
   a :Step ;

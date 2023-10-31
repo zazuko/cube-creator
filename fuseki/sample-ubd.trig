@@ -108,6 +108,7 @@ graph <cube-project/ubd/dimensions-metadata> {
   <cube-project/ubd/dimensions-metadata/dimension-value>
     schema:about <https://environment.ld.admin.ch/foen/ubd/28/dimension/value> ;
     schema:name "Wert"@de ;
+    qudt:unit <http://qudt.org/vocab/unit/MicroGM-PER-M3> ;
   .
 
   <cube-project/ubd/dimensions-metadata/station>
