@@ -25,7 +25,7 @@ base <https://cube-creator.zazuko.com/shape#>
     sh:message "cube:Cube needs at least one cube:ObservationSet" ;
   ] , [
     sh:path cube:observationConstraint ;
-    sh:node <http://example.org/ObservationConstraintShape> ; # from cube.link
+    sh:node <https://cube.link/shape/standalone-constraint-constraint#ObservationConstraintShape> ; # from cube.link
     sh:message "cube:Cube must point to a valid cube:Constraint" ;
   ] ;
 .

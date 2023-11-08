@@ -134,8 +134,8 @@
     ] ;
      code:arguments (
       """[
-        'https://cube.link/v0.0.5/shape/standalone-constraint-constraint',
-        // 'https://cube.link/v0.0.5/shape/datacatalog-constraint',        
+        'https://cube.link/v0.1.0/shape/standalone-constraint-constraint',
+        // 'https://cube.link/v0.1.0/shape/datacatalog-constraint',        
       ]"""^^code:EcmaScript  
      )
     .
