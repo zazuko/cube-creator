@@ -60,12 +60,35 @@
       code:link <node:barnard59-validate-shacl/validate.js#shacl>
     ] ;
   code:arguments
-    [ code:name "shape" ; code:value <#loadShapes> ] ,
+    [ code:name "shape" ; code:value <#concatShapes> ] ,
     [ code:name "maxErrors" ; code:value 100 ] ,
     [
       code:name "onViolation" ;
       code:value [ a code:EcmaScript ; code:link <file:../lib/log#prettyPrintReport> ]
     ] ;
+.
+
+<#concatShapes> a :Pipeline, :ReadableObjectMode ;
+  :steps [
+    :stepList
+    (
+      <#loadAllShapes>
+    )
+  ].
+
+
+<#loadAllShapes>
+  a :Step ;
+  code:implementedBy
+    [
+      a code:EcmaScriptModule ;
+      code:link <node:barnard59-base/concat.js#object>
+    ] ;
+  code:arguments
+    (
+      <#loadShapes>
+      <#loadCubeShapes>
+    )
 .
 
 <#loadShapes>
@@ -93,6 +116,70 @@
           ]
         )
     ] .
+
+<#loadCubeShapes>
+  a :Pipeline, :ReadableObjectMode ;
+  :steps
+    [
+      :stepList
+        (
+          <#shapeURLs>
+          <#getShapes>
+        )
+    ] .
+
+<#shapeURLs> a :Step   ;
+    code:implementedBy [ 
+      a code:EcmaScriptModule  ;
+      code:link <node:stream#Readable.from> ;     
+    ] ;
+     code:arguments (
+      """[
+        'https://cube.link/v0.1.0/shape/standalone-constraint-constraint',
+        // 'https://cube.link/v0.1.0/shape/datacatalog-constraint',        
+      ]"""^^code:EcmaScript  
+     )
+    .
+
+<#getShapes>  a :Step ;
+    code:implementedBy [ 
+      a code:EcmaScriptModule  ;
+      code:link <node:barnard59-base/forEach.js#default> ;     
+    ] ;
+    code:arguments ( <#getShape> "shapeURL" ) 
+  .
+
+<#getShape> a :Pipeline , :ReadableObjectMode;
+  :steps
+    [
+      :stepList
+        (
+          <#fetch>
+          <#parse>
+        ) 
+    ] .
+
+<#fetch>  a :Step ;
+    code:implementedBy
+    [
+      a code:EcmaScriptModule ;
+      code:link <node:barnard59-http/get.js#default>
+    ] ;
+    code:arguments
+    [
+      code:name "url";
+      code:value "shapeURL"^^:VariableName ;
+    ]
+.
+
+<#parse>  a :Step ;
+  code:implementedBy
+    [
+      code:link <node:barnard59-formats/n3.js#parse> ;
+      a code:EcmaScriptModule ;
+    ] 
+  .
+
 
 <#flatten> a :Step ;
   code:implementedBy
