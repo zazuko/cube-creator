@@ -5262,6 +5262,17 @@ barnard59-graph-store@^1.0.0:
     readable-stream "^3.6.0"
     sparql-http-client "^2.4.0"
 
+barnard59-http@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/barnard59-http/-/barnard59-http-1.1.1.tgz#90456b4def674004684fc197d4cefa53e52bb435"
+  integrity sha512-nzquPqfB8VilFyS+T6+xy9wqnmQHuQzawGwe3fX5T0YHJ565E2wVybiMfYUCOoDkoK3fsQpOR8PpoZRibYOgNg==
+  dependencies:
+    "@opentelemetry/api" "^1.0.1"
+    duplex-to "^1.0.1"
+    duplexify "^4.0.0"
+    node-fetch "^3.3.2"
+    readable-stream ">=3"
+
 barnard59-rdf@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/barnard59-rdf/-/barnard59-rdf-1.0.0.tgz#cb447628e183d5b7b7728cb0359192747b73656e"
@@ -6977,7 +6988,7 @@ duplexify@^3.6.1:
     readable-stream "^2.0.0"
     stream-shift "^1.0.0"
 
-duplexify@^4.1.1:
+duplexify@^4.0.0, duplexify@^4.1.1:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/duplexify/-/duplexify-4.1.2.tgz#18b4f8d28289132fa0b9573c898d9f903f81c7b0"
   integrity sha512-fz3OjcNCHmRP12MJoZMPglx8m4rrFP8rovnk4vT8Fs+aonZoCwGg10dSsQsfP/E62eZcPTMSMP6686fu9Qlqtw==
@@ -8034,9 +8045,9 @@ fn.name@1.x.x:
   integrity sha512-GRnmB5gPyJpAhTQdSZTSp9uaPSvl09KoYcMQtsB9rQoOmzs9dH6ffeccH+Z+cv6P68Hu5bC6JjRh4Ah/mHSNRw==
 
 follow-redirects@^1.0.0:
-  version "1.14.8"
-  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.8.tgz#016996fb9a11a100566398b1c6839337d7bfa8fc"
-  integrity sha512-1x0S9UVJHsQprFcEC/qnNzBLcIxsjAV905f/UkQxbclCsoTWlacCNOpQa/anodLl2uaEKFhfWOvM2Qg77+15zA==
+  version "1.15.4"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.4.tgz#cdc7d308bf6493126b17ea2191ea0ccf3e535adf"
+  integrity sha512-Cr4D/5wlrb0z9dgERpUL3LrmPKVDsETIJhaCMeDfuFYcqa5bldGV6wBsAN6X/vxlXQtFBMrXdXxdL8CbDTGniw==
 
 for-each@^0.3.3:
   version "0.3.3"
@@ -10663,6 +10674,15 @@ node-fetch@^3.2.10:
     fetch-blob "^3.1.4"
     formdata-polyfill "^4.0.10"
 
+node-fetch@^3.3.2:
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-3.3.2.tgz#d1e889bacdf733b4ff3b2b243eb7a12866a0b78b"
+  integrity sha512-dRB78srN/l6gqWulah9SrxeYnxeddIG30+GOqK/9OlLVyLg3HPnr6SqOWTWOXKRwC2eGYCkZ59NNuSgvSrpgOA==
+  dependencies:
+    data-uri-to-buffer "^4.0.0"
+    fetch-blob "^3.1.4"
+    formdata-polyfill "^4.0.10"
+
 node-forge@^1:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-1.3.1.tgz#be8da2af243b2417d5f646a770663a92b7e9ded3"
@@ -12168,6 +12188,17 @@ readable-stream@1.1.x:
     inherits "^2.0.3"
     string_decoder "^1.1.1"
     util-deprecate "^1.0.1"
+
+readable-stream@>=3:
+  version "4.5.2"
+  resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-4.5.2.tgz#9e7fc4c45099baeed934bff6eb97ba6cf2729e09"
+  integrity sha512-yjavECdqeZ3GLXNgRXgeQEdz9fvDDkNKyHnbHRFtOr7/LcfgBcmct7t/ET+HaCTqfh06OzoAxrkN/IfjJBVe+g==
+  dependencies:
+    abort-controller "^3.0.0"
+    buffer "^6.0.3"
+    events "^3.3.0"
+    process "^0.11.10"
+    string_decoder "^1.3.0"
 
 readable-stream@^2.0.0, readable-stream@^2.0.1, readable-stream@^2.2.2, readable-stream@^2.3.3, readable-stream@~2.3.6:
   version "2.3.7"
