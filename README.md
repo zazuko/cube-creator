@@ -82,7 +82,7 @@ For brevity, use npm script `npm run test:e2e --grep pattern`
 
 We use Cypress to run UI e2e tests.
 
-To simplify the tests, we circumvent authentication in the app. For that, the following variables need to be set in `.local.env` before running the UI:
+To simplify the tests, we circumvent authentication in the app. For that, the following variables need to be set in `.env` before running the UI:
 ```
 VUE_APP_E2E=true
 VUE_APP_X_USER=john-doe
