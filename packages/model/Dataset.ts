@@ -1,4 +1,4 @@
-import { Literal } from 'rdf-js'
+import type { Literal } from '@rdfjs/types'
 import { RdfResource } from '@tpluscode/rdfine/RdfResource'
 import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import { Constructor, property } from '@tpluscode/rdfine'

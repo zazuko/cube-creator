@@ -1,4 +1,4 @@
-import { Dataset } from 'rdf-js'
+import type { Dataset } from '@rdfjs/types'
 import { qudt } from '@tpluscode/rdf-ns-builders'
 import $rdf from 'rdf-ext'
 

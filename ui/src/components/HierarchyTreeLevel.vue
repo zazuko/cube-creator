@@ -31,7 +31,7 @@
 
 <script lang="ts">
 import { GraphPointer } from 'clownface'
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { defineComponent, PropType, Ref, ref, toRefs } from 'vue'
 
 import ExternalTerm from '@/components/ExternalTerm.vue'

@@ -1,4 +1,4 @@
-import { Quad } from 'rdf-js'
+import type { Quad } from '@rdfjs/types'
 import type { Context } from 'barnard59-core/lib/Pipeline'
 import { PassThrough } from 'readable-stream'
 import through2 from 'through2'

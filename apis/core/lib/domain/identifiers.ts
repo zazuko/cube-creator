@@ -1,4 +1,4 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import UrlSlugify from 'url-slugify'
 import $rdf from 'rdf-ext'
 import { GraphPointer } from 'clownface'

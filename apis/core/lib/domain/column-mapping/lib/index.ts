@@ -1,4 +1,4 @@
-import { Term } from 'rdf-js'
+import type { Term } from '@rdfjs/types'
 import { ColumnMapping, CsvProject, Table } from '@cube-creator/model'
 import type { Organization } from '@rdfine/schema'
 import { ResourceStore } from '../../../ResourceStore'

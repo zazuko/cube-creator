@@ -1,4 +1,4 @@
-import { DatasetCore } from 'rdf-js'
+import type { DatasetCore } from '@rdfjs/types'
 import { describe, it, beforeEach, before } from 'mocha'
 import { expect } from 'chai'
 import { blankNode, namedNode } from '@cube-creator/testing/clownface'

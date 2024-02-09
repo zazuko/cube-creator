@@ -1,4 +1,4 @@
-import { NamedNode, Quad, Stream, Term } from 'rdf-js'
+import type { NamedNode, Quad, Stream, Term } from '@rdfjs/types'
 import clownface, { GraphPointer, MultiPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import through2 from 'through2'

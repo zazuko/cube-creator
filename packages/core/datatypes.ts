@@ -1,4 +1,4 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { xsd } from '@tpluscode/rdf-ns-builders/strict'
 
 export const datatypes: [NamedNode, string[]][] = [

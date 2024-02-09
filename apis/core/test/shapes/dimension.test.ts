@@ -1,4 +1,4 @@
-import { DatasetCore } from 'rdf-js'
+import type { DatasetCore } from '@rdfjs/types'
 import $rdf from 'rdf-ext'
 import toStream from 'string-to-stream'
 import Parser from '@rdfjs/parser-n3'

@@ -1,4 +1,4 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import namespace from '@rdf-esm/namespace'
 import env from '../env'
 

@@ -1,4 +1,4 @@
-import { Term } from 'rdf-js'
+import type { Term } from '@rdfjs/types'
 import type { GraphPointer } from 'clownface'
 import { ForbiddenMapper, UnauthorizedMapper } from './auth'
 import { DomainErrorMapper } from './domain'

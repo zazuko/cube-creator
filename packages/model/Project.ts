@@ -1,4 +1,4 @@
-import { DatasetCore, NamedNode } from 'rdf-js'
+import type { DatasetCore, NamedNode } from '@rdfjs/types'
 import { ResourceMixin } from '@rdfine/rdfs'
 import { Constructor, namespace, property, RdfResource, ResourceIdentifier } from '@tpluscode/rdfine'
 import type { GraphPointer } from 'clownface'

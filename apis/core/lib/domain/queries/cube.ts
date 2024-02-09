@@ -1,5 +1,5 @@
-import { NamedNode, Stream, Term } from 'rdf-js'
 import { Readable } from 'stream'
+import type { NamedNode, Stream, Term } from '@rdfjs/types'
 import { CONSTRUCT, SELECT, sparql } from '@tpluscode/sparql-builder'
 import StreamClient from 'sparql-http-client/StreamClient'
 import * as ns from '@cube-creator/core/namespace'

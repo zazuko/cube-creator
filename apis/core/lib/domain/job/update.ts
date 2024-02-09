@@ -1,4 +1,4 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { GraphPointer } from 'clownface'
 import { Job, JobMixin, ImportProject, Dataset, CsvProject } from '@cube-creator/model'
 import { isPublishJob, isTransformJob, JobErrorMixin } from '@cube-creator/model/Job'

@@ -1,4 +1,4 @@
-import { NamedNode, Quad } from 'rdf-js'
+import type { NamedNode, Quad } from '@rdfjs/types'
 import $rdf from 'rdf-ext'
 import clownface from 'clownface'
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders'

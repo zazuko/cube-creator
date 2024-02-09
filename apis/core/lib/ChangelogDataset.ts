@@ -1,4 +1,4 @@
-import { DatasetCore, Quad } from 'rdf-js'
+import type { DatasetCore, Quad } from '@rdfjs/types'
 import $rdf from 'rdf-ext'
 
 interface Changes {

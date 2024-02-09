@@ -1,6 +1,6 @@
 import { Constructor, property } from '@tpluscode/rdfine'
 import { md, meta } from '@cube-creator/core/namespace'
-import { NamedNode, Term } from 'rdf-js'
+import type { NamedNode, Term } from '@rdfjs/types'
 import { Hierarchy } from '@/store/types'
 import { ThingMixin } from '@rdfine/schema'
 import { Resource } from 'alcaeus'

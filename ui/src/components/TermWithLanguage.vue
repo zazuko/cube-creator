@@ -5,7 +5,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { Literal } from 'rdf-js'
+import type { Literal } from '@rdfjs/types'
 import { MultiPointer } from 'clownface'
 import { taggedLiteral } from 'clownface/filter'
 import { displayLanguage } from '@/store/serializers'

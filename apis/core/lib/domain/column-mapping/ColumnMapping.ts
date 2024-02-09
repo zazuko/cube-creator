@@ -1,4 +1,4 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { Constructor } from '@tpluscode/rdfine'
 import { Initializer, RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import { cc } from '@cube-creator/core/namespace'

@@ -1,4 +1,4 @@
-import { DatasetCore } from 'rdf-js'
+import type { DatasetCore } from '@rdfjs/types'
 import { insertTestProject } from '@cube-creator/testing/lib/seedData'
 import { before, describe, it } from 'mocha'
 import getStream from 'get-stream'

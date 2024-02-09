@@ -1,5 +1,5 @@
 import $rdf from '@rdf-esm/dataset'
-import { Quad } from 'rdf-js'
+import type { Quad } from '@rdfjs/types'
 import { shrink as _shrink } from '@zazuko/rdf-vocabularies/shrink'
 import { expand as _expand } from '@zazuko/rdf-vocabularies/expand'
 import prefixes from '@zazuko/rdf-vocabularies/prefixes'

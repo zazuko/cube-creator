@@ -1,5 +1,5 @@
-import { Quad, Stream, Term } from 'rdf-js'
 import path from 'path'
+import type { Quad, Stream, Term } from '@rdfjs/types'
 import { CONSTRUCT } from '@tpluscode/sparql-builder'
 import { hydra, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { md, meta } from '@cube-creator/core/namespace'

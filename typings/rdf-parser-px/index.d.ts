@@ -1,6 +1,6 @@
 declare module 'rdf-parser-px' {
   import { Readable, Transform } from 'stream'
-  import { Sink, Stream } from 'rdf-js'
+  import type { Sink, Stream } from '@rdfjs/types'
 
   interface ColumnMetadata {
     titles: string | string []

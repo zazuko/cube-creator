@@ -1,5 +1,5 @@
 import { URLSearchParams } from 'url'
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import nodeFetch, { RequestInit, Response } from 'node-fetch'
 import env from '@cube-creator/core/env'
 import { GraphPointer } from 'clownface'

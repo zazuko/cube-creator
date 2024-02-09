@@ -1,4 +1,4 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import $rdf from 'rdf-ext'
 import { SparqlTemplateResult } from '@tpluscode/rdf-string'
 import env from '@cube-creator/core/env'

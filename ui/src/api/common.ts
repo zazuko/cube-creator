@@ -1,5 +1,5 @@
 import { RdfResource, RuntimeOperation } from 'alcaeus'
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { Actions } from '@/api/mixins/ApiResource'
 

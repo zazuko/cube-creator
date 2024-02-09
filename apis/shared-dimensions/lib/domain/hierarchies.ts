@@ -1,4 +1,4 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { CONSTRUCT, SELECT } from '@tpluscode/sparql-builder'
 import { md, meta } from '@cube-creator/core/namespace'
 import clownface, { GraphPointer } from 'clownface'

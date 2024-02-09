@@ -1,4 +1,4 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import type { Context } from 'barnard59-core/lib/Pipeline'
 import StreamClient from 'sparql-http-client'
 import { CONSTRUCT } from '@tpluscode/sparql-builder'

@@ -1,4 +1,4 @@
-import { DatasetCore, NamedNode, Term } from 'rdf-js'
+import type { DatasetCore, NamedNode, Term } from '@rdfjs/types'
 import { Organization, OrganizationMixin as SchemaOrganizationMixin } from '@rdfine/schema'
 import { Constructor, namespace, property, ResourceIdentifier } from '@tpluscode/rdfine'
 import { cc } from '@cube-creator/core/namespace'

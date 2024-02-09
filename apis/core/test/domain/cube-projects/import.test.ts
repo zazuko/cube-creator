@@ -1,4 +1,4 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { describe, it, beforeEach, afterEach } from 'mocha'
 import clownface, { GraphPointer } from 'clownface'
 import { blankNode, namedNode } from '@cube-creator/testing/clownface'

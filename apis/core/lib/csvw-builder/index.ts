@@ -1,4 +1,4 @@
-import { Term } from 'rdf-js'
+import type { Term } from '@rdfjs/types'
 import * as Csvw from '@rdfine/csvw'
 import TermMap from '@rdfjs/term-map'
 import {

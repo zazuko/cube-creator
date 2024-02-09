@@ -1,4 +1,4 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { GraphPointer } from 'clownface'
 import type { MediaObject } from '@rdfine/schema'
 import { CsvSource } from '@cube-creator/model'

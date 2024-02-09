@@ -1,4 +1,4 @@
-import { Term } from 'rdf-js'
+import type { Term } from '@rdfjs/types'
 import { describe, it, beforeEach, before } from 'mocha'
 import { expect } from 'chai'
 import sinon from 'sinon'

@@ -1,4 +1,4 @@
-import { NamedNode, Term } from 'rdf-js'
+import type { NamedNode, Term } from '@rdfjs/types'
 import { CsvProject, Project, CsvMapping, ImportProject } from '@cube-creator/model'
 import { Constructor } from '@tpluscode/rdfine'
 import { create as createMapping } from '@cube-creator/model/CsvMapping'

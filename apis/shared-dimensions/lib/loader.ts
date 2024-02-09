@@ -1,5 +1,5 @@
-import { NamedNode } from 'rdf-js'
 import { PassThrough } from 'stream'
+import type { NamedNode } from '@rdfjs/types'
 import { SELECT } from '@tpluscode/sparql-builder'
 import type HydraBox from 'hydra-box'
 import { rdf } from '@tpluscode/rdf-ns-builders'

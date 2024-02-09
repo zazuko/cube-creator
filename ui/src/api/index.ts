@@ -21,7 +21,7 @@ import * as Models from '@cube-creator/model'
 import { findNodes } from 'clownface-shacl-path'
 import { FileLiteral } from '@/forms/FileLiteral'
 import { GraphPointer } from 'clownface'
-import { Term } from 'rdf-js'
+import type { Term } from '@rdfjs/types'
 
 export const rootURL = window.APP_CONFIG.apiCoreBase
 const segmentSeparator = '!!' // used to replace slash in URI to prevent escaping

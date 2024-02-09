@@ -45,7 +45,7 @@
 <script lang="ts">
 import { DimensionMetadata } from '@cube-creator/model'
 import { defineComponent, PropType } from 'vue'
-import { Literal } from 'rdf-js'
+import type { Literal } from '@rdfjs/types'
 import HydraOperationButton from './HydraOperationButton.vue'
 import DataKindIcon from './DataKindIcon.vue'
 import ScaleOfMeasureIcon from './ScaleOfMeasureIcon.vue'

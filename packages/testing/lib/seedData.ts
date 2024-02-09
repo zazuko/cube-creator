@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import { DatasetCore } from 'rdf-js'
+import type { DatasetCore } from '@rdfjs/types'
 import ParsingClient from 'sparql-http-client/ParsingClient'
 import StreamClient from 'sparql-http-client/StreamClient'
 import { parsers } from '@rdfjs/formats-common'

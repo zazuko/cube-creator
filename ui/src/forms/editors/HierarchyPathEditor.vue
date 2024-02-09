@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { Term } from 'rdf-js'
+import type { Term } from '@rdfjs/types'
 import { dataset } from '@rdf-esm/dataset'
 import clownface, { GraphPointer } from 'clownface'
 import { sh, schema, rdfs } from '@tpluscode/rdf-ns-builders/strict'

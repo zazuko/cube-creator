@@ -1,4 +1,4 @@
-import { BlankNode, Quad, Term } from 'rdf-js'
+import type { BlankNode, Quad, Term } from '@rdfjs/types'
 import { csvw, rdf } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import type { Context } from 'barnard59-core/lib/Pipeline'

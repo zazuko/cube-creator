@@ -1,4 +1,4 @@
-import { Term, Quad } from 'rdf-js'
+import type { Term, Quad } from '@rdfjs/types'
 import { CONSTRUCT } from '@tpluscode/sparql-builder'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { parsingClient } from '../../query-client'

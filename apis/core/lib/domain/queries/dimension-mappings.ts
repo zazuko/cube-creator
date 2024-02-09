@@ -1,5 +1,5 @@
-import { Literal, NamedNode, Term } from 'rdf-js'
 import { Readable } from 'stream'
+import type { Literal, NamedNode, Term } from '@rdfjs/types'
 import { SELECT } from '@tpluscode/sparql-builder'
 import { sparql, SparqlTemplateResult } from '@tpluscode/rdf-string'
 import { rdf, schema, sh } from '@tpluscode/rdf-ns-builders'

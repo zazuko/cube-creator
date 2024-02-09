@@ -3,7 +3,7 @@ import { customElement, property, query } from 'lit/decorators.js'
 import { html } from 'lit'
 import './FormSubmitCancel'
 import './HydraOperationError'
-import { Quad, Quad_Graph as Graph } from 'rdf-js'
+import type { Quad, Quad_Graph as Graph } from '@rdfjs/types'
 import $rdf from 'rdf-ext'
 import clownface from 'clownface'
 

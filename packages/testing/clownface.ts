@@ -1,4 +1,4 @@
-import { BlankNode, NamedNode } from 'rdf-js'
+import type { BlankNode, NamedNode } from '@rdfjs/types'
 import clownface, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import DatasetExt from 'rdf-ext/lib/Dataset'

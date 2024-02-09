@@ -25,7 +25,7 @@ Exported from the package's main module, a factory function requires configurati
 ```typescript
 import { shaclMiddleware } from 'hydra-box-middleware-shacl' 
 import express from 'express'
-import type { NamedNode, Term, Quad } from 'rdf-js'
+import type { NamedNode, Term, Quad } from '@rdfjs/types'
 import type { GraphPointer } from 'clownface'
 
 const app = express()

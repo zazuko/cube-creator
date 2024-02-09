@@ -1,4 +1,4 @@
-import { Quad, Term } from 'rdf-js'
+import type { Quad, Term } from '@rdfjs/types'
 import { describe, it, beforeEach, before, after } from 'mocha'
 import { expect } from 'chai'
 import clownface, { GraphPointer } from 'clownface'

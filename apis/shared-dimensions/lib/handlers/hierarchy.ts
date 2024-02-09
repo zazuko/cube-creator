@@ -1,4 +1,4 @@
-import { Quad } from 'rdf-js'
+import type { Quad } from '@rdfjs/types'
 import { dcterms, sd } from '@tpluscode/rdf-ns-builders'
 import { asyncMiddleware } from 'middleware-async'
 import $rdf from 'rdf-ext'

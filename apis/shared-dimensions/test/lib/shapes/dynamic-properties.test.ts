@@ -1,4 +1,4 @@
-import { NamedNode, Quad } from 'rdf-js'
+import type { NamedNode, Quad } from '@rdfjs/types'
 import { describe, before, beforeEach, it } from 'mocha'
 import sinon from 'sinon'
 import clownface, { GraphPointer } from 'clownface'

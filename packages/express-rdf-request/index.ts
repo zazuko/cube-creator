@@ -1,4 +1,4 @@
-import { NamedNode, Quad } from 'rdf-js'
+import type { NamedNode, Quad } from '@rdfjs/types'
 import express from 'express'
 import clownface, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
@@ -10,7 +10,7 @@ declare module 'express-serve-static-core' {
   }
 }
 
-declare module 'rdf-js' {
+declare module '@rdfjs/types' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface Stream extends AsyncIterable<Quad> {}
 }

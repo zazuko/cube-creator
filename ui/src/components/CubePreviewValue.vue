@@ -15,7 +15,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { Literal, Term } from 'rdf-js'
+import type { Literal, Term } from '@rdfjs/types'
 import type RdfResource from '@tpluscode/rdfine/RdfResource'
 import { schema, xsd } from '@tpluscode/rdf-ns-builders'
 import TermSet from '@rdfjs/term-set'

@@ -1,4 +1,4 @@
-import type { DatasetCore, NamedNode } from 'rdf-js'
+import type { DatasetCore, NamedNode } from '@rdfjs/types'
 import type * as Schema from '@rdfine/schema'
 import RdfResourceImpl, { Initializer, RdfResourceCore, ResourceIdentifier } from '@tpluscode/rdfine/RdfResource'
 import { Constructor, property } from '@tpluscode/rdfine'

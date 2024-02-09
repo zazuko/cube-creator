@@ -1,6 +1,6 @@
 import debounce from 'debounce'
 import { validate } from '@hydrofoil/shaperone-rdf-validate-shacl'
-import { DatasetCore } from 'rdf-js'
+import type { DatasetCore } from '@rdfjs/types'
 import clownface from 'clownface'
 import { sh } from '@tpluscode/rdf-ns-builders'
 

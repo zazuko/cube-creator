@@ -1,4 +1,4 @@
-import { Literal, NamedNode, Term } from 'rdf-js'
+import type { Literal, NamedNode, Term } from '@rdfjs/types'
 import { Constructor, property, RdfResource } from '@tpluscode/rdfine'
 import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import type { Collection } from '@rdfine/hydra'

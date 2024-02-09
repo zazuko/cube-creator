@@ -1,4 +1,4 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import TermMap from '@rdfjs/term-map'
 import clownface, { AnyPointer, GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'

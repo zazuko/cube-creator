@@ -1,4 +1,4 @@
-import { Term, Quad } from 'rdf-js'
+import type { Term, Quad } from '@rdfjs/types'
 import { CONSTRUCT } from '@tpluscode/sparql-builder'
 import { rdf } from '@tpluscode/rdf-ns-builders'
 import env from '@cube-creator/core/env'

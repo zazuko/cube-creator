@@ -1,5 +1,5 @@
-import { Term } from 'rdf-js'
 import { PassThrough } from 'stream'
+import type { Term } from '@rdfjs/types'
 import asyncMiddleware from 'middleware-async'
 import clownface from 'clownface'
 import parsePreferHeader from 'parse-prefer-header'

@@ -1,4 +1,4 @@
-import { Stream } from 'rdf-js'
+import type { Stream } from '@rdfjs/types'
 import { PassThrough } from 'readable-stream'
 import $rdf from 'rdf-ext'
 import { readable } from 'duplex-to'

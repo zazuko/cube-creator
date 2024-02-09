@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { DatasetCore, NamedNode, Quad, Quad_Graph, Quad_Predicate, Term } from 'rdf-js'
+import type { DatasetCore, NamedNode, Quad, Quad_Graph, Quad_Predicate, Term } from '@rdfjs/types'
 import TermSet from '@rdfjs/term-set'
 import clownface, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'

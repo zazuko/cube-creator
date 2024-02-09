@@ -1,4 +1,4 @@
-import { NamedNode, Term } from 'rdf-js'
+import type { NamedNode, Term } from '@rdfjs/types'
 import { SELECT } from '@tpluscode/sparql-builder'
 import { CsvMapping, Table } from '@cube-creator/model'
 import { cc } from '@cube-creator/core/namespace'
