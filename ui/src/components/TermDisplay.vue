@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { Literal, Term } from 'rdf-js'
+import type { Literal, Term } from '@rdfjs/types'
 import { shrink } from '@/rdf-properties'
 import { xsd } from '@tpluscode/rdf-ns-builders'
 

@@ -24,7 +24,7 @@
 import { defineComponent, PropType } from 'vue'
 import { PropertyState } from '@hydrofoil/shaperone-core/models/forms'
 import $rdf from '@rdfjs/data-model'
-import { Literal, Term } from 'rdf-js'
+import type { Literal, Term } from '@rdfjs/types'
 
 export default defineComponent({
   name: 'TagsWithLanguageEditor',

@@ -1,4 +1,4 @@
-import { Quad, Term } from 'rdf-js'
+import type { Quad, Term } from '@rdfjs/types'
 import { Collection, IriTemplate } from '@rdfine/hydra'
 import { AnyPointer, GraphPointer } from 'clownface'
 import { rdf } from '@tpluscode/rdf-ns-builders'

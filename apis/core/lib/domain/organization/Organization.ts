@@ -1,4 +1,4 @@
-import { NamedNode, Term } from 'rdf-js'
+import type { NamedNode, Term } from '@rdfjs/types'
 import { Constructor } from '@tpluscode/rdfine'
 import { Organization } from '@rdfine/schema'
 import { schema } from '@tpluscode/rdf-ns-builders'

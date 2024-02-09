@@ -1,6 +1,6 @@
 import { createReadStream } from 'fs'
 import path from 'path'
-import { NamedNode, Quad } from 'rdf-js'
+import type { NamedNode, Quad } from '@rdfjs/types'
 import httpError, { BadRequest } from 'http-errors'
 import { Files } from '@cube-creator/express/multipart'
 import $rdf from 'rdf-ext'

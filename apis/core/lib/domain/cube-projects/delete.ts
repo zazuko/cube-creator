@@ -1,4 +1,4 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { Project } from '@cube-creator/model'
 import { ParsingClient } from 'sparql-http-client/ParsingClient'
 import { SELECT } from '@tpluscode/sparql-builder'

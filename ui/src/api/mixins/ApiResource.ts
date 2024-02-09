@@ -1,7 +1,7 @@
 import { Constructor, RdfResource } from '@tpluscode/rdfine'
 import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import { commonActions } from '@/api/common'
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { RuntimeOperation } from 'alcaeus'
 import { displayLanguage } from '@/store/serializers'
 import { rdfs } from '@tpluscode/rdf-ns-builders'

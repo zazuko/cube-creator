@@ -21,7 +21,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
 import { CsvSource } from '@cube-creator/model'
-import { Term } from 'rdf-js'
+import type { Term } from '@rdfjs/types'
 import { mapGetters, Store } from 'vuex'
 import { RootState } from '../../store/types'
 import store from '../../store'

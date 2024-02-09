@@ -1,4 +1,4 @@
-import { Term } from 'rdf-js'
+import type { Term } from '@rdfjs/types'
 import stream from 'readable-stream'
 import { HydraClient } from 'alcaeus/alcaeus'
 import { Job, Table, TransformJob } from '@cube-creator/model'

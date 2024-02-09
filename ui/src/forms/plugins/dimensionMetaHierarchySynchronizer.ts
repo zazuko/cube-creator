@@ -1,4 +1,4 @@
-import { Term } from 'rdf-js'
+import type { Term } from '@rdfjs/types'
 import clownface, { GraphPointer } from 'clownface'
 import type { Plugin } from '@captaincodeman/rdx/typings/modelStore'
 import { api } from '@/api/index'

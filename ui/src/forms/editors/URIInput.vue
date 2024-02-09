@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import * as $rdf from '@rdf-esm/data-model'
 import { api } from '@/api'
 import { rdfs, schema, skos } from '@tpluscode/rdf-ns-builders/strict'

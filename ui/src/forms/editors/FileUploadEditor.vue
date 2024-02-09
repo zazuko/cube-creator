@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { Term } from 'rdf-js'
+import type { Term } from '@rdfjs/types'
 import { FileLiteral } from '@/forms/FileLiteral'
 
 export default defineComponent({

@@ -1,4 +1,4 @@
-import { Term } from 'rdf-js'
+import type { Term } from '@rdfjs/types'
 import namespace from '@rdfjs/namespace'
 import $rdf from 'rdf-ext'
 import { sparql } from '@tpluscode/sparql-builder'

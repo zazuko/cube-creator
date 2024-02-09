@@ -1,4 +1,4 @@
-import { NamedNode, Term } from 'rdf-js'
+import type { NamedNode, Term } from '@rdfjs/types'
 import ParsingClient from 'sparql-http-client/ParsingClient'
 import clownface, { AnyPointer, GraphPointer } from 'clownface'
 import { ASK, INSERT, SELECT } from '@tpluscode/sparql-builder'

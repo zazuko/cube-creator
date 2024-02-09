@@ -1,4 +1,4 @@
-import { NamedNode, Term } from 'rdf-js'
+import type { NamedNode, Term } from '@rdfjs/types'
 import { cc } from '@cube-creator/core/namespace'
 import $rdf from 'rdf-ext'
 import { CsvSource } from '@cube-creator/model'

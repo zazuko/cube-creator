@@ -1,4 +1,4 @@
-import type { NamedNode, Stream, Term } from 'rdf-js'
+import type { NamedNode, Stream, Term } from '@rdfjs/types'
 import { cc } from '@cube-creator/core/namespace'
 import { Project } from '@cube-creator/model/Project'
 import { SELECT } from '@tpluscode/sparql-builder'

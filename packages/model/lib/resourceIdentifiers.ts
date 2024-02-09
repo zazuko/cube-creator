@@ -1,4 +1,4 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { namedNode } from '@rdf-esm/data-model'
 import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 

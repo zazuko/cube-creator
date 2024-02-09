@@ -1,4 +1,4 @@
-import { Literal, NamedNode } from 'rdf-js'
+import type { Literal, NamedNode } from '@rdfjs/types'
 import { HydraClient } from 'alcaeus/alcaeus'
 import * as Csvw from '@rdfine/csvw'
 import DatasetExt from 'rdf-ext/lib/Dataset'

@@ -26,7 +26,7 @@
   },
   "devDependencies": {
     "@types/hydra-box": "^0.6.0",
-    "@types/rdf-js": "^4",
+    "@rdfjs/types": "^1.1.0",
     "@types/rdf-transform-triple-to-quad": "^1.0.0",
     "@types/rdf-validate-shacl": "^0.4.0",
     "@types/rdfjs__express-handler": "^1.1.2"

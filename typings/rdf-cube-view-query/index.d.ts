@@ -36,7 +36,7 @@ declare module 'rdf-cube-view-query/lib/query/ViewQuery' {
 }
 
 declare module 'rdf-cube-view-query/lib/View' {
-  import { DatasetCore, NamedNode, Term } from 'rdf-js'
+  import type { DatasetCore, NamedNode, Term } from '@rdfjs/types'
   import type { GraphPointer } from 'clownface'
   import ViewQuery = require('rdf-cube-view-query/lib/query/ViewQuery')
   import Node = require('rdf-cube-view-query/lib/Node')
@@ -91,7 +91,7 @@ declare module 'rdf-cube-view-query/lib/Source' {
 }
 
 declare module 'rdf-cube-view-query/lib/Cube' {
-  import { DatasetCore, NamedNode, Term } from 'rdf-js'
+  import type { DatasetCore, NamedNode, Term } from '@rdfjs/types'
   import Node = require('rdf-cube-view-query/lib/Node')
   import Source = require('rdf-cube-view-query/lib/Source')
 
@@ -111,7 +111,7 @@ declare module 'rdf-cube-view-query/lib/Cube' {
 }
 
 declare module 'rdf-cube-view-query/lib/Node' {
-  import { DatasetCore, NamedNode, Term } from 'rdf-js'
+  import type { DatasetCore, NamedNode, Term } from '@rdfjs/types'
   import type { GraphPointer } from 'clownface'
 
   namespace Node {

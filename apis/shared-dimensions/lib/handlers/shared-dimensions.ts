@@ -1,4 +1,4 @@
-import { Term } from 'rdf-js'
+import type { Term } from '@rdfjs/types'
 import { hydra, oa, schema } from '@tpluscode/rdf-ns-builders'
 import { asyncMiddleware } from 'middleware-async'
 import { protectedResource } from '@hydrofoil/labyrinth/resource'

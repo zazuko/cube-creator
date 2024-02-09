@@ -1,4 +1,4 @@
-import { NamedNode, Term } from 'rdf-js'
+import type { NamedNode, Term } from '@rdfjs/types'
 import env from '@cube-creator/core/env'
 import { before, describe, it } from 'mocha'
 import { expect } from 'chai'

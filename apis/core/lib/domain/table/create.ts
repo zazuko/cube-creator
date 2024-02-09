@@ -1,4 +1,4 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { GraphPointer } from 'clownface'
 import { csvw, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'

@@ -48,7 +48,7 @@
 <script lang="ts">
 import { dcterms, sd } from '@tpluscode/rdf-ns-builders'
 import { GraphPointer } from 'clownface'
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { defineComponent } from 'vue'
 import HydraOperationButton from '@/components/HydraOperationButton.vue'
 import HierarchyTree from '@/components/HierarchyTree.vue'

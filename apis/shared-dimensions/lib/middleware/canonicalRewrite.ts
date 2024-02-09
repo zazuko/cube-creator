@@ -1,5 +1,5 @@
-import { Quad, Stream, Term } from 'rdf-js'
 import { Readable } from 'stream'
+import type { Quad, Stream, Term } from '@rdfjs/types'
 import express from 'express'
 import asyncMiddleware from 'middleware-async'
 import through2 from 'through2'

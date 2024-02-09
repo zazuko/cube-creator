@@ -1,4 +1,4 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { beforeEach, describe, it } from 'mocha'
 import { expect } from 'chai'
 import $rdf from 'rdf-ext'

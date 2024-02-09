@@ -1,4 +1,4 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import asyncMiddleware from 'middleware-async'
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
 import { GraphPointer } from 'clownface'

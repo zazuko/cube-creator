@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import { Readable } from 'stream'
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { describe, it, beforeEach } from 'mocha'
 import { expect } from 'chai'
 import sinon from 'sinon'

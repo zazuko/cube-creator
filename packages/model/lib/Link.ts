@@ -1,4 +1,4 @@
-import { DatasetCore } from 'rdf-js'
+import type { DatasetCore } from '@rdfjs/types'
 import { RdfResource, RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import type { HydraResponse } from 'alcaeus'
 

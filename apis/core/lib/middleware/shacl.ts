@@ -1,4 +1,4 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import * as expressMiddlewareShacl from 'hydra-box-middleware-shacl'
 import ResourceStoreImpl from '../ResourceStore'
 import { streamClient } from '../query-client'

@@ -1,4 +1,4 @@
-import { Variable, Literal, NamedNode } from 'rdf-js'
+import type { Variable, Literal, NamedNode } from '@rdfjs/types'
 import $rdf from 'rdf-ext'
 import { CONSTRUCT, sparql } from '@tpluscode/sparql-builder'
 import { SparqlGraphQueryExecutable, SparqlQuery, SparqlQueryExecutable } from '@tpluscode/sparql-builder/lib'

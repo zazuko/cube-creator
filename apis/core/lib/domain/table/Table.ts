@@ -1,4 +1,4 @@
-import { NamedNode, Term } from 'rdf-js'
+import type { NamedNode, Term } from '@rdfjs/types'
 import { Constructor, property } from '@tpluscode/rdfine'
 import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import { CsvColumn, Table } from '@cube-creator/model'

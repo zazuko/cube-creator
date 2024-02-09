@@ -1,5 +1,5 @@
-import { NamedNode, Stream } from 'rdf-js'
 import { Readable } from 'stream'
+import type { NamedNode, Stream } from '@rdfjs/types'
 import E, { Router } from 'express'
 import { parsers } from '@rdfjs-elements/formats-pretty'
 import once from 'once'

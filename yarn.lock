@@ -2680,7 +2680,7 @@
   dependencies:
     "@rdfjs/to-ntriples" "^2.0.0"
 
-"@rdfjs/types@*", "@rdfjs/types@>=1.0.1":
+"@rdfjs/types@*", "@rdfjs/types@>=1.0.1", "@rdfjs/types@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@rdfjs/types/-/types-1.1.0.tgz#098f180b7cccb03bb416c7b4d03baaa9d480e36b"
   integrity sha512-5zm8bN2/CC634dTcn/0AhTRLaQRjXDZs3QfcAsQKNturHT7XVWcKy/8p3P5gXl+YkZTAmy7T5M/LyiT/jbkENw==
@@ -3544,13 +3544,6 @@
   dependencies:
     "@types/rdf-dataset-indexed" "*"
     rdf-js "^4.0.2"
-
-"@types/rdf-js@^4", "@types/rdf-js@^4.0.0":
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/@types/rdf-js/-/rdf-js-4.0.2.tgz#a7eb0ff009915db2c980df97533d3ba7acad0c4b"
-  integrity sha512-soR/+RMogGiDU1lrpuQl5ZL55/L1eq/JlR2dWx052Uh/RYs9okh3XZHFlIJXHZqjqyjEn4WdbOMfBj7vvc2WVQ==
-  dependencies:
-    rdf-js "*"
 
 "@types/rdf-loaders-registry@*":
   version "0.3.1"
@@ -5261,6 +5254,17 @@ barnard59-graph-store@^1.0.0:
     promise-the-world "^1.0.1"
     readable-stream "^3.6.0"
     sparql-http-client "^2.4.0"
+
+barnard59-http@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/barnard59-http/-/barnard59-http-1.1.1.tgz#90456b4def674004684fc197d4cefa53e52bb435"
+  integrity sha512-nzquPqfB8VilFyS+T6+xy9wqnmQHuQzawGwe3fX5T0YHJ565E2wVybiMfYUCOoDkoK3fsQpOR8PpoZRibYOgNg==
+  dependencies:
+    "@opentelemetry/api" "^1.0.1"
+    duplex-to "^1.0.1"
+    duplexify "^4.0.0"
+    node-fetch "^3.3.2"
+    readable-stream ">=3"
 
 barnard59-rdf@^1.0.0:
   version "1.0.0"
@@ -6977,7 +6981,7 @@ duplexify@^3.6.1:
     readable-stream "^2.0.0"
     stream-shift "^1.0.0"
 
-duplexify@^4.1.1:
+duplexify@^4.0.0, duplexify@^4.1.1:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/duplexify/-/duplexify-4.1.2.tgz#18b4f8d28289132fa0b9573c898d9f903f81c7b0"
   integrity sha512-fz3OjcNCHmRP12MJoZMPglx8m4rrFP8rovnk4vT8Fs+aonZoCwGg10dSsQsfP/E62eZcPTMSMP6686fu9Qlqtw==
@@ -10654,10 +10658,10 @@ node-fetch@3.0.0-beta.9:
     data-uri-to-buffer "^3.0.1"
     fetch-blob "^2.1.1"
 
-node-fetch@^3.2.10:
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-3.3.1.tgz#b3eea7b54b3a48020e46f4f88b9c5a7430d20b2e"
-  integrity sha512-cRVc/kyto/7E5shrWca1Wsea4y6tL9iYJE5FBCius3JQfb/4P4I295PfhgbJQBLTx6lATE4z+wK0rPM4VS2uow==
+node-fetch@^3.2.10, node-fetch@^3.3.2:
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-3.3.2.tgz#d1e889bacdf733b4ff3b2b243eb7a12866a0b78b"
+  integrity sha512-dRB78srN/l6gqWulah9SrxeYnxeddIG30+GOqK/9OlLVyLg3HPnr6SqOWTWOXKRwC2eGYCkZ59NNuSgvSrpgOA==
   dependencies:
     data-uri-to-buffer "^4.0.0"
     fetch-blob "^3.1.4"
@@ -12169,6 +12173,17 @@ readable-stream@1.1.x:
     string_decoder "^1.1.1"
     util-deprecate "^1.0.1"
 
+readable-stream@>=3, readable-stream@^4.0.0, readable-stream@^4.2.0, readable-stream@^4.3.0:
+  version "4.5.2"
+  resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-4.5.2.tgz#9e7fc4c45099baeed934bff6eb97ba6cf2729e09"
+  integrity sha512-yjavECdqeZ3GLXNgRXgeQEdz9fvDDkNKyHnbHRFtOr7/LcfgBcmct7t/ET+HaCTqfh06OzoAxrkN/IfjJBVe+g==
+  dependencies:
+    abort-controller "^3.0.0"
+    buffer "^6.0.3"
+    events "^3.3.0"
+    process "^0.11.10"
+    string_decoder "^1.3.0"
+
 readable-stream@^2.0.0, readable-stream@^2.0.1, readable-stream@^2.2.2, readable-stream@^2.3.3, readable-stream@~2.3.6:
   version "2.3.7"
   resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-2.3.7.tgz#1eca1cf711aef814c04f62252a36a62f6cb23b57"
@@ -12181,17 +12196,6 @@ readable-stream@^2.0.0, readable-stream@^2.0.1, readable-stream@^2.2.2, readable
     safe-buffer "~5.1.1"
     string_decoder "~1.1.1"
     util-deprecate "~1.0.1"
-
-readable-stream@^4.0.0, readable-stream@^4.2.0, readable-stream@^4.3.0:
-  version "4.4.2"
-  resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-4.4.2.tgz#e6aced27ad3b9d726d8308515b9a1b98dc1b9d13"
-  integrity sha512-Lk/fICSyIhodxy1IDK2HazkeGjSmezAWX2egdtJnYhtzKEsBPJowlI6F6LPb5tqIQILrMbx22S5o3GuJavPusA==
-  dependencies:
-    abort-controller "^3.0.0"
-    buffer "^6.0.3"
-    events "^3.3.0"
-    process "^0.11.10"
-    string_decoder "^1.3.0"
 
 readable-to-readable@^0.1.0:
   version "0.1.3"

@@ -1,4 +1,4 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { HydraBox } from 'hydra-box'
 import express from 'express'
 import cf, { GraphPointer } from 'clownface'

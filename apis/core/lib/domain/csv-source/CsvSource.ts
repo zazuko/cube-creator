@@ -1,4 +1,4 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { cc } from '@cube-creator/core/namespace'
 import { CsvSource } from '@cube-creator/model'
 import * as CsvColumn from '@cube-creator/model/CsvColumn'

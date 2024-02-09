@@ -1,4 +1,4 @@
-import { Term } from 'rdf-js'
+import type { Term } from '@rdfjs/types'
 import { cc } from '@cube-creator/core/namespace'
 import { CONSTRUCT, SELECT } from '@tpluscode/sparql-builder'
 import { dcterms, rdfs, schema } from '@tpluscode/rdf-ns-builders'

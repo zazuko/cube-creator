@@ -1,4 +1,4 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { SparqlQueryLoader } from '@hydrofoil/labyrinth/lib/loader'
 import { PropertyResource, Resource } from 'hydra-box'
 import ParsingClient from 'sparql-http-client/ParsingClient'

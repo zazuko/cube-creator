@@ -1,4 +1,4 @@
-import { NamedNode, Term } from 'rdf-js'
+import type { NamedNode, Term } from '@rdfjs/types'
 import { DELETE, WITH } from '@tpluscode/sparql-builder'
 import { VALUES } from '@tpluscode/sparql-builder/expressions'
 import { schema } from '@tpluscode/rdf-ns-builders/strict'

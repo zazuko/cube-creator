@@ -1,4 +1,4 @@
-import { DatasetCore, NamedNode, Quad, Term } from 'rdf-js'
+import type { DatasetCore, NamedNode, Quad, Term } from '@rdfjs/types'
 import { cc } from '@cube-creator/core/namespace'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 import { dcterms, schema } from '@tpluscode/rdf-ns-builders'

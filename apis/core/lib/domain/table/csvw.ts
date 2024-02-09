@@ -1,4 +1,4 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import * as Table from '@cube-creator/model/Table'
 import * as Csvw from '@rdfine/csvw'
 import { NotFoundError } from '@cube-creator/api-errors'

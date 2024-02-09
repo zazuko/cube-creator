@@ -1,4 +1,4 @@
-import { Term, Quad, NamedNode, DatasetCore } from 'rdf-js'
+import type { Term, Quad, NamedNode, DatasetCore } from '@rdfjs/types'
 import { Request, Response } from 'express'
 import asyncMiddleware from 'middleware-async'
 import $rdf from 'rdf-ext'

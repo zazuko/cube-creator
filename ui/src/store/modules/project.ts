@@ -23,7 +23,7 @@ import {
   serializeTable,
   serializeTableCollection,
 } from '../serializers'
-import { Term } from 'rdf-js'
+import type { Term } from '@rdfjs/types'
 import { RdfResource } from 'alcaeus'
 import { cc } from '@cube-creator/core/namespace'
 import type { Organization } from '@rdfine/schema'

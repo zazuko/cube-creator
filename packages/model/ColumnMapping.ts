@@ -1,4 +1,4 @@
-import { DatasetCore, NamedNode, Term } from 'rdf-js'
+import type { DatasetCore, NamedNode, Term } from '@rdfjs/types'
 import { Initializer, RdfResource, RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import RdfResourceImpl, { Constructor, namespace, property, ResourceIdentifier } from '@tpluscode/rdfine'
 import { cc } from '@cube-creator/core/namespace'

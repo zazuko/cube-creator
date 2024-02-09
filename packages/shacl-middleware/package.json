@@ -20,7 +20,7 @@
     "@cube-creator/testing": "^0.1.15",
     "@rdfjs/term-map": "^1.0.0",
     "@tpluscode/rdf-string": "^0.2.21",
-    "@types/rdf-js": "^4",
+    "@rdfjs/types": "^1.1.0",
     "@types/rdf-validate-shacl": "^0.4.0",
     "mocha": "^10",
     "supertest": "^6.0.0"

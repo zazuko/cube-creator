@@ -1,4 +1,4 @@
-import { BlankNode, DatasetCore, NamedNode } from 'rdf-js'
+import type { BlankNode, DatasetCore, NamedNode } from '@rdfjs/types'
 import chai from 'chai'
 import type { NodeShape, ValidationResult } from '@rdfine/shacl'
 import { fromPointer } from '@rdfine/shacl/lib/NodeShape'

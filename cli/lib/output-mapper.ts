@@ -1,4 +1,4 @@
-import { DatasetCore, Quad, Term } from 'rdf-js'
+import type { DatasetCore, Quad, Term } from '@rdfjs/types'
 import $rdf from 'rdf-ext'
 import { ImportJob, TransformJob } from '@cube-creator/model'
 import { HydraClient } from 'alcaeus/alcaeus'

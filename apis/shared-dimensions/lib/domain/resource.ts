@@ -1,4 +1,4 @@
-import { NamedNode, Quad } from 'rdf-js'
+import type { NamedNode, Quad } from '@rdfjs/types'
 import $rdf from 'rdf-ext'
 import { sparql } from '@tpluscode/rdf-string'
 import { AnyPointer, GraphPointer } from 'clownface'

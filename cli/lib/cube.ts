@@ -1,4 +1,4 @@
-import { DatasetCore, Quad, Term } from 'rdf-js'
+import type { DatasetCore, Quad, Term } from '@rdfjs/types'
 import $rdf from 'rdf-ext'
 import { cc } from '@cube-creator/core/namespace'
 import clownface, { GraphPointer } from 'clownface'

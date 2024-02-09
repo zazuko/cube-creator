@@ -1,4 +1,4 @@
-import { NamedNode, Quad, Term } from 'rdf-js'
+import type { NamedNode, Quad, Term } from '@rdfjs/types'
 import type StreamClient from 'sparql-http-client/StreamClient'
 import cf, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'

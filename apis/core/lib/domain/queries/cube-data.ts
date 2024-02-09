@@ -1,4 +1,4 @@
-import { NamedNode, Quad } from 'rdf-js'
+import type { NamedNode, Quad } from '@rdfjs/types'
 import { DESCRIBE } from '@tpluscode/sparql-builder'
 import { ParsingClient } from 'sparql-http-client/ParsingClient'
 

@@ -1,4 +1,4 @@
-import { Term } from 'rdf-js'
+import type { Term } from '@rdfjs/types'
 import CubeQuery from 'rdf-cube-view-query'
 import { Source } from 'rdf-cube-view-query/lib/Source'
 import { View } from 'rdf-cube-view-query/lib/View'

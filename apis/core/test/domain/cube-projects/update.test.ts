@@ -1,4 +1,4 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { describe, it, beforeEach, afterEach } from 'mocha'
 import { expect } from 'chai'
 import clownface, { GraphPointer } from 'clownface'

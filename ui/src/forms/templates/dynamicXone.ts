@@ -1,6 +1,6 @@
 import { decorate, FocusNodeTemplate } from '@hydrofoil/shaperone-wc/templates'
 import type { PropertyShape } from '@rdfine/shacl'
-import { NamedNode, Term } from 'rdf-js'
+import type { NamedNode, Term } from '@rdfjs/types'
 import { sh1 } from '@cube-creator/core/namespace'
 import { FocusNode } from '@hydrofoil/shaperone-core'
 import { findNodes } from 'clownface-shacl-path'

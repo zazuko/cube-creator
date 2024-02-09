@@ -1,4 +1,4 @@
-import { Literal } from 'rdf-js'
+import type { Literal } from '@rdfjs/types'
 import { describe, it, beforeEach } from 'mocha'
 import { Request } from 'express'
 import sinon from 'sinon'

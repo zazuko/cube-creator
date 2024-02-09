@@ -1,4 +1,4 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { GraphPointer } from 'clownface'
 import error from 'http-errors'
 import { Dictionary } from '@rdfine/prov'

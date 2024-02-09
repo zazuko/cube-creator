@@ -94,7 +94,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { Term } from 'rdf-js'
+import type { Term } from '@rdfjs/types'
 import { ResourceIdentifier } from '@tpluscode/rdfine'
 import { ColumnMapping, Table } from '@cube-creator/model'
 import BMessage from './BMessage.vue'

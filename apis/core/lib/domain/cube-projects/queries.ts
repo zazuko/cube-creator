@@ -1,4 +1,4 @@
-import { NamedNode, Term } from 'rdf-js'
+import type { NamedNode, Term } from '@rdfjs/types'
 import { ASK, SELECT } from '@tpluscode/sparql-builder'
 import { dcterms, schema } from '@tpluscode/rdf-ns-builders'
 import $rdf from 'rdf-ext'

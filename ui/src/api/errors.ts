@@ -1,6 +1,6 @@
 import { HydraResponse } from 'alcaeus'
 import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
-import { DatasetCore } from 'rdf-js'
+import type { DatasetCore } from '@rdfjs/types'
 
 export interface ValidationReport {
   path: string

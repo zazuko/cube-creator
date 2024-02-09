@@ -1,5 +1,5 @@
-import { DatasetCore, NamedNode, Quad, Term } from 'rdf-js'
 import { Transform } from 'stream'
+import type { DatasetCore, NamedNode, Quad, Term } from '@rdfjs/types'
 import { BadRequest } from 'http-errors'
 import $rdf from 'rdf-ext'
 import { cc } from '@cube-creator/core/namespace'

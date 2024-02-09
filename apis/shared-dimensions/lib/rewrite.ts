@@ -1,4 +1,4 @@
-import { Quad, Term } from 'rdf-js'
+import type { Quad, Term } from '@rdfjs/types'
 import $rdf from 'rdf-ext'
 import clownface, { GraphPointer } from 'clownface'
 import env from './env'

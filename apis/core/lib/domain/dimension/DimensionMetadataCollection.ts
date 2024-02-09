@@ -1,4 +1,4 @@
-import { BlankNode, DatasetCore, NamedNode, Term } from 'rdf-js'
+import type { BlankNode, DatasetCore, NamedNode, Term } from '@rdfjs/types'
 import { GraphPointer } from 'clownface'
 import { Constructor } from '@tpluscode/rdfine'
 import type { Organization } from '@rdfine/schema'

@@ -1,4 +1,4 @@
-import { Literal, NamedNode, Quad } from 'rdf-js'
+import type { Literal, NamedNode, Quad } from '@rdfjs/types'
 import { obj } from 'through2'
 import $rdf from 'rdf-ext'
 import { dcat, dcterms, rdf, schema, sh, _void, foaf } from '@tpluscode/rdf-ns-builders'

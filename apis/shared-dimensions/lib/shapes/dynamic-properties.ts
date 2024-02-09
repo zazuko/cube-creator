@@ -1,4 +1,4 @@
-import { DatasetCore, NamedNode, Quad } from 'rdf-js'
+import type { DatasetCore, NamedNode, Quad } from '@rdfjs/types'
 import { dash, hydra, rdf, rdfs, schema, sh, xsd } from '@tpluscode/rdf-ns-builders/strict'
 import { iso6391, md } from '@cube-creator/core/namespace'
 import { CONSTRUCT } from '@tpluscode/sparql-builder'
