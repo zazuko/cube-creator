@@ -1,4 +1,4 @@
-import { shape, editor, lindasSchema } from '@cube-creator/core/namespace'
+import { shape, editor, lindasSchema, cc } from '@cube-creator/core/namespace'
 import { supportedLanguages } from '@cube-creator/core/languages'
 import { hydra, rdfs, sh, dcat, dcterms, xsd, rdf, vcard, schema, _void, dash, skos } from '@tpluscode/rdf-ns-builders'
 import { sparql, turtle } from '@tpluscode/rdf-string'
@@ -209,6 +209,19 @@ ${shapeId} {
       ${sh.description} "Only published datasets will be listed in the external tools. A draft will be nevertheless be public." ;
       ${sh.group} ${mainGroup} ;
     ] ;
+
+    ${sh.property} [
+      ${sh.name} "Hide this cube?" ;
+      ${sh.path} ${cc.isHiddenCube} ;
+      ${sh.datatype} ${xsd.boolean} ;
+      ${sh.defaultValue} ${false} ;
+      ${sh.minCount} 1 ;
+      ${sh.maxCount} 1 ;      
+      ${sh.order} 31 ;
+      ${sh.description} "Hidden cubes are only visible in *visualize* for logged-in users" ;
+      ${sh.group} ${mainGroup} ;
+    ] ;
+
     ${sh.property} [
         ${sh.name} "Publish to" ;
         ${sh.path} ${schema.workExample} ;

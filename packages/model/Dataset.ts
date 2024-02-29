@@ -16,6 +16,7 @@ export interface Dataset extends RdfResource {
   title: Literal[]
   created: Date
   published: Date
+  isHiddenCube: boolean
 }
 
 export const Error = {
@@ -43,6 +44,9 @@ export function DatasetMixin<Base extends Constructor>(Resource: Base): Mixin {
 
     @property.literal({ path: schema.datePublished, type: Date, datatype: xsd.date })
     published!: Date
+
+    @property.literal({ path: cc.isHiddenCube, datatype: xsd.boolean })
+    isHiddenCube!: boolean
   }
 
   return Impl
