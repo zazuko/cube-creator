@@ -76,12 +76,14 @@ export async function createPublishJob({
 
   const metadata = await store.getResource(project.dataset)
 
+  const targetGraph = metadata.isHiddenCube ? $rdf.namedNode(organization.publishGraph.value + '/hidden') : organization.publishGraph
+
   const jobPointer = await store.createMember(jobCollection.term, id.job(jobCollection))
   const job = Job.createPublish(jobPointer, {
     project: projectPointer,
     name: 'Publish job',
     revision: project.nextRevision,
-    publishGraph: organization.publishGraph,
+    publishGraph: targetGraph,
     status: metadata?.pointer.out(schema.creativeWorkStatus).term,
     publishedTo: metadata?.pointer.out(schema.workExample).term,
   })
