@@ -139,4 +139,23 @@ export const organizations = turtle`
     ${cube.observedBy} <https://ld.admin.ch/office/VII.1.3> ;
   .
 }
+<organization/fatc> {
+  <organization/fatc>
+    a ${schema.Organization} ;
+    ${cc.publishGraph}  <https://lindas.admin.ch/fatc/cube> ;
+    ${cc.namespace} <https://education.ld.admin.ch/fatc/> ;
+    ${schema.dataset} <https://education.ld.admin.ch/.well-known/void> ;
+    ${rdfs.label} "Federal Administration Training Centre"@en ;
+    ${rdfs.label} "Ausbildungszentrum der Bundesverwaltung"@de ;
+    ${rdfs.label} "Centro di formazione dell'Amministrazione federale"@it ;
+    ${rdfs.label} "Centre de formation de l'administration fédérale"@fr ;
+    ${dcat.accessURL} <https://education.ld.admin.ch/sparql> ;
+    ${_void.sparqlEndpoint} <https://education.ld.admin.ch/query> ;
+    ${cube.observedBy} <https://ld.admin.ch/office/V.1.4> ;
+    
+  .
+}
+
+
+
 `
