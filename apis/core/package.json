@@ -1,6 +1,6 @@
 {
   "name": "@cube-creator/core-api",
-  "version": "2.3.3",
+  "version": "2.3.4",
   "private": true,
   "scripts": {
     "build": "tsc"
