@@ -1,5 +1,17 @@
 # @cube-creator/cli
 
+## 3.0.0
+
+### Major Changes
+
+- 20676f48: Use [cube.link shapes](https://github.com/zazuko/cube-link/tree/main/validation) for validation
+
+### Patch Changes
+
+- 259b48be: Add `qudt:hasUnit` in addition to `qudt:unit`. The former will be removed in a future version (see #1473)
+  Closes #1440
+  Re https://gitlab.ldbar.ch/bafu/visualize/-/issues/562
+
 ## 2.0.11
 
 ### Patch Changes

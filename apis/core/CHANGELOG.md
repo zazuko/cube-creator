@@ -1,5 +1,11 @@
 # @cube-creator/core-api
 
+## 2.3.4
+
+### Patch Changes
+
+- 54994019: Added organization for Federal Administration Training Centre
+
 ## 2.3.3
 
 ### Patch Changes
