@@ -39,5 +39,6 @@ declare module 'barnard59-core' {
     originalValueQuads: DatasetExt
     cubeCreatorVersion: string
     cliVersion: string
+    isHiddenCube: boolean
   }
 }
