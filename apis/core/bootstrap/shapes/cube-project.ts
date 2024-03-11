@@ -22,6 +22,7 @@ const csvCubeShape = turtle`
   ${sh.ignoredProperties} (
     ${rdfs.label}
     ${schema.maintainer}
+    ${cc.isHiddenCube}
     ${rdf.type}
     ${generatedProperties}
   ) ;
@@ -49,6 +50,7 @@ const existingCubeShape = turtle`
   ${sh.ignoredProperties} (
     ${rdfs.label}
     ${schema.maintainer}
+    ${cc.isHiddenCube}
     ${rdf.type}
     ${generatedProperties}
   ) ;
@@ -95,6 +97,7 @@ const importedCubeShape = turtle`
   ${sh.ignoredProperties} (
     ${rdfs.label}
     ${schema.maintainer}
+    ${cc.isHiddenCube}
     ${rdf.type}
     ${generatedProperties}
   ) ;

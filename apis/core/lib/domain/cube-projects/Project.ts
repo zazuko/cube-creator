@@ -16,6 +16,7 @@ interface ApiProject {
   initializeJobCollection(store: ResourceStore): void
   incrementPublishedRevision(): void
   updateMaintainer(organization: Term | undefined): { before: Term; after: Term }
+  updateIsHiddenCube(hiddenCube: Term | undefined): void
   rename(name: string | undefined): void
 }
 
@@ -89,6 +90,14 @@ export function ProjectMixin<Base extends Constructor<Omit<Project, keyof ApiPro
         before,
         after: org,
       }
+    }
+
+    updateIsHiddenCube(hiddenCube: Term | undefined) {
+      if (!hiddenCube || hiddenCube.termType !== 'Literal' || hiddenCube.datatype.value !== 'http://www.w3.org/2001/XMLSchema#boolean') {
+        throw new DomainError('Missing flag isHiddenCube or not a boolean')
+      }
+
+      this.isHiddenCube = hiddenCube.value === 'true'
     }
 
     rename(label: string | undefined): void {

@@ -23,10 +23,11 @@ interface CreateProjectCommand {
 interface CreateProjectResource extends Omit<CreateProjectCommand, 'projectsCollection'> {
   label: string
   maintainer: NamedNode
+  isHiddenCube: boolean
   projectNode: GraphPointer<NamedNode>
 }
 
-async function createCsvProjectResource({ user, projectNode, store, label, maintainer, resource }: CreateProjectResource) {
+async function createCsvProjectResource({ user, projectNode, store, label, maintainer, isHiddenCube, resource }: CreateProjectResource) {
   const cubeIdentifier = resource.out(dcterms.identifier).value
   if (!cubeIdentifier) {
     throw new Error('Missing cube identifier name')
@@ -45,6 +46,7 @@ async function createCsvProjectResource({ user, projectNode, store, label, maint
     creator: user,
     label,
     maintainer,
+    isHiddenCube,
     cubeIdentifier,
     sourceKind,
   })
@@ -60,7 +62,7 @@ async function createCsvProjectResource({ user, projectNode, store, label, maint
   return { project, dataset }
 }
 
-async function createImportProjectResources({ resource, user, projectNode, store, label, maintainer }: CreateProjectResource) {
+async function createImportProjectResources({ resource, user, projectNode, store, label, maintainer, isHiddenCube }: CreateProjectResource) {
   const sourceCube = resource.out(cc['CubeProject/sourceCube']).term
   if (sourceCube?.termType !== 'NamedNode') {
     throw new Error('Missing cube identifier')
@@ -91,6 +93,7 @@ async function createImportProjectResources({ resource, user, projectNode, store
     creator: user,
     label,
     maintainer,
+    isHiddenCube,
     sourceCube,
     sourceEndpoint,
     sourceGraph,
@@ -124,6 +127,11 @@ export async function createProject({
   if (!maintainer || maintainer.termType !== 'NamedNode') {
     throw new DomainError('Missing organization or not a named node')
   }
+  const hiddenCube = resource.out(cc.isHiddenCube).term
+  if (!hiddenCube || hiddenCube.termType !== 'Literal' || hiddenCube.datatype.value !== 'http://www.w3.org/2001/XMLSchema#boolean') {
+    throw new DomainError('Missing flag isHiddenCube or not a boolean')
+  }
+  const isHiddenCube = hiddenCube.value === 'true'
 
   let project: Project.Project
   let dataset: Dataset.Dataset
@@ -140,6 +148,7 @@ export async function createProject({
       store,
       label,
       maintainer,
+      isHiddenCube,
       resource,
     }))
   } else if (isImportProject) {
@@ -150,6 +159,7 @@ export async function createProject({
       resource,
       label,
       maintainer,
+      isHiddenCube,
     }))
   } else {
     throw new error.BadRequest(`Unexpected value of ${cc.projectSourceKind.value}`)

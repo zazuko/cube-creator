@@ -108,7 +108,7 @@ export function ProjectMixin<Base extends Constructor>(base: Base): Mixin {
 
 ProjectMixin.appliesTo = cc.CubeProject
 
-type MinimalFields = 'creator' | 'label' | 'maintainer'
+type MinimalFields = 'creator' | 'label' | 'maintainer' | 'isHiddenCube'
 export const createMinimalProject = initializer<Project, MinimalFields>(ProjectMixin)
 
 type CsvProjectMandatoryFields = MinimalFields | 'cubeIdentifier' | 'sourceKind'

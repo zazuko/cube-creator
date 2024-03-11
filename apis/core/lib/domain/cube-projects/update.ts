@@ -23,6 +23,7 @@ export async function updateProject({
   const project = await store.getResource<ImportProject | CsvProject>(resource.term)
 
   project.rename(resource.out(rdfs.label).value)
+  project.updateIsHiddenCube(resource.out(cc.isHiddenCube).term)
   const maintainer = project.updateMaintainer(resource.out(schema.maintainer).term)
 
   let currentCube: NamedNode
