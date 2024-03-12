@@ -99,7 +99,7 @@ export function ProjectMixin<Base extends Constructor>(base: Base): Mixin {
     @property.literal({ path: lindasSchema.datasetNextDateModified, type: Date })
     plannedNextUpdate?: Date
 
-    @property.literal({ path: cc.isHiddenCube, datatype: xsd.boolean })
+    @property.literal({ path: cc.isHiddenCube, datatype: xsd.boolean, type: Boolean })
     isHiddenCube!: boolean
   }
 
