@@ -97,12 +97,18 @@ export async function importProject({
   if (!maintainer) {
     throw new BadRequest('Missing organization')
   }
+  const hiddenCube = resource.out(cc.isHiddenCube).term
+  if (!hiddenCube || hiddenCube.termType !== 'Literal' || hiddenCube.datatype.value !== 'http://www.w3.org/2001/XMLSchema#boolean') {
+    throw new DomainError('Missing flag isHiddenCube or not a boolean')
+  }
+  const isHiddenCube = hiddenCube.value === 'true'
 
   const projectNode = await store.createMember(projectsCollection.term, id.cubeProject(label))
 
   const project = createMinimalProject(projectNode, {
     creator: user,
     maintainer,
+    isHiddenCube,
     label,
   })
 
