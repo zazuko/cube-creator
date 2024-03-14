@@ -19,7 +19,8 @@ With Class api:EntryPoint {
                 prefix schema: <http://schema.org/>
 
                 <> cc:projectSourceKind <https://cube-creator.zazuko.com/vocab#projectSourceKind/CSV> ;
-                   schema:maintainer <https://cube-creator.lndo.site/organization/bafu> .
+                   schema:maintainer <https://cube-creator.lndo.site/organization/bafu> ;
+                   cc:isHiddenCube true .
                 ```
             } => {
                 Expect Status 400
@@ -32,7 +33,8 @@ With Class api:EntryPoint {
                 prefix cc: <https://cube-creator.zazuko.com/vocab#>
                 prefix schema: <http://schema.org/>
                 <> cc:projectSourceKind <https://cube-creator.zazuko.com/vocab#projectSourceKind/Foo> ;
-                   schema:maintainer <https://cube-creator.lndo.site/organization/bafu> .
+                   schema:maintainer <https://cube-creator.lndo.site/organization/bafu> ;
+                   cc:isHiddenCube true .
                 ```
             } => {
                 Expect Status 400
@@ -48,7 +50,8 @@ With Class api:EntryPoint {
 
                 <> cc:projectSourceKind <https://cube-creator.zazuko.com/vocab#projectSourceKind/CSV> ;
                    rdfs:label "" ;
-                   schema:maintainer <https://cube-creator.lndo.site/organization/bafu> .
+                   schema:maintainer <https://cube-creator.lndo.site/organization/bafu> ;
+                   cc:isHiddenCube true .
                 ```
             } => {
                 Expect Status 400
@@ -65,7 +68,8 @@ With Class api:EntryPoint {
                 <> cc:projectSourceKind <https://cube-creator.zazuko.com/vocab#projectSourceKind/CSV> ;
                    rdfs:label "Test Project" ;
                    cc:namespace <http://example.com/test-cube> ;
-                   schema:maintainer <https://cube-creator.lndo.site/organization/bafu> .
+                   schema:maintainer <https://cube-creator.lndo.site/organization/bafu> ;
+                   cc:isHiddenCube true .
                 ```
             } => {
                 Expect Status 400
@@ -84,7 +88,8 @@ With Class api:EntryPoint {
                 <> cc:projectSourceKind <https://cube-creator.zazuko.com/vocab#projectSourceKind/CSV> ;
                    rdfs:label "Test Project" ;
                    dcterms:identifier "ubd/28" ;
-                   schema:maintainer <https://cube-creator.lndo.site/organization/bafu> .
+                   schema:maintainer <https://cube-creator.lndo.site/organization/bafu> ;
+                   cc:isHiddenCube true .
                 ```
             } => {
                 Expect Status 400
@@ -103,7 +108,8 @@ With Class api:EntryPoint {
                 <> cc:projectSourceKind <https://cube-creator.zazuko.com/vocab#projectSourceKind/CSV> ;
                    rdfs:label "Test Project" ;
                    dcterms:identifier "example/px-cube" ;
-                   schema:maintainer <https://cube-creator.lndo.site/organization/bafu> .
+                   schema:maintainer <https://cube-creator.lndo.site/organization/bafu> ;
+                   cc:isHiddenCube true .
                 ```
             } => {
                 Expect Status 400
@@ -123,7 +129,8 @@ With Class api:EntryPoint {
                    rdfs:label "Test Project" ;
                    CubeProject:sourceCube <https://environment.ld.admin.ch/foen/ubd/28> ;
                    CubeProject:sourceEndpoint <http://db.cube-creator.lndo.site/px-cube> ;
-                   schema:maintainer <https://cube-creator.lndo.site/organization/bafu> .
+                   schema:maintainer <https://cube-creator.lndo.site/organization/bafu> ;
+                   cc:isHiddenCube true .
                 ```
             } => {
                 Expect Status 400
@@ -143,7 +150,8 @@ With Class api:EntryPoint {
                    rdfs:label "Test Project" ;
                    CubeProject:sourceCube <https://environment.ld.admin.ch/foen/example/px-cube> ;
                    CubeProject:sourceEndpoint <http://db.cube-creator.lndo.site/px-cube> ;
-                   schema:maintainer <https://cube-creator.lndo.site/organization/bafu> .
+                   schema:maintainer <https://cube-creator.lndo.site/organization/bafu> ;
+                   cc:isHiddenCube true .
                 ```
             } => {
                 Expect Status 400
@@ -163,7 +171,8 @@ With Class api:EntryPoint {
                    rdfs:label "Test Project" ;
                    CubeProject:sourceCube <https://environment.ld.admin.ch/bafu/example/px2> ;
                    CubeProject:sourceEndpoint <http://db.cube-creator.lndo.site/px-cube> ;
-                   schema:maintainer <https://cube-creator.lndo.site/organization/bafu> .
+                   schema:maintainer <https://cube-creator.lndo.site/organization/bafu> ;
+                   cc:isHiddenCube true .
                 ```
             } => {
                 Expect Status 400
