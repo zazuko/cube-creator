@@ -1,6 +1,8 @@
 import type { NamedNode } from '@rdfjs/types'
+import $rdf from 'rdf-ext'
 import { GraphPointer } from 'clownface'
-import { dcterms, rdfs, schema } from '@tpluscode/rdf-ns-builders'
+import { isLiteral } from 'is-graph-pointer'
+import { dcterms, rdfs, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import * as Project from '@cube-creator/model/Project'
 import * as Dataset from '@cube-creator/model/Dataset'
@@ -12,6 +14,8 @@ import * as id from '../identifiers'
 import { cubeNamespaceAllowed } from '../organization/query'
 import { createImportJob } from '../job/create'
 import { exists } from './queries'
+
+const xsdTrue = $rdf.literal('true', xsd.boolean)
 
 interface CreateProjectCommand {
   projectsCollection: GraphPointer<NamedNode>
@@ -127,11 +131,11 @@ export async function createProject({
   if (!maintainer || maintainer.termType !== 'NamedNode') {
     throw new DomainError('Missing organization or not a named node')
   }
-  const hiddenCube = resource.out(cc.isHiddenCube).term
-  if (!hiddenCube || hiddenCube.termType !== 'Literal' || hiddenCube.datatype.value !== 'http://www.w3.org/2001/XMLSchema#boolean') {
+  const hiddenCube = resource.out(cc.isHiddenCube)
+  if (!isLiteral(hiddenCube, xsd.boolean)) {
     throw new DomainError('Missing flag isHiddenCube or not a boolean')
   }
-  const isHiddenCube = hiddenCube.value === 'true'
+  const isHiddenCube = xsdTrue.equals(hiddenCube.term)
 
   let project: Project.Project
   let dataset: Dataset.Dataset

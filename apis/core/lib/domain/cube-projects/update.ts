@@ -1,8 +1,9 @@
 import type { NamedNode } from '@rdfjs/types'
+import $rdf from 'rdf-ext'
 import { GraphPointer } from 'clownface'
 import { DomainError } from '@cube-creator/api-errors'
 import { cc } from '@cube-creator/core/namespace'
-import { dcterms, rdfs, schema } from '@tpluscode/rdf-ns-builders'
+import { dcterms, rdfs, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import { CsvProject, ImportProject, Project } from '@cube-creator/model'
 import type { Organization } from '@rdfine/schema'
 import type { Dictionary } from '@rdfine/prov'
@@ -10,6 +11,8 @@ import { isCsvProject } from '@cube-creator/model/Project'
 import { ResourceStore } from '../../ResourceStore'
 import { cubeNamespaceAllowed } from '../organization/query'
 import { exists, previouslyPublished } from './queries'
+
+const xsdTrue = $rdf.literal('true', xsd.boolean)
 
 interface UpdateProjectCommand {
   resource: GraphPointer
@@ -23,7 +26,7 @@ export async function updateProject({
   const project = await store.getResource<ImportProject | CsvProject>(resource.term)
 
   project.rename(resource.out(rdfs.label).value)
-  project.updateIsHiddenCube(resource.out(cc.isHiddenCube).term)
+  project.isHiddenCube = xsdTrue.equals(resource.out(cc.isHiddenCube).term)
   const maintainer = project.updateMaintainer(resource.out(schema.maintainer).term)
 
   let currentCube: NamedNode
