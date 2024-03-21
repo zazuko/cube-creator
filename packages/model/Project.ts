@@ -5,7 +5,7 @@ import type { GraphPointer } from 'clownface'
 import RdfResourceImpl, { Initializer, RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import { cc, lindasSchema } from '@cube-creator/core/namespace'
-import { dcterms, schema } from '@tpluscode/rdf-ns-builders'
+import { dcterms, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import { Organization, Person, PersonMixin } from '@rdfine/schema'
 import type { Collection } from '@rdfine/hydra'
 import { initializer } from './lib/initializer'
@@ -28,6 +28,7 @@ export interface Project extends RdfResource {
   export: Link
   details: Link
   plannedNextUpdate?: Date
+  isHiddenCube: boolean
 }
 
 export interface CsvProject extends Project {
@@ -97,6 +98,9 @@ export function ProjectMixin<Base extends Constructor>(base: Base): Mixin {
 
     @property.literal({ path: lindasSchema.datasetNextDateModified, type: Date })
     plannedNextUpdate?: Date
+
+    @property.literal({ path: cc.isHiddenCube, datatype: xsd.boolean, type: Boolean })
+    isHiddenCube!: boolean
   }
 
   return Impl
@@ -104,7 +108,7 @@ export function ProjectMixin<Base extends Constructor>(base: Base): Mixin {
 
 ProjectMixin.appliesTo = cc.CubeProject
 
-type MinimalFields = 'creator' | 'label' | 'maintainer'
+type MinimalFields = 'creator' | 'label' | 'maintainer' | 'isHiddenCube'
 export const createMinimalProject = initializer<Project, MinimalFields>(ProjectMixin)
 
 type CsvProjectMandatoryFields = MinimalFields | 'cubeIdentifier' | 'sourceKind'

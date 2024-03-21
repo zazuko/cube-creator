@@ -1,6 +1,8 @@
 import type { NamedNode } from '@rdfjs/types'
+import $rdf from 'rdf-ext'
 import { GraphPointer } from 'clownface'
-import { dcterms, rdfs, schema } from '@tpluscode/rdf-ns-builders'
+import { isLiteral } from 'is-graph-pointer'
+import { dcterms, rdfs, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import * as Project from '@cube-creator/model/Project'
 import * as Dataset from '@cube-creator/model/Dataset'
@@ -13,6 +15,8 @@ import { cubeNamespaceAllowed } from '../organization/query'
 import { createImportJob } from '../job/create'
 import { exists } from './queries'
 
+const xsdTrue = $rdf.literal('true', xsd.boolean)
+
 interface CreateProjectCommand {
   projectsCollection: GraphPointer<NamedNode>
   resource: GraphPointer
@@ -23,10 +27,11 @@ interface CreateProjectCommand {
 interface CreateProjectResource extends Omit<CreateProjectCommand, 'projectsCollection'> {
   label: string
   maintainer: NamedNode
+  isHiddenCube: boolean
   projectNode: GraphPointer<NamedNode>
 }
 
-async function createCsvProjectResource({ user, projectNode, store, label, maintainer, resource }: CreateProjectResource) {
+async function createCsvProjectResource({ user, projectNode, store, label, maintainer, isHiddenCube, resource }: CreateProjectResource) {
   const cubeIdentifier = resource.out(dcterms.identifier).value
   if (!cubeIdentifier) {
     throw new Error('Missing cube identifier name')
@@ -45,6 +50,7 @@ async function createCsvProjectResource({ user, projectNode, store, label, maint
     creator: user,
     label,
     maintainer,
+    isHiddenCube,
     cubeIdentifier,
     sourceKind,
   })
@@ -60,7 +66,7 @@ async function createCsvProjectResource({ user, projectNode, store, label, maint
   return { project, dataset }
 }
 
-async function createImportProjectResources({ resource, user, projectNode, store, label, maintainer }: CreateProjectResource) {
+async function createImportProjectResources({ resource, user, projectNode, store, label, maintainer, isHiddenCube }: CreateProjectResource) {
   const sourceCube = resource.out(cc['CubeProject/sourceCube']).term
   if (sourceCube?.termType !== 'NamedNode') {
     throw new Error('Missing cube identifier')
@@ -91,6 +97,7 @@ async function createImportProjectResources({ resource, user, projectNode, store
     creator: user,
     label,
     maintainer,
+    isHiddenCube,
     sourceCube,
     sourceEndpoint,
     sourceGraph,
@@ -124,6 +131,11 @@ export async function createProject({
   if (!maintainer || maintainer.termType !== 'NamedNode') {
     throw new DomainError('Missing organization or not a named node')
   }
+  const hiddenCube = resource.out(cc.isHiddenCube)
+  if (!isLiteral(hiddenCube, xsd.boolean)) {
+    throw new DomainError('Missing flag isHiddenCube or not a boolean')
+  }
+  const isHiddenCube = xsdTrue.equals(hiddenCube.term)
 
   let project: Project.Project
   let dataset: Dataset.Dataset
@@ -140,6 +152,7 @@ export async function createProject({
       store,
       label,
       maintainer,
+      isHiddenCube,
       resource,
     }))
   } else if (isImportProject) {
@@ -150,6 +163,7 @@ export async function createProject({
       resource,
       label,
       maintainer,
+      isHiddenCube,
     }))
   } else {
     throw new error.BadRequest(`Unexpected value of ${cc.projectSourceKind.value}`)

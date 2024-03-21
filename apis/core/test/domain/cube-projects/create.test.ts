@@ -52,6 +52,7 @@ describe('domain/cube-projects/create', () => {
       .addOut(rdfs.label, 'Foo bar project')
       .addOut(dcterms.identifier, 'ubd/28')
       .addOut(schema.maintainer, organization.id)
+      .addOut(cc.isHiddenCube, true)
       .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
 
     // when
@@ -73,6 +74,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(dcterms.identifier, 'ubd/28')
         .addOut(schema.maintainer, organization.id)
+        .addOut(cc.isHiddenCube, true)
         .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
 
       // when
@@ -130,6 +132,7 @@ describe('domain/cube-projects/create', () => {
       .addOut(rdfs.label, 'Foo bar project')
       .addOut(dcterms.identifier, 'ubd/28')
       .addOut(schema.maintainer, organization.id)
+      .addOut(cc.isHiddenCube, true)
       .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
 
     // when
@@ -155,6 +158,7 @@ describe('domain/cube-projects/create', () => {
       .addOut(rdfs.label, 'Foo bar project')
       .addOut(dcterms.identifier, 'ubd/28')
       .addOut(schema.maintainer, organization.id)
+      .addOut(cc.isHiddenCube, true)
       .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
 
     // when
@@ -205,6 +209,7 @@ describe('domain/cube-projects/create', () => {
       .addOut(rdfs.label, 'Foo bar project')
       .addOut(dcterms.identifier, 'ubd/28')
       .addOut(schema.maintainer, organization.id)
+      .addOut(cc.isHiddenCube, true)
       .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
 
     // when
@@ -222,6 +227,7 @@ describe('domain/cube-projects/create', () => {
       .addOut(rdfs.label, 'Foo bar project')
       .addOut(schema.maintainer, organization.id)
       .addOut(dcterms.identifier, 'ubd/28')
+      .addOut(cc.isHiddenCube, true)
       .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
 
     // when
@@ -239,6 +245,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(schema.maintainer, organization.id)
         .addOut(dcterms.identifier, 'ubd/28')
+        .addOut(cc.isHiddenCube, true)
         .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
 
       // when
@@ -255,6 +262,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(schema.maintainer, organization.id)
         .addOut(dcterms.identifier, 'ubd/28')
+        .addOut(cc.isHiddenCube, true)
         .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
 
       // when
@@ -271,6 +279,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(schema.maintainer, organization.id)
         .addOut(dcterms.identifier, 'ubd/28')
+        .addOut(cc.isHiddenCube, true)
         .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
 
       // when
@@ -287,6 +296,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(schema.maintainer, organization.id)
         .addOut(dcterms.identifier, 'ubd/28')
+        .addOut(cc.isHiddenCube, true)
         .addOut(cc.publishGraph, $rdf.namedNode('http://example.com/published-cube'))
         .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
 
@@ -318,6 +328,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
         .addOut(dcterms.identifier, 'ubd/28')
+        .addOut(cc.isHiddenCube, true)
         .addOut(schema.maintainer, organization.id)
 
       // when
@@ -350,6 +361,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
         .addOut(dcterms.identifier, 'ubd/28')
+        .addOut(cc.isHiddenCube, true)
         .addOut(schema.maintainer, organization.id)
 
       // when
@@ -388,6 +400,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
         .addOut(dcterms.identifier, 'ubd/28')
+        .addOut(cc.isHiddenCube, true)
         .addOut(schema.maintainer, organization.id)
 
       // when
@@ -435,6 +448,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
         .addOut(dcterms.identifier, 'ubd/28')
+        .addOut(cc.isHiddenCube, true)
         .addOut(schema.maintainer, organization.id)
 
       // when
@@ -486,6 +500,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(cc['CubeProject/sourceCube'], $rdf.namedNode('http://example.cube/'))
         .addOut(cc['CubeProject/sourceEndpoint'], $rdf.namedNode('http://example.endpoint/'))
         .addOut(schema.maintainer, organization.id)
+        .addOut(cc.isHiddenCube, true)
 
       // when
       const { project } = await createProject({ resource, store, projectsCollection, user })
@@ -503,6 +518,7 @@ describe('domain/cube-projects/create', () => {
         .addOut(cc['CubeProject/sourceCube'], $rdf.namedNode('http://example.cube/'))
         .addOut(cc['CubeProject/sourceEndpoint'], $rdf.namedNode('http://example.endpoint/'))
         .addOut(schema.maintainer, organization.id)
+        .addOut(cc.isHiddenCube, true)
 
       // when
       const { project } = await createProject({ resource, store, projectsCollection, user })
@@ -517,6 +533,7 @@ describe('domain/cube-projects/create', () => {
         .namedNode('')
         .addOut(rdfs.label, 'Import project')
         .addOut(schema.maintainer, organization.id)
+        .addOut(cc.isHiddenCube, true)
         .addOut(cc['CubeProject/sourceEndpoint'], $rdf.namedNode('http://example.endpoint/'))
         .addOut(cc.projectSourceKind, cc['projectSourceKind/ExistingCube'])
 
@@ -533,6 +550,7 @@ describe('domain/cube-projects/create', () => {
         .namedNode('')
         .addOut(rdfs.label, 'Import project')
         .addOut(schema.maintainer, organization.id)
+        .addOut(cc.isHiddenCube, true)
         .addOut(cc['CubeProject/sourceCube'], $rdf.literal('http://example.cube/'))
         .addOut(cc['CubeProject/sourceEndpoint'], $rdf.namedNode('http://example.endpoint/'))
         .addOut(cc.projectSourceKind, cc['projectSourceKind/ExistingCube'])
@@ -550,6 +568,7 @@ describe('domain/cube-projects/create', () => {
         .namedNode('')
         .addOut(rdfs.label, 'Import project')
         .addOut(schema.maintainer, organization.id)
+        .addOut(cc.isHiddenCube, true)
         .addOut(cc['CubeProject/sourceCube'], $rdf.namedNode('http://example.cube/'))
         .addOut(cc.projectSourceKind, cc['projectSourceKind/ExistingCube'])
 
@@ -566,6 +585,7 @@ describe('domain/cube-projects/create', () => {
         .namedNode('')
         .addOut(rdfs.label, 'Import project')
         .addOut(schema.maintainer, organization.id)
+        .addOut(cc.isHiddenCube, true)
         .addOut(cc['CubeProject/sourceCube'], $rdf.namedNode('http://example.cube/'))
         .addOut(cc['CubeProject/sourceEndpoint'], $rdf.namedNode('http://example.endpoint/'))
         .addOut(cc.publishGraph, $rdf.namedNode('http://example.com/published-cube'))

@@ -49,6 +49,7 @@
   :steps [ :stepList ( <#loadCube>
                        <#countInputQuads>
                        <#injectCubeRevision>
+                       <#injectIsHiddenCube>
                        <#injectObservedBy>
                        <#injectSoftwareVersions>
                      ) ]
@@ -244,6 +245,11 @@ _:get
   code:implementedBy [ code:link <file:../lib/cube#injectRevision> ;
                        a         code:EcmaScript ] ;
   code:arguments     ( "jobUri"^^:VariableName ) .
+
+<#injectIsHiddenCube>
+  a :Step ;
+  code:implementedBy [ code:link <file:../lib/publish/hiddenCube#inject> ;
+                       a         code:EcmaScript ] .
 
 <#injectSoftwareVersions>
   a :Step ;

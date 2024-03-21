@@ -25,7 +25,8 @@ With Class api:EntryPoint {
                 <> cc:projectSourceKind <https://cube-creator.zazuko.com/vocab#projectSourceKind/CSV> ;
                    rdfs:label "Deleted Test Project" ;
                    dcterms:identifier "delete-test-cube" ;
-                   schema:maintainer <https://cube-creator.lndo.site/organization/bafu> .
+                   schema:maintainer <https://cube-creator.lndo.site/organization/bafu> ;
+                   cc:isHiddenCube true .
                 ```
             } => {
                 Expect Status 201

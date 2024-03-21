@@ -32,6 +32,7 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/import', () => {
       resource = blankNode()
         .addOut(rdfs.label, 'UBD Imported')
         .addOut(schema.maintainer, ex.Bafu)
+        .addOut(cc.isHiddenCube, true)
       const organization = namedNode(ex.Bafu)
         .addOut(rdf.type, schema.Organization)
         .addOut(cc.namespace, $rdf.namedNode('https://test.ld.admin.ch/org/'))

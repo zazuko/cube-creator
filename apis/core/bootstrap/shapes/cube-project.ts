@@ -1,5 +1,5 @@
 import { cc, sh1, shape, editor } from '@cube-creator/core/namespace'
-import { dash, dcterms, hydra, rdf, rdfs, schema, sh } from '@tpluscode/rdf-ns-builders'
+import { dash, dcterms, hydra, rdf, rdfs, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import { turtle } from '@tpluscode/rdf-string'
 import $rdf from 'rdf-ext'
 
@@ -22,6 +22,7 @@ const csvCubeShape = turtle`
   ${sh.ignoredProperties} (
     ${rdfs.label}
     ${schema.maintainer}
+    ${cc.isHiddenCube}
     ${rdf.type}
     ${generatedProperties}
   ) ;
@@ -49,6 +50,7 @@ const existingCubeShape = turtle`
   ${sh.ignoredProperties} (
     ${rdfs.label}
     ${schema.maintainer}
+    ${cc.isHiddenCube}
     ${rdf.type}
     ${generatedProperties}
   ) ;
@@ -95,6 +97,7 @@ const importedCubeShape = turtle`
   ${sh.ignoredProperties} (
     ${rdfs.label}
     ${schema.maintainer}
+    ${cc.isHiddenCube}
     ${rdf.type}
     ${generatedProperties}
   ) ;
@@ -143,6 +146,16 @@ const projectProperties = ({ xoneAlternatives = [] }: { xoneAlternatives?: unkno
     ${dash.editor} ${dash.InstancesSelectEditor} ;
     ${hydra.collection} <organizations> ;
     ${sh.order} 20 ;
+  ] ;
+  ${sh.property} [
+    ${sh.name} "Hide this cube?" ;
+    ${sh.description} "Hidden cubes are only visible in *visualize* for logged-in users" ;
+    ${sh.path} ${cc.isHiddenCube} ;
+    ${sh.datatype} ${xsd.boolean} ;
+    ${sh.defaultValue} ${true} ;
+    ${sh.minCount} 1 ;
+    ${sh.maxCount} 1 ;      
+    ${sh.order} 21 ;
   ] ;
   ${sh.xone} ( ${xoneAlternatives} ) ;`
 

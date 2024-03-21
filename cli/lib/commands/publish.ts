@@ -29,7 +29,7 @@ export default runner.create<PublishRunOptions>({
     const { publishStore, job: jobUri } = options
     const Hydra = variable.get('apiClient')
 
-    const { job, namespace, cubeIdentifier, cubeCreatorVersion } = await getJob(jobUri, Hydra)
+    const { job, namespace, cubeIdentifier, cubeCreatorVersion, isHiddenCube } = await getJob(jobUri, Hydra)
 
     if (options.to === 'filesystem' && !variable.has('targetFile')) {
       variable.set('targetFile', tempy.file())
@@ -59,6 +59,7 @@ export default runner.create<PublishRunOptions>({
     variable.set('revision', job.revision)
     variable.set('namespace', namespace)
     variable.set('cubeIdentifier', cubeIdentifier)
+    variable.set('isHiddenCube', isHiddenCube)
     logger.info(`Publishing cube <${cubeIdentifier}>`)
   },
   async after(options, variables) {
@@ -77,6 +78,7 @@ async function getJob(jobUri: string, Hydra: HydraClient): Promise<{
   namespace: string
   cubeIdentifier: string
   cubeCreatorVersion: string | undefined | null
+  isHiddenCube: boolean
 }> {
   const jobResource = await Hydra.loadResource<PublishJob>(jobUri)
   const cubeCreatorVersion = jobResource.response?.xhr.headers.get('x-cube-creator')
@@ -105,5 +107,6 @@ async function getJob(jobUri: string, Hydra: HydraClient): Promise<{
     namespace: datasetResource.representation?.root?.hasPart[0].id.value,
     cubeIdentifier,
     cubeCreatorVersion,
+    isHiddenCube: project.isHiddenCube,
   }
 }

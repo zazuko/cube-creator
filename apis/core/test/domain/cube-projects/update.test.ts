@@ -55,6 +55,7 @@ describe('domain/cube-projects/update', () => {
         .node(id)
         .addOut(rdfs.label, 'Created name')
         .addOut(schema.maintainer, bafu.id)
+        .addOut(cc.isHiddenCube, true)
         .addOut(dcterms.identifier, 'cube')
         .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
     }
@@ -99,6 +100,23 @@ describe('domain/cube-projects/update', () => {
 
       // then
       expect(editedProject.pointer.out(rdfs.label).term?.value).to.eq('Edited name')
+    })
+
+    it('updates isHiddenCube', async () => {
+      // given
+      const resource = projectPointer(project.term)
+      resource
+        .deleteOut(cc.isHiddenCube)
+        .addOut(cc.isHiddenCube, false)
+
+      // when
+      const editedProject = await updateProject({
+        resource,
+        store,
+      })
+
+      // then
+      expect(editedProject.pointer.out(cc.isHiddenCube).term?.value).to.eq('false')
     })
 
     describe('when maintainer changes', () => {
@@ -360,6 +378,7 @@ describe('domain/cube-projects/update', () => {
         .node(id)
         .addOut(rdfs.label, 'Created name')
         .addOut(schema.maintainer, bafu.id)
+        .addOut(cc.isHiddenCube, true)
         .addOut(cc['CubeProject/sourceCube'], $rdf.namedNode('http://external.cube'))
         .addOut(cc['CubeProject/sourceEndpoint'], $rdf.namedNode('http://external.cube/query'))
         .addOut(cc.projectSourceKind, cc['projectSourceKind/ExistingCube'])

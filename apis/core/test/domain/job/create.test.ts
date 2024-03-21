@@ -27,6 +27,7 @@ describe('domain/job/create', () => {
     maintainer: organization,
     cubeIdentifier: 'test-cube',
     dataset: $rdf.namedNode('myDataset'),
+    isHiddenCube: false,
   })
   const tableCollection = namedNode('myTables')
   const csvMapping = namedNode('myCsvMapping')
@@ -129,6 +130,32 @@ describe('domain/job/create', () => {
 
       // then
       await expect(promise).rejectedWith(DomainError)
+    })
+  })
+
+  describe('createPublishJob for hiddenCube', () => {
+    let queries: Pick<typeof TableQueries, 'getCubeTable'>
+
+    beforeEach(() => {
+      queries = {
+        getCubeTable: sinon.stub().resolves($rdf.namedNode('observations')),
+      }
+
+      if (!organization.pointer.has(cc.publishGraph).value) {
+        organization.pointer.addOut(cc.publishGraph, $rdf.namedNode('publishGraph'))
+      }
+      project.isHiddenCube = true
+    })
+
+    it('creates a job resource', async () => {
+      // when
+      const job = await createPublishJob({ resource: jobCollection.term, store, queries })
+
+      // then
+      expect(job.has(rdf.type, cc.PublishJob).values.length).to.eq(1)
+      expect(job.out(cc.project).value).to.eq('myProject')
+
+      expect(job.out(cc.publishGraph).term).to.deep.eq($rdf.namedNode('publishGraph/hidden'))
     })
   })
 })

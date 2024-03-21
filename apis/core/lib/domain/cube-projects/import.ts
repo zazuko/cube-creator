@@ -5,8 +5,9 @@ import $rdf from 'rdf-ext'
 import { cc } from '@cube-creator/core/namespace'
 import { Files } from '@cube-creator/express/multipart'
 import { createMinimalProject, Project } from '@cube-creator/model/Project'
-import { dcterms, rdfs, schema, rdf } from '@tpluscode/rdf-ns-builders/strict'
+import { dcterms, rdfs, schema, rdf, xsd } from '@tpluscode/rdf-ns-builders/strict'
 import clownface, { GraphPointer } from 'clownface'
+import { isLiteral } from 'is-graph-pointer'
 import { obj } from 'through2'
 import TermSet from '@rdfjs/term-set'
 import { Organization } from '@rdfine/schema'
@@ -15,6 +16,8 @@ import { DomainError } from '../../../../errors/domain'
 import * as id from '../identifiers'
 import { ResourceStore } from '../../ResourceStore'
 import { exists } from './queries'
+
+const xsdTrue = $rdf.literal('true', xsd.boolean)
 
 interface ImportProject {
   projectsCollection: GraphPointer<NamedNode>
@@ -97,12 +100,18 @@ export async function importProject({
   if (!maintainer) {
     throw new BadRequest('Missing organization')
   }
+  const hiddenCube = resource.out(cc.isHiddenCube)
+  if (!isLiteral(hiddenCube, xsd.boolean)) {
+    throw new DomainError('Missing flag isHiddenCube or not a boolean')
+  }
+  const isHiddenCube = xsdTrue.equals(hiddenCube.term)
 
   const projectNode = await store.createMember(projectsCollection.term, id.cubeProject(label))
 
   const project = createMinimalProject(projectNode, {
     creator: user,
     maintainer,
+    isHiddenCube,
     label,
   })
 
