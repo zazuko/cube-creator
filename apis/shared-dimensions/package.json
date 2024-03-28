@@ -25,7 +25,7 @@
     "clownface": "^1.4.0",
     "cors": "^2.8.5",
     "debug": "^4.3.1",
-    "express": "^4.17.1",
+    "express": "^4.19.2",
     "express-conditional-middleware": "^2.1.1",
     "http-errors": "^2.0.0",
     "http-status": "^1.5.0",

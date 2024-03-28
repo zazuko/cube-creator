@@ -16,7 +16,7 @@
     "clownface": "^1.1.0",
     "commander": "^7.0.0",
     "debug": "^4.1.1",
-    "express": "^4.17.1",
+    "express": "^4.19.2",
     "hydra-box": "^0.6.2",
     "rdf-ext": "^1.3.0",
     "rdf-parser-px": "^0.2.0",
