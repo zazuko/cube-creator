@@ -1,7 +1,7 @@
 import asyncMiddleware from 'middleware-async'
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
-import { shaclValidate } from '../middleware/shacl'
-import { createCSVMapping } from '../domain/csv-mapping/create'
+import { shaclValidate } from '../middleware/shacl.js'
+import { createCSVMapping } from '../domain/csv-mapping/create.js'
 
 export const post = protectedResource(shaclValidate, asyncMiddleware(async (req, res) => {
   const project = await createCSVMapping({

@@ -1,8 +1,8 @@
-import { Term } from 'rdf-js'
+import type { Term } from '@rdfjs/types'
 import namespace from '@rdfjs/namespace'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import { sparql } from '@tpluscode/sparql-builder'
-import env from './env'
+import env from './env.js'
 
 export function textSearch(subject: Term, predicate: Term, textQuery: string) {
   switch (env.maybe.MANAGED_DIMENSIONS_STORE_ENGINE) {

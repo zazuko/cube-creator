@@ -1,9 +1,9 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { cc } from '@cube-creator/core/namespace'
-import { ResourceStore } from '../../ResourceStore'
-import * as TableQueries from '../queries/table'
-import * as ColumnMappingQueries from '../queries/column-mapping'
-import { deleteColumnMapping } from '../column-mapping/delete'
+import { ResourceStore } from '../../ResourceStore.js'
+import * as TableQueries from '../queries/table.js'
+import * as ColumnMappingQueries from '../queries/column-mapping.js'
+import { deleteColumnMapping } from '../column-mapping/delete.js'
 
 interface DeleteTableCommand {
   resource: NamedNode

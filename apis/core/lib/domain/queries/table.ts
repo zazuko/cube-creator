@@ -1,10 +1,10 @@
-import { NamedNode, Term } from 'rdf-js'
+import type { NamedNode, Term } from '@rdfjs/types'
 import { SELECT } from '@tpluscode/sparql-builder'
 import { CsvMapping, Table } from '@cube-creator/model'
 import { cc } from '@cube-creator/core/namespace'
 import { ResourceIdentifier } from '@tpluscode/rdfine'
 import { DomainError } from '@cube-creator/api-errors'
-import { parsingClient } from '../../query-client'
+import { parsingClient } from '../../query-client.js'
 
 export async function * getTablesForMapping(csvMapping: NamedNode, client = parsingClient) {
   const results = await SELECT
@@ -16,7 +16,7 @@ export async function * getTablesForMapping(csvMapping: NamedNode, client = pars
              ${cc.csvMapping} ${csvMapping} .
       }
       `
-    .execute(client.query)
+    .execute(client)
 
   for (const result of results) {
     const table = result.table
@@ -36,7 +36,7 @@ export async function * getLinkedTablesForSource(csvSource: ResourceIdentifier, 
              ${cc.csvSource} ${csvSource} .
       }
       `
-    .execute(client.query)
+    .execute(client)
 
   for (const result of results) {
     const table = result.table
@@ -59,7 +59,7 @@ export async function * getTableReferences(referencedTable: Table, client = pars
              ${cc.referencedTable} ${referencedTable.id} .
       }
       `
-    .execute(client.query)
+    .execute(client)
 
   for (const result of results) {
     const { columnMapping } = result
@@ -79,7 +79,7 @@ export async function getTableForColumnMapping(columnMapping: NamedNode, client 
            ${cc.columnMapping} ${columnMapping} .
     }
     `
-    .execute(client.query)
+    .execute(client)
 
   if (results.length < 1) {
     throw new Error(`No table for column mapping ${columnMapping.value} found`)
@@ -98,7 +98,7 @@ export async function getCubeTable(csvMapping: CsvMapping): Promise<Term | undef
         ?table ${cc.csvMapping} ${csvMapping.id} .
       }
     `
-    .execute(parsingClient.query)
+    .execute(parsingClient)
 
   const [first, ...rest] = bindings
   if (rest.length) {

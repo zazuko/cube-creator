@@ -1,27 +1,25 @@
 import { describe, it, beforeEach } from 'mocha'
 import { expect } from 'chai'
-import $rdf from 'rdf-ext'
+import $rdf from '@cube-creator/env'
 import { dcterms, rdf, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
-import '../../../lib/domain'
+import '../../../lib/domain/index.js'
 import { DomainError } from '@cube-creator/api-errors'
 import sinon from 'sinon'
-import * as Organization from '@cube-creator/model/Organization'
 import { namedNode } from '@cube-creator/testing/clownface'
-import * as Project from '@cube-creator/model/Project'
 import { ex } from '@cube-creator/testing/lib/namespace'
-import { createPublishJob, createTransformJob } from '../../../lib/domain/job/create'
-import { TestResourceStore } from '../../support/TestResourceStore'
-import * as TableQueries from '../../../lib/domain/queries/table'
+import { createPublishJob, createTransformJob } from '../../../lib/domain/job/create.js'
+import { TestResourceStore } from '../../support/TestResourceStore.js'
+import * as TableQueries from '../../../lib/domain/queries/table.js'
 
 describe('domain/job/create', () => {
   let store: TestResourceStore
 
-  const organization = Organization.fromPointer(namedNode('org'), {
+  const organization = $rdf.rdfine.cc.Organization(namedNode('org'), {
     namespace: $rdf.namedNode('http://example.com/'),
     publishGraph: $rdf.namedNode('publishGraph'),
   })
-  const project = Project.fromPointer(namedNode('myProject'), {
+  const project = $rdf.rdfine.cc.Project(namedNode('myProject'), {
     csvMapping: $rdf.namedNode('myCsvMapping'),
     cubeGraph: $rdf.namedNode('myCubeGraph'),
     maintainer: organization,

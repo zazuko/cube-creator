@@ -1,6 +1,6 @@
 import { md } from '@cube-creator/core/namespace'
 import { rdf } from '@tpluscode/rdf-ns-builders'
-import type { BootstrappedResourceFactory } from './index'
+import type { BootstrappedResourceFactory } from './index.js'
 
 export const termSets = (ptr: BootstrappedResourceFactory) =>
   ptr('_term-sets').addOut(rdf.type, md.SharedDimensions)

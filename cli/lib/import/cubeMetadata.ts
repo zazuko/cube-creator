@@ -1,13 +1,12 @@
-import { DatasetCore, NamedNode, Quad, Term } from 'rdf-js'
+import type { DatasetCore, NamedNode, Quad, Term } from '@rdfjs/types'
 import { cc } from '@cube-creator/core/namespace'
-import DatasetExt from 'rdf-ext/lib/Dataset'
+import { Dataset as DatasetExt } from '@zazuko/env/lib/Dataset.js'
 import { dcterms, schema } from '@tpluscode/rdf-ns-builders'
-import type { Context } from 'barnard59-core/lib/Pipeline'
+import type { Context } from 'barnard59-core'
 import StreamClient from 'sparql-http-client'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import { sparql, CONSTRUCT } from '@tpluscode/sparql-builder'
 import * as ns from '@cube-creator/core/namespace'
-import clownface from 'clownface'
 import { create } from '@cube-creator/model/Dataset'
 import * as Cube from '@cube-creator/model/Cube'
 import through2 from 'through2'
@@ -86,7 +85,7 @@ function preserveExistingValues(dataset: DatasetCore) {
 }
 
 function prepareNewCubeResource(cubeResource: Cube.Cube, datasetResource: NamedNode) {
-  const pointer = clownface({ dataset: $rdf.dataset() }).namedNode(datasetResource)
+  const pointer = $rdf.clownface().namedNode(datasetResource)
   create(pointer, {
     hasPart: [Cube.create(pointer.node(cubeResource.id), {
       creator: cubeResource.creator,
@@ -116,7 +115,7 @@ export default async function query(this: Context, { cube, graph, endpoint, ...r
 
   const metaCollection = prepareNewCubeResource(cubeResource, datasetResource)
 
-  const newMetadata = (await cubeMetaQuery.execute(client.query))
+  const newMetadata = (await cubeMetaQuery.execute(client))
 
   return readable(merge(
     newMetadata.pipe(preserveExistingValues(metaCollection)),

@@ -1,36 +1,35 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { describe, it, beforeEach, afterEach } from 'mocha'
 import { expect } from 'chai'
-import clownface, { GraphPointer } from 'clownface'
-import $rdf from 'rdf-ext'
+import type { GraphPointer } from 'clownface'
+import $rdf from '@cube-creator/env'
 import { DomainError } from '@cube-creator/api-errors'
 import sinon from 'sinon'
-import DatasetExt from 'rdf-ext/lib/Dataset'
+import { Dataset as DatasetExt } from '@zazuko/env/lib/Dataset.js'
 import { ResourceIdentifier } from '@tpluscode/rdfine'
-import { dcterms, prov, rdfs, schema, rdf } from '@tpluscode/rdf-ns-builders/strict'
+import { dcterms, prov, rdfs, schema, rdf } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import { namedNode } from '@cube-creator/testing/clownface'
 import { Dataset, Project } from '@cube-creator/model'
-import { fromPointer } from '@cube-creator/model/Organization'
-import { createProject } from '../../../lib/domain/cube-projects/create'
-import { TestResourceStore } from '../../support/TestResourceStore'
-import '../../../lib/domain'
-import { updateProject } from '../../../lib/domain/cube-projects/update'
-import * as projectQueries from '../../../lib/domain/cube-projects/queries'
-import * as orgQueries from '../../../lib/domain/organization/query'
+import { createProject } from '../../../lib/domain/cube-projects/create.js'
+import { TestResourceStore } from '../../support/TestResourceStore.js'
+import '../../../lib/domain/index.js'
+import { updateProject } from '../../../lib/domain/cube-projects/update.js'
+import * as projectQueries from '../../../lib/domain/cube-projects/queries.js'
+import * as orgQueries from '../../../lib/domain/organization/query.js'
 
 describe('domain/cube-projects/update', () => {
   let store: TestResourceStore
   const user = $rdf.namedNode('userId')
-  const projectsCollection = clownface({ dataset: $rdf.dataset() }).namedNode('projects')
+  const projectsCollection = $rdf.clownface().namedNode('projects')
   let projectExists: sinon.SinonStub
   let previouslyPublished: sinon.SinonStub
 
-  const bafu = fromPointer(clownface({ dataset: $rdf.dataset() }).namedNode('bafu'), {
+  const bafu = $rdf.rdfine.cc.Organization($rdf.clownface().namedNode('bafu'), {
     namespace: $rdf.namedNode('http://bafu.namespace/'),
     publishGraph: $rdf.namedNode('http://bafu.cubes/'),
   })
-  const bar = fromPointer(clownface({ dataset: $rdf.dataset() }).namedNode('bar'), {
+  const bar = $rdf.rdfine.cc.Organization($rdf.clownface().namedNode('bar'), {
     namespace: $rdf.namedNode('http://bar.namespace/'),
     publishGraph: $rdf.namedNode('http://bar.cubes/'),
   })
@@ -51,7 +50,7 @@ describe('domain/cube-projects/update', () => {
 
   describe('CSV project', () => {
     function projectPointer(id: ResourceIdentifier = $rdf.namedNode('')) {
-      return clownface({ dataset: $rdf.dataset() })
+      return $rdf.clownface()
         .node(id)
         .addOut(rdfs.label, 'Created name')
         .addOut(schema.maintainer, bafu.id)
@@ -356,7 +355,7 @@ describe('domain/cube-projects/update', () => {
 
   describe('Import project', () => {
     function projectPointer(id: ResourceIdentifier = $rdf.namedNode('')) {
-      return clownface({ dataset: $rdf.dataset() })
+      return $rdf.clownface()
         .node(id)
         .addOut(rdfs.label, 'Created name')
         .addOut(schema.maintainer, bafu.id)

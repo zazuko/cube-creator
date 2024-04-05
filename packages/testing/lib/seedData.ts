@@ -1,17 +1,17 @@
 import fs from 'fs'
 import path from 'path'
-import { DatasetCore } from 'rdf-js'
-import ParsingClient from 'sparql-http-client/ParsingClient'
-import StreamClient from 'sparql-http-client/StreamClient'
-import { parsers } from '@rdfjs/formats-common'
-import $rdf from 'rdf-ext'
+import type { DatasetCore, Stream } from '@rdfjs/types'
+import ParsingClient from 'sparql-http-client/ParsingClient.js'
+import StreamClient from 'sparql-http-client/StreamClient.js'
+import formats from '@rdfjs/formats-common'
+import $rdf from '@zazuko/env'
 import { xsd, _void, rdf } from '@tpluscode/rdf-ns-builders'
 import { sparql } from '@tpluscode/rdf-string'
 import RdfPxParser from 'rdf-parser-px'
 import TripleToQuadTransform from 'rdf-transform-triple-to-quad'
 import { DELETE } from '@tpluscode/sparql-builder'
 import { VALUES } from '@tpluscode/sparql-builder/expressions'
-import { ccClients, mdClients } from './index'
+import { ccClients, mdClients } from './index.js'
 
 async function removeTestGraphs(client: ParsingClient, dataset: DatasetCore) {
   const graphs = [...dataset.match(null, _void.inDataset)].map(({ subject }) => subject)
@@ -35,13 +35,13 @@ async function removeRootResources(client: ParsingClient, dataset: DatasetCore) 
           FILTER (?s = ?root || isblank(?s))
         }
       `
-      .execute(client.query)
+      .execute(client)
   }
 }
 
 const insertTestData = async (pathName: string, { parsingClient, streamClient }: { parsingClient: ParsingClient; streamClient: StreamClient }) => {
   const file = fs.createReadStream(path.resolve(process.cwd(), pathName))
-  const stream = parsers.import('application/trig', file)
+  const stream = formats.parsers.import('application/trig', file) as unknown as Stream
 
   if (stream) {
     const ds = await $rdf.dataset().import(stream)

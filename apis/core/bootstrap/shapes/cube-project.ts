@@ -1,7 +1,7 @@
 import { cc, sh1, shape, editor } from '@cube-creator/core/namespace'
 import { dash, dcterms, hydra, rdf, rdfs, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { turtle } from '@tpluscode/rdf-string'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 
 const cubeIdPattern = $rdf.literal('^[a-zA-Z0-9/\\-._,]+[^/]$')
 

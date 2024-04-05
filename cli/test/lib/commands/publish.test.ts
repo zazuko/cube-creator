@@ -1,19 +1,19 @@
-import { NamedNode, Term } from 'rdf-js'
+import type { NamedNode, Term } from '@rdfjs/types'
 import env from '@cube-creator/core/env'
 import { before, describe, it } from 'mocha'
 import { expect } from 'chai'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import { prefixes } from '@zazuko/rdf-vocabularies'
 import { ASK, CONSTRUCT, DELETE, SELECT, WITH } from '@tpluscode/sparql-builder'
 import { csvw, dcat, dcterms, qudt, rdf, schema, sh, vcard, xsd, _void, foaf } from '@tpluscode/rdf-ns-builders'
 import { ccClients } from '@cube-creator/testing/lib'
 import { insertTestProject } from '@cube-creator/testing/lib/seedData'
 import { cc, cube } from '@cube-creator/core/namespace'
-import clownface, { AnyPointer } from 'clownface'
+import type { AnyPointer } from 'clownface'
 import namespace, { NamespaceBuilder } from '@rdfjs/namespace'
-import runner from '../../../lib/commands/publish'
-import { setupEnv } from '../../support/env'
-import { Published } from '../../../../packages/model/Cube'
+import runner from '../../../lib/commands/publish.js'
+import { setupEnv } from '../../support/env.js'
+import { Published } from '../../../../packages/model/Cube.js'
 
 describe('@cube-creator/cli/lib/commands/publish', function () {
   this.timeout(200000)
@@ -58,16 +58,16 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
             ?org ${cc.publishGraph} ?expectedGraph .
           }
         `
-      .execute(ccClients.parsingClient.query)
+      .execute(ccClients.parsingClient)
 
     targetCube = namespace(ns.baseCube('3').value)
 
     const dataset = await $rdf.dataset().import(await CONSTRUCT`?s ?p ?o`
       .FROM(expectedGraph as NamedNode)
       .WHERE`?s ?p ?o`
-      .execute(ccClients.streamClient.query))
+      .execute(ccClients.streamClient))
 
-    cubePointer = clownface({ dataset })
+    cubePointer = $rdf.clownface({ dataset })
   }
 
   async function removesHydraTerms() {
@@ -90,7 +90,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
           strstarts(str(?p), "${prefixes.hydra}") ||
           strstarts(str(?o), "${prefixes.hydra}")
         )
-      `.execute(ccClients.parsingClient.query)
+      `.execute(ccClients.parsingClient)
 
     expect(anyHydra).to.be.false
   }
@@ -115,7 +115,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
           strends(str(?p), "#_original") ||
           strends(str(?o), "#_original")
         )
-      `.execute(ccClients.parsingClient.query)
+      `.execute(ccClients.parsingClient)
 
     expect(anyHydra).to.be.false
   }
@@ -158,7 +158,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
         ${job} ${schema.creativeWorkStatus} ${Published}
       `.WHERE`
         ${job} ${schema.creativeWorkStatus} ?status
-      `).execute(ccClients.parsingClient.query)
+      `).execute(ccClients.parsingClient)
     })
     before(runJob)
 
@@ -169,7 +169,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
     it('does not publish a cube with trailing slash', async () => {
       const trailingSlashCubeExists = await ASK`${ns.baseCube('3/')} ?p ?o`
         .FROM(targetGraph)
-        .execute(ccClients.streamClient.query)
+        .execute(ccClients.streamClient)
 
       expect(trailingSlashCubeExists).to.be.false
     })
@@ -177,7 +177,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
     it('adds a schema:dataset link to void dataset', async () => {
       const hasVoidLink = await ASK`<https://environment.ld.admin.ch/.well-known/void> ${schema.dataset} ${targetCube()}`
         .FROM(targetGraph)
-        .execute(ccClients.streamClient.query)
+        .execute(ccClients.streamClient)
 
       expect(hasVoidLink).to.be.true
     })
@@ -185,7 +185,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
     it('adds a foaf:topic link to void dataset', async () => {
       const hasVoidLink = await ASK`<https://environment.ld.admin.ch/.well-known/void> ${foaf.topic} ${targetCube()}`
         .FROM(targetGraph)
-        .execute(ccClients.streamClient.query)
+        .execute(ccClients.streamClient)
 
       expect(hasVoidLink).to.be.true
     })
@@ -391,7 +391,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
     it('adds work examples', async function () {
       const cube = cubePointer.namedNode(targetCube())
 
-      const shape = clownface({ dataset: $rdf.dataset(), term: $rdf.blankNode() })
+      const shape = $rdf.clownface({ dataset: $rdf.dataset(), term: $rdf.blankNode() })
         .addOut(sh.property, property => {
           property
             .addOut(sh.path, schema.workExample)
@@ -473,7 +473,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
           ?s ?p ?o .
           filter (regex(str(?p), str(${csvw()})))
         `
-        .execute(ccClients.parsingClient.query)
+        .execute(ccClients.parsingClient)
 
       expect(distinctCsvwProps[0].count.value).to.eq('0')
     })
@@ -484,13 +484,13 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
         ?observation ?dimension ?value .
 
         FILTER ( REGEX (str(?dimension), str(${targetCube()}) ) )
-      `.FROM(targetGraph).execute(ccClients.streamClient.query)
+      `.FROM(targetGraph).execute(ccClients.streamClient)
       const anyShapePropertyHasRevision = await ASK`
         ?shape a ${cube.Constraint} .
         ?shape ${sh.property}/${sh.path} ?dimension .
 
         FILTER ( REGEX (str(?dimension), str(${targetCube()}) ) )
-      `.FROM(targetGraph).execute(ccClients.streamClient.query)
+      `.FROM(targetGraph).execute(ccClients.streamClient)
 
       expect(anyObservationPredicateHasRevision).to.be.false
       expect(anyShapePropertyHasRevision).to.be.false
@@ -503,7 +503,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
           ${sh.path} ${ns.baseCube('pollutant')} ;
           a ${cube.SharedDimension} ;
         ] .
-      `.FROM(targetGraph).execute(ccClients.streamClient.query)
+      `.FROM(targetGraph).execute(ccClients.streamClient)
 
       expect(hasShareDimensionType).to.eventually.be.true
     })
@@ -518,7 +518,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
     it('adds schema:sameAs to concepts linked to observation dimensions', async () => {
       const sameAsAdded = await ASK`
         ${targetCube('/station/blBAS')} ${schema.sameAs} ${ns.baseCube('station/blBAS')}
-      `.FROM(targetGraph).execute(ccClients.streamClient.query)
+      `.FROM(targetGraph).execute(ccClients.streamClient)
 
       expect(sameAsAdded).to.be.true
     })
@@ -526,7 +526,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
     it('does not add schema:sameAs to concepts outside cube namespace', async () => {
       const sameAsAdded = await ASK`
         <http://www.wikidata.org/entity/Q2025> ${schema.sameAs} ?any
-      `.FROM(targetGraph).execute(ccClients.streamClient.query)
+      `.FROM(targetGraph).execute(ccClients.streamClient)
 
       expect(sameAsAdded).to.be.false
     })
@@ -534,7 +534,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
     it('does not add schema:sameAs to objects of non-dimension properties`', async () => {
       const sameAsAdded = await ASK`
         ${targetCube('/maintainer/blBAS')} ${schema.sameAs} ?any
-      `.FROM(targetGraph).execute(ccClients.streamClient.query)
+      `.FROM(targetGraph).execute(ccClients.streamClient)
 
       expect(sameAsAdded).to.be.false
     })
@@ -547,7 +547,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
           ?property ${sh.path} ?dimension ; ${schema.version} ?version
         `
         .FROM(targetGraph)
-        .execute(ccClients.parsingClient.query)
+        .execute(ccClients.parsingClient)
 
       expect(results).to.have.length(2)
       expect(results).to.deep.contain.members([{
@@ -560,7 +560,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
     it('does not add link to void dataset', async () => {
       const hasVoidLink = await ASK`?void ${schema.dataset} ${targetCube()}`
         .FROM(targetGraph)
-        .execute(ccClients.streamClient.query)
+        .execute(ccClients.streamClient)
 
       expect(hasVoidLink).to.be.false
     })

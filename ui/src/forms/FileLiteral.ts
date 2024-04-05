@@ -1,4 +1,4 @@
-import { Literal } from 'rdf-js'
+import type { Literal } from '@rdfjs/types'
 import LiteralExt from 'rdf-ext/lib/Literal'
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface

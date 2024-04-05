@@ -1,17 +1,17 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
 import { Enrichment } from '@hydrofoil/labyrinth/lib/middleware/preprocessResource'
 import asyncMiddleware from 'middleware-async'
 import { parsingClient } from '@cube-creator/shared-dimensions-api/lib/sparql'
 import { cube } from '@cube-creator/core/namespace'
 import { rdf, schema } from '@tpluscode/rdf-ns-builders'
-import { ParsingClient } from 'sparql-http-client/ParsingClient'
+import { ParsingClient } from 'sparql-http-client/ParsingClient.js'
 import { Request } from 'express'
 import { GraphPointer } from 'clownface'
-import { shaclValidate } from '../middleware/shacl'
-import { update } from '../domain/dimension/update'
-import { getDimensionTypes, getMappedDimensions } from '../domain/queries/dimension-metadata'
-import * as client from '../query-client'
+import { shaclValidate } from '../middleware/shacl.js'
+import { update } from '../domain/dimension/update.js'
+import { getDimensionTypes, getMappedDimensions } from '../domain/queries/dimension-metadata.js'
+import * as client from '../query-client.js'
 
 export const get = protectedResource(asyncMiddleware((req, res) => {
   return res.quadStream(req.hydra.resource.quadStream())

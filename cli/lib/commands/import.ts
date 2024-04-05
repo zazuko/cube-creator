@@ -1,8 +1,8 @@
 import { ImportJob } from '@cube-creator/model/ImportJob'
 import * as Models from '@cube-creator/model'
 import { HydraClient } from 'alcaeus/alcaeus'
-import { logger } from '../log'
-import { create } from './runner'
+import { logger } from '../log.js'
+import { create } from './runner.js'
 
 async function getJob(jobUri: string, Hydra: HydraClient): Promise<ImportJob> {
   const jobResource = await Hydra.loadResource<ImportJob>(jobUri)

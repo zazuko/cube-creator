@@ -1,18 +1,17 @@
-import { Quad, Stream, Term } from 'rdf-js'
 import path from 'path'
+import type { Quad, Stream, Term } from '@rdfjs/types'
 import { CONSTRUCT } from '@tpluscode/sparql-builder'
 import { hydra, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { md, meta } from '@cube-creator/core/namespace'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import { toRdf } from 'rdf-literal'
 import { fromFile } from 'rdf-utils-fs'
-import clownface from 'clownface'
 import { isGraphPointer } from 'is-graph-pointer'
-import { StreamClient } from 'sparql-http-client/StreamClient'
-import { ParsingClient } from 'sparql-http-client/ParsingClient'
-import env from '../env'
-import shapeToQuery from '../shapeToQuery'
-import { getDynamicProperties } from './shared-dimension'
+import { StreamClient } from 'sparql-http-client/StreamClient.js'
+import { ParsingClient } from 'sparql-http-client/ParsingClient.js'
+import env from '../env.js'
+import shapeToQuery from '../shapeToQuery.js'
+import { getDynamicProperties } from './shared-dimension/index.js'
 
 export function getSharedDimensions() {
   return CONSTRUCT`
@@ -79,13 +78,13 @@ export async function getSharedTerms<C extends StreamClient | ParsingClient>({ s
   }
 
   const { constructQuery } = await shapeToQuery()
-  return constructQuery(shape).execute(client.query) as any
+  return constructQuery(shape).execute(client) as any
 }
 
 async function loadShape() {
   const dataset = await $rdf.dataset().import(fromFile(path.resolve(__dirname, '../shapes/terms-query-shape.ttl')))
 
-  return clownface({
+  return $rdf.clownface({
     dataset,
   }).has(rdf.type, sh.NodeShape)
 }

@@ -1,15 +1,14 @@
-import { NamedNode, Quad, Term } from 'rdf-js'
-import clownface, { GraphPointer } from 'clownface'
-import TermSet from '@rdfjs/term-set'
-import $rdf from 'rdf-ext'
+import type { NamedNode, Quad, Term } from '@rdfjs/types'
+import type { GraphPointer } from 'clownface'
+import $rdf from '@cube-creator/env'
 import { DimensionMetadataCollection, Project } from '@cube-creator/model'
 import { createNoMeasureDimensionError, Error } from '@cube-creator/model/DimensionMetadata'
 import { prov, rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
-import { ResourceStore } from '../../ResourceStore'
-import * as id from '../identifiers'
-import { findProject } from '../cube-projects/queries'
-import { canBeMappedToSharedDimension } from './DimensionMetadata'
+import { ResourceStore } from '../../ResourceStore.js'
+import * as id from '../identifiers.js'
+import { findProject } from '../cube-projects/queries.js'
+import { canBeMappedToSharedDimension } from './DimensionMetadata.js'
 
 interface UpdateDimensionCommand {
   metadataCollection: NamedNode
@@ -17,7 +16,7 @@ interface UpdateDimensionCommand {
   store: ResourceStore
 }
 
-function * extractSubgraph(pointer: GraphPointer, visited = new TermSet()): Iterable<Quad> {
+function * extractSubgraph(pointer: GraphPointer, visited = $rdf.termSet()): Iterable<Quad> {
   if (visited.has(pointer.term)) {
     return
   }
@@ -60,13 +59,13 @@ export async function update({
   }
 
   if (!metadata.hasPart.some(dim => dim.isMeasureDimension)) {
-    metadata.addError?.(createNoMeasureDimensionError)
+    metadata.addError?.(createNoMeasureDimensionError($rdf))
   } else {
     metadata.removeError?.(Error.MissingMeasureDimension)
   }
 
   const dataset = $rdf.dataset([...extractSubgraph(metadata.pointer.node(dimensionMetadata.term))])
-  return clownface({ dataset }).node(dimensionMetadata.term)
+  return $rdf.clownface({ dataset }).node(dimensionMetadata.term)
 }
 
 interface ClearDimensionChangedWarning {

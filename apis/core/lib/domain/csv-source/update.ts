@@ -1,15 +1,15 @@
-import { NamedNode } from 'rdf-js'
-import { GraphPointer } from 'clownface'
+import type { NamedNode } from '@rdfjs/types'
+import type { GraphPointer } from 'clownface'
+import $rdf from '@cube-creator/env'
 import { CsvSource } from '@cube-creator/model'
-import RdfResource from '@tpluscode/rdfine'
 import { schema } from '@tpluscode/rdf-ns-builders'
-import { ResourceStore } from '../../ResourceStore'
-import { error } from '../../log'
-import { loadFileHeadString } from '../csv/file-head'
-import { parse } from '../csv'
-import { sampleValues } from '../csv/sample-values'
-import type { GetMediaStorage } from '../../storage'
-import { getMediaStorage } from '../../storage'
+import { ResourceStore } from '../../ResourceStore.js'
+import { error } from '../../log.js'
+import { loadFileHeadString } from '../csv/file-head.js'
+import { parse } from '../csv/index.js'
+import { sampleValues } from '../csv/sample-values.js'
+import type { GetMediaStorage } from '../../storage/index.js'
+import { getMediaStorage } from '../../storage/index.js'
 
 interface UpdateCsvSourceCommand {
   resource: GraphPointer<NamedNode>
@@ -22,7 +22,7 @@ export async function update({
   store,
   getStorage = getMediaStorage,
 }: UpdateCsvSourceCommand): Promise<GraphPointer> {
-  const changed = RdfResource.factory.createEntity<CsvSource>(resource)
+  const changed = $rdf.rdfine().factory.createEntity<CsvSource>(resource)
   const csvSource = await store.getResource<CsvSource>(resource.term)
 
   csvSource.name = changed.name

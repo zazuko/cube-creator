@@ -1,10 +1,10 @@
 import { Constructor, property } from '@tpluscode/rdfine'
 import { md, meta } from '@cube-creator/core/namespace'
-import { NamedNode, Term } from 'rdf-js'
+import type { NamedNode, Term } from '@rdfjs/types'
 import { Hierarchy } from '@/store/types'
 import { ThingMixin } from '@rdfine/schema'
 import { Resource } from 'alcaeus'
-import { schema } from '@tpluscode/rdf-ns-builders/strict'
+import { schema } from '@tpluscode/rdf-ns-builders'
 
 export default function mixin<Base extends Constructor> (base: Base) {
   class Impl extends ThingMixin(base) implements Partial<Hierarchy> {

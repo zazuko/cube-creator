@@ -76,7 +76,7 @@ class Dimension {
   toDataset({ shape }) {
     const dataset = rdf.dataset()
 
-    const ptr = clownface({ dataset }).blankNode()
+    const ptr = $rdf.clownface({ dataset }).blankNode()
 
     const nodeKind = this.termType === 'NamedNode' ? ns.sh.IRI : ns.sh.Literal
     ptr

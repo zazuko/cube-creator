@@ -1,4 +1,4 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { Constructor } from '@tpluscode/rdfine'
 import { Initializer, RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import { cc } from '@cube-creator/core/namespace'
@@ -40,7 +40,7 @@ export function ReferenceColumnMappingMixin<Base extends Constructor<Omit<Refere
         mapping.pointer.deleteOut()
       })
 
-      this.identifierMapping = referencedColumns.map(referencedColumn => createIdentifierMapping(this.pointer.blankNode(), {
+      this.identifierMapping = referencedColumns.map(referencedColumn => createIdentifierMapping(this.env, this.pointer.blankNode(), {
         referencedColumn,
       }))
     }

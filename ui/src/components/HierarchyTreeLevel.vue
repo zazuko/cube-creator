@@ -31,7 +31,7 @@
 
 <script lang="ts">
 import { GraphPointer } from 'clownface'
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { defineComponent, PropType, Ref, ref, toRefs } from 'vue'
 
 import ExternalTerm from '@/components/ExternalTerm.vue'
@@ -42,7 +42,7 @@ import * as hierarchy from '@zazuko/cube-hierarchy-query/resources'
 import { NextInHierarchy } from '@/store/types'
 import Remote, { RemoteData } from '@/remote'
 import StreamClient from 'sparql-http-client'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 
 export default defineComponent({
   name: 'HiearchyTreeLevel',

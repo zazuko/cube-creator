@@ -1,10 +1,10 @@
-import { Quad } from 'rdf-js'
+import type { Quad } from '@rdfjs/types'
 import { dcterms, sd } from '@tpluscode/rdf-ns-builders'
 import { asyncMiddleware } from 'middleware-async'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import env from '@cube-creator/core/env'
 import { meta } from '@cube-creator/core/namespace'
-import { ShouldRewrite } from '../middleware/canonicalRewrite'
+import { ShouldRewrite } from '../middleware/canonicalRewrite.js'
 
 export const get = asyncMiddleware(async (req, res) => {
   const hierarchy = await req.hydra.resource.clownface()

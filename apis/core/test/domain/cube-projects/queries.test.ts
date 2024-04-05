@@ -2,9 +2,9 @@ import namespace from '@rdfjs/namespace'
 import { expect } from 'chai'
 import { describe, it, before } from 'mocha'
 import { ccClients } from '@cube-creator/testing/lib'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import { insertTestProject } from '@cube-creator/testing/lib/seedData'
-import { exists } from '../../../lib/domain/cube-projects/queries'
+import { exists } from '../../../lib/domain/cube-projects/queries.js'
 
 const ns = namespace('https://cube-creator.lndo.site/')
 

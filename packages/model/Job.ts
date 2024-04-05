@@ -1,17 +1,17 @@
-import { Literal, NamedNode, Term } from 'rdf-js'
+import type { Literal, NamedNode, Term } from '@rdfjs/types'
 import { Constructor, property, RdfResource } from '@tpluscode/rdfine'
 import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import type { Collection } from '@rdfine/hydra'
 import type * as Rdfs from '@rdfine/rdfs'
 import { ResourceMixin } from '@rdfine/rdfs'
-import { Action, ActionMixin, CreativeWork, CreativeWorkMixin, Thing, ThingMixin } from '@rdfine/schema'
+import { Action, ActionMixin, CreativeWork, Thing, ThingMixin } from '@rdfine/schema'
 import { ValidationReport, ValidationReportMixin } from '@rdfine/shacl'
 import { cc } from '@cube-creator/core/namespace'
 import { schema, dcterms, rdfs, rdf } from '@tpluscode/rdf-ns-builders'
-import { TableCollection } from './Table'
-import { Link } from './lib/Link'
-import { initializer } from './lib/initializer'
-import { DimensionMetadataCollection } from './DimensionMetadata'
+import { TableCollection } from './Table.js'
+import { Link } from './lib/Link.js'
+import { initializer } from './lib/initializer.js'
+import { DimensionMetadataCollection } from './DimensionMetadata.js'
 
 export interface JobError extends Thing {
   validationReport?: ValidationReport
@@ -154,7 +154,7 @@ export function PublishJobMixin<Base extends Constructor<RdfResource>>(base: Bas
       return this.pointer
         .out(schema.workExample)
         .filter(example => example.out(schema.encodingFormat).terms.length > 0)
-        .map(workExampleP => new CreativeWorkMixin.Class(workExampleP as any) as CreativeWork)
+        .map(workExampleP => this.env.rdfine.schema.CreativeWork(workExampleP as any) as CreativeWork)
     }
 
     addWorkExample(attrs: WorkExampleInput) {

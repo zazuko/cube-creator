@@ -1,11 +1,11 @@
-import { Quad, Term } from 'rdf-js'
+import type { Quad, Term } from '@rdfjs/types'
 import { Collection, IriTemplate } from '@rdfine/hydra'
-import { AnyPointer, GraphPointer } from 'clownface'
+import type { AnyPointer, GraphPointer } from 'clownface'
 import { rdf } from '@tpluscode/rdf-ns-builders'
 import * as ns from '@cube-creator/core/namespace'
-import { loadResourceLabels as _loadResourceLabels } from '../queries/observations'
-import { warning } from '../../log'
-import { createSource, createView, createHydraCollection, populateFilters } from './lib'
+import { loadResourceLabels as _loadResourceLabels } from '../queries/observations.js'
+import { warning } from '../../log.js'
+import { createSource, createView, createHydraCollection, populateFilters } from './lib/index.js'
 
 const DEFAULT_PAGE_SIZE = 20
 const DEFAULT_PAGE_INDEX = 1
@@ -18,7 +18,7 @@ interface Params {
   filters?: AnyPointer
   pageSize?: number
   pageIndex?: number
-  loadResourceLabels?: (ids: Term[]) => Promise<Quad[]>
+  loadResourceLabels?: (ids: Term[]) => Promise<Iterable<Quad>>
 }
 
 export async function getObservations({
@@ -67,12 +67,12 @@ export async function getObservations({
 
   // Load labels for linked resources
   const labelQuads = await getLabels(observations, loadResourceLabels)
-  labelQuads.forEach((quad) => collection.pointer.dataset.add(quad))
+  ;[...labelQuads].forEach((quad) => collection.pointer.dataset.add(quad))
 
   return collection
 }
 
-async function getLabels(observations: Record<string, Term>[], loadResourceLabels: (ids: Term[]) => Promise<Quad[]>): Promise<Quad[]> {
+async function getLabels(observations: Record<string, Term>[], loadResourceLabels: (ids: Term[]) => Promise<Iterable<Quad>>): Promise<Iterable<Quad>> {
   const blackList: string[] = [rdf.type.value, ns.cube.observedBy.value]
   const resourceIds = new Set(observations.flatMap((observation) => {
     return Object.entries(observation)

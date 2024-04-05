@@ -1,20 +1,20 @@
-import { DatasetCore, NamedNode, Quad, Term } from 'rdf-js'
 import { Transform } from 'stream'
-import { BadRequest } from 'http-errors'
-import $rdf from 'rdf-ext'
+import type { DatasetCore, NamedNode, Quad, Term } from '@rdfjs/types'
+import httpError from 'http-errors'
+import $rdf from '@cube-creator/env'
 import { cc } from '@cube-creator/core/namespace'
 import { Files } from '@cube-creator/express/multipart'
 import { createMinimalProject, Project } from '@cube-creator/model/Project'
-import { dcterms, rdfs, schema, rdf } from '@tpluscode/rdf-ns-builders/strict'
-import clownface, { GraphPointer } from 'clownface'
+import { dcterms, rdfs, schema, rdf } from '@tpluscode/rdf-ns-builders'
+import type { GraphPointer } from 'clownface'
 import { obj } from 'through2'
-import TermSet from '@rdfjs/term-set'
 import { Organization } from '@rdfine/schema'
-import QuadExt from 'rdf-ext/lib/Quad'
-import { DomainError } from '../../../../errors/domain'
-import * as id from '../identifiers'
-import { ResourceStore } from '../../ResourceStore'
-import { exists } from './queries'
+import { DomainError } from '../../../../errors/domain.js'
+import * as id from '../identifiers.js'
+import { ResourceStore } from '../../ResourceStore.js'
+import { exists } from './queries.js'
+
+const { BadRequest } = httpError
 
 interface ImportProject {
   projectsCollection: GraphPointer<NamedNode>
@@ -29,7 +29,7 @@ interface ImportedProject {
   importedDataset: DatasetCore
 }
 
-const sourceKinds = new TermSet([
+const sourceKinds = $rdf.termSet([
   cc['projectSourceKind/ExistingCube'],
   cc['projectSourceKind/CSV'],
 ])
@@ -66,17 +66,17 @@ function alignCubeNamespace(before: string, after: string) {
     return term
   }
 
-  return ({ subject, predicate, object, graph }: QuadExt): QuadExt => {
+  return ({ subject, predicate, object, graph }: Quad): Quad => {
     return $rdf.quad(rewrite(subject), rewrite(predicate), rewrite(object), graph)
   }
 }
 
 function setCsvSourceErrors(dataset: DatasetCore) {
   // errors will notify users that CSVs need to be uploaded
-  clownface({ dataset })
+  $rdf.clownface({ dataset })
     .has(rdf.type, cc.CSVSource)
     .forEach(source => {
-      clownface({ dataset, graph: source.term })
+      $rdf.clownface({ dataset, graph: source.term })
         .node(source)
         .addOut(schema.error, 'CSV must be uploaded after importing project')
     })
@@ -100,7 +100,7 @@ export async function importProject({
 
   const projectNode = await store.createMember(projectsCollection.term, id.cubeProject(label))
 
-  const project = createMinimalProject(projectNode, {
+  const project = createMinimalProject($rdf, projectNode, {
     creator: user,
     maintainer,
     label,
@@ -116,7 +116,7 @@ export async function importProject({
     await importedDataset.import(next(project.id.value + '/').pipe(adjustTerms(project)))
   }
 
-  const importedProject = clownface({ dataset: importedDataset, graph: project.id }).node(project.id)
+  const importedProject = $rdf.clownface({ dataset: importedDataset, graph: project.id }).node(project.id)
   const cubeIdentifier = resource.out(dcterms.identifier).value || importedProject.out(dcterms.identifier).value
   if (!cubeIdentifier) {
     throw new BadRequest('Missing cube identifier name in imported data')
@@ -145,7 +145,7 @@ export async function importProject({
     .addOut(dcterms.identifier, cubeIdentifier)
 
   if (project.sourceKind.equals(cc['projectSourceKind/CSV'])) {
-    const originalCubeId = clownface({ dataset: importedDataset })
+    const originalCubeId = $rdf.clownface({ dataset: importedDataset })
       .has(rdf.type, schema.Dataset)
       .out(schema.hasPart)
       .term

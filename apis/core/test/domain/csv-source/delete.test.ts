@@ -1,16 +1,15 @@
 import { describe, it, beforeEach } from 'mocha'
 import { expect } from 'chai'
 import sinon from 'sinon'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import { cc } from '@cube-creator/core/namespace'
 import { rdf, schema } from '@tpluscode/rdf-ns-builders'
-import clownface from 'clownface'
-import { TestResourceStore } from '../../support/TestResourceStore'
-import * as TableQueries from '../../../lib/domain/queries/table'
-import '../../../lib/domain'
-import { deleteSource } from '../../../lib/domain/csv-source/delete'
-import * as DeleteTable from '../../../lib/domain/table/delete'
-import type { GetMediaStorage, MediaStorage } from '../../../lib/storage'
+import { TestResourceStore } from '../../support/TestResourceStore.js'
+import * as TableQueries from '../../../lib/domain/queries/table.js'
+import '../../../lib/domain/index.js'
+import { deleteSource } from '../../../lib/domain/csv-source/delete.js'
+import * as DeleteTable from '../../../lib/domain/table/delete.js'
+import type { GetMediaStorage, MediaStorage } from '../../../lib/storage/index.js'
 
 describe('domain/csv-sources/delete', () => {
   let storage: MediaStorage
@@ -35,16 +34,16 @@ describe('domain/csv-sources/delete', () => {
 
     sinon.stub(DeleteTable, 'deleteTable')
   })
-  const csvSource = clownface({ dataset: $rdf.dataset() })
+  const csvSource = $rdf.clownface()
     .namedNode('source')
     .addOut(rdf.type, cc.CSVSource)
     .addOut(schema.associatedMedia, file => { file.addOut(schema.identifier, 'FileKey') })
     .addOut(cc.csvMapping, $rdf.namedNode('csv-mapping'))
-  const csvMapping = clownface({ dataset: $rdf.dataset() })
+  const csvMapping = $rdf.clownface()
     .namedNode('csv-mapping')
     .addOut(rdf.type, cc.CsvMapping)
     .addOut(cc.csvSource, csvSource)
-  const table = clownface({ dataset: $rdf.dataset() })
+  const table = $rdf.clownface()
     .namedNode('table')
     .addOut(rdf.type, cc.Table)
     .addOut(cc.csvSource, csvSource)
@@ -55,7 +54,7 @@ describe('domain/csv-sources/delete', () => {
       csvSource, table,
     ])
     // when
-    await deleteSource({ resource: csvSource.term, store: store, getStorage })
+    await deleteSource({ resource: csvSource.term, store, getStorage })
 
     // then
     expect(storage.delete).to.have.been.calledWith(sinon.match({

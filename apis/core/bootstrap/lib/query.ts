@@ -1,5 +1,5 @@
-import { NamedNode } from 'rdf-js'
-import $rdf from 'rdf-ext'
+import type { NamedNode } from '@rdfjs/types'
+import $rdf from '@zazuko/env'
 import { SparqlTemplateResult } from '@tpluscode/rdf-string'
 import env from '@cube-creator/core/env'
 

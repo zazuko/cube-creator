@@ -1,25 +1,25 @@
 import * as fs from 'fs'
 import * as path from 'path'
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { describe, it, beforeEach } from 'mocha'
 import { expect } from 'chai'
 import sinon from 'sinon'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import { cc } from '@cube-creator/core/namespace'
-import DatasetExt from 'rdf-ext/lib/Dataset'
+import { Dataset as DatasetExt } from '@zazuko/env/lib/Dataset.js'
 import { csvw, dtype, rdf, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
-import clownface, { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
 import { DomainError } from '@cube-creator/api-errors'
-import { TestResourceStore } from '../../support/TestResourceStore'
-import { replaceFile } from '../../../lib/domain/csv-source/replace'
-import type { GetMediaStorage, MediaStorage } from '../../../lib/storage'
+import { TestResourceStore } from '../../support/TestResourceStore.js'
+import { replaceFile } from '../../../lib/domain/csv-source/replace.js'
+import type { GetMediaStorage, MediaStorage } from '../../../lib/storage/index.js'
 
 describe('domain/csv-sources/replace', () => {
   let storage: MediaStorage
   let getStorage: GetMediaStorage
   let csvSource: GraphPointer<NamedNode, DatasetExt>
   let csvMapping: GraphPointer<NamedNode, DatasetExt>
-  const data = clownface({ dataset: $rdf.dataset() })
+  const data = $rdf.clownface()
     .namedNode('')
     .addOut(cc.sourceKind, cc.MediaLocal)
     .addOut(schema.name, $rdf.literal('source.csv'))
@@ -34,7 +34,7 @@ describe('domain/csv-sources/replace', () => {
     }
     getStorage = () => (storage)
 
-    csvMapping = clownface({ dataset: $rdf.dataset() })
+    csvMapping = $rdf.clownface()
       .namedNode('csv-mapping')
       .addOut(rdf.type, cc.CsvMapping)
   })
@@ -43,7 +43,7 @@ describe('domain/csv-sources/replace', () => {
     let csvSourceUpdate: GraphPointer
     beforeEach(async () => {
       // given
-      csvSource = clownface({ dataset: $rdf.dataset() })
+      csvSource = $rdf.clownface()
         .namedNode('source')
         .addOut(rdf.type, cc.CSVSource)
         .addOut(schema.name, 'Name')
@@ -178,7 +178,7 @@ describe('domain/csv-sources/replace', () => {
     let csvSourceUpdate: GraphPointer
     beforeEach(async () => {
       // given
-      csvSource = clownface({ dataset: $rdf.dataset() })
+      csvSource = $rdf.clownface()
         .namedNode('source')
         .addOut(rdf.type, cc.CSVSource)
         .addOut(schema.name, 'Name')
@@ -307,7 +307,7 @@ describe('domain/csv-sources/replace', () => {
   describe('when columns are missing', () => {
     it('throws', () => {
       // given
-      csvSource = clownface({ dataset: $rdf.dataset() })
+      csvSource = $rdf.clownface()
         .namedNode('source')
         .addOut(rdf.type, cc.CSVSource)
         .addOut(schema.name, 'Name')

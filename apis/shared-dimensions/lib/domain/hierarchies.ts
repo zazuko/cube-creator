@@ -1,16 +1,16 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { CONSTRUCT, SELECT } from '@tpluscode/sparql-builder'
 import { md, meta } from '@cube-creator/core/namespace'
-import clownface, { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
 import { hydra, rdf, schema } from '@tpluscode/rdf-ns-builders'
 import httpError from 'http-errors'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import slugify from 'slugify'
 import { DomainError } from '@cube-creator/api-errors'
-import { SharedDimensionsStore } from '../store'
-import env from '../env'
-import { textSearch } from '../query'
-import { newId, replace } from './resource'
+import { SharedDimensionsStore } from '../store/index.js'
+import env from '../env.js'
+import { textSearch } from '../query.js'
+import { newId, replace } from './resource.js'
 
 interface GetHierarchies {
   freetextQuery: string | undefined
@@ -69,7 +69,7 @@ export async function create({ resource, store }: CreateHierarchy) {
   }
 
   const dataset = $rdf.dataset([...resource.dataset].map(replace(resource.term, hierarchyId)))
-  const hierarchy = clownface({ dataset })
+  const hierarchy = $rdf.clownface({ dataset })
     .namedNode(hierarchyId)
     .addOut(rdf.type, [hydra.Resource, meta.Hierarchy, md.Hierarchy])
 

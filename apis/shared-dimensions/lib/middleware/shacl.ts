@@ -1,7 +1,7 @@
 import { shaclMiddleware } from 'hydra-box-middleware-shacl'
-import $rdf from 'rdf-ext'
-import shapes from '../shapes'
-import env from '../env'
+import $rdf from '@zazuko/env'
+import shapes from '../shapes/index.js'
+import env from '../env.js'
 
 type CreateMiddleware = Pick<Parameters<typeof shaclMiddleware>[0], 'parseResource'>
 

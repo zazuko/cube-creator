@@ -1,21 +1,21 @@
 import asyncMiddleware from 'middleware-async'
 import conditional from 'express-conditional-middleware'
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
-import { serializers } from '@rdfjs-elements/formats-pretty'
+import formats from '@rdfjs-elements/formats-pretty'
 import env from '@cube-creator/core/env'
 import { cc, cube, meta } from '@cube-creator/core/namespace'
 import * as ns from '@tpluscode/rdf-ns-builders'
 import cors from 'cors'
 import { isMultipart } from '@cube-creator/express/multipart'
-import { shaclValidate } from '../middleware/shacl'
-import { createProject } from '../domain/cube-projects/create'
-import { updateProject } from '../domain/cube-projects/update'
-import { deleteProject } from '../domain/cube-projects/delete'
-import { getExportedProject } from '../domain/cube-projects/export'
-import { getProjectDetails } from '../domain/cube-projects/details'
-import { triggers } from '../pipeline/trigger'
-import { parsingClient, streamClient } from '../query-client'
-import { postImportedProject } from './cube-projects/import'
+import { shaclValidate } from '../middleware/shacl.js'
+import { createProject } from '../domain/cube-projects/create.js'
+import { updateProject } from '../domain/cube-projects/update.js'
+import { deleteProject } from '../domain/cube-projects/delete.js'
+import { getExportedProject } from '../domain/cube-projects/export.js'
+import { getProjectDetails } from '../domain/cube-projects/details.js'
+import { triggers } from '../pipeline/trigger.js'
+import { parsingClient, streamClient } from '../query-client.js'
+import { postImportedProject } from './cube-projects/import.js'
 
 const trigger = triggers[env.PIPELINE_TYPE]
 
@@ -85,7 +85,7 @@ export const getExport = protectedResource(cors({ exposedHeaders: 'content-dispo
   res.setHeader('Content-Disposition', `attachment; filename="${project.label}.trig"`)
   res.setHeader('Content-Type', 'application/trig')
 
-  const quadStream: any = serializers.import('application/trig', data, {
+  const quadStream: any = formats.serializers.import('application/trig', data, {
     prefixes: {
       cc: cc().value,
       rdf: ns.rdf().value,
@@ -114,7 +114,7 @@ export const getDetails = protectedResource(asyncMiddleware(async (req, res) => 
   const quadStream = await getProjectDetails({
     project: req.hydra.resource.term,
     resource: req.hydra.term,
-  }).execute(streamClient.query)
+  }).execute(streamClient)
 
   return res.quadStream(quadStream)
 }))

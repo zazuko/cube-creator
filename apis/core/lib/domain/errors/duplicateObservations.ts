@@ -2,9 +2,9 @@ import { INSERT, SELECT, sparql } from '@tpluscode/sparql-builder'
 import { cc, cube } from '@cube-creator/core/namespace'
 import { Error } from '@cube-creator/model/Dataset'
 import { TransformJob } from '@cube-creator/model/Job'
-import { schema } from '@tpluscode/rdf-ns-builders/strict'
-import { streamClient } from '../../query-client'
-import { deleteCurrentError } from './deleteCurrent'
+import { schema } from '@tpluscode/rdf-ns-builders'
+import { streamClient } from '../../query-client.js'
+import { deleteCurrentError } from './deleteCurrent.js'
 
 function findDuplicateObservations(job: TransformJob) {
   return SELECT`?observation`

@@ -1,9 +1,9 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { cc, lindasSchema } from '@cube-creator/core/namespace'
 import { dcat, hydra, rdf, schema, vcard, _void } from '@tpluscode/rdf-ns-builders'
 import { GraphPointer } from 'clownface'
-import { ResourceStore } from '../../ResourceStore'
-import * as projectQuery from '../cube-projects/queries'
+import { ResourceStore } from '../../ResourceStore.js'
+import * as projectQuery from '../cube-projects/queries.js'
 
 interface AddMetaDataCommand {
   dataset: GraphPointer<NamedNode>

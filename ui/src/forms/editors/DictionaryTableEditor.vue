@@ -68,7 +68,7 @@
 import { defineComponent, PropType } from 'vue'
 import { PropertyObjectState } from '@hydrofoil/shaperone-core/models/forms'
 import { prov, sh } from '@tpluscode/rdf-ns-builders'
-import { Term } from 'rdf-js'
+import type { Term } from '@rdfjs/types'
 import { PropertyShape } from '@rdfine/shacl'
 import { PropertyRenderer } from '@hydrofoil/shaperone-core/renderer'
 import RadioButton from '@/components/RadioButton.vue'

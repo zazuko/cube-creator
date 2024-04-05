@@ -1,8 +1,8 @@
 /* eslint-disable import/no-duplicates,@typescript-eslint/no-empty-interface,no-use-before-define */
 declare module 'rdf-cube-view-query' {
-  import View = require('rdf-cube-view-query/lib/View')
-  import Cube = require('rdf-cube-view-query/lib/Cube')
-  import Source = require('rdf-cube-view-query/lib/Source')
+  import View = require('rdf-cube-view-query/lib/View.js')
+  import Cube = require('rdf-cube-view-query/lib/Cube.js')
+  import Source = require('rdf-cube-view-query/lib/Source.js')
 
   interface Lib {
     View: typeof View
@@ -15,7 +15,7 @@ declare module 'rdf-cube-view-query' {
   export = _export
 }
 
-declare module 'rdf-cube-view-query/lib/query/ViewQuery' {
+declare module 'rdf-cube-view-query/lib/query/ViewQuery.js' {
   import type { GraphPointer } from 'clownface'
 
   namespace ViewQuery {
@@ -35,13 +35,13 @@ declare module 'rdf-cube-view-query/lib/query/ViewQuery' {
   export = ViewQuery
 }
 
-declare module 'rdf-cube-view-query/lib/View' {
-  import { DatasetCore, NamedNode, Term } from 'rdf-js'
+declare module 'rdf-cube-view-query/lib/View.js' {
+  import type { DatasetCore, NamedNode, Term } from '@rdfjs/types'
   import type { GraphPointer } from 'clownface'
-  import ViewQuery = require('rdf-cube-view-query/lib/query/ViewQuery')
-  import Node = require('rdf-cube-view-query/lib/Node')
-  import Cube = require('rdf-cube-view-query/lib/Cube')
-  import Dimension = require('rdf-cube-view-query/lib/Dimension')
+  import ViewQuery = require('rdf-cube-view-query/lib/query/ViewQuery.js')
+  import Node = require('rdf-cube-view-query/lib/Node.js')
+  import Cube = require('rdf-cube-view-query/lib/Cube.js')
+  import Dimension = require('rdf-cube-view-query/lib/Dimension.js')
 
   type Observation = Record<string, Term>
 
@@ -66,9 +66,9 @@ declare module 'rdf-cube-view-query/lib/View' {
   export = View
 }
 
-declare module 'rdf-cube-view-query/lib/Source' {
-  import Cube = require('rdf-cube-view-query/lib/Cube')
-  import Node = require('rdf-cube-view-query/lib/Node')
+declare module 'rdf-cube-view-query/lib/Source.js' {
+  import Cube = require('rdf-cube-view-query/lib/Cube.js')
+  import Node = require('rdf-cube-view-query/lib/Node.js')
 
   namespace Source {
     interface Source extends Node.Node {
@@ -90,10 +90,10 @@ declare module 'rdf-cube-view-query/lib/Source' {
   export = Source
 }
 
-declare module 'rdf-cube-view-query/lib/Cube' {
-  import { DatasetCore, NamedNode, Term } from 'rdf-js'
-  import Node = require('rdf-cube-view-query/lib/Node')
-  import Source = require('rdf-cube-view-query/lib/Source')
+declare module 'rdf-cube-view-query/lib/Cube.js' {
+  import type { DatasetCore, NamedNode, Term } from '@rdfjs/types'
+  import Node = require('rdf-cube-view-query/lib/Node.js')
+  import Source = require('rdf-cube-view-query/lib/Source.js')
 
   namespace Cube {
     interface Cube extends Node.Node {
@@ -110,8 +110,8 @@ declare module 'rdf-cube-view-query/lib/Cube' {
   export = Cube
 }
 
-declare module 'rdf-cube-view-query/lib/Node' {
-  import { DatasetCore, NamedNode, Term } from 'rdf-js'
+declare module 'rdf-cube-view-query/lib/Node.js' {
+  import type { DatasetCore, NamedNode, Term } from '@rdfjs/types'
   import type { GraphPointer } from 'clownface'
 
   namespace Node {
@@ -141,8 +141,8 @@ declare module 'rdf-cube-view-query/lib/Node' {
   export = Node
 }
 
-declare module 'rdf-cube-view-query/lib/Dimension' {
-  import Node = require('rdf-cube-view-query/lib/Node')
+declare module 'rdf-cube-view-query/lib/Dimension.js' {
+  import Node = require('rdf-cube-view-query/lib/Node.js')
 
   class Dimension extends Node {
 

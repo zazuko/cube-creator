@@ -1,21 +1,21 @@
 import { describe, beforeEach, it } from 'mocha'
 import { expect } from 'chai'
 import sinon from 'sinon'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import StreamClient from 'sparql-http-client'
-import clownface, { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
 import { Files } from '@cube-creator/express/multipart'
 import { md, meta } from '@cube-creator/core/namespace'
-import { hydra, rdf, schema, sh } from '@tpluscode/rdf-ns-builders/strict'
+import { hydra, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { namedNode } from '@cube-creator/testing/clownface'
 import { ASK } from '@tpluscode/sparql-builder'
 import { nanoid } from 'nanoid'
 import ValidationReport from 'rdf-validate-shacl/src/validation-report'
-import { importDimension } from '../../../../lib/domain/shared-dimension/import'
-import { SharedDimensionsStore } from '../../../../lib/store'
-import { testStore } from '../../../support/store'
-import { mdClients } from '../../../../../../packages/testing/lib/index'
-import env from '../../../../lib/env'
+import { importDimension } from '../../../../lib/domain/shared-dimension/import.js'
+import { SharedDimensionsStore } from '../../../../lib/store/index.js'
+import { testStore } from '../../../support/store.js'
+import { mdClients } from '../../../../../../packages/testing/lib/index.js'
+import env from '../../../../lib/env.js'
 
 describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension/import', () => {
   describe('importDimension', () => {
@@ -25,7 +25,7 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension/import
     let client: StreamClient
 
     beforeEach(() => {
-      resource = clownface({
+      resource = $rdf.clownface({
         dataset: $rdf.dataset(),
       }).namedNode('')
       files = {}
@@ -88,7 +88,7 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension/import
       files['dim.ttl'] = () => {
         const dataset = $rdf.dataset()
 
-        clownface({ dataset })
+        $rdf.clownface({ dataset })
           .namedNode('dim-1')
           .addOut(rdf.type, md.SharedDimension)
           .namedNode('dim-2')
@@ -134,7 +134,7 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension/import
       files['dim.ttl'] = () => {
         const dataset = $rdf.dataset()
 
-        clownface({ dataset })
+        $rdf.clownface({ dataset })
           .namedNode('dim')
           .addOut(rdf.type, md.SharedDimension)
 
@@ -159,7 +159,7 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension/import
       files['dim.ttl'] = () => {
         const dataset = $rdf.dataset()
 
-        clownface({ dataset })
+        $rdf.clownface({ dataset })
           .namedNode('dim')
           .addOut(rdf.type, [
             md.SharedDimension,
@@ -198,7 +198,7 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension/import
       files['dim.ttl'] = () => {
         const dataset = $rdf.dataset()
 
-        clownface({ dataset })
+        $rdf.clownface({ dataset })
           .namedNode(dimension)
           .addOut(rdf.type, [
             md.SharedDimension,
@@ -234,7 +234,7 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension/import
         FILTER ( isBlank(?shape) )
       `
         .FROM($rdf.namedNode(env.MANAGED_DIMENSIONS_GRAPH))
-        .execute(mdClients.streamClient.query)
+        .execute(mdClients.streamClient)
       await expect(correctlySaved).to.eventually.be.true
     })
 
@@ -244,7 +244,7 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension/import
       files['dim.ttl'] = () => {
         const dataset = $rdf.dataset()
 
-        clownface({ dataset })
+        $rdf.clownface({ dataset })
           .namedNode('dim')
           .addOut(rdf.type, [
             md.SharedDimension,

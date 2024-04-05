@@ -3,10 +3,10 @@ const TermMap = require('@rdfjs/term-map')
 const TermSet = require('@rdfjs/term-set')
 const rdf = require('rdf-ext')
 const { Transform } = require('readable-stream')
-const urlJoin = require('./urlJoin')
-const Cube = require('./Cube')
 const ns = require('@tpluscode/rdf-ns-builders')
 const { cube } = require('@cube-creator/core/namespace')
+const urlJoin = require('./urlJoin')
+const Cube = require('./Cube')
 
 function defaultCube({ observationSet }) {
   const observationSetIri = observationSet && observationSet.value
@@ -50,7 +50,7 @@ class ToCubeShape extends Transform {
 
     const context = {
       dataset,
-      ptr: clownface({ dataset }).has(ns.rdf.type, cube.Observation),
+      ptr: $rdf.clownface({ dataset }).has(ns.rdf.type, cube.Observation),
     }
 
     context.observationSet = context.ptr.in(cube.observation).term

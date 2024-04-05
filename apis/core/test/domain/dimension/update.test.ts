@@ -1,18 +1,18 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { describe, it, beforeEach } from 'mocha'
 import { expect } from 'chai'
-import clownface, { GraphPointer } from 'clownface'
-import $rdf from 'rdf-ext'
+import type { GraphPointer } from 'clownface'
+import $rdf from '@zazuko/env'
 import sinon from 'sinon'
-import DatasetExt from 'rdf-ext/lib/Dataset'
+import { Dataset as DatasetExt } from '@zazuko/env/lib/Dataset.js'
 import { prov, rdf, schema, sh, qudt, time } from '@tpluscode/rdf-ns-builders'
 import { cc, meta } from '@cube-creator/core/namespace'
 import { ex } from '@cube-creator/testing/lib/namespace'
 import { namedNode } from '@cube-creator/testing/clownface'
-import { update } from '../../../lib/domain/dimension/update'
-import { TestResourceStore } from '../../support/TestResourceStore'
-import '../../../lib/domain'
-import * as projectQuery from '../../../lib/domain/cube-projects/queries'
+import { update } from '../../../lib/domain/dimension/update.js'
+import { TestResourceStore } from '../../support/TestResourceStore.js'
+import '../../../lib/domain/index.js'
+import * as projectQuery from '../../../lib/domain/cube-projects/queries.js'
 
 describe('domain/dimension/update', function () {
   let store: TestResourceStore
@@ -215,7 +215,7 @@ describe('domain/dimension/update', function () {
 
   it('replaces child blank nodes recursively', async () => {
     // given
-    const dimensionMetadata = clownface({ dataset: $rdf.dataset() })
+    const dimensionMetadata = $rdf.clownface()
       .namedNode('dimension')
       .addOut(schema.about, ex.pollutantDimension)
       .addOut(meta.dataKind, dataKind => {

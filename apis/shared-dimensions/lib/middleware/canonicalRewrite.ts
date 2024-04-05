@@ -1,11 +1,11 @@
-import { Quad, Stream, Term } from 'rdf-js'
 import { Readable } from 'stream'
+import type { Quad, Stream, Term } from '@rdfjs/types'
 import express from 'express'
 import asyncMiddleware from 'middleware-async'
 import through2 from 'through2'
 import { oa } from '@tpluscode/rdf-ns-builders'
-import $rdf from 'rdf-ext'
-import env from '../env'
+import $rdf from '@zazuko/env'
+import env from '../env.js'
 
 function rewriteTerm<T extends Term>(term: T): T {
   if (term.termType === 'NamedNode') {

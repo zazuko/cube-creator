@@ -1,9 +1,9 @@
 import { HydraClient } from 'alcaeus/alcaeus'
 import { CsvProject, ImportProject, UnlistJob } from '@cube-creator/model'
-import '../variables'
+import '../variables.js'
 import { isCsvProject } from '@cube-creator/model/Project'
-import { logger } from '../log'
-import * as runner from './runner'
+import { logger } from '../log.js'
+import * as runner from './runner.js'
 
 interface UnlistRunOptions extends runner.RunOptions {
   publishStore?: {

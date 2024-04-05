@@ -284,7 +284,7 @@ export default defineComponent({
         return
       }
 
-      const filters = clownface({ dataset: $rdf.dataset() })
+      const filters = $rdf.clownface()
         .blankNode()
         .addOut(hydra.limit, this.pageSize)
         .addOut(hydra.pageIndex, this.page)

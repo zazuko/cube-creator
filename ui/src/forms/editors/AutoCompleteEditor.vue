@@ -19,7 +19,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
 import type { PropertyShape } from '@rdfine/shacl'
-import { Term, NamedNode } from 'rdf-js'
+import type { Term, NamedNode } from '@rdfjs/types'
 import { GraphPointer } from 'clownface'
 import VueSelect from 'vue-select'
 import { debounce } from 'debounce'

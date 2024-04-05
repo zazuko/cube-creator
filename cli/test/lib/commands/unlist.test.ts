@@ -1,17 +1,17 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import env from '@cube-creator/core/env'
 import { before, describe, it } from 'mocha'
 import { expect } from 'chai'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import { CONSTRUCT, SELECT } from '@tpluscode/sparql-builder'
 import { schema, xsd } from '@tpluscode/rdf-ns-builders'
 import { ccClients } from '@cube-creator/testing/lib'
 import { insertTestProject } from '@cube-creator/testing/lib/seedData'
 import { cc } from '@cube-creator/core/namespace'
-import clownface, { AnyPointer } from 'clownface'
+import type { AnyPointer } from 'clownface'
 import namespace from '@rdfjs/namespace'
-import runner from '../../../lib/commands/unlist'
-import { setupEnv } from '../../support/env'
+import runner from '../../../lib/commands/unlist.js'
+import { setupEnv } from '../../support/env.js'
 
 describe('@cube-creator/cli/lib/commands/unlist', function () {
   this.timeout(200000)
@@ -52,14 +52,14 @@ describe('@cube-creator/cli/lib/commands/unlist', function () {
             ?org ${cc.publishGraph} ?expectedGraph .
           }
         `
-      .execute(ccClients.parsingClient.query)
+      .execute(ccClients.parsingClient)
 
     const dataset = await $rdf.dataset().import(await CONSTRUCT`?s ?p ?o`
       .FROM(expectedGraph as NamedNode)
       .WHERE`?s ?p ?o`
-      .execute(ccClients.streamClient.query))
+      .execute(ccClients.streamClient))
 
-    cubePointer = clownface({ dataset })
+    cubePointer = $rdf.clownface({ dataset })
   }
 
   before(resetData)

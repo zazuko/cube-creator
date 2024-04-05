@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/order
-import { opentelemetry } from './lib/otel/index'
+import { opentelemetry } from './lib/otel/index.js'
 
 /* eslint-disable import/no-extraneous-dependencies */
 import * as http from 'http'
@@ -10,7 +10,7 @@ import debug from 'debug'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 import dotenv from 'dotenv'
-import * as command from './lib/commands'
+import * as command from './lib/commands/index.js'
 
 dotenv.config({
   path: path.resolve(__dirname, '.env'),

@@ -1,17 +1,17 @@
-import { NamedNode } from 'rdf-js'
-import { GraphPointer } from 'clownface'
+import type { NamedNode } from '@rdfjs/types'
+import type { GraphPointer } from 'clownface'
 import { schema } from '@tpluscode/rdf-ns-builders'
-import { Conflict } from 'http-errors'
+import httpError from 'http-errors'
 import { CsvMapping } from '@cube-creator/model'
 import { cc } from '@cube-creator/core/namespace'
-import { error } from '../../log'
-import { ResourceStore } from '../../ResourceStore'
-import { loadFileHeadString } from '../csv/file-head'
-import { sniffParse } from '../csv'
-import { sampleValues } from '../csv/sample-values'
-import * as CsvSourceQueries from '../queries/csv-source'
-import type { GetMediaStorage } from '../../storage'
-import { getMediaStorage } from '../../storage'
+import { error } from '../../log.js'
+import { ResourceStore } from '../../ResourceStore.js'
+import { loadFileHeadString } from '../csv/file-head.js'
+import { sniffParse } from '../csv/index.js'
+import { sampleValues } from '../csv/sample-values.js'
+import * as CsvSourceQueries from '../queries/csv-source.js'
+import type { GetMediaStorage } from '../../storage/index.js'
+import { getMediaStorage } from '../../storage/index.js'
 
 interface CreateCSVSourceCommand {
   csvMappingId: NamedNode
@@ -36,7 +36,7 @@ export async function createCSVSource({
   const location = (resource.out(schema.contentUrl).term || undefined) as NamedNode | undefined
 
   if (await sourceWithFilenameExists(csvMapping.id, fileName)) {
-    throw new Conflict(`A file with ${fileName} has already been added to the project`)
+    throw new httpError.Conflict(`A file with ${fileName} has already been added to the project`)
   }
 
   const csvSource = csvMapping.addSource(store, { fileName })

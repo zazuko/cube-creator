@@ -1,6 +1,6 @@
 import { describe, it } from 'mocha'
 import { expect } from 'chai'
-import { parse } from '../../lib/uriTemplateParser'
+import { parse } from '../../lib/uriTemplateParser.js'
 
 describe('@cube-creator/model/lib/uriTemplateParser', () => {
   describe('ParsedTemplateWrapper', () => {

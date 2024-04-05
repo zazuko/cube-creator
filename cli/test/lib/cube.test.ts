@@ -1,10 +1,10 @@
 import { describe, it } from 'mocha'
 import { expect } from 'chai'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import { cc, cube } from '@cube-creator/core/namespace'
 import { rdf } from '@tpluscode/rdf-ns-builders'
-import { getObservationSetId, injectRevision } from '../../lib/cube'
-import { logger } from '../support/logger'
+import { getObservationSetId, injectRevision } from '../../lib/cube.js'
+import { logger } from '../support/logger.js'
 
 describe('lib/cube', () => {
   describe('getObservationSetId', () => {

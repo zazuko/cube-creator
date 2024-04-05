@@ -1,12 +1,11 @@
-import { NamedNode, Stream, Term } from 'rdf-js'
 import { Readable } from 'stream'
+import type { NamedNode, Stream, Term } from '@rdfjs/types'
 import { CONSTRUCT, SELECT, sparql } from '@tpluscode/sparql-builder'
-import StreamClient from 'sparql-http-client/StreamClient'
+import StreamClient from 'sparql-http-client/StreamClient.js'
 import * as ns from '@cube-creator/core/namespace'
 import { schema, sh } from '@tpluscode/rdf-ns-builders'
-import ParsingClient from 'sparql-http-client/ParsingClient'
-import $rdf from 'rdf-ext'
-import clownface from 'clownface'
+import ParsingClient from 'sparql-http-client/ParsingClient.js'
+import $rdf from '@zazuko/env'
 
 async function selectIdentifiers(datasetId: Term, parsingClient: ParsingClient): Promise<Record<string, NamedNode> | undefined> {
   const [result] = await SELECT`?cube ?cubeData ?project ?shape`
@@ -23,7 +22,7 @@ async function selectIdentifiers(datasetId: Term, parsingClient: ParsingClient):
       graph ?cubeData {
         ?cube ${ns.cube.observationConstraint} ?shape .
       }
-    `.execute(parsingClient.query)
+    `.execute(parsingClient)
 
   return result as any
 }
@@ -41,14 +40,14 @@ function constructPropertyShapes(shape: NamedNode, cubeData: NamedNode, excludeI
       ?property ${deepPaths} ?s .
       ?s ?p ?o
     `
-    .execute(streamClient.query)
+    .execute(streamClient)
 }
 
 export async function loadCubeShapes(datasetId: Term, excludeInLists: boolean, { parsingClient, streamClient }: { parsingClient: ParsingClient; streamClient: StreamClient }): Promise<Array<Stream & Readable>> {
   const identifiers = await selectIdentifiers(datasetId, parsingClient)
   if (identifiers) {
     const { cube, cubeData, project, shape } = identifiers
-    const graph = clownface({ dataset: $rdf.dataset() })
+    const graph = $rdf.clownface()
       .node(project).addOut(ns.cc.cubeGraph, cubeData)
       .node(cube).addOut(ns.cube.observationConstraint, shape)
 

@@ -1,7 +1,7 @@
 import { Constructor, property } from '@tpluscode/rdfine'
 import { md, meta } from '@cube-creator/core/namespace'
-import { schema, sh } from '@tpluscode/rdf-ns-builders/strict'
-import { NamedNode } from 'rdf-js'
+import { schema, sh } from '@tpluscode/rdf-ns-builders'
+import type { NamedNode } from '@rdfjs/types'
 import { Hierarchy, NextInHierarchy, Path } from '@/store/types'
 
 function pathMixin<Base extends Constructor> (base: Base) {

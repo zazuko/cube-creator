@@ -1,14 +1,14 @@
-import { NamedNode, Quad } from 'rdf-js'
+import type { NamedNode, Quad } from '@rdfjs/types'
 import { describe, before, beforeEach, it } from 'mocha'
 import sinon from 'sinon'
-import clownface, { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
 import { namedNode } from '@cube-creator/testing/clownface'
 import { insertTestDimensions } from '@cube-creator/testing/lib/seedData'
-import $rdf from 'rdf-ext'
-import { hydra, qb, rdfs, schema, sh, xsd } from '@tpluscode/rdf-ns-builders/strict'
+import $rdf from '@zazuko/env'
+import { hydra, qb, rdfs, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import { expect } from 'chai'
 import { toRdf } from 'rdf-literal'
-import { DynamicPropertiesQuery, loadDynamicTermProperties } from '../../../lib/shapes/dynamic-properties'
+import { DynamicPropertiesQuery, loadDynamicTermProperties } from '../../../lib/shapes/dynamic-properties.js'
 
 describe('@cube-creator/shared-dimensions-api/lib/shapes/dynamic-properties @SPARQL', () => {
   let shape: GraphPointer<NamedNode>
@@ -25,7 +25,7 @@ describe('@cube-creator/shared-dimensions-api/lib/shapes/dynamic-properties @SPA
 
   it('sets sh:minCount=1 when dynamic property is required', async () => {
     // when
-    const dynamicProperties = clownface({
+    const dynamicProperties = $rdf.clownface({
       dataset: $rdf.dataset([
         ...await loadDynamicTermProperties(targetClass, shape),
       ]),
@@ -38,7 +38,7 @@ describe('@cube-creator/shared-dimensions-api/lib/shapes/dynamic-properties @SPA
 
   it('sets sh:minCount=0 when dynamic property is not required', async () => {
     // when
-    const dynamicProperties = clownface({
+    const dynamicProperties = $rdf.clownface({
       dataset: $rdf.dataset([
         ...await loadDynamicTermProperties(targetClass, shape),
       ]),
@@ -51,7 +51,7 @@ describe('@cube-creator/shared-dimensions-api/lib/shapes/dynamic-properties @SPA
 
   it('transforms dynamic literal property into SHACL Property', async () => {
     // when
-    const dynamicProperties = clownface({
+    const dynamicProperties = $rdf.clownface({
       dataset: $rdf.dataset([
         ...await loadDynamicTermProperties(targetClass, shape),
       ]),
@@ -90,7 +90,7 @@ describe('@cube-creator/shared-dimensions-api/lib/shapes/dynamic-properties @SPA
 
   it('transforms dynamic dimension property into SHACL Property', async () => {
     // when
-    const dynamicProperties = clownface({
+    const dynamicProperties = $rdf.clownface({
       dataset: $rdf.dataset([
         ...await loadDynamicTermProperties(targetClass, shape),
       ]),
@@ -126,7 +126,7 @@ describe('@cube-creator/shared-dimensions-api/lib/shapes/dynamic-properties @SPA
 
   it('populates sh:languageIn as list from queried values', async () => {
     // when
-    const dynamicProperties = clownface({
+    const dynamicProperties = $rdf.clownface({
       dataset: $rdf.dataset([
         ...await loadDynamicTermProperties(targetClass, shape),
       ]),
@@ -151,7 +151,7 @@ describe('@cube-creator/shared-dimensions-api/lib/shapes/dynamic-properties', ()
   it('adds dynamic properties ordered by label', async () => {
     // given
     const dataset = $rdf.dataset()
-    clownface({ dataset })
+    $rdf.clownface({ dataset })
       .blankNode()
       .addOut(sh.path, hydra.last)
       .addOut(rdfs.label, 'Last property')
@@ -164,7 +164,7 @@ describe('@cube-creator/shared-dimensions-api/lib/shapes/dynamic-properties', ()
     dynamicPropertiesQuery.resolves(dataset.toArray())
 
     // when
-    const dynamicProperties = clownface({
+    const dynamicProperties = $rdf.clownface({
       dataset: $rdf.dataset([...await loadDynamicTermProperties('http://target.node', shape, dynamicPropertiesQuery)]),
     })
 

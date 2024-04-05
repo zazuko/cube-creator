@@ -1,14 +1,14 @@
-import { NamedNode, Term } from 'rdf-js'
+import type { NamedNode, Term } from '@rdfjs/types'
 import { Constructor, property } from '@tpluscode/rdfine'
 import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import { CsvColumn, Table } from '@cube-creator/model'
 import { cc } from '@cube-creator/core/namespace'
 import * as ColumnMapping from '@cube-creator/model/ColumnMapping'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import slug from 'slug'
 import { Link } from '@cube-creator/model/lib/Link'
-import { ResourceStore } from '../../ResourceStore'
-import * as id from '../identifiers'
+import { ResourceStore } from '../../ResourceStore.js'
+import * as id from '../identifiers.js'
 
 interface CreateLiteralColumnMapping {
   store: ResourceStore
@@ -55,7 +55,7 @@ export default function mixin<Base extends Constructor<Table>>(Resource: Base): 
     columnMappings!: Array<Link<ColumnMapping.ColumnMapping>>
 
     addLiteralColumnMapping({ store, sourceColumn, targetProperty, datatype, language, defaultValue, dimensionType }: CreateLiteralColumnMapping): ColumnMapping.LiteralColumnMapping {
-      const columnMapping = ColumnMapping.createLiteral(store.create(id.columnMapping(this, sourceColumn.name)), {
+      const columnMapping = ColumnMapping.createLiteral(this.env, store.create(id.columnMapping(this, sourceColumn.name)), {
         sourceColumn,
         targetProperty,
         datatype,
@@ -70,7 +70,7 @@ export default function mixin<Base extends Constructor<Table>>(Resource: Base): 
     }
 
     addReferenceColumnMapping({ store, targetProperty, referencedTable, identifierMappings, dimensionType }: CreateReferenceColumnMapping): ColumnMapping.ReferenceColumnMapping {
-      const columnMapping = ColumnMapping.createReference(store.create(id.columnMapping(this, targetProperty.value)), {
+      const columnMapping = ColumnMapping.createReference(this.env, store.create(id.columnMapping(this, targetProperty.value)), {
         targetProperty,
         referencedTable,
         dimensionType,
@@ -78,6 +78,7 @@ export default function mixin<Base extends Constructor<Table>>(Resource: Base): 
 
       columnMapping.identifierMapping = identifierMappings.map((properties) =>
         ColumnMapping.createIdentifierMapping(
+          this.env,
           columnMapping.pointer.node(id.identifierMapping(columnMapping)),
           properties,
         ),

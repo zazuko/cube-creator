@@ -1,15 +1,14 @@
-import type { NamedNode, Stream, Term } from 'rdf-js'
+import type { NamedNode, Stream, Term } from '@rdfjs/types'
 import { cc } from '@cube-creator/core/namespace'
 import { Project } from '@cube-creator/model/Project'
 import { SELECT } from '@tpluscode/sparql-builder'
 import { IN } from '@tpluscode/sparql-builder/expressions'
 import StreamClient from 'sparql-http-client'
 import through2 from 'through2'
-import $rdf from 'rdf-ext'
-import { dcterms, schema } from '@tpluscode/rdf-ns-builders'
-import { rdfs } from '@tpluscode/rdf-ns-builders/strict'
-import { streamClient } from '../../query-client'
-import { ResourceStore } from '../../ResourceStore'
+import $rdf from '@zazuko/env'
+import { dcterms, schema, rdfs } from '@tpluscode/rdf-ns-builders'
+import { streamClient } from '../../query-client.js'
+import { ResourceStore } from '../../ResourceStore.js'
 
 interface GetExportedProject {
   resource: NamedNode
@@ -78,7 +77,7 @@ export async function getExportedProject({ resource, store, client = streamClien
       ?g != ${project.id} || ( ?g = ${project.id} && ?s = ${project.id} )
     )
     `
-    .execute(client.query)
+    .execute(client)
 
   const projectNamespace = new RegExp(`^${project.id.value}/?`)
   function removeBase<T extends Term>(term: T): T {

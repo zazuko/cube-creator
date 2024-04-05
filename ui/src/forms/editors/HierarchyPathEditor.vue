@@ -21,10 +21,10 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { Term } from 'rdf-js'
+import type { Term } from '@rdfjs/types'
 import { dataset } from '@rdf-esm/dataset'
-import clownface, { GraphPointer } from 'clownface'
-import { sh, schema, rdfs } from '@tpluscode/rdf-ns-builders/strict'
+import type { GraphPointer } from 'clownface'
+import { sh, schema, rdfs } from '@tpluscode/rdf-ns-builders'
 import InstancesSelect from './SelectEditor.vue'
 
 function getProperty (value: GraphPointer | undefined) {
@@ -102,7 +102,7 @@ export default defineComponent({
     },
 
     __update () {
-      const pointer = clownface({ dataset: dataset() })
+      const pointer = $rdf.clownface({ dataset: dataset() })
       if (this.inverse) {
         const path = pointer.blankNode()
         if (this.property) {

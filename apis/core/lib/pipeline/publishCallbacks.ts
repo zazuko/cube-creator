@@ -1,11 +1,11 @@
 import nodeFetch from 'node-fetch'
 import env from '@cube-creator/core/env'
 import { SELECT } from '@tpluscode/sparql-builder'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import { cc } from '@cube-creator/core/namespace'
 import { schema } from '@tpluscode/rdf-ns-builders'
-import { warning } from '../log'
-import { TriggerCallbackMap, TriggerCallbacks } from './index'
+import { warning } from '../log.js'
+import { TriggerCallbackMap, TriggerCallbacks } from './index.js'
 
 const pipelineUrlTerm = $rdf.namedNode('urn:gitlab:pipelineUrl')
 
@@ -29,7 +29,7 @@ const gitlab: TriggerCallbacks = {
                ${cc.revision} ${job.out(cc.revision).term} ;
           .
         }
-      `.execute(client.query)
+      `.execute(client)
 
     const cancelPipelines = previousJobs.map(async ({ pipelineUrl }) => {
       return fetch(`${pipelineUrl.value}/cancel`, {

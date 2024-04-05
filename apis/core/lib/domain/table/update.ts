@@ -7,14 +7,14 @@ import {
 } from '@cube-creator/model'
 import type { Organization } from '@rdfine/schema'
 import { schema, xsd } from '@tpluscode/rdf-ns-builders'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import { GraphPointer } from 'clownface'
 import { cc } from '@cube-creator/core/namespace'
-import { ResourceStore } from '../../ResourceStore'
-import { getDimensionMetaDataCollection } from '../queries/dimension-metadata'
-import * as ColumnMappingQueries from '../queries/column-mapping'
-import { findOrganization } from '../organization/query'
-import { getTableReferences } from '../queries/table'
+import { ResourceStore } from '../../ResourceStore.js'
+import { getDimensionMetaDataCollection } from '../queries/dimension-metadata.js'
+import * as ColumnMappingQueries from '../queries/column-mapping.js'
+import { findOrganization } from '../organization/query.js'
+import { getTableReferences } from '../queries/table.js'
 
 const trueTerm = $rdf.literal('true', xsd.boolean)
 

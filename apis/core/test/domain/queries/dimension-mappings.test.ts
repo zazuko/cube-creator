@@ -1,12 +1,12 @@
 import { describe, it, beforeEach, afterEach } from 'mocha'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import { expect } from 'chai'
 import { ccClients } from '@cube-creator/testing/lib'
 import { insertTestDimensions, insertTestProject } from '@cube-creator/testing/lib/seedData'
-import { dcterms, prov, schema, xsd } from '@tpluscode/rdf-ns-builders/strict'
+import { dcterms, prov, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import { ASK, sparql } from '@tpluscode/sparql-builder'
 import { IN } from '@tpluscode/sparql-builder/expressions'
-import { getUnmappedValues, importMappingsFromSharedDimension } from '../../../lib/domain/queries/dimension-mappings'
+import { getUnmappedValues, importMappingsFromSharedDimension } from '../../../lib/domain/queries/dimension-mappings.js'
 
 describe('@cube-creator/core-api/lib/domain/queries/dimension-mappings @SPARQL', function () {
   this.timeout(20000)
@@ -60,7 +60,7 @@ describe('@cube-creator/core-api/lib/domain/queries/dimension-mappings @SPARQL',
           ] .
         `
         .FROM(pollutantMapping)
-        .execute(ccClients.parsingClient.query)
+        .execute(ccClients.parsingClient)
       const ozonePairCreated = ASK`
           ${pollutantMapping} ${prov.hadDictionaryMember} [
             ${prov.pairKey} "so2" ;
@@ -71,7 +71,7 @@ describe('@cube-creator/core-api/lib/domain/queries/dimension-mappings @SPARQL',
           ] .
         `
         .FROM(pollutantMapping)
-        .execute(ccClients.parsingClient.query)
+        .execute(ccClients.parsingClient)
 
       await expect(sulphurOxidePairCreated).to.eventually.be.true
       await expect(ozonePairCreated).to.eventually.be.true
@@ -95,7 +95,7 @@ describe('@cube-creator/core-api/lib/domain/queries/dimension-mappings @SPARQL',
           FILTER(?key ${IN('"O3"', '"so2"')})
         `
         .FROM(pollutantMapping)
-        .execute(ccClients.parsingClient.query)
+        .execute(ccClients.parsingClient)
 
       expect(pairsCreated).to.be.false
     })
@@ -122,7 +122,7 @@ describe('@cube-creator/core-api/lib/domain/queries/dimension-mappings @SPARQL',
           ] .
         `
         .FROM(testMapping)
-        .execute(ccClients.parsingClient.query)
+        .execute(ccClients.parsingClient)
 
       expect(pairsCreated).to.be.true
     })
@@ -149,7 +149,7 @@ describe('@cube-creator/core-api/lib/domain/queries/dimension-mappings @SPARQL',
           ] .
         `
         .FROM(testMapping)
-        .execute(ccClients.parsingClient.query)
+        .execute(ccClients.parsingClient)
 
       expect(pairsCreated).to.be.true
     })
@@ -177,14 +177,14 @@ describe('@cube-creator/core-api/lib/domain/queries/dimension-mappings @SPARQL',
           ] .
         `
         .FROM(testMapping)
-        .execute(ccClients.parsingClient.query)
+        .execute(ccClients.parsingClient)
       const redMapped = await ASK`
           ${testMapping} ${prov.hadDictionaryMember} [
             ${prov.pairKey} "#F00" ;
           ] .
         `
         .FROM(testMapping)
-        .execute(ccClients.parsingClient.query)
+        .execute(ccClients.parsingClient)
 
       expect(blueMapped).to.be.true
       expect(redMapped).to.be.false

@@ -3,7 +3,7 @@ import { NodeShape, PropertyShape } from '@rdfine/shacl'
 import { dash, dcterms, rdf, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import { supportedLanguages } from '@cube-creator/core/languages'
 import { md } from '@cube-creator/core/namespace'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import { fromPointer as propertyGroup } from '@rdfine/shacl/lib/PropertyGroup'
 
 const defaultGroup = $rdf.namedNode('#default-group')

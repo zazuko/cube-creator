@@ -1,13 +1,13 @@
 import { describe, it, beforeEach, before } from 'mocha'
 import { expect } from 'chai'
 import sinon from 'sinon'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import nodeFetch, { Response } from 'node-fetch'
 import { ccClients } from '@cube-creator/testing/lib'
 import { blankNode } from '@cube-creator/testing/clownface'
 import { cc } from '@cube-creator/core/namespace'
 import { insertTestProject } from '@cube-creator/testing/lib/seedData'
-import { callbacks } from '../../lib/pipeline/publishCallbacks'
+import { callbacks } from '../../lib/pipeline/publishCallbacks.js'
 
 describe('@cube-creator/core/lib/pipeline/publishCallback @SPARQL', () => {
   const { gitlab } = callbacks

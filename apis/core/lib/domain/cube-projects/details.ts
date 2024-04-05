@@ -1,10 +1,10 @@
-import { Variable, Literal, NamedNode } from 'rdf-js'
-import $rdf from 'rdf-ext'
+import type { Variable, Literal, NamedNode } from '@rdfjs/types'
+import $rdf from '@zazuko/env'
 import { CONSTRUCT, sparql } from '@tpluscode/sparql-builder'
 import { SparqlGraphQueryExecutable, SparqlQuery, SparqlQueryExecutable } from '@tpluscode/sparql-builder/lib'
-import { schema } from '@tpluscode/rdf-ns-builders/strict'
+import { schema } from '@tpluscode/rdf-ns-builders'
 import { lindasSchema } from '@cube-creator/core/namespace'
-import * as DetailParts from './details/index'
+import * as DetailParts from './details/index.js'
 
 export interface ProjectDetailPart {
   (project: NamedNode, variable: Variable): [SparqlQueryExecutable, ...[Literal, ...Literal[]]]

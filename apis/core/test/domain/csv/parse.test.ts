@@ -3,8 +3,8 @@ import { resolve } from 'path'
 import { Readable } from 'stream'
 import { describe, it } from 'mocha'
 import { expect } from 'chai'
-import { sniffParse } from '../../../lib/domain/csv'
-import { loadFileHeadString } from '../../../lib/domain/csv/file-head'
+import { sniffParse } from '../../../lib/domain/csv/index.js'
+import { loadFileHeadString } from '../../../lib/domain/csv/file-head.js'
 
 describe('domain/csv/parse', () => {
   it('sniffs and parses', async () => {

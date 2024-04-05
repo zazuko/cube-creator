@@ -1,9 +1,9 @@
 const clownface = require('clownface')
 const rdf = require('rdf-ext')
 const TermMap = require('@rdfjs/term-map')
-const Dimension = require('./Dimension')
 const ns = require('@tpluscode/rdf-ns-builders')
 const { cube } = require('@cube-creator/core/namespace')
+const Dimension = require('./Dimension')
 
 class Cube {
   constructor({ term, observationSet, shape }) {
@@ -36,15 +36,15 @@ class Cube {
   toDataset() {
     const dataset = rdf.dataset()
 
-    clownface({ dataset, term: this.term })
+    $rdf.clownface({ dataset, term: this.term })
       .addOut(ns.rdf.type, cube.Cube)
       .addOut(cube.observationSet, this.observationSet)
       .addOut(cube.observationConstraint, this.shape)
 
-    clownface({ dataset, term: this.observationSet })
+    $rdf.clownface({ dataset, term: this.observationSet })
       .addOut(ns.rdf.type, cube.ObservationSet)
 
-    clownface({ dataset, term: this.shape })
+    $rdf.clownface({ dataset, term: this.shape })
       .addOut(ns.rdf.type, [ns.sh.NodeShape, cube.Constraint])
       .addOut(ns.sh.closed, true)
 

@@ -1,7 +1,7 @@
-import { Quad, Term } from 'rdf-js'
-import $rdf from 'rdf-ext'
-import clownface, { GraphPointer } from 'clownface'
-import env from './env'
+import type { Quad, Term } from '@rdfjs/types'
+import $rdf from '@zazuko/env'
+import type { GraphPointer } from 'clownface'
+import env from './env.js'
 
 export function rewriteTerm<T extends Term>(term: T): T {
   if (term.termType === 'NamedNode') {
@@ -24,7 +24,7 @@ function rewriteQuad({ subject, predicate, object, graph }: Quad): Quad {
  * Rewrite pointer's dataset by replacing the API_BASE with BASE as configured in the environment
  */
 export function rewrite<T extends Term>(pointer: GraphPointer<T>): GraphPointer<T> {
-  return clownface({
+  return $rdf.clownface({
     dataset: $rdf.dataset([...pointer.dataset].map(rewriteQuad)),
   }).node(rewriteTerm<T>(pointer.term as any))
 }

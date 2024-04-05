@@ -1,21 +1,19 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { describe, it, beforeEach, afterEach } from 'mocha'
 import { expect } from 'chai'
-import clownface from 'clownface'
-import $rdf from 'rdf-ext'
+import $rdf from '@cube-creator/env'
 import { dcat, rdf, rdfs, schema, sh, _void, hydra, xsd, dcterms } from '@tpluscode/rdf-ns-builders'
 import { cc, cube } from '@cube-creator/core/namespace'
 import { Dataset } from '@cube-creator/model'
-import '../../../lib/domain'
+import '../../../lib/domain/index.js'
 import { Project } from '@cube-creator/model/Project'
-import { fromPointer } from '@cube-creator/model/Organization'
 import sinon from 'sinon'
 import { namedNode } from '@cube-creator/testing/clownface'
 import { DomainError } from '@cube-creator/api-errors'
-import * as orgQueries from '../../../lib/domain/organization/query'
-import * as projectQueries from '../../../lib/domain/cube-projects/queries'
-import { TestResourceStore } from '../../support/TestResourceStore'
-import { createProject } from '../../../lib/domain/cube-projects/create'
+import * as orgQueries from '../../../lib/domain/organization/query.js'
+import * as projectQueries from '../../../lib/domain/cube-projects/queries.js'
+import { TestResourceStore } from '../../support/TestResourceStore.js'
+import { createProject } from '../../../lib/domain/cube-projects/create.js'
 
 describe('domain/cube-projects/create', () => {
   let store: TestResourceStore
@@ -23,7 +21,7 @@ describe('domain/cube-projects/create', () => {
   const projectsCollection = namedNode('projects')
   let projectExists: sinon.SinonStub
 
-  const organization = fromPointer(namedNode('org'), {
+  const organization = $rdf.rdfine.cc.Organization(namedNode('org'), {
     publishGraph: $rdf.namedNode('http://example.com/published-cube'),
     namespace: $rdf.namedNode('http://example.com/'),
   })
@@ -47,7 +45,7 @@ describe('domain/cube-projects/create', () => {
 
   it('creates identifier by slugifying rdfs:label', async () => {
     // given
-    const resource = clownface({ dataset: $rdf.dataset() })
+    const resource = $rdf.clownface()
       .namedNode('')
       .addOut(rdfs.label, 'Foo bar project')
       .addOut(dcterms.identifier, 'ubd/28')
@@ -68,7 +66,7 @@ describe('domain/cube-projects/create', () => {
 
     beforeEach(async () => {
       // given
-      const resource = clownface({ dataset: $rdf.dataset() })
+      const resource = $rdf.clownface()
         .namedNode('')
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(dcterms.identifier, 'ubd/28')
@@ -125,7 +123,7 @@ describe('domain/cube-projects/create', () => {
 
   it('initializes a dimension metadata collection resource', async function () {
     // given
-    const resource = clownface({ dataset: $rdf.dataset() })
+    const resource = $rdf.clownface()
       .namedNode('')
       .addOut(rdfs.label, 'Foo bar project')
       .addOut(dcterms.identifier, 'ubd/28')
@@ -150,7 +148,7 @@ describe('domain/cube-projects/create', () => {
 
   it('creates a job collection resource linked to itself', async () => {
     // given
-    const resource = clownface({ dataset: $rdf.dataset() })
+    const resource = $rdf.clownface()
       .namedNode('')
       .addOut(rdfs.label, 'Foo bar project')
       .addOut(dcterms.identifier, 'ubd/28')
@@ -200,7 +198,7 @@ describe('domain/cube-projects/create', () => {
   it('throws when another project uses same cube identifier', async () => {
     // given
     projectExists.resolves(true)
-    const resource = clownface({ dataset: $rdf.dataset() })
+    const resource = $rdf.clownface()
       .namedNode('')
       .addOut(rdfs.label, 'Foo bar project')
       .addOut(dcterms.identifier, 'ubd/28')
@@ -217,7 +215,7 @@ describe('domain/cube-projects/create', () => {
 
   it('keeps the project source kind', async () => {
     // given
-    const resource = clownface({ dataset: $rdf.dataset() })
+    const resource = $rdf.clownface()
       .namedNode('')
       .addOut(rdfs.label, 'Foo bar project')
       .addOut(schema.maintainer, organization.id)
@@ -234,7 +232,7 @@ describe('domain/cube-projects/create', () => {
   describe('CSV project', () => {
     it('creates a CSV Mapping resource', async () => {
       // given
-      const resource = clownface({ dataset: $rdf.dataset() })
+      const resource = $rdf.clownface()
         .namedNode('')
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(schema.maintainer, organization.id)
@@ -250,7 +248,7 @@ describe('domain/cube-projects/create', () => {
 
     it('initializes export link', async () => {
       // given
-      const resource = clownface({ dataset: $rdf.dataset() })
+      const resource = $rdf.clownface()
         .namedNode('')
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(schema.maintainer, organization.id)
@@ -266,7 +264,7 @@ describe('domain/cube-projects/create', () => {
 
     it('initializes project details link', async () => {
       // given
-      const resource = clownface({ dataset: $rdf.dataset() })
+      const resource = $rdf.clownface()
         .namedNode('')
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(schema.maintainer, organization.id)
@@ -282,7 +280,7 @@ describe('domain/cube-projects/create', () => {
 
     it('initializes project links to child resources dataset and cube graph', async () => {
       // given
-      const resource = clownface({ dataset: $rdf.dataset() })
+      const resource = $rdf.clownface()
         .namedNode('')
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(schema.maintainer, organization.id)
@@ -313,7 +311,7 @@ describe('domain/cube-projects/create', () => {
 
     it('initializes a CsvMapping resource', async () => {
       // given
-      const resource = clownface({ dataset: $rdf.dataset() })
+      const resource = $rdf.clownface()
         .namedNode('')
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
@@ -345,7 +343,7 @@ describe('domain/cube-projects/create', () => {
 
     it("generates dataset's cube id", async function () {
       // given
-      const resource = clownface({ dataset: $rdf.dataset() })
+      const resource = $rdf.clownface()
         .namedNode('')
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
@@ -383,7 +381,7 @@ describe('domain/cube-projects/create', () => {
 
     it('creates a properly defined sources collection', async () => {
       // given
-      const resource = clownface({ dataset: $rdf.dataset() })
+      const resource = $rdf.clownface()
         .namedNode('')
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
@@ -430,7 +428,7 @@ describe('domain/cube-projects/create', () => {
 
     it('creates a properly defined tables collection', async () => {
       // given
-      const resource = clownface({ dataset: $rdf.dataset() })
+      const resource = $rdf.clownface()
         .namedNode('')
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(cc.projectSourceKind, cc['projectSourceKind/CSV'])
@@ -479,7 +477,7 @@ describe('domain/cube-projects/create', () => {
   describe('Existing cube', () => {
     it('does not create a CSV Mapping resource', async () => {
       // given
-      const resource = await clownface({ dataset: $rdf.dataset() })
+      const resource = await $rdf.clownface()
         .namedNode('')
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(cc.projectSourceKind, cc['projectSourceKind/ExistingCube'])
@@ -496,7 +494,7 @@ describe('domain/cube-projects/create', () => {
 
     it('initializes export link', async () => {
       // given
-      const resource = await clownface({ dataset: $rdf.dataset() })
+      const resource = await $rdf.clownface()
         .namedNode('')
         .addOut(rdfs.label, 'Foo bar project')
         .addOut(cc.projectSourceKind, cc['projectSourceKind/ExistingCube'])
@@ -513,7 +511,7 @@ describe('domain/cube-projects/create', () => {
 
     it('throws when cube URI is missing', async () => {
       // given
-      const resource = clownface({ dataset: $rdf.dataset() })
+      const resource = $rdf.clownface()
         .namedNode('')
         .addOut(rdfs.label, 'Import project')
         .addOut(schema.maintainer, organization.id)
@@ -529,7 +527,7 @@ describe('domain/cube-projects/create', () => {
 
     it('throws when cube URI is string', async () => {
       // given
-      const resource = clownface({ dataset: $rdf.dataset() })
+      const resource = $rdf.clownface()
         .namedNode('')
         .addOut(rdfs.label, 'Import project')
         .addOut(schema.maintainer, organization.id)
@@ -546,7 +544,7 @@ describe('domain/cube-projects/create', () => {
 
     it('throws when source endpoint is missing', async () => {
       // given
-      const resource = clownface({ dataset: $rdf.dataset() })
+      const resource = $rdf.clownface()
         .namedNode('')
         .addOut(rdfs.label, 'Import project')
         .addOut(schema.maintainer, organization.id)
@@ -562,7 +560,7 @@ describe('domain/cube-projects/create', () => {
 
     it('initializes project links to child resources dataset and cube graph', async () => {
       // given
-      const resource = clownface({ dataset: $rdf.dataset() })
+      const resource = $rdf.clownface()
         .namedNode('')
         .addOut(rdfs.label, 'Import project')
         .addOut(schema.maintainer, organization.id)

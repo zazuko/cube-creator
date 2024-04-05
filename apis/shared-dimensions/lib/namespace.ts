@@ -1,5 +1,5 @@
 import namespace from '@rdfjs/namespace'
-import env from './env'
+import env from './env.js'
 
 type Shapes = 'shape/shared-dimension-create'
 | 'shape/shared-dimension-update'

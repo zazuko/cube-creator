@@ -21,7 +21,7 @@ import * as Models from '@cube-creator/model'
 import { findNodes } from 'clownface-shacl-path'
 import { FileLiteral } from '@/forms/FileLiteral'
 import { GraphPointer } from 'clownface'
-import { Term } from 'rdf-js'
+import type { Term } from '@rdfjs/types'
 
 export const rootURL = window.APP_CONFIG.apiCoreBase
 const segmentSeparator = '!!' // used to replace slash in URI to prevent escaping
@@ -139,7 +139,7 @@ export const api = {
   async invokeSaveOperation<T extends RdfResource = RdfResource> (operation: RuntimeOperation | null | undefined, resource: RdfResource | GraphPointer<ResourceIdentifier>, headers: HeadersInit = {}): Promise<T | null | undefined> {
     const data = 'toJSON' in resource
       ? resource
-      : RdfResourceImpl.factory.createEntity(resource) as RdfResource
+      : $rdf.rdfine().factory.createEntity(resource) as RdfResource
 
     if (!operation) throw new Error('Operation does not exist')
 

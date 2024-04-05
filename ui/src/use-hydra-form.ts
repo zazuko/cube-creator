@@ -1,15 +1,15 @@
 import type { Shape } from '@rdfine/shacl'
 import * as $rdf from '@rdf-esm/dataset'
 import type { RdfResource, ResourceIdentifier, RuntimeOperation } from 'alcaeus'
-import clownface, { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
 import { computed, ref, Ref, shallowRef, ShallowRef, watch } from 'vue'
-import { Term } from 'rdf-js'
+import type { Term } from '@rdfjs/types'
 import { sh1 } from '@cube-creator/core/namespace'
-import { sh } from '@tpluscode/rdf-ns-builders/strict'
+import { sh } from '@tpluscode/rdf-ns-builders'
 import { api } from './api'
 import { APIErrorValidation, ErrorDetails } from './api/errors'
 
-const initResource = () => clownface({ dataset: $rdf.dataset() }).namedNode('')
+const initResource = () => $rdf.clownface().namedNode('')
 
 interface HydraFormOptions {
   beforeSubmit?: () => Promise<boolean> | boolean

@@ -3,8 +3,8 @@ import sinon from 'sinon'
 import { expect } from 'chai'
 import { cc } from '@cube-creator/core/namespace'
 import { insertTestProject } from '@cube-creator/testing/lib/seedData'
-import { timeoutJobs } from '../../../lib/commands'
-import { setupEnv } from '../../support/env'
+import { timeoutJobs } from '../../../lib/commands/index.js'
+import { setupEnv } from '../../support/env.js'
 
 describe('@cube-creator/cli/lib/commands/timeoutJobs', () => {
   beforeEach(function () {

@@ -1,11 +1,9 @@
-import { Literal, NamedNode, Term } from 'rdf-js'
+import type { Literal, NamedNode, Term } from '@rdfjs/types'
 import { Constructor, property } from '@tpluscode/rdfine'
 import { prov, rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { Dictionary } from '@rdfine/prov'
 import { cc, md } from '@cube-creator/core/namespace'
-import TermMap from '@rdfjs/term-map'
-import $rdf from 'rdf-ext'
-import TermSet from '@rdfjs/term-set'
+import $rdf from '@zazuko/env'
 import { GraphPointer } from 'clownface'
 
 interface DictionaryEx {
@@ -54,7 +52,7 @@ export function ProvDictionaryMixinEx<Base extends Constructor<Dictionary>>(Reso
           entriesAdded = true
         }
         return pairKey ? map.set(pairKey, pairEntity) : map
-      }, new TermMap())
+      }, $rdf.termMap())
 
       let entriesRemoved = false
       // Set values for current entries or remove
@@ -92,7 +90,7 @@ export function ProvDictionaryMixinEx<Base extends Constructor<Dictionary>>(Reso
     }
 
     addMissingEntries(unmappedValues: Set<Literal>) {
-      const currentKeys = new TermSet(this.pointer
+      const currentKeys = $rdf.termSet(this.pointer
         .out(prov.hadDictionaryMember)
         .out(prov.pairKey)
         .terms)

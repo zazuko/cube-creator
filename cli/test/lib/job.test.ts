@@ -7,9 +7,9 @@ import { Table } from '@rdfine/csvw'
 import type { VariableMap } from 'barnard59-core'
 import * as Models from '@cube-creator/model'
 import * as Csvw from '@rdfine/csvw'
-import { logger } from '../support/logger'
-import { setupEnv } from '../support/env'
-import { TableIterator } from '../../lib/job'
+import { logger } from '../support/logger.js'
+import { setupEnv } from '../support/env.js'
+import { TableIterator } from '../../lib/job.js'
 
 Hydra.resources.factory.addMixin(...Object.values(Models))
 Hydra.resources.factory.addMixin(...Object.values(Csvw))

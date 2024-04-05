@@ -1,9 +1,9 @@
-import { NamedNode, Term } from 'rdf-js'
-import { GraphPointer } from 'clownface'
-import $rdf from 'rdf-ext'
-import { parsingClient } from './sparql'
-import env from './env'
-import Store from './store/index'
+import type { NamedNode, Term } from '@rdfjs/types'
+import type { GraphPointer } from 'clownface'
+import $rdf from '@zazuko/env'
+import { parsingClient } from './sparql.js'
+import env from './env.js'
+import Store from './store/index.js'
 
 export interface SharedDimensionsStore {
   graph: NamedNode

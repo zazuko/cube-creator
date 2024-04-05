@@ -1,14 +1,13 @@
 import { describe, it } from 'mocha'
 import express from 'express'
 import request from 'supertest'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import { hydra, rdf, rdfs, schema, sh } from '@tpluscode/rdf-ns-builders'
-import clownface from 'clownface'
 import { turtle } from '@tpluscode/rdf-string'
 import { appMock, mockResourceMiddleware } from '@cube-creator/testing/middleware'
 import { ex, cc } from '@cube-creator/testing/lib/namespace'
-import { shaclMiddleware } from '..'
-import { loader } from './support/loader'
+import { shaclMiddleware } from '../index.js'
+import { loader } from './support/loader.js'
 
 describe('middleware/shacl', () => {
   const loadResourcesTypes = async () => []
@@ -22,7 +21,7 @@ describe('middleware/shacl', () => {
     app.use(mockResourceMiddleware())
     app.use(shaclMiddleware({
       loadResource: loader([
-        clownface({ dataset: $rdf.dataset() }).namedNode(ex.NotShape).addOut(rdf.type, hydra.Class),
+        $rdf.clownface().namedNode(ex.NotShape).addOut(rdf.type, hydra.Class),
       ]),
       loadResourcesTypes,
     }))
@@ -41,7 +40,7 @@ describe('middleware/shacl', () => {
     app.use(appMock(api => {
       api.operation.addOut(hydra.expects, ex.Shape)
     }))
-    const shape = clownface({ dataset: $rdf.dataset() })
+    const shape = $rdf.clownface()
       .namedNode(ex.Shape)
       .addOut(rdf.type, sh.NodeShape)
       .addOut(sh.targetClass, cc.CubeProject)
@@ -69,7 +68,7 @@ describe('middleware/shacl', () => {
     app.use(appMock(api => {
       api.operation.addOut(hydra.expects, ex.Shape)
     }))
-    const shape = clownface({ dataset: $rdf.dataset() })
+    const shape = $rdf.clownface()
       .namedNode(ex.Shape)
       .addOut(rdf.type, sh.NodeShape)
       .addOut(sh.targetClass, cc.CubeProject)
@@ -99,7 +98,7 @@ describe('middleware/shacl', () => {
       api.operation.addOut(hydra.expects, ex.Shape)
       api.term = ex.resource
     }))
-    const shape = clownface({ dataset: $rdf.dataset() })
+    const shape = $rdf.clownface()
       .namedNode(ex.Shape)
       .addOut(rdf.type, sh.NodeShape)
       .addOut(sh.property, prop => prop.addOut(sh.path, rdfs.label).addOut(sh.minCount, 1))
@@ -128,7 +127,7 @@ describe('middleware/shacl', () => {
     app.use(appMock(api => {
       api.operation.addOut(hydra.expects, ex.Shape)
     }))
-    const shape = clownface({ dataset: $rdf.dataset() })
+    const shape = $rdf.clownface()
       .namedNode(ex.Shape)
       .addOut(rdf.type, sh.NodeShape)
       .addOut(sh.property, prop => prop.addOut(sh.path, rdfs.label).addOut(sh.minCount, 1))
@@ -160,7 +159,7 @@ describe('middleware/shacl', () => {
     app.use(appMock(api => {
       api.operation.addOut(hydra.expects, ex.Shape)
     }))
-    const shape = clownface({ dataset: $rdf.dataset() })
+    const shape = $rdf.clownface()
       .namedNode(ex.Shape)
       .addOut(rdf.type, sh.NodeShape)
 
@@ -185,7 +184,7 @@ describe('middleware/shacl', () => {
       api.operation.addOut(hydra.expects, ex.Shape)
       api.term = ex.Resource
     }))
-    const shape = clownface({ dataset: $rdf.dataset() })
+    const shape = $rdf.clownface()
       .namedNode(ex.Shape)
       .addOut(rdf.type, sh.NodeShape)
       .addOut(sh.targetClass, schema.Person)
@@ -212,7 +211,7 @@ describe('middleware/shacl', () => {
       api.operation.addOut(hydra.expects, ex.Shape)
       api.term = ex.Resource
     }))
-    const shape = clownface({ dataset: $rdf.dataset() })
+    const shape = $rdf.clownface()
       .namedNode(ex.Shape)
       .addOut(rdf.type, sh.NodeShape)
       .addOut(sh.property, prop => prop.addOut(sh.path, rdfs.label).addOut(sh.minCount, 1))

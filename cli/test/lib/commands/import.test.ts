@@ -1,6 +1,6 @@
 import { before, describe, it } from 'mocha'
 import { expect } from 'chai'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import { dcat, dcterms, qudt, schema, sh, time, vcard, xsd } from '@tpluscode/rdf-ns-builders'
 import namespace from '@rdfjs/namespace'
 import env from '@cube-creator/core/env'
@@ -9,8 +9,8 @@ import { ASK, SELECT } from '@tpluscode/sparql-builder'
 import * as ns from '@cube-creator/core/namespace'
 import { ccClients } from '@cube-creator/testing/lib'
 import { cc, meta } from '@cube-creator/core/namespace'
-import { setupEnv } from '../../support/env'
-import runner from '../../../lib/commands/import'
+import { setupEnv } from '../../support/env.js'
+import runner from '../../../lib/commands/import.js'
 
 describe('@cube-creator/cli/lib/commands/import', () => {
   const cube = $rdf.namedNode('https://environment.ld.admin.ch/foen/example/px-cube')
@@ -42,7 +42,7 @@ describe('@cube-creator/cli/lib/commands/import', () => {
 
           ?set ${ns.cube.observation} ?observation .
           ?observation ?p ?o .
-        `.execute(ccClients.parsingClient.query)
+        `.execute(ccClients.parsingClient)
 
     expect(result.count).to.deep.eq($rdf.literal('14256', xsd.integer))
   })
@@ -57,7 +57,7 @@ describe('@cube-creator/cli/lib/commands/import', () => {
         ] .
       `
       .FROM(cubeDataGraph)
-      .execute(ccClients.parsingClient.query)
+      .execute(ccClients.parsingClient)
 
     expect(hasName).to.be.false
   })
@@ -65,7 +65,7 @@ describe('@cube-creator/cli/lib/commands/import', () => {
   it('does not copy cube metadata into data graph', async () => {
     const hasName = await ASK`${cube} ${schema.name} ?name`
       .FROM(cubeDataGraph)
-      .execute(ccClients.parsingClient.query)
+      .execute(ccClients.parsingClient)
 
     expect(hasName).to.be.false
   })
@@ -76,7 +76,7 @@ describe('@cube-creator/cli/lib/commands/import', () => {
         ?concept ${schema.name} ?name
       `
       .FROM(cubeDataGraph)
-      .execute(ccClients.parsingClient.query)
+      .execute(ccClients.parsingClient)
 
     expect(hasConceptData).to.be.true
   })
@@ -89,7 +89,7 @@ describe('@cube-creator/cli/lib/commands/import', () => {
           ${metadata} ${schema.hasPart} ?dimensionMetadata ; a ${cc.DimensionMetadataCollection} .
           ?dimensionMetadata ${schema.about} ?dim .
         `
-      .execute(ccClients.parsingClient.query)
+      .execute(ccClients.parsingClient)
 
     expect(dimensions.count).to.deep.eq($rdf.literal('20', xsd.integer))
   })
@@ -103,7 +103,7 @@ describe('@cube-creator/cli/lib/commands/import', () => {
         ${cube} ${dcterms.creator} ${resource('user')}
       `
       .FROM(resource('cube-project/px/dataset'))
-      .execute(ccClients.parsingClient.query)
+      .execute(ccClients.parsingClient)
 
     const hasNewMeta = await ASK`
         ${resource('cube-project/px/dataset')}
@@ -114,7 +114,7 @@ describe('@cube-creator/cli/lib/commands/import', () => {
           ${schema.temporalCoverage} ?temp ;
         .
       `.FROM(resource('cube-project/px/dataset'))
-      .execute(ccClients.parsingClient.query)
+      .execute(ccClients.parsingClient)
 
     expect(hasNewMeta).to.be.true
     expect(hasPreviousData).to.be.true
@@ -123,7 +123,7 @@ describe('@cube-creator/cli/lib/commands/import', () => {
   it('does not copy observation URIs into meta graph', async () => {
     const hasObservations = ASK`?set ${ns.cube.observation} ?observation`
       .FROM(resource('cube-project/px/dataset'))
-      .execute(ccClients.parsingClient.query)
+      .execute(ccClients.parsingClient)
 
     await expect(hasObservations).to.eventually.be.false
   })
@@ -136,7 +136,7 @@ describe('@cube-creator/cli/lib/commands/import', () => {
               ${schema.name} "Bois de grumes en m3"@fr ;
               ${qudt.scaleType} ${qudt.RatioScale} .
       `.FROM(resource('cube-project/px/dataset/dimension-metadata'))
-      .execute(ccClients.parsingClient.query)
+      .execute(ccClients.parsingClient)
 
     expect(hasDimensionMeta).to.be.true
   })
@@ -147,7 +147,7 @@ describe('@cube-creator/cli/lib/commands/import', () => {
                 ${schema.description} ?desc .
         `
       .FROM(resource('cube-project/px/dataset/dimension-metadata'))
-      .execute(ccClients.parsingClient.query)
+      .execute(ccClients.parsingClient)
 
     expect(hasDescription).to.be.true
   })
@@ -158,7 +158,7 @@ describe('@cube-creator/cli/lib/commands/import', () => {
                 ${qudt.scaleType} ${qudt.EnumerationScale}
         `
       .FROM(resource('cube-project/px/dataset/dimension-metadata'))
-      .execute(ccClients.parsingClient.query)
+      .execute(ccClients.parsingClient)
 
     expect(didNotReplace).to.be.true
   })
@@ -174,7 +174,7 @@ describe('@cube-creator/cli/lib/commands/import', () => {
           )
         `
       .FROM(resource('cube-project/px/dataset/dimension-metadata'))
-      .execute(ccClients.parsingClient.query)
+      .execute(ccClients.parsingClient)
 
     expect(result.name.value).to.eq('Bundeswaelder in ha')
     expect(rest).to.have.length(0)
@@ -186,13 +186,13 @@ describe('@cube-creator/cli/lib/commands/import', () => {
                     ${schema.hasPart} ${resource('cube-project/px/dataset/dimension-metadata/remove')}
       `
       .FROM(resource('cube-project/px/dataset/dimension-metadata'))
-      .execute(ccClients.parsingClient.query)
+      .execute(ccClients.parsingClient)
 
     const hasRemovedDimension = await ASK`
         ?meta ${schema.about} ${cubeNs('measure/remove')}
       `
       .FROM(resource('cube-project/px/dataset/dimension-metadata'))
-      .execute(ccClients.parsingClient.query)
+      .execute(ccClients.parsingClient)
 
     expect(hasRemovedPart).to.be.false
     expect(hasRemovedDimension).to.be.false
@@ -207,7 +207,7 @@ describe('@cube-creator/cli/lib/commands/import', () => {
                 ] ;
         `
       .FROM(resource('cube-project/px/dataset/dimension-metadata'))
-      .execute(ccClients.parsingClient.query)
+      .execute(ccClients.parsingClient)
 
     expect(didNotRemove).to.be.true
   })
@@ -218,7 +218,7 @@ describe('@cube-creator/cli/lib/commands/import', () => {
                 ${meta.dataKind} ?kind ;
         `
       .FROM(resource('cube-project/px/dataset/dimension-metadata'))
-      .execute(ccClients.parsingClient.query)
+      .execute(ccClients.parsingClient)
 
     expect(results).to.have.length(1)
   })
@@ -237,7 +237,7 @@ describe('@cube-creator/cli/lib/commands/import', () => {
       )
     `
       .FROM(resource('cube-project/px/dataset'))
-      .execute(ccClients.parsingClient.query)
+      .execute(ccClients.parsingClient)
 
     expect(keptExistingMeta).to.be.true
   })
@@ -250,7 +250,7 @@ describe('@cube-creator/cli/lib/commands/import', () => {
       .
     `
       .FROM(resource('cube-project/px/dataset'))
-      .execute(ccClients.parsingClient.query)
+      .execute(ccClients.parsingClient)
     const literals = results.map((row) => row.unitText)
 
     expect(literals).to.have.length(3)
@@ -269,7 +269,7 @@ describe('@cube-creator/cli/lib/commands/import', () => {
                ${schema.description} ?desc ;
                ${dcterms.description} ?desc ;
      `.FROM(resource('cube-project/px/dataset'))
-      .execute(ccClients.parsingClient.query)
+      .execute(ccClients.parsingClient)
 
     expect(hasValues).to.be.true
   })
@@ -280,7 +280,7 @@ describe('@cube-creator/cli/lib/commands/import', () => {
       .WHERE`
           ${cube} a ${ns.cube.Cube} ;
                   ${ns.cube.observationSet}/${ns.cube.observation}/${cubeNs('measure/11')} ?value .
-        `.execute(ccClients.parsingClient.query)
+        `.execute(ccClients.parsingClient)
 
     expect(results).to.deep.contain.members([{
       value: $rdf.namedNode('http://example.com/dimension/colors/red'),

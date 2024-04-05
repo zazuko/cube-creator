@@ -1,5 +1,5 @@
-import { NamedNode } from 'rdf-js'
-import { xsd } from '@tpluscode/rdf-ns-builders/strict'
+import type { NamedNode } from '@rdfjs/types'
+import { xsd } from '@tpluscode/rdf-ns-builders'
 
 export const datatypes: [NamedNode, string[]][] = [
   // Most used datatypes, in alphabetical order of the label

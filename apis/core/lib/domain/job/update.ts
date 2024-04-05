@@ -1,13 +1,13 @@
-import { NamedNode } from 'rdf-js'
-import { GraphPointer } from 'clownface'
+import type { NamedNode } from '@rdfjs/types'
+import type { GraphPointer } from 'clownface'
 import { Job, JobMixin, ImportProject, Dataset, CsvProject } from '@cube-creator/model'
 import { isPublishJob, isTransformJob, JobErrorMixin } from '@cube-creator/model/Job'
-import RdfResource from '@tpluscode/rdfine'
+import $rdf from '@cube-creator/env'
 import { schema } from '@tpluscode/rdf-ns-builders'
-import { ResourceStore } from '../../ResourceStore'
-import { insertDimensionCardinalityError, insertMissingDimensionsError } from '../errors'
-import { error } from '../../log'
-import { clearDimensionChangedWarning } from '../dimension/update'
+import { ResourceStore } from '../../ResourceStore.js'
+import { insertDimensionCardinalityError, insertMissingDimensionsError } from '../errors/index.js'
+import { error } from '../../log.js'
+import { clearDimensionChangedWarning } from '../dimension/update.js'
 
 interface JobUpdateParams {
   resource: GraphPointer<NamedNode>
@@ -15,7 +15,7 @@ interface JobUpdateParams {
 }
 
 export async function update({ resource, store }: JobUpdateParams): Promise<GraphPointer> {
-  const changes = RdfResource.factory.createEntity<Job>(resource, [JobMixin])
+  const changes = $rdf.rdfine().factory.createEntity<Job>(resource, [JobMixin])
   const job = await store.getResource<Job>(resource.term)
 
   job.modified = changes.modified
@@ -48,7 +48,7 @@ export async function update({ resource, store }: JobUpdateParams): Promise<Grap
   }
 
   if (changes.error) {
-    job.error = RdfResource.factory.createEntity(job.pointer.blankNode(), [JobErrorMixin], {
+    job.error = $rdf.rdfine().factory.createEntity(job.pointer.blankNode(), [JobErrorMixin], {
       initializer: {
         ...changes.error.toJSON(),
         types: [schema.Thing],

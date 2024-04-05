@@ -1,14 +1,14 @@
-import { Literal } from 'rdf-js'
+import type { Literal } from '@rdfjs/types'
 import { RdfResource } from '@tpluscode/rdfine/RdfResource'
 import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import { Constructor, property } from '@tpluscode/rdfine'
 import { _void, dcat, dcterms, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import { cc, cube } from '@cube-creator/core/namespace'
-import { initializer } from './lib/initializer'
-import { Cube } from './Cube'
-import { DimensionMetadataCollection, DimensionMetadataCollectionMixin } from './DimensionMetadata'
-import { Link } from './lib/Link'
-import { childResource } from './lib/resourceIdentifiers'
+import { initializer } from './lib/initializer.js'
+import { Cube } from './Cube.js'
+import { DimensionMetadataCollection, DimensionMetadataCollectionMixin } from './DimensionMetadata.js'
+import { Link } from './lib/Link.js'
+import { childResource } from './lib/resourceIdentifiers.js'
 
 export interface Dataset extends RdfResource {
   hasPart: Cube[]

@@ -1,5 +1,5 @@
 import { VuexOidcState } from 'vuex-oidc'
-import { DatasetCore, NamedNode, Quad, Term } from 'rdf-js'
+import type { DatasetCore, NamedNode, Quad, Term } from '@rdfjs/types'
 import { AppState } from './modules/app'
 import { APIState } from './modules/api'
 import { ProjectsState } from '@/store/modules/projects'

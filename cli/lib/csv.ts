@@ -1,10 +1,10 @@
-import { Stream } from 'rdf-js'
+import type { Stream } from '@rdfjs/types'
 import { PassThrough } from 'readable-stream'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import { readable } from 'duplex-to'
 import { CsvSource } from '@cube-creator/model'
 import fetch from 'node-fetch'
-import type { Context } from 'barnard59-core/lib/Pipeline'
+import type { Context } from 'barnard59-core'
 
 export function openFromCsvw(this: Context) {
   const csvStream = new PassThrough()

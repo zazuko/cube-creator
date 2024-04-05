@@ -1,11 +1,11 @@
-import { NamedNode, Stream } from 'rdf-js'
 import { Readable } from 'stream'
+import type { NamedNode, Stream } from '@rdfjs/types'
 import E, { Router } from 'express'
-import { parsers } from '@rdfjs-elements/formats-pretty'
+import formats from '@rdfjs-elements/formats-pretty'
 import once from 'once'
 import { BadRequest } from 'http-errors'
-import clownface, { GraphPointer } from 'clownface'
-import $rdf from 'rdf-ext'
+import type { GraphPointer } from 'clownface'
+import $rdf from '@zazuko/env'
 import asyncMiddleware from 'middleware-async'
 import mime from 'mime-types'
 import multer from 'multer'
@@ -27,12 +27,12 @@ declare module 'express-serve-static-core' {
 function parseFile(file: Express.Multer.File, baseIRI: string): Stream & Readable {
   const mimeType = mime.lookup(file.originalname)
 
-  let parserStream = parsers.import(file.mimetype, Readable.from(file.buffer), {
+  let parserStream = formats.parsers.import(file.mimetype, Readable.from(file.buffer), {
     baseIRI,
   })
 
   if (!parserStream && mimeType) {
-    parserStream = parsers.import(mimeType, Readable.from(file.buffer), {
+    parserStream = formats.parsers.import(mimeType, Readable.from(file.buffer), {
       baseIRI,
     })
   }
@@ -59,7 +59,7 @@ multiPartResourceHandler.use(asyncMiddleware((req, res, next) => {
       throw new BadRequest('Missing request part "representation"')
     }
 
-    return clownface({
+    return $rdf.clownface({
       dataset: await $rdf.dataset().import(parseFile(representation, req.hydra.term.value)),
       term: req.hydra.term,
     })

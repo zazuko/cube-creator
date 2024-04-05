@@ -1,5 +1,5 @@
-import { DatasetCore } from 'rdf-js'
-import $rdf from 'rdf-ext'
+import type { DatasetCore } from '@rdfjs/types'
+import $rdf from '@zazuko/env'
 import toStream from 'string-to-stream'
 import Parser from '@rdfjs/parser-n3'
 import { describe, it, before } from 'mocha'
@@ -8,7 +8,7 @@ import { rdf, schema, time } from '@tpluscode/rdf-ns-builders'
 import { namedNode } from '@cube-creator/testing/clownface'
 import { GraphPointer } from 'clownface'
 import { meta } from '@cube-creator/core/namespace'
-import { DimensionMetadataShape } from '../../bootstrap/shapes/dimension'
+import { DimensionMetadataShape } from '../../bootstrap/shapes/dimension.js'
 
 const parser = new Parser()
 

@@ -1,29 +1,29 @@
+import $rdf from '@cube-creator/env'
 import { ThingMixin } from '@rdfine/schema'
 import { DictionaryBundle } from '@rdfine/prov/bundles'
 import * as CoreModel from '@cube-creator/model'
-import RdfResourceImpl from '@tpluscode/rdfine'
-import CsvMapping from './csv-mapping/CsvMapping'
-import CsvSource from './csv-source/CsvSource'
-import ProjectMixins from './cube-projects/Project'
-import Table from './table/Table'
-import Dataset from './dataset/Dataset'
-import Resource from './Resource'
-import OrganizationMixin from './organization/Organization'
-import DimensionMetadataCollection from './dimension/DimensionMetadataCollection'
-import { ProvDictionaryMixinEx } from './dimension-mapping/DimensionMapping'
-import * as ColumnMappings from './column-mapping/ColumnMapping'
+import CsvMapping from './csv-mapping/CsvMapping.js'
+import CsvSource from './csv-source/CsvSource.js'
+import ProjectMixins from './cube-projects/Project.js'
+import Table from './table/Table.js'
+import Dataset from './dataset/Dataset.js'
+import Resource from './Resource.js'
+import OrganizationMixin from './organization/Organization.js'
+import DimensionMetadataCollection from './dimension/DimensionMetadataCollection.js'
+import { ProvDictionaryMixinEx } from './dimension-mapping/DimensionMapping.js'
+import * as ColumnMappings from './column-mapping/ColumnMapping.js'
 
-RdfResourceImpl.factory.addMixin(...Object.values(CoreModel))
-RdfResourceImpl.factory.addMixin(CsvMapping)
-RdfResourceImpl.factory.addMixin(CsvSource)
-RdfResourceImpl.factory.addMixin(...ProjectMixins)
-RdfResourceImpl.factory.addMixin(Dataset)
-RdfResourceImpl.factory.addMixin(Table)
-RdfResourceImpl.factory.addMixin(Resource)
-RdfResourceImpl.factory.addMixin(DimensionMetadataCollection)
-RdfResourceImpl.factory.addMixin(OrganizationMixin)
-RdfResourceImpl.factory.addMixin(ProvDictionaryMixinEx)
-RdfResourceImpl.factory.addMixin(...Object.values(ColumnMappings))
+$rdf.rdfine().factory.addMixin(...Object.values(CoreModel))
+$rdf.rdfine().factory.addMixin(CsvMapping)
+$rdf.rdfine().factory.addMixin(CsvSource)
+$rdf.rdfine().factory.addMixin(...ProjectMixins)
+$rdf.rdfine().factory.addMixin(Dataset)
+$rdf.rdfine().factory.addMixin(Table)
+$rdf.rdfine().factory.addMixin(Resource)
+$rdf.rdfine().factory.addMixin(DimensionMetadataCollection)
+$rdf.rdfine().factory.addMixin(OrganizationMixin)
+$rdf.rdfine().factory.addMixin(ProvDictionaryMixinEx)
+$rdf.rdfine().factory.addMixin(...Object.values(ColumnMappings))
 
-RdfResourceImpl.factory.addMixin(ThingMixin)
-RdfResourceImpl.factory.addMixin(...DictionaryBundle)
+$rdf.rdfine().factory.addMixin(ThingMixin)
+$rdf.rdfine().factory.addMixin(...DictionaryBundle)

@@ -1,19 +1,17 @@
-import { DatasetCore, Quad, Term } from 'rdf-js'
-import $rdf from 'rdf-ext'
+import type { DatasetCore, Quad, Term } from '@rdfjs/types'
+import $rdf from '@zazuko/env'
 import { ImportJob, TransformJob } from '@cube-creator/model'
 import { HydraClient } from 'alcaeus/alcaeus'
-import type { Context } from 'barnard59-core/lib/Pipeline'
+import type { Context } from 'barnard59-core'
 import { Dictionary } from '@rdfine/prov'
-import { prov, schema, qudt } from '@tpluscode/rdf-ns-builders/strict'
+import { prov, schema, qudt, rdf } from '@tpluscode/rdf-ns-builders'
 import { cc, cube } from '@cube-creator/core/namespace'
-import TermMap from '@rdfjs/term-map'
 import { MultiPointer } from 'clownface'
 import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import { HydraResponse } from 'alcaeus'
 import { DefaultCsvwLiteral } from '@cube-creator/core/mapping'
 import through2 from 'through2'
-import { rdf } from '@tpluscode/rdf-ns-builders'
-import { importDynamic } from './module'
+import { importDynamic } from './module.js'
 
 const undef = $rdf.literal('', cube.Undefined)
 
@@ -63,7 +61,7 @@ export async function loadDimensionMapping(mappingUri: string, Hydra: HydraClien
 }
 
 export async function mapDimensions(this: Pick<Context, 'variables'>) {
-  const mappingCache = new TermMap<Term, MultiPointer | null>()
+  const mappingCache = $rdf.termMap<Term, MultiPointer | null>()
   const jobUri = this.variables.get('jobUri')
   const dimensionMetadataCollection = await loadMetadata(jobUri, this.variables.get('apiClient'))
 
@@ -80,7 +78,7 @@ export async function mapDimensions(this: Pick<Context, 'variables'>) {
     return mappingTerm
   }
 
-  const valueCache = new TermMap<Term, Map<string, Term | undefined>>()
+  const valueCache = $rdf.termMap<Term, Map<string, Term | undefined>>()
   const getMappedValue = async (mappingTerm: string, object: Term) => {
     const dict = await loadDimensionMapping(mappingTerm, this.variables.get('apiClient'))
     if (!dict) {
@@ -168,7 +166,7 @@ export function substituteUndefined(quad: Quad): Quad {
 export function substituteUndefinedReferences(this: Context) {
   const { csvwResource } = this.variables.get('transformed')
 
-  const patterns = new TermMap(csvwResource.tableSchema?.column
+  const patterns = $rdf.termMap(csvwResource.tableSchema?.column
     .filter(column => column.propertyUrl)
     .map(column => {
       const pattern = column.pointer.out(qudt.pattern).value

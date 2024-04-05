@@ -1,10 +1,10 @@
 import asyncMiddleware from 'middleware-async'
 import * as labyrinth from '@hydrofoil/labyrinth/resource'
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
-import { shaclValidate } from '../middleware/shacl'
-import { createColumnMapping } from '../domain/column-mapping/create'
-import { updateLiteralColumnMapping, updateReferenceColumnMapping } from '../domain/column-mapping/update'
-import { deleteColumnMapping } from '../domain/column-mapping/delete'
+import { shaclValidate } from '../middleware/shacl.js'
+import { createColumnMapping } from '../domain/column-mapping/create.js'
+import { updateLiteralColumnMapping, updateReferenceColumnMapping } from '../domain/column-mapping/update.js'
+import { deleteColumnMapping } from '../domain/column-mapping/delete.js'
 
 export const postLiteral = protectedResource(shaclValidate, asyncMiddleware(async (req, res) => {
   const columnMapping = await createColumnMapping({

@@ -1,11 +1,9 @@
-import { BlankNode, DatasetCore, NamedNode } from 'rdf-js'
+import type { BlankNode, DatasetCore, NamedNode } from '@rdfjs/types'
 import chai from 'chai'
 import type { NodeShape, ValidationResult } from '@rdfine/shacl'
-import { fromPointer } from '@rdfine/shacl/lib/NodeShape'
-import { ShapeBundle, ValidationResultBundle } from '@rdfine/shacl/bundles'
-import RdfResourceImpl, { Initializer, RdfResource, ResourceIdentifier } from '@tpluscode/rdfine/RdfResource'
-import $rdf from 'rdf-ext'
-import clownface, { GraphPointer, MultiPointer } from 'clownface'
+import { Initializer, RdfResource, ResourceIdentifier } from '@tpluscode/rdfine/RdfResource'
+import $rdf from '@cube-creator/env'
+import type { GraphPointer, MultiPointer } from 'clownface'
 import Validator from 'rdf-validate-shacl'
 import type * as Validate from 'rdf-validate-shacl/src/validation-report'
 import { rdf, sh } from '@tpluscode/rdf-ns-builders'
@@ -18,8 +16,6 @@ declare global {
     }
   }
 }
-
-RdfResourceImpl.factory.addMixin(...ShapeBundle, ...ValidationResultBundle)
 
 function isRdfine(shapeLike: any): shapeLike is RdfResource {
   return 'equals' in shapeLike && typeof shapeLike.equals === 'function'
@@ -34,7 +30,7 @@ function isDataset(shapeLike: any): shapeLike is DatasetCore {
 }
 
 function toJSON(result: Validate.ValidationResult) {
-  const { focusNode, resultMessage, resultPath, resultSeverity } = RdfResourceImpl.factory.createEntity<ValidationResult>(result.pointer).toJSON()
+  const { focusNode, resultMessage, resultPath, resultSeverity } = $rdf.rdfine().factory.createEntity<ValidationResult>(result.pointer).toJSON()
 
   return {
     focusNode,
@@ -64,21 +60,22 @@ chai.Assertion.addMethod('matchShape', function (shapeInit: Initializer<NodeShap
   } else if (isGraphPointer(obj)) {
     resourceDataset = obj.dataset
     targetNode = [...obj.terms]
-    actual = targetNode.map(term => new RdfResourceImpl(clownface({ dataset: resourceDataset, term })).toJSON())
+    const Resource = $rdf.rdfine.Resource
+    actual = targetNode.map(term => new Resource($rdf.clownface({ dataset: resourceDataset, term })).toJSON())
   } else {
     throw new Error(`Cannot match given object to a SHACL Shape. Expecting a rdfine object, graph pointer or RDF/JS dataset. Got ${obj?.constructor.name}`)
   }
 
   let shape: NodeShape
   if (isDataset(shapeInit)) {
-    const [shapePointer] = clownface({ dataset: shapeInit })
+    const [shapePointer] = $rdf.clownface({ dataset: shapeInit })
       .has(rdf.type, [sh.Shape, sh.NodeShape]).toArray()
-    shape = fromPointer(shapePointer, { targetNode })
+    shape = $rdf.rdfine.sh.NodeShape(shapePointer, { targetNode })
   } else if (isGraphPointer(shapeInit)) {
-    shape = fromPointer(shapeInit, { targetNode })
+    shape = $rdf.rdfine.sh.NodeShape(shapeInit, { targetNode })
   } else {
-    shape = fromPointer(
-      clownface({ dataset: $rdf.dataset() }).blankNode(),
+    shape = $rdf.rdfine.sh.NodeShape(
+      $rdf.clownface().blankNode(),
       { ...shapeInit, targetNode })
   }
 

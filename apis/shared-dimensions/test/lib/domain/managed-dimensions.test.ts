@@ -1,10 +1,10 @@
 import { before, describe, it } from 'mocha'
 import { expect } from 'chai'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import { mdClients } from '@cube-creator/testing/lib'
 import { insertTestDimensions } from '@cube-creator/testing/lib/seedData'
 import { rdf, rdfs, schema } from '@tpluscode/rdf-ns-builders'
-import { getSharedDimensions, getSharedTerms } from '../../../lib/domain/shared-dimensions'
+import { getSharedDimensions, getSharedTerms } from '../../../lib/domain/shared-dimensions.js'
 
 describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimensions @SPARQL', () => {
   before(async () => {
@@ -15,7 +15,7 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimensions @SPAR
     it('returns from all graphs', async () => {
       // when
       const dataset = await $rdf.dataset()
-        .import(await getSharedDimensions().execute(mdClients.streamClient.query))
+        .import(await getSharedDimensions().execute(mdClients.streamClient))
 
       // then
       const termSets = [...dataset.match(null, rdf.type, schema.DefinedTermSet)].map(({ subject }) => subject)

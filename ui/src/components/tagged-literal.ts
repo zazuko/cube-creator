@@ -1,9 +1,9 @@
 import { html, LitElement } from 'lit'
 import { property, customElement } from 'lit/decorators.js'
 import { localizedLabel, PointerLike } from '@rdfjs-elements/lit-helpers/localizedLabel.js'
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { namedNode } from '@rdfjs/dataset'
-import { schema } from '@tpluscode/rdf-ns-builders/strict'
+import { schema } from '@tpluscode/rdf-ns-builders'
 
 @customElement('tagged-literal')
 export class TaggedLiteral extends LitElement {

@@ -6,8 +6,8 @@ import { csvw } from '@tpluscode/rdf-ns-builders'
 import { cc, cube } from '@cube-creator/core/namespace'
 import tempy from 'tempy'
 import fromFile from 'rdf-utils-fs/fromFile'
-import { loadProject } from './project'
-import { tracer } from './otel/tracer'
+import { loadProject } from './project.js'
+import { tracer } from './otel/tracer.js'
 
 interface Params {
   jobUri: string

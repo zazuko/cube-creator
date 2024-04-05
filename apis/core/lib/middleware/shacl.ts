@@ -1,8 +1,8 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import * as expressMiddlewareShacl from 'hydra-box-middleware-shacl'
-import ResourceStoreImpl from '../ResourceStore'
-import { streamClient } from '../query-client'
-import { loadResourcesTypes } from '../domain/queries/resources-types'
+import ResourceStoreImpl from '../ResourceStore.js'
+import { streamClient } from '../query-client.js'
+import { loadResourcesTypes } from '../domain/queries/resources-types.js'
 
 type CreateMiddleware = Pick<Parameters<typeof expressMiddlewareShacl.shaclMiddleware>[0], 'parseResource' | 'loadShapes' | 'disableShClass'>
 

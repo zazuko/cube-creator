@@ -1,8 +1,8 @@
-import { Term } from 'rdf-js'
+import type { Term } from '@rdfjs/types'
 import { ColumnMapping, CsvProject, Table } from '@cube-creator/model'
 import type { Organization } from '@rdfine/schema'
-import { ResourceStore } from '../../../ResourceStore'
-import { findOrganization } from '../../organization/query'
+import { ResourceStore } from '../../../ResourceStore.js'
+import { findOrganization } from '../../organization/query.js'
 
 export async function findMapping(table: Table, targetProperty: Term, store: ResourceStore): Promise<ColumnMapping | null> {
   const { organizationId, projectId } = await findOrganization({ table })

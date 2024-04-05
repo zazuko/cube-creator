@@ -1,15 +1,14 @@
-import { BlankNode, DatasetCore, NamedNode, Term } from 'rdf-js'
-import { GraphPointer } from 'clownface'
+import type { BlankNode, DatasetCore, NamedNode, Term } from '@rdfjs/types'
+import type { GraphPointer } from 'clownface'
 import { Constructor } from '@tpluscode/rdfine'
 import type { Organization } from '@rdfine/schema'
 import { cc } from '@cube-creator/core/namespace'
 import { ColumnMapping, DimensionMetadataCollection } from '@cube-creator/model'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import * as DimensionMetadata from '@cube-creator/model/DimensionMetadata'
-import $rdf from 'rdf-ext'
-import { shrink } from '@zazuko/rdf-vocabularies'
-import TermSet from '@rdfjs/term-set'
-import { ResourceStore } from '../../ResourceStore'
+import $rdf from '@zazuko/env'
+import { shrink } from '@zazuko/prefixes'
+import { ResourceStore } from '../../ResourceStore.js'
 
 interface CreateColumnMetadata {
   store: ResourceStore
@@ -38,7 +37,7 @@ declare module '@cube-creator/model' {
   }
 }
 
-function copyMetadata(pointer: GraphPointer, metadata: DatasetCore, visited = new TermSet<BlankNode>()) {
+function copyMetadata(pointer: GraphPointer, metadata: DatasetCore, visited = $rdf.termSet<BlankNode>()) {
   if (pointer.term.termType === 'BlankNode') {
     if (visited.has(pointer.term)) {
       return
@@ -96,7 +95,7 @@ export default function Mixin<Base extends Constructor<Omit<DimensionMetadataCol
         return existingDim
       }
 
-      const dimensionMetadata = DimensionMetadata.create(this.pointer.node(this.getId(params.columnMapping)), {
+      const dimensionMetadata = DimensionMetadata.create(this.env, this.pointer.node(this.getId(params.columnMapping)), {
         about: identifier,
       })
 

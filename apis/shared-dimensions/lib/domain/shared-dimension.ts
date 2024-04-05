@@ -1,22 +1,20 @@
-import { NamedNode, Quad, Stream, Term } from 'rdf-js'
-import clownface, { GraphPointer, MultiPointer } from 'clownface'
-import $rdf from 'rdf-ext'
+import type { NamedNode, Quad, Stream, Term } from '@rdfjs/types'
+import type { GraphPointer, MultiPointer } from 'clownface'
+import $rdf from '@zazuko/env'
 import through2 from 'through2'
-import { dcterms, hydra, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
+import { dcterms, hydra, rdf, schema, sh, oa } from '@tpluscode/rdf-ns-builders'
 import { md, meta } from '@cube-creator/core/namespace'
 import { DomainError } from '@cube-creator/api-errors'
 import httpError from 'http-errors'
 import { DESCRIBE, SELECT } from '@tpluscode/sparql-builder'
-import { StreamClient } from 'sparql-http-client/StreamClient'
-import { oa } from '@tpluscode/rdf-ns-builders/strict'
-import TermSet from '@rdfjs/term-set'
-import { parsingClient, streamClient } from '../sparql'
-import { SharedDimensionsStore } from '../store'
-import env from '../env'
-import { newId, replace } from './resource'
-import * as queries from './shared-dimension/queries'
+import { StreamClient } from 'sparql-http-client/StreamClient.js'
+import { parsingClient, streamClient } from '../sparql.js'
+import { SharedDimensionsStore } from '../store/index.js'
+import env from '../env.js'
+import { newId, replace } from './resource.js'
+import * as queries from './shared-dimension/queries.js'
 
-export { importDimension } from './shared-dimension/import'
+export { importDimension } from './shared-dimension/import.js'
 
 interface CreateSharedDimension {
   resource: GraphPointer<NamedNode>
@@ -35,7 +33,7 @@ export async function create({ resource, store }: CreateSharedDimension): Promis
   }
 
   const dataset = $rdf.dataset([...resource.dataset].map(replace(resource.term, termSetId)))
-  const termSet = clownface({ dataset })
+  const termSet = $rdf.clownface({ dataset })
     .namedNode(termSetId)
     .addOut(rdf.type, [hydra.Resource, schema.DefinedTermSet, meta.SharedDimension, md.SharedDimension])
     .deleteOut(md.createAs)
@@ -62,7 +60,7 @@ export async function createTerm({ termSet, resource, store }: CreateTerm): Prom
   }
 
   const dataset = $rdf.dataset([...resource.dataset].map(replace(resource.term, termId)))
-  const term = clownface({ dataset })
+  const term = $rdf.clownface({ dataset })
     .namedNode(termId)
     .deleteOut(dcterms.identifier)
     .addOut(schema.inDefinedTermSet, termSet)
@@ -102,7 +100,7 @@ export async function update({ resource, store, shape, queries }: UpdateSharedDi
   }
 
   const current = await store.load(resource.term)
-  const deletedProperties = new TermSet(current.out(schema.additionalProperty).out(rdf.predicate).terms)
+  const deletedProperties = $rdf.termSet(current.out(schema.additionalProperty).out(rdf.predicate).terms)
   for (const prop of resource.out(schema.additionalProperty).out(rdf.predicate).terms) {
     deletedProperties.delete(prop)
   }
@@ -140,7 +138,7 @@ export async function getExportedDimension({ resource, store, client = streamCli
     .FROM(store.graph)
     .WHERE`
       ?term ${schema.inDefinedTermSet} ${resource}
-  `.execute(client.query)
+  `.execute(client)
 
   const baseUriPattern = new RegExp(`^${env.MANAGED_DIMENSIONS_BASE}`)
   function removeBase<T extends Term>(term: T): T {
@@ -179,7 +177,7 @@ export async function getDynamicProperties(sharedDimensions: Term[], client = pa
     .WHERE`
       ?dimension ${schema.additionalProperty}/${rdf.predicate} ?property
     `
-    .execute(client.query)
+    .execute(client)
 
   return bindings.map(b => b.property)
 }

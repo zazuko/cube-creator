@@ -1,19 +1,19 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import { Readable } from 'stream'
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { describe, it, beforeEach } from 'mocha'
 import { expect } from 'chai'
 import sinon from 'sinon'
-import $rdf from 'rdf-ext'
-import DatasetExt from 'rdf-ext/lib/Dataset'
+import $rdf from '@zazuko/env'
+import { Dataset as DatasetExt } from '@zazuko/env/lib/Dataset.js'
 import { csvw, rdf, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
-import clownface, { GraphPointer } from 'clownface'
-import { TestResourceStore } from '../../support/TestResourceStore'
-import '../../../lib/domain'
-import { update } from '../../../lib/domain/csv-source/update'
-import type { GetMediaStorage, MediaStorage } from '../../../lib/storage'
+import type { GraphPointer } from 'clownface'
+import { TestResourceStore } from '../../support/TestResourceStore.js'
+import '../../../lib/domain/index.js'
+import { update } from '../../../lib/domain/csv-source/update.js'
+import type { GetMediaStorage, MediaStorage } from '../../../lib/storage/index.js'
 
 describe('domain/csv-sources/upload', () => {
   let storage: MediaStorage
@@ -29,7 +29,7 @@ describe('domain/csv-sources/upload', () => {
       getDownloadLink: sinon.spy(),
     }
     getStorage = () => (storage)
-    csvSource = clownface({ dataset: $rdf.dataset() })
+    csvSource = $rdf.clownface()
       .namedNode('source')
       .addOut(rdf.type, cc.CSVSource)
       .addOut(schema.name, 'Old name')
@@ -45,7 +45,7 @@ describe('domain/csv-sources/upload', () => {
 
   it('it updates the name', async () => {
     // given
-    const resource = clownface({ dataset: $rdf.dataset() })
+    const resource = $rdf.clownface()
       .namedNode('source')
       .addOut(rdf.type, cc.CSVSource)
       .addOut(schema.name, 'New name')
@@ -76,7 +76,7 @@ describe('domain/csv-sources/upload', () => {
 
   it('it does not load source if dialect does not change', async () => {
     // given
-    const resource = clownface({ dataset: $rdf.dataset() })
+    const resource = $rdf.clownface()
       .namedNode('source')
       .addOut(rdf.type, cc.CSVSource)
       .addOut(schema.name, 'Old name')
@@ -101,7 +101,7 @@ describe('domain/csv-sources/upload', () => {
 
   it('loads the source file when dialect changes', async () => {
     // given
-    const resource = clownface({ dataset: $rdf.dataset() })
+    const resource = $rdf.clownface()
       .namedNode('source')
       .addOut(rdf.type, cc.CSVSource)
       .addOut(schema.name, 'Old name')
@@ -126,7 +126,7 @@ describe('domain/csv-sources/upload', () => {
 
   it('it updates dialect when necessary', async () => {
     // given
-    const resource = clownface({ dataset: $rdf.dataset() })
+    const resource = $rdf.clownface()
       .namedNode('source')
       .addOut(rdf.type, cc.CSVSource)
       .addOut(schema.name, 'Old name')
@@ -171,7 +171,7 @@ describe('domain/csv-sources/upload', () => {
 
   it('when updating to incompatible dialect, data get cleared', async () => {
     // given
-    const resource = clownface({ dataset: $rdf.dataset() })
+    const resource = $rdf.clownface()
       .namedNode('source')
       .addOut(rdf.type, cc.CSVSource)
       .addOut(schema.name, 'Old name')

@@ -6,7 +6,7 @@ import { hydra } from '@tpluscode/rdf-ns-builders'
 import { Parameters, PropertyShape } from '@hydrofoil/shape-to-query/model/constraint/ConstraintComponent'
 import namespace from '@rdfjs/namespace'
 import { sparql } from '@tpluscode/sparql-builder'
-import env from './env'
+import env from './env.js'
 
 /*
  The @hydrofoil/shape-to-query is an ES Module and as long as we compile to CJS, it needs to be loaded dynamically

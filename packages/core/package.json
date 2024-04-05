@@ -2,6 +2,10 @@
   "name": "@cube-creator/core",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
+  "exports": {
+    "./*": "./*.js"
+  },
   "dependencies": {
     "@rdfjs/parser-n3": "^2.0.2",
     "@tpluscode/rdf-ns-builders": "^4.3.0",
@@ -9,12 +13,12 @@
     "@zazuko/prefixes": "^2.2.0",
     "@zazuko/vocabulary-extras": "^2.0.6",
     "@zazuko/env": "^2.0.6",
-    "sparql-http-client": "^2.2.2",
+    "sparql-http-client": "^3.0.0",
     "string-to-stream": "^3.0.1"
   },
   "devDependencies": {
     "@rdfjs/types": "^1.1.0",
     "@types/rdfjs__parser-n3": "^2.0.6",
-    "@types/sparql-http-client": "^2.2.5"
+    "@types/sparql-http-client": "^3.0.2"
   }
 }

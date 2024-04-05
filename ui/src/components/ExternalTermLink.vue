@@ -9,7 +9,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
 import { SharedDimensionTerm } from '../store/types'
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 
 export default defineComponent({
   name: 'ExternalTermLink',

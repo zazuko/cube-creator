@@ -3,8 +3,8 @@ import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import type { GraphPointer } from 'clownface'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import * as Schema from '@rdfine/schema'
-import { cc } from '../core/namespace'
-import { JobErrorMixin } from './Job'
+import { cc } from '../core/namespace.js'
+import { JobErrorMixin } from './Job.js'
 
 declare module '@tpluscode/rdfine/RdfResource' {
   interface RdfResourceCore {

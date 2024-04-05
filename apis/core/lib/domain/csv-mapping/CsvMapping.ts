@@ -1,16 +1,12 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { Constructor } from '@tpluscode/rdfine'
 import { rdf } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
-import * as Hydra from '@rdfine/hydra'
-import RdfResource from '@tpluscode/rdfine/RdfResource'
 import { CsvMapping } from '@cube-creator/model'
 import * as CsvSource from '@cube-creator/model/CsvSource'
 import * as Table from '@cube-creator/model/Table'
-import { ResourceStore } from '../../ResourceStore'
-import * as id from '../identifiers'
-
-RdfResource.factory.addMixin(...Object.values(Hydra))
+import { ResourceStore } from '../../ResourceStore.js'
+import * as id from '../identifiers.js'
 
 interface AddSource {
   fileName: string
@@ -43,7 +39,7 @@ export default function Mixin<Base extends Constructor<Omit<CsvMapping, keyof Ap
         throw new Error('Sources collection already exists')
       }
 
-      this.sourcesCollection = new Hydra.CollectionMixin.Class(store.create(id.csvSourceCollection(this)), {
+      this.sourcesCollection = this.env.rdfine.hydra.Collection(store.create(id.csvSourceCollection(this)), {
         types: [cc.CSVSourceCollection],
         title: 'CSV-Sources',
         [cc.csvMapping.value]: this,
@@ -64,7 +60,7 @@ export default function Mixin<Base extends Constructor<Omit<CsvMapping, keyof Ap
         throw new Error('Tables collection already exists')
       }
 
-      this.tableCollection = new Hydra.CollectionMixin.Class(store.create(id.tableCollection(this)), {
+      this.tableCollection = this.env.rdfine.hydra.Collection(store.create(id.tableCollection(this)), {
         types: [cc.TableCollection],
         title: 'Tables',
         [cc.csvMapping.value]: this,
@@ -81,7 +77,7 @@ export default function Mixin<Base extends Constructor<Omit<CsvMapping, keyof Ap
     }
 
     addSource(store: ResourceStore, { fileName }: AddSource): CsvSource.CsvSource {
-      const source = CsvSource.create(store.create(id.csvSource(this, fileName)), {
+      const source = CsvSource.create(this.env, store.create(id.csvSource(this, fileName)), {
         name: fileName,
         csvMapping: this,
       })
@@ -94,7 +90,7 @@ export default function Mixin<Base extends Constructor<Omit<CsvMapping, keyof Ap
       const table = await store.createMember(this.tableCollection.id as NamedNode, id.table(this, name))
       const types = isObservationTable ? [cc.ObservationTable] : []
 
-      return Table.create(table, {
+      return Table.create(this.env, table, {
         types,
         name,
         csvMapping: this,

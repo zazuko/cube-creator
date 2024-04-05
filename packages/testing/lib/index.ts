@@ -1,5 +1,5 @@
-import StreamClient from 'sparql-http-client/StreamClient'
-import ParsingClient from 'sparql-http-client/ParsingClient'
+import StreamClient from 'sparql-http-client/StreamClient.js'
+import ParsingClient from 'sparql-http-client/ParsingClient.js'
 
 const endpoints = (db: 'cube-creator' | 'shared-dimensions') => ({
   updateUrl: `http://db.cube-creator.lndo.site/${db}/update`,

@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { Term } from 'rdf-js'
+import type { Term } from '@rdfjs/types'
 import { shrink } from '@/rdf-properties'
 import { CreateIdentifier } from '../store/modules/project'
 

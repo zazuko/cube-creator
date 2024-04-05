@@ -1,5 +1,5 @@
 import StreamClient from 'sparql-http-client'
-import ParsingClient from 'sparql-http-client/ParsingClient'
+import ParsingClient from 'sparql-http-client/ParsingClient.js'
 import env from '@cube-creator/core/env'
 
 const clientConfig = {

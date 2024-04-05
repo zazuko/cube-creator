@@ -1,15 +1,14 @@
-import { NamedNode, Term } from 'rdf-js'
+import type { NamedNode, Term } from '@rdfjs/types'
 import { CsvProject, Project, CsvMapping, ImportProject } from '@cube-creator/model'
 import { Constructor } from '@tpluscode/rdfine'
 import { create as createMapping } from '@cube-creator/model/CsvMapping'
-import '../csv-mapping/CsvMapping'
+import '../csv-mapping/CsvMapping.js'
 import { cc } from '@cube-creator/core/namespace'
-import * as Hydra from '@rdfine/hydra'
 import { rdf } from '@tpluscode/rdf-ns-builders'
 import { childResource } from '@cube-creator/model/lib/resourceIdentifiers'
 import { DomainError } from '@cube-creator/api-errors'
-import * as id from '../identifiers'
-import { ResourceStore } from '../../ResourceStore'
+import * as id from '../identifiers.js'
+import { ResourceStore } from '../../ResourceStore.js'
 
 interface ApiProject {
   nextRevision: number
@@ -53,7 +52,7 @@ export function ProjectMixin<Base extends Constructor<Omit<Project, keyof ApiPro
         throw new Error('Job collection already exists')
       }
 
-      this.jobCollection = new Hydra.CollectionMixin.Class(store.create(childResource('jobs')(this)), {
+      this.jobCollection = this.env.rdfine.hydra.Collection(store.create(childResource('jobs')(this)), {
         types: [cc.JobCollection],
         title: 'Jobs',
         [cc.project.value]: this,
@@ -110,7 +109,7 @@ export function CsvProjectMixin<Base extends Constructor<Omit<CsvProject, keyof 
         throw new Error('CSV Mapping already exists')
       }
 
-      const mapping = createMapping(store.create(id.csvMapping(this)), {
+      const mapping = createMapping(this.env, store.create(id.csvMapping(this)), {
         project: this,
       })
 

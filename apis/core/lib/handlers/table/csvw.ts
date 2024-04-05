@@ -1,6 +1,6 @@
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
 import asyncMiddleware from 'middleware-async'
-import { createCsvw } from '../../domain/table/csvw'
+import { createCsvw } from '../../domain/table/csvw.js'
 
 export const get = protectedResource(asyncMiddleware(async (req, res) => {
   const csvwTable = await createCsvw({

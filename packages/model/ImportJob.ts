@@ -1,14 +1,14 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { Constructor, namespace, property, RdfResource } from '@tpluscode/rdfine'
 import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import { ResourceMixin } from '@rdfine/rdfs'
 import { ActionMixin } from '@rdfine/schema'
 import { cc } from '@cube-creator/core/namespace'
 import { schema } from '@tpluscode/rdf-ns-builders'
-import { initializer } from './lib/initializer'
-import { Job } from './Job'
-import { DimensionMetadataCollection } from './DimensionMetadata'
-import { Link } from './lib/Link'
+import { initializer } from './lib/initializer.js'
+import { Job } from './Job.js'
+import { DimensionMetadataCollection } from './DimensionMetadata.js'
+import { Link } from './lib/Link.js'
 
 export interface ImportJob extends Job {
   sourceCube: NamedNode

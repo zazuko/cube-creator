@@ -1,23 +1,21 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { describe, it, beforeEach } from 'mocha'
 import { expect } from 'chai'
 import sinon from 'sinon'
-import clownface, { GraphPointer } from 'clownface'
-import $rdf from 'rdf-ext'
-import { csvw, hydra, rdf, schema, xsd, prov } from '@tpluscode/rdf-ns-builders/strict'
+import type { GraphPointer } from 'clownface'
+import $rdf from '@Cube-creator/env'
+import { csvw, hydra, rdf, schema, xsd, prov } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
-import DatasetExt from 'rdf-ext/lib/Dataset'
+import { Dataset as DatasetExt } from '@zazuko/env/lib/Dataset.js'
 import { ColumnMapping } from '@cube-creator/model'
-import * as Organization from '@cube-creator/model/Organization'
-import * as Project from '@cube-creator/model/Project'
 import { namedNode } from '@cube-creator/testing/clownface'
-import { TestResourceStore } from '../../support/TestResourceStore'
-import * as DimensionMetadataQueries from '../../../lib/domain/queries/dimension-metadata'
-import type * as TableQueries from '../../../lib/domain/queries/table'
-import type * as ColumnMappingQueries from '../../../lib/domain/queries/column-mapping'
-import '../../../lib/domain'
-import { deleteColumnMapping } from '../../../lib/domain/column-mapping/delete'
-import * as orgQueries from '../../../lib/domain/organization/query'
+import { TestResourceStore } from '../../support/TestResourceStore.js'
+import * as DimensionMetadataQueries from '../../../lib/domain/queries/dimension-metadata.js'
+import type * as TableQueries from '../../../lib/domain/queries/table.js'
+import type * as ColumnMappingQueries from '../../../lib/domain/queries/column-mapping.js'
+import '../../../lib/domain/index.js'
+import { deleteColumnMapping } from '../../../lib/domain/column-mapping/delete.js'
+import * as orgQueries from '../../../lib/domain/organization/query.js'
 
 describe('domain/column-mapping/delete', () => {
   let store: TestResourceStore
@@ -36,18 +34,18 @@ describe('domain/column-mapping/delete', () => {
   beforeEach(() => {
     sinon.restore()
 
-    const organization = Organization.fromPointer(namedNode('org'), {
+    const organization = $rdf.rdfine.cc.Organization(namedNode('org'), {
       namespace: $rdf.namedNode('http://example.com/'),
     })
-    const project = Project.fromPointer(namedNode('project'), {
+    const project = $rdf.rdfine.cc.Project(namedNode('project'), {
       maintainer: organization,
       cubeIdentifier: 'test-cube',
     })
 
-    const csvMapping = clownface({ dataset: $rdf.dataset() })
+    const csvMapping = $rdf.clownface()
       .namedNode('csv-mapping')
       .addOut(rdf.type, cc.CsvMapping)
-    const csvSource = clownface({ dataset: $rdf.dataset() })
+    const csvSource = $rdf.clownface()
       .namedNode('foo')
       .addOut(rdf.type, cc.CSVSource)
       .addOut(csvw.column, $rdf.namedNode('my-column'), (column) => {
@@ -57,7 +55,7 @@ describe('domain/column-mapping/delete', () => {
         column.addOut(schema.name, $rdf.literal('My Column 2'))
       })
 
-    columnMapping = clownface({ dataset: $rdf.dataset() })
+    columnMapping = $rdf.clownface()
       .node($rdf.namedNode('columnMapping'))
       .addOut(rdf.type, cc.ColumnMapping)
       .addOut(rdf.type, hydra.Resource)
@@ -67,14 +65,14 @@ describe('domain/column-mapping/delete', () => {
       .addOut(cc.language, $rdf.literal('fr'))
       .addOut(cc.defaultValue, $rdf.literal('test'))
 
-    const otherColumnMapping = clownface({ dataset: $rdf.dataset() })
+    const otherColumnMapping = $rdf.clownface()
       .node($rdf.namedNode('otherColumnMapping'))
       .addOut(rdf.type, cc.ColumnMapping)
       .addOut(rdf.type, hydra.Resource)
       .addOut(cc.sourceColumn, $rdf.namedNode('my-column2'))
       .addOut(cc.targetProperty, $rdf.namedNode('other'))
 
-    const table = clownface({ dataset: $rdf.dataset() })
+    const table = $rdf.clownface()
       .namedNode('myTable')
       .addOut(rdf.type, cc.Table)
       .addOut(rdf.type, cc.ObservationTable)
@@ -83,7 +81,7 @@ describe('domain/column-mapping/delete', () => {
       .addOut(cc.columnMapping, columnMapping)
       .addOut(cc.columnMapping, otherColumnMapping)
 
-    columnMappingObservation = clownface({ dataset: $rdf.dataset() })
+    columnMappingObservation = $rdf.clownface()
       .node($rdf.namedNode('columnMappingObservation'))
       .addOut(rdf.type, cc.ColumnMapping)
       .addOut(rdf.type, hydra.Resource)
@@ -91,7 +89,7 @@ describe('domain/column-mapping/delete', () => {
       .addOut(cc.targetProperty, $rdf.namedNode('test'))
       .addOut(cc.datatype, xsd.integer)
 
-    observationTable = clownface({ dataset: $rdf.dataset() })
+    observationTable = $rdf.clownface()
       .namedNode('myObservationTable')
       .addOut(rdf.type, cc.Table)
       .addOut(rdf.type, cc.ObservationTable)
@@ -100,11 +98,11 @@ describe('domain/column-mapping/delete', () => {
       .addOut(cc.columnMapping, columnMappingObservation)
       .addOut(cc.columnMapping, columnMapping)
 
-    dimensionMapping = clownface({ dataset: $rdf.dataset() })
+    dimensionMapping = $rdf.clownface()
       .namedNode('myDimensionMapping')
       .addOut(rdf.type, prov.Dictionary)
 
-    dimensionMetadataCollection = clownface({ dataset: $rdf.dataset() })
+    dimensionMetadataCollection = $rdf.clownface()
       .namedNode('dimensionMetadataCollection')
       .addOut(rdf.type, cc.DimensionMetadataCollection)
       .addOut(schema.hasPart, $rdf.namedNode('myDimension'), dim => {

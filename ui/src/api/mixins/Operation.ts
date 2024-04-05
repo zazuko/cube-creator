@@ -1,6 +1,6 @@
 import { Constructor, property } from '@tpluscode/rdfine'
 import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
-import { hydra } from '@tpluscode/rdf-ns-builders/strict'
+import { hydra } from '@tpluscode/rdf-ns-builders'
 import RdfResource from '@tpluscode/rdfine/RdfResource'
 import * as ns from '@cube-creator/core/namespace'
 

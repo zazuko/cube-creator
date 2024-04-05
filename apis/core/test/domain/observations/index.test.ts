@@ -1,14 +1,14 @@
-import { Quad, Term } from 'rdf-js'
+import type { Quad, Term } from '@rdfjs/types'
 import { describe, it, beforeEach, before, after } from 'mocha'
 import { expect } from 'chai'
-import clownface, { GraphPointer } from 'clownface'
-import $rdf from 'rdf-ext'
+import type { GraphPointer } from 'clownface'
+import $rdf from '@zazuko/env'
 import { IriTemplate } from '@rdfine/hydra'
 import sinon from 'sinon'
-import Cube from 'rdf-cube-view-query/lib/Cube'
-import Source from 'rdf-cube-view-query/lib/Source'
-import { getObservations } from '../../../lib/domain/observations'
-import * as lib from '../../../lib/domain/observations/lib'
+import Cube from 'rdf-cube-view-query/lib/Cube.js'
+import Source from 'rdf-cube-view-query/lib/Source.js'
+import { getObservations } from '../../../lib/domain/observations/index.js'
+import * as lib from '../../../lib/domain/observations/lib/index.js'
 
 describe('lib/domain/observations', () => {
   let templateParams: GraphPointer
@@ -47,7 +47,7 @@ describe('lib/domain/observations', () => {
 
   beforeEach(() => {
     observations = []
-    templateParams = clownface({ dataset: $rdf.dataset() }).blankNode()
+    templateParams = $rdf.clownface().blankNode()
 
     cubes = [
       new Cube({

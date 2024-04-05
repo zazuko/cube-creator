@@ -1,10 +1,10 @@
-import { NamedNode, Term } from 'rdf-js'
+import type { NamedNode, Term } from '@rdfjs/types'
 import { CsvMapping, Table } from '@cube-creator/model'
 import { ASK, SELECT } from '@tpluscode/sparql-builder'
 import { cc } from '@cube-creator/core/namespace'
 import { schema } from '@tpluscode/rdf-ns-builders'
-import $rdf from 'rdf-ext'
-import { parsingClient } from '../../query-client'
+import $rdf from '@zazuko/env'
+import { parsingClient } from '../../query-client.js'
 
 type FindOrganization = {
   table: Table
@@ -44,7 +44,7 @@ export async function findOrganization(findBy: FindOrganization, client = parsin
     `
   }
 
-  const result = await query.execute(client.query)
+  const result = await query.execute(client)
 
   return result[0]
 }
@@ -56,5 +56,5 @@ export function cubeNamespaceAllowed(cube: NamedNode, organization: Term, client
     FILTER (
       STRSTARTS( str(${cube}), str(?ns) )
     )
-  }`.execute(client.query)
+  }`.execute(client)
 }

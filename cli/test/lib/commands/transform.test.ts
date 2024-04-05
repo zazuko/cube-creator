@@ -1,17 +1,17 @@
 import env from '@cube-creator/core/env'
 import { before, describe, it } from 'mocha'
 import { expect } from 'chai'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import clownface from 'clownface'
 import { ASK, DESCRIBE, SELECT } from '@tpluscode/sparql-builder'
 import namespace from '@rdfjs/namespace'
 import { Hydra } from 'alcaeus/node'
-import { csvw, rdf, rdfs, schema, sh, unit, xsd } from '@tpluscode/rdf-ns-builders/strict'
+import { csvw, rdf, rdfs, schema, sh, unit, xsd } from '@tpluscode/rdf-ns-builders'
 import { ccClients } from '@cube-creator/testing/lib'
 import { insertTestProject } from '@cube-creator/testing/lib/seedData'
 import { cc, cube } from '@cube-creator/core/namespace'
-import { setupEnv } from '../../support/env'
-import runner from '../../../lib/commands/transform'
+import { setupEnv } from '../../support/env.js'
+import runner from '../../../lib/commands/transform.js'
 
 describe('@cube-creator/cli/lib/commands/transform', function () {
   this.timeout(360 * 1000)
@@ -42,7 +42,7 @@ describe('@cube-creator/cli/lib/commands/transform', function () {
     })
 
     it('produces constraint shape', async () => {
-      const shape = await ASK`?shape a ${sh.NodeShape}`.FROM(expectedGraph).execute(ccClients.streamClient.query)
+      const shape = await ASK`?shape a ${sh.NodeShape}`.FROM(expectedGraph).execute(ccClients.streamClient)
 
       expect(shape).to.be.true
     })
@@ -56,7 +56,7 @@ describe('@cube-creator/cli/lib/commands/transform', function () {
       `
         .FROM(datasetGraph)
         .prologue`BASE ${projectNs()}`
-        .execute(ccClients.parsingClient.query)
+        .execute(ccClients.parsingClient)
 
       await expect(hasPreviousErrors).to.eventually.be.false
     })
@@ -68,7 +68,7 @@ describe('@cube-creator/cli/lib/commands/transform', function () {
           ?property ${sh.in} ?in
         `
         .FROM(expectedGraph)
-        .execute(ccClients.parsingClient.query)
+        .execute(ccClients.parsingClient)
 
       await expect(hasInList).to.eventually.be.false
     })
@@ -80,16 +80,16 @@ describe('@cube-creator/cli/lib/commands/transform', function () {
           ?property ${sh.in} ?in
         `
         .FROM(expectedGraph)
-        .execute(ccClients.parsingClient.query)
+        .execute(ccClients.parsingClient)
 
       expect(hasInList).eventually.be.false
     })
 
     it('produces observations', async () => {
       const query = DESCRIBE`${cubeNs('observation/so2-blBAS-2000-annualmean')}`.FROM(expectedGraph)
-      const dataset = await $rdf.dataset().import(await query.execute(ccClients.streamClient.query))
+      const dataset = await $rdf.dataset().import(await query.execute(ccClients.streamClient))
 
-      const observation = clownface({ dataset }).node(cubeNs('observation/so2-blBAS-2000-annualmean'))
+      const observation = $rdf.clownface({ dataset }).node(cubeNs('observation/so2-blBAS-2000-annualmean'))
 
       expect(observation).to.matchShape({
         property: [{
@@ -150,9 +150,9 @@ describe('@cube-creator/cli/lib/commands/transform', function () {
 
     it('produces non-observation resources', async () => {
       const query = DESCRIBE`${cubeNs('station/blBAS')}`.FROM(expectedGraph)
-      const dataset = await $rdf.dataset().import(await query.execute(ccClients.streamClient.query))
+      const dataset = await $rdf.dataset().import(await query.execute(ccClients.streamClient))
 
-      const station = clownface({ dataset }).node(cubeNs('station/blBAS'))
+      const station = $rdf.clownface({ dataset }).node(cubeNs('station/blBAS'))
 
       expect(station).to.matchShape({
         property: [{
@@ -170,14 +170,14 @@ describe('@cube-creator/cli/lib/commands/transform', function () {
     it('does not output cc:cube as dimension property', async () => {
       const hasCubeProperty = await ASK`${cubeShape} ${sh.property}/${sh.path} ${cc.cube} .`
         .FROM($rdf.namedNode(`${env.API_CORE_BASE}cube-project/ubd/cube-data`))
-        .execute(ccClients.streamClient.query)
+        .execute(ccClients.streamClient)
       expect(hasCubeProperty).to.eq(false)
     })
 
     it('does not output csvw:describes as dimension property', async () => {
       const hasDescribesProperty = await ASK`${cubeShape} ${sh.property}/${sh.path} ${csvw.describes} .`
         .FROM($rdf.namedNode(`${env.API_CORE_BASE}cube-project/ubd/cube-data`))
-        .execute(ccClients.streamClient.query)
+        .execute(ccClients.streamClient)
 
       expect(hasDescribesProperty).to.eq(false)
     })
@@ -189,7 +189,7 @@ describe('@cube-creator/cli/lib/commands/transform', function () {
         FILTER ( BNODE (?observation) )
       `
         .FROM($rdf.namedNode(`${env.API_CORE_BASE}cube-project/ubd/cube-data`))
-        .execute(ccClients.streamClient.query)
+        .execute(ccClients.streamClient)
 
       expect(hasDescribesProperty).to.eq(false)
     })
@@ -201,7 +201,7 @@ describe('@cube-creator/cli/lib/commands/transform', function () {
           ?s ?prop ?o .
           filter (regex(str(?prop), str(${csvw()})))
         `
-        .execute(ccClients.parsingClient.query)
+        .execute(ccClients.parsingClient)
 
       expect(distinctCsvwProps).to.have.length(1)
       expect(distinctCsvwProps[0].prop).to.deep.eq(csvw.describes)
@@ -228,7 +228,7 @@ describe('@cube-creator/cli/lib/commands/transform', function () {
         .FROM(expectedGraph)
         .WHERE`
           <https://environment.ld.admin.ch/foen/ubd/28/observation/so2-blBAS-2000-annualmean> ${rdfs.comment} ?value
-        `.execute(ccClients.parsingClient.query)
+        `.execute(ccClients.parsingClient)
 
       expect(observationValue[0]?.value).to.deep.eq($rdf.literal('', cube.Undefined))
     })
@@ -236,7 +236,7 @@ describe('@cube-creator/cli/lib/commands/transform', function () {
     it('does not output ""^^cube:Undefined for non-Observation tables', async () => {
       const hasName = await ASK`${cubeNs('station/neCHA')} ${schema.name} ?name`
         .FROM(expectedGraph)
-        .execute(ccClients.parsingClient.query)
+        .execute(ccClients.parsingClient)
 
       expect(hasName).to.be.false
     })
@@ -246,7 +246,7 @@ describe('@cube-creator/cli/lib/commands/transform', function () {
         .FROM(expectedGraph)
         .WHERE`
           <https://environment.ld.admin.ch/foen/ubd/28/observation/so2-blBAS-1984-annualmean> <https://environment.ld.admin.ch/foen/ubd/28/unit> ?value
-        `.execute(ccClients.parsingClient.query)
+        `.execute(ccClients.parsingClient)
 
       expect(result[0]?.value).to.deep.eq(cube.Undefined)
     })
@@ -274,7 +274,7 @@ describe('@cube-creator/cli/lib/commands/transform', function () {
         `
         .execute(ccClients.streamClient.query, { base: cubeBase }))
 
-      const propShape = clownface({ dataset }).has(sh.path)
+      const propShape = $rdf.clownface({ dataset }).has(sh.path)
 
       expect(propShape.has(sh.in).terms).to.have.length(0)
       expect(propShape.has(sh.minInclusive).terms).to.have.length(1)
@@ -290,7 +290,7 @@ describe('@cube-creator/cli/lib/commands/transform', function () {
         `
         .execute(ccClients.streamClient.query, { base: cubeBase }))
 
-      const propShape = clownface({ dataset }).has(sh.path)
+      const propShape = $rdf.clownface({ dataset }).has(sh.path)
 
       expect(propShape.has(sh.in).terms).to.have.length(0)
       expect(propShape.has(sh.minInclusive).terms).to.have.length(1)
@@ -334,7 +334,7 @@ describe('@cube-creator/cli/lib/commands/transform', function () {
           ?s ?p ?o .
           ?p a ${cc.OriginalValuePredicate} .
         `
-        .execute(ccClients.parsingClient.query)
+        .execute(ccClients.parsingClient)
 
       expect(originalValues).to.have.length(28999)
       expect(originalValues[0].p).to.deep.eq($rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/pollutant#_original'))

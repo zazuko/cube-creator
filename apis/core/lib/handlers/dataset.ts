@@ -1,21 +1,19 @@
-import { Term } from 'rdf-js'
 import { PassThrough } from 'stream'
+import type { Term } from '@rdfjs/types'
 import asyncMiddleware from 'middleware-async'
-import clownface from 'clownface'
 import parsePreferHeader from 'parse-prefer-header'
-import $rdf from 'rdf-ext'
+import $rdf from '@cube-creator/env'
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
 import { loadLinkedResources } from '@hydrofoil/labyrinth/lib/query/eagerLinks'
 import merge from 'merge2'
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 import { cc, query, view } from '@cube-creator/core/namespace'
-import { fromPointer } from '@rdfine/hydra/lib/IriTemplate'
 import env from '@cube-creator/core/env'
-import { shaclValidate } from '../middleware/shacl'
-import { update } from '../domain/dataset/update'
-import { loadCubeShapes } from '../domain/queries/cube'
-import * as clients from '../query-client'
-import { getCubesAndGraphs } from '../domain/dataset/queries'
+import { shaclValidate } from '../middleware/shacl.js'
+import { update } from '../domain/dataset/update.js'
+import { loadCubeShapes } from '../domain/queries/cube.js'
+import * as clients from '../query-client.js'
+import { getCubesAndGraphs } from '../domain/dataset/queries.js'
 
 export const put = protectedResource(
   shaclValidate,
@@ -41,7 +39,7 @@ export const get = protectedResource(asyncMiddleware(async (req, res) => {
     objectMode: true,
   })
 
-  const types = clownface({
+  const types = $rdf.clownface({
     dataset: req.hydra.api.dataset,
     term: dataset.out(rdf.type).terms,
   })
@@ -56,10 +54,10 @@ export const get = protectedResource(asyncMiddleware(async (req, res) => {
 
 async function observationTemplate(dataset: Term) {
   const results = await getCubesAndGraphs(dataset)
-  const cf = clownface({ dataset: $rdf.dataset() })
+  const cf = $rdf.clownface()
 
   for (const { cube, graph } of results) {
-    const template = fromPointer(cf.blankNode(), {
+    const template = $rdf.rdfine.hydra.IriTemplate(cf.blankNode(), {
       template: `${env.API_CORE_BASE}observations?cube=${encodeURIComponent(cube.value)}&graph=${encodeURIComponent(graph.value)}{&view,pageSize,page}`,
       mapping: [{
         property: view.view,

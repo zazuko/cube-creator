@@ -1,14 +1,11 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { SparqlQueryLoader } from '@hydrofoil/labyrinth/lib/loader'
 import { PropertyResource, Resource } from 'hydra-box'
-import ParsingClient from 'sparql-http-client/ParsingClient'
+import ParsingClient from 'sparql-http-client/ParsingClient.js'
 import { SELECT } from '@tpluscode/sparql-builder'
-import $rdf from 'rdf-ext'
-import TermSet from '@rdfjs/term-set'
-import TermMap from '@rdfjs/term-map'
+import $rdf from '@zazuko/env'
 import { as, hydra } from '@tpluscode/rdf-ns-builders'
 import { IN, VALUES } from '@tpluscode/sparql-builder/expressions'
-import clownface from 'clownface'
 import express from 'express'
 
 interface CreateResourceGetters {
@@ -28,7 +25,7 @@ export default class Loader extends SparqlQueryLoader {
 
     const client: ParsingClient = (this as any).__client
     const createDatasetGetters: CreateResourceGetters = (this as any).__createDatasetGetters.bind(this)
-    const supportedProperties = clownface(req.hydra.api)
+    const supportedProperties = $rdf.clownface(req.hydra.api)
       .any()
       .has(hydra.supportedProperty)
       .out(hydra.supportedProperty)
@@ -44,7 +41,7 @@ export default class Loader extends SparqlQueryLoader {
 
           FILTER (?link NOT ${IN(...excludedProperties)})
         }
-      `.execute(client.query)
+      `.execute(client)
 
     const resources = links.reduce((set, { parent, link }) => {
       if (parent.termType !== 'NamedNode' || link.termType !== 'NamedNode') {
@@ -56,14 +53,14 @@ export default class Loader extends SparqlQueryLoader {
         property: link,
         object: term,
         prefetchDataset: $rdf.dataset(),
-        types: new TermSet(),
+        types: $rdf.termSet(),
         ...createDatasetGetters(parent),
       }
 
       resource.prefetchDataset.add($rdf.quad(parent, link, term))
 
       return set.set(parent, resource)
-    }, new TermMap<NamedNode, PropertyResource>())
+    }, $rdf.termMap<NamedNode, PropertyResource>())
 
     if (resources.size) {
       const typesQuery = [...resources.keys()].reduce((query, graph) => {
@@ -75,7 +72,7 @@ export default class Loader extends SparqlQueryLoader {
           }
         `)
 
-      const types = await typesQuery.execute(client.query)
+      const types = await typesQuery.execute(client)
       for (const { parent, type } of types) {
         if (parent.termType !== 'NamedNode' || type.termType !== 'NamedNode') {
           continue

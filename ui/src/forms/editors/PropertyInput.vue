@@ -10,7 +10,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { Term } from 'rdf-js'
+import type { Term } from '@rdfjs/types'
 import * as $rdf from '@rdf-esm/data-model'
 import { expand, shrink } from '@/rdf-properties'
 import store from '../../store'

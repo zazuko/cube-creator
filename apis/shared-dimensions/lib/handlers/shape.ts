@@ -1,6 +1,6 @@
 import asyncMiddleware from 'middleware-async'
 import { NotFoundError } from '@cube-creator/api-errors'
-import shapes from '../shapes'
+import shapes from '../shapes/index.js'
 
 export const get = asyncMiddleware(async (req, res, next) => {
   const load = shapes.get(req.hydra.resource.term)

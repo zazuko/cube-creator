@@ -59,7 +59,7 @@ ${shape('table/create')} {
     ${commonProperties}
     ${sh.property} [
       ${sh.name} "Columns to map" ;
-      ${sh.descriptin} "These columns will be mapped in the new table with default parameters that you can change later.";
+      ${sh.description} "These columns will be mapped in the new table with default parameters that you can change later.";
       ${sh.path} ${csvw.column} ;
       ${sh.class} ${csvw.Column} ;
       ${dash.hidden} ${true} ;

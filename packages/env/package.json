@@ -1,0 +1,17 @@
+{
+  "name": "@cube-creator/env",
+  "type": "module",
+  "version": "0.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "@cube-creator/model": "0.1.27",
+    "@rdfine/csvw": "^0.8.5",
+    "@rdfine/hydra": "^0.10.5",
+    "@rdfine/prov": "^0.3.5",
+    "@rdfine/schema": "^0.8.5",
+    "@rdfine/shacl": "^0.10.5",
+    "@tpluscode/rdfine": "^0.7.9",
+    "@zazuko/env": "^2.1.1",
+    "alcaeus": "^3.0.0"
+  }
+}

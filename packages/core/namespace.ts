@@ -1,10 +1,10 @@
-import prefixes from '@zazuko/rdf-vocabularies/prefixes'
-import namespace from '@rdf-esm/namespace'
+import prefixes from '@zazuko/prefixes'
+import rdf from '@zazuko/env'
 import '@zazuko/vocabulary-extras/register'
 
 export { cube } from '@zazuko/vocabulary-extras/builders'
 export { meta, relation } from '@zazuko/vocabulary-extras/builders/loose' // TODO: do not use loose builders
-export { shape } from './namespaces/shapes'
+export { shape } from './namespaces/shapes.js'
 
 type CubeCreatorClass =
   'CubeProject' |
@@ -119,13 +119,13 @@ type SharedDimensionsTerms =
 
 prefixes.view = 'https://cube.link/view/'
 
-export const query = namespace('http://hypermedia.app/query#')
-export const view = namespace(prefixes.view)
-export const hydraBox = namespace('http://hydra-box.org/schema/')
-export const cc = namespace<CubeCreatorTerms>('https://cube-creator.zazuko.com/vocab#')
-export const md = namespace<SharedDimensionsTerms>('https://cube-creator.zazuko.com/shared-dimensions/vocab#')
-export const editor = namespace(cc.dash.value)
-export const sh1 = namespace('https://hypermedia.app/shaperone#')
-export const hex = namespace('https://w3id.org/hydra/extension#')
-export const iso6391 = namespace('http://lexvo.org/id/iso639-1/')
-export const lindasSchema = namespace('https://schema.ld.admin.ch/')
+export const query = rdf.namespace('http://hypermedia.app/query#')
+export const view = rdf.namespace(prefixes.view)
+export const hydraBox = rdf.namespace('http://hydra-box.org/schema/')
+export const cc = rdf.namespace<CubeCreatorTerms>('https://cube-creator.zazuko.com/vocab#')
+export const md = rdf.namespace<SharedDimensionsTerms>('https://cube-creator.zazuko.com/shared-dimensions/vocab#')
+export const editor = rdf.namespace(cc.dash.value)
+export const sh1 = rdf.namespace('https://hypermedia.app/shaperone#')
+export const hex = rdf.namespace('https://w3id.org/hydra/extension#')
+export const iso6391 = rdf.namespace('http://lexvo.org/id/iso639-1/')
+export const lindasSchema = rdf.namespace('https://schema.ld.admin.ch/')

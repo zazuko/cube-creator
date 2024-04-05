@@ -1,5 +1,5 @@
 import { SELECT } from '@tpluscode/sparql-builder'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import { cc, lindasSchema } from '@cube-creator/core/namespace'
 import type { ProjectDetailPart } from '../details.js'
 

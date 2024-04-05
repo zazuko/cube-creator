@@ -1,5 +1,5 @@
-import { NamedNode } from 'rdf-js'
-import type { Context } from 'barnard59-core/lib/Pipeline'
+import type { NamedNode } from '@rdfjs/types'
+import type { Context } from 'barnard59-core'
 import StreamClient from 'sparql-http-client'
 import { CONSTRUCT } from '@tpluscode/sparql-builder'
 import * as ns from '@cube-creator/core/namespace'
@@ -68,5 +68,5 @@ export default async function query(this: Context, { endpoint, cube, graph }: Cu
     query = query.FROM(graph)
   }
 
-  return query.execute(client.query)
+  return query.execute(client)
 }

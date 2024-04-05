@@ -1,14 +1,13 @@
 import { Router, Request, Response, NextFunction, RequestHandler } from 'express'
 import error from 'http-errors'
 import env from '@cube-creator/core/env'
-import fetch from 'node-fetch'
+import $rdf from '@cube-creator/env'
 import { expressjwt } from 'express-jwt'
 import { expressJwtSecret, GetVerificationKey } from 'jwks-rsa'
 import { DELETE } from '@tpluscode/sparql-builder'
 import { hydra, schema } from '@tpluscode/rdf-ns-builders'
-import TermSet from '@rdfjs/term-set'
-import { log, warning } from './log'
-import * as idOf from './domain/identifiers'
+import { log, warning } from './log.js'
+import * as idOf from './domain/identifiers.js'
 
 declare module '@hydrofoil/labyrinth' {
   export interface User {
@@ -93,7 +92,7 @@ export default async () => {
 }
 
 function updateUserResource(): RequestHandler {
-  const users = new TermSet()
+  const users = $rdf.termSet()
 
   return (req, res, next) => {
     if (req.user?.id && !users.has(req.user.id)) {
@@ -115,7 +114,7 @@ function updateUserResource(): RequestHandler {
                 ${id} ${schema.name} ?name .
               }
             }
-        `.execute(req.labyrinth.sparql.query)
+        `.execute(req.labyrinth.sparql)
           .catch(warning)
       })
     }

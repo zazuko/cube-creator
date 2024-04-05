@@ -1,21 +1,21 @@
 import { createReadStream } from 'fs'
 import path from 'path'
-import { NamedNode, Quad } from 'rdf-js'
+import type { NamedNode, Quad } from '@rdfjs/types'
 import httpError, { BadRequest } from 'http-errors'
 import { Files } from '@cube-creator/express/multipart'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import SHACLValidator from 'rdf-validate-shacl'
 import ValidationReport from 'rdf-validate-shacl/src/validation-report'
 import { parsers } from '@rdfjs/formats-common'
-import clownface, { AnyPointer, GraphPointer } from 'clownface'
+import type { AnyPointer, GraphPointer } from 'clownface'
 import { rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { INSERT } from '@tpluscode/sparql-builder'
-import { StreamClient } from 'sparql-http-client/StreamClient'
+import { StreamClient } from 'sparql-http-client/StreamClient.js'
 import through2 from 'through2'
 import { md } from '@cube-creator/core/namespace'
-import env from '../../env'
-import { SharedDimensionsStore } from '../../store'
-import { streamClient } from '../../sparql'
+import env from '../../env.js'
+import { SharedDimensionsStore } from '../../store/index.js'
+import { streamClient } from '../../sparql.js'
 
 interface ImportedDimension {
   termSet: GraphPointer
@@ -64,7 +64,7 @@ export async function importDimension({
       this.push($rdf.quad(subject, predicate, object, graph))
       next()
     }))
-  const termSet = clownface({ dataset: await $rdf.dataset().import(importStream) })
+  const termSet = $rdf.clownface({ dataset: await $rdf.dataset().import(importStream) })
     .has(rdf.type, md.SharedDimension)
 
   if (!termSet.term || !isNamedNode(termSet)) {
@@ -81,7 +81,7 @@ export async function importDimension({
     throw new httpError.Conflict(`Shared Dimension '${identifier}' already exists`)
   }
 
-  await INSERT.DATA`${termSet.dataset}`.execute(client.query)
+  await INSERT.DATA`${termSet.dataset}`.execute(client)
 
   return {
     termSet: await store.load(termSet.term),

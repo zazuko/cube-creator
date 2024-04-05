@@ -5,7 +5,7 @@ import { INSERT } from '@tpluscode/sparql-builder'
 import { mdClients } from '@cube-creator/testing/lib'
 import namespace from '@rdfjs/namespace'
 import { hydra, schema, sh } from '@tpluscode/rdf-ns-builders'
-import Loader from '../../lib/loader'
+import Loader from '../../lib/loader.js'
 
 const ex = namespace('http://example.com/')
 const graph = ex('shared-dimensions')

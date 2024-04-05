@@ -1,22 +1,20 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { describe, it, beforeEach } from 'mocha'
 import { expect } from 'chai'
 import sinon from 'sinon'
-import clownface, { GraphPointer } from 'clownface'
-import $rdf from 'rdf-ext'
+import type { GraphPointer } from 'clownface'
+import $rdf from '@cube-creator/env'
 import { csvw, hydra, prov, rdf, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import { DomainError, NotFoundError } from '@cube-creator/api-errors'
-import DatasetExt from 'rdf-ext/lib/Dataset'
-import * as Organization from '@cube-creator/model/Organization'
-import * as Project from '@cube-creator/model/Project'
+import { Dataset as DatasetExt } from '@zazuko/env/lib/Dataset.js'
 import { namedNode } from '@cube-creator/testing/clownface'
-import { TestResourceStore } from '../../support/TestResourceStore'
-import * as DimensionMetadataQueries from '../../../lib/domain/queries/dimension-metadata'
-import type * as TableQueries from '../../../lib/domain/queries/table'
-import '../../../lib/domain'
-import { updateLiteralColumnMapping } from '../../../lib/domain/column-mapping/update'
-import * as orgQueries from '../../../lib/domain/organization/query'
+import { TestResourceStore } from '../../support/TestResourceStore.js'
+import * as DimensionMetadataQueries from '../../../lib/domain/queries/dimension-metadata.js'
+import type * as TableQueries from '../../../lib/domain/queries/table.js'
+import '../../../lib/domain/index.js'
+import { updateLiteralColumnMapping } from '../../../lib/domain/column-mapping/update.js'
+import * as orgQueries from '../../../lib/domain/organization/query.js'
 
 describe('domain/column-mapping/update', () => {
   let store: TestResourceStore
@@ -31,11 +29,11 @@ describe('domain/column-mapping/update', () => {
   let observationTable: GraphPointer<NamedNode, DatasetExt>
 
   beforeEach(() => {
-    const csvMapping = clownface({ dataset: $rdf.dataset() })
+    const csvMapping = $rdf.clownface()
       .namedNode('csv-mapping')
       .addOut(rdf.type, cc.CsvMapping)
       .addOut(cc.namespace, 'http://example.com/')
-    const csvSource = clownface({ dataset: $rdf.dataset() })
+    const csvSource = $rdf.clownface()
       .namedNode('foo')
       .addOut(rdf.type, cc.CSVSource)
       .addOut(csvw.column, $rdf.namedNode('my-column'), (column) => {
@@ -45,7 +43,7 @@ describe('domain/column-mapping/update', () => {
         column.addOut(schema.name, $rdf.literal('My Column 2'))
       })
 
-    columnMapping = clownface({ dataset: $rdf.dataset() })
+    columnMapping = $rdf.clownface()
       .node($rdf.namedNode('columnMapping'))
       .addOut(rdf.type, [cc.ColumnMapping, cc.LiteralColumnMapping])
       .addOut(rdf.type, hydra.Resource)
@@ -55,14 +53,14 @@ describe('domain/column-mapping/update', () => {
       .addOut(cc.language, $rdf.literal('fr'))
       .addOut(cc.defaultValue, $rdf.literal('test'))
 
-    const otherColumnMapping = clownface({ dataset: $rdf.dataset() })
+    const otherColumnMapping = $rdf.clownface()
       .node($rdf.namedNode('otherColumnMapping'))
       .addOut(rdf.type, [cc.ColumnMapping, cc.LiteralColumnMapping])
       .addOut(rdf.type, hydra.Resource)
       .addOut(cc.sourceColumn, $rdf.namedNode('my-column2'))
       .addOut(cc.targetProperty, $rdf.namedNode('other'))
 
-    const table = clownface({ dataset: $rdf.dataset() })
+    const table = $rdf.clownface()
       .namedNode('myTable')
       .addOut(rdf.type, cc.Table)
       .addOut(cc.csvMapping, csvMapping)
@@ -70,7 +68,7 @@ describe('domain/column-mapping/update', () => {
       .addOut(cc.columnMapping, columnMapping)
       .addOut(cc.columnMapping, otherColumnMapping)
 
-    columnMappingObservation = clownface({ dataset: $rdf.dataset() })
+    columnMappingObservation = $rdf.clownface()
       .node($rdf.namedNode('columnMappingObservation'))
       .addOut(rdf.type, [cc.ColumnMapping, cc.LiteralColumnMapping])
       .addOut(rdf.type, hydra.Resource)
@@ -78,14 +76,14 @@ describe('domain/column-mapping/update', () => {
       .addOut(cc.targetProperty, $rdf.namedNode('test'))
       .addOut(cc.datatype, xsd.integer)
 
-    const otherColumnMappingObservation = clownface({ dataset: $rdf.dataset() })
+    const otherColumnMappingObservation = $rdf.clownface()
       .node($rdf.namedNode('otherColumnMappingObservation'))
       .addOut(rdf.type, cc.ColumnMapping)
       .addOut(rdf.type, hydra.Resource)
       .addOut(cc.sourceColumn, $rdf.namedNode('my-other-column'))
       .addOut(cc.targetProperty, $rdf.namedNode('other'))
 
-    observationTable = clownface({ dataset: $rdf.dataset() })
+    observationTable = $rdf.clownface()
       .namedNode('myObservationTable')
       .addOut(rdf.type, cc.Table)
       .addOut(rdf.type, cc.ObservationTable)
@@ -96,12 +94,12 @@ describe('domain/column-mapping/update', () => {
 
     const dimensionProperty = $rdf.namedNode('test')
 
-    dimensionMappings = clownface({ dataset: $rdf.dataset() })
+    dimensionMappings = $rdf.clownface()
       .namedNode('dimension-mappings')
       .addOut(rdf.type, prov.Dictionary)
       .addOut(schema.about, dimensionProperty)
 
-    dimensionMetadata = clownface({ dataset: $rdf.dataset() })
+    dimensionMetadata = $rdf.clownface()
       .namedNode('myDimensionMetadata')
       .addOut(rdf.type, cc.DimensionMetadataCollection)
       .addOut(schema.hasPart, $rdf.namedNode('myDimension'), dim => {
@@ -110,10 +108,10 @@ describe('domain/column-mapping/update', () => {
           .addOut(cc.dimensionMapping, dimensionMappings)
       })
 
-    const organization = Organization.fromPointer(namedNode('org'), {
+    const organization = $rdf.rdfine.cc.Organization(namedNode('org'), {
       namespace: $rdf.namedNode('http://example.com/'),
     })
-    const project = Project.fromPointer(namedNode('project'), {
+    const project = $rdf.rdfine.cc.Project(namedNode('project'), {
       maintainer: organization,
       cubeIdentifier: 'test-cube',
     })
@@ -152,7 +150,7 @@ describe('domain/column-mapping/update', () => {
   })
 
   it('updates simple properties', async () => {
-    const resource = clownface({ dataset: $rdf.dataset() })
+    const resource = $rdf.clownface()
       .node($rdf.namedNode('columnMapping'))
       .addOut(cc.sourceColumn, $rdf.namedNode('my-column'))
       .addOut(cc.targetProperty, $rdf.namedNode('test2'))
@@ -192,7 +190,7 @@ describe('domain/column-mapping/update', () => {
   })
 
   it('delete non mandatory properties', async () => {
-    const resource = clownface({ dataset: $rdf.dataset() })
+    const resource = $rdf.clownface()
       .node($rdf.namedNode('columnMapping'))
       .addOut(cc.sourceColumn, $rdf.namedNode('my-column'))
       .addOut(cc.targetProperty, $rdf.namedNode('test'))
@@ -226,7 +224,7 @@ describe('domain/column-mapping/update', () => {
   })
 
   it('changes source column', async () => {
-    const resource = clownface({ dataset: $rdf.dataset() })
+    const resource = $rdf.clownface()
       .node($rdf.namedNode('columnMapping'))
       .addOut(cc.sourceColumn, $rdf.namedNode('my-column2'))
       .addOut(cc.targetProperty, $rdf.namedNode('test'))
@@ -240,7 +238,7 @@ describe('domain/column-mapping/update', () => {
   })
 
   it('throw if column does not exit', async () => {
-    const resource = clownface({ dataset: $rdf.dataset() })
+    const resource = $rdf.clownface()
       .node($rdf.namedNode('columnMapping'))
       .addOut(cc.sourceColumn, $rdf.namedNode('my-column3'))
       .addOut(cc.targetProperty, $rdf.namedNode('test'))
@@ -256,7 +254,7 @@ describe('domain/column-mapping/update', () => {
   it('throw if targetProperty already in use on observation table', async () => {
     getTableForColumnMapping.resolves(observationTable.term.value)
 
-    const resource = clownface({ dataset: $rdf.dataset() })
+    const resource = $rdf.clownface()
       .node($rdf.namedNode('columnMappingObservation'))
       .addOut(cc.sourceColumn, $rdf.namedNode('my-column'))
       .addOut(cc.targetProperty, $rdf.namedNode('other'))
@@ -267,7 +265,7 @@ describe('domain/column-mapping/update', () => {
   })
 
   it('do not throw if targetProperty already in use on non-observation table', async () => {
-    const resource = clownface({ dataset: $rdf.dataset() })
+    const resource = $rdf.clownface()
       .node($rdf.namedNode('columnMapping'))
       .addOut(cc.sourceColumn, $rdf.namedNode('my-column'))
       .addOut(cc.targetProperty, $rdf.namedNode('other'))
@@ -280,7 +278,7 @@ describe('domain/column-mapping/update', () => {
   it('change targetProperty for obeservation table', async () => {
     getTableForColumnMapping.resolves(observationTable.term.value)
 
-    const resource = clownface({ dataset: $rdf.dataset() })
+    const resource = $rdf.clownface()
       .node($rdf.namedNode('columnMappingObservation'))
       .addOut(cc.sourceColumn, $rdf.namedNode('my-column'))
       .addOut(cc.targetProperty, $rdf.namedNode('test2'))

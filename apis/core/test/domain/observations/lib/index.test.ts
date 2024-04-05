@@ -1,20 +1,16 @@
-import { Term } from 'rdf-js'
+import type { Term } from '@rdfjs/types'
 import { describe, it, beforeEach, before } from 'mocha'
 import { expect } from 'chai'
 import sinon from 'sinon'
-import clownface, { AnyPointer, GraphPointer } from 'clownface'
-import $rdf from 'rdf-ext'
-import { View } from 'rdf-cube-view-query/lib/View'
-import Cube from 'rdf-cube-view-query/lib/Cube'
-import Source from 'rdf-cube-view-query/lib/Source'
+import type { AnyPointer, GraphPointer } from 'clownface'
+import $rdf from '@cube-creator/env'
+import { View } from 'rdf-cube-view-query/lib/View.js'
+import Cube from 'rdf-cube-view-query/lib/Cube.js'
+import Source from 'rdf-cube-view-query/lib/Source.js'
 import * as ns from '@cube-creator/core/namespace'
-import { hydra, rdf, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
+import { hydra, rdf, schema, sh, xsd } from '@tpluscode/rdf-ns-builders/loose'
 import { IriTemplate } from '@rdfine/hydra'
-import { IriTemplateBundle } from '@rdfine/hydra/bundles'
-import RdfResource from '@tpluscode/rdfine/RdfResource'
-import { populateFilters, createHydraCollection, createView } from '../../../../lib/domain/observations/lib'
-
-RdfResource.factory.addMixin(...IriTemplateBundle)
+import { populateFilters, createHydraCollection, createView } from '../../../../lib/domain/observations/lib/index.js'
 
 describe('lib/domain/observations/lib', () => {
   describe('createView', () => {
@@ -58,10 +54,10 @@ describe('lib/domain/observations/lib', () => {
     let dimension: sinon.SinonStub
 
     beforeEach(() => {
-      filter = clownface({ dataset: $rdf.dataset() })
+      filter = $rdf.clownface()
       dimension = sinon.stub()
       view = {
-        ptr: clownface({ dataset: $rdf.dataset() }).blankNode(),
+        ptr: $rdf.clownface().blankNode(),
         dimension,
       } as any as View
     })
@@ -183,16 +179,16 @@ describe('lib/domain/observations/lib', () => {
     let observations: Record<string, Term>[]
 
     before(() => {
-      templateParams = clownface({ dataset: $rdf.dataset() })
+      templateParams = $rdf.clownface()
         .blankNode()
         .addOut(ns.cc.cube, 'CUBE')
         .addOut(ns.cc.cubeGraph, 'GRAPH')
         .addOut(ns.view.view, 'FILTERS')
         .addOut(hydra.limit, $rdf.literal('20', xsd.integer))
-      const templatePointer = clownface({ dataset: $rdf.dataset() })
+      const templatePointer = $rdf.clownface()
         .blankNode()
         .addOut(rdf.type, hydra.IriTemplate)
-      template = RdfResource.factory.createEntity(templatePointer, [], {
+      template = $rdf.rdfine().factory.createEntity(templatePointer, [], {
         initializer: {
           template: '/observations?cube={cube}&graph={graph}{&view,pageSize}',
           mapping: [{

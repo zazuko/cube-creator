@@ -1,9 +1,9 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { Project } from '@cube-creator/model'
-import { ParsingClient } from 'sparql-http-client/ParsingClient'
+import { ParsingClient } from 'sparql-http-client/ParsingClient.js'
 import { SELECT } from '@tpluscode/sparql-builder'
-import { ResourceStore } from '../../ResourceStore'
-import { deleteMapping } from '../csv-mapping/delete'
+import { ResourceStore } from '../../ResourceStore.js'
+import { deleteMapping } from '../csv-mapping/delete.js'
 
 interface DeleteProjectCommand {
   resource: NamedNode
@@ -30,7 +30,7 @@ export async function deleteProject({
         ?s ?p ?o
       }
       filter(strstarts(str(?graph), "${project.id.value}"))
-    `.execute(client.query)
+    `.execute(client)
 
   for (const { graph } of graphs) {
     if (graph) {

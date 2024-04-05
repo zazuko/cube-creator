@@ -3,7 +3,7 @@ import { insertTestProject } from '@cube-creator/testing/lib/seedData'
 import { ccClients } from '@cube-creator/testing/lib/index'
 import { expect } from 'chai'
 import namespace from '@rdfjs/namespace'
-import { findByDimensionMapping } from '../../../lib/domain/queries/dimension-metadata'
+import { findByDimensionMapping } from '../../../lib/domain/queries/dimension-metadata.js'
 
 const projectNs = namespace('https://cube-creator.lndo.site/')
 

@@ -1,18 +1,17 @@
 import { expect } from 'chai'
 import { insertTestDimensions } from '@cube-creator/testing/lib/seedData'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import { mdClients } from '@cube-creator/testing/lib/index'
 import { md } from '@cube-creator/core/namespace'
 import namespace from '@rdfjs/namespace'
 import { GraphPointer } from 'clownface'
-import { hydra, qb, rdf, rdfs, schema, sh, xsd } from '@tpluscode/rdf-ns-builders/strict'
+import { hydra, qb, rdf, rdfs, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import { Initializer } from '@tpluscode/rdfine/RdfResource'
 import { NodeShape } from '@rdfine/shacl'
 import { ex } from '@cube-creator/testing/lib/namespace'
 import { ASK, INSERT } from '@tpluscode/sparql-builder'
 import { namedNode } from '@cube-creator/testing/clownface'
-import Store from '../../lib/store/index'
-import { SharedDimensionsStore } from '../../lib/store'
+import Store, { SharedDimensionsStore } from '../../lib/store/index.js'
 
 const graph = $rdf.namedNode('https://lindas.admin.ch/cube/dimension')
 const ns = namespace('https://ld.admin.ch/cube/dimension/')
@@ -41,7 +40,7 @@ describe('@cube-creator/shared-dimensions-api/lib/store/index @SPARQL', () => {
         GRAPH ${ex.anotherGraph} {
           ${id} a ${md.SharedDimension}
         }
-      `.execute(parsingClient.query)
+      `.execute(parsingClient)
 
       // when
       const exists = store.exists(id, md.SharedDimension)
@@ -77,7 +76,7 @@ describe('@cube-creator/shared-dimensions-api/lib/store/index @SPARQL', () => {
         GRAPH ${ex.otherGraph} {
           ${ns['technologies/sparql']} a ${ex.Something}
         }
-      `.execute(parsingClient.query)
+      `.execute(parsingClient)
     })
 
     context('existing dimension', () => {
@@ -238,7 +237,7 @@ describe('@cube-creator/shared-dimensions-api/lib/store/index @SPARQL', () => {
         GRAPH ${ex.otherGraph} {
           ${ns['technologies/sparql']} a ${ex.Something}
         }
-      `.execute(parsingClient.query)
+      `.execute(parsingClient)
     })
 
     it('does not delete data from other graphs', async () => {
@@ -249,7 +248,7 @@ describe('@cube-creator/shared-dimensions-api/lib/store/index @SPARQL', () => {
       await store.delete(term)
 
       // then
-      await expect(ASK`${term} ?p ?o`.FROM(ex.otherGraph).execute(parsingClient.query)).to.eventually.be.true
+      await expect(ASK`${term} ?p ?o`.FROM(ex.otherGraph).execute(parsingClient)).to.eventually.be.true
     })
 
     it('deletes dimension term with dynamic properties', async () => {
@@ -260,7 +259,7 @@ describe('@cube-creator/shared-dimensions-api/lib/store/index @SPARQL', () => {
       await store.delete(term)
 
       // then
-      await expect(ASK`${term} ?p ?o`.FROM(graph).execute(parsingClient.query)).to.eventually.be.false
+      await expect(ASK`${term} ?p ?o`.FROM(graph).execute(parsingClient)).to.eventually.be.false
     })
 
     it('deletes dimension deep', async () => {
@@ -271,7 +270,7 @@ describe('@cube-creator/shared-dimensions-api/lib/store/index @SPARQL', () => {
       await store.delete(term)
 
       // then
-      await expect(ASK`${term} (<>|!<>)+ ?o`.execute(parsingClient.query)).to.eventually.be.false
+      await expect(ASK`${term} (<>|!<>)+ ?o`.execute(parsingClient)).to.eventually.be.false
     })
   })
 
@@ -297,7 +296,7 @@ describe('@cube-creator/shared-dimensions-api/lib/store/index @SPARQL', () => {
           ${schema.name} "OWL"@de ;
           ${schema.inDefinedTermSet} ${ns.technologies} ;
         .
-      `.execute(parsingClient.query)).to.eventually.be.true
+      `.execute(parsingClient)).to.eventually.be.true
     })
 
     it('updates existing resource', async () => {
@@ -319,10 +318,10 @@ describe('@cube-creator/shared-dimensions-api/lib/store/index @SPARQL', () => {
           ${schema.name} "RDF"@de ;
           ${schema.inDefinedTermSet} ${ns.technologies} ;
         .
-      `.execute(parsingClient.query)).to.eventually.be.true
+      `.execute(parsingClient)).to.eventually.be.true
       await expect(ASK`
         ${ns['technologies/rdf']} ${schema.validThrough} ?validThrough .
-      `.execute(parsingClient.query)).to.eventually.be.false
+      `.execute(parsingClient)).to.eventually.be.false
     })
 
     it('updates dynamic properties', async () => {
@@ -345,13 +344,13 @@ describe('@cube-creator/shared-dimensions-api/lib/store/index @SPARQL', () => {
           ${schema.color} ${ex('dimensions/colors/red')} ;
           ${qb.order} 10 ;
           ${rdfs.comment} "This term has dynamic properties" .
-      `.execute(parsingClient.query)).to.eventually.be.false
+      `.execute(parsingClient)).to.eventually.be.false
       await expect(ASK`
         ${ns['technologies/sparql']}
           ${schema.color} ${ex('dimensions/colors/blue')} ;
           ${qb.order} 20 ;
           ${rdfs.comment} "Updated" .
-      `.execute(parsingClient.query)).to.eventually.be.true
+      `.execute(parsingClient)).to.eventually.be.true
     })
   })
 

@@ -1,7 +1,7 @@
 import { GraphPointer } from 'clownface'
 // import { rdf, hydra, dbo } from '@tpluscode/rdf-ns-builders'
 // import { cc } from '@cube-creator/core/namespace'
-import { ResourceStore } from '../../ResourceStore'
+import { ResourceStore } from '../../ResourceStore.js'
 // import * as id from '../identifiers'
 // import { saveFile } from '../../storage/s3'
 

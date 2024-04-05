@@ -3,7 +3,7 @@ import { supportedLanguages } from '@cube-creator/core/languages'
 import { datatypes } from '@cube-creator/core/datatypes'
 import { dash, hydra, rdfs, sh, csvw, xsd } from '@tpluscode/rdf-ns-builders'
 import { turtle } from '@tpluscode/rdf-string'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 
 const literalShapeId = shape('column-mapping/literal')
 const referenceShapeId = shape('column-mapping/reference')

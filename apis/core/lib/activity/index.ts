@@ -1,4 +1,4 @@
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import env from '@cube-creator/core/env'
 import { nanoid } from 'nanoid'
 

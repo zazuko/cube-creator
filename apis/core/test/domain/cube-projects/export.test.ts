@@ -1,14 +1,13 @@
-import { DatasetCore } from 'rdf-js'
+import type { DatasetCore } from '@rdfjs/types'
 import { before, describe, it } from 'mocha'
 import { expect } from 'chai'
 import { cc } from '@cube-creator/core/namespace'
 import { insertTestProject } from '@cube-creator/testing/lib/seedData'
 import { ccClients } from '@cube-creator/testing/lib'
-import clownface from 'clownface'
-import $rdf from 'rdf-ext'
-import { dcterms, rdf, schema } from '@tpluscode/rdf-ns-builders/strict'
-import { getExportedProject } from '../../../lib/domain/cube-projects/export'
-import ResourceStore from '../../../lib/ResourceStore'
+import $rdf from '@zazuko/env'
+import { dcterms, rdf, schema } from '@tpluscode/rdf-ns-builders'
+import { getExportedProject } from '../../../lib/domain/cube-projects/export.js'
+import ResourceStore from '../../../lib/ResourceStore.js'
 
 describe('@cube-creator/core-api/lib/domain/cube-projects/export @SPARQL', () => {
   let dataset: DatasetCore
@@ -45,7 +44,7 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/export @SPARQL', () =>
     describe('cc:dataset', () => {
       it('exports properties', () => {
         // given
-        const project = clownface({ dataset, term: projectId })
+        const project = $rdf.clownface({ dataset, term: projectId })
 
         // when
         const cubeDataset = project.out(cc.dataset)
@@ -63,7 +62,7 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/export @SPARQL', () =>
       describe('cc:dimensionMetadata', () => {
         it('exports all metadata', () => {
           // given
-          const project = clownface({ dataset, term: projectId })
+          const project = $rdf.clownface({ dataset, term: projectId })
 
           // when
           const dimensionMetadata = project.out(cc.dataset).out(cc.dimensionMetadata)
@@ -89,7 +88,7 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/export @SPARQL', () =>
 
     it('does not export published version', () => {
       // given
-      const project = clownface({ dataset, graph: projectId, term: projectId })
+      const project = $rdf.clownface({ dataset, graph: projectId, term: projectId })
 
       // then
       expect(project.out(cc.latestPublishedRevision).terms).to.have.length(0)
@@ -97,7 +96,7 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/export @SPARQL', () =>
 
     it('does not export creator', () => {
       // given
-      const creator = clownface({ dataset, graph: projectId })
+      const creator = $rdf.clownface({ dataset, graph: projectId })
         .namedNode('https://cube-creator.lndo.site/user')
 
       // then
@@ -107,7 +106,7 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/export @SPARQL', () =>
 
     it('does not export maintainer (organization)', () => {
       // given
-      const project = clownface({ dataset, graph: projectId, term: projectId })
+      const project = $rdf.clownface({ dataset, graph: projectId, term: projectId })
 
       // then
       expect(project.out(schema.maintainer).terms).to.have.length(0)
@@ -115,9 +114,9 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/export @SPARQL', () =>
 
     it('does not export csv S3 links', () => {
       // given
-      const sources = clownface({ dataset })
+      const sources = $rdf.clownface({ dataset })
         .has(rdf.type, cc.CSVSource)
-      const medias = clownface({ dataset })
+      const medias = $rdf.clownface({ dataset })
         .namedNode('csv-source/ubd')
         .has(schema.associatedMedia)
 
@@ -128,9 +127,9 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/export @SPARQL', () =>
 
     it('does export external csv links', () => {
       // given
-      const sources = clownface({ dataset })
+      const sources = $rdf.clownface({ dataset })
         .has(rdf.type, cc.CSVSource)
-      const media = clownface({ dataset })
+      const media = $rdf.clownface({ dataset })
         .namedNode('csv-source/external')
         .out(schema.associatedMedia)
         .out(schema.contentUrl)

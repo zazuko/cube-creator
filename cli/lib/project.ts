@@ -1,6 +1,6 @@
 import { PublishJob, Project } from '@cube-creator/model'
-import type { Context } from 'barnard59-core/lib/Pipeline'
-import { tracer } from './otel/tracer'
+import type { Context } from 'barnard59-core'
+import { tracer } from './otel/tracer.js'
 
 export async function loadProject(jobUri: string, { variables, logger }: Context) {
   return tracer.startActiveSpan('find project', { attributes: { jobUri } }, async span => {

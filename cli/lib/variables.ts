@@ -1,8 +1,8 @@
-import { Literal, NamedNode } from 'rdf-js'
+import type { Literal, NamedNode } from '@rdfjs/types'
 import { HydraClient } from 'alcaeus/alcaeus'
 import * as Csvw from '@rdfine/csvw'
-import DatasetExt from 'rdf-ext/lib/Dataset'
-import { PublishJob, UnlistJob } from '../../packages/model/Job'
+import { Dataset as DatasetExt } from '@zazuko/env/lib/Dataset.js'
+import { PublishJob, UnlistJob } from '../../packages/model/Job.js'
 
 declare module 'barnard59-core' {
   interface Variables {

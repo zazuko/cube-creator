@@ -1,6 +1,7 @@
 {
   "name": "@zazuko/cube-creator",
   "private": true,
+  "type": "module",
   "scripts": {
     "prepare": "husky install",
     "postinstall": "patch-package",
@@ -53,8 +54,9 @@
       "./**/*.ts"
     ],
     "require": [
-      "mocha-setup.js"
-    ]
+      "mocha-setup.cjs"
+    ],
+    "loader": "ts-node/esm"
   },
   "c8": {
     "all": true,

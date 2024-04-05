@@ -1,19 +1,18 @@
-import { NamedNode, Quad } from 'rdf-js'
-import $rdf from 'rdf-ext'
-import clownface from 'clownface'
+import type { NamedNode, Quad } from '@rdfjs/types'
+import $rdf from '@zazuko/env'
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 
 interface CollectionHandler {
   memberType: NamedNode
   collectionType: NamedNode
-  memberQuads: Quad[]
+  memberQuads: Iterable<Quad>
   collection: NamedNode
 }
 
 export function getCollection({ collection, memberQuads, memberType, collectionType }: CollectionHandler) {
   const dataset = $rdf.dataset(memberQuads)
 
-  const graph = clownface({ dataset })
+  const graph = $rdf.clownface({ dataset })
   const members = graph.has(rdf.type, memberType)
 
   return graph.node(collection)

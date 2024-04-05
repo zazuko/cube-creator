@@ -1,11 +1,11 @@
-import { NamedNode } from 'rdf-js'
+import type { NamedNode } from '@rdfjs/types'
 import { GraphPointer } from 'clownface'
 import error from 'http-errors'
 import { Dictionary } from '@rdfine/prov'
 import { cc, md } from '@cube-creator/core/namespace'
 import { isNamedNode } from 'is-graph-pointer'
 import { schema } from '@tpluscode/rdf-ns-builders'
-import { ResourceStore } from '../../ResourceStore'
+import { ResourceStore } from '../../ResourceStore.js'
 
 interface UpdateDimensionMapping {
   resource: NamedNode

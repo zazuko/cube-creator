@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { Term } from 'rdf-js'
+import type { Term } from '@rdfjs/types'
 import { qudt } from '@tpluscode/rdf-ns-builders'
 
 const icons: Record<string, string> = {

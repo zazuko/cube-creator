@@ -2,11 +2,10 @@ import asyncMiddleware from 'middleware-async'
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
 import { loadLinkedResources } from '@hydrofoil/labyrinth/lib/query/eagerLinks'
 import { query } from '@cube-creator/core/namespace'
-import clownface from 'clownface'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import { rdf } from '@tpluscode/rdf-ns-builders'
-import { createTable } from '../../domain/table/create'
-import { shaclValidate } from '../../middleware/shacl'
+import { createTable } from '../../domain/table/create.js'
+import { shaclValidate } from '../../middleware/shacl.js'
 
 export const post = protectedResource(
   shaclValidate,
@@ -22,7 +21,7 @@ export const post = protectedResource(
     res.header('Location', table.value)
 
     // Include resources defined with `query:include`
-    const types = clownface({
+    const types = $rdf.clownface({
       dataset: req.hydra.api.dataset,
       term: table.out(rdf.type).terms,
     })

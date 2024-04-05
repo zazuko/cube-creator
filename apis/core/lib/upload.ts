@@ -4,9 +4,9 @@ import * as companion from '@uppy/companion'
 import env from '@cube-creator/core/env'
 import bodyParser from 'body-parser'
 import { nanoid } from 'nanoid'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 
-import { sourceWithFilenameExists } from './domain/queries/csv-source'
+import { sourceWithFilenameExists } from './domain/queries/csv-source.js'
 
 const apiURL = new URL(env.API_CORE_BASE)
 

@@ -1,18 +1,16 @@
-import { NamedNode, Quad, Term } from 'rdf-js'
-import type StreamClient from 'sparql-http-client/StreamClient'
-import cf, { GraphPointer } from 'clownface'
-import $rdf from 'rdf-ext'
-import DatasetExt from 'rdf-ext/lib/Dataset'
+import type { NamedNode, Quad, Term } from '@rdfjs/types'
+import type StreamClient from 'sparql-http-client/StreamClient.js'
+import type { GraphPointer } from 'clownface'
+import $rdf from '@cube-creator/env'
+import { Dataset as DatasetExt } from '@zazuko/env/lib/Dataset.js'
 import { CONSTRUCT, INSERT } from '@tpluscode/sparql-builder'
-import TermMap from '@rdfjs/term-map'
 import { as, hydra, rdf } from '@tpluscode/rdf-ns-builders'
-import { warn } from '@hydrofoil/labyrinth/lib/logger'
+import { warn } from '@hydrofoil/labyrinth/lib/logger.js'
 import { sparql, SparqlTemplateResult } from '@tpluscode/rdf-string'
-import TermSet from '@rdfjs/term-set'
-import RdfResource, { RdfResourceCore, ResourceIdentifier } from '@tpluscode/rdfine/RdfResource'
+import { RdfResourceCore, ResourceIdentifier } from '@tpluscode/rdfine/RdfResource'
 import { Link } from '@cube-creator/model/lib/Link'
-import { ChangelogDataset } from './ChangelogDataset'
-import * as Activity from './activity/index'
+import { ChangelogDataset } from './ChangelogDataset.js'
+import * as Activity from './activity/index.js'
 
 interface ResourceCreationOptions {
   implicitlyDereferencable?: boolean
@@ -73,11 +71,11 @@ export class SparqlStoreFacade implements TripleStoreFacade {
   }
 
   async loadResource(term: NamedNode): Promise<GraphPointer<NamedNode, ChangelogDataset<DatasetExt>> | undefined> {
-    const stream = await CONSTRUCT`?s ?p ?o`
+    const stream = CONSTRUCT`?s ?p ?o`
       .WHERE`GRAPH ${term} { ?s ?p ?o }`
-      .execute(this.__client.query)
+      .execute(this.__client)
 
-    const resource = cf({ dataset: new ChangelogDataset(await $rdf.dataset().import(stream)), term })
+    const resource = $rdf.clownface({ dataset: new ChangelogDataset(await $rdf.dataset().import(stream)), term })
 
     if (!resource.dataset.size) {
       return undefined
@@ -90,7 +88,7 @@ export class SparqlStoreFacade implements TripleStoreFacade {
     const now = Activity.now()
     const actor = this.getUser?.()
 
-    const graphsToDelete = new TermSet([...deletedResources])
+    const graphsToDelete = $rdf.termSet([...deletedResources])
     let shouldUpdate = graphsToDelete.size > 0
     const commands: SparqlTemplateResult[] = [...deletedResources]
       .flatMap(id => [...SparqlStoreFacade.deleteResourceCommands(id, now, actor)])
@@ -165,13 +163,13 @@ export class SparqlStoreFacade implements TripleStoreFacade {
 
 export default class implements ResourceStore {
   private readonly __storage: TripleStoreFacade
-  private readonly __resources: TermMap<NamedNode, GraphPointer<NamedNode, ChangelogDataset>>
-  private readonly __deletedGraphs: TermSet<NamedNode>
+  private readonly __resources: Map<NamedNode, GraphPointer<NamedNode, ChangelogDataset>>
+  private readonly __deletedGraphs: Set<NamedNode>
 
   constructor(clientOrStore: StreamClient | TripleStoreFacade) {
     this.__storage = 'store' in clientOrStore ? new SparqlStoreFacade(clientOrStore) : clientOrStore
-    this.__resources = new TermMap()
-    this.__deletedGraphs = new TermSet()
+    this.__resources = $rdf.termMap()
+    this.__deletedGraphs = $rdf.termSet()
   }
 
   async get(id: string | Term | undefined | Link<any>, opts?: GetOptions): Promise<GraphPointer<NamedNode>> {
@@ -214,7 +212,7 @@ export default class implements ResourceStore {
     const pointer = await this.get(id, opts)
     if (!pointer) return undefined
 
-    return RdfResource.factory.createEntity<T>(pointer)
+    return $rdf.rdfine().factory.createEntity<T>(pointer)
   }
 
   async save(): Promise<void> {
@@ -231,7 +229,7 @@ export default class implements ResourceStore {
       throw new Error(`Resource <${id.value}> already exists`)
     }
 
-    const pointer = cf({ dataset: new ChangelogDataset($rdf.dataset()), term: id })
+    const pointer = $rdf.clownface({ dataset: new ChangelogDataset($rdf.dataset()), term: id })
 
     if (implicitlyDereferencable) {
       pointer.addOut(rdf.type, hydra.Resource)

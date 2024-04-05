@@ -1,20 +1,19 @@
-import { Term } from 'rdf-js'
+import type { Term } from '@rdfjs/types'
 import stream from 'readable-stream'
 import { HydraClient } from 'alcaeus/alcaeus'
 import { Job, Table, TransformJob } from '@cube-creator/model'
 import type * as Schema from '@rdfine/schema'
-import { schema } from '@tpluscode/rdf-ns-builders/strict'
+import { schema } from '@tpluscode/rdf-ns-builders'
 import type { Logger } from 'winston'
 import type { Context, VariableMap } from 'barnard59-core'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import { cc } from '@cube-creator/core/namespace'
-import TermMap from '@rdfjs/term-map'
-import { GraphPointer } from 'clownface'
-import { ValidationError } from 'barnard59-validate-shacl/lib/errors'
-import DatasetExt from 'rdf-ext/lib/Dataset'
+import type { GraphPointer } from 'clownface'
+import { ValidationError } from 'barnard59-shacl/lib/errors.js'
+import { Dataset as DatasetExt } from '@zazuko/env/lib/Dataset.js'
 import { createPlaygroundUrl } from '@zazuko/shacl-playground'
 import { shorten } from '@zazuko/s'
-import { logger } from './log'
+import { logger } from './log.js'
 
 interface Params {
   jobUri: string
@@ -125,7 +124,7 @@ function isValidationError(error: string | Error): error is ValidationError {
 }
 
 function mergeDatasetIn(target: GraphPointer, toMerge: GraphPointer): GraphPointer {
-  const blanks = new TermMap()
+  const blanks = $rdf.termMap()
 
   const rewriteBlank = (term: Term): any => {
     if (term.termType === 'BlankNode') {
