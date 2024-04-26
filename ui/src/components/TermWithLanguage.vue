@@ -33,7 +33,7 @@ export default defineComponent({
 
         for (const lang of displayLanguage) {
           term = this.values?.find(({ language }) => language === lang)
-          if (term) return `${term.value}@${term.language}`
+          if (term) return `${term.value} (${term.language})`
         }
 
         return undefined
