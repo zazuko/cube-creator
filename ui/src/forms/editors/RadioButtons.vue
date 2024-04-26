@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { GraphPointer, MultiPointer } from 'clownface'
+import type { GraphPointer, MultiPointer } from 'clownface'
 import type { Term } from '@rdfjs/types'
 import { rdfs } from '@tpluscode/rdf-ns-builders'
 import RadioButton from '@/components/RadioButton.vue'

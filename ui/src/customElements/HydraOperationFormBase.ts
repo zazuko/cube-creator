@@ -2,7 +2,7 @@ import { html, LitElement, TemplateResult } from 'lit'
 import { property } from 'lit/decorators.js'
 import { RuntimeOperation } from 'alcaeus'
 import { Shape } from '@rdfine/shacl'
-import { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
 import { ErrorDetails } from '@/api/errors'
 import './LoadingBlock'
 

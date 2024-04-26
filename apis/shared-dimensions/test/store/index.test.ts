@@ -3,18 +3,18 @@ import { insertTestDimensions } from '@cube-creator/testing/lib/seedData'
 import $rdf from '@zazuko/env'
 import { mdClients } from '@cube-creator/testing/lib/index'
 import { md } from '@cube-creator/core/namespace'
-import namespace from '@rdfjs/namespace'
-import { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
 import { hydra, qb, rdf, rdfs, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import { Initializer } from '@tpluscode/rdfine/RdfResource'
 import { NodeShape } from '@rdfine/shacl'
 import { ex } from '@cube-creator/testing/lib/namespace'
 import { ASK, INSERT } from '@tpluscode/sparql-builder'
 import { namedNode } from '@cube-creator/testing/clownface'
-import Store, { SharedDimensionsStore } from '../../lib/store/index.js'
+import Store from '../../lib/store/index.js'
+import { SharedDimensionsStore } from '../../lib/store.js'
 
 const graph = $rdf.namedNode('https://lindas.admin.ch/cube/dimension')
-const ns = namespace('https://ld.admin.ch/cube/dimension/')
+const ns = $rdf.namespace('https://ld.admin.ch/cube/dimension/')
 const { parsingClient } = mdClients
 
 describe('@cube-creator/shared-dimensions-api/lib/store/index @SPARQL', () => {

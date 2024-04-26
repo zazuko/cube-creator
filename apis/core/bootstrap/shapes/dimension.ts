@@ -2,11 +2,10 @@ import { cc, meta, shape, sh1, cube, md, relation, editor } from '@cube-creator/
 import { supportedLanguages } from '@cube-creator/core/languages'
 import { sparql, turtle } from '@tpluscode/rdf-string'
 import { dash, hydra, prov, rdf, rdfs, schema, sh, qudt, time, xsd } from '@tpluscode/rdf-ns-builders'
-import namespace from '@rdfjs/namespace'
 import $rdf from '@zazuko/env'
 import { lindasQueryTemplate } from '../lib/query.js'
 
-const sou = namespace('http://qudt.org/vocab/sou/')
+const sou = $rdf.namespace('http://qudt.org/vocab/sou/')
 
 const sharedDimensionCollection = $rdf.namedNode('dimension/_term-sets')
 

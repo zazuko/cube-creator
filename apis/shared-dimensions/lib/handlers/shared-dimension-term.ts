@@ -2,7 +2,7 @@ import asyncMiddleware from 'middleware-async'
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
 import { oa } from '@tpluscode/rdf-ns-builders'
 import { updateTerm } from '../domain/shared-dimension-term.js'
-import { store } from '../store/index.js'
+import { store } from '../store.js'
 import { shaclValidate } from '../middleware/shacl.js'
 import { rewrite } from '../rewrite.js'
 

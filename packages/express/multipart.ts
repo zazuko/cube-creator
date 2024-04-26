@@ -1,5 +1,6 @@
-import { Readable } from 'stream'
-import type { NamedNode, Stream } from '@rdfjs/types'
+import { Readable } from 'node:stream'
+import type { Readable as RS } from 'readable-stream'
+import type { NamedNode, Stream, BaseQuad } from '@rdfjs/types'
 import E, { Router } from 'express'
 import formats from '@rdfjs-elements/formats-pretty'
 import once from 'once'
@@ -14,7 +15,7 @@ export function isMultipart(req: E.Request) {
   return req.get('content-type')?.includes('multipart/form-data')
 }
 
-export type Files = Record<string, (baseIri: string) => Stream & Readable>
+export type Files = Record<string, (baseIri: string) => Stream<BaseQuad> & RS>
 
 declare module 'express-serve-static-core' {
   interface Request {

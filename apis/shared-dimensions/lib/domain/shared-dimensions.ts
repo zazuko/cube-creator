@@ -5,13 +5,13 @@ import { hydra, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { md, meta } from '@cube-creator/core/namespace'
 import $rdf from '@zazuko/env'
 import { toRdf } from 'rdf-literal'
-import { fromFile } from 'rdf-utils-fs'
+import { fromFile } from '@zazuko/rdf-utils-fs'
 import { isGraphPointer } from 'is-graph-pointer'
 import { StreamClient } from 'sparql-http-client/StreamClient.js'
 import { ParsingClient } from 'sparql-http-client/ParsingClient.js'
 import env from '../env.js'
 import shapeToQuery from '../shapeToQuery.js'
-import { getDynamicProperties } from './shared-dimension/index.js'
+import { getDynamicProperties } from './shared-dimension.js'
 
 export function getSharedDimensions() {
   return CONSTRUCT`
@@ -82,7 +82,7 @@ export async function getSharedTerms<C extends StreamClient | ParsingClient>({ s
 }
 
 async function loadShape() {
-  const dataset = await $rdf.dataset().import(fromFile(path.resolve(__dirname, '../shapes/terms-query-shape.ttl')))
+  const dataset = await $rdf.dataset().import(fromFile($rdf, path.resolve(__dirname, '../shapes/terms-query-shape.ttl')))
 
   return $rdf.clownface({
     dataset,

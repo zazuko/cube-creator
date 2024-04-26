@@ -23,7 +23,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
 import type { Shape } from '@rdfine/shacl'
-import $rdf from '@rdf-esm/data-model'
+import $rdf from '@cube-creator/env'
 import { sh } from '@tpluscode/rdf-ns-builders'
 import { ValidationReport } from '@/api/errors'
 

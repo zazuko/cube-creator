@@ -15,6 +15,7 @@
     "useDefineForClassFields": false,
     "typeRoots": ["./typings", "./node_modules/@types"],
     "allowJs": true,
+    "skipLibCheck": true,
     "resolveJsonModule": true
   },
   "include": [

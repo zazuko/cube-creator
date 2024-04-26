@@ -1,13 +1,13 @@
 import { describe, it, before } from 'mocha'
 import { expect } from 'chai'
-import type { ResourceLoader } from 'hydra-box'
+import type { ResourceLoader } from '@kopflos-cms/core'
 import { INSERT } from '@tpluscode/sparql-builder'
 import { mdClients } from '@cube-creator/testing/lib'
-import namespace from '@rdfjs/namespace'
 import { hydra, schema, sh } from '@tpluscode/rdf-ns-builders'
+import $rdf from '@zazuko/env'
 import Loader from '../../lib/loader.js'
 
-const ex = namespace('http://example.com/')
+const ex = $rdf.namespace('http://example.com/')
 const graph = ex('shared-dimensions')
 const testResources = INSERT.DATA`
 graph ${graph} {
@@ -39,7 +39,7 @@ describe('shared-dimensions/lib/loader @SPARQL', () => {
       stream: mdClients.streamClient,
       sparql: mdClients.parsingClient,
     })
-    await testResources.execute(mdClients.parsingClient.query, {
+    await testResources.execute(mdClients.parsingClient, {
       base: 'http://example.com/',
     })
   })

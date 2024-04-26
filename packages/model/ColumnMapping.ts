@@ -3,7 +3,7 @@ import { Initializer, RdfResource, RdfResourceCore } from '@tpluscode/rdfine/Rdf
 import { Constructor, namespace, property, ResourceIdentifier } from '@tpluscode/rdfine'
 import { cc } from '@cube-creator/core/namespace'
 import type { GraphPointer } from 'clownface'
-import $rdf from '@cube-creator/env'
+import { RdfineEnvironment } from '@tpluscode/rdfine/environment'
 import { CsvColumn } from './CsvColumn.js'
 import { Table } from './Table.js'
 import { Link } from './lib/Link.js'
@@ -107,8 +107,8 @@ export function ReferenceColumnMappingMixin<Base extends Constructor>(Resource: 
 
 ReferenceColumnMappingMixin.appliesTo = cc.ReferenceColumnMapping
 
-export const literalFromPointer = <T extends ResourceIdentifier, D extends DatasetCore>(pointer: GraphPointer<T, D>, initializer?: Initializer<ColumnMapping>): LiteralColumnMapping => {
-  return $rdf.rdfine().factory.createEntity<LiteralColumnMapping>(pointer, [LiteralColumnMappingMixin], {
+export const literalFromPointer = <T extends ResourceIdentifier, D extends DatasetCore>(env: RdfineEnvironment, pointer: GraphPointer<T, D>, initializer?: Initializer<ColumnMapping>): LiteralColumnMapping => {
+  return env.rdfine().factory.createEntity<LiteralColumnMapping>(pointer, [LiteralColumnMappingMixin], {
     initializer: {
       ...initializer,
       types: [cc.ColumnMapping, cc.LiteralColumnMapping],
@@ -116,8 +116,8 @@ export const literalFromPointer = <T extends ResourceIdentifier, D extends Datas
   })
 }
 
-export const referenceFromPointer = <T extends ResourceIdentifier, D extends DatasetCore>(pointer: GraphPointer<T, D>, initializer?: Initializer<ColumnMapping>): ReferenceColumnMapping => {
-  return $rdf.rdfine().factory.createEntity<ReferenceColumnMapping>(pointer, [ReferenceColumnMappingMixin], {
+export const referenceFromPointer = <T extends ResourceIdentifier, D extends DatasetCore>(env: RdfineEnvironment, pointer: GraphPointer<T, D>, initializer?: Initializer<ColumnMapping>): ReferenceColumnMapping => {
+  return env.rdfine().factory.createEntity<ReferenceColumnMapping>(pointer, [ReferenceColumnMappingMixin], {
     initializer: {
       ...initializer,
       types: [cc.ColumnMapping, cc.ReferenceColumnMapping],

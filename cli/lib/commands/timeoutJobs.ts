@@ -50,12 +50,11 @@ export async function timeoutJobs({
 
   const apiClient = $rdf.hydra
   apiClient.resources.factory.addMixin(...Object.values(Models))
-  setupAuthentication({}, logger, apiClient)
+  setupAuthentication({}, logger)
 
   for (const { job } of overtimeJobs) {
     await updateJob({
       jobUri: job.value,
-      apiClient,
       modified: new Date(now()),
       status: cc.CanceledJobStatus,
       executionUrl: undefined,

@@ -1,9 +1,10 @@
 import type { DatasetCore } from '@rdfjs/types'
 import { Constructor } from '@tpluscode/rdfine'
 import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
-import { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
 import $rdf from '@zazuko/env'
 import { Dataset as DatasetExt } from '@zazuko/env/lib/Dataset.js'
+import toCanonical from 'rdf-dataset-ext/toCanonical.js'
 
 declare module '@tpluscode/rdfine' {
   interface RdfResource {
@@ -24,7 +25,7 @@ export default function Mixin<Base extends Constructor>(Resource: Base) {
       const otherCanonical = 'toCanonical' in otherDataset ? otherDataset : $rdf.dataset([...otherDataset])
 
       // compare their canonical N-Quads representations
-      return thisDatasetExt.toCanonical() === otherCanonical.toCanonical()
+      return toCanonical(thisDatasetExt) === toCanonical(otherCanonical)
     }
   }
 }

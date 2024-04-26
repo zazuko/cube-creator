@@ -1,12 +1,8 @@
 import type { NamedNode } from '@rdfjs/types'
 import type { AnyPointer, GraphPointer } from 'clownface'
-import $rdf from '@zazuko/env'
+import $rdf from '@cube-creator/env'
 import type { Initializer } from '@tpluscode/rdfine/RdfResource'
 import type { NodeShape } from '@rdfine/shacl'
-import RdfResource from '@tpluscode/rdfine'
-import { NodeShapeBundle, PropertyShapeBundle } from '@rdfine/shacl/bundles'
-import { ResourceBundle } from '@rdfine/rdfs/bundles'
-import { fromPointer } from '@rdfine/shacl/lib/NodeShape'
 import { Request } from 'express'
 import parsePreferHeader from 'parse-prefer-header'
 import { shape } from '../namespace.js'
@@ -15,10 +11,6 @@ import { loadDynamicTermProperties } from './dynamic-properties.js'
 import * as sharedDimension from './shared-dimension.js'
 import hierarchy from './hierarchy.js'
 
-RdfResource.factory.addMixin(...NodeShapeBundle)
-RdfResource.factory.addMixin(...PropertyShapeBundle)
-RdfResource.factory.addMixin(...ResourceBundle)
-
 interface ShapeFactory {
   (req: Request): Promise<GraphPointer<NamedNode>>
 }
@@ -26,7 +18,7 @@ interface ShapeFactory {
 function entry(id: NamedNode, init: (graph: AnyPointer) => Initializer<NodeShape>): [NamedNode, ShapeFactory] {
   async function factory(req: Request) {
     const pointer = $rdf.clownface().namedNode(id)
-    fromPointer(pointer, init(pointer.any()))
+    $rdf.rdfine.sh.NodeShape(pointer, init(pointer.any()))
 
     const { targetClass } = parsePreferHeader(req.header('Prefer'))
     for (const quad of await loadDynamicTermProperties(targetClass, pointer)) {

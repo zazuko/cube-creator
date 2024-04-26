@@ -2,12 +2,13 @@ import asyncMiddleware from 'middleware-async'
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import cors from 'cors'
-import { serializers } from '@rdfjs-elements/formats-pretty'
+import $rdf from '@cube-creator/env'
+import formats from '@rdfjs-elements/formats-pretty'
 import error from 'http-errors'
 import { md, meta } from '@cube-creator/core/namespace'
 import * as ns from '@tpluscode/rdf-ns-builders'
-import { createTerm, getExportedDimension } from '../domain/shared-dimension/index.js'
-import { store } from '../store/index.js'
+import { createTerm, getExportedDimension } from '../domain/shared-dimension.js'
+import { store } from '../store.js'
 import { shaclValidate } from '../middleware/shacl.js'
 import { rewrite } from '../rewrite.js'
 
@@ -43,7 +44,7 @@ export const getExport = protectedResource(cors({ exposedHeaders: 'content-dispo
   res.setHeader('Content-Disposition', `attachment; filename="${name}.trig"`)
   res.setHeader('Content-Type', 'application/trig')
 
-  const quadStream: any = serializers.import('application/trig', data, {
+  const quadStream: any = formats.serializers.import('application/trig', data, {
     prefixes: {
       md: md().value,
       meta: meta().value,

@@ -1,14 +1,14 @@
 import { insertTestDimensions } from '@cube-creator/testing/lib/seedData'
-import namespace from '@rdfjs/namespace'
 import { schema, rdfs, qb, xsd } from '@tpluscode/rdf-ns-builders'
 import { expect } from 'chai'
 import { ASK } from '@tpluscode/sparql-builder'
 import { mdClients } from '@cube-creator/testing/lib/index'
+import $rdf from '@zazuko/env'
 import { deleteDynamicTerms } from '../../../../lib/domain/shared-dimension/queries.js'
 
 const { parsingClient } = mdClients
 
-const ns = namespace('https://ld.admin.ch/cube/dimension/')
+const ns = $rdf.namespace('https://ld.admin.ch/cube/dimension/')
 
 describe('@cube-creator/shared-dimensions-api/lib/shared-dimension/queries @SPARQL', () => {
   describe('deleteDynamicTerms', () => {

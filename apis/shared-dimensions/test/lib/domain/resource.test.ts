@@ -6,24 +6,23 @@ import { ASK } from '@tpluscode/sparql-builder'
 import $rdf from '@zazuko/env'
 import { mdClients } from '@cube-creator/testing/lib'
 import { insertTestDimensions } from '@cube-creator/testing/lib/seedData'
-import { parsers } from '@rdfjs/formats-common'
+import formats from '@rdfjs/formats'
 import type { AnyPointer } from 'clownface'
-import namespace from '@rdfjs/namespace'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { cascadeDelete } from '../../../lib/domain/resource.js'
-import { store } from '../../../lib/store/index.js'
+import { store } from '../../../lib/store.js'
 import env from '../../../lib/env.js'
 
-const ns = namespace('https://cube-creator.lndo.site/shared-dimensions/')
+const ns = $rdf.namespace('https://cube-creator.lndo.site/shared-dimensions/')
 
 describe('@cube-creator/shared-dimensions-api/lib/domain/resource @SPARQL', () => {
   const client = mdClients.parsingClient
   let api: AnyPointer
 
   before(async () => {
-    const apiStream = parsers.import('text/turtle', fs.createReadStream(path.join(__dirname, '../../../hydra/index.ttl')))
+    const apiStream = formats.parsers.import('text/turtle', fs.createReadStream(path.join(__dirname, '../../../hydra/index.ttl'))) as any
     api = $rdf.clownface({
-      dataset: await $rdf.dataset().import(apiStream!),
+      dataset: await $rdf.dataset().import(apiStream),
     })
   })
 

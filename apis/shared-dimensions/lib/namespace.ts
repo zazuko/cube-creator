@@ -1,4 +1,4 @@
-import namespace from '@rdfjs/namespace'
+import $rdf from '@zazuko/env'
 import env from './env.js'
 
 type Shapes = 'shape/shared-dimension-create'
@@ -8,4 +8,4 @@ type Shapes = 'shape/shared-dimension-create'
 | 'shape/hierarchy-create'
 | 'shape/hierarchy'
 
-export const shape = namespace<Shapes>(`${env.MANAGED_DIMENSIONS_BASE}dimension/_`)
+export const shape = $rdf.namespace<Shapes>(`${env.MANAGED_DIMENSIONS_BASE}dimension/_`)

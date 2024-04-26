@@ -3,8 +3,7 @@ import asyncMiddleware from 'middleware-async'
 import error from 'http-errors'
 import { IriTemplate, IriTemplateMixin } from '@rdfine/hydra'
 import type { AnyContext, AnyPointer } from 'clownface'
-import $rdf from '@zazuko/env'
-import Parser from '@rdfjs/parser-n3'
+import $rdf from '@cube-creator/env'
 import toStream from 'string-to-stream'
 import { Dataset as DatasetExt } from '@zazuko/env/lib/Dataset.js'
 import * as ns from '@cube-creator/core/namespace'
@@ -12,8 +11,6 @@ import { cc, hydraBox } from '@cube-creator/core/namespace'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 import { warning } from '../log.js'
 import { getObservations } from '../domain/observations/index.js'
-
-const parser = new Parser()
 
 export const query = protectedResource(
   asyncMiddleware(async (req, res, next) => {
@@ -41,7 +38,7 @@ export const query = protectedResource(
     const viewArgument = query.out(ns.view.view).value
     if (viewArgument) {
       try {
-        filters = $rdf.clownface({ dataset: await $rdf.dataset().import(parser.import(toStream(viewArgument))) })
+        filters = $rdf.clownface({ dataset: await $rdf.dataset().import($rdf.formats.parsers.import('text/turtle', toStream(viewArgument))!) })
       } catch (e: any) {
         warning('Failed to parse cube view')
         warning(e.toString())

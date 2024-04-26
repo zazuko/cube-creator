@@ -1,9 +1,10 @@
 import { HydraClient } from 'alcaeus/alcaeus'
 import { CsvProject, ImportProject, UnlistJob } from '@cube-creator/model'
-import '../variables.js'
+import $rdf from '@cube-creator/env'
 import { isCsvProject } from '@cube-creator/model/Project'
 import { logger } from '../log.js'
 import * as runner from './runner.js'
+import '../variables.js'
 
 interface UnlistRunOptions extends runner.RunOptions {
   publishStore?: {
@@ -19,9 +20,7 @@ export default runner.create<UnlistRunOptions>({
   },
   async prepare(options, variable) {
     const { publishStore, job: jobUri } = options
-    const Hydra = variable.get('apiClient')
-
-    const { job, namespace, cubeIdentifier } = await getJob(jobUri, Hydra)
+    const { job, namespace, cubeIdentifier } = await getJob(jobUri, $rdf.hydra)
 
     variable.set('unlist-job', job)
     variable.set('publish-graph-store-endpoint', publishStore?.endpoint || process.env.PUBLISH_GRAPH_STORE_ENDPOINT)

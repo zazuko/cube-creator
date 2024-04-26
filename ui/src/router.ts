@@ -43,7 +43,7 @@ import HierarchyCreate from '@/views/HierarchyCreate.vue'
 import Hierarchy from '@/views/Hierarchy.vue'
 import HierarchyEdit from '@/views/HierarchyEdit.vue'
 import { IriTemplate, RuntimeOperation } from 'alcaeus'
-import { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
 import { hydraBox } from '@cube-creator/core/namespace'
 
 const routes: Array<RouteRecordRaw> = [

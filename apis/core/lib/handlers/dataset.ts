@@ -9,6 +9,7 @@ import merge from 'merge2'
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 import { cc, query, view } from '@cube-creator/core/namespace'
 import env from '@cube-creator/core/env'
+import toStream from 'rdf-dataset-ext/toStream.js'
 import { shaclValidate } from '../middleware/shacl.js'
 import { update } from '../domain/dataset/update.js'
 import { loadCubeShapes } from '../domain/queries/cube.js'
@@ -43,10 +44,10 @@ export const get = protectedResource(asyncMiddleware(async (req, res) => {
     dataset: req.hydra.api.dataset,
     term: dataset.out(rdf.type).terms,
   })
-  const linkedResources = await loadLinkedResources(dataset, types.out(query.include).toArray(), req.labyrinth.sparql)
+  const linkedResources = await loadLinkedResources($rdf, dataset, types.out(query.include).toArray(), req.labyrinth.sparql)
   const observationsTemplateStream = await observationTemplate(dataset.term)
 
-  merge([dataset.dataset.toStream(), ...shapeStreams, linkedResources.toStream(), observationsTemplateStream], { objectMode: true })
+  merge([toStream(dataset.dataset), ...shapeStreams, toStream(linkedResources), observationsTemplateStream], { objectMode: true })
     .pipe(outStream)
 
   return res.quadStream(outStream)

@@ -88,7 +88,7 @@ const dynamicPropertiesFromStore: DynamicPropertiesQuery = async function (targe
 
   const quads = await Promise.all([basicProperties, collectionSearchTemplates])
 
-  return quads.flatMap(q => q)
+  return quads.flatMap(ds => [...ds])
 }
 
 function buildShaclLists(pointer: AnyPointer) {

@@ -1,6 +1,6 @@
 import type { NamedNode } from '@rdfjs/types'
 import { SparqlQueryLoader } from '@hydrofoil/labyrinth/lib/loader'
-import { PropertyResource, Resource } from 'hydra-box'
+import { PropertyResource, Resource } from '@kopflos-cms/core'
 import ParsingClient from 'sparql-http-client/ParsingClient.js'
 import { SELECT } from '@tpluscode/sparql-builder'
 import $rdf from '@zazuko/env'

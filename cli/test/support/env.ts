@@ -1,6 +1,5 @@
 import path from 'path'
 import dotenv from 'dotenv'
-import { Hydra } from 'alcaeus/node'
 import { setupAuthentication } from '../../lib/auth.js'
 import { logger } from './logger.js'
 
@@ -15,5 +14,5 @@ export function setupEnv() {
     path: path.resolve(__dirname, '../../../.local.env'),
   })
 
-  setupAuthentication({}, logger, Hydra)
+  setupAuthentication({}, logger)
 }

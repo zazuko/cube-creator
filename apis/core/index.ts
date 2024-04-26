@@ -12,16 +12,19 @@ import { resource } from 'express-rdf-request'
 import cors from 'cors'
 import env from '@cube-creator/core/env'
 import { errorMappers } from '@cube-creator/api-errors'
+import $rdf from '@cube-creator/env'
+import Environment from '@zazuko/env/Environment'
+import Fs from '@zazuko/rdf-utils-fs/Factory'
 import { error, log } from './lib/log.js'
 import authentication from './lib/auth.js'
 import { bootstrap } from './bootstrap/index.js'
 import { resourceStore } from './lib/middleware/resource.js'
 import { expectsDisambiguate, preferHydraCollection } from './lib/middleware/operations.js'
-import './lib/domain/index.js'
 import upload from './lib/upload.js'
 import Loader from './lib/Loader.js'
 import * as s3 from './lib/storage/s3.js'
 import { version } from './package.json'
+import './lib/domain/index.js'
 
 const apiPath = path.resolve(__dirname, 'hydra')
 const codePath = path.resolve(__dirname, 'lib')
@@ -84,6 +87,7 @@ async function main() {
 
   app.use(resourceStore)
   app.use(await hydraBox({
+    env: new Environment([Fs], { parent: $rdf }),
     apiPath,
     codePath,
     baseUri,
@@ -100,7 +104,7 @@ async function main() {
         expectsDisambiguate,
       ],
     },
-    loader: new Loader({
+    loader: new Loader($rdf, {
       endpointUrl,
       user,
       password,

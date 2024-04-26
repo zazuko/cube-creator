@@ -1,6 +1,6 @@
 import { ImportJob } from '@cube-creator/model/ImportJob'
-import * as Models from '@cube-creator/model'
 import { HydraClient } from 'alcaeus/alcaeus'
+import $rdf from '@cube-creator/env'
 import { logger } from '../log.js'
 import { create } from './runner.js'
 
@@ -21,10 +21,7 @@ export default create({
   async prepare(options, variable) {
     const { job: jobUri } = options
 
-    const Hydra = variable.get('apiClient')
-    Hydra.resources.factory.addMixin(...Object.values(Models))
-
-    const { dataset, dimensionMetadata, sourceCube, sourceGraph, sourceEndpoint, cubeGraph: { value: cubeGraph } } = await getJob(jobUri, Hydra)
+    const { dataset, dimensionMetadata, sourceCube, sourceGraph, sourceEndpoint, cubeGraph: { value: cubeGraph } } = await getJob(jobUri, $rdf.hydra)
 
     logger.info('Importing cube %O', {
       sourceCube, sourceGraph, sourceEndpoint, cubeGraph, dimensionMetadata: dimensionMetadata.id, dataset,

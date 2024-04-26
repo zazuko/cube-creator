@@ -58,7 +58,7 @@ export const put = protectedResource(
       const metadataId = await findByDimensionMapping(dimensionMapping.term)
       const dimensionMetadata = await store.getResource<DimensionMetadataCollection>(metadataId)
 
-      dimensionMetadata.addError?.(dimensionChangedWarning)
+      dimensionMetadata.addError?.(dimensionChangedWarning($rdf))
     }
 
     await store.save()
@@ -120,7 +120,7 @@ export const importMappingsRequest = protectedResource(
 
     const metadataId = await findByDimensionMapping(dimensionMapping.id)
     const dimensionMetadata = await store.getResource<DimensionMetadataCollection>(metadataId)
-    dimensionMetadata.addError?.(dimensionChangedWarning)
+    dimensionMetadata.addError?.(dimensionChangedWarning($rdf))
     await store.save()
 
     res.end()

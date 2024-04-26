@@ -2,8 +2,8 @@
 import querystring from 'querystring'
 import fetch from 'node-fetch'
 import { Logger } from 'winston'
-import { HydraClient } from 'alcaeus/alcaeus'
 import once from 'once'
+import $rdf from '@cube-creator/env'
 
 export type AuthConfig = {
   issuer: string
@@ -93,10 +93,10 @@ function defaultAuthConfig(log: Logger): AuthConfig {
   throw new Error('Incomplete OIDC config')
 }
 
-export function setupAuthentication(config: Partial<AuthConfig>, log: Logger, Hydra: HydraClient) {
+export function setupAuthentication(config: Partial<AuthConfig>, log: Logger) {
   let token: LiveToken | undefined
 
-  Hydra.defaultHeaders = async () => {
+  $rdf.hydra.defaultHeaders = async () => {
     if (!token || !isValid(token)) {
       token = await getToken({ ...defaultAuthConfig(log), ...config })
     }

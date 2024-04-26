@@ -6,6 +6,7 @@ import { cc } from '@cube-creator/core/namespace'
 import type { AnyPointer, GraphPointer } from 'clownface'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { ResourceIdentifier } from '@tpluscode/rdfine/RdfResource'
+import $rdf from '@cube-creator/env'
 import { shaclValidate } from '../middleware/shacl.js'
 import { createCSVSource } from '../domain/csv-source/upload.js'
 import { deleteSource } from '../domain/csv-source/delete.js'
@@ -113,7 +114,7 @@ function isGraphPointer(ptr: AnyPointer): ptr is GraphPointer<ResourceIdentifier
 function getPresignedLink(csvSource: GraphPointer): string {
   const mediaPointer = csvSource.out(schema.associatedMedia)
   if (isGraphPointer(mediaPointer)) {
-    const media = mediaObjectFromPointer(mediaPointer)
+    const media = $rdf.rdfine.schema.MediaObject(mediaPointer)
     const storage = getMediaStorage(media)
 
     return storage.getDownloadLink(media)

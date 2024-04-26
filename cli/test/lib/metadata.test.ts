@@ -2,26 +2,22 @@ import type { DatasetCore } from '@rdfjs/types'
 import { insertTestProject } from '@cube-creator/testing/lib/seedData'
 import { before, describe, it } from 'mocha'
 import getStream from 'get-stream'
-import { Context } from 'barnard59-core/lib/Pipeline'
+import type { Context, VariableMap, Variables } from 'barnard59-core'
 import env from '@cube-creator/core/env'
 import type { GraphPointer } from 'clownface'
 import { expect } from 'chai'
-import { VariableMap, Variables } from 'barnard59-core'
-import { Hydra } from 'alcaeus/node'
-import * as Models from '@cube-creator/model'
 import { toRdf } from 'rdf-literal'
 import $rdf from '@zazuko/env'
 import { sh } from '@tpluscode/rdf-ns-builders'
+import { CCEnv } from '@cube-creator/env'
 import { setupEnv } from '../support/env.js'
 import { loadCubeMetadata } from '../../lib/metadata.js'
 import { logger } from '../support/logger.js'
 
-Hydra.resources.factory.addMixin(...Object.values(Models))
-
 describe('@cube-creator/cli/lib/metadata @SPARQL', function () {
   this.timeout(20000)
 
-  let context: Context
+  let context: Context<CCEnv>
   let variables: VariableMap
 
   before(async () => {
@@ -32,14 +28,13 @@ describe('@cube-creator/cli/lib/metadata @SPARQL', function () {
       ['revision', 1],
       ['namespace', 'https://environment.ld.admin.ch/foen/'],
       ['cubeIdentifier', 'ubd/28'],
-      ['apiClient', Hydra],
       ['timestamp', toRdf(new Date())],
       ['metadata', $rdf.dataset()],
     ])
     context = {
       variables,
       logger,
-    }
+    } as any
   })
 
   describe('loadCubeMetadata', () => {

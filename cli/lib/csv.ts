@@ -1,6 +1,6 @@
+import { PassThrough } from 'node:stream'
 import type { Stream } from '@rdfjs/types'
-import { PassThrough } from 'readable-stream'
-import $rdf from '@zazuko/env'
+import $rdf from '@cube-creator/env'
 import { readable } from 'duplex-to'
 import { CsvSource } from '@cube-creator/model'
 import fetch from 'node-fetch'
@@ -8,12 +8,11 @@ import type { Context } from 'barnard59-core'
 
 export function openFromCsvw(this: Context) {
   const csvStream = new PassThrough()
-  const Hydra = this.variables.get('apiClient')
   const csvw = this.variables.get('transformed').csvwResource
   const lastTransformed = this.variables.get('lastTransformed')
 
   Promise.resolve().then(async () => {
-    const { response, representation } = await Hydra.loadResource<CsvSource>(csvw.url!)
+    const { response, representation } = await $rdf.hydra.loadResource<CsvSource>(csvw.url!)
     if (!representation?.root) {
       csvStream.emit('error', new Error('Failed to load Source. Response was: ' + response?.xhr.statusText))
       return
@@ -46,6 +45,6 @@ export function getCsvwTriples(this: Context): Stream {
 
   return csvw.pointer.dataset
     .match(null, null, null, csvw.id)
-    .map(quad => $rdf.triple(quad.subject, quad.predicate, quad.object))
+    .map(quad => $rdf.quad(quad.subject, quad.predicate, quad.object))
     .toStream()
 }

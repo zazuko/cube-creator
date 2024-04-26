@@ -4,10 +4,9 @@ import { expect } from 'chai'
 import sinon from 'sinon'
 import { Dataset as DatasetExt } from '@zazuko/env/lib/Dataset.js'
 import $rdf from '@zazuko/env'
-import { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
 import { prov, rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
-import namespace from '@rdfjs/namespace'
 import httpError from 'http-errors'
 import { namedNode } from '@cube-creator/testing/clownface'
 import { ex } from '@cube-creator/testing/lib/namespace'
@@ -15,7 +14,7 @@ import { update } from '../../../lib/domain/dimension-mapping/update.js'
 import { TestResourceStore } from '../../support/TestResourceStore.js'
 import '../../../lib/domain/index.js'
 
-const wtd = namespace('http://www.wikidata.org/entity/')
+const wtd = $rdf.namespace('http://www.wikidata.org/entity/')
 
 const wikidata = {
   arsenic: wtd.Q871,

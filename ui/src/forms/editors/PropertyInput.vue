@@ -11,7 +11,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
 import type { Term } from '@rdfjs/types'
-import * as $rdf from '@rdf-esm/data-model'
+import $rdf from '@cube-creator/env'
 import { expand, shrink } from '@/rdf-properties'
 import store from '../../store'
 import { CreateIdentifier } from '../../store/modules/project'

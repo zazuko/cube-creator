@@ -15,7 +15,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
 import type { Term } from '@rdfjs/types'
-import { namedNode } from '@rdf-esm/data-model'
+import $rdf from '@cube-creator/env'
 
 export default defineComponent({
   name: 'CheckboxListEditor',
@@ -46,7 +46,7 @@ export default defineComponent({
 
   methods: {
     emit (): void {
-      this.update(this.selected.map(namedNode))
+      this.update(this.selected.map($rdf.namedNode))
     },
   },
 })

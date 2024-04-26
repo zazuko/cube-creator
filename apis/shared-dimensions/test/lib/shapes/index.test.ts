@@ -7,7 +7,7 @@ import { dcterms, hydra, qudt, rdf, schema, sh } from '@tpluscode/rdf-ns-builder
 import { md, meta } from '@cube-creator/core/namespace'
 import $rdf from '@zazuko/env'
 import { expect } from 'chai'
-import { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
 import shapes from '../../../lib/shapes/index.js'
 import * as ns from '../../../lib/namespace.js'
 

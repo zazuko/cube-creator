@@ -17,7 +17,7 @@
 import { defineComponent } from 'vue'
 import RdfResourceImpl from '@tpluscode/rdfine'
 import { RuntimeOperation } from 'alcaeus'
-import { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
 
 import { api } from '@/api'
 import BMessage from '@/components/BMessage.vue'

@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts">
-import { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
 import type { NamedNode } from '@rdfjs/types'
 import { defineComponent, PropType, Ref, ref, toRefs } from 'vue'
 

@@ -24,7 +24,7 @@ export function inject(this: Pick<Context, 'variables'>) {
   return through2.obj(
     (chunk, enc, cb) => cb(null, chunk),
     function (done) {
-      dataset.forEach(this.push.bind(this))
+      dataset.forEach(d => this.push(d))
       done()
     })
 }

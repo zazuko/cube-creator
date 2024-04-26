@@ -1,12 +1,10 @@
 import type { Literal, NamedNode } from '@rdfjs/types'
-import { HydraClient } from 'alcaeus/alcaeus'
 import * as Csvw from '@rdfine/csvw'
-import { Dataset as DatasetExt } from '@zazuko/env/lib/Dataset.js'
+import { Dataset as DatasetExt } from '@zazuko/env/lib/DatasetExt.js'
 import { PublishJob, UnlistJob } from '../../packages/model/Job.js'
 
 declare module 'barnard59-core' {
   interface Variables {
-    apiClient: HydraClient<DatasetExt>
     jobUri: string
     executionUrl: string
     'graph-store-endpoint': string

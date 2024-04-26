@@ -1,5 +1,5 @@
 import type { NamedNode } from '@rdfjs/types'
-import { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
 import { DomainError } from '@cube-creator/api-errors'
 import { cc } from '@cube-creator/core/namespace'
 import { dcterms, rdfs, schema } from '@tpluscode/rdf-ns-builders'

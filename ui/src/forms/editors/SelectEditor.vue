@@ -19,7 +19,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
 import type { Term, NamedNode } from '@rdfjs/types'
-import { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
 import '@/components/tagged-literal'
 import { getLocalizedLabel } from '@rdfjs-elements/lit-helpers'
 import { rdfs, schema } from '@tpluscode/rdf-ns-builders'

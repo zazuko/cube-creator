@@ -4,7 +4,7 @@ import { prov, rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { Dictionary } from '@rdfine/prov'
 import { cc, md } from '@cube-creator/core/namespace'
 import $rdf from '@zazuko/env'
-import { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
 
 interface DictionaryEx {
   about: NamedNode

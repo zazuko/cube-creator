@@ -1,4 +1,3 @@
-import nodeFetch from 'node-fetch'
 import env from '@cube-creator/core/env'
 import { SELECT } from '@tpluscode/sparql-builder'
 import $rdf from '@zazuko/env'
@@ -10,7 +9,7 @@ import { TriggerCallbackMap, TriggerCallbacks } from './index.js'
 const pipelineUrlTerm = $rdf.namedNode('urn:gitlab:pipelineUrl')
 
 const gitlab: TriggerCallbacks = {
-  onSuccess: async function cancelConcurrentJobs({ job, res, fetch = nodeFetch, client }) {
+  onSuccess: async function cancelConcurrentJobs({ job, res, client }) {
     if (!env.has('GITLAB_TOKEN') || !env.has('GITLAB_API_URL')) {
       return
     }

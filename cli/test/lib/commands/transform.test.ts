@@ -1,11 +1,8 @@
 import env from '@cube-creator/core/env'
 import { before, describe, it } from 'mocha'
 import { expect } from 'chai'
-import $rdf from '@zazuko/env'
-import clownface from 'clownface'
+import $rdf from '@cube-creator/env'
 import { ASK, DESCRIBE, SELECT } from '@tpluscode/sparql-builder'
-import namespace from '@rdfjs/namespace'
-import { Hydra } from 'alcaeus/node'
 import { csvw, rdf, rdfs, schema, sh, unit, xsd } from '@tpluscode/rdf-ns-builders'
 import { ccClients } from '@cube-creator/testing/lib'
 import { insertTestProject } from '@cube-creator/testing/lib/seedData'
@@ -24,11 +21,11 @@ describe('@cube-creator/cli/lib/commands/transform', function () {
   })
 
   describe('successful job', () => {
-    const projectNs = namespace(`${env.API_CORE_BASE}cube-project/ubd/`)
+    const projectNs = $rdf.namespace(`${env.API_CORE_BASE}cube-project/ubd/`)
     const job = `${projectNs().value}csv-mapping/jobs/test-job`
     const expectedGraph = projectNs('cube-data')
     const cubeBase = 'https://environment.ld.admin.ch/foen/ubd/28/'
-    const cubeNs = namespace(cubeBase)
+    const cubeNs = $rdf.namespace(cubeBase)
     const cubeShape = cubeNs('shape/')
 
     before(async () => {
@@ -208,7 +205,7 @@ describe('@cube-creator/cli/lib/commands/transform', function () {
     })
 
     it('updates job', async () => {
-      const { representation } = await Hydra.loadResource(job)
+      const { representation } = await $rdf.hydra.loadResource(job)
       expect(representation?.root).to.matchShape({
         property: [{
           path: schema.actionStatus,
@@ -252,27 +249,27 @@ describe('@cube-creator/cli/lib/commands/transform', function () {
     })
 
     it('includes ""^^cube:Undefined in property shape sh:in of literal columns', async () => {
-      const dataset = await $rdf.dataset().import(await DESCRIBE`?property`
+      const dataset = await $rdf.dataset().import(DESCRIBE`?property`
         .FROM(expectedGraph)
         .WHERE`
           <shape/> ${sh.property} ?property .
           ?property ${sh.path} ${rdfs.comment} .
         `
-        .execute(ccClients.streamClient.query, { base: cubeBase }))
+        .execute(ccClients.streamClient, { base: cubeBase }))
 
-      const ins = [...clownface({ dataset }).has(sh.in).out(sh.in).list()!].map(ptr => ptr.term)
+      const ins = [...$rdf.clownface({ dataset }).has(sh.in).out(sh.in).list()!].map(ptr => ptr.term)
 
       expect(ins).to.deep.contain.members([$rdf.literal('', cube.Undefined)])
     })
 
     it('does not emit sh:in for min/max dimensions', async () => {
-      const dataset = await $rdf.dataset().import(await DESCRIBE`?property`
+      const dataset = await $rdf.dataset().import(DESCRIBE`?property`
         .FROM(expectedGraph)
         .WHERE`
           <shape/> ${sh.property} ?property .
           ?property ${sh.path} ${cubeNs('dimension/value')} .
         `
-        .execute(ccClients.streamClient.query, { base: cubeBase }))
+        .execute(ccClients.streamClient, { base: cubeBase }))
 
       const propShape = $rdf.clownface({ dataset }).has(sh.path)
 
@@ -282,13 +279,13 @@ describe('@cube-creator/cli/lib/commands/transform', function () {
     })
 
     it('does not emit sh:in for min/max dimensions with cube:Undefined value', async () => {
-      const dataset = await $rdf.dataset().import(await DESCRIBE`?property`
+      const dataset = await $rdf.dataset().import(DESCRIBE`?property`
         .FROM(expectedGraph)
         .WHERE`
           <shape/> ${sh.property} ?property .
           ?property ${sh.path} ${cubeNs('dimension/limitvalue')} .
         `
-        .execute(ccClients.streamClient.query, { base: cubeBase }))
+        .execute(ccClients.streamClient, { base: cubeBase }))
 
       const propShape = $rdf.clownface({ dataset }).has(sh.path)
 
@@ -298,29 +295,29 @@ describe('@cube-creator/cli/lib/commands/transform', function () {
     })
 
     it('includes cube:Undefined in property shape sh:in of mapped columns', async () => {
-      const dataset = await $rdf.dataset().import(await DESCRIBE`?property`
+      const dataset = await $rdf.dataset().import(DESCRIBE`?property`
         .FROM(expectedGraph)
         .WHERE`
           <shape/> ${sh.property} ?property .
           ?property ${sh.path} <unit> .
         `
-        .execute(ccClients.streamClient.query, { base: cubeBase }))
+        .execute(ccClients.streamClient, { base: cubeBase }))
 
-      const ins = [...clownface({ dataset }).has(sh.in).out(sh.in).list()!].map(ptr => ptr.term)
+      const ins = [...$rdf.clownface({ dataset }).has(sh.in).out(sh.in).list()!].map(ptr => ptr.term)
 
       expect(ins).to.deep.contain.members([cube.Undefined])
     })
 
     it('emits an sh:or alternative to include cube:Undefined datatype', async () => {
-      const dataset = await $rdf.dataset().import(await DESCRIBE`?property`
+      const dataset = await $rdf.dataset().import(DESCRIBE`?property`
         .FROM(expectedGraph)
         .WHERE`
           <shape/> ${sh.property} ?property .
           ?property ${sh.path} ${rdfs.comment} .
         `
-        .execute(ccClients.streamClient.query, { base: cubeBase }))
+        .execute(ccClients.streamClient, { base: cubeBase }))
 
-      const ors = [...clownface({ dataset }).has(sh.or).out(sh.or).list()!]
+      const ors = [...$rdf.clownface({ dataset }).has(sh.or).out(sh.or).list()!]
         .flatMap(ptr => ptr.out(sh.datatype).terms)
 
       expect(ors).to.have.length(2)
@@ -356,7 +353,7 @@ describe('@cube-creator/cli/lib/commands/transform', function () {
     await expect(jobRun).to.have.rejected
 
     // then
-    const job = await Hydra.loadResource(jobUri)
+    const job = await $rdf.hydra.loadResource(jobUri)
     expect(job.representation?.root).to.matchShape({
       property: [{
         path: schema.actionStatus,

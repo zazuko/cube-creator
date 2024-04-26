@@ -2,7 +2,7 @@ import type { Literal, NamedNode, Term } from '@rdfjs/types'
 import { Constructor, property, RdfResource } from '@tpluscode/rdfine'
 import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import type { Collection } from '@rdfine/hydra'
-import type * as Rdfs from '@rdfine/rdfs'
+import type { Resource } from '@rdfine/rdfs'
 import { ResourceMixin } from '@rdfine/rdfs'
 import { Action, ActionMixin, CreativeWork, Thing, ThingMixin } from '@rdfine/schema'
 import { ValidationReport, ValidationReportMixin } from '@rdfine/shacl'
@@ -17,7 +17,7 @@ export interface JobError extends Thing {
   validationReport?: ValidationReport
 }
 
-export interface Job extends Action, Rdfs.Resource, RdfResource {
+export interface Job extends Action, Resource, RdfResource {
   created: Date
   modified: Date
   link?: RdfResource

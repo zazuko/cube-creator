@@ -1,19 +1,15 @@
 import { describe, before, beforeEach, it } from 'mocha'
 import { expect } from 'chai'
-import { Hydra } from 'alcaeus/node'
+import $rdf from '@cube-creator/env'
 import env from '@cube-creator/core/env'
 import { insertTestProject } from '@cube-creator/testing/lib/seedData'
 import { Table } from '@rdfine/csvw'
 import type { VariableMap } from 'barnard59-core'
-import * as Models from '@cube-creator/model'
-import * as Csvw from '@rdfine/csvw'
 import { logger } from '../support/logger.js'
 import { setupEnv } from '../support/env.js'
 import { TableIterator } from '../../lib/job.js'
 
-Hydra.resources.factory.addMixin(...Object.values(Models))
-Hydra.resources.factory.addMixin(...Object.values(Csvw))
-Hydra.baseUri = env.API_CORE_BASE
+$rdf.hydra.baseUri = env.API_CORE_BASE
 
 describe('lib/job', function () {
   this.timeout(360 * 1000)
@@ -28,7 +24,6 @@ describe('lib/job', function () {
   beforeEach(() => {
     variables = new Map<any, any>([
       ['executionUrl', 'http://foo.runner/job/bar'],
-      ['apiClient', Hydra],
     ])
   })
 

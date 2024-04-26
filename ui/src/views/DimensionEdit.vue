@@ -19,7 +19,7 @@
 
 <script lang="ts">
 import { rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
-import { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
 import { computed, defineComponent, shallowRef, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'

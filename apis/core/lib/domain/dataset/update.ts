@@ -1,7 +1,7 @@
 import type { NamedNode } from '@rdfjs/types'
 import { cc, lindasSchema } from '@cube-creator/core/namespace'
 import { dcat, hydra, rdf, schema, vcard, _void } from '@tpluscode/rdf-ns-builders'
-import { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
 import { ResourceStore } from '../../ResourceStore.js'
 import * as projectQuery from '../cube-projects/queries.js'
 

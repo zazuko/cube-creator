@@ -2,7 +2,6 @@ import { describe, it, beforeEach, before } from 'mocha'
 import { expect } from 'chai'
 import sinon from 'sinon'
 import $rdf from '@zazuko/env'
-import nodeFetch, { Response } from 'node-fetch'
 import { ccClients } from '@cube-creator/testing/lib'
 import { blankNode } from '@cube-creator/testing/clownface'
 import { cc } from '@cube-creator/core/namespace'
@@ -11,7 +10,7 @@ import { callbacks } from '../../lib/pipeline/publishCallbacks.js'
 
 describe('@cube-creator/core/lib/pipeline/publishCallback @SPARQL', () => {
   const { gitlab } = callbacks
-  let fetch: typeof nodeFetch
+  let fetch: typeof global.fetch
 
   beforeEach(() => {
     fetch = sinon.stub().resolves() as any
@@ -41,7 +40,7 @@ describe('@cube-creator/core/lib/pipeline/publishCallback @SPARQL', () => {
           .addOut(cc.project, $rdf.namedNode('https://cube-creator.lndo.site/cube-project/ubd'))
 
         // when
-        await gitlab.onSuccess?.({
+        gitlab.onSuccess?.({
           job,
           fetch,
           client: ccClients.parsingClient,
@@ -79,7 +78,7 @@ describe('@cube-creator/core/lib/pipeline/publishCallback @SPARQL', () => {
           .addOut(cc.project, $rdf.namedNode('https://cube-creator.lndo.site/cube-project/ubd'))
 
         // when
-        await gitlab.onSuccess?.({
+        gitlab.onSuccess?.({
           job,
           fetch,
           client: ccClients.parsingClient,

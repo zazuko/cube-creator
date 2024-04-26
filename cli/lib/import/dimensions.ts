@@ -8,6 +8,7 @@ import * as ns from '@cube-creator/core/namespace'
 import { CONSTRUCT, SELECT } from '@tpluscode/sparql-builder'
 import StreamClient from 'sparql-http-client/StreamClient.js'
 import { Dataset as DatasetExt } from '@zazuko/env/lib/Dataset.js'
+import { CCEnv } from '@cube-creator/env'
 
 interface DimensionQuery {
   endpoint: NamedNode
@@ -101,7 +102,7 @@ function addMetadata({ id, metadataCollection, dimension, existingCollection, im
 /**
  * Populates cc:DimensionMetadataResource with dimensions found in the imported cube
  */
-export default async function query(this: Context, { endpoint, cube, graph, metadataResource }: DimensionQuery) {
+export default async function query(this: Context<CCEnv>, { endpoint, cube, graph, metadataResource }: DimensionQuery) {
   const client = new ParsingClient({
     endpointUrl: endpoint.value,
   })
@@ -109,8 +110,7 @@ export default async function query(this: Context, { endpoint, cube, graph, meta
     endpointUrl: endpoint.value,
   })
 
-  const Hydra = this.variables.get('apiClient')
-  const { response, representation } = await Hydra.loadResource(metadataResource)
+  const { response, representation } = await this.env.hydra.loadResource(metadataResource)
   if (!representation?.root) {
     throw new Error(`Failed to load existing dimension metadata. Response was: '${response?.xhr.statusText}'`)
   }

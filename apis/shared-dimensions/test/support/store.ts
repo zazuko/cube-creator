@@ -1,7 +1,7 @@
 import { rdf } from '@tpluscode/rdf-ns-builders'
 import sinon from 'sinon'
 import $rdf from '@zazuko/env'
-import { SharedDimensionsStore } from '../../lib/store/index.js'
+import { SharedDimensionsStore } from '../../lib/store.js'
 
 export function testStore(): SharedDimensionsStore {
   const resources = $rdf.termMap()

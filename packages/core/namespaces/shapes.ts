@@ -1,5 +1,5 @@
 import type { NamedNode } from '@rdfjs/types'
-import namespace from '@rdf-esm/namespace'
+import $rdf from '@zazuko/env'
 import env from '../env.js'
 
 export const baseUri = env.maybe.API_CORE_BASE || ''
@@ -26,4 +26,4 @@ type ShapeTerms =
 
 type ShapesNamespace = (term: ShapeTerms) => NamedNode
 
-export const shape: ShapesNamespace = namespace(baseUri + 'shape/') as any
+export const shape: ShapesNamespace = $rdf.namespace(baseUri + 'shape/') as any

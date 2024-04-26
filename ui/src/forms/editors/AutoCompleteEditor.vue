@@ -20,7 +20,7 @@
 import { defineComponent, PropType } from 'vue'
 import type { PropertyShape } from '@rdfine/shacl'
 import type { Term, NamedNode } from '@rdfjs/types'
-import { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
 import VueSelect from 'vue-select'
 import { debounce } from 'debounce'
 import { findNodes } from 'clownface-shacl-path'

@@ -12,6 +12,7 @@ import * as Cube from '@cube-creator/model/Cube'
 import through2 from 'through2'
 import { readable } from 'duplex-to'
 import merge from 'merge2'
+import { CCEnv } from '@cube-creator/env'
 
 interface CubeMetadataQuery {
   endpoint: NamedNode
@@ -84,10 +85,10 @@ function preserveExistingValues(dataset: DatasetCore) {
   })
 }
 
-function prepareNewCubeResource(cubeResource: Cube.Cube, datasetResource: NamedNode) {
+function prepareNewCubeResource(env: CCEnv, cubeResource: Cube.Cube, datasetResource: NamedNode) {
   const pointer = $rdf.clownface().namedNode(datasetResource)
-  create(pointer, {
-    hasPart: [Cube.create(pointer.node(cubeResource.id), {
+  create(env, pointer, {
+    hasPart: [Cube.create(env, pointer.node(cubeResource.id), {
       creator: cubeResource.creator,
     })],
   })
@@ -98,14 +99,13 @@ function prepareNewCubeResource(cubeResource: Cube.Cube, datasetResource: NamedN
   return pointer.dataset
 }
 
-export default async function query(this: Context, { cube, graph, endpoint, ...rest }: CubeMetadataQuery) {
+export default async function query(this: Context<CCEnv>, { cube, graph, endpoint, ...rest }: CubeMetadataQuery) {
   const client = new StreamClient({
     endpointUrl: endpoint.value,
   })
 
   const datasetResource = $rdf.namedNode(rest.datasetResource)
-  const Hydra = this.variables.get('apiClient')
-  const { representation, response } = await Hydra.loadResource(datasetResource)
+  const { representation, response } = await this.env.hydra.loadResource(datasetResource)
   const cubeResource = representation?.get<Cube.Cube>(cube.value)
   if (!cubeResource) {
     throw new Error(`Failed to load cube dataset. Response was: '${response?.xhr.statusText}'`)
@@ -113,9 +113,9 @@ export default async function query(this: Context, { cube, graph, endpoint, ...r
 
   const cubeMetaQuery = createQuery(cube, datasetResource, graph)
 
-  const metaCollection = prepareNewCubeResource(cubeResource, datasetResource)
+  const metaCollection = prepareNewCubeResource(this.env, cubeResource, datasetResource)
 
-  const newMetadata = (await cubeMetaQuery.execute(client))
+  const newMetadata = cubeMetaQuery.execute(client)
 
   return readable(merge(
     newMetadata.pipe(preserveExistingValues(metaCollection)),

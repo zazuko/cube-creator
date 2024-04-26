@@ -2,6 +2,7 @@ import { describe, it } from 'mocha'
 import { blankNode } from '@cube-creator/testing/clownface'
 import { expect } from 'chai'
 import { schema } from '@tpluscode/rdf-ns-builders'
+// eslint-disable-next-line import/no-extraneous-dependencies
 import $rdf from '@cube-creator/env'
 import { BaseResourceMixin } from '../BaseResource.js'
 

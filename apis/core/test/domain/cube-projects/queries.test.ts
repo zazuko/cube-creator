@@ -1,4 +1,3 @@
-import namespace from '@rdfjs/namespace'
 import { expect } from 'chai'
 import { describe, it, before } from 'mocha'
 import { ccClients } from '@cube-creator/testing/lib'
@@ -6,7 +5,7 @@ import $rdf from '@zazuko/env'
 import { insertTestProject } from '@cube-creator/testing/lib/seedData'
 import { exists } from '../../../lib/domain/cube-projects/queries.js'
 
-const ns = namespace('https://cube-creator.lndo.site/')
+const ns = $rdf.namespace('https://cube-creator.lndo.site/')
 
 describe('@cube-creator/core-api/lib/domain/cube-projects/queries @SPARQL', () => {
   before(async () => {

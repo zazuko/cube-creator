@@ -5,11 +5,11 @@ import { Constructor, property } from '@tpluscode/rdfine'
 import { IriTemplate } from '@rdfine/hydra'
 import { dcterms, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import { cc, cube } from '@cube-creator/core/namespace'
-import { namedNode } from '@rdf-esm/data-model'
+import $rdf from '@zazuko/env'
 import { initializer } from './lib/initializer.js'
 
-export const Draft = namedNode('https://ld.admin.ch/vocabulary/CreativeWorkStatus/Draft')
-export const Published = namedNode('https://ld.admin.ch/vocabulary/CreativeWorkStatus/Published')
+export const Draft = $rdf.namedNode('https://ld.admin.ch/vocabulary/CreativeWorkStatus/Draft')
+export const Published = $rdf.namedNode('https://ld.admin.ch/vocabulary/CreativeWorkStatus/Published')
 
 export interface Cube extends RdfResourceCore {
   dateCreated: Date

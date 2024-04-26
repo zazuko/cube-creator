@@ -3,11 +3,8 @@ import { supportedLanguages } from '@cube-creator/core/languages'
 import { datatypes } from '@cube-creator/core/datatypes'
 import type { Initializer } from '@tpluscode/rdfine/RdfResource'
 import type { NodeShape, PropertyShape } from '@rdfine/shacl'
-import $rdf from '@zazuko/env'
+import $rdf from '@cube-creator/env'
 import { editor, iso6391, md, meta, sh1 } from '@cube-creator/core/namespace'
-import { fromPointer as nodeShape } from '@rdfine/shacl/lib/NodeShape'
-import { fromPointer as propertyGroup } from '@rdfine/shacl/lib/PropertyGroup'
-import { fromPointer as resource } from '@rdfine/rdfs/lib/Resource'
 
 const defaultGroup = $rdf.namedNode('#default-group')
 const datatypeUri = [xsd.anyURI, ['URI']]
@@ -27,7 +24,7 @@ const properties: Initializer<PropertyShape>[] = [{
   maxCount: supportedLanguages.length,
   languageIn: supportedLanguages,
   order: 10,
-  group: propertyGroup(defaultGroup, {
+  group: $rdf.rdfine.sh.PropertyGroup(defaultGroup, {
     label: 'Dimension',
   }),
 }, {
@@ -179,7 +176,7 @@ const properties: Initializer<PropertyShape>[] = [{
   path: schema.additionalProperty,
   order: 40,
   nodeKind: sh.BlankNodeOrIRI,
-  group: propertyGroup({
+  group: $rdf.rdfine.sh.PropertyGroup({
     label: 'Term properties',
   }),
   node: {
@@ -226,7 +223,7 @@ const properties: Initializer<PropertyShape>[] = [{
       defaultValue: false,
       order: 15,
     }],
-    xone: [nodeShape({
+    xone: [$rdf.rdfine.sh.NodeShape({
       closed: true,
       ignoredProperties: commonProperties,
       property: [{
@@ -246,7 +243,7 @@ const properties: Initializer<PropertyShape>[] = [{
         order: 30,
         message: 'Datatype must be one of the listed xsd types',
       }],
-    }), nodeShape({
+    }), $rdf.rdfine.sh.NodeShape({
       closed: true,
       ignoredProperties: commonProperties,
       property: [{
@@ -263,7 +260,7 @@ const properties: Initializer<PropertyShape>[] = [{
         maxCount: 1,
         order: 30,
       }],
-    }), nodeShape({
+    }), $rdf.rdfine.sh.NodeShape({
       closed: true,
       ignoredProperties: commonProperties,
       property: [{
@@ -273,15 +270,15 @@ const properties: Initializer<PropertyShape>[] = [{
       }, {
         name: 'Languages',
         path: sh.languageIn,
-        in: [resource(iso6391.de, {
+        in: [$rdf.rdfine.rdfs.Resource(iso6391.de, {
           label: 'German',
-        }), resource(iso6391.fr, {
+        }), $rdf.rdfine.rdfs.Resource(iso6391.fr, {
           label: 'French',
-        }), resource(iso6391.it, {
+        }), $rdf.rdfine.rdfs.Resource(iso6391.it, {
           label: 'Italian',
-        }), resource(iso6391.rm, {
+        }), $rdf.rdfine.rdfs.Resource(iso6391.rm, {
           label: 'Romansh',
-        }), resource(iso6391.en, {
+        }), $rdf.rdfine.rdfs.Resource(iso6391.en, {
           label: 'English',
         })],
         [dash.editor.value]: editor.CheckboxListEditor,

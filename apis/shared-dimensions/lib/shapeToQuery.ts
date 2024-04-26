@@ -1,11 +1,11 @@
 import onetime from 'onetime'
 import { md } from '@cube-creator/core/namespace'
-import { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
 import { isGraphPointer } from 'is-graph-pointer'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 import { Parameters, PropertyShape } from '@hydrofoil/shape-to-query/model/constraint/ConstraintComponent'
-import namespace from '@rdfjs/namespace'
 import { sparql } from '@tpluscode/sparql-builder'
+import $rdf from '@zazuko/env'
 import env from './env.js'
 
 /*
@@ -67,7 +67,7 @@ async function defineConstraintComponents() {
 
     buildPatterns({ focusNode, valueNode, propertyPath }: Parameters): any {
       if (this.vendor === 'stardog') {
-        const fts = namespace('tag:stardog:api:search:')
+        const fts = $rdf.namespace('tag:stardog:api:search:')
         return sparql`
         service ${fts.textMatch} {
           [] ${fts.query} """${this.pattern + '*'}""";

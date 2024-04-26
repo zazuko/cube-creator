@@ -1,7 +1,7 @@
 import type { NamedNode } from '@rdfjs/types'
 import asyncMiddleware from 'middleware-async'
 import { protectedResource } from '@hydrofoil/labyrinth/resource'
-import { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
 import env from '@cube-creator/core/env'
 import express from 'express'
 import { shaclValidate } from '../middleware/shacl.js'

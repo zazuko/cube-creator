@@ -1,8 +1,10 @@
 import path from 'path'
 import { hydraBox } from '@hydrofoil/labyrinth'
 import { Router } from 'express'
-import $rdf from '@zazuko/env'
+import $rdf from '@cube-creator/env'
 import camouflage from 'camouflage-rewrite'
+import Environment from '@zazuko/env/Environment'
+import Fs from '@zazuko/rdf-utils-fs/Factory.js'
 import env from './lib/env.js'
 import bootstrap from './bootstrap/index.js'
 import Loader from './lib/loader.js'
@@ -22,6 +24,7 @@ export async function sharedDimensions(): Promise<Router> {
       rewriteHeaders: true,
     }))
     .use(await hydraBox({
+      env: new Environment([Fs], { parent: $rdf }),
       term: $rdf.namedNode(`${env.MANAGED_DIMENSIONS_API_BASE}dimension/api`),
       apiPath,
       codePath,

@@ -4,7 +4,7 @@ import { Constructor, property, ResourceIdentifier } from '@tpluscode/rdfine'
 import type { GraphPointer } from 'clownface'
 import { csvw, dtype, schema } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
-import $rdf from '@cube-creator/env'
+import { RdfineEnvironment } from '@tpluscode/rdfine/environment'
 import { initializer } from './lib/initializer.js'
 
 export interface CsvColumn extends RdfResource {
@@ -30,8 +30,8 @@ export function CsvColumnMixin<Base extends Constructor>(Resource: Base): Mixin 
 
 CsvColumnMixin.appliesTo = csvw.Column
 
-export const fromPointer = (pointer: GraphPointer<ResourceIdentifier>, initializer?: Initializer<CsvColumn>): CsvColumn => {
-  return $rdf.rdfine().factory.createEntity<CsvColumn>(pointer, [CsvColumnMixin], {
+export const fromPointer = (env: RdfineEnvironment, pointer: GraphPointer<ResourceIdentifier>, initializer?: Initializer<CsvColumn>): CsvColumn => {
+  return env.rdfine().factory.createEntity<CsvColumn>(pointer, [CsvColumnMixin], {
     initializer,
   })
 }

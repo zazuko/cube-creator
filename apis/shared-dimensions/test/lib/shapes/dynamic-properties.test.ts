@@ -161,7 +161,7 @@ describe('@cube-creator/shared-dimensions-api/lib/shapes/dynamic-properties', ()
       .blankNode()
       .addOut(sh.path, hydra.first)
       .addOut(rdfs.label, 'First property')
-    dynamicPropertiesQuery.resolves(dataset.toArray())
+    dynamicPropertiesQuery.resolves([...dataset])
 
     // when
     const dynamicProperties = $rdf.clownface({

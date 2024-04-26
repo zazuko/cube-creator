@@ -2,7 +2,7 @@ import prefixes from '@zazuko/prefixes'
 import rdf from '@zazuko/env'
 import '@zazuko/vocabulary-extras/register'
 
-export { cube } from '@zazuko/vocabulary-extras/builders'
+export { cube } from '@zazuko/vocabulary-extras/builders/loose'
 export { meta, relation } from '@zazuko/vocabulary-extras/builders/loose' // TODO: do not use loose builders
 export { shape } from './namespaces/shapes.js'
 

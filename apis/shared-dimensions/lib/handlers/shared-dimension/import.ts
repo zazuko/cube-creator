@@ -4,8 +4,8 @@ import { multiPartResourceHandler } from '@cube-creator/express/multipart'
 import { validationReportResponse } from 'hydra-box-middleware-shacl'
 import { shaclValidate } from '../../middleware/shacl.js'
 import { streamClient } from '../../sparql.js'
-import { importDimension } from '../../domain/shared-dimension/index.js'
-import { store } from '../../store/index.js'
+import { importDimension } from '../../domain/shared-dimension.js'
+import { store } from '../../store.js'
 
 export const postImportedDimension = protectedResource(
   multiPartResourceHandler,

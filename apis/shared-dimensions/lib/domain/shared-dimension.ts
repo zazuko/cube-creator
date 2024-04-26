@@ -9,7 +9,7 @@ import httpError from 'http-errors'
 import { DESCRIBE, SELECT } from '@tpluscode/sparql-builder'
 import { StreamClient } from 'sparql-http-client/StreamClient.js'
 import { parsingClient, streamClient } from '../sparql.js'
-import { SharedDimensionsStore } from '../store/index.js'
+import { SharedDimensionsStore } from '../store.js'
 import env from '../env.js'
 import { newId, replace } from './resource.js'
 import * as queries from './shared-dimension/queries.js'
@@ -163,7 +163,7 @@ export async function getExportedDimension({ resource, store, client = streamCli
     .import(quads.pipe(transformToQuads))
 
   for (const excludedProp of excludedProps) {
-    materialized.removeMatches(null, excludedProp)
+    materialized.deleteMatches(null, excludedProp)
   }
 
   return {

@@ -13,6 +13,7 @@
     "@cube-creator/env": "*",
     "@rdfine/shacl": "^0.10.5",
     "@rdfjs/express-handler": "^2.0.0",
+    "@rdfjs/formats": "^4",
     "@tpluscode/rdf-ns-builders": "^4.3.0",
     "@tpluscode/rdf-string": "^1.1.3",
     "@tpluscode/rdfine": "^0.7.7",

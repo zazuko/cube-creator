@@ -1,5 +1,4 @@
 import type { Term } from '@rdfjs/types'
-import namespace from '@rdfjs/namespace'
 import $rdf from '@zazuko/env'
 import { sparql } from '@tpluscode/sparql-builder'
 import env from './env.js'
@@ -7,7 +6,7 @@ import env from './env.js'
 export function textSearch(subject: Term, predicate: Term, textQuery: string) {
   switch (env.maybe.MANAGED_DIMENSIONS_STORE_ENGINE) {
     case 'stardog': {
-      const fts = namespace('tag:stardog:api:search:')
+      const fts = $rdf.namespace('tag:stardog:api:search:')
       const variable = $rdf.variable('_s')
       return sparql`
         service ${fts.textMatch} {

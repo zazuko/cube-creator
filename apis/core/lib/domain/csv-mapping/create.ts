@@ -1,4 +1,4 @@
-import { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
 // import { rdf, hydra, dbo } from '@tpluscode/rdf-ns-builders'
 // import { cc } from '@cube-creator/core/namespace'
 import { ResourceStore } from '../../ResourceStore.js'

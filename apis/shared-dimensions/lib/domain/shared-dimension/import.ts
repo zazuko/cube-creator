@@ -6,7 +6,7 @@ import { Files } from '@cube-creator/express/multipart'
 import $rdf from '@zazuko/env'
 import SHACLValidator from 'rdf-validate-shacl'
 import ValidationReport from 'rdf-validate-shacl/src/validation-report'
-import { parsers } from '@rdfjs/formats-common'
+import formats from '@rdfjs/formats'
 import type { AnyPointer, GraphPointer } from 'clownface'
 import { rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { INSERT } from '@tpluscode/sparql-builder'
@@ -14,7 +14,7 @@ import { StreamClient } from 'sparql-http-client/StreamClient.js'
 import through2 from 'through2'
 import { md } from '@cube-creator/core/namespace'
 import env from '../../env.js'
-import { SharedDimensionsStore } from '../../store/index.js'
+import { SharedDimensionsStore } from '../../store.js'
 import { streamClient } from '../../sparql.js'
 
 interface ImportedDimension {
@@ -34,9 +34,9 @@ function isNamedNode(pointer: AnyPointer): pointer is GraphPointer<NamedNode> {
 
 const shapesPath = path.join(__dirname, 'importShapes.ttl')
 export async function validateTermSet(termSet: GraphPointer): Promise<ValidationReport> {
-  const shapes = await $rdf.dataset().import(parsers.import('text/turtle', createReadStream(shapesPath), {
+  const shapes = await $rdf.dataset().import(formats.parsers.import('text/turtle', createReadStream(shapesPath), {
     baseIRI: termSet.value,
-  })!)
+  }) as any)
   const validator = new SHACLValidator(shapes)
 
   return validator.validate(termSet.dataset)

@@ -1,5 +1,3 @@
-import * as Csvw from '@rdfine/csvw'
-import { ThingMixin } from '@rdfine/schema'
 import * as runner from './runner.js'
 
 interface TransformRunOptions extends runner.RunOptions {
@@ -13,10 +11,5 @@ export default runner.create<TransformRunOptions>({
   },
   prepare(_, variable) {
     variable.set('lastTransformed', {})
-
-    const Hydra = variable.get('apiClient')
-
-    Hydra.resources.factory.addMixin(...Object.values(Csvw))
-    Hydra.resources.factory.addMixin(ThingMixin)
   },
 })

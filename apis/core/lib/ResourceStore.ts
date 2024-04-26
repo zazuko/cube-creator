@@ -1,5 +1,5 @@
 import type { NamedNode, Quad, Term } from '@rdfjs/types'
-import type StreamClient from 'sparql-http-client/StreamClient.js'
+import type { StreamClient } from 'sparql-http-client/StreamClient.js'
 import type { GraphPointer } from 'clownface'
 import $rdf from '@cube-creator/env'
 import { Dataset as DatasetExt } from '@zazuko/env/lib/Dataset.js'

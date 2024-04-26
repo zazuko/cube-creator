@@ -25,7 +25,7 @@ export const post = protectedResource(
       dataset: req.hydra.api.dataset,
       term: table.out(rdf.type).terms,
     })
-    const linkedResources = await loadLinkedResources(table, types.out(query.include).toArray(), req.labyrinth.sparql)
+    const linkedResources = await loadLinkedResources($rdf, table, types.out(query.include).toArray(), req.labyrinth.sparql)
     await res.dataset($rdf.dataset([...table.dataset, ...linkedResources]))
   }),
 )

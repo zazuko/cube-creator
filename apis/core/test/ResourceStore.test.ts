@@ -208,7 +208,7 @@ describe('ResourceStore', () => {
     it('does not update store if nothing changes', async () => {
       // given
       const store = new ResourceStore(client)
-      query.construct.callsFake(async () => $rdf.dataset([
+      query.construct.callsFake(() => $rdf.dataset([
         $rdf.quad(ex.Resource, rdfs.label, $rdf.literal('foo')),
       ]).toStream())
 
@@ -225,7 +225,7 @@ describe('ResourceStore', () => {
     it('only saves changed resources', async function () {
       // given
       const store = new ResourceStore(client)
-      query.construct.callsFake(async () => $rdf.dataset([
+      query.construct.callsFake(() => $rdf.dataset([
         $rdf.quad($rdf.namedNode('baz'), rdfs.label, $rdf.literal('foo')),
       ]).toStream())
 
