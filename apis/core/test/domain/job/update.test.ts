@@ -202,6 +202,33 @@ describe('domain/job/update', () => {
       })
     })
 
+    it('does not change dataset published date on first revision', async () => {
+      // given
+      const resource = clownface({ dataset: $rdf.dataset() })
+        .namedNode('job')
+        .addOut(schema.actionStatus, schema.CompletedActionStatus)
+        .addOut(dcterms.modified, $rdf.literal('2020-12-12T11:30:30', xsd.dateTime))
+      job
+        .addOut(cc.revision, 1)
+      dataset.addOut(schema.datePublished, $rdf.literal('2020-10-12', xsd.date))
+
+      // when
+      await update({
+        resource,
+        store,
+      })
+
+      // then
+      expect(dataset).to.matchShape({
+        property: {
+          path: schema.datePublished,
+          hasValue: $rdf.literal('2020-10-12', xsd.date),
+          minCount: 1,
+          maxCount: 1,
+        },
+      })
+    })
+
     it('does not change dataset published date on revision>1', async () => {
       // given
       const resource = clownface({ dataset: $rdf.dataset() })

@@ -30,7 +30,7 @@ export async function update({ resource, store }: JobUpdateParams): Promise<Grap
         project.incrementPublishedRevision()
 
         const dataset = await store.getResource<Dataset>(project.dataset.id)
-        if (job.revision === 1) {
+        if (job.revision === 1 && !dataset.published) {
           dataset.setPublishedDate(job.modified)
         }
       } else if (isTransformJob(job)) {
