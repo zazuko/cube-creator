@@ -4,32 +4,32 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <link rel="icon" href="/favicon.ico">
     <title>Cube Creator</title>
-    <% if (NODE_ENV == "production") { %>
-    <script src="<%= BASE_URL %>config.js"></script>
-    <% } else { %>
-    <!-- Keep this in sync with .env.local, ui/public/config.js.template and ui/types/global.d.ts -->
+<!--    <%if (NODE_ENV == "production") { %>-->
+<!--    <script src="/config.js"></script>-->
+<!--    <% } else { %>-->
+<!--    &lt;!&ndash; Keep this in sync with .env.local, ui/public/config.js.template and ui/types/global.d.ts &ndash;&gt;-->
     <script type="text/javascript">
       window.APP_CONFIG = {
         oidc: {
-          authority: "<%= VUE_APP_AUTH_ISSUER %>",
-          clientId: "<%= VUE_APP_AUTH_CLIENT_ID %>",
+          authority: "<%= VITE_AUTH_ISSUER %>",
+          clientId: "<%= VITE_AUTH_CLIENT_ID %>",
           scope: "openid email profile pipelines:read pipelines:write",
         },
-        apiCoreBase: "<%= VUE_APP_API_CORE_BASE %>",
+        apiCoreBase: "<%= VITE_API_CORE_BASE %>",
       };
     </script>
-    <% } %>
+<!--    <% } %>-->
     <script>try{new EventTarget}catch(e){document.write('<script src="https://unpkg.com/@ungap/event-target@0.1.0/min.js"><\x2fscript>')}</script>
     <link href="https://fonts.googleapis.com/css?family=Material+Icons&display=block" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0-beta.85/dist/themes/light.css" />
   </head>
   <body>
     <noscript>
-      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+      <strong>We're sorry but this app doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
     <div id="app"></div>
-    <!-- built files will be auto injected -->
+    <script type="module" src="../src/main.ts"></script>
   </body>
 </html>

@@ -1,6 +1,9 @@
+/// <reference types="vite/client" />
 import type { NamedNode } from '@rdfjs/types'
 import $rdf from '@zazuko/env'
-import env from '../env.js'
+import { createProxy } from '../env.js'
+
+const env = createProxy(global.process && global.process.env ? global.process.env : import.meta.env)
 
 export const baseUri = env.maybe.API_CORE_BASE || ''
 

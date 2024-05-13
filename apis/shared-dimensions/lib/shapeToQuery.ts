@@ -3,22 +3,22 @@ import { md } from '@cube-creator/core/namespace'
 import type { GraphPointer } from 'clownface'
 import { isGraphPointer } from 'is-graph-pointer'
 import { hydra } from '@tpluscode/rdf-ns-builders'
-import { Parameters, PropertyShape } from '@hydrofoil/shape-to-query/model/constraint/ConstraintComponent'
+import ConstraintComponent, { Parameters, PropertyShape } from '@hydrofoil/shape-to-query/model/constraint/ConstraintComponent.js'
 import { sparql } from '@tpluscode/sparql-builder'
 import $rdf from '@zazuko/env'
+import { constructQuery, deleteQuery } from '@hydrofoil/shape-to-query'
+import { constraintComponents } from '@hydrofoil/shape-to-query/model/constraint/index.js'
+import { PatternConstraintComponent } from '@hydrofoil/shape-to-query/model/constraint/pattern.js'
+import { SparqlTemplateResult } from '@tpluscode/rdf-string'
 import env from './env.js'
 
 /*
  The @hydrofoil/shape-to-query is an ES Module and as long as we compile to CJS, it needs to be loaded dynamically
  using this ugly TS hack
  */
-// eslint-disable-next-line no-new-func
-const _importDynamic = new Function('modulePath', 'return import(modulePath)')
 
 export default async function shapeToQuery() {
   await setup()
-
-  const { constructQuery, deleteQuery } = await _importDynamic('@hydrofoil/shape-to-query')
 
   return {
     constructQuery,
@@ -31,10 +31,6 @@ const setup = onetime(async () => {
 })
 
 async function defineConstraintComponents() {
-  const { ConstraintComponent } = await _importDynamic('@hydrofoil/shape-to-query/model/constraint/ConstraintComponent.js')
-  const { constraintComponents } = await _importDynamic('@hydrofoil/shape-to-query/model/constraint/index.js')
-  const { PatternConstraintComponent } = await _importDynamic('@hydrofoil/shape-to-query/model/constraint/pattern.js')
-
   constraintComponents.set(md.FreeTextSearchConstraintComponent, class TextSearch extends ConstraintComponent {
     static match(pointer: GraphPointer) {
       return isGraphPointer(pointer.out(hydra.freetextQuery))
@@ -88,6 +84,10 @@ async function defineConstraintComponents() {
       }
 
       throw new Error('Unsupported vendor')
+    }
+
+    buildPropertyShapePatterns(arg: Parameters): string | SparqlTemplateResult | SparqlTemplateResult[] {
+      return ''
     }
   })
 }

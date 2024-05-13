@@ -1,7 +1,7 @@
 import type { Term } from '@rdfjs/types'
 import { hydra, oa, schema } from '@tpluscode/rdf-ns-builders'
 import { asyncMiddleware } from 'middleware-async'
-import { protectedResource } from '@hydrofoil/labyrinth/resource'
+import { protectedResource } from '@hydrofoil/labyrinth/resource.js'
 import { Enrichment } from '@hydrofoil/labyrinth/lib/middleware/preprocessResource'
 import httpError from 'http-errors'
 import type { GraphPointer } from 'clownface'

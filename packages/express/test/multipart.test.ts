@@ -8,6 +8,8 @@ import $rdf from '@zazuko/env'
 import { rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { isMultipart, multiPartResourceHandler } from '../multipart.js'
 
+const __dirname = path.dirname(new URL(import.meta.url).pathname)
+
 describe('@cube-creator/express/multipart', () => {
   describe('isMultipart', () => {
     const testHandler: express.RequestHandler = (req, res) => {

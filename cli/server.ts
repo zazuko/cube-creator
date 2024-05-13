@@ -12,6 +12,8 @@ import bodyParser from 'body-parser'
 import dotenv from 'dotenv'
 import * as command from './lib/commands/index.js'
 
+const __dirname = path.dirname(new URL(import.meta.url).pathname)
+
 dotenv.config({
   path: path.resolve(__dirname, '.env'),
 })

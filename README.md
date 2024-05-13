@@ -26,9 +26,9 @@ It is obtained from [keycloak](https://keycloak.zazukoians.org/admin/master/cons
 Alternatively, you can bypass authentication altogether by setting the environment variables in `.env` similar to the following example:
 
 ```dotenv
-VUE_APP_E2E=true
-VUE_APP_X_USER=john-doe
-VUE_APP_X_PERMISSION=pipelines:read,pipelines:write
+VITE_E2E=true
+VITE_X_USER=john-doe
+VITE_X_PERMISSION=pipelines:read,pipelines:write
 ```
 
 If you have already started the application, make sure to run `lando rebuild -y` to apply the changes.
@@ -94,9 +94,9 @@ We use Cypress to run UI e2e tests.
 
 To simplify the tests, we circumvent authentication in the app. For that, the following variables need to be set in `.env` before running the UI:
 ```
-VUE_APP_E2E=true
-VUE_APP_X_USER=john-doe
-VUE_APP_X_PERMISSION=pipelines:read,pipelines:write
+VITE_E2E=true
+VITE_X_USER=john-doe
+VITE_X_PERMISSION=pipelines:read,pipelines:write
 ```
 
 We need a running instance of the app to test. The easiest way is to start lando: `lando start`

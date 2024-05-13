@@ -1,5 +1,4 @@
-import { Hydra } from 'alcaeus/web'
-import * as Shaperone from '@hydrofoil/shaperone-wc/configure'
+import { configure } from '@hydrofoil/shaperone-wc/configure'
 import { html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import { FocusNodeTemplate, GroupTemplate, ObjectTemplate, PropertyTemplate } from '@hydrofoil/shaperone-wc/templates'
@@ -14,6 +13,7 @@ import * as dictionaryEditor from './templates/dictionaryEditor'
 import * as dynamicXone from './templates/dynamicXone'
 import emptyPropertyHider from './templates/emptyPropertyHider'
 import validation from '@/forms/validation'
+import $rdf from '@cube-creator/env'
 
 export const focusNode: FocusNodeTemplate = (renderer, { focusNode }) => {
   const tabs = () => html`
@@ -98,6 +98,7 @@ object.loadDependencies = () => [
   import('../customElements/FormObject')
 ]
 
+const Shaperone = configure($rdf)
 Shaperone.renderer.setTemplates({
   focusNode: dynamicXone.focusNode(dictionaryEditor.focusNode(focusNode)),
   property: emptyPropertyHider(dictionaryEditor.property(property)),
@@ -106,10 +107,10 @@ Shaperone.renderer.setTemplates({
 })
 Shaperone.components.pushComponents(Editors)
 Shaperone.components.pushComponents(Viewers)
-setup(Shaperone, { client: Hydra })
+setup(Shaperone)
 Object.values(decorators).forEach(Shaperone.components.decorate)
 
-Shaperone.editors.addMetadata(Metadata)
+Shaperone.editors.addMetadata(() => Metadata)
 Shaperone.editors.addMatchers(Matchers)
 Shaperone.validation.setValidator(validation)
 

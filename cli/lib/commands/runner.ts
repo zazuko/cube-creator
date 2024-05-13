@@ -9,6 +9,8 @@ import { updateJobStatus } from '../job.js'
 import { logger } from '../log.js'
 import bufferDebug from '../bufferDebug.js'
 
+const __dirname = path.dirname(new URL(import.meta.url).pathname)
+
 const ns = {
   pipeline: $rdf.namespace('urn:pipeline:cube-creator'),
 }

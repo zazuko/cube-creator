@@ -42,7 +42,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Set e2e environment variables
-        run: echo -e "\nVUE_APP_E2E=true\nVUE_APP_X_USER=john-doe\nVUE_APP_X_PERMISSION=pipelines:read,pipelines:write" >> .local.env
+        run: echo -e "\nVITE_E2E=true\nVITE_X_USER=john-doe\nVITE_X_PERMISSION=pipelines:read,pipelines:write" >> .local.env
       - uses: ./.github/workflows/setup-env
       - run: yarn seed-data
 

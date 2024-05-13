@@ -1,7 +1,6 @@
 import type { NamedNode } from '@rdfjs/types'
 import { describe, it, beforeEach } from 'mocha'
 import { expect } from 'chai'
-import sinon from 'sinon'
 import type { GraphPointer } from 'clownface'
 import $rdf from '@cube-creator/env'
 import { csvw, hydra, rdf, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
@@ -9,10 +8,8 @@ import { cc } from '@cube-creator/core/namespace'
 import { DomainError } from '@cube-creator/api-errors'
 import { Dataset as DatasetExt } from '@zazuko/env/lib/Dataset.js'
 import { namedNode } from '@cube-creator/testing/clownface'
-import { createColumnMapping } from '../../../lib/domain/column-mapping/create.js'
+import esmock from 'esmock'
 import { TestResourceStore } from '../../support/TestResourceStore.js'
-import * as DimensionMetadataQueries from '../../../lib/domain/queries/dimension-metadata.js'
-import * as orgQueries from '../../../lib/domain/organization/query.js'
 import '../../../lib/domain/index.js'
 
 describe('domain/column-mapping/create', () => {
@@ -21,9 +18,9 @@ describe('domain/column-mapping/create', () => {
   let observationTable: GraphPointer<NamedNode, DatasetExt>
   let dimensionMetadata: GraphPointer<NamedNode, DatasetExt>
 
-  beforeEach(() => {
-    sinon.restore()
+  let createColumnMapping: typeof import('../../../lib/domain/column-mapping/create.js').createColumnMapping
 
+  beforeEach(async () => {
     const csvMapping = $rdf.clownface()
       .namedNode('csv-mapping')
       .addOut(rdf.type, cc.CsvMapping)
@@ -67,13 +64,18 @@ describe('domain/column-mapping/create', () => {
       project,
     ])
 
-    sinon.restore()
-    sinon.stub(DimensionMetadataQueries, 'getDimensionMetaDataCollection').resolves(dimensionMetadata.term)
-
-    sinon.stub(orgQueries, 'findOrganization').resolves({
-      projectId: project.id,
-      organizationId: organization.id,
-    })
+    ;({ createColumnMapping } = await esmock('../../../lib/domain/column-mapping/create.js', {
+      '../../../lib/domain/organization/query.js': {
+        findOrganization: async () =>
+          ({
+            projectId: project.id,
+            organizationId: organization.id,
+          }),
+      },
+      '../../../lib/domain/queries/dimension-metadata.js': {
+        getDimensionMetaDataCollection: async () => dimensionMetadata.term,
+      },
+    }))
   })
 
   it('creates identifier by slugifying the column schema:name', async () => {

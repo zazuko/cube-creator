@@ -1,5 +1,5 @@
 import asyncMiddleware from 'middleware-async'
-import { protectedResource } from '@hydrofoil/labyrinth/resource'
+import { protectedResource } from '@hydrofoil/labyrinth/resource.js'
 import { deleteTable } from '../../domain/table/delete.js'
 
 export const remove = protectedResource(

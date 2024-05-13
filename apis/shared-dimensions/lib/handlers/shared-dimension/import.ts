@@ -1,4 +1,4 @@
-import { protectedResource } from '@hydrofoil/labyrinth/resource'
+import { protectedResource } from '@hydrofoil/labyrinth/resource.js'
 import asyncMiddleware from 'middleware-async'
 import { multiPartResourceHandler } from '@cube-creator/express/multipart'
 import { validationReportResponse } from 'hydra-box-middleware-shacl'

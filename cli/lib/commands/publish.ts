@@ -10,6 +10,8 @@ import { version } from '../../package.json'
 import * as runner from './runner.js'
 import '../variables.js'
 
+const __dirname = path.dirname(new URL(import.meta.url).pathname)
+
 interface PublishRunOptions extends runner.RunOptions {
   to: 'filesystem' | 'graph-store'
   upload?: boolean

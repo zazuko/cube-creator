@@ -1,7 +1,7 @@
 import type { Term, Quad } from '@rdfjs/types'
 import { CONSTRUCT } from '@tpluscode/sparql-builder'
 import { rdf } from '@tpluscode/rdf-ns-builders'
-import env from '@cube-creator/core/env'
+import env from '@cube-creator/core/env/node'
 import { ParsingClient } from 'sparql-http-client/ParsingClient.js'
 import $rdf from '@zazuko/env'
 import { parsingClient } from '../../query-client.js'

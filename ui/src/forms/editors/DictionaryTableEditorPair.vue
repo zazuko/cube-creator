@@ -8,6 +8,7 @@ import { PropertyRenderer } from '@hydrofoil/shaperone-core/renderer'
 import { PropertyShape } from '@rdfine/shacl'
 import { defineComponent, PropType } from 'vue'
 import RenderWcTemplate from '../RenderWcTemplate.vue'
+import { FocusNode } from '@hydrofoil/shaperone-core'
 
 export default defineComponent({
   name: 'DictionaryTableEditorPair',
@@ -29,7 +30,7 @@ export default defineComponent({
 
   computed: {
     templateResult () {
-      const object: any = this.object.object
+      const object = this.object.object as unknown as FocusNode
 
       return this.renderer.renderFocusNode({
         focusNode: object,

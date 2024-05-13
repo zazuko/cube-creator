@@ -1,4 +1,4 @@
-import env from '@cube-creator/core/env'
+import env from '@cube-creator/core/env/node'
 import { SELECT } from '@tpluscode/sparql-builder'
 import $rdf from '@zazuko/env'
 import { cc } from '@cube-creator/core/namespace'

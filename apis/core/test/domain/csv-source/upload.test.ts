@@ -15,6 +15,8 @@ import type * as CsvSourceQueries from '../../../lib/domain/queries/csv-source.j
 import '../../../lib/domain/index.js'
 import type { GetMediaStorage, MediaStorage } from '../../../lib/storage/index.js'
 
+const __dirname = path.dirname(new URL(import.meta.url).pathname)
+
 describe('domain/csv-sources/upload', () => {
   let storage: MediaStorage
   let getStorage: GetMediaStorage

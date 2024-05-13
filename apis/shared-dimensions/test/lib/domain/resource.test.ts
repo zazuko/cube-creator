@@ -13,6 +13,7 @@ import { cascadeDelete } from '../../../lib/domain/resource.js'
 import { store } from '../../../lib/store.js'
 import env from '../../../lib/env.js'
 
+const __dirname = path.dirname(new URL(import.meta.url).pathname)
 const ns = $rdf.namespace('https://cube-creator.lndo.site/shared-dimensions/')
 
 describe('@cube-creator/shared-dimensions-api/lib/domain/resource @SPARQL', () => {

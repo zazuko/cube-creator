@@ -3,7 +3,7 @@ import { expect } from 'chai'
 import sinon from 'sinon'
 import $rdf from '@zazuko/env'
 import { dcterms, rdf } from '@tpluscode/rdf-ns-builders'
-import env from '@cube-creator/core/env'
+import env from '@cube-creator/core/env/node'
 import { cc } from '@cube-creator/core/namespace'
 import * as trigger from '../../lib/pipeline/trigger.js'
 

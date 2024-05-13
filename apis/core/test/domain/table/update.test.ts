@@ -9,12 +9,9 @@ import { csvw, hydra, rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import { namedNode } from '@cube-creator/testing/clownface'
 import { TestResourceStore } from '../../support/TestResourceStore.js'
-import * as DimensionMetadataQueries from '../../../lib/domain/queries/dimension-metadata.js'
 import type * as ColumnMappingQueries from '../../../lib/domain/queries/column-mapping.js'
 import '../../../lib/domain/index.js'
-import { updateTable } from '../../../lib/domain/table/update.js'
-import * as orgQueries from '../../../lib/domain/organization/query.js'
-import * as tableQueries from '../../../lib/domain/queries/table.js'
+import esmock from 'esmock'
 
 describe('domain/table/update', () => {
   let store: TestResourceStore
@@ -23,7 +20,10 @@ describe('domain/table/update', () => {
   let dimensionMetadata: GraphPointer<NamedNode, DatasetExt>
   let columnMapping: GraphPointer<NamedNode, DatasetExt>
 
-  beforeEach(() => {
+  let updateTable: typeof import('../../../lib/domain/table/update.js').updateTable
+  let getTableReferences: sinon.SinonStub
+
+  beforeEach(async () => {
     sinon.restore()
 
     const organization = $rdf.rdfine.cc.Organization(namedNode('org'), {
@@ -104,7 +104,6 @@ describe('domain/table/update', () => {
     ])
 
     sinon.restore()
-    sinon.stub(DimensionMetadataQueries, 'getDimensionMetaDataCollection').resolves(dimensionMetadata.term)
 
     dimensionIsUsedByOtherMapping = sinon.stub().resolves(false)
     const getReferencingMappingsForTable = sinon.stub().returns([])
@@ -113,10 +112,20 @@ describe('domain/table/update', () => {
       getReferencingMappingsForTable,
     }
 
-    sinon.stub(orgQueries, 'findOrganization').resolves({
-      projectId: project.id,
-      organizationId: organization.id,
-    })
+    getTableReferences = sinon.stub().resolves([])
+    ;({ updateTable } = await esmock('../../../lib/domain/table/update.js', {
+      '../../lib/domain/organization/query.js': {
+        findOrganization: async () =>
+          ({
+            projectId: project.id,
+            organizationId: organization.id,
+          }),
+        getTableReferences,
+      },
+      '../../../lib/domain/queries/dimension-metadata.js': {
+        getDimensionMetaDataCollection: sinon.stub().resolves(dimensionMetadata.term),
+      },
+    }))
   })
 
   it('updates simple properties', async () => {
@@ -169,7 +178,7 @@ describe('domain/table/update', () => {
           mapping.addOut(cc.sourceColumn, $rdf.namedNode('id'))
           mapping.addOut(cc.referencedColumn, $rdf.namedNode('id'))
         })
-      sinon.stub(tableQueries, 'getTableReferences').callsFake(async function * () {
+      getTableReferences.callsFake(async function * () {
         yield columnMapping.term
       })
 

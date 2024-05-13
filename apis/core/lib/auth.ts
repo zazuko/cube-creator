@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction, RequestHandler } from 'express'
 import error from 'http-errors'
-import env from '@cube-creator/core/env'
+import env from '@cube-creator/core/env/node'
 import $rdf from '@cube-creator/env'
 import { expressjwt } from 'express-jwt'
 import { expressJwtSecret, GetVerificationKey } from 'jwks-rsa'

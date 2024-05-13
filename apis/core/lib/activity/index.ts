@@ -1,5 +1,5 @@
 import $rdf from '@zazuko/env'
-import env from '@cube-creator/core/env'
+import env from '@cube-creator/core/env/node'
 import { nanoid } from 'nanoid'
 
 export function newId() {

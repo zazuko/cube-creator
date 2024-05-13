@@ -14,6 +14,8 @@ import { TestResourceStore } from '../../support/TestResourceStore.js'
 import { replaceFile } from '../../../lib/domain/csv-source/replace.js'
 import type { GetMediaStorage, MediaStorage } from '../../../lib/storage/index.js'
 
+const __dirname = path.dirname(new URL(import.meta.url).pathname)
+
 describe('domain/csv-sources/replace', () => {
   let storage: MediaStorage
   let getStorage: GetMediaStorage

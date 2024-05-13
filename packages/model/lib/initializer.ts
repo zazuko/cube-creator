@@ -1,6 +1,6 @@
 /* eslint-disable no-redeclare */
 import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
-import RdfResourceImpl, { RdfineFactory, ResourceIdentifier } from '@tpluscode/rdfine'
+import { RdfineFactory, ResourceIdentifier } from '@tpluscode/rdfine'
 import type { GraphPointer } from 'clownface'
 import { Initializer } from '@tpluscode/rdfine/RdfResource'
 import type { Environment } from '@rdfjs/environment/Environment'
@@ -23,10 +23,14 @@ export function initializer<T, TRequired extends Extract<keyof T, string>>(mixin
     const defaultInit = typeof defaults === 'function' ? defaults() : defaults
     const combinedInit = { ...(defaultInit || {}), ...(init || {}) }
 
-    const resource = new (mixin(RdfResourceImpl))(pointer, combinedInit)
+    const resource = env.rdfine().factory.createEntity<T>(pointer, [mixin], {
+      initializer: combinedInit,
+    })
+
     if (mixin.appliesTo) {
       resource.types.add(mixin.appliesTo)
     }
-    return env.rdfine().factory.createEntity(resource.pointer)
+
+    return resource
   }
 }

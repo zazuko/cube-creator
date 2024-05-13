@@ -1,6 +1,6 @@
 import { URLSearchParams } from 'url'
 import type { NamedNode } from '@rdfjs/types'
-import env from '@cube-creator/core/env'
+import env from '@cube-creator/core/env/node'
 import type { GraphPointer } from 'clownface'
 import { dcterms, rdf } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'

@@ -30,12 +30,10 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import RdfResourceImpl from '@tpluscode/rdfine'
+import $rdf from '@cube-creator/env'
 import { RuntimeOperation } from 'alcaeus'
 import type { GraphPointer } from 'clownface'
-
 import { CsvSource } from '@cube-creator/model'
-
 import { api } from '@/api'
 import CsvUploadForm from '@/components/CsvUploadForm.vue'
 import SidePane from '@/components/SidePane.vue'
@@ -88,7 +86,7 @@ export default defineComponent({
       const mediaObject = mediaObjects[0]
 
       const operation = this.operation
-      const resource = RdfResourceImpl.factory.createEntity(mediaObject)
+      const resource = $rdf.rdfine().factory.createEntity(mediaObject)
 
       this.error = null
       this.isLoading = true

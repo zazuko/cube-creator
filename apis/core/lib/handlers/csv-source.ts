@@ -1,6 +1,6 @@
 import * as express from 'express'
 import asyncMiddleware from 'middleware-async'
-import * as labyrinth from '@hydrofoil/labyrinth/resource'
+import * as labyrinth from '@hydrofoil/labyrinth/resource.js'
 import { Enrichment } from '@hydrofoil/labyrinth/lib/middleware/preprocessResource'
 import { cc } from '@cube-creator/core/namespace'
 import type { AnyPointer, GraphPointer } from 'clownface'

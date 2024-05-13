@@ -1,7 +1,7 @@
 import asyncMiddleware from 'middleware-async'
 import { NO_CONTENT } from 'http-status'
 import type { GraphPointer } from 'clownface'
-import { protectedResource } from '@hydrofoil/labyrinth/resource'
+import { protectedResource } from '@hydrofoil/labyrinth/resource.js'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 import $rdf from '@cube-creator/env'
 import { store } from '../store.js'

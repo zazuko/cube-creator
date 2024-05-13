@@ -1,7 +1,7 @@
 import { describe, before, beforeEach, it } from 'mocha'
 import { expect } from 'chai'
 import $rdf from '@cube-creator/env'
-import env from '@cube-creator/core/env'
+import env from '@cube-creator/core/env/node'
 import { insertTestProject } from '@cube-creator/testing/lib/seedData'
 import { Table } from '@rdfine/csvw'
 import type { VariableMap } from 'barnard59-core'

@@ -1,4 +1,4 @@
-import { protectedResource } from '@hydrofoil/labyrinth/resource'
+import { protectedResource } from '@hydrofoil/labyrinth/resource.js'
 import asyncMiddleware from 'middleware-async'
 import error from 'http-errors'
 import { IriTemplate, IriTemplateMixin } from '@rdfine/hydra'

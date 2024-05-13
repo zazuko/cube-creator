@@ -1,4 +1,4 @@
-import { protectedResource } from '@hydrofoil/labyrinth/resource'
+import { protectedResource } from '@hydrofoil/labyrinth/resource.js'
 import { multiPartResourceHandler } from '@cube-creator/express/multipart'
 import asyncMiddleware from 'middleware-async'
 import { INSERT } from '@tpluscode/sparql-builder'

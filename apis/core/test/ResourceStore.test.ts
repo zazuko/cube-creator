@@ -3,20 +3,21 @@ import { expect } from 'chai'
 import sinon from 'sinon'
 import $rdf from '@zazuko/env'
 import { StreamClient } from 'sparql-http-client/StreamClient.js'
-import StreamQuery from 'sparql-http-client/StreamQuery'
-import StreamStore from 'sparql-http-client/StreamStore'
+import StreamQuery from 'sparql-http-client/StreamQuery.js'
+import StreamStore from 'sparql-http-client/StreamStore.js'
 import { ex } from '@cube-creator/testing/lib/namespace'
 import { as, hydra, rdf, rdfs, schema } from '@tpluscode/rdf-ns-builders'
 import { ASK, DELETE, INSERT } from '@tpluscode/sparql-builder'
 import { ccClients } from '@cube-creator/testing/lib'
-import ResourceStore, { SparqlStoreFacade } from '../lib/ResourceStore.js'
+import esmock from 'esmock'
 import { manages } from '../lib/resources/hydraManages.js'
-import * as Activity from '../lib/activity/index.js'
 
 describe('ResourceStore', () => {
   let client: StreamClient
   let query: sinon.SinonStubbedInstance<StreamQuery>
   let store: sinon.SinonStubbedInstance<StreamStore>
+
+  let ResourceStore: typeof import('../lib/ResourceStore.js').default
 
   beforeEach(() => {
     query = sinon.createStubInstance(StreamQuery)
@@ -27,11 +28,15 @@ describe('ResourceStore', () => {
     }
   })
 
-  before(() => {
-    sinon.stub(Activity, 'now')
-      .returns(new Date(Date.parse('2021-10-26T08:00:00.000Z')))
-    sinon.stub(Activity, 'newId')
-      .returns($rdf.namedNode('https://cube-creator.lndo.site/activity/test-activity'))
+  before(async () => {
+    ({ default: ResourceStore } = await esmock('../lib/ResourceStore.js', {
+      '../lib/activity/index.js': {
+        now: sinon.stub()
+          .returns(new Date(Date.parse('2021-10-26T08:00:00.000Z'))),
+        newId: sinon.stub()
+          .returns($rdf.namedNode('https://cube-creator.lndo.site/activity/test-activity')),
+      },
+    }))
   })
 
   after(() => {
@@ -42,7 +47,7 @@ describe('ResourceStore', () => {
     it('loads resource from sparql endpoint', async () => {
       // given
       const store = new ResourceStore(client)
-      query.construct.resolves($rdf.dataset([
+      query.construct.returns($rdf.dataset([
         $rdf.quad(ex.Foo, rdfs.label, $rdf.literal('foo')),
       ]).toStream())
 
@@ -56,7 +61,7 @@ describe('ResourceStore', () => {
     it('called twice returns same object', async () => {
       // given
       const store = new ResourceStore(client)
-      query.construct.resolves($rdf.dataset([
+      query.construct.returns($rdf.dataset([
         $rdf.quad(ex.Foo, rdfs.label, $rdf.literal('foo')),
       ]).toStream())
       const expected = await store.get(ex.Foo)
@@ -84,7 +89,7 @@ describe('ResourceStore', () => {
     it('returns "undefined" when it is allowed resource comes back empty', async () => {
       // given
       const store = new ResourceStore(client)
-      query.construct.resolves($rdf.dataset().toStream())
+      query.construct.returns($rdf.dataset().toStream())
 
       // when
       const resource = await store.get('foo', { allowMissing: true })
@@ -96,7 +101,7 @@ describe('ResourceStore', () => {
     it('throws if resource comes back empty', async () => {
       // given
       const store = new ResourceStore(client)
-      query.construct.resolves($rdf.dataset().toStream())
+      query.construct.returns($rdf.dataset().toStream())
 
       // when
       const promise = store.get('foo')
@@ -243,7 +248,7 @@ describe('ResourceStore', () => {
     it('only deletes graph if all resource triples were removed', async function () {
       // given
       const store = new ResourceStore(client)
-      query.construct.resolves($rdf.dataset([
+      query.construct.returns($rdf.dataset([
         $rdf.quad($rdf.namedNode('baz'), rdfs.label, $rdf.literal('foo')),
         $rdf.quad($rdf.namedNode('baz'), rdfs.comment, $rdf.literal('bar')),
       ]).toStream())
@@ -288,9 +293,10 @@ describe('ResourceStore', () => {
 
 describe('ResourceStore @SPARQL', () => {
   const testResource = ex.TestResource
-  let store: ResourceStore
+  let store: import('../lib/ResourceStore.js').default
 
   beforeEach(async () => {
+    const { default: ResourceStore, SparqlStoreFacade } = await import('../lib/ResourceStore.js')
     store = new ResourceStore(new SparqlStoreFacade(ccClients.streamClient, () => ex.User))
     await DELETE`
       graph ?resource { ?rs ?rp ?ro }

@@ -1,3 +1,4 @@
+/// <reference types="vite/client" />
 import { createApp } from 'vue'
 import * as Sentry from '@sentry/vue'
 import { Integrations } from '@sentry/tracing'
@@ -7,7 +8,7 @@ import App from './App.vue'
 import router from './router'
 import './components/tagged-literal'
 import { setLanguages } from '@rdfjs-elements/lit-helpers'
-import { displayLanguage } from '@/store/serializers'
+import { displayLanguage } from './store/serializers'
 import { library as iconsLibrary } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { far } from '@fortawesome/free-regular-svg-icons'
@@ -16,7 +17,11 @@ import './customElements'
 import './styles/app.scss'
 import store from './store'
 import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path.js'
+import $rdf from '@cube-creator/env'
+import formats from '@rdfjs-elements/formats-pretty'
 import './forms/plugins'
+
+$rdf.formats.import(formats)
 
 setBasePath('/app/shoelace')
 
@@ -32,6 +37,15 @@ app.use(store)
 iconsLibrary.add(fas)
 iconsLibrary.add(far)
 app.component('FontAwesomeIcon', FontAwesomeIcon)
+
+interface ImportMetaEnv {
+  readonly VITE_APP_TITLE: string
+  // more env variables...
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv
+}
 
 app.use(Oruga, {
   ...bulmaConfig,
@@ -63,7 +77,7 @@ Sentry.init({
   app,
   dsn: window.APP_CONFIG.sentry?.dsn,
   environment: window.APP_CONFIG.sentry?.environment,
-  release: process.env.VUE_APP_SENTRY_RELEASE,
+  release: import.meta.env.VITE_SENTRY_RELEASE,
   attachProps: true,
   logErrors: true,
   tracesSampleRate: 1,

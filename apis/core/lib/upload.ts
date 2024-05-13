@@ -1,7 +1,7 @@
 import os from 'os'
 import express from 'express'
 import * as companion from '@uppy/companion'
-import env from '@cube-creator/core/env'
+import env from '@cube-creator/core/env/node'
 import bodyParser from 'body-parser'
 import { nanoid } from 'nanoid'
 import $rdf from '@zazuko/env'

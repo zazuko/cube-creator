@@ -5,7 +5,7 @@ import { Initializer, RdfResource, ResourceIdentifier } from '@tpluscode/rdfine/
 import $rdf from '@cube-creator/env'
 import type { GraphPointer, MultiPointer } from 'clownface'
 import Validator from 'rdf-validate-shacl'
-import type * as Validate from 'rdf-validate-shacl/src/validation-report'
+import type * as Validate from 'rdf-validate-shacl/src/validation-report.js'
 import { rdf, sh } from '@tpluscode/rdf-ns-builders'
 
 declare global {
@@ -60,8 +60,7 @@ chai.Assertion.addMethod('matchShape', function (shapeInit: Initializer<NodeShap
   } else if (isGraphPointer(obj)) {
     resourceDataset = obj.dataset
     targetNode = [...obj.terms]
-    const Resource = $rdf.rdfine.Resource
-    actual = targetNode.map(term => new Resource($rdf.clownface({ dataset: resourceDataset, term })).toJSON())
+    actual = targetNode.map(term => $rdf.rdfine().createEntity($rdf.clownface({ dataset: resourceDataset, term })).toJSON())
   } else {
     throw new Error(`Cannot match given object to a SHACL Shape. Expecting a rdfine object, graph pointer or RDF/JS dataset. Got ${obj?.constructor.name}`)
   }

@@ -28,9 +28,8 @@
 import { defineComponent, ref, Ref } from 'vue'
 import { mapState } from 'vuex'
 import { useRoute } from 'vue-router'
-import $rdf from '@rdfjs/data-model'
+import $rdf from '@cube-creator/env'
 import type { NamedNode, Term } from '@rdfjs/types'
-import TermSet from '@rdf-esm/term-set'
 import RdfResource from '@tpluscode/rdfine/RdfResource'
 import type { GraphPointer } from 'clownface'
 import SidePane from '@/components/SidePane.vue'
@@ -68,13 +67,13 @@ export default defineComponent({
 
     const resource = responseResource.pointer.namedNode(this.resourceId)
     const resourceQuads = [...responseResource.pointer.dataset.match(this.resourceId, null, null, $rdf.namedNode(url.href))]
-    const resourcePredicates = new TermSet(resourceQuads.map(({ predicate }) => predicate))
+    const resourcePredicates = $rdf.termSet(resourceQuads.map(({ predicate }) => predicate))
 
     this.resource = resource
     this.properties = [...resourcePredicates].map((predicate) => {
       const values: (Term | RdfResource)[] = resource.out(predicate).map((pointer: GraphPointer) => {
         if (pointer.term.termType === 'NamedNode') {
-          return RdfResource.factory.createEntity(pointer)
+          return $rdf.rdfine().factory.createEntity(pointer)
         } else {
           return pointer.term
         }

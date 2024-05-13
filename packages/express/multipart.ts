@@ -4,7 +4,7 @@ import type { NamedNode, Stream, BaseQuad } from '@rdfjs/types'
 import E, { Router } from 'express'
 import formats from '@rdfjs-elements/formats-pretty'
 import once from 'once'
-import { BadRequest } from 'http-errors'
+import httpError from 'http-errors'
 import type { GraphPointer } from 'clownface'
 import $rdf from '@zazuko/env'
 import asyncMiddleware from 'middleware-async'
@@ -39,7 +39,7 @@ function parseFile(file: Express.Multer.File, baseIRI: string): Stream & Readabl
   }
 
   if (!parserStream) {
-    throw new BadRequest(`Parser not found for file ${file.originalname}`)
+    throw new httpError.BadRequest(`Parser not found for file ${file.originalname}`)
   }
 
   return parserStream as any
@@ -53,11 +53,11 @@ multiPartResourceHandler.use(asyncMiddleware((req, res, next) => {
     const { files } = req
 
     if (!(files && Array.isArray(files))) {
-      throw new BadRequest('Unexpected multipart body')
+      throw new httpError.BadRequest('Unexpected multipart body')
     }
     const representation = files.find(file => file.fieldname === 'representation')
     if (!representation) {
-      throw new BadRequest('Missing request part "representation"')
+      throw new httpError.BadRequest('Missing request part "representation"')
     }
 
     return $rdf.clownface({

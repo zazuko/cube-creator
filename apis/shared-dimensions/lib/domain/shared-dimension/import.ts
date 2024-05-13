@@ -1,11 +1,11 @@
 import { createReadStream } from 'fs'
 import path from 'path'
 import type { NamedNode, Quad } from '@rdfjs/types'
-import httpError, { BadRequest } from 'http-errors'
+import httpError from 'http-errors'
 import { Files } from '@cube-creator/express/multipart'
 import $rdf from '@zazuko/env'
 import SHACLValidator from 'rdf-validate-shacl'
-import ValidationReport from 'rdf-validate-shacl/src/validation-report'
+import ValidationReport from 'rdf-validate-shacl/src/validation-report.js'
 import formats from '@rdfjs/formats'
 import type { AnyPointer, GraphPointer } from 'clownface'
 import { rdf, schema } from '@tpluscode/rdf-ns-builders'
@@ -16,6 +16,8 @@ import { md } from '@cube-creator/core/namespace'
 import env from '../../env.js'
 import { SharedDimensionsStore } from '../../store.js'
 import { streamClient } from '../../sparql.js'
+
+const __dirname = path.dirname(new URL(import.meta.url).pathname)
 
 interface ImportedDimension {
   termSet: GraphPointer
@@ -50,12 +52,12 @@ export async function importDimension({
 }: ImportDimension): Promise<ImportedDimension | ValidationReport> {
   const importedDimension = resource.out(md.export).value
   if (!importedDimension) {
-    throw new BadRequest('Import must contain exactly one Shared Dimension')
+    throw new httpError.BadRequest('Import must contain exactly one Shared Dimension')
   }
 
   const exportedData = files[importedDimension]
   if (!exportedData) {
-    throw new BadRequest(`Missing data for file ${importedDimension}`)
+    throw new httpError.BadRequest(`Missing data for file ${importedDimension}`)
   }
 
   const graph = $rdf.namedNode(env.MANAGED_DIMENSIONS_GRAPH)
@@ -68,7 +70,7 @@ export async function importDimension({
     .has(rdf.type, md.SharedDimension)
 
   if (!termSet.term || !isNamedNode(termSet)) {
-    throw new BadRequest('Import must contain exactly one Shared Dimension')
+    throw new httpError.BadRequest('Import must contain exactly one Shared Dimension')
   }
 
   const report = await validateTermSet(termSet)

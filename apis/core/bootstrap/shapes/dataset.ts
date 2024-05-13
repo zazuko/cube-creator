@@ -4,7 +4,7 @@ import { hydra, rdfs, sh, dcat, dcterms, xsd, rdf, vcard, schema, _void, dash, s
 import { sparql, turtle } from '@tpluscode/rdf-string'
 import $rdf from '@zazuko/env'
 import { Draft } from '@cube-creator/model/Cube'
-import env from '@cube-creator/core/env'
+import env from '@cube-creator/core/env/node'
 import { lindasQuery } from '../lib/query.js'
 
 const shapeId = shape('dataset/edit-metadata')

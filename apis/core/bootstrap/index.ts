@@ -1,5 +1,5 @@
 import * as core from '@cube-creator/core/bootstrap'
-import env from '@cube-creator/core/env'
+import env from '@cube-creator/core/env/node'
 import { log } from '../lib/log.js'
 import { cubeProjects } from './cube-projects.js'
 import { entrypoint } from './entrypoint.js'

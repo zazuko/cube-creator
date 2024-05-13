@@ -13,6 +13,8 @@ import env from '../env.js'
 import shapeToQuery from '../shapeToQuery.js'
 import { getDynamicProperties } from './shared-dimension.js'
 
+const __dirname = path.dirname(new URL(import.meta.url).pathname)
+
 export function getSharedDimensions() {
   return CONSTRUCT`
     ?termSet ?p ?o .

@@ -5,7 +5,7 @@ import { PropertyShape } from '@rdfine/shacl'
 import { dash, dcterms, foaf, hydra, rdf, schema, sd, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import { editor, md, meta } from '@cube-creator/core/namespace'
 import type { AnyPointer } from 'clownface'
-import env from '@cube-creator/core/env'
+import env from '@cube-creator/core/env/node'
 
 export default function ({ rdfTypeProperty = false }: { rdfTypeProperty?: boolean } = {}) {
   return (graph: AnyPointer): Initializer<NodeShape> => {

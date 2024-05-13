@@ -1,5 +1,5 @@
 import { ActionTree, MutationTree, GetterTree } from 'vuex'
-import { ColorsModifiers } from '@oruga-ui/oruga/types/helpers'
+import type { ColorsModifiers } from '@oruga-ui/oruga/types/helpers'
 import { loadCommonProperties } from '@/rdf-properties'
 import { RootState } from '../types'
 

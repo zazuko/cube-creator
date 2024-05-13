@@ -1,7 +1,7 @@
 import type { NamedNode } from '@rdfjs/types'
 import $rdf from '@zazuko/env'
 import { SparqlTemplateResult } from '@tpluscode/rdf-string'
-import env from '@cube-creator/core/env'
+import env from '@cube-creator/core/env/node'
 
 export function lindasQuery(query: SparqlTemplateResult): NamedNode {
   return $rdf.namedNode(`${env.PUBLIC_QUERY_ENDPOINT}?query=${encodeURIComponent(query.toString())}`)

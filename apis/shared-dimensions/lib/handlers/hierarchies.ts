@@ -1,6 +1,6 @@
 import { asyncMiddleware } from 'middleware-async'
 import { md } from '@cube-creator/core/namespace'
-import { protectedResource } from '@hydrofoil/labyrinth/resource'
+import { protectedResource } from '@hydrofoil/labyrinth/resource.js'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 import $rdf from '@cube-creator/env'
 import httpError from 'http-errors'

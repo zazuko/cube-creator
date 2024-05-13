@@ -5,7 +5,7 @@ import type { GraphPointer } from 'clownface'
 import './FormSubmitCancel'
 import './LoadingBlock'
 import './HydraOperationError'
-import { ColorsModifiers } from '@oruga-ui/oruga/types/helpers'
+import type { ColorsModifiers } from '@oruga-ui/oruga/types/helpers'
 import $rdf from '@zazuko/env'
 import { HydraOperationFormBase } from '@/customElements/HydraOperationFormBase'
 

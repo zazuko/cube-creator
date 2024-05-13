@@ -13,6 +13,8 @@ import { DELETE } from '@tpluscode/sparql-builder'
 import { VALUES } from '@tpluscode/sparql-builder/expressions'
 import { ccClients, mdClients } from './index.js'
 
+const __dirname = path.dirname(new URL(import.meta.url).pathname)
+
 async function removeTestGraphs(client: ParsingClient, dataset: DatasetCore) {
   const graphs = [...dataset.match(null, _void.inDataset)].map(({ subject }) => subject)
 

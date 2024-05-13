@@ -1,5 +1,5 @@
 import type { NamedNode, Term } from '@rdfjs/types'
-import { Organization } from '@rdfine/schema'
+import type { Organization } from '@rdfine/schema'
 import { Constructor, namespace, property } from '@tpluscode/rdfine'
 import { cc } from '@cube-creator/core/namespace'
 import { dcat, schema, _void } from '@tpluscode/rdf-ns-builders'
@@ -7,7 +7,7 @@ import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import { RdfineEnvironment } from '@tpluscode/rdfine/environment'
 import { createFactory } from '@tpluscode/rdfine/factory'
 
-export { Organization } from '@rdfine/schema'
+export type { Organization } from '@rdfine/schema'
 
 interface CreateIdentifier {
   cubeIdentifier: string

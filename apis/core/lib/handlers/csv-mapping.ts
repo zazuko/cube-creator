@@ -1,5 +1,5 @@
 import asyncMiddleware from 'middleware-async'
-import { protectedResource } from '@hydrofoil/labyrinth/resource'
+import { protectedResource } from '@hydrofoil/labyrinth/resource.js'
 import { shaclValidate } from '../middleware/shacl.js'
 import { createCSVMapping } from '../domain/csv-mapping/create.js'
 

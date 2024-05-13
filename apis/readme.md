@@ -94,7 +94,7 @@ hydra-box looks for such operations where the resource type and `hydra:method` m
 A reusable middleware can be imported from `@hydrofoil/labyrinth` to restrict access to a resource.
 
 ```typescript
-import { protectedResource } from '@hydrofoil/labyrinth/resource'
+import { protectedResource } from '@hydrofoil/labyrinth/resource.js'
 
 export const update = protectedResource((req, res) => {
   // OK, authorized

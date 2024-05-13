@@ -1,5 +1,5 @@
 import asyncMiddleware from 'middleware-async'
-import { protectedResource } from '@hydrofoil/labyrinth/resource'
+import { protectedResource } from '@hydrofoil/labyrinth/resource.js'
 import { loadLinkedResources } from '@hydrofoil/labyrinth/lib/query/eagerLinks'
 import { query } from '@cube-creator/core/namespace'
 import $rdf from '@zazuko/env'

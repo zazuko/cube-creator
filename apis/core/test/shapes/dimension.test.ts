@@ -7,7 +7,10 @@ import { rdf, schema, time } from '@tpluscode/rdf-ns-builders'
 import { namedNode } from '@cube-creator/testing/clownface'
 import type { GraphPointer } from 'clownface'
 import { meta } from '@cube-creator/core/namespace'
+import formats from '@rdfjs-elements/formats-pretty'
 import { DimensionMetadataShape } from '../../bootstrap/shapes/dimension.js'
+
+$rdf.formats.import(formats)
 
 describe('apis/core/bootstrap/shapes/dimension', () => {
   describe('DimensionMetadataShape', () => {

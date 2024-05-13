@@ -1,5 +1,5 @@
 import type { Shape } from '@rdfine/shacl'
-import * as $rdf from '@rdf-esm/dataset'
+import $rdf from '@cube-creator/env'
 import type { RdfResource, ResourceIdentifier, RuntimeOperation } from 'alcaeus'
 import type { GraphPointer } from 'clownface'
 import { computed, ref, Ref, shallowRef, ShallowRef, watch } from 'vue'

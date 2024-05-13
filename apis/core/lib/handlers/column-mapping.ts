@@ -1,6 +1,6 @@
 import asyncMiddleware from 'middleware-async'
-import * as labyrinth from '@hydrofoil/labyrinth/resource'
-import { protectedResource } from '@hydrofoil/labyrinth/resource'
+import * as labyrinth from '@hydrofoil/labyrinth/resource.js'
+import { protectedResource } from '@hydrofoil/labyrinth/resource.js'
 import { shaclValidate } from '../middleware/shacl.js'
 import { createColumnMapping } from '../domain/column-mapping/create.js'
 import { updateLiteralColumnMapping, updateReferenceColumnMapping } from '../domain/column-mapping/update.js'

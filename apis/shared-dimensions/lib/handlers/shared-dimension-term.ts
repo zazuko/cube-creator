@@ -1,5 +1,5 @@
 import asyncMiddleware from 'middleware-async'
-import { protectedResource } from '@hydrofoil/labyrinth/resource'
+import { protectedResource } from '@hydrofoil/labyrinth/resource.js'
 import { oa } from '@tpluscode/rdf-ns-builders'
 import { updateTerm } from '../domain/shared-dimension-term.js'
 import { store } from '../store.js'

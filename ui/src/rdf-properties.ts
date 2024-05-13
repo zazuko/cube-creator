@@ -1,15 +1,15 @@
-import $rdf from '@rdf-esm/dataset'
+import $rdf from '@cube-creator/env'
 import type { Quad } from '@rdfjs/types'
-import { shrink as _shrink } from '@zazuko/rdf-vocabularies/shrink'
-import { expand as _expand } from '@zazuko/rdf-vocabularies/expand'
-import prefixes from '@zazuko/rdf-vocabularies/prefixes'
+import { shrink as _shrink } from '@zazuko/prefixes/shrink'
+import { expand as _expand } from '@zazuko/prefixes/expand'
+import prefixes from '@zazuko/prefixes'
 import { rdf } from '@tpluscode/rdf-ns-builders'
 
 export async function loadCommonProperties (): Promise<string[]> {
-  const vocabs = await import('./vocabularies')
+  const vocabs = await import('./vocabularies.js')
 
   return Object.entries(vocabs).flatMap(([prefix, factory]) => {
-    const dataset = $rdf.dataset(factory($rdf))
+    const dataset = $rdf.dataset(factory({ factory: $rdf }))
     const baseIRI = prefixes[prefix]
     const graph = $rdf.namedNode(baseIRI)
     const properties = [...dataset.match(null, rdf.type, rdf.Property, graph)]

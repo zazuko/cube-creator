@@ -16,7 +16,7 @@
     "test:cli:transform": "yarn c8 -o coverage/transform mocha --recursive cli/**/*.test.ts --grep @cube-creator/cli/lib/commands/transform",
     "test:cli:timeoutJobs": "yarn c8 -o coverage/transform mocha --recursive cli/**/*.test.ts --grep @cube-creator/cli/lib/commands/timeoutJobs",
     "test:e2e": "docker-compose run --rm e2e-tests --",
-    "seed-data": "dotenv -e .local.env -- bash -c \"ts-node packages/testing/index.ts -i ubd dimensions px-cube hierarchies\""
+    "seed-data": "dotenv -e .local.env -- bash -c \"node --loader ts-node/esm packages/testing/index.ts -i ubd dimensions px-cube hierarchies\""
   },
   "workspaces": [
     "cli",
@@ -57,7 +57,7 @@
     "require": [
       "mocha-setup.cjs"
     ],
-    "loader": "ts-node/esm"
+    "loader": "ts-node/esm/transpile-only"
   },
   "c8": {
     "all": true,

@@ -6,7 +6,7 @@ import { hydra, rdf, sh } from '@tpluscode/rdf-ns-builders'
 import SHACLValidator from 'rdf-validate-shacl'
 import type { GraphPointer } from 'clownface'
 import { ProblemDocument } from 'http-problem-details'
-import ValidationReport from 'rdf-validate-shacl/src/validation-report'
+import ValidationReport from 'rdf-validate-shacl/src/validation-report.js'
 
 interface ShaclMiddlewareOptions {
   loadShapes?(req: Request): Promise<DatasetCore>

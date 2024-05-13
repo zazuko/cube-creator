@@ -1,5 +1,5 @@
 import type { NamedNode, Term } from '@rdfjs/types'
-import env from '@cube-creator/core/env'
+import env from '@cube-creator/core/env/node'
 import { before, describe, it } from 'mocha'
 import { expect } from 'chai'
 import $rdf from '@zazuko/env'
