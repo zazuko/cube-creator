@@ -3,11 +3,24 @@
 @prefix code: <https://code.described.at/> .
 
 <#Main> a :Pipeline ;
-        :steps
-          [
-            :stepList
-              ( <#concatStreams> <#validate> <#StreamOutput> ) ;
-          ] .
+  :variables
+    [
+      :variable
+        [
+          :name "executionUrl" ;
+          :required false
+        ] ;
+      :variable
+        [
+          :name "lastTransformed" ;
+          :required false
+        ] ;
+    ] ;
+  :steps
+    [
+      :stepList
+        ( <#concatStreams> <#validate> <#StreamOutput> ) ;
+    ] .
 
 <#concatStreams>
   a :Step ;

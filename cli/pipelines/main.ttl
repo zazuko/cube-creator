@@ -157,7 +157,7 @@
 
 <#toObservation> a :Step;
   code:implementedBy [ a code:EcmaScriptModule;
-                       code:link <node:barnard59-rdf/cube.js#toObservation>
+                       code:link <node:barnard59-cube/cube.js#toObservation>
                      ] ;
   code:arguments [
                       code:name "observations";
