@@ -98,8 +98,8 @@ function cubeMetadata({ project, revision, timestamp }: QueryParams) {
 
   graph ${project.dataset.id} {
     ${project.dataset.id} ?cubeProp ?cubeMeta .
-    FILTER (?cubeProp != schema:datePublished)
-    OPTIONAL { ${project.dataset.id} schema:datePublished ?d }
+    FILTER (?cubeProp != ${schema.datePublished})
+    OPTIONAL { ${project.dataset.id} ${schema.datePublished} ?d }
     BIND(COALESCE(?d, ${defaultDatePublished}) AS ?datePublished)
 
     MINUS {
