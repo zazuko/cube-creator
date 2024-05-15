@@ -2,11 +2,10 @@ import type { DatasetCore } from '@rdfjs/types'
 import { insertTestProject } from '@cube-creator/testing/lib/seedData'
 import { before, describe, it } from 'mocha'
 import getStream from 'get-stream'
-import { Context } from 'barnard59-core/lib/Pipeline'
 import env from '@cube-creator/core/env'
 import clownface, { GraphPointer } from 'clownface'
 import { expect } from 'chai'
-import { VariableMap, Variables } from 'barnard59-core'
+import { Context, VariableMap, Variables } from 'barnard59-core'
 import { Hydra } from 'alcaeus/node'
 import * as Models from '@cube-creator/model'
 import { toRdf } from 'rdf-literal'
@@ -36,7 +35,7 @@ describe('@cube-creator/cli/lib/metadata @SPARQL', function () {
       ['timestamp', toRdf(new Date())],
       ['metadata', $rdf.dataset()],
     ])
-    context = {
+    context = <any>{
       variables,
       logger,
     }
