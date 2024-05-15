@@ -6,6 +6,7 @@ import clownface from 'clownface'
 import $rdf from 'rdf-ext'
 import { parsers } from '@rdfjs-elements/formats-pretty'
 import toStream from 'string-to-stream'
+import type { DatasetCore, NamedNode } from '@rdfjs/types'
 import { shaclValidate } from '../../middleware/shacl'
 import { importProject } from '../../domain/cube-projects/import'
 import { streamClient } from '../../query-client'
@@ -24,8 +25,9 @@ export const postImportedProject = protectedResource(
       throw new Error('User is not defined')
     }
 
+    const pointer: { term: NamedNode; dataset: DatasetCore } = await req.hydra.resource.clownface()
     const { project, importedDataset } = await importProject({
-      projectsCollection: await req.hydra.resource.clownface(),
+      projectsCollection: clownface(pointer),
       resource: await req.parseFromMultipart(),
       files: req.multipartFileQuadsStreams(),
       store: req.resourceStore(),

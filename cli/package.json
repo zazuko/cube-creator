@@ -42,7 +42,7 @@
     "@zazuko/shacl-playground": "^1.0.0",
     "alcaeus": "^2",
     "aws-sdk": "^2.559.0",
-    "barnard59": "^5.0.1",
+    "barnard59": "^5.0.2",
     "barnard59-base": "^2.4.2",
     "barnard59-cube": "^1.4.3",
     "barnard59-formats": "^2.1.1",

@@ -1,8 +1,9 @@
-import type * as Pipeline from 'barnard59-core/lib/Pipeline'
+import type Pipeline from 'barnard59-core/lib/Pipeline'
+import type { Context } from 'barnard59-core'
 
-export const asStep = (pipeline: Pipeline.default) => pipeline
+export const asStep = (pipeline: Pipeline) => pipeline
 
-export function selectTransformation(this: Pipeline.Context, arg: {observationTable: Pipeline.default; otherTable: Pipeline.default}) {
+export function selectTransformation(this: Context, arg: {observationTable: Pipeline; otherTable: Pipeline}) {
   if (this.variables.get('transformed').isObservationTable === true) {
     this.logger.info('Input is cube table')
     return arg.observationTable

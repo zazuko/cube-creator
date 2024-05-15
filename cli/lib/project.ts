@@ -1,5 +1,5 @@
 import { PublishJob, Project } from '@cube-creator/model'
-import type { Context } from 'barnard59-core/lib/Pipeline'
+import type { Context } from 'barnard59-core'
 import { tracer } from './otel/tracer'
 
 export async function loadProject(jobUri: string, { variables, logger }: Context) {

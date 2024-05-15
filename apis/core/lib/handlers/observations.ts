@@ -11,6 +11,7 @@ import RdfResourceImpl from '@tpluscode/rdfine'
 import * as ns from '@cube-creator/core/namespace'
 import { cc, hydraBox } from '@cube-creator/core/namespace'
 import { hydra } from '@tpluscode/rdf-ns-builders'
+import type { DatasetCore, Term } from '@rdfjs/types'
 import { warning } from '../log'
 import { getObservations } from '../domain/observations'
 
@@ -50,8 +51,8 @@ export const query = protectedResource(
       }
     }
 
-    const templatePointer = req.hydra.operation.out(hydraBox.variables).toArray()[0]
-    const template = RdfResourceImpl.factory.createEntity<IriTemplate>(templatePointer, [IriTemplateMixin])
+    const templatePointer: { term: Term; dataset: DatasetCore } = req.hydra.operation.out(hydraBox.variables).toArray()[0]
+    const template = RdfResourceImpl.factory.createEntity<IriTemplate>(clownface(templatePointer), [IriTemplateMixin])
     const collection = await getObservations({
       sourceGraph,
       pageSize,

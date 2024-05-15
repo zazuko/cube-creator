@@ -1,5 +1,5 @@
 import type { DatasetCore, NamedNode, Term } from '@rdfjs/types'
-import type { Context } from 'barnard59-core/lib/Pipeline'
+import type { Context } from 'barnard59-core'
 import ParsingClient from 'sparql-http-client/ParsingClient'
 import clownface, { AnyContext, AnyPointer, GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'

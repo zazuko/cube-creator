@@ -1,4 +1,4 @@
-import type { Context } from 'barnard59-core/lib/Pipeline'
+import type { Context } from 'barnard59-core'
 import $rdf from 'rdf-ext'
 import through2 from 'through2'
 import clownface from 'clownface'

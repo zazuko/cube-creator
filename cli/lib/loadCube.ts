@@ -1,6 +1,6 @@
 import { Stream, PassThrough } from 'stream'
 import { spawnSync } from 'child_process'
-import type * as Pipeline from 'barnard59-core/lib/Pipeline'
+import type { Context } from 'barnard59-core'
 import { CONSTRUCT, sparql } from '@tpluscode/sparql-builder'
 import { csvw } from '@tpluscode/rdf-ns-builders'
 import { cc, cube } from '@cube-creator/core/namespace'
@@ -20,7 +20,7 @@ interface Params {
  * Opens a SPARQL stream reading the cube, excluding the Cube Constraint subgraph,
  * which will be processed alongside the rest of cube metadata
  */
-export async function loadCube(this: Pipeline.Context, { jobUri, endpoint, user, password }: Params): Promise<Stream> {
+export async function loadCube(this: Context, { jobUri, endpoint, user, password }: Params): Promise<Stream> {
   const { project } = await loadProject(jobUri, this)
 
   const patterns = sparql`
