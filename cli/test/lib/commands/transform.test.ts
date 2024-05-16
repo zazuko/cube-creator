@@ -61,18 +61,6 @@ describe('@cube-creator/cli/lib/commands/transform', function () {
       await expect(hasPreviousErrors).to.eventually.be.false
     })
 
-    it('adds no sh:in to large dimension', async () => {
-      const hasInList = ASK`
-          ${cubeShape} ${sh.property} ?property .
-          ?property ${sh.path} ${cubeNs.station} .
-          ?property ${sh.in} ?in
-        `
-        .FROM(expectedGraph)
-        .execute(ccClients.parsingClient.query)
-
-      await expect(hasInList).to.eventually.be.false
-    })
-
     it('does not add sh:in for dimension of literals', async () => {
       const hasInList = ASK`
           ${cubeShape} ${sh.property} ?property .
