@@ -98,7 +98,7 @@ describe('domain/column-mapping/create', () => {
       .node($rdf.namedNode(''))
       .addOut(cc.sourceColumn, $rdf.namedNode('my-column'))
       .addOut(cc.targetProperty, $rdf.namedNode('test'))
-      .addOut(cc.datatype, xsd.integer)
+      .addOut(cc.datatype, xsd.integer) // becomes rdf.langString because of language
       .addOut(cc.language, $rdf.literal('fr'))
       .addOut(cc.defaultValue, $rdf.literal('test'))
 
@@ -121,7 +121,8 @@ describe('domain/column-mapping/create', () => {
         minCount: 1,
       }, {
         path: cc.datatype,
-        hasValue: xsd.integer,
+        // hasValue: xsd.integer,
+        hasValue: rdf.langString,
         minCount: 1,
       }, {
         path: cc.language,
