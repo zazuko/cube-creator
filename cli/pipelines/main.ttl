@@ -193,6 +193,9 @@
                  ] , [
                    code:name "cube" ;
                    code:value [ a code:EcmaScript ; code:link <file:../lib/cube#getCubeId> ]
+                 ]  , [
+                   code:name "shape" ;
+                   code:value [ a code:EcmaScript ; code:link <file:../lib/cube#getCubeShapeId> ]
                  ] .
 
 <#flatten> a :Step;
