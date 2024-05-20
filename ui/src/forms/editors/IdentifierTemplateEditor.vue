@@ -49,11 +49,6 @@ export default defineComponent({
       type: Object as PropType<Term>,
       default: undefined,
     },
-    autoPrefill: {
-      type: Boolean,
-      // TODO: Should only be true on table creation
-      default: true,
-    },
   },
   emits: ['input'],
 
@@ -150,30 +145,6 @@ export default defineComponent({
 
       return newValue
     },
-
-    prefill (): void {
-      if (this.wasModified) return
-
-      if (!this.tableName) return
-
-      const prefix = this.tableName.split(' ').join('')
-      const prefillValue = !this.isObservationTable
-        ? `${prefix}/{REPLACE}`
-        : ''
-
-      this.update(prefillValue)
-      this.$emit('input', prefillValue)
-    },
-  },
-
-  watch: {
-    tableName () {
-      this.prefill()
-    },
-
-    isObservationTable () {
-      this.prefill()
-    }
   },
 })
 </script>
