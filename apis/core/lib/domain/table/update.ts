@@ -44,12 +44,9 @@ export async function updateTable({
   table.color = color.value
 
   const identifierTemplate = resource.out(cc.identifierTemplate)
-  if (!identifierTemplate?.value) {
-    throw new Error('cc.identifierTemplate missing from the payload')
-  }
 
   if (identifierTemplate.value !== table.identifierTemplate) {
-    table.identifierTemplate = identifierTemplate.value
+    table.identifierTemplate = identifierTemplate.value || ''
     const csvSource = await store.getResource(table.csvSource)
 
     const columns = table.parsedTemplate.columnNames
