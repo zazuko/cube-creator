@@ -5431,10 +5431,10 @@ barnard59-core@6.0.0, barnard59-core@^6.0.0:
     untildify "^5.0.0"
     winston "^3.3.3"
 
-barnard59-cube@^1.4.5:
-  version "1.4.5"
-  resolved "https://registry.yarnpkg.com/barnard59-cube/-/barnard59-cube-1.4.5.tgz#c9a7e0d62df02398ee760970b1a269a952220f08"
-  integrity sha512-cBqLzzkRUl0l5rKoEiWjTZdKhTRs38Fnhl2dAi49/7llykK3Q0oHnW0M68ObHE2l2y1BkxPItfGBgXioDGgAiQ==
+barnard59-cube@^1.4.6:
+  version "1.4.6"
+  resolved "https://registry.yarnpkg.com/barnard59-cube/-/barnard59-cube-1.4.6.tgz#f54a76fa316b081d92941f5ca0ae358359d956bd"
+  integrity sha512-IashBSLPUHeYIjMmWcogu78/Z6QFxd+hoia3a6DjjcmgapyalC9BDe+iaAeoA5O5jCBlI35MQrCkA6HUndfElw==
   dependencies:
     barnard59-base "^2.4.2"
     barnard59-formats "^2.1.2"
@@ -5456,7 +5456,7 @@ barnard59-env@1.2.5, barnard59-env@^1.2.2:
     "@zazuko/env-node" "^2.1.3"
     "@zazuko/vocabulary-extras-builders" "^1.1.3"
 
-barnard59-formats@^2.1.0, barnard59-formats@^2.1.1, barnard59-formats@^2.1.2:
+barnard59-formats@^2.1.1, barnard59-formats@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/barnard59-formats/-/barnard59-formats-2.1.2.tgz#3a362af7faab12aefb11c27cbad50d06e486215a"
   integrity sha512-hbayQjY8thhJcl3G81fWwpmktYEck/vNNNr7EuDpztq773mLBQSeTHIGNy+xs1asPTpRtEKBmYjLxwbrtYIC9g==
@@ -12686,7 +12686,7 @@ rdf-validate-shacl@^0.4.0, rdf-validate-shacl@^0.4.3, rdf-validate-shacl@^0.4.4,
     rdf-literal "^1.3.0"
     rdf-validate-datatype "^0.1.5"
 
-rdf-validate-shacl@^0.5.4, rdf-validate-shacl@^0.5.5:
+rdf-validate-shacl@^0.5.5:
   version "0.5.5"
   resolved "https://registry.yarnpkg.com/rdf-validate-shacl/-/rdf-validate-shacl-0.5.5.tgz#5ccb2615d8e3268c92dff5280f4b9959e8173c1e"
   integrity sha512-oN6LQh7bzdQEkRMPCW332hxkRH9YANJuylcId41mivJar68vjk8Q4yAjAELxwrZsY2FsGWH4r9x5sPGqKMCUPg==
