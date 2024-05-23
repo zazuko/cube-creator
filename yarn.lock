@@ -3168,9 +3168,9 @@
     "@zazuko/rdf-vocabularies" ">=2023.01.17"
 
 "@tpluscode/rdf-string@^1.0.1", "@tpluscode/rdf-string@^1.0.3":
-  version "1.3.2"
-  resolved "https://registry.yarnpkg.com/@tpluscode/rdf-string/-/rdf-string-1.3.2.tgz#c8c5b687c5093c983e0b00184f938f88cac1a4b9"
-  integrity sha512-66nMZ0IVb31WUz6KY+4MvD/Tn1lI0lZt6uCfhgOxh1j5GrE/lc0eVxckOgOvrY4Kt3S5tQy/jSy/mVuP9jukHA==
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/@tpluscode/rdf-string/-/rdf-string-1.3.3.tgz#7bd989b4745240eb0fb8b140dceaf54715151b0d"
+  integrity sha512-BiBVkX3EVRApo6DNpXuq7Mh87tPX/3aD8m1tjxe4TT6piRrmwbIT/QRrlNdAjt5cAEBRwH8cp+GFTOb/X4Y8Ww==
   dependencies:
     "@rdfjs/data-model" "^2.0.0"
     "@rdfjs/environment" "^1.0.0"
