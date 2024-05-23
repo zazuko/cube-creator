@@ -5,14 +5,16 @@ import { query } from '@cube-creator/core/namespace'
 import clownface from 'clownface'
 import $rdf from 'rdf-ext'
 import { rdf } from '@tpluscode/rdf-ns-builders'
+import type { DatasetCore, NamedNode } from '@rdfjs/types'
 import { createTable } from '../../domain/table/create'
 import { shaclValidate } from '../../middleware/shacl'
 
 export const post = protectedResource(
   shaclValidate,
   asyncMiddleware(async (req, res) => {
+    const cfLike: { term: NamedNode; dataset: DatasetCore } = await req.hydra.resource.clownface()
     const table = await createTable({
-      tableCollection: await req.hydra.resource.clownface(),
+      tableCollection: clownface(cfLike),
       resource: await req.resource(),
       store: req.resourceStore(),
     })

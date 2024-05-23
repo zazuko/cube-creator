@@ -26,7 +26,7 @@ describe('middleware/resource', () => {
           return dataset.toStream()
         },
         async clownface() {
-          return clownface({ dataset }).node(this.term)
+          return clownface({ dataset }).node(this.term) as any
         },
       }
     }))

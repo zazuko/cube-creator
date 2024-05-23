@@ -1,5 +1,6 @@
 import { PassThrough } from 'stream'
-import type { Term } from '@rdfjs/types'
+import toStream from 'rdf-dataset-ext/toStream.js'
+import type { DatasetCore, NamedNode, Term } from '@rdfjs/types'
 import asyncMiddleware from 'middleware-async'
 import clownface from 'clownface'
 import parsePreferHeader from 'parse-prefer-header'
@@ -20,8 +21,9 @@ import { getCubesAndGraphs } from '../domain/dataset/queries'
 export const put = protectedResource(
   shaclValidate,
   asyncMiddleware(async (req, res) => {
+    const pointer: { term: NamedNode; dataset: DatasetCore } = await req.hydra.resource.clownface()
     const dataset = await update({
-      dataset: await req.hydra.resource.clownface(),
+      dataset: clownface(pointer),
       resource: await req.resource(),
       store: req.resourceStore(),
     })
@@ -35,7 +37,8 @@ export const put = protectedResource(
 export const get = protectedResource(asyncMiddleware(async (req, res) => {
   const { includeInLists } = parsePreferHeader(req.header('Prefer'))
 
-  const dataset = await req.hydra.resource.clownface()
+  const ptr: { term: NamedNode; dataset: DatasetCore } = await req.hydra.resource.clownface()
+  const dataset = clownface(ptr)
   const shapeStreams = [...await loadCubeShapes(req.hydra.resource.term, !includeInLists, clients)]
   const outStream = new PassThrough({
     objectMode: true,
@@ -48,7 +51,7 @@ export const get = protectedResource(asyncMiddleware(async (req, res) => {
   const linkedResources = await loadLinkedResources(dataset, types.out(query.include).toArray(), req.labyrinth.sparql)
   const observationsTemplateStream = await observationTemplate(dataset.term)
 
-  merge([dataset.dataset.toStream(), ...shapeStreams, linkedResources.toStream(), observationsTemplateStream], { objectMode: true })
+  merge([toStream(dataset.dataset), ...shapeStreams, linkedResources.toStream(), observationsTemplateStream], { objectMode: true })
     .pipe(outStream)
 
   return res.quadStream(outStream)

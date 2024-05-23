@@ -102,11 +102,12 @@ export function create<TOptions extends RunOptions>({ pipelineSources, prepare, 
 
     await prepare?.(command, variables)
 
-    const { default: Runner } = await importDynamic('barnard59/runner.js')
+    const { default: Runner } = await importDynamic<typeof import('barnard59/runner.js')>('barnard59/runner.js')
+    const env = await importDynamic<typeof import('barnard59-env')>('barnard59-env')
     const run = await Runner(clownface({
       dataset,
       term: pipelines.Entrypoint,
-    }), {
+    }), env.default, {
       basePath: path.resolve(basePath, 'pipelines'),
       outputStream: process.stdout,
       variables,

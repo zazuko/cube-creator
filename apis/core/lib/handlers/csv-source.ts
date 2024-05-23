@@ -4,9 +4,10 @@ import * as labyrinth from '@hydrofoil/labyrinth/resource'
 import { Enrichment } from '@hydrofoil/labyrinth/lib/middleware/preprocessResource'
 import { cc } from '@cube-creator/core/namespace'
 import { fromPointer as mediaObjectFromPointer } from '@cube-creator/model/MediaObject'
-import { AnyPointer, GraphPointer } from 'clownface'
+import clownface, { AnyPointer, GraphPointer } from 'clownface'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { ResourceIdentifier } from '@tpluscode/rdfine/RdfResource'
+import type { DatasetCore, NamedNode } from '@rdfjs/types'
 import { shaclValidate } from '../middleware/shacl'
 import { createCSVSource } from '../domain/csv-source/upload'
 import { deleteSource } from '../domain/csv-source/delete'
@@ -66,8 +67,8 @@ const getCSVSource: express.RequestHandler = asyncMiddleware(async (req, res, ne
     return next()
   }
 
-  const csvSource = await req.hydra.resource.clownface()
-  const directDownload = getPresignedLink(csvSource)
+  const csvSource: { term: NamedNode; dataset: DatasetCore } = await req.hydra.resource.clownface()
+  const directDownload = getPresignedLink(clownface(csvSource))
   if (!directDownload) {
     return next(new Error('s3 key not found'))
   }

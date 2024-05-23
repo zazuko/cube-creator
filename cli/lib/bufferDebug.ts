@@ -27,7 +27,7 @@ function bufferInfo(pipeline: Pipeline) {
       const { key, value } = bufferStatePair({
         index,
         mode: 'write',
-        state: step.stream._writableState,
+        state: (step.stream as any)._writableState,
         step,
       })
 

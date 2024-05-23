@@ -1,5 +1,5 @@
 interface DynamicImport {
-  (m: string): Promise<any>
+  <T = any>(m: string): Promise<T>
 }
 
 // eslint-disable-next-line no-new-func

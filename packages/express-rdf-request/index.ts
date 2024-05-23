@@ -39,6 +39,7 @@ export function resource(req: express.Request, res: unknown, next: express.NextF
       const expectedTypes = req.hydra.operation
         .out(hydra.expects)
         .has(rdf.type, hydra.Class)
+        .terms
 
       pointer.addOut(rdf.type, expectedTypes)
     }

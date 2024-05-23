@@ -1,5 +1,5 @@
 import winston from 'winston'
-import { OnViolation } from 'barnard59-validate-shacl'
+import { OnViolation } from 'barnard59-shacl/validate'
 import { fromPointer } from '@rdfine/shacl/lib/ValidationReport'
 
 export const logger = winston.createLogger({
@@ -12,7 +12,7 @@ export const logger = winston.createLogger({
   ],
 })
 
-export function prettyPrintReport({ context, report }: OnViolation) {
+export const prettyPrintReport: OnViolation = ({ context, report }) => {
   const jsonld = fromPointer(report.pointer).toJSON()
   context.logger.error(JSON.stringify(jsonld, null, 2))
 

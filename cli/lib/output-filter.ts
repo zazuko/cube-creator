@@ -1,7 +1,7 @@
 import type { BlankNode, Quad, Term } from '@rdfjs/types'
 import { csvw, rdf } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
-import type { Context } from 'barnard59-core/lib/Pipeline'
+import type { Context } from 'barnard59-core'
 import { customAlphabet } from 'nanoid'
 import dict from 'nanoid-dictionary'
 import $rdf from 'rdf-ext'
