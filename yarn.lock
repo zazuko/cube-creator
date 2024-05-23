@@ -4837,7 +4837,7 @@
   dependencies:
     "@rdfjs/environment" "^1.0.0"
 
-"@zazuko/env-node@^2.1.1":
+"@zazuko/env-node@^2.1.3":
   version "2.1.3"
   resolved "https://registry.yarnpkg.com/@zazuko/env-node/-/env-node-2.1.3.tgz#ff378ef5dbc4b917687d6b17e5ce5e8398537422"
   integrity sha512-vaYbkMe0DsvpWEWBQpWPJ0mEYiFhwDGw8Caso1MmASUbHY/gH2tAA6BDv4LsCK/BrU4gWftUWz6uEsRP3FmdHA==
@@ -5413,7 +5413,7 @@ barnard59-base@^2.0.1, barnard59-base@^2.4.1, barnard59-base@^2.4.2:
     readable-to-readable "^0.1.3"
     through2 "^4.0.2"
 
-barnard59-core@6.0.0:
+barnard59-core@6.0.0, barnard59-core@^6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/barnard59-core/-/barnard59-core-6.0.0.tgz#f845f8fc7f73c15eaa215c0dddef6fa3b63c2490"
   integrity sha512-7gEfLnCB+DlfoknpRrolYOc8M8hBa/O+HKuWQvT1kAxaRZSLTg3fUxQJ6AOi+KGS7eANiL6ZQXO+cqE+IAcoTQ==
@@ -5431,16 +5431,16 @@ barnard59-core@6.0.0:
     untildify "^5.0.0"
     winston "^3.3.3"
 
-barnard59-cube@^1.4.3:
-  version "1.4.3"
-  resolved "https://registry.yarnpkg.com/barnard59-cube/-/barnard59-cube-1.4.3.tgz#33ae18f922045a16ea0a157596f67defe45414de"
-  integrity sha512-klGYH16Ssr4jZBwNRdrhMk/Cu/ByCI0KQENr9KWkBtwXhQRcC4x9WraaG4d17pumPw4OHCVhO5lc9EINm6L6Hw==
+barnard59-cube@^1.4.6:
+  version "1.4.6"
+  resolved "https://registry.yarnpkg.com/barnard59-cube/-/barnard59-cube-1.4.6.tgz#f54a76fa316b081d92941f5ca0ae358359d956bd"
+  integrity sha512-IashBSLPUHeYIjMmWcogu78/Z6QFxd+hoia3a6DjjcmgapyalC9BDe+iaAeoA5O5jCBlI35MQrCkA6HUndfElw==
   dependencies:
     barnard59-base "^2.4.2"
-    barnard59-formats "^2.0.0"
+    barnard59-formats "^2.1.2"
     barnard59-http "^2.0.0"
     barnard59-rdf "^3.4.0"
-    barnard59-shacl "^1.4.4"
+    barnard59-shacl "^1.4.6"
     barnard59-sparql "^2.3.0"
     external-merge-sort "^0.1.4"
     lodash "^4.17.21"
@@ -5448,18 +5448,18 @@ barnard59-cube@^1.4.3:
     readable-stream "3 - 4"
     through2 "^4.0.2"
 
-barnard59-env@1.2.4, barnard59-env@^1.2.2:
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/barnard59-env/-/barnard59-env-1.2.4.tgz#abacd6947b7c4fd38ab9a23d913efd6533489589"
-  integrity sha512-Y1Az1wxSh4gJS7t3a1HR4zmk8A+uTKIkuhtux69x6mBG9Npn6nUDjCKIkqMt7dKuJjwSKA1nwMnmVRgHM7fSqw==
+barnard59-env@1.2.5, barnard59-env@^1.2.2:
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/barnard59-env/-/barnard59-env-1.2.5.tgz#4140a2992d4645794c9a4769a8664f73280176d3"
+  integrity sha512-gY73vHlPcgO+iJ84r/L2MsxkPQLOhHEb32XgDN3QEIbe3srHE7K4ytZkuuxQBlUE72ksNT+S7vDhvEggGsa8Eg==
   dependencies:
-    "@zazuko/env-node" "^2.1.1"
+    "@zazuko/env-node" "^2.1.3"
     "@zazuko/vocabulary-extras-builders" "^1.1.3"
 
-barnard59-formats@^2.0.0, barnard59-formats@^2.1.0, barnard59-formats@^2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/barnard59-formats/-/barnard59-formats-2.1.1.tgz#cdee48d4c6c226d387af89ab242b6d0c1ae759f8"
-  integrity sha512-EnrQenB/MzDPvEvkcg6P2PS1BwTKpgtgwi2T7U5MCNThFEaVwhnngmrZ3RDQobbyIgM0IuFLPS57vWN1iBrl3A==
+barnard59-formats@^2.1.1, barnard59-formats@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/barnard59-formats/-/barnard59-formats-2.1.2.tgz#3a362af7faab12aefb11c27cbad50d06e486215a"
+  integrity sha512-hbayQjY8thhJcl3G81fWwpmktYEck/vNNNr7EuDpztq773mLBQSeTHIGNy+xs1asPTpRtEKBmYjLxwbrtYIC9g==
   dependencies:
     "@opentelemetry/api" "^1.0.1"
     "@rdfjs/parser-jsonld" "^2.1.0"
@@ -5468,6 +5468,7 @@ barnard59-formats@^2.0.0, barnard59-formats@^2.1.0, barnard59-formats@^2.1.1:
     "@rdfjs/serializer-ntriples" "^2.0.0"
     "@rdfjs/sink-to-duplex" "^1.0.0"
     barnard59-base "^2.0.1"
+    is-stream "^3.0.0"
     rdf-parser-csvw "^0.15.0"
     rdf-parser-csvw-xlsx "^0.1.0"
     rdfxml-streaming-parser "^1.2.0"
@@ -5514,18 +5515,18 @@ barnard59-rdf@^3.0.0, barnard59-rdf@^3.4.0:
     rdf-transform-triple-to-quad "^2.0.0"
     readable-stream "^3.6.0"
 
-barnard59-shacl@^1.4.4, barnard59-shacl@^1.4.5:
-  version "1.4.5"
-  resolved "https://registry.yarnpkg.com/barnard59-shacl/-/barnard59-shacl-1.4.5.tgz#a1431b99b0560e2a6497ccba20e0dc8143d47afc"
-  integrity sha512-xXvN7U4AQnSDhX5+StS4wtmbDt78Nza+v0FnQqLft666nVgOGVi/cAORGpdTzZc7mhkgxMu+4HXIrTv9+sj+LA==
+barnard59-shacl@^1.4.5, barnard59-shacl@^1.4.6:
+  version "1.4.6"
+  resolved "https://registry.yarnpkg.com/barnard59-shacl/-/barnard59-shacl-1.4.6.tgz#1b1afc8845e9bd98dedd69964f36c1ae0b5cc886"
+  integrity sha512-sNq9gGUPEUGcXma1seRU1qtwiiqa3i0jDo6kUsylcACZa8bbxL3TvDg99S0gZnL9XZa8wE6pSQS8glyLSYN01w==
   dependencies:
     "@rdfjs/fetch" "^3.0.0"
     "@rdfjs/to-ntriples" "^3.0.0"
     barnard59-base "^2.4.2"
-    barnard59-formats "^2.1.0"
+    barnard59-formats "^2.1.1"
     barnard59-rdf "^3.4.0"
     is-stream "^3.0.0"
-    rdf-validate-shacl "^0.5.4"
+    rdf-validate-shacl "^0.5.5"
     readable-stream "3 - 4"
 
 barnard59-sparql@^2.3.0:
@@ -5538,10 +5539,10 @@ barnard59-sparql@^2.3.0:
     readable-stream "^4.5.2"
     sparql-http-client "^3.0.0"
 
-barnard59@^5.0.1:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/barnard59/-/barnard59-5.0.1.tgz#fd868dfd222fe7f7f3649e14b6bd800e138ded7f"
-  integrity sha512-q6FWovuNQ+Wjd9uGbEU+RgC5E/l7RVq7uHJG78yDl3H7ylcu9km1eAjL4KJ2O8R+vdSYT2WY13esCbMt6aKnHQ==
+barnard59@^5.0.2:
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/barnard59/-/barnard59-5.0.2.tgz#e0dffa8f296a1535f1510136490b9134b8a3b7d2"
+  integrity sha512-b0fYWGKnbt25g71/d7KPsNGi+5DZZTVYAguI1rNP5BKrzJyHMd6LHadeg9uoKUYy10OQKyQ0ONNvU9M3wA9bQg==
   dependencies:
     "@opentelemetry/api" "^1.0.0"
     "@opentelemetry/exporter-collector" "^0.24.0"
@@ -5553,7 +5554,7 @@ barnard59@^5.0.1:
     "@opentelemetry/tracing" "^0.24.0"
     "@rdfjs/namespace" "^2.0.0"
     barnard59-core "6.0.0"
-    barnard59-env "1.2.4"
+    barnard59-env "1.2.5"
     commander "^11.0.0"
     find-up "^7.0.0"
     is-graph-pointer "^2.1.0"
@@ -12685,7 +12686,7 @@ rdf-validate-shacl@^0.4.0, rdf-validate-shacl@^0.4.3, rdf-validate-shacl@^0.4.4,
     rdf-literal "^1.3.0"
     rdf-validate-datatype "^0.1.5"
 
-rdf-validate-shacl@^0.5.4:
+rdf-validate-shacl@^0.5.5:
   version "0.5.5"
   resolved "https://registry.yarnpkg.com/rdf-validate-shacl/-/rdf-validate-shacl-0.5.5.tgz#5ccb2615d8e3268c92dff5280f4b9959e8173c1e"
   integrity sha512-oN6LQh7bzdQEkRMPCW332hxkRH9YANJuylcId41mivJar68vjk8Q4yAjAELxwrZsY2FsGWH4r9x5sPGqKMCUPg==

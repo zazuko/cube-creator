@@ -1,0 +1,22 @@
+diff --git a/node_modules/rdf-parser-csvw/lib/metadata/TableSchema.js b/node_modules/rdf-parser-csvw/lib/metadata/TableSchema.js
+index 141cf94..9c802cd 100644
+--- a/node_modules/rdf-parser-csvw/lib/metadata/TableSchema.js
++++ b/node_modules/rdf-parser-csvw/lib/metadata/TableSchema.js
+@@ -93,7 +93,7 @@ class TableSchema {
+     }
+ 
+     if (datatype.termType === 'NamedNode') {
+-      return { base: datatype.value }
++      return { base: datatype }
+     }
+ 
+     const base = RdfUtils.findValue(this.dataset, datatype, this.ns.base)
+@@ -205,7 +205,7 @@ class TableSchema {
+   }
+ 
+   defaultDatatype () {
+-    return { base: this.ns.string.value }
++    return { base: this.ns.string }
+   }
+ }
+ 

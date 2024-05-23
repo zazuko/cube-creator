@@ -16,10 +16,5 @@
       "no-unused-expressions": "off",
       "prefer-regex-literals": "off"
     }
-  }, {
-    "files": ["cli/lib/toCubeShape/*.js"],
-    "rules": {
-      "@typescript-eslint/no-var-requires": "off"
-    }
   }]
 }
