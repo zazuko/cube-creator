@@ -1,4 +1,4 @@
-import { Stream, PassThrough } from 'stream'
+import { Stream } from 'stream'
 import { spawnSync } from 'child_process'
 import type { Context } from 'barnard59-core'
 import { CONSTRUCT, sparql } from '@tpluscode/sparql-builder'
@@ -34,11 +34,7 @@ export async function loadCube(this: Context, { jobUri, endpoint, user, password
     filter not exists { ?s a ${cc.OriginalValuePredicate} }
   `
 
-  const combined = new PassThrough({
-    objectMode: true,
-  })
-
-  tempy.file.task(async tempFile => {
+  return tempy.file.task(async tempFile => {
     this.logger.info('Saving cube data to temp file %s', tempFile)
     const query = CONSTRUCT`?s ?p ?o`
       .FROM(project.cubeGraph)
@@ -66,19 +62,9 @@ export async function loadCube(this: Context, { jobUri, endpoint, user, password
       throw new Error(`Cube download failed. Curl exited with ${exit.status}`)
     }
 
-    this.logger.info('Reading cube data to temp file')
-    const localQuads: any = fromFile(tempFile)
-    localQuads.pipe(combined)
-
-    return new Promise((resolve, reject) => {
-      localQuads.on('end', resolve)
-      localQuads.on('error', reject)
-    })
+    this.logger.info('Reading cube data from temp file')
+    return fromFile(tempFile) as any
   }, {
     extension: 'ttl',
-  }).catch(e => {
-    combined.destroy(e)
   })
-
-  return combined
 }

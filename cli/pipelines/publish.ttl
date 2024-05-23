@@ -16,6 +16,11 @@
           :name "bnodeUuid" ;
           :required false
         ] ;
+      :variable
+        [
+          :name "executionUrl" ;
+          :required false
+        ] ;
     ] ;
   :steps
     [
