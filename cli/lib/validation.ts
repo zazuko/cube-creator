@@ -26,7 +26,7 @@ const messages = new TermMap<NamedNode, string>([
   [xsd.date, 'Dates should be formatted as YYYY-MM-DD as specified by ISO 8601. See also https://www.w3.org/TR/xmlschema-2/#date.'],
   [xsd.dateTime, 'Values should be formatted as YYYY-MM-DDThh:mm:ss. See also https://www.w3.org/TR/xmlschema-2/#dateTime.'],
   [xsd.gDay, 'Days should be formatted as DD. See also https://www.w3.org/TR/xmlschema-2/#gDay.'],
-  [xsd.decimal, 'Decimals should be formatted as digits, possibly with a period to separate the fractional part. An optional leading sign is allowed. with See also https://www.w3.org/TR/xmlschema-2/#decimal.'],
+  [xsd.decimal, 'Decimals should be formatted as digits, possibly with a period to separate the fractional part. An optional leading sign is allowed. See also https://www.w3.org/TR/xmlschema-2/#decimal.'],
   [xsd.integer, 'Integers should be formatted as digits, with an optional leading sign. See also https://www.w3.org/TR/xmlschema-2/#integer.'],
   [xsd.gMonth, 'Months should be formatted as MM. See also https://www.w3.org/TR/xmlschema-2/#gMonth.'],
   [xsd.string, 'See also https://www.w3.org/TR/xmlschema-2/#string.'],
