@@ -20,7 +20,6 @@ function quadToString(quad: Quad): string {
   })
 }
 
-// consider replacing should with may
 const messages = new TermMap<NamedNode, string>([
   [xsd.boolean, 'Boolean values should be formatted as "true" and "false" (or "0" and "1"). See also https://www.w3.org/TR/xmlschema-2/#boolean.'],
   [xsd.date, 'Dates should be formatted as YYYY-MM-DD as specified by ISO 8601. See also https://www.w3.org/TR/xmlschema-2/#date.'],
