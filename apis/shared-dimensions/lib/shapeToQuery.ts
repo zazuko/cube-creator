@@ -1,11 +1,14 @@
 import onetime from 'onetime'
 import { md } from '@cube-creator/core/namespace'
-import { GraphPointer } from 'clownface'
+import { AnyPointer, GraphPointer } from 'clownface'
 import { isGraphPointer } from 'is-graph-pointer'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 import { Parameters, PropertyShape } from '@hydrofoil/shape-to-query/model/constraint/ConstraintComponent'
+import evalTemplateLiteral from 'rdf-loader-code/evalTemplateLiteral.js'
 import namespace from '@rdfjs/namespace'
 import { sparql } from '@tpluscode/sparql-builder'
+import $rdf from 'rdf-ext'
+import type { Literal } from '@rdfjs/types'
 import env from './env'
 
 /*
@@ -15,15 +18,51 @@ import env from './env'
 // eslint-disable-next-line no-new-func
 const _importDynamic = new Function('modulePath', 'return import(modulePath)')
 
-export default async function shapeToQuery() {
+export default async function shapeToQuery(): Promise<Pick<typeof import('@hydrofoil/shape-to-query'), 'constructQuery' | 'deleteQuery' | 's2q'>> {
   await setup()
 
-  const { constructQuery, deleteQuery } = await _importDynamic('@hydrofoil/shape-to-query')
+  const { constructQuery, deleteQuery, s2q } = await _importDynamic('@hydrofoil/shape-to-query')
 
   return {
     constructQuery,
     deleteQuery,
+    s2q,
   }
+}
+
+export async function rewriteTemplates(shape: AnyPointer, variables: Map<string, unknown>) {
+  const { s2q } = await shapeToQuery()
+
+  shape.any().has(s2q('template' as any))
+    .forEach(templateNode => {
+      const template = templateNode.out(s2q('template' as any))
+      const value = evalTemplateLiteral(template.value, { variables })
+      const literalOption = (template.term as Literal).language || (template.term as Literal).datatype
+
+      ;[...shape.dataset.match(null, null, templateNode.term)].forEach(quad => {
+        shape.dataset.delete(quad)
+        shape.dataset.add($rdf.quad(quad.subject, quad.predicate, $rdf.literal(value, literalOption), quad.graph))
+      })
+
+      templateNode.deleteOut()
+    })
+
+  shape.any().has(s2q('variable' as any))
+    .forEach(templateNode => {
+      const variableName = templateNode.out(s2q('variable' as any)).value
+      if (!variableName) {
+        return
+      }
+
+      const value = variables.get(variableName) as any
+
+      ;[...shape.dataset.match(null, null, templateNode.term)].forEach(quad => {
+        shape.dataset.delete(quad)
+        shape.dataset.add($rdf.quad(quad.subject, quad.predicate, value, quad.graph))
+      })
+
+      templateNode.deleteOut()
+    })
 }
 
 const setup = onetime(async () => {
@@ -31,7 +70,7 @@ const setup = onetime(async () => {
 })
 
 async function defineConstraintComponents() {
-  const { ConstraintComponent } = await _importDynamic('@hydrofoil/shape-to-query/model/constraint/ConstraintComponent.js')
+  const { default: ConstraintComponent } = await _importDynamic('@hydrofoil/shape-to-query/model/constraint/ConstraintComponent.js')
   const { constraintComponents } = await _importDynamic('@hydrofoil/shape-to-query/model/constraint/index.js')
   const { PatternConstraintComponent } = await _importDynamic('@hydrofoil/shape-to-query/model/constraint/pattern.js')
 

@@ -48,6 +48,27 @@ md:SharedDimensions
           a code:EcmaScript ;
           code:link <file:handlers/shared-dimensions#get> ;
         ] ;
+      hydra-box:variables
+        [
+          a hydra:IriTemplate ;
+          hydra:template "/_term-sets{?q,pageSize,page}" ;
+          hydra:mapping
+            [
+              a hydra:IriTemplateMapping ;
+              hydra:property hydra:freetextQuery ;
+              hydra:variable "q" ;
+            ],
+            [
+              a hydra:IriTemplateMapping ;
+              hydra:property hydra:limit ;
+              hydra:variable "pageSize" ;
+            ],
+            [
+              a hydra:IriTemplateMapping ;
+              hydra:property hydra:pageIndex ;
+              hydra:variable "page" ;
+            ] ;
+        ] ;
     ], [
          a hydra:Operation, schema:CreateAction ;
          hydra:method "POST" ;

@@ -19,9 +19,23 @@ import { rewrite, rewriteTerm } from '../rewrite'
 import { postImportedDimension } from './shared-dimension/import'
 import { getCollection } from './collection'
 
-export const get = asyncMiddleware(async (req, res) => {
-  const collection = await getCollection({
-    memberQuads: await getSharedDimensions().execute(parsingClient.query),
+export const get = asyncMiddleware(async (req, res, next) => {
+  if (!req.dataset) {
+    return next(new httpError.BadRequest())
+  }
+  const query = clownface({ dataset: await req.dataset() })
+  const pageSize = Number(query.out(hydra.limit).value || 10)
+  const page = Number(query.out(hydra.pageIndex).value || 1)
+  const offset = (page - 1) * pageSize
+  const queryParams = {
+    freetextQuery: query.has(hydra.freetextQuery).out(hydra.freetextQuery).value,
+    validThrough: query.has(md.onlyValidTerms, query.literal(true)).terms.length ? new Date() : undefined,
+    limit: pageSize,
+    offset,
+  }
+
+  const collection = getCollection({
+    memberQuads: await getSharedDimensions(parsingClient, queryParams),
     collectionType: md.SharedDimensions,
     memberType: schema.DefinedTermSet,
     collection: req.hydra.resource.term,
@@ -73,7 +87,7 @@ export const getTerms = asyncMiddleware(async (req, res, next) => {
     offset,
   }
 
-  const collection = await getCollection({
+  const collection = getCollection({
     memberQuads: await getSharedTerms(queryParams, parsingClient),
     memberType: schema.DefinedTerm,
     collectionType: md.SharedDimensionTerms,

@@ -1,0 +1,90 @@
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+prefix meta: <https://cube.link/meta/>
+PREFIX s2q: <https://hypermedia.app/shape-to-query#>
+prefix schema: <http://schema.org/>
+PREFIX sparql: <http://datashapes.org/sparql#>
+prefix md: <https://cube-creator.zazuko.com/shared-dimensions/vocab#>
+
+[
+  a sh:NodeShape ;
+  sh:target
+    [
+      a s2q:NodeExpressionTarget ;
+      sh:expression
+        [
+          sh:limit [ s2q:template "${limit}"^^xsd:integer ] ;
+          sh:nodes
+            [
+              sh:offset [ s2q:template "${offset}"^^xsd:integer ] ;
+              sh:nodes
+                [
+                  sh:orderBy [ sh:path [ s2q:variable "orderBy" ] ] ;
+                  sh:nodes
+                    [
+                      sh:filterShape
+                        [
+                          sh:property
+                            [
+                              sh:path schema:name ;
+                              sh:pattern
+                                [
+                                  s2q:template "^${freetextQuery}" ;
+                                ] ;
+                              sh:flags "i" ;
+                            ] ;
+                          sh:property
+                            [
+                              sh:path rdf:type ;
+                              sh:hasValue schema:DefinedTermSet, meta:SharedDimension ;
+                            ] ;
+                        ] ;
+                    ] ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+  sh:property
+    [
+      sh:path schema:name ;
+    ] ;
+  sh:property
+    [
+      sh:path rdf:type ;
+    ] ;
+  sh:property
+    [
+      sh:path md:terms ;
+      sh:values
+        [
+          sparql:iri
+            (
+              [
+                sparql:concat
+                  (
+                    [ s2q:template "${MANAGED_DIMENSIONS_BASE}dimension/_terms?dimension=" ; ]
+                    [ sparql:encode_for_uri ( [ sparql:str ( sh:this ) ] ) ]
+                  )
+              ]
+            )
+        ]
+    ] ;
+  sh:property
+    [
+      sh:path md:export ;
+      sh:values
+        [
+          sparql:iri
+            (
+              [
+                sparql:concat
+                  (
+                    [ s2q:template "${MANAGED_DIMENSIONS_BASE}dimension/_terms?dimension=" ; ]
+                    [ sparql:encode_for_uri ( [ sparql:str ( sh:this ) ] ) ]
+                  )
+              ]
+            )
+        ]
+    ] ;
+] .
