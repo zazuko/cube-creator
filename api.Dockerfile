@@ -3,6 +3,7 @@ FROM node:18-alpine AS builder
 
 WORKDIR /app
 ADD package.json yarn.lock ./
+ADD ./patches ./patches/
 ADD ./apis/core/package.json ./apis/core/
 ADD ./apis/errors/package.json ./apis/errors/
 ADD ./apis/shared-dimensions/package.json ./apis/shared-dimensions/
