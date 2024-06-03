@@ -36,6 +36,10 @@ export async function rewriteTemplates(shape: AnyPointer, variables: Map<string,
   shape.any().has(s2q('template' as any))
     .forEach(templateNode => {
       const template = templateNode.out(s2q('template' as any))
+      if (!isGraphPointer(template)) {
+        throw new Error('Template not found')
+      }
+
       const value = evalTemplateLiteral(template.value, { variables })
       const literalOption = (template.term as Literal).language || (template.term as Literal).datatype
 
