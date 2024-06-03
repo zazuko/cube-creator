@@ -1,7 +1,7 @@
 import type { Literal, NamedNode, Quad } from '@rdfjs/types'
 import { obj } from 'through2'
 import $rdf from 'rdf-ext'
-import { dcat, dcterms, rdf, schema, sh, _void, foaf } from '@tpluscode/rdf-ns-builders'
+import { dcat, dcterms, rdf, schema, sh, _void, foaf, xsd } from '@tpluscode/rdf-ns-builders'
 import { cc, cube } from '@cube-creator/core/namespace'
 import { Dataset, Project, PublishJob } from '@cube-creator/model'
 import { HydraClient } from 'alcaeus/alcaeus'
@@ -10,7 +10,7 @@ import { Published } from '@cube-creator/model/Cube'
 import { CONSTRUCT, sparql } from '@tpluscode/sparql-builder'
 import StreamClient from 'sparql-http-client/StreamClient'
 import { Readable } from 'readable-stream'
-import { toRdf } from 'rdf-literal'
+import { fromRdf, toRdf } from 'rdf-literal'
 import { tracer } from './otel/tracer'
 import { loadProject } from './project'
 
@@ -54,6 +54,7 @@ interface QueryParams {
   project: Project
   revision: Literal
   cubeIdentifier: string
+  timestamp: Literal
 }
 
 function sourceCubeAndShape({ project, revision, cubeIdentifier }: QueryParams) {
@@ -87,7 +88,8 @@ function sourceCubeAndShape({ project, revision, cubeIdentifier }: QueryParams) 
   `
 }
 
-function cubeMetadata({ project, revision }: QueryParams) {
+function cubeMetadata({ project, revision, timestamp }: QueryParams) {
+  const defaultDatePublished = toRdf(fromRdf(timestamp), { datatype: xsd.date })
   return sparql`
   graph ${project.cubeGraph} {
     ?cube a ${cube.Cube} .
@@ -96,6 +98,9 @@ function cubeMetadata({ project, revision }: QueryParams) {
 
   graph ${project.dataset.id} {
     ${project.dataset.id} ?cubeProp ?cubeMeta .
+    FILTER (?cubeProp != ${schema.datePublished})
+    OPTIONAL { ${project.dataset.id} ${schema.datePublished} ?d }
+    BIND(COALESCE(?d, ${defaultDatePublished}) AS ?datePublished)
 
     MINUS {
         ${project.dataset.id} ${schema.hasPart}|${cc.dimensionMetadata} ?cubeMeta
@@ -188,6 +193,7 @@ export async function loadCubeMetadata(this: Context, { jobUri, endpoint, user, 
     project,
     cubeIdentifier,
     revision,
+    timestamp,
   }
 
   const stream = await CONSTRUCT`
@@ -202,7 +208,7 @@ export async function loadCubeMetadata(this: Context, { jobUri, endpoint, user, 
       ${dcat.accessURL} ${maintainer.accessURL} ;
       ${_void.sparqlEndpoint} ${maintainer.sparqlEndpoint} ;
 
-      ${revision.value === '1' ? sparql`${schema.datePublished} ${timestamp}` : ''}
+      ${schema.datePublished} ?datePublished ;
     .
     ?cube a ${schema.CreativeWork} ; ${schema.hasPart} ?cubeVersion .
 
