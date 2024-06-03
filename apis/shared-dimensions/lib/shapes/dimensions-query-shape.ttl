@@ -14,30 +14,33 @@ prefix md: <https://cube-creator.zazuko.com/shared-dimensions/vocab#>
       a s2q:NodeExpressionTarget ;
       sh:expression
         [
-          sh:limit [ s2q:template "${limit}"^^xsd:integer ] ;
-          sh:nodes
+          sh:distinct
             [
-              sh:offset [ s2q:template "${offset}"^^xsd:integer ] ;
+              sh:limit [ s2q:template "${limit}"^^xsd:integer ] ;
               sh:nodes
                 [
-                  sh:orderBy [ sh:path [ s2q:variable "orderBy" ] ] ;
+                  sh:offset [ s2q:template "${offset}"^^xsd:integer ] ;
                   sh:nodes
                     [
-                      sh:filterShape
+                      sh:orderBy [ sh:path [ s2q:variable "orderBy" ] ] ;
+                      sh:nodes
                         [
-                          sh:property
+                          sh:filterShape
                             [
-                              sh:path schema:name ;
-                              sh:pattern
+                              sh:property
                                 [
-                                  s2q:template "^${freetextQuery}" ;
+                                  sh:path schema:name ;
+                                  sh:pattern
+                                    [
+                                      s2q:template "^${freetextQuery}" ;
+                                    ] ;
+                                  sh:flags "i" ;
                                 ] ;
-                              sh:flags "i" ;
-                            ] ;
-                          sh:property
-                            [
-                              sh:path rdf:type ;
-                              sh:hasValue schema:DefinedTermSet, meta:SharedDimension ;
+                              sh:property
+                                [
+                                  sh:path rdf:type ;
+                                  sh:hasValue schema:DefinedTermSet, meta:SharedDimension ;
+                                ] ;
                             ] ;
                         ] ;
                     ] ;
