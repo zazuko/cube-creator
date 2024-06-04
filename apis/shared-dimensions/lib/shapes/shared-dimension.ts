@@ -2,6 +2,7 @@ import { dash, dcterms, hydra, qudt, rdf, rdfs, schema, sh, time, xsd } from '@t
 import { supportedLanguages } from '@cube-creator/core/languages'
 import { datatypes } from '@cube-creator/core/datatypes'
 import type { Initializer } from '@tpluscode/rdfine/RdfResource'
+import { fromPointer as iriTemplate } from '@rdfine/hydra/lib/IriTemplate'
 import type { NodeShape, PropertyShape } from '@rdfine/shacl'
 import $rdf from 'rdf-ext'
 import { editor, iso6391, md, meta, sh1 } from '@cube-creator/core/namespace'
@@ -257,7 +258,14 @@ const properties: Initializer<PropertyShape>[] = [{
         name: 'Shared dimension',
         path: sh.class,
         [dash.editor.value]: dash.AutoCompleteEditor,
-        [hydra.collection.value]: $rdf.namedNode('/dimension/_term-sets'),
+        [hydra.search.value]: iriTemplate({
+          template: '/dimension/_term-sets{?q}',
+          mapping: {
+            variable: 'q',
+            property: hydra.freetextQuery,
+            [sh.minLength.value]: 0,
+          },
+        }),
         nodeKind: sh.IRI,
         minCount: 1,
         maxCount: 1,

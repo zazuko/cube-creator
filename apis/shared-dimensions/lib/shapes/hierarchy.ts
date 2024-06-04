@@ -9,7 +9,7 @@ import env from '@cube-creator/core/env'
 
 export default function ({ rdfTypeProperty = false }: { rdfTypeProperty?: boolean } = {}) {
   return (graph: AnyPointer): Initializer<NodeShape> => {
-    const sharedDimensionCollection = graph.namedNode('/dimension/_term-sets')
+    // const sharedDimensionCollection = graph.namedNode('/dimension/_term-sets')
     const publicQueryEndpoint = graph.blankNode()
       .addOut(sd.endpoint, graph.namedNode(env.PUBLIC_QUERY_ENDPOINT))
       .addOut(foaf.page, env.TRIFID_UI)
@@ -79,7 +79,14 @@ export default function ({ rdfTypeProperty = false }: { rdfTypeProperty?: boolea
       maxCount: 1,
       nodeKind: sh.IRI,
       [dash.editor.value]: dash.InstancesSelectEditor,
-      [hydra.collection.value]: sharedDimensionCollection,
+      [hydra.search.value]: iriTemplate({
+        template: 'dimension/_term-sets{?q}',
+        mapping: {
+          variable: 'q',
+          property: hydra.freetextQuery,
+          [sh.minLength.value]: 0,
+        },
+      }),
       order: 5,
     }, {
       name: 'Root',

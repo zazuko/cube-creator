@@ -32,7 +32,7 @@ export default class implements SharedDimensionsStore {
       focusNode: term,
     }).FROM(this.graph)
 
-    const quads = await query.execute(this.client.query, {
+    const quads = await query.execute(this.client, {
       operation: 'postDirect',
     })
     return clownface({
@@ -59,7 +59,7 @@ export default class implements SharedDimensionsStore {
 
   async delete(id: NamedNode): Promise<void> {
     const shape = await this.getShape(id)
-    await (await this.deleteQuery(shape, id)).execute(this.client.query)
+    await (await this.deleteQuery(shape, id)).execute(this.client)
   }
 
   private async deleteQuery(shape: GraphPointer, focusNode: NamedNode) {

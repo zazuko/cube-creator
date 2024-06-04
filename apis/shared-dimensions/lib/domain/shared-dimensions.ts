@@ -1,8 +1,6 @@
 import path from 'path'
 import type { Quad, Stream, Term } from '@rdfjs/types'
-import { CONSTRUCT } from '@tpluscode/sparql-builder'
 import { hydra, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
-import { md, meta } from '@cube-creator/core/namespace'
 import $rdf from 'rdf-ext'
 import { toRdf } from 'rdf-literal'
 import { fromFile } from 'rdf-utils-fs'
@@ -11,28 +9,31 @@ import { isGraphPointer } from 'is-graph-pointer'
 import { StreamClient } from 'sparql-http-client/StreamClient'
 import { ParsingClient } from 'sparql-http-client/ParsingClient'
 import env from '../env'
-import shapeToQuery from '../shapeToQuery'
+import shapeToQuery, { rewriteTemplates } from '../shapeToQuery'
 import { getDynamicProperties } from './shared-dimension'
 
-export function getSharedDimensions() {
-  return CONSTRUCT`
-    ?termSet ?p ?o .
-    ?termSet ${md.terms} ?terms .
-    ?termSet ${md.export} ?export .
-  `
-    .WHERE`
-      ?termSet a ${schema.DefinedTermSet}, ${meta.SharedDimension} .
-      ?termSet ?p ?o .
+interface GetSharedDimensions {
+  freetextQuery?: string
+  limit?: number
+  offset?: number
+}
 
-      MINUS { ?termSet ${md.export} ?o }
+export async function getSharedDimensions<C extends StreamClient | ParsingClient>(client: C, { freetextQuery = '', limit = 10, offset = 0 }: GetSharedDimensions = {}): Promise<C extends StreamClient ? Stream : Quad[]> {
+  const { constructQuery } = await shapeToQuery()
 
-      BIND ( IRI(CONCAT("${env.MANAGED_DIMENSIONS_BASE}", "dimension/_terms?dimension=", ENCODE_FOR_URI(STR(?termSet)))) as ?terms )
+  const shape = await loadShape('dimensions-query-shape')
 
-      OPTIONAL {
-        ?termSet a ${md.SharedDimension} .
-        BIND ( IRI(CONCAT("${env.MANAGED_DIMENSIONS_BASE}", "dimension/_export?dimension=", ENCODE_FOR_URI(STR(?termSet)))) as ?export )
-      }
-    `
+  const { MANAGED_DIMENSIONS_BASE } = env
+  const variables = new Map(Object.entries({
+    MANAGED_DIMENSIONS_BASE,
+    limit,
+    offset,
+    freetextQuery,
+    orderBy: schema.name,
+  }))
+  await rewriteTemplates(shape, variables)
+
+  return constructQuery(shape).execute(client) as any
 }
 
 interface GetSharedTerms {
@@ -44,10 +45,7 @@ interface GetSharedTerms {
 }
 
 export async function getSharedTerms<C extends StreamClient | ParsingClient>({ sharedDimensions, freetextQuery, validThrough, limit = 10, offset = 0 }: GetSharedTerms, client: C): Promise<C extends StreamClient ? Stream : Quad[]> {
-  const shape = await loadShape()
-  if (!isGraphPointer(shape)) {
-    throw new Error('Multiple shapes found')
-  }
+  const shape = await loadShape('terms-query-shape')
 
   shape.addOut(sh.targetNode, sharedDimensions)
 
@@ -79,13 +77,19 @@ export async function getSharedTerms<C extends StreamClient | ParsingClient>({ s
   }
 
   const { constructQuery } = await shapeToQuery()
-  return constructQuery(shape).execute(client.query) as any
+  return constructQuery(shape).execute(client) as any
 }
 
-async function loadShape() {
-  const dataset = await $rdf.dataset().import(fromFile(path.resolve(__dirname, '../shapes/terms-query-shape.ttl')))
+async function loadShape(shape: string) {
+  const dataset = await $rdf.dataset().import(fromFile(path.resolve(__dirname, `../shapes/${shape}.ttl`)))
 
-  return clownface({
+  const ptr = clownface({
     dataset,
   }).has(rdf.type, sh.NodeShape)
+
+  if (!isGraphPointer(ptr)) {
+    throw new Error('Multiple shapes found')
+  }
+
+  return ptr
 }
