@@ -52,7 +52,7 @@ ADD apis/core/hydra/*.ttl ./apis/core/hydra/
 ADD apis/shared-dimensions/hydra/*.ttl ./apis/shared-dimensions/hydra/
 ADD apis/shared-dimensions/lib/domain/shared-dimension/importShapes.ttl ./apis/shared-dimensions/lib/domain/shared-dimension/
 ADD apis/shared-dimensions/lib/store/shapes.ttl ./apis/shared-dimensions/lib/store/shapes.ttl
-ADD apis/shared-dimensions/lib/shapes/terms-query-shape.ttl ./apis/shared-dimensions/lib/shapes/terms-query-shape.ttl
+ADD apis/shared-dimensions/lib/shapes/*.ttl ./apis/shared-dimensions/lib/shapes/
 
 # for every new hydra api "foo" add
 #ADD apis/foo/hydra/*.ttl ./apis/foo/hydra/
