@@ -54,7 +54,15 @@ prefix md: <https://cube-creator.zazuko.com/shared-dimensions/vocab#>
     ] ;
   sh:property
     [
+      sh:path schema:alternateName ;
+    ] ;
+  sh:property
+    [
       sh:path rdf:type ;
+    ] ;
+  sh:property
+    [
+      sh:path schema:validThrough ;
     ] ;
   sh:property
     [

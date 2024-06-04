@@ -80,7 +80,7 @@ export default function ({ rdfTypeProperty = false }: { rdfTypeProperty?: boolea
       nodeKind: sh.IRI,
       [dash.editor.value]: dash.InstancesSelectEditor,
       [hydra.search.value]: iriTemplate({
-        template: 'dimension/_term-sets?{&q}',
+        template: 'dimension/_term-sets{?q}',
         mapping: {
           variable: 'q',
           property: hydra.freetextQuery,
