@@ -1,6 +1,6 @@
 import type { NamedNode, Quad } from '@rdfjs/types'
 import $rdf from 'rdf-ext'
-import clownface from 'clownface'
+import clownface, { GraphPointer } from 'clownface'
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 
 interface CollectionHandler {
@@ -11,7 +11,7 @@ interface CollectionHandler {
   collection: NamedNode
 }
 
-export function getCollection({ collection, view, memberQuads, memberType, collectionType }: CollectionHandler) {
+export function getCollection({ collection, view, memberQuads, memberType, collectionType }: CollectionHandler): GraphPointer<NamedNode> {
   const dataset = $rdf.dataset(memberQuads)
 
   const graph = clownface({ dataset })
@@ -28,5 +28,5 @@ export function getCollection({ collection, view, memberQuads, memberType, colle
       .addIn(hydra.view, collection)
   }
 
-  return graph
+  return graph.node(collection)
 }
