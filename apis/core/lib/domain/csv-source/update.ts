@@ -45,11 +45,15 @@ export async function createOrUpdateColumns(csvSource: CsvSource, getStorage: Ge
     const storage = getStorage(csvSource.associatedMedia)
     const fileStream = await storage.getStream(csvSource.associatedMedia)
     const head = await loadFileHeadString(fileStream, 500)
-    const { header, rows } = await parse(head, {
+    const { header, rows, headerTrimmed } = await parse(head, {
       bom: true,
       delimiter: csvSource.dialect.delimiter,
       quote: csvSource.dialect.quoteChar,
     })
+
+    if (headerTrimmed) {
+      csvSource.setTrimError()
+    }
 
     const sampleCol = sampleValues(header, rows)
 
