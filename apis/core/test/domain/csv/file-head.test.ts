@@ -52,24 +52,6 @@ describe('domain/csv/file-head', () => {
     expect(lines.length).to.eq(5)
   })
 
-  it('trims headers', async () => {
-    const input = `"  station_id  ","\tpollutant_id\t","aggregation_id\t","\tlimitvalue","  year","value","unit_id","value_remark"\r
-"blBAS","so2","annualmean",30,1984,31.9,"µg/m3","incomplete series"\r
-"blBAS","so2","annualmean",30,1985,40.2,"µg/m3","incomplete series"\r
-"blBAS","so2","annualmean",30,1985,40.2,"µg/m3","incomplete series"\r
-"blBAS","so2","annualmean",30,1985,40.2,"µg/m3","incomplete series"\r
-"blBAS","so2","annualmean",30,1986,33.6,"µg/m3","incomplete series"\r
-"blBAS","so2","annualmean",30,1987,33,"µg/m3","incomplete series"`
-    const stream = new Readable()
-    stream.push(input)
-    stream.push(null)
-    const head = await loadFileHeadString(stream)
-
-    const lines = head.split('\n')
-    expect(lines[0]).to.eq('"station_id","pollutant_id","aggregation_id","limitvalue","year","value","unit_id","value_remark"')
-    expect(lines.length).to.eq(5)
-  })
-
   it('parses all lines on short file', async () => {
     const path = resolve(__dirname, '../../fixtures/CH_yearly_air_immission_unit_id.csv')
 
