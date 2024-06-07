@@ -4878,9 +4878,9 @@
     xlsx "^0.18.5"
 
 "@zazuko/rdf-parser-csvw@^0.16", "@zazuko/rdf-parser-csvw@^0.16.3", "@zazuko/rdf-parser-csvw@^0.16.4":
-  version "0.16.4"
-  resolved "https://registry.yarnpkg.com/@zazuko/rdf-parser-csvw/-/rdf-parser-csvw-0.16.4.tgz#161e08779aded83be959c572413ba2f96981512f"
-  integrity sha512-z7dN8HpxMRtghXNHvxriDXa3TwVQHHdpwkJ9YM/swfUaTHPsjqkdWjbXkBa+yLq3wxCPSJIdXgw1Nc8PdjEZBw==
+  version "0.16.5"
+  resolved "https://registry.yarnpkg.com/@zazuko/rdf-parser-csvw/-/rdf-parser-csvw-0.16.5.tgz#36b2da42bfb19d3e6d3464531f842ede8b193816"
+  integrity sha512-vAF9rb7WxdMMheWZxkfXXqgtyx0foT1DJrh89jZkp+UPGRHO1nqogwju3ZfDUaS2jVFxr8fUqvBmmYhKzdncVQ==
   dependencies:
     "@rdfjs/data-model" "^2.0.2"
     "@rdfjs/dataset" "^2.0.2"
