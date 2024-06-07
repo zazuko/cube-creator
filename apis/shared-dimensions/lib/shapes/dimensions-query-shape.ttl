@@ -66,6 +66,7 @@ prefix md: <https://cube-creator.zazuko.com/shared-dimensions/vocab#>
     ] ;
   sh:property
     [
+      sh:deactivated true ;
       sh:path md:terms ;
       sh:values
         [
@@ -83,6 +84,7 @@ prefix md: <https://cube-creator.zazuko.com/shared-dimensions/vocab#>
     ] ;
   sh:property
     [
+      sh:deactivated true ;
       sh:path md:export ;
       sh:values
         [
