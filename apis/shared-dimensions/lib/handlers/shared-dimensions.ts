@@ -13,7 +13,7 @@ import { shaclValidate } from '../middleware/shacl'
 import { getSharedDimensions, getSharedTerms } from '../domain/shared-dimensions'
 import { create } from '../domain/shared-dimension'
 import { store } from '../store'
-import { parsingClient } from '../sparql'
+import { parsingClient, streamClient } from '../sparql'
 import env from '../env'
 import { rewrite, rewriteTerm } from '../rewrite'
 import { postImportedDimension } from './shared-dimension/import'
@@ -36,7 +36,7 @@ export const get = asyncMiddleware(async (req, res, next) => {
 
   const collection = getCollection({
     view: $rdf.namedNode(req.absoluteUrl()),
-    memberQuads: await getSharedDimensions(parsingClient, queryParams),
+    memberQuads: await getSharedDimensions(streamClient, queryParams),
     collectionType: md.SharedDimensions,
     memberType: schema.DefinedTermSet,
     collection: req.hydra.resource.term,
