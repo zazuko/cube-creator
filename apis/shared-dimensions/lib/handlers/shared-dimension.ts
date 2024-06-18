@@ -7,6 +7,7 @@ import { serializers } from '@rdfjs-elements/formats-pretty'
 import error from 'http-errors'
 import { md, meta } from '@cube-creator/core/namespace'
 import * as ns from '@tpluscode/rdf-ns-builders'
+import { oa } from '@tpluscode/rdf-ns-builders'
 import { createTerm, getExportedDimension } from '../domain/shared-dimension'
 import { store } from '../store'
 import { shaclValidate } from '../middleware/shacl'
@@ -18,6 +19,8 @@ export const post = protectedResource(shaclValidate, asyncMiddleware(async (req,
     termSet: clownface({ dataset: await req.hydra.resource.dataset() }).node(req.hydra.term),
     store: store(),
   })
+
+  term.addOut(oa.canonical, term)
 
   res.setHeader('Location', term.value)
   res.status(201)
