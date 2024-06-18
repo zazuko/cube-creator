@@ -41,7 +41,7 @@ With Class meta:SharedDimension {
             Expect Property schema:validFrom
             Expect Property schema:validThrough
             Expect Property oa:canonical {
-                Expect Id <https://ld.admin.ch/cube/technologies/node-js>
+                Expect Id <https://ld.admin.ch/cube/dimension/technologies/node-js>
             }
         }
 

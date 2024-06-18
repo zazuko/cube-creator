@@ -39,7 +39,7 @@ With Class schema:DefinedTerm {
             Expect Type schema:DefinedTerm
             Expect Property schema:name "Resource Description Framework"
             Expect Property oa:canonical {
-                Expect Id <https://ld.admin.ch/cube/technologies/rdf>
+                Expect Id <https://ld.admin.ch/cube/dimension/technologies/rdf>
             }
         }
     }
