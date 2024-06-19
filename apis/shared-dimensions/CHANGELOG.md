@@ -1,5 +1,16 @@
 # @cube-creator/shared-dimensions-api
 
+## 3.1.0
+
+### Minor Changes
+
+- 88f2cbb: Improve loading speed of Shared Dimensions in UI (closes #1509)
+- 88f2cbb: Shared dimensions are now searchable and paginated in search results on dimension mapping and hierarchy screens (re #1509, closes #1481)
+
+### Patch Changes
+
+- 78de1cd: Correct links to shared dimension terms (fixes #1498)
+
 ## 3.0.4
 
 ### Patch Changes
