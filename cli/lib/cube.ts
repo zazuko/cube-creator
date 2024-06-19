@@ -1,4 +1,4 @@
-import type { DatasetCore, Quad, Term } from '@rdfjs/types'
+import type { DataFactory, DatasetCore, Quad, Term } from '@rdfjs/types'
 import $rdf from '@zazuko/env'
 import { cc } from '@cube-creator/core/namespace'
 import type { GraphPointer } from 'clownface'
@@ -26,6 +26,11 @@ export const getObservationSetId = ({ dataset }: { dataset: DatasetCore }) => {
 
 export function getCubeId({ ptr }: { ptr: GraphPointer }) {
   return ptr.out(cc.cube).term || ''
+}
+
+export function getCubeShapeId(this: { rdf: DataFactory }, { ptr }: { ptr: GraphPointer }) {
+  const cubeId = getCubeId({ ptr })
+  return this.rdf.namedNode(`${typeof cubeId === 'string' ? cubeId : cubeId.value}/shape/`)
 }
 
 export function expirePreviousVersions(this: Pick<Context, 'variables' | 'logger'>) {

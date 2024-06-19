@@ -68,7 +68,11 @@ async function validateNewFile(csvSource: CsvSource, media: MediaObject, storage
   }
 
   // Check header
-  const { header } = await parse(head, parserOptions)
+  const { header, headerTrimmed } = await parse(head, parserOptions)
+
+  if (headerTrimmed) {
+    csvSource.setTrimError()
+  }
 
   const missingColumns = csvSource.columns.filter((column) => !header.includes(column.name)).map((column) => column.name)
   if (missingColumns.length > 0) {

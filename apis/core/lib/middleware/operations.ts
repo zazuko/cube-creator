@@ -1,11 +1,10 @@
 import { RequestHandler } from 'express'
-import type { GraphPointer } from 'clownface'
 import $rdf from '@zazuko/env'
 import asyncMiddleware from 'middleware-async'
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 import { log } from '../log.js'
 
-function logRemovedOperation(operation: GraphPointer) {
+function logRemovedOperation(operation: any) {
   const method = operation.out(hydra.method).value
   const types = operation.out(rdf.type).values
   const clas = operation.in(hydra.supportedOperation).values

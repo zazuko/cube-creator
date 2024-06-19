@@ -12,7 +12,7 @@
     "@rdfine/schema": "^0.8.5",
     "@rdfine/shacl": "^0.10.5",
     "@tpluscode/rdfine": "^0.7.9",
-    "@zazuko/env": "^2.1.1",
+    "barnard59-env": "^1.2.6",
     "alcaeus": "^3.0.0"
   }
 }

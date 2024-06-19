@@ -7,8 +7,6 @@ import { lindasQueryTemplate } from '../lib/query.js'
 
 const sou = $rdf.namespace('http://qudt.org/vocab/sou/')
 
-const sharedDimensionCollection = $rdf.namedNode('dimension/_term-sets')
-
 const unitsQuery = sparql`
 CONSTRUCT
   {
@@ -471,7 +469,14 @@ ${shape('dimension/shared-mapping-import')} {
       ${sh.path} ${cc.sharedDimension} ;
       ${sh.name} "Shared dimension" ;
       ${dash.editor} ${dash.AutoCompleteEditor} ;
-      ${hydra.collection} ${sharedDimensionCollection} ;
+      ${hydra.search} [
+        ${hydra.template} "dimension/_term-sets?{&q}" ;
+        ${hydra.mapping} [
+          ${hydra.variable} "q" ;
+          ${hydra.property} ${hydra.freetextQuery} ;
+          ${sh.minLength} 0 ;
+        ];
+      ] ;
       ${sh1.orderBy} ( ${schema.name} ) ;
       ${sh.nodeKind} ${sh.IRI} ;
       ${sh.order} 10 ;
@@ -519,7 +524,14 @@ ${shape('dimension/shared-mapping')} {
       ${sh.path} ${cc.sharedDimension} ;
       ${sh.name} "Shared dimensions" ;
       ${dash.editor} ${dash.AutoCompleteEditor} ;
-      ${hydra.collection} ${sharedDimensionCollection} ;
+      ${hydra.search} [
+        ${hydra.template} "dimension/_term-sets?{&q}" ;
+        ${hydra.mapping} [
+          ${hydra.variable} "q" ;
+          ${hydra.property} ${hydra.freetextQuery} ;
+          ${sh.minLength} 0 ;
+        ];
+      ] ;
       ${sh1.orderBy} ( ${schema.name} ) ;
       ${sh.nodeKind} ${sh.IRI} ;
       ${sh.order} 10 ;

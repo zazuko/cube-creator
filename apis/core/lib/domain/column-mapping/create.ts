@@ -80,12 +80,15 @@ async function createLiteralColumnMapping({ targetProperty, table, source, resou
     throw new NotFoundError(columnId)
   }
 
+  const language = resource.out(cc.language).value
+  const datatype = language ? rdf.langString : resource.out(cc.datatype).term as NamedNode
+
   return table.addLiteralColumnMapping({
     store,
     sourceColumn: column,
     targetProperty,
-    datatype: resource.out(cc.datatype).term as NamedNode,
-    language: resource.out(cc.language).value,
+    datatype,
+    language,
     defaultValue: resource.out(cc.defaultValue).term,
     dimensionType: resource.out(cc.dimensionType).term,
   })

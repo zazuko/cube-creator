@@ -27,7 +27,6 @@ With Class api:Table {
                 cc:sourceColumn <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/year> ;
                 cc:targetProperty "dimension/year-built" ;
                 cc:datatype xsd:date ;
-                cc:language "en" ;
                 cc:defaultValue "2000-01-01" .
             ```
         } => {
@@ -42,7 +41,6 @@ With Class api:Table {
             Expect Property cc:datatype {
                 Expect Id xsd:date
             }
-            Expect Property cc:language "en"
             Expect Property cc:defaultValue "2000-01-01"
         }
 
@@ -58,7 +56,6 @@ With Class api:Table {
                 cc:sourceColumn <https://cube-creator.lndo.site/cube-project/ubd/csv-source/ubd/column/year> ;
                 cc:targetProperty "dimension/year-built" ;
                 cc:datatype xsd:date ;
-                cc:language "en" ;
                 cc:defaultValue "2000-01-01" .
             ```
         } => {

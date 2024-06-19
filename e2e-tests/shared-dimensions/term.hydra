@@ -4,6 +4,7 @@ PREFIX schema: <http://schema.org/>
 PREFIX qudt: <http://qudt.org/schema/qudt/>
 PREFIX meta: <https://cube.link/meta/>
 PREFIX sh: <http://www.w3.org/ns/shacl#>
+PREFIX oa: <http://www.w3.org/ns/oa#>
 
 ENTRYPOINT "dimension/technologies/rdf"
 
@@ -37,6 +38,9 @@ With Class schema:DefinedTerm {
 
             Expect Type schema:DefinedTerm
             Expect Property schema:name "Resource Description Framework"
+            Expect Property oa:canonical {
+                Expect Id <https://ld.admin.ch/cube/dimension/technologies/rdf>
+            }
         }
     }
 }

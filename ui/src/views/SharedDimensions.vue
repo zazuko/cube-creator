@@ -36,7 +36,7 @@
           <div class="is-flex-grow-1 is-flex is-justify-content-space-between is-flex-direction-column">
             <div class="has-text-weight-bold">
               <term-with-language :values="dimension.names" :selected-language="selectedLanguage">
-                <i>No translation for {{ selectedLanguage }}</i>
+                <i> &lt;{{ dimension.id.value }}&gt; </i> <small>(No translation for {{ selectedLanguage }})</small>
               </term-with-language>
             </div>
             <p class="abbreviations is-size-7">

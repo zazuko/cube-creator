@@ -4,6 +4,14 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 
 <#Main> a :Pipeline ;
+  :variables
+    [
+      :variable
+        [
+          :name "executionUrl" ;
+          :required false
+        ] ;
+    ] ;
   :steps [ :stepList ( <#loadMetadata> <#doTransform> <#validate> <#countOutputQuads> <#StreamOutput> ) ] .
 
 <#StreamOutput>
@@ -157,7 +165,7 @@
 
 <#toObservation> a :Step;
   code:implementedBy [ a code:EcmaScriptModule;
-                       code:link <node:barnard59-rdf/cube.js#toObservation>
+                       code:link <node:barnard59-cube/cube.js#toObservation>
                      ] ;
   code:arguments [
                       code:name "observations";
@@ -172,8 +180,8 @@
                        ] .
 
 <#toCubeShape> a :Step;
-  code:implementedBy [ a code:EcmaScript;
-  code:link <file:../lib/toCubeShape>
+  code:implementedBy [ a code:EcmaScriptModule;
+  code:link <node:barnard59-cube/cube.js#buildCubeShape>
                      ];
   code:arguments [
                    code:name "excludeValuesOf";
@@ -185,6 +193,9 @@
                  ] , [
                    code:name "cube" ;
                    code:value [ a code:EcmaScript ; code:link <file:../lib/cube#getCubeId> ]
+                 ]  , [
+                   code:name "shape" ;
+                   code:value [ a code:EcmaScript ; code:link <file:../lib/cube#getCubeShapeId> ]
                  ] .
 
 <#flatten> a :Step;

@@ -32,7 +32,7 @@ export default class implements SharedDimensionsStore {
       focusNode: term,
     }).FROM(this.graph)
 
-    const quads = await query.execute(this.client.query, {
+    const quads = await query.execute(this.client, {
       operation: 'postDirect',
     })
     return $rdf.clownface({

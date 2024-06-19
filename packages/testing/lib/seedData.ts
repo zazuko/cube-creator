@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import type { Readable } from 'node:stream'
 import type { DatasetCore, Stream } from '@rdfjs/types'
 import ParsingClient from 'sparql-http-client/ParsingClient.js'
 import StreamClient from 'sparql-http-client/StreamClient.js'
@@ -43,7 +44,7 @@ async function removeRootResources(client: ParsingClient, dataset: DatasetCore) 
 
 const insertTestData = async (pathName: string, { parsingClient, streamClient }: { parsingClient: ParsingClient; streamClient: StreamClient }) => {
   const file = fs.createReadStream(path.resolve(process.cwd(), pathName))
-  const stream = formats.parsers.import('application/trig', file) as unknown as Stream
+  const stream = formats.parsers.import('application/trig', file) as unknown as Stream & Readable
 
   if (stream) {
     const ds = await $rdf.dataset().import(stream)

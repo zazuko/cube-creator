@@ -134,7 +134,7 @@ const excludedProps = [
 export async function getExportedDimension({ resource, store, client = streamClient }: GetExportedDimension): Promise<ExportedDimension> {
   const dimension = await store.load(resource)
 
-  const quads = await DESCRIBE`${resource} ?term`
+  const quads = DESCRIBE`${resource} ?term`
     .FROM(store.graph)
     .WHERE`
       ?term ${schema.inDefinedTermSet} ${resource}

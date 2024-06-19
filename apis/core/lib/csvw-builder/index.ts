@@ -1,4 +1,4 @@
-import { Term } from 'rdf-js'
+import type { Term } from '@rdfjs/types'
 import type * as Csvw from '@rdfine/csvw'
 import {
   ColumnMapping,

@@ -15,6 +15,7 @@ import { errorMappers } from '@cube-creator/api-errors'
 import $rdf from '@cube-creator/env'
 import Environment from '@zazuko/env/Environment.js'
 import Fs from '@zazuko/rdf-utils-fs/Factory.js'
+import asyncMiddleware from 'middleware-async'
 import { error, log } from './lib/log.js'
 import authentication from './lib/auth.js'
 import { bootstrap } from './bootstrap/index.js'
@@ -25,7 +26,6 @@ import Loader from './lib/Loader.js'
 import * as s3 from './lib/storage/s3.js'
 import pkg from './package.json' assert { type: 'json' }
 import './lib/domain/index.js'
-import asyncMiddleware from 'middleware-async'
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname)
 

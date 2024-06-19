@@ -14,8 +14,9 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimensions @SPAR
   describe('getSharedDimensions', () => {
     it('returns from all graphs', async () => {
       // when
-      const dataset = await $rdf.dataset()
-        .import(await getSharedDimensions().execute(mdClients.streamClient))
+      const dataset = $rdf.dataset([
+        ...await getSharedDimensions(mdClients.streamClient),
+      ])
 
       // then
       const termSets = [...dataset.match(null, rdf.type, schema.DefinedTermSet)].map(({ subject }) => subject)
@@ -23,6 +24,22 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimensions @SPAR
         $rdf.namedNode('http://example.com/dimension/colors'),
         $rdf.namedNode('http://example.com/dimension/countries'),
         $rdf.namedNode('http://example.com/dimension/chemicals'),
+      ])
+    })
+
+    it('returns filtered by name', async () => {
+      // when
+      const dataset = $rdf.dataset([
+        ...await getSharedDimensions(mdClients.streamClient, {
+          freetextQuery: 'colors',
+        }),
+      ])
+
+      // then
+      const termSets = [...dataset.match(null, rdf.type, schema.DefinedTermSet)].map(({ subject }) => subject)
+      expect(termSets).to.have.length(1)
+      expect(termSets).to.deep.contain.members([
+        $rdf.namedNode('http://example.com/dimension/colors'),
       ])
     })
   })

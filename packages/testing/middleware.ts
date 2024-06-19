@@ -21,7 +21,7 @@ export function appMock(prepare?: (hydra: HydraBox) => void): express.RequestHan
     await rdfHandler.attach(req, res)
 
     const hydra: RecursivePartial<HydraBox> = {
-      operation: $rdf.clownface({ dataset: $rdf.dataset() }).blankNode(),
+      operation: $rdf.clownface({ dataset: $rdf.dataset() }).blankNode() as any,
       api: {
         dataset: $rdf.dataset(),
         graph: $rdf.namedNode('foo'),

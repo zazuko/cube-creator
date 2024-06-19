@@ -26,11 +26,17 @@ export default defineComponent({
   computed: {
     value (): string | undefined {
       if (Array.isArray(this.values)) {
-        const term =
+        let term =
           this.values?.find(({ language }) => language === this.selectedLanguage) ||
           this.values?.find(({ language }) => !language)
+        if (term) return term.value
 
-        return term?.value
+        for (const lang of displayLanguage) {
+          term = this.values?.find(({ language }) => language === lang)
+          if (term) return `${term.value} (${term.language})`
+        }
+
+        return undefined
       }
 
       const term = this.values?.filter(filter.taggedLiteral([

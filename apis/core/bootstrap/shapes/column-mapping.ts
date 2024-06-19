@@ -67,6 +67,16 @@ ${literalShapeId} {
       ${sh.maxCount} 1 ;
       ${sh.order} 60 ;
     ] ;
+
+    ${sh.message} "Errors" ;
+    ${sh.node} [
+      ${sh.message} "Either set Language or Data type, not both" ;
+      ${dash.hidden} true ;
+      ${sh.or} (
+        [ ${sh.path} ${cc.datatype} ; ${sh.hasValue} ${xsd.string} ]
+        [ ${sh.path} [ ${sh.alternativePath} (${cc.language} ${cc.datatype})] ; ${sh.maxCount} 1 ]
+      )
+    ]
   .
 
   ${datatypes.map(([id, labels]) => labels.map(label => turtle`${id} ${rdfs.label} "${label}" .`))}

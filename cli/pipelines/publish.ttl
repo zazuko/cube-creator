@@ -4,17 +4,35 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 
 <#Main> a :Pipeline ;
-        :steps
-          [
-            :stepList
-              (
-                <#concatStreams>
-                <#removeHydraTriples>
-                <#uniqueBnodes>
-                <#countOutputQuads>
-                <#StreamOutput>
-              ) ;
-          ] .
+  :variables
+    [
+      :variable
+        [
+          :name "lastTransformed" ;
+          :required false
+        ] ;
+      :variable
+        [
+          :name "bnodeUuid" ;
+          :required false
+        ] ;
+      :variable
+        [
+          :name "executionUrl" ;
+          :required false
+        ] ;
+    ] ;
+  :steps
+    [
+      :stepList
+        (
+          <#concatStreams>
+          <#removeHydraTriples>
+          <#uniqueBnodes>
+          <#countOutputQuads>
+          <#StreamOutput>
+        ) ;
+    ] .
 
 <#concatStreams>
   a :Step ;
@@ -57,7 +75,7 @@
   code:implementedBy
     [
       a code:EcmaScriptModule ;
-      code:link <node:barnard59-validate-shacl/validate.js#shacl>
+      code:link <node:barnard59-shacl/validate.js#shacl>
     ] ;
   code:arguments
     [ code:name "shape" ; code:value <#concatShapes> ] ,
@@ -129,24 +147,24 @@
     ] .
 
 <#shapeURLs> a :Step   ;
-    code:implementedBy [ 
+    code:implementedBy [
       a code:EcmaScriptModule  ;
-      code:link <node:stream#Readable.from> ;     
+      code:link <node:stream#Readable.from> ;
     ] ;
      code:arguments (
       """[
-        'https://cube.link/v0.1.0/shape/standalone-constraint-constraint',
-        // 'https://cube.link/v0.1.0/shape/datacatalog-constraint',        
-      ]"""^^code:EcmaScript  
+        'https://cube.link/v0.2.1/shape/standalone-constraint-constraint',
+        // 'https://cube.link/v0.1.0/shape/datacatalog-constraint',
+      ]"""^^code:EcmaScript
      )
     .
 
 <#getShapes>  a :Step ;
-    code:implementedBy [ 
+    code:implementedBy [
       a code:EcmaScriptModule  ;
-      code:link <node:barnard59-base/forEach.js#default> ;     
+      code:link <node:barnard59-base/forEach.js#default> ;
     ] ;
-    code:arguments ( <#getShape> "shapeURL" ) 
+    code:arguments ( <#getShape> "shapeURL" )
   .
 
 <#getShape> a :Pipeline , :ReadableObjectMode;
@@ -156,7 +174,7 @@
         (
           <#fetch>
           <#parse>
-        ) 
+        )
     ] .
 
 <#fetch>  a :Step ;
@@ -177,7 +195,7 @@
     [
       code:link <node:barnard59-formats/n3.js#parse> ;
       a code:EcmaScriptModule ;
-    ] 
+    ]
   .
 
 

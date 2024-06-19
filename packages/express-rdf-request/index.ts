@@ -10,7 +10,7 @@ declare module 'express-serve-static-core' {
   }
 }
 
-declare module 'rdf-js' {
+declare module '@rdfjs/types' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface Stream extends AsyncIterable<Quad> {}
 }
@@ -39,6 +39,7 @@ export function resource(req: express.Request, res: unknown, next: express.NextF
       const expectedTypes = req.hydra.operation
         .out(hydra.expects)
         .has(rdf.type, hydra.Class)
+        .terms
 
       pointer.addOut(rdf.type, expectedTypes)
     }

@@ -1,15 +1,17 @@
 import onetime from 'onetime'
 import { md } from '@cube-creator/core/namespace'
-import type { GraphPointer } from 'clownface'
+import type { AnyPointer, GraphPointer } from 'clownface'
 import { isGraphPointer } from 'is-graph-pointer'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 import ConstraintComponent, { Parameters, PropertyShape } from '@hydrofoil/shape-to-query/model/constraint/ConstraintComponent.js'
+import evalTemplateLiteral from 'rdf-loader-code/evalTemplateLiteral.js'
 import { sparql } from '@tpluscode/sparql-builder'
-import $rdf from '@zazuko/env'
-import { constructQuery, deleteQuery } from '@hydrofoil/shape-to-query'
+import $rdf from '@cube-creator/env'
+import { constructQuery, deleteQuery, s2q } from '@hydrofoil/shape-to-query'
 import { constraintComponents } from '@hydrofoil/shape-to-query/model/constraint/index.js'
 import { PatternConstraintComponent } from '@hydrofoil/shape-to-query/model/constraint/pattern.js'
 import { SparqlTemplateResult } from '@tpluscode/rdf-string'
+import type { Literal } from '@rdfjs/types'
 import env from './env.js'
 
 /*
@@ -17,13 +19,53 @@ import env from './env.js'
  using this ugly TS hack
  */
 
-export default async function shapeToQuery() {
+export default async function shapeToQuery(): Promise<Pick<typeof import('@hydrofoil/shape-to-query'), 'constructQuery' | 'deleteQuery' | 's2q'>> {
   await setup()
 
   return {
     constructQuery,
     deleteQuery,
+    s2q,
   }
+}
+
+export async function rewriteTemplates(shape: AnyPointer, variables: Map<string, unknown>) {
+  const { s2q } = await shapeToQuery()
+
+  shape.any().has(s2q('template' as any))
+    .forEach(templateNode => {
+      const template = templateNode.out(s2q('template' as any))
+      if (!isGraphPointer(template)) {
+        throw new Error('Template not found')
+      }
+
+      const value = evalTemplateLiteral(template.value, { variables })
+      const literalOption = (template.term as Literal).language || (template.term as Literal).datatype
+
+      ;[...shape.dataset.match(null, null, templateNode.term)].forEach(quad => {
+        shape.dataset.delete(quad)
+        shape.dataset.add($rdf.quad(quad.subject, quad.predicate, $rdf.literal(value, literalOption), quad.graph))
+      })
+
+      templateNode.deleteOut()
+    })
+
+  shape.any().has(s2q('variable' as any))
+    .forEach(templateNode => {
+      const variableName = templateNode.out(s2q('variable' as any)).value
+      if (!variableName) {
+        return
+      }
+
+      const value = variables.get(variableName) as any
+
+      ;[...shape.dataset.match(null, null, templateNode.term)].forEach(quad => {
+        shape.dataset.delete(quad)
+        shape.dataset.add($rdf.quad(quad.subject, quad.predicate, value, quad.graph))
+      })
+
+      templateNode.deleteOut()
+    })
 }
 
 const setup = onetime(async () => {

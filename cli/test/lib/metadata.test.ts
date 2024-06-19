@@ -31,7 +31,7 @@ describe('@cube-creator/cli/lib/metadata @SPARQL', function () {
       ['timestamp', toRdf(new Date())],
       ['metadata', $rdf.dataset()],
     ])
-    context = {
+    context = <any>{
       variables,
       logger,
     } as any

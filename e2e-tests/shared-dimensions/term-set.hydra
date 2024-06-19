@@ -4,6 +4,7 @@ PREFIX schema: <http://schema.org/>
 PREFIX qudt: <http://qudt.org/schema/qudt/>
 PREFIX meta: <https://cube.link/meta/>
 PREFIX sh: <http://www.w3.org/ns/shacl#>
+PREFIX oa: <http://www.w3.org/ns/oa#>
 
 ENTRYPOINT "dimension/technologies"
 
@@ -39,6 +40,9 @@ With Class meta:SharedDimension {
             Expect Property schema:inDefinedTermSet
             Expect Property schema:validFrom
             Expect Property schema:validThrough
+            Expect Property oa:canonical {
+                Expect Id <https://ld.admin.ch/cube/dimension/technologies/node-js>
+            }
         }
 
         Invoke {

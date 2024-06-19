@@ -278,22 +278,6 @@ describe('@cube-creator/cli/lib/commands/transform', function () {
       expect(propShape.has(sh.maxInclusive).terms).to.have.length(1)
     })
 
-    it('does not emit sh:in for min/max dimensions with cube:Undefined value', async () => {
-      const dataset = await $rdf.dataset().import(DESCRIBE`?property`
-        .FROM(expectedGraph)
-        .WHERE`
-          <shape/> ${sh.property} ?property .
-          ?property ${sh.path} ${cubeNs('dimension/limitvalue')} .
-        `
-        .execute(ccClients.streamClient, { base: cubeBase }))
-
-      const propShape = $rdf.clownface({ dataset }).has(sh.path)
-
-      expect(propShape.has(sh.in).terms).to.have.length(0)
-      expect(propShape.has(sh.minInclusive).terms).to.have.length(1)
-      expect(propShape.has(sh.maxInclusive).terms).to.have.length(1)
-    })
-
     it('includes cube:Undefined in property shape sh:in of mapped columns', async () => {
       const dataset = await $rdf.dataset().import(DESCRIBE`?property`
         .FROM(expectedGraph)

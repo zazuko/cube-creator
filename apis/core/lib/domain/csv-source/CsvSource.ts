@@ -21,6 +21,7 @@ interface ApiCsvSource {
    */
   setDialect(dialect: Partial<Csvw.Dialect>): boolean
   appendOrUpdateColumn(params: CreateOrUpdateColumn): CsvColumn.CsvColumn
+  setTrimError(): void
 }
 
 declare module '@cube-creator/model' {
@@ -81,6 +82,10 @@ export default function Mixin<Base extends Constructor<Omit<CsvSource, keyof Api
       }
 
       return column
+    }
+
+    setTrimError() {
+      this.errorMessages.push('Some column names had leading or trailing whitespace. They were trimmed. Please adjust the CSV if that was intentional.')
     }
   }
 

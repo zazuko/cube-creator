@@ -306,6 +306,17 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
       })
     })
 
+    it('adds published date to published cube', async function () {
+      expect(cubePointer.namedNode(targetCube())).to.matchShape({
+        property: [{
+          path: schema.datePublished,
+          datatype: xsd.date,
+          minCount: 1,
+          maxCount: 1,
+        }],
+      })
+    })
+
     it('adds project identifier to dataset metadata', async function () {
       expect(cubePointer.namedNode(targetCube())).to.matchShape({
         property: [{

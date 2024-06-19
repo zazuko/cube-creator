@@ -254,7 +254,14 @@ const properties: Initializer<PropertyShape>[] = [{
         name: 'Shared dimension',
         path: sh.class,
         [dash.editor.value]: dash.AutoCompleteEditor,
-        [hydra.collection.value]: $rdf.namedNode('/dimension/_term-sets'),
+        [hydra.search.value]: $rdf.rdfine.hydra.IriTemplate({
+          template: '/dimension/_term-sets{?q}',
+          mapping: {
+            variable: 'q',
+            property: hydra.freetextQuery,
+            [sh.minLength.value]: 0,
+          },
+        }),
         nodeKind: sh.IRI,
         minCount: 1,
         maxCount: 1,

@@ -2,7 +2,7 @@
   "compilerOptions": {
     "rootDir": ".",
     "target": "ES2020",
-    "module": "ES2020",
+    "module": "ESNext",
     "moduleResolution": "node",
     "esModuleInterop": true,
     "strict": true,
@@ -15,8 +15,8 @@
     "useDefineForClassFields": false,
     "typeRoots": ["./typings", "./node_modules/@types"],
     "allowJs": true,
-    "skipLibCheck": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "skipLibCheck": true
   },
   "include": [
     "packages",
