@@ -23,7 +23,7 @@ export interface ShouldRewrite {
 const defaultShouldRewrite: ShouldRewrite = ({ predicate }) => {
   if (predicate.equals(oa.canonical)) {
     return {
-      subject: false,
+      object: false,
     }
   }
 
