@@ -11,7 +11,7 @@ import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import { HydraResponse } from 'alcaeus'
 import { DefaultCsvwLiteral } from '@cube-creator/core/mapping'
 import through2 from 'through2'
-import { CCEnv } from '@cube-creator/env'
+import type { Environment } from 'barnard59-env'
 import map, { MapCallback } from 'barnard59-base/map.js'
 
 const undef = $rdf.literal('', cube.Undefined)
@@ -50,7 +50,7 @@ async function loadMetadata(jobUri: string, Hydra: HydraClient) {
   return dimensionMetadataResource.representation.root
 }
 
-export async function loadDimensionMapping(mappingUri: string, env: CCEnv) {
+export async function loadDimensionMapping(mappingUri: string, env: Environment) {
   const mappingResource = await load<Dictionary>(mappingUri, env.hydra, {
     Prefer: 'return=canonical, only-mapped',
   })
@@ -61,7 +61,7 @@ export async function loadDimensionMapping(mappingUri: string, env: CCEnv) {
   return mappingResource.representation.root?.pointer
 }
 
-export async function mapDimensions(this: Context<CCEnv>) {
+export async function mapDimensions(this: Context) {
   const mappingCache = $rdf.termMap<Term, MultiPointer | null>()
   const jobUri = this.variables.get('jobUri')
   const dimensionMetadataCollection = await loadMetadata(jobUri, this.env.hydra)

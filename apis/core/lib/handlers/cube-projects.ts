@@ -7,8 +7,6 @@ import { cc, cube, meta } from '@cube-creator/core/namespace'
 import * as ns from '@tpluscode/rdf-ns-builders'
 import cors from 'cors'
 import { isMultipart } from '@cube-creator/express/multipart'
-import type { DatasetCore, NamedNode } from '@rdfjs/types'
-import clownface from 'clownface'
 import { shaclValidate } from '../middleware/shacl.js'
 import { createProject } from '../domain/cube-projects/create.js'
 import { updateProject } from '../domain/cube-projects/update.js'
@@ -30,9 +28,8 @@ const postDirect = protectedResource(
       throw new Error('User is not defined')
     }
 
-    const pointer: { term: NamedNode; dataset: DatasetCore } = await req.hydra.resource.clownface()
     const { project: { pointer: project }, job } = await createProject({
-      projectsCollection: clownface(pointer),
+      projectsCollection: await req.hydra.resource.clownface(),
       resource: await req.resource(),
       user,
       store: req.resourceStore(),

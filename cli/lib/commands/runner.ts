@@ -3,7 +3,9 @@ import $rdf from '@cube-creator/env'
 import { fromFile } from '@zazuko/rdf-utils-fs'
 import { schema, xsd } from '@tpluscode/rdf-ns-builders'
 import type { VariableMap } from 'barnard59-core'
+import b59Env from 'barnard59-env'
 import { cc } from '@cube-creator/core/namespace'
+import Environment from '@zazuko/env/Environment.js'
 import { setupAuthentication } from '../auth.js'
 import { updateJobStatus } from '../job.js'
 import { logger } from '../log.js'
@@ -97,10 +99,12 @@ export function create<TOptions extends RunOptions>({ pipelineSources, prepare, 
     await prepare?.(command, variables)
 
     const { default: Runner } = await import('barnard59/runner.js')
+
+    const env = new Environment($rdf, { parent: b59Env })
     const run = await Runner($rdf.clownface({
       dataset,
       term: pipelines.Entrypoint,
-    }), $rdf, {
+    }), env, {
       basePath: path.resolve(basePath, 'pipelines'),
       outputStream: process.stdout,
       variables,

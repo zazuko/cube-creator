@@ -13,6 +13,6 @@
     "@rdfine/shacl": "^0.10.5",
     "@tpluscode/rdfine": "^0.7.9",
     "@zazuko/env": "^2.1.1",
-    "alcaeus": "^3.0.0"
+    "alcaeus": "^3.0.1"
   }
 }

@@ -1,7 +1,7 @@
 import type { Quad } from '@rdfjs/types'
 import { dcterms, sd } from '@tpluscode/rdf-ns-builders'
 import { asyncMiddleware } from 'middleware-async'
-import $rdf from '@zazuko/env'
+import $rdf from '@zazuko/env-node'
 import env from '@cube-creator/core/env/node'
 import { meta } from '@cube-creator/core/namespace'
 import { ShouldRewrite } from '../middleware/canonicalRewrite.js'

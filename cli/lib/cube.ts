@@ -10,7 +10,6 @@ import { Dataset, PublishJob } from '@cube-creator/model'
 import StreamClient from 'sparql-http-client/StreamClient.js'
 import { Draft } from '@cube-creator/model/Cube'
 import { toRdf } from 'rdf-literal'
-import { CCEnv } from '@cube-creator/env'
 import { loadDataset } from './metadata.js'
 import { tracer } from './otel/tracer.js'
 
@@ -70,7 +69,7 @@ export function expirePreviousVersions(this: Pick<Context, 'variables' | 'logger
     .execute(client)
 }
 
-export async function injectRevision(this: Pick<Context<CCEnv>, 'variables' | 'logger' | 'env'>, jobUri?: string) {
+export async function injectRevision(this: Pick<Context, 'variables' | 'logger' | 'env'>, jobUri?: string) {
   let cubeNamespace = this.variables.get('namespace')
   const revision = this.variables.get('revision')
   const metadata = this.variables.get('metadata')

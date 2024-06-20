@@ -4,7 +4,7 @@ import type { ResourceLoader } from '@kopflos-cms/core'
 import { INSERT } from '@tpluscode/sparql-builder'
 import { mdClients } from '@cube-creator/testing/lib'
 import { hydra, schema, sh } from '@tpluscode/rdf-ns-builders'
-import $rdf from '@zazuko/env'
+import $rdf from '@zazuko/env-node'
 import Loader from '../../lib/loader.js'
 
 const ex = $rdf.namespace('http://example.com/')

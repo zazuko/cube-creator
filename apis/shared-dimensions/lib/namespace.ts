@@ -1,4 +1,4 @@
-import $rdf from '@zazuko/env'
+import $rdf from '@zazuko/env-node'
 import env from './env.js'
 
 type Shapes = 'shape/shared-dimension-create'

@@ -1,4 +1,4 @@
-import $rdf from '@zazuko/env'
+import $rdf from '@zazuko/env-node'
 import { rdf, sh } from '@tpluscode/rdf-ns-builders'
 import { shape } from '../lib/namespace.js'
 

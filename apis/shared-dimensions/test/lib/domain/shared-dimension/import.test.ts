@@ -1,7 +1,7 @@
 import { describe, beforeEach, it } from 'mocha'
 import { expect } from 'chai'
 import sinon from 'sinon'
-import $rdf from '@zazuko/env'
+import $rdf from '@zazuko/env-node'
 import StreamClient from 'sparql-http-client'
 import type { GraphPointer } from 'clownface'
 import { Files } from '@cube-creator/express/multipart'

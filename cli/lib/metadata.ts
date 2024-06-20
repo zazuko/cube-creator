@@ -9,11 +9,10 @@ import { Published } from '@cube-creator/model/Cube'
 import { CONSTRUCT, sparql } from '@tpluscode/sparql-builder'
 import StreamClient from 'sparql-http-client/StreamClient.js'
 import { fromRdf, toRdf } from 'rdf-literal'
-import { CCEnv } from '@cube-creator/env'
 import { tracer } from './otel/tracer.js'
 import { loadProject } from './project.js'
 
-export async function loadDataset(jobUri: string, $rdf: Context<CCEnv>['env']) {
+export async function loadDataset(jobUri: string, $rdf: Context['env']) {
   const jobResource = await $rdf.hydra.loadResource<PublishJob>(jobUri)
   const job = jobResource.representation?.root
   if (!job) {
@@ -164,7 +163,7 @@ function annotateSharedDimensions({ project }: QueryParams) {
   `
 }
 
-export async function loadCubeMetadata(this: Context<CCEnv>, { jobUri, endpoint, user, password }: Params) {
+export async function loadCubeMetadata(this: Context, { jobUri, endpoint, user, password }: Params) {
   const baseCube = this.env.namedNode(this.variables.get('namespace'))
   const revision = toRdf(this.variables.get('revision'))
   const cubeIdentifier = this.variables.get('cubeIdentifier')
@@ -274,7 +273,7 @@ export async function loadCubeMetadata(this: Context<CCEnv>, { jobUri, endpoint,
   })
 }
 
-export async function injectObservedBy(this: Context<CCEnv>, jobUri: string) {
+export async function injectObservedBy(this: Context, jobUri: string) {
   const { env: $rdf } = this
   const { maintainer } = await loadDataset(jobUri, $rdf)
 

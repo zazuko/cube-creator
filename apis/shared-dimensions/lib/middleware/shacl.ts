@@ -1,5 +1,5 @@
 import { shaclMiddleware } from 'hydra-box-middleware-shacl'
-import $rdf from '@zazuko/env'
+import $rdf from '@zazuko/env-node'
 import shapes from '../shapes/index.js'
 import env from '../env.js'
 

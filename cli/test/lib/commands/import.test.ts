@@ -2,7 +2,6 @@ import { before, describe, it } from 'mocha'
 import { expect } from 'chai'
 import $rdf from '@zazuko/env'
 import { dcat, dcterms, qudt, schema, sh, time, vcard, xsd } from '@tpluscode/rdf-ns-builders'
-import namespace from '@rdfjs/namespace'
 import env from '@cube-creator/core/env/node'
 import { insertTestProject, insertPxCube } from '@cube-creator/testing/lib/seedData'
 import { ASK, SELECT } from '@tpluscode/sparql-builder'
@@ -14,8 +13,8 @@ import runner from '../../../lib/commands/import.js'
 
 describe('@cube-creator/cli/lib/commands/import', () => {
   const cube = $rdf.namedNode('https://environment.ld.admin.ch/foen/example/px-cube')
-  const cubeNs = namespace(`${cube.value}/`)
-  const resource = namespace(env.API_CORE_BASE)
+  const cubeNs = $rdf.namespace(`${cube.value}/`)
+  const resource = $rdf.namespace(env.API_CORE_BASE)
   const cubeDataGraph = resource('cube-project/px/cube-data')
 
   before(async function () {

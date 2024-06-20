@@ -1,5 +1,5 @@
 import type { Quad, Term } from '@rdfjs/types'
-import $rdf from '@zazuko/env'
+import $rdf from '@zazuko/env-node'
 import type { GraphPointer } from 'clownface'
 import env from './env.js'
 

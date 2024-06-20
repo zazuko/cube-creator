@@ -1,5 +1,5 @@
 import type { NamedNode, Quad } from '@rdfjs/types'
-import $rdf from '@zazuko/env'
+import $rdf from '@zazuko/env-node'
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 import type { GraphPointer } from 'clownface'
 

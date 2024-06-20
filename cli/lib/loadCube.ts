@@ -6,7 +6,6 @@ import { cc, cube } from '@cube-creator/core/namespace'
 import tempy from 'tempy'
 import { fromFile } from '@zazuko/rdf-utils-fs'
 import type { Context } from 'barnard59-core'
-import { CCEnv } from '@cube-creator/env'
 import { loadProject } from './project.js'
 import { tracer } from './otel/tracer.js'
 
@@ -21,7 +20,7 @@ interface Params {
  * Opens a SPARQL stream reading the cube, excluding the Cube Constraint subgraph,
  * which will be processed alongside the rest of cube metadata
  */
-export async function loadCube(this: Context<CCEnv>, { jobUri, endpoint, user, password }: Params): Promise<Stream> {
+export async function loadCube(this: Context, { jobUri, endpoint, user, password }: Params): Promise<Stream> {
   const { project } = await loadProject(jobUri, this)
 
   const patterns = sparql`

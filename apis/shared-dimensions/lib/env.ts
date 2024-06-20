@@ -1,5 +1,5 @@
 import { createProxy } from '@cube-creator/core/env'
-import $rdf from '@zazuko/env'
+import $rdf from '@zazuko/env-node'
 
 const prefix = 'MANAGED_DIMENSIONS_'
 

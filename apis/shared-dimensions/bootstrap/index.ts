@@ -1,6 +1,6 @@
 import type { NamedNode } from '@rdfjs/types'
 import type { GraphPointer } from 'clownface'
-import $rdf from '@zazuko/env'
+import $rdf from '@zazuko/env-node'
 import env from '../lib/env.js'
 import { log } from '../lib/log.js'
 import { store } from '../lib/store.js'

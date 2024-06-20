@@ -12,7 +12,7 @@ import * as Cube from '@cube-creator/model/Cube'
 import through2 from 'through2'
 import { readable } from 'duplex-to'
 import merge from 'merge2'
-import { CCEnv } from '@cube-creator/env'
+import type { Environment } from 'barnard59-env'
 
 interface CubeMetadataQuery {
   endpoint: NamedNode
@@ -85,7 +85,7 @@ function preserveExistingValues(dataset: DatasetCore) {
   })
 }
 
-function prepareNewCubeResource(env: CCEnv, cubeResource: Cube.Cube, datasetResource: NamedNode) {
+function prepareNewCubeResource(env: Environment, cubeResource: Cube.Cube, datasetResource: NamedNode) {
   const pointer = $rdf.clownface().namedNode(datasetResource)
   create(env, pointer, {
     hasPart: [Cube.create(env, pointer.node(cubeResource.id), {
@@ -99,7 +99,7 @@ function prepareNewCubeResource(env: CCEnv, cubeResource: Cube.Cube, datasetReso
   return pointer.dataset
 }
 
-export default async function query(this: Context<CCEnv>, { cube, graph, endpoint, ...rest }: CubeMetadataQuery) {
+export default async function query(this: Context, { cube, graph, endpoint, ...rest }: CubeMetadataQuery) {
   const client = new StreamClient({
     endpointUrl: endpoint.value,
   })

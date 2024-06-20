@@ -9,7 +9,6 @@ import { expect } from 'chai'
 import { toRdf } from 'rdf-literal'
 import $rdf from '@zazuko/env'
 import { sh } from '@tpluscode/rdf-ns-builders'
-import { CCEnv } from '@cube-creator/env'
 import { setupEnv } from '../support/env.js'
 import { loadCubeMetadata } from '../../lib/metadata.js'
 import { logger } from '../support/logger.js'
@@ -17,7 +16,7 @@ import { logger } from '../support/logger.js'
 describe('@cube-creator/cli/lib/metadata @SPARQL', function () {
   this.timeout(20000)
 
-  let context: Context<CCEnv>
+  let context: Context
   let variables: VariableMap
 
   before(async () => {

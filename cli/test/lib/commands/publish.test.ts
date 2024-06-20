@@ -10,7 +10,7 @@ import { ccClients } from '@cube-creator/testing/lib'
 import { insertTestProject } from '@cube-creator/testing/lib/seedData'
 import { cc, cube } from '@cube-creator/core/namespace'
 import type { AnyPointer } from 'clownface'
-import namespace, { NamespaceBuilder } from '@rdfjs/namespace'
+import type { NamespaceBuilder } from '@rdfjs/namespace'
 import runner from '../../../lib/commands/publish.js'
 import { setupEnv } from '../../support/env.js'
 import { Published } from '../../../../packages/model/Cube.js'
@@ -21,7 +21,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
   const targetGraph = $rdf.namedNode('https://lindas.admin.ch/foen/cube')
   const baseCubeId = 'https://environment.ld.admin.ch/foen/ubd/28'
   const ns = {
-    baseCube: namespace(baseCubeId + '/'),
+    baseCube: $rdf.namespace(baseCubeId + '/'),
   }
 
   const executionUrl = 'http://example.com/publishing-test'
@@ -60,7 +60,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
         `
       .execute(ccClients.parsingClient)
 
-    targetCube = namespace(ns.baseCube('3').value)
+    targetCube = $rdf.namespace(ns.baseCube('3').value)
 
     const dataset = await $rdf.dataset().import(await CONSTRUCT`?s ?p ?o`
       .FROM(expectedGraph as NamedNode)

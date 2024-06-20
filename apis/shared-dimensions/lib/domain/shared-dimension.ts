@@ -1,6 +1,6 @@
 import type { NamedNode, Quad, Stream, Term } from '@rdfjs/types'
 import type { GraphPointer, MultiPointer } from 'clownface'
-import $rdf from '@zazuko/env'
+import $rdf from '@zazuko/env-node'
 import through2 from 'through2'
 import { dcterms, hydra, rdf, schema, sh, oa } from '@tpluscode/rdf-ns-builders'
 import { md, meta } from '@cube-creator/core/namespace'

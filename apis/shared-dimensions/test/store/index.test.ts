@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { insertTestDimensions } from '@cube-creator/testing/lib/seedData'
-import $rdf from '@zazuko/env'
+import $rdf from '@zazuko/env-node'
 import { mdClients } from '@cube-creator/testing/lib/index'
 import { md } from '@cube-creator/core/namespace'
 import type { GraphPointer } from 'clownface'

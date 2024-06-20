@@ -2,7 +2,7 @@ import type { Literal, NamedNode, Quad } from '@rdfjs/types'
 import { turtle } from '@tpluscode/rdf-string'
 import type { Context } from 'barnard59-core'
 import { validateQuad } from 'rdf-validate-datatype'
-import TermMap from '@rdfjs/term-map'
+import $rdf from '@zazuko/env'
 import { xsd } from '@tpluscode/rdf-ns-builders'
 
 export function validate(this: Context, quad: Quad): Quad {
@@ -20,7 +20,7 @@ function quadToString(quad: Quad): string {
   })
 }
 
-const messages = new TermMap<NamedNode, string>([
+const messages = $rdf.termMap<NamedNode, string>([
   [xsd.boolean, 'Boolean values should be formatted as "true" and "false" (or "0" and "1"). See also https://www.w3.org/TR/xmlschema-2/#boolean.'],
   [xsd.date, 'Dates should be formatted as YYYY-MM-DD as specified by ISO 8601. See also https://www.w3.org/TR/xmlschema-2/#date.'],
   [xsd.dateTime, 'Values should be formatted as YYYY-MM-DDThh:mm:ss. See also https://www.w3.org/TR/xmlschema-2/#dateTime.'],
@@ -34,7 +34,7 @@ const messages = new TermMap<NamedNode, string>([
   [xsd.gYearMonth, 'Values should be formatted as YYYY-MM. See also https://www.w3.org/TR/xmlschema-2/#gYearMonth.'],
 ])
 
-const typeName = new TermMap<NamedNode, string>([
+const typeName = $rdf.termMap<NamedNode, string>([
   [xsd.boolean, 'boolean'],
   [xsd.date, 'date'],
   [xsd.dateTime, 'dateTime'],

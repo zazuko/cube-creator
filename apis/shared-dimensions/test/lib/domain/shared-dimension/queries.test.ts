@@ -3,7 +3,7 @@ import { schema, rdfs, qb, xsd } from '@tpluscode/rdf-ns-builders'
 import { expect } from 'chai'
 import { ASK } from '@tpluscode/sparql-builder'
 import { mdClients } from '@cube-creator/testing/lib/index'
-import $rdf from '@zazuko/env'
+import $rdf from '@zazuko/env-node'
 import { deleteDynamicTerms } from '../../../../lib/domain/shared-dimension/queries.js'
 
 const { parsingClient } = mdClients

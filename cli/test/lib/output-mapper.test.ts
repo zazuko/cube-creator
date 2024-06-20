@@ -6,7 +6,6 @@ import { cube } from '@cube-creator/core/namespace'
 import { insertTestProject } from '@cube-creator/testing/lib/seedData'
 import { xsd } from '@tpluscode/rdf-ns-builders'
 import type { Context } from 'barnard59-core'
-import { CCEnv } from '@cube-creator/env'
 import { setupEnv } from '../support/env.js'
 import { mapDimensions } from '../../lib/output-mapper.js'
 
@@ -25,7 +24,7 @@ describe('lib/output-mapper', function () {
       variables: new Map<any, any>([
         ['jobUri', `${env.API_CORE_BASE}cube-project/ubd/csv-mapping/jobs/test-job`],
       ]),
-    } as unknown as Context<CCEnv>
+    } as unknown as Context
 
     it('mapped value is replaced', async () => {
       // given

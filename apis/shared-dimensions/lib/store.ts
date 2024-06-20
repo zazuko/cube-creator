@@ -1,6 +1,6 @@
 import type { NamedNode, Term } from '@rdfjs/types'
 import type { GraphPointer } from 'clownface'
-import $rdf from '@zazuko/env'
+import $rdf from '@zazuko/env-node'
 import { parsingClient } from './sparql.js'
 import env from './env.js'
 import Store from './store/index.js'

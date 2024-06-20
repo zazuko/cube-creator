@@ -9,7 +9,6 @@ import { ccClients } from '@cube-creator/testing/lib'
 import { insertTestProject } from '@cube-creator/testing/lib/seedData'
 import { cc } from '@cube-creator/core/namespace'
 import type { AnyPointer } from 'clownface'
-import namespace from '@rdfjs/namespace'
 import runner from '../../../lib/commands/unlist.js'
 import { setupEnv } from '../../support/env.js'
 
@@ -17,7 +16,7 @@ describe('@cube-creator/cli/lib/commands/unlist', function () {
   this.timeout(200000)
 
   const ns = {
-    baseCube: namespace('https://environment.ld.admin.ch/foen/ubd/28/'),
+    baseCube: $rdf.namespace('https://environment.ld.admin.ch/foen/ubd/28/'),
   }
 
   const executionUrl = 'http://example.com/unlisting-test'

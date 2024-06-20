@@ -24,7 +24,7 @@
     "@cube-creator/testing": "^0.1.21",
     "@types/is-uri": "^1",
     "@rdfjs/types": "^1.1.0",
-    "alcaeus": "^3",
+    "alcaeus": "^3.0.1",
     "chai": "^4.3.4",
     "mocha": "^10"
   }

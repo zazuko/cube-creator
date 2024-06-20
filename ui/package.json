@@ -59,7 +59,7 @@
     "@vocabulary/xsd": "^1.0.4",
     "@zazuko/cube-hierarchy-query": "^2.2.1",
     "@zazuko/env": "^2.0.6",
-    "alcaeus": "^3.0.0",
+    "alcaeus": "^3.0.1",
     "buffer": "^6.0.3",
     "bulma-quickview": "^2.0.0",
     "clownface-shacl-path": "^2.1.0",

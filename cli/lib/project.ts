@@ -1,9 +1,8 @@
 import { PublishJob, Project } from '@cube-creator/model'
 import type { Context } from 'barnard59-core'
-import { CCEnv } from '@cube-creator/env'
 import { tracer } from './otel/tracer.js'
 
-export async function loadProject(jobUri: string, { logger, env }: Context<CCEnv>) {
+export async function loadProject(jobUri: string, { logger, env }: Context) {
   return tracer.startActiveSpan('find project', { attributes: { jobUri } }, async span => {
     try {
       const jobResource = await env.hydra.loadResource<PublishJob>(jobUri)

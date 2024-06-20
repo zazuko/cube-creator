@@ -1,5 +1,5 @@
 import type { Term } from '@rdfjs/types'
-import $rdf from '@zazuko/env'
+import $rdf from '@zazuko/env-node'
 import { sparql } from '@tpluscode/sparql-builder'
 import env from './env.js'
 

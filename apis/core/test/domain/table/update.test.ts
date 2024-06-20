@@ -2,6 +2,7 @@ import type { NamedNode } from '@rdfjs/types'
 import { describe, it, beforeEach } from 'mocha'
 import { expect } from 'chai'
 import sinon from 'sinon'
+import esmock from 'esmock'
 import type { GraphPointer } from 'clownface'
 import $rdf from '@cube-creator/env'
 import { Dataset as DatasetExt } from '@zazuko/env/lib/Dataset.js'
@@ -11,7 +12,6 @@ import { namedNode } from '@cube-creator/testing/clownface'
 import { TestResourceStore } from '../../support/TestResourceStore.js'
 import type * as ColumnMappingQueries from '../../../lib/domain/queries/column-mapping.js'
 import '../../../lib/domain/index.js'
-import esmock from 'esmock'
 
 describe('domain/table/update', () => {
   let store: TestResourceStore
