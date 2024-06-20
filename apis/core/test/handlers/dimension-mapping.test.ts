@@ -1,14 +1,12 @@
 import type { Literal } from '@rdfjs/types'
 import { describe, it, beforeEach } from 'mocha'
 import { Request } from 'express'
-import sinon from 'sinon'
 import { expect } from 'chai'
 import $rdf from '@cube-creator/env'
 import { prov } from '@tpluscode/rdf-ns-builders'
 import { namedNode } from '@cube-creator/testing/clownface'
 import { ex } from '@cube-creator/testing/lib/namespace'
-import { prepareEntries } from '../../lib/handlers/dimension-mapping.js'
-import * as queries from '../../lib/domain/queries/dimension-mappings.js'
+import esmock from 'esmock'
 import '../../lib/domain/index.js'
 
 describe('lib/handlers/dimension-mapping', () => {
@@ -18,11 +16,16 @@ describe('lib/handlers/dimension-mapping', () => {
     } as Request
     let unmappedTerms: Set<Literal>
 
-    beforeEach(() => {
+    let prepareEntries: typeof import('../../lib/handlers/dimension-mapping.js').prepareEntries
+
+    beforeEach(async () => {
       unmappedTerms = $rdf.termSet()
 
-      sinon.restore()
-      sinon.stub(queries, 'getUnmappedValues').callsFake(async () => unmappedTerms)
+      ;({ prepareEntries } = await esmock('../../lib/handlers/dimension-mapping.js', {
+        '../../lib/domain/queries/dimension-mappings.js': {
+          getUnmappedValues: async () => unmappedTerms,
+        },
+      }))
     })
 
     it('add link to dimension to every entry', async () => {

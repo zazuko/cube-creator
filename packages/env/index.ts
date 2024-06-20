@@ -10,7 +10,7 @@ import { RdfsFactory } from '@rdfine/rdfs/Factory'
 import { SchemaFactory } from '@rdfine/schema/Factory'
 import alcaeus, { AlcaeusFactory } from 'alcaeus/Factory.js'
 import CubeCreatorModelFactory from '@cube-creator/model/Factory'
-import { Dataset as DatasetExt } from '@zazuko/env/lib/DatasetExt.js'
+import { Dataset as DatasetExt } from '@zazuko/env/lib/Dataset.js'
 import * as Models from '@cube-creator/model'
 
 const env = new Environment([

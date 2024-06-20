@@ -9,17 +9,18 @@ import { prov, rdf, schema, sh, qudt, time } from '@tpluscode/rdf-ns-builders'
 import { cc, meta } from '@cube-creator/core/namespace'
 import { ex } from '@cube-creator/testing/lib/namespace'
 import { namedNode } from '@cube-creator/testing/clownface'
-import { update } from '../../../lib/domain/dimension/update.js'
+import esmock from 'esmock'
 import { TestResourceStore } from '../../support/TestResourceStore.js'
 import '../../../lib/domain/index.js'
-import * as projectQuery from '../../../lib/domain/cube-projects/queries.js'
 
 describe('domain/dimension/update', function () {
   let store: TestResourceStore
   let metadataCollection: GraphPointer<NamedNode, DatasetExt>
   let findProject: sinon.SinonStub
 
-  beforeEach(() => {
+  let update: typeof import('../../../lib/domain/dimension/update').update
+
+  beforeEach(async () => {
     const project = namedNode(ex('project/test'))
 
     metadataCollection = namedNode('dimension')
@@ -40,8 +41,12 @@ describe('domain/dimension/update', function () {
       project,
     ])
 
-    sinon.restore()
-    findProject = sinon.stub(projectQuery, 'findProject')
+    findProject = sinon.stub()
+    ;({ update } = await esmock('../../../lib/domain/dimension/update.js', {
+      '../../../lib/domain/cube-projects/queries.js': {
+        findProject,
+      },
+    }))
   })
 
   it('replaces all triples about a dimension', async () => {

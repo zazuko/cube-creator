@@ -4,18 +4,19 @@ import sinon from 'sinon'
 import $rdf from '@zazuko/env'
 import { cc } from '@cube-creator/core/namespace'
 import { rdf, schema } from '@tpluscode/rdf-ns-builders'
+import esmock from 'esmock'
 import { TestResourceStore } from '../../support/TestResourceStore.js'
-import * as TableQueries from '../../../lib/domain/queries/table.js'
-import '../../../lib/domain/index.js'
-import { deleteSource } from '../../../lib/domain/csv-source/delete.js'
-import * as DeleteTable from '../../../lib/domain/table/delete.js'
 import type { GetMediaStorage, MediaStorage } from '../../../lib/storage/index.js'
+import '../../../lib/domain/index.js'
 
 describe('domain/csv-sources/delete', () => {
   let storage: MediaStorage
   let getStorage: GetMediaStorage
+  let deleteTable: sinon.SinonStub
 
-  beforeEach(() => {
+  let deleteSource: typeof import('../../../lib/domain/csv-source/delete.js').deleteSource
+
+  beforeEach(async () => {
     storage = {
       getStream: sinon.spy(),
       delete: sinon.spy(),
@@ -27,12 +28,17 @@ describe('domain/csv-sources/delete', () => {
       yield $rdf.namedNode('table')
     }
 
-    sinon.restore()
-    sinon.stub(TableQueries, 'getLinkedTablesForSource').returns(tableGenerator())
-    sinon.stub(TableQueries, 'getTablesForMapping').returns(tableGenerator())
-    sinon.stub(TableQueries, 'getTableForColumnMapping')
-
-    sinon.stub(DeleteTable, 'deleteTable')
+    deleteTable = sinon.stub()
+    ;({ deleteSource } = await esmock('../../../lib/domain/csv-source/delete.js', {
+      '../../../lib/domain/queries/table.js': {
+        getLinkedTablesForSource: sinon.stub().returns(tableGenerator()),
+        getTablesForMapping: sinon.stub().returns(tableGenerator()),
+        getTableForColumnMapping: sinon.stub(),
+      },
+      '../../../lib/domain/table/delete.js': {
+        deleteTable,
+      },
+    }))
   })
   const csvSource = $rdf.clownface()
     .namedNode('source')
@@ -61,7 +67,7 @@ describe('domain/csv-sources/delete', () => {
       id: csvSource.out(schema.associatedMedia).term,
     }))
     expect(csvMapping.out(cc.csvSource).term).to.be.undefined
-    expect(DeleteTable.deleteTable).to.have.been.calledWith(sinon.match({
+    expect(deleteTable).to.have.been.calledWith(sinon.match({
       resource: table.term,
     }))
   })

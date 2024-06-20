@@ -114,7 +114,7 @@ describe('domain/table/update', () => {
 
     getTableReferences = sinon.stub().resolves([])
     ;({ updateTable } = await esmock('../../../lib/domain/table/update.js', {
-      '../../lib/domain/organization/query.js': {
+      '../../../lib/domain/organization/query.js': {
         findOrganization: async () =>
           ({
             projectId: project.id,

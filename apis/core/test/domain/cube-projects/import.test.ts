@@ -1,5 +1,5 @@
 import type { NamedNode } from '@rdfjs/types'
-import { describe, it, beforeEach, afterEach } from 'mocha'
+import { describe, it, beforeEach } from 'mocha'
 import type { GraphPointer } from 'clownface'
 import { blankNode, namedNode } from '@cube-creator/testing/clownface'
 import $rdf from '@cube-creator/env'
@@ -11,10 +11,10 @@ import { Dataset as DatasetExt } from '@zazuko/env/lib/Dataset.js'
 import { cc, cube } from '@cube-creator/core/namespace'
 import { Project } from '@cube-creator/model'
 import sinon from 'sinon'
-import * as projectQueries from '../../../lib/domain/cube-projects/queries.js'
+import esmock from 'esmock'
 import { TestResourceStore } from '../../support/TestResourceStore.js'
 import { ResourceStore } from '../../../lib/ResourceStore.js'
-import { adjustTerms, importProject } from '../../../lib/domain/cube-projects/import.js'
+import { adjustTerms } from '../../../lib/domain/cube-projects/import.js'
 import { DomainError } from '../../../../errors/domain.js'
 import '../../../lib/domain/index.js'
 
@@ -27,8 +27,10 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/import', () => {
     let store: ResourceStore
     let projectExists: sinon.SinonStub
 
-    beforeEach(() => {
-      projectExists = sinon.stub(projectQueries, 'exists').resolves(false)
+    let importProject: typeof import('../../../lib/domain/cube-projects/import.js').importProject
+
+    beforeEach(async () => {
+      projectExists = sinon.stub().resolves(false)
       projectsCollection = namedNode('projects')
       resource = blankNode()
         .addOut(rdfs.label, 'UBD Imported')
@@ -40,10 +42,10 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/import', () => {
         projectsCollection,
         organization,
       ])
-    })
 
-    afterEach(() => {
-      projectExists.restore()
+      ;({ importProject } = await esmock('../../../lib/domain/cube-projects/import.js', {
+        '../../../lib/domain/cube-projects/queries.js': { exists: projectExists },
+      }))
     })
 
     function testImportProject({ files }: Pick<Parameters<typeof importProject>[0], 'files'>) {

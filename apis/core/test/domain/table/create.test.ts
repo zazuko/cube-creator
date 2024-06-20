@@ -9,23 +9,20 @@ import { csvw, dtype, hydra, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import { namedNode } from '@cube-creator/testing/clownface'
 import { DomainError } from '@cube-creator/api-errors'
-import { createTable } from '../../../lib/domain/table/create.js'
+import esmock from 'esmock'
 import { TestResourceStore } from '../../support/TestResourceStore.js'
-import * as DimensionMetadataQueries from '../../../lib/domain/queries/dimension-metadata.js'
 import '../../../lib/domain/index.js'
-import * as TableQueries from '../../../lib/domain/queries/table.js'
-import * as orgQueries from '../../../lib/domain/organization/query.js'
 
 describe('domain/table/create', () => {
   let store: TestResourceStore
   let tableCollection: GraphPointer<NamedNode, DatasetExt>
   let csvSource: GraphPointer<NamedNode, DatasetExt>
   let dimensionMetadata: GraphPointer<NamedNode, DatasetExt>
-  let getTableQueries: sinon.SinonStub
+  let getCubeTable: sinon.SinonStub
 
-  beforeEach(() => {
-    sinon.restore()
+  let createTable: typeof import('../../../lib/domain/table/create.js').createTable
 
+  beforeEach(async () => {
     const organization = $rdf.rdfine.cc.Organization(namedNode('org'), {
       namespace: $rdf.namedNode('http://example.com/'),
     })
@@ -55,14 +52,18 @@ describe('domain/table/create', () => {
       organization,
     ])
 
-    sinon.restore()
-    sinon.stub(DimensionMetadataQueries, 'getDimensionMetaDataCollection').resolves(dimensionMetadata.term)
-    getTableQueries = sinon.stub(TableQueries, 'getCubeTable').resolves(undefined)
-
-    sinon.stub(orgQueries, 'findOrganization').resolves({
-      projectId: project.id,
-      organizationId: organization.id,
-    })
+    getCubeTable = sinon.stub().resolves(undefined)
+    ;({ createTable } = await esmock('../../../lib/domain/table/create.js', {
+      '../../../lib/domain/queries/table.js': {
+        getCubeTable,
+      },
+      '../../../lib/domain/organization/query.js': {
+        findOrganization: sinon.stub().resolves({
+          projectId: project.id,
+          organizationId: organization.id,
+        }),
+      },
+    }))
   })
 
   it('creates identifier by slugifying schema:name', async () => {
@@ -150,7 +151,7 @@ describe('domain/table/create', () => {
       .addOut(schema.color, '#ababab')
       .addOut(cc.identifierTemplate, '{id}')
       .addOut(cc.csvSource, $rdf.namedNode('foo'))
-    getTableQueries.resolves([$rdf.namedNode('cube-table')])
+    getCubeTable.resolves([$rdf.namedNode('cube-table')])
 
     // then
     await expect(createTable(

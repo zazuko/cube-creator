@@ -2,7 +2,7 @@ import type { NamedNode, Quad, Term } from '@rdfjs/types'
 import type { GraphPointer } from 'clownface'
 import $rdf from '@cube-creator/env'
 import { DimensionMetadataCollection, Project } from '@cube-creator/model'
-import { createNoMeasureDimensionError, Error } from '@cube-creator/model/DimensionMetadata'
+import { noMeasureDimensionError, Error } from '@cube-creator/model/DimensionMetadata'
 import { prov, rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import { ResourceStore } from '../../ResourceStore.js'
@@ -59,7 +59,7 @@ export async function update({
   }
 
   if (!metadata.hasPart.some(dim => dim.isMeasureDimension)) {
-    metadata.addError?.(createNoMeasureDimensionError($rdf))
+    metadata.addError?.($rdf.rdfine.schema.Thing(noMeasureDimensionError))
   } else {
     metadata.removeError?.(Error.MissingMeasureDimension)
   }

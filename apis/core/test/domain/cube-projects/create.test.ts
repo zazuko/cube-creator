@@ -1,19 +1,17 @@
 import type { NamedNode } from '@rdfjs/types'
-import { describe, it, beforeEach, afterEach } from 'mocha'
+import { describe, it, beforeEach } from 'mocha'
 import { expect } from 'chai'
 import $rdf from '@cube-creator/env'
 import { dcat, rdf, rdfs, schema, sh, _void, hydra, xsd, dcterms } from '@tpluscode/rdf-ns-builders'
 import { cc, cube } from '@cube-creator/core/namespace'
 import { Dataset } from '@cube-creator/model'
-import '../../../lib/domain/index.js'
 import { Project } from '@cube-creator/model/Project'
 import sinon from 'sinon'
 import { namedNode } from '@cube-creator/testing/clownface'
 import { DomainError } from '@cube-creator/api-errors'
-import * as orgQueries from '../../../lib/domain/organization/query.js'
-import * as projectQueries from '../../../lib/domain/cube-projects/queries.js'
+import esmock from 'esmock'
 import { TestResourceStore } from '../../support/TestResourceStore.js'
-import { createProject } from '../../../lib/domain/cube-projects/create.js'
+import '../../../lib/domain/index.js'
 
 describe('domain/cube-projects/create', () => {
   let store: TestResourceStore
@@ -21,26 +19,29 @@ describe('domain/cube-projects/create', () => {
   const projectsCollection = namedNode('projects')
   let projectExists: sinon.SinonStub
 
+  let createProject: typeof import('../../../lib/domain/cube-projects/create.js').createProject
+
   const organization = $rdf.rdfine.cc.Organization(namedNode('org'), {
     publishGraph: $rdf.namedNode('http://example.com/published-cube'),
     namespace: $rdf.namedNode('http://example.com/'),
   })
 
-  beforeEach(() => {
+  beforeEach(async () => {
     store = new TestResourceStore([
       projectsCollection,
       organization,
     ])
 
-    sinon.stub(orgQueries, 'findOrganization').resolves({
-      organizationId: organization.id,
-    })
-    projectExists = sinon.stub(projectQueries, 'exists').resolves(false)
-    sinon.stub(orgQueries, 'cubeNamespaceAllowed').resolves(true)
-  })
-
-  afterEach(() => {
-    sinon.restore()
+    projectExists = sinon.stub()
+    ;({ createProject } = await esmock('../../../lib/domain/cube-projects/create.js', {
+      '../../../lib/domain/organization/query.js': {
+        findOrganization: sinon.stub().resolves({ organizationId: organization.id }),
+        cubeNamespaceAllowed: sinon.stub().resolves(true),
+      },
+      '../../../lib/domain/cube-projects/queries.js': {
+        exists: projectExists,
+      },
+    }))
   })
 
   it('creates identifier by slugifying rdfs:label', async () => {

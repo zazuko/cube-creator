@@ -1,5 +1,5 @@
 import type { Quad, Term } from '@rdfjs/types'
-import { describe, it, beforeEach, before, after } from 'mocha'
+import { describe, it, beforeEach, before } from 'mocha'
 import { expect } from 'chai'
 import type { GraphPointer } from 'clownface'
 import $rdf from '@zazuko/env'
@@ -7,8 +7,9 @@ import { IriTemplate } from '@rdfine/hydra'
 import sinon from 'sinon'
 import Cube from 'rdf-cube-view-query/lib/Cube.js'
 import Source from 'rdf-cube-view-query/lib/Source.js'
-import { getObservations } from '../../../lib/domain/observations/index.js'
-import * as lib from '../../../lib/domain/observations/lib/index.js'
+import esmock from 'esmock'
+// import { getObservations } from '../../../lib/domain/observations/index.js'
+// import * as lib from '../../../lib/domain/observations/lib/index.js'
 
 describe('lib/domain/observations', () => {
   let templateParams: GraphPointer
@@ -26,23 +27,28 @@ describe('lib/domain/observations', () => {
   } as any
   const loadResourceLabels = () => new Promise<Quad[]>((resolve) => resolve([]))
 
-  before(() => {
-    sinon.stub(lib, 'createSource').returns(sinon.createStubInstance(Source, {
-      cubes: sinon.stub().callsFake(async () => cubes) as any,
-    }))
-    sinon.stub(lib, 'createHydraCollection')
-    sinon.stub(lib, 'createView').returns({
+  let createView: sinon.SinonStub
+  let getObservations: typeof import('../../../lib/domain/observations/index.js').getObservations
+
+  before(async () => {
+    createView = sinon.stub().returns({
       async observations() {
         return observations
       },
       async observationCount() {
         return observations.length
       },
-    } as any)
-  })
+    })
 
-  after(() => {
-    sinon.restore()
+    ;({ getObservations } = (await esmock('../../../lib/domain/observations/index.js', {
+      '../../../lib/domain/observations/lib/index.js': {
+        createSource: sinon.stub().returns(sinon.createStubInstance(Source, {
+          cubes: sinon.stub().callsFake(async () => cubes) as any,
+        })),
+        createHydraCollection: sinon.stub(),
+        createView,
+      },
+    })))
   })
 
   beforeEach(() => {
@@ -73,7 +79,7 @@ describe('lib/domain/observations', () => {
     })
 
     // then
-    expect(lib.createView).to.have.been.calledWith(sinon.match.any, 20, sinon.match.any)
+    expect(createView).to.have.been.calledWith(sinon.match.any, 20, sinon.match.any)
   })
 
   it('passes offset 0 if pageIndex is not provided', async () => {
@@ -92,7 +98,7 @@ describe('lib/domain/observations', () => {
     })
 
     // then
-    expect(lib.createView).to.have.been.calledWith(sinon.match.any, sinon.match.any, 0)
+    expect(createView).to.have.been.calledWith(sinon.match.any, sinon.match.any, 0)
   })
 
   it('computes offset from pageSize and pageIndex', async () => {
@@ -115,6 +121,6 @@ describe('lib/domain/observations', () => {
     })
 
     // then
-    expect(lib.createView).to.have.been.calledWith(sinon.match.any, 10, 40)
+    expect(createView).to.have.been.calledWith(sinon.match.any, 10, 40)
   })
 })

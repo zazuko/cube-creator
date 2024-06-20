@@ -9,21 +9,14 @@ import { cc } from '@cube-creator/core/namespace'
 import { Dataset as DatasetExt } from '@zazuko/env/lib/Dataset.js'
 import { ColumnMapping } from '@cube-creator/model'
 import { namedNode } from '@cube-creator/testing/clownface'
+import esmock from 'esmock'
 import { TestResourceStore } from '../../support/TestResourceStore.js'
-import * as DimensionMetadataQueries from '../../../lib/domain/queries/dimension-metadata.js'
-import type * as TableQueries from '../../../lib/domain/queries/table.js'
-import type * as ColumnMappingQueries from '../../../lib/domain/queries/column-mapping.js'
 import '../../../lib/domain/index.js'
-import { deleteColumnMapping } from '../../../lib/domain/column-mapping/delete.js'
-import * as orgQueries from '../../../lib/domain/organization/query.js'
 
 describe('domain/column-mapping/delete', () => {
   let store: TestResourceStore
   const getLinkedTablesForSource = sinon.stub()
   const getTablesForMapping = sinon.stub()
-  let tableQueries: typeof TableQueries
-  let getTableForColumnMapping: sinon.SinonStub
-  let columnMappingQueries: typeof ColumnMappingQueries
   let dimensionIsUsedByOtherMapping: sinon.SinonStub
   let dimensionMetadataCollection: GraphPointer<NamedNode, DatasetExt>
   let columnMapping: GraphPointer<NamedNode, DatasetExt>
@@ -31,9 +24,9 @@ describe('domain/column-mapping/delete', () => {
   let observationTable: GraphPointer<NamedNode, DatasetExt>
   let dimensionMapping: GraphPointer<NamedNode, DatasetExt>
 
-  beforeEach(() => {
-    sinon.restore()
+  let deleteColumnMapping: typeof import('../../../lib/domain/column-mapping/delete.js').deleteColumnMapping
 
+  beforeEach(async () => {
     const organization = $rdf.rdfine.cc.Organization(namedNode('org'), {
       namespace: $rdf.namedNode('http://example.com/'),
     })
@@ -127,29 +120,32 @@ describe('domain/column-mapping/delete', () => {
       dimensionMapping,
     ])
 
-    sinon.restore()
-    sinon.stub(DimensionMetadataQueries, 'getDimensionMetaDataCollection').resolves(dimensionMetadataCollection.term)
-
-    getTableForColumnMapping = sinon.stub().resolves(observationTable.term.value)
-    tableQueries = {
-      getLinkedTablesForSource,
-      getTablesForMapping,
-      getTableForColumnMapping,
-      getTableReferences: sinon.stub(),
-      getCubeTable: sinon.stub(),
-    }
-
+    const getDimensionMetaDataCollection = sinon.stub().resolves(dimensionMetadataCollection.term)
+    const getTableForColumnMapping = sinon.stub().resolves(observationTable.term.value)
     dimensionIsUsedByOtherMapping = sinon.stub().resolves(false)
-    const getReferencingMappingsForTable = sinon.stub().returns([])
-    columnMappingQueries = {
-      dimensionIsUsedByOtherMapping,
-      getReferencingMappingsForTable,
-    }
 
-    sinon.stub(orgQueries, 'findOrganization').resolves({
-      projectId: project.id,
-      organizationId: organization.id,
-    })
+    ;({ deleteColumnMapping } = await esmock('../../../lib/domain/column-mapping/delete.js', {
+      '../../../lib/domain/queries/table.js': {
+        getLinkedTablesForSource,
+        getTablesForMapping,
+        getTableForColumnMapping,
+        getTableReferences: sinon.stub(),
+        getCubeTable: sinon.stub(),
+      },
+      '../../../lib/domain/queries/dimension-metadata.js': {
+        getDimensionMetaDataCollection,
+      },
+      '../../../lib/domain/queries/column-mapping.js': {
+        dimensionIsUsedByOtherMapping,
+        getReferencingMappingsForTable: sinon.stub().returns([]),
+      },
+      '../../../lib/domain/organization/query.js': {
+        findOrganization: sinon.stub().resolves({
+          projectId: project.id,
+          organizationId: organization.id,
+        }),
+      },
+    }))
   })
 
   it('deletes a column mapping and its dimensions', async () => {
@@ -158,7 +154,7 @@ describe('domain/column-mapping/delete', () => {
     const dimensionsCount = dimensionMetadataCollection.out(schema.hasPart).terms.length
     const columnMappingsCount = observationTable.out(cc.columnMapping).terms.length
 
-    await deleteColumnMapping({ resource: resourceId, store, tableQueries, columnMappingQueries })
+    await deleteColumnMapping({ resource: resourceId, store })
     await store.save()
 
     const columnMapping = await store.getResource<ColumnMapping>(resourceId, { allowMissing: true })
@@ -178,7 +174,7 @@ describe('domain/column-mapping/delete', () => {
     const columnMappingsCount = observationTable.out(cc.columnMapping).terms.length
     const dimensionMetadataCount = dimensionMetadataCollection.node($rdf.namedNode('myDimension')).out().values.length
 
-    await deleteColumnMapping({ resource: resourceId, store, tableQueries, columnMappingQueries })
+    await deleteColumnMapping({ resource: resourceId, store })
     await store.save()
 
     const columnMapping = await store.getResource<ColumnMapping>(resourceId, { allowMissing: true })
@@ -194,7 +190,7 @@ describe('domain/column-mapping/delete', () => {
     const resourceId = $rdf.namedNode('columnMappingObservation')
 
     // when
-    await deleteColumnMapping({ resource: resourceId, store, tableQueries, columnMappingQueries })
+    await deleteColumnMapping({ resource: resourceId, store })
     await store.save()
 
     // then

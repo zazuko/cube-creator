@@ -17,7 +17,7 @@ import type { Organization } from '@rdfine/schema'
 import { Dictionary } from '@rdfine/prov'
 import { ResourceStore } from '../../ResourceStore.js'
 import { getDimensionMetaDataCollection } from '../queries/dimension-metadata.js'
-import * as TableQueries from '../queries/table.js'
+import { getTableForColumnMapping } from '../queries/table.js'
 import * as id from '../identifiers.js'
 import { findOrganization } from '../organization/query.js'
 import { findMapping } from './lib/index.js'
@@ -25,18 +25,15 @@ import { findMapping } from './lib/index.js'
 interface UpdateColumnMappingCommand {
   resource: GraphPointer
   store: ResourceStore
-  tableQueries?: Pick<typeof TableQueries, 'getTableForColumnMapping'>
 }
 
 export async function updateLiteralColumnMapping({
   resource,
   store,
-  tableQueries = TableQueries,
 }: UpdateColumnMappingCommand): Promise<GraphPointer> {
   const { columnMapping, table } = await updateColumnMapping<LiteralColumnMapping>({
     resource,
     store,
-    tableQueries,
   })
 
   const columnId = resource.out(cc.sourceColumn).term!
@@ -63,12 +60,10 @@ export async function updateLiteralColumnMapping({
 export async function updateReferenceColumnMapping({
   resource,
   store,
-  tableQueries = TableQueries,
 }: UpdateColumnMappingCommand): Promise<GraphPointer> {
   const { columnMapping, table } = await updateColumnMapping<ReferenceColumnMapping>({
     resource,
     store,
-    tableQueries,
   })
 
   // Update referencedTable
@@ -106,7 +101,6 @@ export async function updateReferenceColumnMapping({
 async function updateColumnMapping<T extends ColumnMapping>({
   resource,
   store,
-  tableQueries: { getTableForColumnMapping } = TableQueries,
 }: UpdateColumnMappingCommand): Promise<{ columnMapping: T; table: Table }> {
   const columnMapping = await store.getResource<T>(resource.term)
 

@@ -26,7 +26,7 @@
     "@kopflos-cms/core": "^0.2.0",
     "rdf-parser-px": "^0.2.0",
     "rdf-transform-triple-to-quad": "^1.0.2",
-    "rdf-validate-shacl": "^0.5.3",
+    "rdf-validate-shacl": "^0.5.5",
     "sparql-http-client": "^3.0.0"
   },
   "devDependencies": {

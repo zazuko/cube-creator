@@ -65,15 +65,16 @@ describe('domain/column-mapping/create', () => {
     ])
 
     ;({ createColumnMapping } = await esmock('../../../lib/domain/column-mapping/create.js', {
+      '../../../lib/domain/queries/dimension-metadata.js': {
+        getDimensionMetaDataCollection: async () => dimensionMetadata.term,
+      },
+    }, {
       '../../../lib/domain/organization/query.js': {
         findOrganization: async () =>
           ({
             projectId: project.id,
             organizationId: organization.id,
           }),
-      },
-      '../../../lib/domain/queries/dimension-metadata.js': {
-        getDimensionMetaDataCollection: async () => dimensionMetadata.term,
       },
     }))
   })

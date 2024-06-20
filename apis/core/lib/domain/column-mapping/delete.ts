@@ -8,6 +8,8 @@ import { getDimensionMetaDataCollection } from '../queries/dimension-metadata.js
 import * as TableQueries from '../queries/table.js'
 import * as ColumnMappingQueries from '../queries/column-mapping.js'
 import { findOrganization } from '../organization/query.js'
+import { getTableForColumnMapping } from '../queries/table.js'
+import { dimensionIsUsedByOtherMapping } from '../queries/column-mapping.js'
 
 interface DeleteColumnMappingCommand {
   resource: NamedNode
@@ -19,8 +21,6 @@ interface DeleteColumnMappingCommand {
 export async function deleteColumnMapping({
   resource,
   store,
-  tableQueries: { getTableForColumnMapping } = TableQueries,
-  columnMappingQueries: { dimensionIsUsedByOtherMapping } = ColumnMappingQueries,
 }: DeleteColumnMappingCommand): Promise<void> {
   const columnMapping = await store.getResource<ColumnMapping>(resource, { allowMissing: true })
   if (!columnMapping) return

@@ -6,10 +6,9 @@ import $rdf from '@zazuko/env'
 import { ccClients } from '@cube-creator/testing/lib'
 import { insertPxCube, insertTestProject } from '@cube-creator/testing/lib/seedData'
 import { cc } from '@cube-creator/core/namespace'
-import { deleteProject } from '../../../lib/domain/cube-projects/delete.js'
+import esmock from 'esmock'
 import ResourceStore from '../../../lib/ResourceStore.js'
 import '../../../lib/domain/index.js'
-import * as storage from '../../../lib/storage/index.js'
 
 describe('@cube-creator/core-api/lib/domain/cube-projects/delete @SPARQL', function () {
   this.timeout(20000)
@@ -17,10 +16,16 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/delete @SPARQL', funct
   const project = $rdf.namedNode('https://cube-creator.lndo.site/cube-project/ubd')
   const deleteFile = sinon.stub()
 
-  before(() => {
-    sinon.stub(storage, 'getMediaStorage').returns({
-      delete: deleteFile,
-    } as any)
+  let deleteProject: typeof import('../../../lib/domain/cube-projects/delete').deleteProject
+
+  before(async () => {
+    ({ deleteProject } = await esmock('../../../lib/domain/cube-projects/delete.js', {}, {
+      '../../../lib/storage/index.js': {
+        getMediaStorage: () => ({
+          delete: deleteFile,
+        }),
+      },
+    }))
   })
 
   beforeEach(async () => {

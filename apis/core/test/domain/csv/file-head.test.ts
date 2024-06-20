@@ -6,6 +6,8 @@ import { expect } from 'chai'
 import { sniffParse } from '../../../lib/domain/csv/index.js'
 import { loadFileHeadString } from '../../../lib/domain/csv/file-head.js'
 
+const __dirname = new URL('.', import.meta.url).pathname
+
 describe('domain/csv/file-head', () => {
   it('sniffs and parses', async () => {
     const path = resolve(__dirname, '../../fixtures/CH_yearly_air_immission_aggregation_id.csv')

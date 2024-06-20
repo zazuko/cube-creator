@@ -1,5 +1,5 @@
 import type { NamedNode } from '@rdfjs/types'
-import { describe, it, beforeEach, afterEach } from 'mocha'
+import { describe, it, beforeEach } from 'mocha'
 import { expect } from 'chai'
 import type { GraphPointer } from 'clownface'
 import $rdf from '@cube-creator/env'
@@ -11,12 +11,10 @@ import { dcterms, prov, rdfs, schema, rdf } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import { namedNode } from '@cube-creator/testing/clownface'
 import { Dataset, Project } from '@cube-creator/model'
+import esmock from 'esmock'
 import { createProject } from '../../../lib/domain/cube-projects/create.js'
 import { TestResourceStore } from '../../support/TestResourceStore.js'
 import '../../../lib/domain/index.js'
-import { updateProject } from '../../../lib/domain/cube-projects/update.js'
-import * as projectQueries from '../../../lib/domain/cube-projects/queries.js'
-import * as orgQueries from '../../../lib/domain/organization/query.js'
 
 describe('domain/cube-projects/update', () => {
   let store: TestResourceStore
@@ -24,6 +22,8 @@ describe('domain/cube-projects/update', () => {
   const projectsCollection = $rdf.clownface().namedNode('projects')
   let projectExists: sinon.SinonStub
   let previouslyPublished: sinon.SinonStub
+
+  let updateProject: typeof import('../../../lib/domain/cube-projects/update').updateProject
 
   const bafu = $rdf.rdfine.cc.Organization($rdf.clownface().namedNode('bafu'), {
     namespace: $rdf.namedNode('http://bafu.namespace/'),
@@ -41,12 +41,19 @@ describe('domain/cube-projects/update', () => {
       bafu,
       bar,
     ])
-    projectExists = sinon.stub(projectQueries, 'exists').resolves(false)
-    previouslyPublished = sinon.stub(projectQueries, 'previouslyPublished').resolves(false)
-    sinon.stub(orgQueries, 'cubeNamespaceAllowed').resolves(true)
-  })
 
-  afterEach(sinon.restore)
+    projectExists = sinon.stub().resolves(false)
+    previouslyPublished = sinon.stub().resolves(false)
+    ;({ updateProject } = await esmock('../../../lib/domain/cube-projects/update.js', {
+      '../../../lib/domain/cube-projects/queries.js': {
+        exists: projectExists,
+        previouslyPublished,
+      },
+      '../../../lib/domain/organization/query.js': {
+        cubeNamespaceAllowed: sinon.stub().resolves(true),
+      },
+    }))
+  })
 
   describe('CSV project', () => {
     function projectPointer(id: ResourceIdentifier = $rdf.namedNode('')) {

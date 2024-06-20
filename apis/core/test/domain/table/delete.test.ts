@@ -9,12 +9,8 @@ import { csvw, hydra, rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import { ColumnMapping, Table } from '@cube-creator/model'
 import { namedNode } from '@cube-creator/testing/clownface'
+import esmock from 'esmock'
 import { TestResourceStore } from '../../support/TestResourceStore.js'
-import * as DimensionMetadataQueries from '../../../lib/domain/queries/dimension-metadata.js'
-import type * as TableQueries from '../../../lib/domain/queries/table.js'
-import type * as ColumnMappingQueries from '../../../lib/domain/queries/column-mapping.js'
-import { deleteTable } from '../../../lib/domain/table/delete.js'
-import * as orgQueries from '../../../lib/domain/organization/query.js'
 import '../../../lib/domain/index.js'
 
 describe('domain/table/delete', () => {
@@ -22,8 +18,6 @@ describe('domain/table/delete', () => {
   let getReferencingMappingsForTable: sinon.SinonStub
   const getLinkedTablesForSource = sinon.stub()
   const getTablesForMapping = sinon.stub()
-  let tableQueries: typeof TableQueries
-  let columnMappingQueries: typeof ColumnMappingQueries
   let dimensionIsUsedByOtherMapping: sinon.SinonStub
   let columnMapping : GraphPointer<NamedNode, DatasetExt>
   let columnMappingReferencing : GraphPointer<NamedNode, DatasetExt>
@@ -32,9 +26,9 @@ describe('domain/table/delete', () => {
   let observationTable : GraphPointer<NamedNode, DatasetExt>
   let dimensionMetadataCollection : GraphPointer<NamedNode, DatasetExt>
 
-  beforeEach(() => {
-    sinon.restore()
+  let deleteTable: typeof import('../../../lib/domain/table/delete.js').deleteTable
 
+  beforeEach(async () => {
     const organization = $rdf.rdfine.cc.Organization(namedNode('org'), {
       namespace: $rdf.namedNode('http://example.com/'),
     })
@@ -116,36 +110,39 @@ describe('domain/table/delete', () => {
       columnMappingReferencing,
     ])
 
-    sinon.restore()
-    sinon.stub(DimensionMetadataQueries, 'getDimensionMetaDataCollection').resolves(dimensionMetadataCollection.term)
-
     const getTableForColumnMapping = sinon.stub().resolves(observationTable.term.value)
-    tableQueries = {
-      getLinkedTablesForSource,
-      getTablesForMapping,
-      getTableForColumnMapping,
-      getTableReferences: sinon.stub(),
-      getCubeTable: sinon.stub(),
-    }
-
     dimensionIsUsedByOtherMapping = sinon.stub().resolves(false)
     getReferencingMappingsForTable = sinon.stub().returns([])
-    columnMappingQueries = {
-      dimensionIsUsedByOtherMapping,
-      getReferencingMappingsForTable,
-    }
-
-    sinon.stub(orgQueries, 'findOrganization').resolves({
-      projectId: project.id,
-      organizationId: organization.id,
-    })
+    ;({ deleteTable } = await esmock('../../../lib/domain/table/delete.js', {
+      '../../../lib/domain/queries/column-mapping.js': {
+        dimensionIsUsedByOtherMapping,
+        getReferencingMappingsForTable,
+      },
+    }, {
+      '../../../lib/domain/queries/table.js': {
+        getLinkedTablesForSource,
+        getTablesForMapping,
+        getTableForColumnMapping,
+        getTableReferences: sinon.stub(),
+        getCubeTable: sinon.stub(),
+      },
+      '../../../lib/domain/queries/dimension-metadata.js': {
+        getDimensionMetaDataCollection: sinon.stub().resolves(dimensionMetadataCollection.term),
+      },
+      '../../../lib/domain/organization/query.js': {
+        findOrganization: sinon.stub().resolves({
+          organizationId: organization.id,
+          projectId: project.id,
+        }),
+      },
+    }))
   })
 
   it('deletes the table', async () => {
     // given
 
     // when
-    await deleteTable({ resource: table.term, store, tableQueries, columnMappingQueries })
+    await deleteTable({ resource: table.term, store })
     await store.save()
 
     // then
@@ -160,7 +157,7 @@ describe('domain/table/delete', () => {
     // given
 
     // when
-    await deleteTable({ resource: observationTable.term, store, tableQueries, columnMappingQueries })
+    await deleteTable({ resource: observationTable.term, store })
     await store.save()
 
     // then
@@ -178,7 +175,7 @@ describe('domain/table/delete', () => {
     dimensionIsUsedByOtherMapping.resolves(true)
 
     // when
-    await deleteTable({ resource: observationTable.term, store, tableQueries, columnMappingQueries })
+    await deleteTable({ resource: observationTable.term, store })
     await store.save()
 
     // then
@@ -200,7 +197,7 @@ describe('domain/table/delete', () => {
     getReferencingMappingsForTable.returns(mappingGenerator())
 
     // when
-    await deleteTable({ resource: table.term, store, tableQueries, columnMappingQueries })
+    await deleteTable({ resource: table.term, store })
     await store.save()
 
     // then
