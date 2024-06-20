@@ -1,4 +1,4 @@
-import parent from 'barnard59-env'
+import parent from '@zazuko/env'
 import Environment from '@zazuko/env/Environment.js'
 import { RdfineFactory } from '@tpluscode/rdfine'
 import { ShFactory } from '@rdfine/shacl/Factory'
