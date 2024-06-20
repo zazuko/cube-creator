@@ -83,7 +83,8 @@ type CubeCreatorProperty =
   'export' |
   'projectDetails' |
   'validationReport' |
-  'batchMapping'
+  'batchMapping' |
+  'isHiddenCube'
 
 type OtherTerms =
   'dash' |

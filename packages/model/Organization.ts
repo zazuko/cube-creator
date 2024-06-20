@@ -1,4 +1,5 @@
 import type { DatasetCore, NamedNode, Term } from '@rdfjs/types'
+import $rdf from 'rdf-ext'
 import { Organization, OrganizationMixin as SchemaOrganizationMixin } from '@rdfine/schema'
 import { Constructor, namespace, property, ResourceIdentifier } from '@tpluscode/rdfine'
 import { cc } from '@cube-creator/core/namespace'
@@ -13,6 +14,7 @@ interface CreateIdentifier {
 
 interface OrganizationEx {
   publishGraph: NamedNode
+  readonly hiddenGraph: NamedNode
   namespace: NamedNode
   dataset?: NamedNode
   accessURL: NamedNode
@@ -30,6 +32,10 @@ export function OrganizationMixin<Base extends Constructor<Omit<Organization, ke
   class Impl extends Resource implements OrganizationEx {
     @property()
     publishGraph!: NamedNode
+
+    get hiddenGraph(): NamedNode {
+      return $rdf.namedNode(this.publishGraph.value + '/hidden')
+    }
 
     @property()
     namespace!: NamedNode
