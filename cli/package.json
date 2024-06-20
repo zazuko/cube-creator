@@ -95,7 +95,6 @@
     "@types/once": "^1.4.0",
     "@rdfjs/types": "^1.1.0",
     "@types/rdf-utils-fs": "^2.1.0",
-    "@types/rdf-validate-datatype": "^0.2.0",
     "@types/rdfjs__formats": "^4.0.1",
     "@types/readable-stream": "^2.3.11",
     "@types/sinon": "^17.0.3",
