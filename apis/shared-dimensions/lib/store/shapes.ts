@@ -1,11 +1,12 @@
-import { resolve } from 'path'
-import clownface, { AnyPointer } from 'clownface'
-import { fromFile } from 'rdf-utils-fs'
-import $rdf from 'rdf-ext'
+import { dirname, resolve } from 'path'
+import type { AnyPointer } from 'clownface'
+import { fromFile } from '@zazuko/rdf-utils-fs'
+import $rdf from '@zazuko/env-node'
 
+const __dirname = dirname(new URL(import.meta.url).pathname)
 export async function loadShapes(): Promise<AnyPointer> {
   const path = resolve(__dirname, 'shapes.ttl')
-  return clownface({
-    dataset: await $rdf.dataset().import(fromFile(path)),
+  return $rdf.clownface({
+    dataset: await $rdf.dataset().import(fromFile($rdf, path)),
   })
 }

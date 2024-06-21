@@ -1,13 +1,13 @@
 import type { DatasetCore, NamedNode, Quad } from '@rdfjs/types'
-import { dash, hydra, rdf, rdfs, schema, sh, xsd } from '@tpluscode/rdf-ns-builders/strict'
+import { dash, hydra, rdf, rdfs, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import { iso6391, md } from '@cube-creator/core/namespace'
 import { CONSTRUCT } from '@tpluscode/sparql-builder'
-import $rdf from 'rdf-ext'
-import clownface, { AnyPointer, GraphPointer } from 'clownface'
+import $rdf from '@zazuko/env-node'
+import type { AnyPointer, GraphPointer } from 'clownface'
 import { toRdf } from 'rdf-literal'
-import env from '../env'
-import { parsingClient } from '../sparql'
-import { rewriteTerm } from '../rewrite'
+import env from '../env.js'
+import { parsingClient } from '../sparql.js'
+import { rewriteTerm } from '../rewrite.js'
 
 export interface DynamicPropertiesQuery {
   (targetClass: NamedNode, shape: NamedNode): Promise<Quad[]>
@@ -60,7 +60,7 @@ const dynamicPropertiesFromStore: DynamicPropertiesQuery = async function (targe
       }
       BIND (IF(!BOUND(?multipleValues) || ?multipleValues = false, 1, ?UNDEF) as ?maxCount)
     `
-    .execute(parsingClient.query)
+    .execute(parsingClient)
 
   const collectionSearchTemplates = CONSTRUCT`
     ${shape} ${sh.property} ?shProperty .
@@ -84,11 +84,11 @@ const dynamicPropertiesFromStore: DynamicPropertiesQuery = async function (targe
 
     BIND(IRI(CONCAT("urn:property:", str(?property))) as ?shProperty)
     BIND (CONCAT("${env.MANAGED_DIMENSIONS_API_BASE}", "dimension/_terms?dimension=", ENCODE_FOR_URI(STR(?termSet)), "{&q}") as ?collectionSearch)
-  `.execute(parsingClient.query)
+  `.execute(parsingClient)
 
   const quads = await Promise.all([basicProperties, collectionSearchTemplates])
 
-  return quads.flatMap(q => q)
+  return quads.flatMap(ds => [...ds])
 }
 
 function buildShaclLists(pointer: AnyPointer) {
@@ -114,7 +114,7 @@ export async function loadDynamicTermProperties(targetClass: string | unknown, s
     dataset.addAll(await dynamicPropertiesQuery(rewriteTerm($rdf.namedNode(targetClass)), shape.term))
   }
 
-  const pointer = clownface({ dataset })
+  const pointer = $rdf.clownface({ dataset })
   buildShaclLists(pointer)
 
   let order = 100

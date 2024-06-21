@@ -1,13 +1,13 @@
 import { Stream } from 'stream'
 import { spawnSync } from 'child_process'
-import type { Context } from 'barnard59-core'
 import { CONSTRUCT, sparql } from '@tpluscode/sparql-builder'
 import { csvw } from '@tpluscode/rdf-ns-builders'
 import { cc, cube } from '@cube-creator/core/namespace'
 import tempy from 'tempy'
-import fromFile from 'rdf-utils-fs/fromFile'
-import { loadProject } from './project'
-import { tracer } from './otel/tracer'
+import { fromFile } from '@zazuko/rdf-utils-fs'
+import type { Context } from 'barnard59-core'
+import { loadProject } from './project.js'
+import { tracer } from './otel/tracer.js'
 
 interface Params {
   jobUri: string
@@ -63,7 +63,7 @@ export async function loadCube(this: Context, { jobUri, endpoint, user, password
     }
 
     this.logger.info('Reading cube data from temp file')
-    return fromFile(tempFile) as any
+    return fromFile(this.env, tempFile) as any
   }, {
     extension: 'ttl',
   })

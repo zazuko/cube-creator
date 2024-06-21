@@ -1,7 +1,7 @@
 import type { Term } from '@rdfjs/types'
 import { DELETE } from '@tpluscode/sparql-builder'
 import { cc } from '@cube-creator/core/namespace'
-import { schema } from '@tpluscode/rdf-ns-builders/strict'
+import { schema } from '@tpluscode/rdf-ns-builders'
 
 export function deleteCurrentError(error: string, dimensionMetadataId: Term) {
   return DELETE`

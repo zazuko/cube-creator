@@ -1,14 +1,14 @@
 import type { Term } from '@rdfjs/types'
-import CubeQuery from 'rdf-cube-view-query'
-import { Source } from 'rdf-cube-view-query/lib/Source'
-import { View } from 'rdf-cube-view-query/lib/View'
-import { Cube } from 'rdf-cube-view-query/lib/Cube'
-import env from '@cube-creator/core/env'
+import * as CubeQuery from 'rdf-cube-view-query'
+import { Source } from 'rdf-cube-view-query/lib/Source.js'
+import { View } from 'rdf-cube-view-query/lib/View.js'
+import { Cube } from 'rdf-cube-view-query/lib/Cube.js'
+import env from '@cube-creator/core/env/node'
 import * as ns from '@cube-creator/core/namespace'
-import clownface, { AnyPointer, GraphPointer } from 'clownface'
-import { Collection, CollectionMixin, IriTemplate } from '@rdfine/hydra'
+import type { AnyPointer, GraphPointer } from 'clownface'
+import { Collection, IriTemplate } from '@rdfine/hydra'
 import { cc } from '@cube-creator/core/namespace'
-import $rdf from 'rdf-ext'
+import $rdf from '@cube-creator/env'
 import { hydra } from '@tpluscode/rdf-ns-builders'
 
 export function createSource(sourceGraph: string): Source {
@@ -61,7 +61,7 @@ interface HydraCollectionParams {
 }
 
 function pageId({ offset, page, template, ...rest }: { template: IriTemplate; templateParams: GraphPointer; page?: number; offset?: number }) {
-  const templateParams = clownface({
+  const templateParams = $rdf.clownface({
     dataset: $rdf.dataset([...rest.templateParams.dataset]),
     term: rest.templateParams.term,
   })
@@ -82,17 +82,17 @@ function pageId({ offset, page, template, ...rest }: { template: IriTemplate; te
 
 export function createHydraCollection({ templateParams, template, observations, totalItems, pageSize }: HydraCollectionParams): Collection {
   const collectionId = template.expand(
-    clownface({ dataset: $rdf.dataset() }).blankNode()
+    $rdf.clownface().blankNode()
       .addOut(cc.cube, templateParams.out(cc.cube))
       .addOut(cc.cubeGraph, templateParams.out(cc.cubeGraph)),
   )
 
-  const collectionPointer = clownface({ dataset: $rdf.dataset() })
+  const collectionPointer = $rdf.clownface()
     .namedNode(new URL(collectionId, env.API_CORE_BASE).toString())
 
   const lastPage = Math.ceil(totalItems / pageSize)
 
-  return new CollectionMixin.Class(collectionPointer, {
+  return $rdf.rdfine.hydra.Collection(collectionPointer, {
     member: observations,
     totalItems,
     view: {

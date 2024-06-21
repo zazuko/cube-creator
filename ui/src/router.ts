@@ -43,7 +43,7 @@ import HierarchyCreate from '@/views/HierarchyCreate.vue'
 import Hierarchy from '@/views/Hierarchy.vue'
 import HierarchyEdit from '@/views/HierarchyEdit.vue'
 import { IriTemplate, RuntimeOperation } from 'alcaeus'
-import { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
 import { hydraBox } from '@cube-creator/core/namespace'
 
 const routes: Array<RouteRecordRaw> = [
@@ -276,11 +276,11 @@ const routes: Array<RouteRecordRaw> = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 })
 
-if (!process.env.VUE_APP_E2E) {
+if (!import.meta.env.VITE_E2E) {
   router.beforeEach(vuexOidcCreateRouterMiddleware(store, 'auth'))
 }
 

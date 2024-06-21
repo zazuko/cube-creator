@@ -1,12 +1,13 @@
 import type { DatasetCore, NamedNode, Term } from '@rdfjs/types'
 import { Initializer, RdfResource, RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
-import RdfResourceImpl, { Constructor, namespace, property, ResourceIdentifier } from '@tpluscode/rdfine'
+import { Constructor, namespace, property, ResourceIdentifier } from '@tpluscode/rdfine'
 import { cc } from '@cube-creator/core/namespace'
 import type { GraphPointer } from 'clownface'
-import { CsvColumn } from './CsvColumn'
-import { Table } from './Table'
-import { Link } from './lib/Link'
-import { initializer } from './lib/initializer'
+import { RdfineEnvironment } from '@tpluscode/rdfine/environment'
+import { CsvColumn } from './CsvColumn.js'
+import { Table } from './Table.js'
+import { Link } from './lib/Link.js'
+import { initializer } from './lib/initializer.js'
 
 export interface ColumnMapping extends RdfResource {
   targetProperty: Term
@@ -106,8 +107,8 @@ export function ReferenceColumnMappingMixin<Base extends Constructor>(Resource: 
 
 ReferenceColumnMappingMixin.appliesTo = cc.ReferenceColumnMapping
 
-export const literalFromPointer = <T extends ResourceIdentifier, D extends DatasetCore>(pointer: GraphPointer<T, D>, initializer?: Initializer<ColumnMapping>): LiteralColumnMapping => {
-  return RdfResourceImpl.factory.createEntity<LiteralColumnMapping>(pointer, [LiteralColumnMappingMixin], {
+export const literalFromPointer = <T extends ResourceIdentifier, D extends DatasetCore>(env: RdfineEnvironment, pointer: GraphPointer<T, D>, initializer?: Initializer<ColumnMapping>): LiteralColumnMapping => {
+  return env.rdfine().factory.createEntity<LiteralColumnMapping>(pointer, [LiteralColumnMappingMixin], {
     initializer: {
       ...initializer,
       types: [cc.ColumnMapping, cc.LiteralColumnMapping],
@@ -115,8 +116,8 @@ export const literalFromPointer = <T extends ResourceIdentifier, D extends Datas
   })
 }
 
-export const referenceFromPointer = <T extends ResourceIdentifier, D extends DatasetCore>(pointer: GraphPointer<T, D>, initializer?: Initializer<ColumnMapping>): ReferenceColumnMapping => {
-  return RdfResourceImpl.factory.createEntity<ReferenceColumnMapping>(pointer, [ReferenceColumnMappingMixin], {
+export const referenceFromPointer = <T extends ResourceIdentifier, D extends DatasetCore>(env: RdfineEnvironment, pointer: GraphPointer<T, D>, initializer?: Initializer<ColumnMapping>): ReferenceColumnMapping => {
+  return env.rdfine().factory.createEntity<ReferenceColumnMapping>(pointer, [ReferenceColumnMappingMixin], {
     initializer: {
       ...initializer,
       types: [cc.ColumnMapping, cc.ReferenceColumnMapping],

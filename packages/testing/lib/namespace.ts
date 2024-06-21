@@ -1,4 +1,4 @@
-import namespace from '@rdfjs/namespace'
+import rdf from '@zazuko/env'
 
-export const ex = namespace('http://example.com/')
-export const cc = namespace('https://cube-creator.zazuko.com/vocab#')
+export const ex = rdf.namespace('http://example.com/')
+export const cc = rdf.namespace('https://cube-creator.zazuko.com/vocab#')

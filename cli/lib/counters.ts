@@ -2,7 +2,7 @@ import type { Quad } from '@rdfjs/types'
 import type { Context } from 'barnard59-core'
 import { PassThrough } from 'readable-stream'
 import through2 from 'through2'
-import { csvw } from '@tpluscode/rdf-ns-builders/strict'
+import { csvw } from '@tpluscode/rdf-ns-builders'
 import { metrics } from '@opentelemetry/api'
 
 const meter = metrics.getMeter('@cube-creator/cli')

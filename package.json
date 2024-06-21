@@ -1,9 +1,10 @@
 {
   "name": "@zazuko/cube-creator",
   "private": true,
+  "type": "module",
   "scripts": {
     "prepare": "husky install",
-    "postinstall": "patch-package; yarn-deduplicate",
+    "postinstall": "patch-package",
     "lint": "eslint . --ext .ts,.vue,.tsx --quiet --ignore-path .gitignore",
     "c8": "c8 --reporter lcovonly",
     "test": "yarn c8 -o coverage/apis mocha --recursive apis/**/*.test.ts packages/**/*.test.ts --grep @SPARQL --invert",
@@ -15,7 +16,7 @@
     "test:cli:transform": "yarn c8 -o coverage/transform mocha --recursive cli/**/*.test.ts --grep @cube-creator/cli/lib/commands/transform",
     "test:cli:timeoutJobs": "yarn c8 -o coverage/transform mocha --recursive cli/**/*.test.ts --grep @cube-creator/cli/lib/commands/timeoutJobs",
     "test:e2e": "docker-compose run --rm e2e-tests --",
-    "seed-data": "dotenv -e .local.env -- bash -c \"ts-node packages/testing/index.ts -i ubd dimensions px-cube hierarchies\""
+    "seed-data": "dotenv -e .local.env -- bash -c \"node --loader ts-node/esm packages/testing/index.ts -i ubd dimensions px-cube hierarchies\""
   },
   "workspaces": [
     "cli",
@@ -25,31 +26,24 @@
   ],
   "dependencies": {
     "patch-package": "^6.5.0",
-    "postinstall-postinstall": "^2.1.0",
-    "yarn-deduplicate": "^6.0.2"
+    "postinstall-postinstall": "^2.1.0"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.5",
-    "@tpluscode/eslint-config": "^0.3.3",
-    "@types/node": "^14.14.7",
+    "@tpluscode/eslint-config": "^0.4.5",
+    "@types/readable-stream": "^4.0.11",
     "@types/webpack-env": "^1.15.3",
-    "@typescript-eslint/eslint-plugin": "^5.48.0",
-    "@typescript-eslint/parser": "^5.48.0",
+    "@typescript-eslint/eslint-plugin": "^7.1.0",
+    "@typescript-eslint/parser": "^7.1.0",
     "c8": "^7.13.0",
     "chai-quantifiers": "^1.0.13",
     "dotenv": "^16.0.0",
-    "eslint": "^8.36.0",
-    "eslint-config-standard": "^17.0.0",
-    "eslint-import-resolver-typescript": "^3.5.2",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^6.1.1",
+    "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-vue": "^9.8.0",
-    "husky": "^8.0.3",
-    "lint-staged": "^13.1.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
     "npm-run-all": "^4.1.5",
-    "standard": "^17.0.0",
-    "ts-node": "^9.0.0",
+    "ts-node": "^10.9.2",
     "typescript": "~4.5.0",
     "winston": "^3.3.3"
   },
@@ -60,8 +54,9 @@
       "./**/*.ts"
     ],
     "require": [
-      "mocha-setup.js"
-    ]
+      "mocha-setup.cjs"
+    ],
+    "loader": "ts-node/esm/transpile-only"
   },
   "c8": {
     "all": true,

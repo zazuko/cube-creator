@@ -1,21 +1,20 @@
 import path from 'path'
-import clownface from 'clownface'
-import $rdf from 'rdf-ext'
-import fromFile from 'rdf-utils-fs/fromFile.js'
+import $rdf from '@cube-creator/env'
+import { fromFile } from '@zazuko/rdf-utils-fs'
 import { schema, xsd } from '@tpluscode/rdf-ns-builders'
 import type { VariableMap } from 'barnard59-core'
-import namespace from '@rdfjs/namespace'
-import * as Alcaeus from 'alcaeus/node'
+import b59Env from 'barnard59-env'
 import { cc } from '@cube-creator/core/namespace'
-import * as Models from '@cube-creator/model'
-import { setupAuthentication } from '../auth'
-import { updateJobStatus } from '../job'
-import { logger } from '../log'
-import { importDynamic } from '../module'
-import bufferDebug from '../bufferDebug'
+import Environment from '@zazuko/env/Environment.js'
+import { setupAuthentication } from '../auth.js'
+import { updateJobStatus } from '../job.js'
+import { logger } from '../log.js'
+import bufferDebug from '../bufferDebug.js'
+
+const __dirname = path.dirname(new URL(import.meta.url).pathname)
 
 const ns = {
-  pipeline: namespace('urn:pipeline:cube-creator'),
+  pipeline: $rdf.namespace('urn:pipeline:cube-creator'),
 }
 
 const pipelines = {
@@ -54,7 +53,7 @@ interface Create<TOptions> {
 }
 
 async function fileToDataset(filename: string) {
-  return $rdf.dataset().import(fromFile(filename))
+  return $rdf.dataset().import(fromFile($rdf, filename))
 }
 
 export function create<TOptions extends RunOptions>({ pipelineSources, prepare, after }: Create<TOptions>) {
@@ -68,16 +67,14 @@ export function create<TOptions extends RunOptions>({ pipelineSources, prepare, 
       params: command.authParam,
     }
 
-    const apiClient = Alcaeus.create({ datasetFactory: $rdf.dataset })
-    apiClient.resources.factory.addMixin(...Object.values(Models))
-    apiClient.cacheStrategy.shouldLoad = previous => {
+    $rdf.hydra.cacheStrategy.shouldLoad = previous => {
       if (previous.representation?.root?.types.has(cc.CSVSource)) {
         return true
       }
 
       return false
     }
-    setupAuthentication(authConfig, logger, apiClient)
+    setupAuthentication(authConfig, logger)
 
     const pipelinePath = (filename: string) => path.join(basePath, `./pipelines/${filename}.ttl`)
     const dataset = await pipelineSources(command).reduce((previous, source) => {
@@ -88,7 +85,6 @@ export function create<TOptions extends RunOptions>({ pipelineSources, prepare, 
     }, Promise.resolve($rdf.dataset()))
 
     logger.info('Running job %s', jobUri)
-    variables.set('apiClient', apiClient)
     variables.set('jobUri', jobUri)
     variables.set('executionUrl', executionUrl)
     variables.set('graph-query-endpoint', process.env.GRAPH_QUERY_ENDPOINT)
@@ -102,12 +98,13 @@ export function create<TOptions extends RunOptions>({ pipelineSources, prepare, 
 
     await prepare?.(command, variables)
 
-    const { default: Runner } = await importDynamic<typeof import('barnard59/runner.js')>('barnard59/runner.js')
-    const env = await importDynamic<typeof import('barnard59-env')>('barnard59-env')
-    const run = await Runner(clownface({
+    const { default: Runner } = await import('barnard59/runner.js')
+
+    const env = new Environment($rdf, { parent: b59Env })
+    const run = await Runner($rdf.clownface({
       dataset,
       term: pipelines.Entrypoint,
-    }), env.default, {
+    }), env, {
       basePath: path.resolve(basePath, 'pipelines'),
       outputStream: process.stdout,
       variables,
@@ -122,7 +119,6 @@ export function create<TOptions extends RunOptions>({ pipelineSources, prepare, 
         modified: new Date(),
         executionUrl: variables.get('executionUrl'),
         status: schema.ActiveActionStatus,
-        apiClient,
       })
     }
 
@@ -135,7 +131,6 @@ export function create<TOptions extends RunOptions>({ pipelineSources, prepare, 
           lastTransformed: run.pipeline.context.variables.get('lastTransformed'),
           status: schema.FailedActionStatus,
           error,
-          apiClient,
         })
       }
 
@@ -153,7 +148,6 @@ export function create<TOptions extends RunOptions>({ pipelineSources, prepare, 
             jobUri: run.pipeline.context.variables.get('jobUri'),
             executionUrl: run.pipeline.context.variables.get('executionUrl'),
             status: schema.CompletedActionStatus,
-            apiClient,
             messages: run.pipeline.context.variables.get('messages'),
           })
         }

@@ -1,16 +1,13 @@
 import type { NamedNode } from '@rdfjs/types'
 import { describe, it, beforeEach } from 'mocha'
-import { fromPointer } from '@rdfine/prov/lib/Dictionary'
-import { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
 import { expect } from 'chai'
-import $rdf from 'rdf-ext'
-import namespace from '@rdfjs/namespace'
-import TermSet from '@rdfjs/term-set'
+import $rdf from '@cube-creator/env'
 import { prov, rdf, xsd } from '@tpluscode/rdf-ns-builders'
 import { blankNode, namedNode } from '@cube-creator/testing/clownface'
-import '../../../lib/domain'
+import '../../../lib/domain/index.js'
 
-const wtd = namespace('http://www.wikidata.org/entity/')
+const wtd = $rdf.namespace('http://www.wikidata.org/entity/')
 
 const wikidata = {
   arsenic: wtd.Q871,
@@ -29,13 +26,13 @@ describe('lib/domain/DimensionMappings', () => {
   describe('addMissingEntries', function () {
     it('creates prov:KeyEntityPairs for missing keys', () => {
       // given
-      const dictionary = fromPointer(pointer, {
+      const dictionary = $rdf.rdfine.prov.Dictionary(pointer, {
         hadDictionaryMember: [{
           pairKey: 'so2',
           pairEntity: wikidata.sulphurDioxide,
         }],
       })
-      const unmappedKeys = new TermSet([
+      const unmappedKeys = $rdf.termSet([
         $rdf.literal('As'),
         $rdf.literal('Pb'),
       ])
@@ -84,8 +81,8 @@ describe('lib/domain/DimensionMappings', () => {
 
     it('uses string value for keys', () => {
       // given
-      const dictionary = fromPointer(pointer)
-      const unmappedKeys = new TermSet([
+      const dictionary = $rdf.rdfine.prov.Dictionary(pointer)
+      const unmappedKeys = $rdf.termSet([
         $rdf.literal('1', xsd.integer),
         $rdf.literal('foobar', xsd.anyAtomicType),
       ])
@@ -124,7 +121,7 @@ describe('lib/domain/DimensionMappings', () => {
 
     it('skips keys which already have entries', () => {
       // given
-      const dictionary = fromPointer(pointer, {
+      const dictionary = $rdf.rdfine.prov.Dictionary(pointer, {
         hadDictionaryMember: [{
           pairKey: 'so2',
           pairEntity: wikidata.sulphurDioxide,
@@ -132,7 +129,7 @@ describe('lib/domain/DimensionMappings', () => {
           pairKey: 'As',
         }],
       })
-      const unmappedKeys = new TermSet([
+      const unmappedKeys = $rdf.termSet([
         $rdf.literal('so2'),
         $rdf.literal('As'),
       ])
@@ -175,11 +172,11 @@ describe('lib/domain/DimensionMappings', () => {
   describe('replaceEntries', () => {
     it('adds rdf:type to all dictionary entries', () => {
       // given
-      const dictionary = fromPointer(pointer)
+      const dictionary = $rdf.rdfine.prov.Dictionary(pointer)
 
       // when
       const newEntries = blankNode()
-      fromPointer(newEntries, {
+      $rdf.rdfine.prov.Dictionary(newEntries, {
         hadDictionaryMember: [{
           pairKey: 'so2',
           pairEntity: wikidata.sulphurDioxide,
@@ -197,7 +194,7 @@ describe('lib/domain/DimensionMappings', () => {
 
     it('returns true when entries are added', () => {
       // given
-      const dictionary = fromPointer(pointer, {
+      const dictionary = $rdf.rdfine.prov.Dictionary(pointer, {
         hadDictionaryMember: [{
           pairKey: 'so2',
           pairEntity: wikidata.sulphurDioxide,
@@ -206,7 +203,7 @@ describe('lib/domain/DimensionMappings', () => {
 
       // when
       const newEntries = blankNode()
-      fromPointer(newEntries, {
+      $rdf.rdfine.prov.Dictionary(newEntries, {
         hadDictionaryMember: [{
           pairKey: 'so2',
           pairEntity: wikidata.sulphurDioxide,
@@ -223,7 +220,7 @@ describe('lib/domain/DimensionMappings', () => {
 
     it('returns true when entries are removed', () => {
       // given
-      const dictionary = fromPointer(pointer, {
+      const dictionary = $rdf.rdfine.prov.Dictionary(pointer, {
         hadDictionaryMember: [{
           pairKey: 'so2',
           pairEntity: wikidata.sulphurDioxide,
@@ -235,7 +232,7 @@ describe('lib/domain/DimensionMappings', () => {
 
       // when
       const newEntries = blankNode()
-      fromPointer(newEntries, {
+      $rdf.rdfine.prov.Dictionary(newEntries, {
         hadDictionaryMember: [{
           pairKey: 'co',
           pairEntity: wikidata.carbonMonoxide,
@@ -249,7 +246,7 @@ describe('lib/domain/DimensionMappings', () => {
 
     it('returns true when entries are exactly the same', () => {
       // given
-      const dictionary = fromPointer(pointer, {
+      const dictionary = $rdf.rdfine.prov.Dictionary(pointer, {
         hadDictionaryMember: [{
           pairKey: 'co',
           pairEntity: wikidata.carbonMonoxide,
@@ -258,7 +255,7 @@ describe('lib/domain/DimensionMappings', () => {
 
       // when
       const newEntries = blankNode()
-      fromPointer(newEntries, {
+      $rdf.rdfine.prov.Dictionary(newEntries, {
         hadDictionaryMember: [{
           pairKey: 'co',
           pairEntity: wikidata.carbonMonoxide,

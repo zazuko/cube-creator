@@ -1,16 +1,13 @@
 import { env } from 'process'
 import { before, describe, it } from 'mocha'
 import { expect } from 'chai'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import { cube } from '@cube-creator/core/namespace'
 import { insertTestProject } from '@cube-creator/testing/lib/seedData'
-import { Hydra } from 'alcaeus/node'
-import * as Models from '@cube-creator/model'
 import { xsd } from '@tpluscode/rdf-ns-builders'
-import { setupEnv } from '../support/env'
-import { mapDimensions } from '../../lib/output-mapper'
-
-Hydra.resources.factory.addMixin(...Object.values(Models))
+import type { Context } from 'barnard59-core'
+import { setupEnv } from '../support/env.js'
+import { mapDimensions } from '../../lib/output-mapper.js'
 
 describe('lib/output-mapper', function () {
   this.timeout(20 * 1000)
@@ -26,9 +23,8 @@ describe('lib/output-mapper', function () {
     const context = {
       variables: new Map<any, any>([
         ['jobUri', `${env.API_CORE_BASE}cube-project/ubd/csv-mapping/jobs/test-job`],
-        ['apiClient', Hydra],
       ]),
-    }
+    } as unknown as Context
 
     it('mapped value is replaced', async () => {
       // given
@@ -88,7 +84,7 @@ describe('lib/output-mapper', function () {
       const mapped = await $rdf.dataset().import(quads.pipe(map))
 
       // then
-      const quad = mapped.toArray()[0]
+      const quad = [...mapped][0]
       expect(quad.subject.value).to.deep.eq('observation')
       expect(quad.predicate.value).to.deep.eq(predicate.value)
       expect(quad.object.value).to.deep.eq('so2')
@@ -110,7 +106,7 @@ describe('lib/output-mapper', function () {
       const mapped = await $rdf.dataset().import(quads.pipe(map))
 
       // then
-      const quad = mapped.toArray()[0]
+      const quad = [...mapped][0]
       expect(quad.subject.value).to.deep.eq('observation')
       expect(quad.predicate.value).to.deep.eq(predicate.value)
       expect(quad.object.value).to.deep.eq('abc')
@@ -132,7 +128,7 @@ describe('lib/output-mapper', function () {
       const mapped = await $rdf.dataset().import(quads.pipe(map))
 
       // then
-      const quad = mapped.toArray()[0]
+      const quad = [...mapped][0]
       expect(quad.subject.value).to.deep.eq('observation')
       expect(quad.predicate.value).to.deep.eq('https://environment.ld.admin.ch/foen/ubd/28/dimension/year')
       expect(quad.object.value).to.deep.eq('2020')

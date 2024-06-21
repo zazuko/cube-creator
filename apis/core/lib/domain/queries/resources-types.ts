@@ -1,15 +1,16 @@
 import type { Term, Quad } from '@rdfjs/types'
 import { CONSTRUCT } from '@tpluscode/sparql-builder'
 import { rdf } from '@tpluscode/rdf-ns-builders'
-import env from '@cube-creator/core/env'
-import TermSet from '@rdfjs/term-set'
-import { parsingClient } from '../../query-client'
+import env from '@cube-creator/core/env/node'
+import { ParsingClient } from 'sparql-http-client/ParsingClient.js'
+import $rdf from '@zazuko/env'
+import { parsingClient } from '../../query-client.js'
 
 interface Clients {
-  sparql?: typeof parsingClient
+  sparql?: ParsingClient
 }
 
-async function loadRemoteResourceTypes(ids: TermSet, sparql: typeof parsingClient): Promise<Quad[]> {
+async function loadRemoteResourceTypes(ids: Set<Term>, sparql: ParsingClient): Promise<Iterable<Quad>> {
   if (!ids.size) {
     return []
   }
@@ -24,10 +25,10 @@ async function loadRemoteResourceTypes(ids: TermSet, sparql: typeof parsingClien
       GRAPH ?g {
         ?resource a ?type .
       }
-    }`.execute(sparql.query)
+    }`.execute(sparql)
 }
 
-function loadLocalResourceTypes(local: TermSet, sparql: typeof parsingClient) {
+function loadLocalResourceTypes(local: Set<Term>, sparql: ParsingClient) {
   if (!local.size) {
     return []
   }
@@ -40,7 +41,7 @@ function loadLocalResourceTypes(local: TermSet, sparql: typeof parsingClient) {
     `
     .WHERE`GRAPH ?g {
         ?resource a ?type .
-    }`.execute(sparql.query)
+    }`.execute(sparql)
 }
 
 export async function loadResourcesTypes(ids: Term[], { sparql = parsingClient }: Clients = {}): Promise<Quad[]> {
@@ -53,8 +54,8 @@ export async function loadResourcesTypes(ids: Term[], { sparql = parsingClient }
 
     return separated
   }, {
-    local: new TermSet(),
-    remote: new TermSet(),
+    local: $rdf.termSet(),
+    remote: $rdf.termSet(),
   })
 
   const typesFoundRemotely = loadRemoteResourceTypes(remote, sparql)

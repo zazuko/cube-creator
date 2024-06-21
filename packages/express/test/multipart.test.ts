@@ -4,10 +4,11 @@ import request from 'supertest'
 import express from 'express'
 import asyncMiddleware from 'middleware-async'
 import { expect } from 'chai'
-import $rdf from 'rdf-ext'
-import { rdf, schema } from '@tpluscode/rdf-ns-builders/strict'
-import clownface from 'clownface'
-import { isMultipart, multiPartResourceHandler } from '../multipart'
+import $rdf from '@zazuko/env'
+import { rdf, schema } from '@tpluscode/rdf-ns-builders'
+import { isMultipart, multiPartResourceHandler } from '../multipart.js'
+
+const __dirname = path.dirname(new URL(import.meta.url).pathname)
 
 describe('@cube-creator/express/multipart', () => {
   describe('isMultipart', () => {
@@ -143,7 +144,7 @@ describe('@cube-creator/express/multipart', () => {
         app.use(asyncMiddleware(async (req, res) => {
           const { part } = req.multipartFileQuadsStreams()
           const dataset = await $rdf.dataset().import(part('http://foo.bar/baz/'))
-          const parsed = clownface({ dataset })
+          const parsed = $rdf.clownface({ dataset })
           res.send(parsed.has(rdf.type, schema.Person).value)
         }))
 

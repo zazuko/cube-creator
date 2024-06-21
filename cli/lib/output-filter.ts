@@ -4,8 +4,8 @@ import { cc } from '@cube-creator/core/namespace'
 import type { Context } from 'barnard59-core'
 import { customAlphabet } from 'nanoid'
 import dict from 'nanoid-dictionary'
-import $rdf from 'rdf-ext'
-import prefixes from '@zazuko/rdf-vocabularies/prefixes'
+import $rdf from '@zazuko/env'
+import prefixes from '@zazuko/prefixes'
 
 const nanoid = customAlphabet(dict.alphanumeric, 15)
 

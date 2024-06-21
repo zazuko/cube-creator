@@ -1,8 +1,8 @@
 import type { NamedNode, Term } from '@rdfjs/types'
 import { DELETE, WITH } from '@tpluscode/sparql-builder'
 import { VALUES } from '@tpluscode/sparql-builder/expressions'
-import { schema } from '@tpluscode/rdf-ns-builders/strict'
-import { streamClient } from '../../sparql'
+import { schema } from '@tpluscode/rdf-ns-builders'
+import { streamClient } from '../../sparql.js'
 
 interface DeleteDynamicTerms {
   graph: string
@@ -22,5 +22,5 @@ export async function deleteDynamicTerms({ dimension, properties, graph }: Delet
   `.WHERE`
     ${VALUES(...values)}
     ?term ?prop ?o ; ${schema.inDefinedTermSet} ${dimension} .
-  `).execute(streamClient.query)
+  `).execute(streamClient)
 }

@@ -1,4 +1,3 @@
-
 export interface RemoteData<T> {
   isLoading: boolean
   isLoaded: boolean

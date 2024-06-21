@@ -1,29 +1,29 @@
 import type { Term } from '@rdfjs/types'
 import { hydra, oa, schema } from '@tpluscode/rdf-ns-builders'
 import { asyncMiddleware } from 'middleware-async'
-import { protectedResource } from '@hydrofoil/labyrinth/resource'
+import { protectedResource } from '@hydrofoil/labyrinth/resource.js'
 import { Enrichment } from '@hydrofoil/labyrinth/lib/middleware/preprocessResource'
 import httpError from 'http-errors'
-import clownface, { GraphPointer } from 'clownface'
-import $rdf from 'rdf-ext'
+import type { GraphPointer } from 'clownface'
+import $rdf from '@zazuko/env-node'
 import { md } from '@cube-creator/core/namespace'
 import conditional from 'express-conditional-middleware'
 import { isMultipart } from '@cube-creator/express/multipart'
-import { shaclValidate } from '../middleware/shacl'
-import { getSharedDimensions, getSharedTerms } from '../domain/shared-dimensions'
-import { create } from '../domain/shared-dimension'
-import { store } from '../store'
-import { parsingClient, streamClient } from '../sparql'
-import env from '../env'
-import { rewrite, rewriteTerm } from '../rewrite'
-import { postImportedDimension } from './shared-dimension/import'
-import { getCollection } from './collection'
+import { shaclValidate } from '../middleware/shacl.js'
+import { getSharedDimensions, getSharedTerms } from '../domain/shared-dimensions.js'
+import { create } from '../domain/shared-dimension.js'
+import { store } from '../store.js'
+import { parsingClient, streamClient } from '../sparql.js'
+import env from '../env.js'
+import { rewrite, rewriteTerm } from '../rewrite.js'
+import { postImportedDimension } from './shared-dimension/import.js'
+import { getCollection } from './collection.js'
 
 export const get = asyncMiddleware(async (req, res, next) => {
   if (!req.dataset) {
     return next(new httpError.BadRequest())
   }
-  const query = clownface({ dataset: await req.dataset() })
+  const query = $rdf.clownface({ dataset: await req.dataset() })
   const pageSize = Number(query.out(hydra.limit).value || 10)
   const page = Number(query.out(hydra.pageIndex).value || 1)
   const offset = (page - 1) * pageSize
@@ -64,7 +64,7 @@ export const getTerms = asyncMiddleware(async (req, res, next) => {
     return next(new httpError.BadRequest())
   }
 
-  const query = clownface({ dataset: await req.dataset() })
+  const query = $rdf.clownface({ dataset: await req.dataset() })
   const termSet = query
     .has(schema.inDefinedTermSet)
     .out(schema.inDefinedTermSet)

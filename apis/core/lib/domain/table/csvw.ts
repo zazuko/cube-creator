@@ -1,10 +1,10 @@
 import type { NamedNode } from '@rdfjs/types'
-import * as Table from '@cube-creator/model/Table'
 import * as Csvw from '@rdfine/csvw'
 import { NotFoundError } from '@cube-creator/api-errors'
-import { ResourceStore } from '../../ResourceStore'
-import { buildCsvw } from '../../csvw-builder'
-import '../../domain'
+import $rdf from '@cube-creator/env'
+import { ResourceStore } from '../../ResourceStore.js'
+import { buildCsvw } from '../../csvw-builder/index.js'
+import '../../domain/index.js'
 
 interface Command {
   tableResource: NamedNode
@@ -20,7 +20,7 @@ export async function createCsvw({
     throw new NotFoundError(tableResource)
   }
 
-  const table = Table.fromPointer(tablePointer)
+  const table = $rdf.rdfine.cc.Table(tablePointer)
 
   return buildCsvw({ table, resources })
 }

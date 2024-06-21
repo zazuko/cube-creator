@@ -1,9 +1,9 @@
 import type { Term } from '@rdfjs/types'
 import type { GraphPointer } from 'clownface'
-import { ForbiddenMapper, UnauthorizedMapper } from './auth'
-import { DomainErrorMapper } from './domain'
+import { ForbiddenMapper, UnauthorizedMapper } from './auth.js'
+import { DomainErrorMapper } from './domain.js'
 
-export { DomainError } from './domain'
+export { DomainError } from './domain.js'
 
 export class NotFoundError extends Error {
   constructor(id: Term | GraphPointer | undefined) {

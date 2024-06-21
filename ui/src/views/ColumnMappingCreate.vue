@@ -38,7 +38,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { ResourceIdentifier, RuntimeOperation } from 'alcaeus'
-import { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
 import { mapGetters } from 'vuex'
 import { CsvSource, Table } from '@cube-creator/model'
 import RadioButton from '@/components/RadioButton.vue'

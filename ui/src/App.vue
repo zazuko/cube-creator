@@ -74,8 +74,8 @@ export default defineComponent({
     }),
 
     release (): string {
-      const commit = process.env.VUE_APP_COMMIT?.slice(0, 7) ?? 'dev'
-      return `${process.env.VUE_APP_VERSION} (${commit})`
+      const commit = import.meta.env.VITE_COMMIT?.slice(0, 7) ?? 'dev'
+      return `${import.meta.env.VITE_VERSION} (${commit})`
     },
   },
 

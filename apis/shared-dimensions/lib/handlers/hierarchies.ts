@@ -1,22 +1,22 @@
 import { asyncMiddleware } from 'middleware-async'
 import { md } from '@cube-creator/core/namespace'
-import { protectedResource } from '@hydrofoil/labyrinth/resource'
+import { protectedResource } from '@hydrofoil/labyrinth/resource.js'
 import { hydra } from '@tpluscode/rdf-ns-builders'
-import clownface from 'clownface'
+import $rdf from '@cube-creator/env'
 import httpError from 'http-errors'
-import { parsingClient } from '../sparql'
-import { getHierarchies, create } from '../domain/hierarchies'
-import { shaclValidate } from '../middleware/shacl'
-import { rewrite } from '../rewrite'
-import { store } from '../store'
-import { getCollection } from './collection'
+import { parsingClient } from '../sparql.js'
+import { getHierarchies, create } from '../domain/hierarchies.js'
+import { shaclValidate } from '../middleware/shacl.js'
+import { rewrite } from '../rewrite.js'
+import { store } from '../store.js'
+import { getCollection } from './collection.js'
 
 export const get = asyncMiddleware(async (req, res, next) => {
   if (!req.dataset) {
     return next(new httpError.BadRequest())
   }
 
-  const query = clownface({ dataset: await req.dataset() })
+  const query = $rdf.clownface({ dataset: await req.dataset() })
   const pageSize = Number(query.out(hydra.limit).value || 10)
   const page = Number(query.out(hydra.pageIndex).value || 1)
   const offset = (page - 1) * pageSize
@@ -26,8 +26,8 @@ export const get = asyncMiddleware(async (req, res, next) => {
     limit: pageSize,
     offset,
   }
-  const collection = await getCollection({
-    memberQuads: await getHierarchies(queryParams).execute(parsingClient.query),
+  const collection = getCollection({
+    memberQuads: await getHierarchies(queryParams).execute(parsingClient),
     collectionType: md.Hierarchies,
     memberType: md.Hierarchy,
     collection: req.hydra.resource.term,

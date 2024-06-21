@@ -1,24 +1,22 @@
 import type { Term } from '@rdfjs/types'
 import asyncMiddleware from 'middleware-async'
-import { protectedResource } from '@hydrofoil/labyrinth/resource'
+import { protectedResource } from '@hydrofoil/labyrinth/resource.js'
 import { Enrichment } from '@hydrofoil/labyrinth/lib/middleware/preprocessResource'
-import { fromPointer } from '@rdfine/prov/lib/Dictionary'
-import env from '@cube-creator/shared-dimensions-api/lib/env'
-import $rdf from 'rdf-ext'
-import clownface from 'clownface'
+import env from '@cube-creator/shared-dimensions-api/lib/env.js'
+import $rdf from '@cube-creator/env'
 import { Dictionary } from '@rdfine/prov'
 import { cc, md } from '@cube-creator/core/namespace'
-import { rdf } from '@tpluscode/rdf-ns-builders/strict'
+import { rdf } from '@tpluscode/rdf-ns-builders'
 import error from 'http-errors'
 import { isNamedNode } from 'is-graph-pointer'
 import { toRdf } from 'rdf-literal'
 import { DimensionMetadataCollection } from '@cube-creator/model'
 import { dimensionChangedWarning } from '@cube-creator/model/DimensionMetadata'
 import parsePreferHeader from 'parse-prefer-header'
-import { shaclValidate } from '../middleware/shacl'
-import { update } from '../domain/dimension-mapping/update'
-import { getUnmappedValues, importMappingsFromSharedDimension } from '../domain/queries/dimension-mappings'
-import { findByDimensionMapping } from '../domain/queries/dimension-metadata'
+import { shaclValidate } from '../middleware/shacl.js'
+import { update } from '../domain/dimension-mapping/update.js'
+import { getUnmappedValues, importMappingsFromSharedDimension } from '../domain/queries/dimension-mappings.js'
+import { findByDimensionMapping } from '../domain/queries/dimension-metadata.js'
 
 function rewrite<T extends Term>(term: T, from: string, to: string): T {
   if (term.termType === 'NamedNode') {
@@ -52,7 +50,7 @@ export const put = protectedResource(
 
     const { dimensionMapping, hasChanges } = await update({
       resource: req.hydra.resource.term,
-      mappings: clownface({ dataset }).node(mappings.term),
+      mappings: $rdf.clownface({ dataset }).node(mappings.term),
       store: req.resourceStore(),
     })
 
@@ -60,7 +58,7 @@ export const put = protectedResource(
       const metadataId = await findByDimensionMapping(dimensionMapping.term)
       const dimensionMetadata = await store.getResource<DimensionMetadataCollection>(metadataId)
 
-      dimensionMetadata.addError?.(dimensionChangedWarning)
+      dimensionMetadata.addError?.(dimensionChangedWarning($rdf))
     }
 
     await store.save()
@@ -87,7 +85,7 @@ export const prepareEntries: Enrichment = async (req, pointer) => {
   }
 
   if (!preferences.onlyMapped) {
-    const dictionary = fromPointer(pointer)
+    const dictionary = $rdf.rdfine.prov.Dictionary(pointer)
     const unmappedValues = await getUnmappedValues(dictionary.id)
 
     dictionary.addMissingEntries(unmappedValues)
@@ -122,7 +120,7 @@ export const importMappingsRequest = protectedResource(
 
     const metadataId = await findByDimensionMapping(dimensionMapping.id)
     const dimensionMetadata = await store.getResource<DimensionMetadataCollection>(metadataId)
-    dimensionMetadata.addError?.(dimensionChangedWarning)
+    dimensionMetadata.addError?.(dimensionChangedWarning($rdf))
     await store.save()
 
     res.end()

@@ -2,11 +2,11 @@ import { RdfResource } from '@tpluscode/rdfine/RdfResource'
 import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import { Constructor, property } from '@tpluscode/rdfine'
 import { cc } from '@cube-creator/core/namespace'
-import { CsvSource, SourcesCollection } from './CsvSource'
-import { TableCollection } from './Table'
-import { Link } from './lib/Link'
-import { initializer } from './lib/initializer'
-import { Project } from './Project'
+import { CsvSource, SourcesCollection } from './CsvSource.js'
+import { TableCollection } from './Table.js'
+import { Link } from './lib/Link.js'
+import { initializer } from './lib/initializer.js'
+import { Project } from './Project.js'
 
 export interface CsvMapping extends RdfResource {
   sources: CsvSource[]

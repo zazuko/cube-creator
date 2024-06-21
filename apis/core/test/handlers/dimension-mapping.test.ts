@@ -1,17 +1,13 @@
 import type { Literal } from '@rdfjs/types'
 import { describe, it, beforeEach } from 'mocha'
 import { Request } from 'express'
-import sinon from 'sinon'
-import TermSet from '@rdfjs/term-set'
 import { expect } from 'chai'
-import $rdf from 'rdf-ext'
+import $rdf from '@cube-creator/env'
 import { prov } from '@tpluscode/rdf-ns-builders'
-import { fromPointer } from '@rdfine/prov/lib/Dictionary'
 import { namedNode } from '@cube-creator/testing/clownface'
 import { ex } from '@cube-creator/testing/lib/namespace'
-import { prepareEntries } from '../../lib/handlers/dimension-mapping'
-import * as queries from '../../lib/domain/queries/dimension-mappings'
-import '../../lib/domain'
+import esmock from 'esmock'
+import '../../lib/domain/index.js'
 
 describe('lib/handlers/dimension-mapping', () => {
   describe('prepareEntries', () => {
@@ -20,11 +16,16 @@ describe('lib/handlers/dimension-mapping', () => {
     } as Request
     let unmappedTerms: Set<Literal>
 
-    beforeEach(() => {
-      unmappedTerms = new TermSet()
+    let prepareEntries: typeof import('../../lib/handlers/dimension-mapping.js').prepareEntries
 
-      sinon.restore()
-      sinon.stub(queries, 'getUnmappedValues').callsFake(async () => unmappedTerms)
+    beforeEach(async () => {
+      unmappedTerms = $rdf.termSet()
+
+      ;({ prepareEntries } = await esmock('../../lib/handlers/dimension-mapping.js', {
+        '../../lib/domain/queries/dimension-mappings.js': {
+          getUnmappedValues: async () => unmappedTerms,
+        },
+      }))
     })
 
     it('add link to dimension to every entry', async () => {
@@ -32,7 +33,7 @@ describe('lib/handlers/dimension-mapping', () => {
       unmappedTerms.add($rdf.literal('Pb'))
       const sharedDimension = ex.dimension
       const mappings = namedNode('mappings')
-      fromPointer(mappings, {
+      $rdf.rdfine.prov.Dictionary(mappings, {
         sharedDimension,
         hadDictionaryMember: [{
           pairKey: 'so2',
@@ -58,7 +59,7 @@ describe('lib/handlers/dimension-mapping', () => {
       // given
       const sharedDimension = ex.dimension
       const mappings = namedNode('mappings')
-      fromPointer(mappings, {
+      $rdf.rdfine.prov.Dictionary(mappings, {
         sharedDimension,
         hadDictionaryMember: [{
           pairKey: 'so2',
@@ -92,7 +93,7 @@ describe('lib/handlers/dimension-mapping', () => {
       unmappedTerms.add($rdf.literal('Pb'))
       const sharedDimension = ex.dimension
       const mappings = namedNode('mappings')
-      fromPointer(mappings, {
+      $rdf.rdfine.prov.Dictionary(mappings, {
         sharedDimension,
         hadDictionaryMember: [{
           pairKey: 'so2',
@@ -127,7 +128,7 @@ describe('lib/handlers/dimension-mapping', () => {
       req.headers.prefer = 'return=canonical'
       const sharedDimension = ex.dimension
       const mappings = namedNode('mappings')
-      fromPointer(mappings, {
+      $rdf.rdfine.prov.Dictionary(mappings, {
         sharedDimension,
         hadDictionaryMember: [{
           pairKey: 'so2',
@@ -159,7 +160,7 @@ describe('lib/handlers/dimension-mapping', () => {
       // given
       const sharedDimension = ex.dimension
       const mappings = namedNode('mappings')
-      fromPointer(mappings, {
+      $rdf.rdfine.prov.Dictionary(mappings, {
         sharedDimension,
         hadDictionaryMember: [{
           pairKey: 'so2',

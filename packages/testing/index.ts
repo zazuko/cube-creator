@@ -1,6 +1,6 @@
 import program from 'commander'
 import debug from 'debug'
-import { insertTestDimensions, insertTestProject, insertPxCube, insertTestHierarchies } from './lib/seedData'
+import { insertTestDimensions, insertTestProject, insertPxCube, insertTestHierarchies } from './lib/seedData.js'
 
 const log = debug('testing')
 log.enabled = true

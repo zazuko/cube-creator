@@ -2,9 +2,9 @@ import type { Term } from '@rdfjs/types'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import { SELECT } from '@tpluscode/sparql-builder'
-import { ParsingClient } from 'sparql-http-client/ParsingClient'
+import { ParsingClient } from 'sparql-http-client/ParsingClient.js'
 import { ResultRow } from 'sparql-http-client/ResultParser'
-import { parsingClient } from '../../query-client'
+import { parsingClient } from '../../query-client.js'
 
 export function getCubesAndGraphs(dataset: Term, client: ParsingClient = parsingClient): Promise<ResultRow[]> {
   return SELECT`?cube ?graph`
@@ -18,5 +18,5 @@ export function getCubesAndGraphs(dataset: Term, client: ParsingClient = parsing
       graph ${dataset} {
           ${dataset} ${schema.hasPart} ?cube .
       }
-    `.execute(client.query)
+    `.execute(client)
 }

@@ -2,10 +2,10 @@ import { shape, editor, lindasSchema } from '@cube-creator/core/namespace'
 import { supportedLanguages } from '@cube-creator/core/languages'
 import { hydra, rdfs, sh, dcat, dcterms, xsd, rdf, vcard, schema, _void, dash, skos } from '@tpluscode/rdf-ns-builders'
 import { sparql, turtle } from '@tpluscode/rdf-string'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import { Draft } from '@cube-creator/model/Cube'
-import env from '@cube-creator/core/env'
-import { lindasQuery } from '../lib/query'
+import env from '@cube-creator/core/env/node'
+import { lindasQuery } from '../lib/query.js'
 
 const shapeId = shape('dataset/edit-metadata')
 const temporalFromTo = $rdf.namedNode(shapeId.value + '#temporalFromTo')

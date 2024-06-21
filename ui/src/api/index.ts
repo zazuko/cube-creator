@@ -1,11 +1,8 @@
-import { Hydra } from 'alcaeus/web'
 import { HydraResponse, RdfResource, RuntimeOperation } from 'alcaeus'
-import { ResponseWrapper } from 'alcaeus/ResponseWrapper'
-import RdfResourceImpl, { RdfResourceCore, ResourceIdentifier } from '@tpluscode/rdfine/RdfResource'
+import { ResponseWrapper } from 'alcaeus/alcaeus'
+import { RdfResourceCore, ResourceIdentifier } from '@tpluscode/rdfine/RdfResource'
 import { hydra, sh } from '@tpluscode/rdf-ns-builders'
-import { ShapeBundle } from '@rdfine/shacl/bundles'
 import { Shape, ValidationReportMixin, ValidationResultMixin } from '@rdfine/shacl'
-import { ThingMixin } from '@rdfine/schema'
 import { Store } from 'vuex'
 import store from '@/store'
 import { RootState } from '@/store/types'
@@ -20,8 +17,9 @@ import SharedDimensionMixin from './mixins/SharedDimension'
 import * as Models from '@cube-creator/model'
 import { findNodes } from 'clownface-shacl-path'
 import { FileLiteral } from '@/forms/FileLiteral'
-import { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
 import type { Term } from '@rdfjs/types'
+import $rdf from '@cube-creator/env'
 
 export const rootURL = window.APP_CONFIG.apiCoreBase
 const segmentSeparator = '!!' // used to replace slash in URI to prevent escaping
@@ -31,26 +29,24 @@ if (!rootURL) {
 }
 
 // Tells Hydra to use the API root URI as base URI for relative URIs
-Hydra.baseUri = rootURL
+$rdf.hydra.baseUri = rootURL
 
-Hydra.resources.factory.addMixin(...Object.values(Models))
-Hydra.resources.factory.addMixin(apiResourceMixin(rootURL, segmentSeparator))
-Hydra.resources.factory.addMixin(CSVSourceMixin)
-Hydra.resources.factory.addMixin(TableMixin)
-Hydra.resources.factory.addMixin(HierarchyMixin)
-Hydra.resources.factory.addMixin(JobCollectionMixin)
-Hydra.resources.factory.addMixin(OperationMixin)
-Hydra.resources.factory.addMixin(SharedDimensionMixin)
-Hydra.resources.factory.addMixin(...ShapeBundle)
-Hydra.resources.factory.addMixin(ThingMixin)
-Hydra.resources.factory.addMixin(ValidationReportMixin)
-Hydra.resources.factory.addMixin(ValidationResultMixin)
+$rdf.hydra.resources.factory.addMixin(...Object.values(Models))
+$rdf.hydra.resources.factory.addMixin(apiResourceMixin(rootURL, segmentSeparator))
+$rdf.hydra.resources.factory.addMixin(CSVSourceMixin)
+$rdf.hydra.resources.factory.addMixin(TableMixin)
+$rdf.hydra.resources.factory.addMixin(HierarchyMixin)
+$rdf.hydra.resources.factory.addMixin(JobCollectionMixin)
+$rdf.hydra.resources.factory.addMixin(OperationMixin)
+$rdf.hydra.resources.factory.addMixin(SharedDimensionMixin)
+$rdf.hydra.resources.factory.addMixin(ValidationReportMixin)
+$rdf.hydra.resources.factory.addMixin(ValidationResultMixin)
 
 // Inject the access token in all requests if present
-Hydra.defaultHeaders = ({ uri }) => prepareHeaders(uri, store)
+$rdf.hydra.defaultHeaders = ({ uri }) => prepareHeaders(uri, store)
 
 // Cache API documentation because we know that it doesn't ever change.
-Hydra.cacheStrategy.shouldLoad = (previous) => {
+$rdf.hydra.cacheStrategy.shouldLoad = (previous) => {
   return !previous.representation.root?.types.has(hydra.ApiDocumentation)
 }
 
@@ -60,7 +56,7 @@ export const api = {
   async fetchResource <T extends RdfResourceCore = RdfResource> (url: string): Promise<T> {
     let request = pendingRequests.get(url)
     if (!request) {
-      request = Hydra.loadResource<T>(url.split(segmentSeparator).join('/'))
+      request = $rdf.hydra.loadResource<T>(url.split(segmentSeparator).join('/'))
       pendingRequests.set(url, request)
     }
 
@@ -139,7 +135,7 @@ export const api = {
   async invokeSaveOperation<T extends RdfResource = RdfResource> (operation: RuntimeOperation | null | undefined, resource: RdfResource | GraphPointer<ResourceIdentifier>, headers: HeadersInit = {}): Promise<T | null | undefined> {
     const data = 'toJSON' in resource
       ? resource
-      : RdfResourceImpl.factory.createEntity(resource) as RdfResource
+      : $rdf.rdfine().factory.createEntity(resource) as RdfResource
 
     if (!operation) throw new Error('Operation does not exist')
 
@@ -196,12 +192,12 @@ export function prepareHeaders (uri: string, store: Store<RootState>): Record<st
     headers.authorization = `Bearer ${token}`
   }
 
-  if (process.env.VUE_APP_X_USER) {
-    headers['x-user'] = process.env.VUE_APP_X_USER
+  if (import.meta.env.VITE_X_USER) {
+    headers['x-user'] = import.meta.env.VITE_X_USER
   }
 
-  if (process.env.VUE_APP_X_PERMISSION) {
-    headers['x-permission'] = process.env.VUE_APP_X_PERMISSION
+  if (import.meta.env.VITE_X_PERMISSION) {
+    headers['x-permission'] = import.meta.env.VITE_X_PERMISSION
   }
 
   return headers

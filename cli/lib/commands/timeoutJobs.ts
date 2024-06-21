@@ -1,16 +1,15 @@
 import { SELECT } from '@tpluscode/sparql-builder'
-import ParsingClient from 'sparql-http-client/ParsingClient'
-import { dcterms, schema } from '@tpluscode/rdf-ns-builders/strict'
-import * as Alcaeus from 'alcaeus/node'
+import ParsingClient from 'sparql-http-client/ParsingClient.js'
+import { dcterms, schema } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import * as Models from '@cube-creator/model'
 import { parse, toSeconds } from 'iso8601-duration'
-import $rdf from 'rdf-ext'
+import $rdf from '@cube-creator/env'
 import { toRdf } from 'rdf-literal'
 import { IN } from '@tpluscode/sparql-builder/expressions'
-import { updateJobStatus } from '../job'
-import { setupAuthentication } from '../auth'
-import { logger } from '../log'
+import { updateJobStatus } from '../job.js'
+import { setupAuthentication } from '../auth.js'
+import { logger } from '../log.js'
 
 interface TimeoutJobs {
   duration: string
@@ -47,16 +46,15 @@ export async function timeoutJobs({
         )
       }
     `
-    .execute(client.query)
+    .execute(client)
 
-  const apiClient = Alcaeus.create({ datasetFactory: $rdf.dataset })
+  const apiClient = $rdf.hydra
   apiClient.resources.factory.addMixin(...Object.values(Models))
-  setupAuthentication({}, logger, apiClient)
+  setupAuthentication({}, logger)
 
   for (const { job } of overtimeJobs) {
     await updateJob({
       jobUri: job.value,
-      apiClient,
       modified: new Date(now()),
       status: cc.CanceledJobStatus,
       executionUrl: undefined,

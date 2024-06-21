@@ -1,23 +1,23 @@
 import type { DatasetCore } from '@rdfjs/types'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import toStream from 'string-to-stream'
-import Parser from '@rdfjs/parser-n3'
 import { describe, it, before } from 'mocha'
 import { expect } from 'chai'
 import { rdf, schema, time } from '@tpluscode/rdf-ns-builders'
 import { namedNode } from '@cube-creator/testing/clownface'
-import { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
 import { meta } from '@cube-creator/core/namespace'
-import { DimensionMetadataShape } from '../../bootstrap/shapes/dimension'
+import formats from '@rdfjs-elements/formats-pretty'
+import { DimensionMetadataShape } from '../../bootstrap/shapes/dimension.js'
 
-const parser = new Parser()
+$rdf.formats.import(formats)
 
 describe('apis/core/bootstrap/shapes/dimension', () => {
   describe('DimensionMetadataShape', () => {
     let shapes: DatasetCore
 
     before(async () => {
-      const quadStream = parser.import(toStream(DimensionMetadataShape.toString({ base: 'http://example.com/' })))
+      const quadStream = $rdf.formats.parsers.import('text/turtle', toStream(DimensionMetadataShape.toString({ base: 'http://example.com/' })))!
       shapes = await $rdf.dataset().import(quadStream)
     })
 

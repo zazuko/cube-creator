@@ -7,9 +7,9 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
 import type { NamedNode } from '@rdfjs/types'
-import * as $rdf from '@rdf-esm/data-model'
+import $rdf from '@cube-creator/env'
 import { api } from '@/api'
-import { rdfs, schema, skos } from '@tpluscode/rdf-ns-builders/strict'
+import { rdfs, schema, skos } from '@tpluscode/rdf-ns-builders'
 import { supportedLanguages } from '@cube-creator/core/languages'
 
 const language = supportedLanguages.map(({ value }) => value)

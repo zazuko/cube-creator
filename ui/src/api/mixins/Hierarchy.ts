@@ -1,6 +1,6 @@
 import { Constructor, property } from '@tpluscode/rdfine'
 import { md, meta } from '@cube-creator/core/namespace'
-import { schema, sh } from '@tpluscode/rdf-ns-builders/strict'
+import { schema, sh } from '@tpluscode/rdf-ns-builders'
 import type { NamedNode } from '@rdfjs/types'
 import { Hierarchy, NextInHierarchy, Path } from '@/store/types'
 

@@ -1,21 +1,22 @@
 import asyncMiddleware from 'middleware-async'
 import { NO_CONTENT } from 'http-status'
-import clownface, { GraphPointer } from 'clownface'
-import { protectedResource } from '@hydrofoil/labyrinth/resource'
-import { hydra } from '@tpluscode/rdf-ns-builders/strict'
-import { store } from '../store'
-import { cascadeDelete } from '../domain/resource'
-import { shaclValidate } from '../middleware/shacl'
-import shapes from '../shapes/index'
-import { update } from '../domain/shared-dimension'
-import { rewrite } from '../rewrite'
-import * as queries from '../domain/shared-dimension/queries'
+import type { GraphPointer } from 'clownface'
+import { protectedResource } from '@hydrofoil/labyrinth/resource.js'
+import { hydra } from '@tpluscode/rdf-ns-builders'
+import $rdf from '@cube-creator/env'
+import { store } from '../store.js'
+import { cascadeDelete } from '../domain/resource.js'
+import { shaclValidate } from '../middleware/shacl.js'
+import shapes from '../shapes/index.js'
+import { update } from '../domain/shared-dimension.js'
+import { rewrite } from '../rewrite.js'
+import * as queries from '../domain/shared-dimension/queries.js'
 
 export const DELETE = protectedResource(asyncMiddleware(async (req, res) => {
   await cascadeDelete({
     store: store(),
     term: req.hydra.resource.term,
-    api: clownface(req.hydra.api),
+    api: $rdf.clownface(req.hydra.api),
   })
 
   res.sendStatus(NO_CONTENT)

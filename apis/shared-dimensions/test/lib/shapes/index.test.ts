@@ -5,11 +5,11 @@ import sinon from 'sinon'
 import { blankNode, namedNode } from '@cube-creator/testing/clownface'
 import { dcterms, hydra, qudt, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { md, meta } from '@cube-creator/core/namespace'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env-node'
 import { expect } from 'chai'
-import { GraphPointer } from 'clownface'
-import shapes from '../../../lib/shapes'
-import * as ns from '../../../lib/namespace'
+import type { GraphPointer } from 'clownface'
+import shapes from '../../../lib/shapes/index.js'
+import * as ns from '../../../lib/namespace.js'
 
 describe('@cube-creator/shared-dimensions-api/lib/shapes', () => {
   let shape: GraphPointer<NamedNode>

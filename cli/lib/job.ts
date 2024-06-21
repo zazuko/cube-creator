@@ -1,20 +1,17 @@
 import type { Term } from '@rdfjs/types'
 import stream from 'readable-stream'
-import { HydraClient } from 'alcaeus/alcaeus'
 import { Job, Table, TransformJob } from '@cube-creator/model'
 import type * as Schema from '@rdfine/schema'
-import { schema } from '@tpluscode/rdf-ns-builders/strict'
+import { schema } from '@tpluscode/rdf-ns-builders'
 import type { Logger } from 'winston'
 import type { Context, VariableMap } from 'barnard59-core'
-import $rdf from 'rdf-ext'
+import $rdf from '@cube-creator/env'
 import { cc } from '@cube-creator/core/namespace'
-import TermMap from '@rdfjs/term-map'
-import { GraphPointer } from 'clownface'
-import { ValidationError } from 'barnard59-shacl/lib/errors'
-import DatasetExt from 'rdf-ext/lib/Dataset'
+import type { GraphPointer } from 'clownface'
+import { ValidationError } from 'barnard59-shacl/lib/errors.js'
 import { createPlaygroundUrl } from '@zazuko/shacl-playground'
 import { shorten } from '@zazuko/s'
-import { logger } from './log'
+import { logger } from './log.js'
 
 interface Params {
   jobUri: string
@@ -25,9 +22,7 @@ interface Params {
 async function loadTransformJob(jobUri: string, log: Logger, variables: Params['variables']): Promise<TransformJob> {
   log.debug(`Loading job ${jobUri}`)
 
-  const Hydra = variables.get('apiClient')
-
-  const { representation, response } = await Hydra.loadResource<TransformJob>(jobUri)
+  const { representation, response } = await $rdf.hydra.loadResource<TransformJob>(jobUri)
   if (!representation || !representation.root) {
     throw new Error(`Did not find representation of job ${jobUri}. Server responded ${response?.xhr.status}`)
   }
@@ -48,14 +43,13 @@ interface JobStatusUpdate {
   status: Schema.ActionStatusType | typeof cc.CanceledJobStatus
   modified: Date
   error?: Error | string
-  apiClient: HydraClient<DatasetExt>
   lastTransformed?: { csv?: string; row?: number }
   messages?: string[]
 }
 
-export async function updateJobStatus({ jobUri, executionUrl, lastTransformed, status, error, modified, apiClient, messages = [] }: JobStatusUpdate) {
+export async function updateJobStatus({ jobUri, executionUrl, lastTransformed, status, error, modified, messages = [] }: JobStatusUpdate) {
   try {
-    const { representation } = await apiClient.loadResource<Job | TransformJob>(jobUri)
+    const { representation } = await $rdf.hydra.loadResource<Job | TransformJob>(jobUri)
     const job = representation?.root
     if (!job) {
       logger.error('Could not load job to update')
@@ -125,7 +119,7 @@ function isValidationError(error: string | Error): error is ValidationError {
 }
 
 function mergeDatasetIn(target: GraphPointer, toMerge: GraphPointer): GraphPointer {
-  const blanks = new TermMap()
+  const blanks = $rdf.termMap()
 
   const rewriteBlank = (term: Term): any => {
     if (term.termType === 'BlankNode') {

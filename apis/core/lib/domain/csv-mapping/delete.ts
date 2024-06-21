@@ -1,9 +1,9 @@
 import type { NamedNode } from '@rdfjs/types'
 import { cc } from '@cube-creator/core/namespace'
-import { ResourceStore } from '../../ResourceStore'
-import { deleteSource } from '../csv-source/delete'
-import { deleteTable } from '../table/delete'
-import { getTablesForMapping } from '../queries/table'
+import { ResourceStore } from '../../ResourceStore.js'
+import { deleteSource } from '../csv-source/delete.js'
+import { deleteTable } from '../table/delete.js'
+import { getTablesForMapping } from '../queries/table.js'
 
 export async function deleteMapping(csvMapping: NamedNode, store: ResourceStore): Promise<void> {
   const csvMappingResource = await store.get(csvMapping, { allowMissing: true })

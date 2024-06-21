@@ -1,10 +1,10 @@
-import { CubeProjectShape } from './cube-project'
-import { TableShape } from './table'
-import { DatasetShape } from './dataset'
-import { CSVSourceCreateShape, CSVSourceUpdateShape } from './csv-source'
-import { JobUpdateShape, JobTriggerShape } from './jobs'
-import { ColumnMappingShape } from './column-mapping'
-import { DimensionMetadataShape, SharedDimensionMappingShape, SharedDimensionMappingImportShape } from './dimension'
+import { CubeProjectShape } from './cube-project.js'
+import { TableShape } from './table.js'
+import { DatasetShape } from './dataset.js'
+import { CSVSourceCreateShape, CSVSourceUpdateShape } from './csv-source.js'
+import { JobUpdateShape, JobTriggerShape } from './jobs.js'
+import { ColumnMappingShape } from './column-mapping.js'
+import { DimensionMetadataShape, SharedDimensionMappingShape, SharedDimensionMappingImportShape } from './dimension.js'
 
 export default [
   CubeProjectShape,

@@ -1,15 +1,15 @@
 import type { NamedNode, Term } from '@rdfjs/types'
-import ParsingClient from 'sparql-http-client/ParsingClient'
-import clownface, { AnyPointer, GraphPointer } from 'clownface'
+import ParsingClient from 'sparql-http-client/ParsingClient.js'
+import type { AnyPointer, GraphPointer } from 'clownface'
 import { ASK, INSERT, SELECT } from '@tpluscode/sparql-builder'
-import { rdf, schema, sh } from '@tpluscode/rdf-ns-builders/strict'
+import { rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import onetime from 'onetime'
 import { isGraphPointer } from 'is-graph-pointer'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env-node'
 import { sparql } from '@tpluscode/rdf-string'
-import { SharedDimensionsStore } from '../store'
-import shapeToQuery from '../shapeToQuery'
-import { loadShapes } from './shapes'
+import { SharedDimensionsStore } from '../store.js'
+import shapeToQuery from '../shapeToQuery.js'
+import { loadShapes } from './shapes.js'
 
 export default class implements SharedDimensionsStore {
   private readonly loadShapes: () => Promise<AnyPointer>
@@ -21,7 +21,7 @@ export default class implements SharedDimensionsStore {
   exists(id: NamedNode, type?: NamedNode): Promise<boolean> {
     return ASK`
       ${id} ${rdf.type} ${type || $rdf.variable('type')} .
-    `.FROM(this.graph).execute(this.client.query)
+    `.FROM(this.graph).execute(this.client)
   }
 
   async load(term: NamedNode): Promise<GraphPointer<NamedNode>> {
@@ -35,7 +35,7 @@ export default class implements SharedDimensionsStore {
     const quads = await query.execute(this.client, {
       operation: 'postDirect',
     })
-    return clownface({
+    return $rdf.clownface({
       dataset: $rdf.dataset(quads),
       term,
     })
@@ -71,11 +71,11 @@ export default class implements SharedDimensionsStore {
     const shapes = await this.loadShapes()
     const types = await SELECT`?type`
       .WHERE`${term} a ?type`
-      .execute(this.client.query)
+      .execute(this.client)
 
     const graph = shapes.has(sh.targetClass, types.map(b => b.type))
     if (!isGraphPointer(graph)) {
-      return clownface({ dataset: $rdf.dataset() })
+      return $rdf.clownface()
         .blankNode()
         .addOut(sh.property, shp => {
           shp.addOut(sh.path, rdf.type)
@@ -89,7 +89,7 @@ export default class implements SharedDimensionsStore {
   }
 
   private async createDynamicProperties({ dataset, term }: GraphPointer, sharedTerm: Term) {
-    const shape = clownface({
+    const shape = $rdf.clownface({
       dataset: $rdf.dataset([...dataset]),
       term,
     })
@@ -98,7 +98,7 @@ export default class implements SharedDimensionsStore {
       .WHERE`
         ${sharedTerm} ${schema.inDefinedTermSet}/${schema.additionalProperty}/${rdf.predicate} ?predicate
       `
-      .execute(this.client.query)
+      .execute(this.client)
 
     for (const { predicate } of dynamicPropertyPredicates) {
       shape.addOut(sh.property, propShape => {

@@ -1,7 +1,7 @@
 import { SELECT } from '@tpluscode/sparql-builder'
 import { IN } from '@tpluscode/sparql-builder/expressions'
-import { as } from '@tpluscode/rdf-ns-builders/strict'
-import $rdf from 'rdf-ext'
+import { as } from '@tpluscode/rdf-ns-builders'
+import $rdf from '@zazuko/env'
 import type { ProjectDetailPart } from '../details.js'
 
 export const lastModification: ProjectDetailPart = (project, variable) => {

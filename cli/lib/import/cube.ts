@@ -68,5 +68,5 @@ export default async function query(this: Context, { endpoint, cube, graph }: Cu
     query = query.FROM(graph)
   }
 
-  return query.execute(client.query)
+  return query.execute(client)
 }

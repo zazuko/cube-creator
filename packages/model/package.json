@@ -2,25 +2,29 @@
   "name": "@cube-creator/model",
   "version": "0.1.27",
   "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./index.js",
+    "./*": "./*.js"
+  },
   "dependencies": {
     "@cube-creator/core": "1.0.0",
-    "@rdf-esm/data-model": "^0.5.3",
-    "@rdfine/csvw": "^0.6.3",
-    "@rdfine/hydra": "^0.8.0",
-    "@rdfine/rdfs": "^0.6.3",
-    "@rdfine/schema": "^0.6.3",
-    "@rdfine/shacl": "^0.8.5",
-    "@tpluscode/rdf-ns-builders": "^1.0.0",
-    "@tpluscode/rdfine": "^0.5.19",
+    "@zazuko/env": "^2.0.6",
+    "@rdfine/csvw": "^0.8.5",
+    "@rdfine/hydra": "^0.10.5",
+    "@rdfine/rdfs": "^0.8.5",
+    "@rdfine/schema": "^0.8.5",
+    "@rdfine/shacl": "^0.10.5",
+    "@tpluscode/rdf-ns-builders": "^4",
+    "@tpluscode/rdfine": "^0.7.7",
     "is-uri": "^1.2.0",
     "uri-template": "^1.0.1"
   },
   "devDependencies": {
     "@cube-creator/testing": "^0.1.21",
-    "@types/clownface": "^1",
     "@types/is-uri": "^1",
     "@rdfjs/types": "^1.1.0",
-    "alcaeus": "^2",
+    "alcaeus": "^3.0.1",
     "chai": "^4.3.4",
     "mocha": "^10"
   }

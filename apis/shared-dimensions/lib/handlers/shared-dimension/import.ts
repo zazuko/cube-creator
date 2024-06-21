@@ -1,11 +1,11 @@
-import { protectedResource } from '@hydrofoil/labyrinth/resource'
+import { protectedResource } from '@hydrofoil/labyrinth/resource.js'
 import asyncMiddleware from 'middleware-async'
 import { multiPartResourceHandler } from '@cube-creator/express/multipart'
 import { validationReportResponse } from 'hydra-box-middleware-shacl'
-import { shaclValidate } from '../../middleware/shacl'
-import { streamClient } from '../../sparql'
-import { importDimension } from '../../domain/shared-dimension'
-import { store } from '../../store'
+import { shaclValidate } from '../../middleware/shacl.js'
+import { streamClient } from '../../sparql.js'
+import { importDimension } from '../../domain/shared-dimension.js'
+import { store } from '../../store.js'
 
 export const postImportedDimension = protectedResource(
   multiPartResourceHandler,

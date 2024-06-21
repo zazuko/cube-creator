@@ -2,21 +2,16 @@ import type { NamedNode } from '@rdfjs/types'
 import { describe, it, beforeEach } from 'mocha'
 import { expect } from 'chai'
 import sinon from 'sinon'
-import clownface, { GraphPointer } from 'clownface'
-import $rdf from 'rdf-ext'
-import DatasetExt from 'rdf-ext/lib/Dataset'
+import esmock from 'esmock'
+import type { GraphPointer } from 'clownface'
+import $rdf from '@cube-creator/env'
+import { Dataset as DatasetExt } from '@zazuko/env/lib/Dataset.js'
 import { csvw, hydra, rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
-import * as Organization from '@cube-creator/model/Organization'
 import { namedNode } from '@cube-creator/testing/clownface'
-import * as Project from '@cube-creator/model/Project'
-import { TestResourceStore } from '../../support/TestResourceStore'
-import * as DimensionMetadataQueries from '../../../lib/domain/queries/dimension-metadata'
-import type * as ColumnMappingQueries from '../../../lib/domain/queries/column-mapping'
-import '../../../lib/domain'
-import { updateTable } from '../../../lib/domain/table/update'
-import * as orgQueries from '../../../lib/domain/organization/query'
-import * as tableQueries from '../../../lib/domain/queries/table'
+import { TestResourceStore } from '../../support/TestResourceStore.js'
+import type * as ColumnMappingQueries from '../../../lib/domain/queries/column-mapping.js'
+import '../../../lib/domain/index.js'
 
 describe('domain/table/update', () => {
   let store: TestResourceStore
@@ -25,23 +20,26 @@ describe('domain/table/update', () => {
   let dimensionMetadata: GraphPointer<NamedNode, DatasetExt>
   let columnMapping: GraphPointer<NamedNode, DatasetExt>
 
-  beforeEach(() => {
+  let updateTable: typeof import('../../../lib/domain/table/update.js').updateTable
+  let getTableReferences: sinon.SinonStub
+
+  beforeEach(async () => {
     sinon.restore()
 
-    const organization = Organization.fromPointer(namedNode('org'), {
+    const organization = $rdf.rdfine.cc.Organization(namedNode('org'), {
       namespace: $rdf.namedNode('http://example.com/'),
     })
-    const project = Project.fromPointer(namedNode('project'), {
+    const project = $rdf.rdfine.cc.Project(namedNode('project'), {
       maintainer: organization,
       cubeIdentifier: 'test-cube',
     })
 
-    const csvMapping = clownface({ dataset: $rdf.dataset() })
+    const csvMapping = $rdf.clownface()
       .namedNode('myCsvMapping')
       .addOut(rdf.type, cc.CsvMapping)
       .addOut(cc.tables, $rdf.namedNode('tables'))
 
-    const csvSource = clownface({ dataset: $rdf.dataset() })
+    const csvSource = $rdf.clownface()
       .namedNode('foo')
       .addOut(rdf.type, cc.CSVSource)
       .addOut(csvw.column, $rdf.namedNode('id'), (column) => {
@@ -51,14 +49,14 @@ describe('domain/table/update', () => {
         column.addOut(schema.name, $rdf.literal('id2'))
       })
 
-    columnMapping = clownface({ dataset: $rdf.dataset() })
+    columnMapping = $rdf.clownface()
       .node($rdf.namedNode('columnMapping'))
       .addOut(rdf.type, cc.ColumnMapping)
       .addOut(rdf.type, hydra.Resource)
       .addOut(cc.sourceColumn, $rdf.namedNode('my-column'))
       .addOut(cc.targetProperty, $rdf.namedNode('test'))
 
-    const table = clownface({ dataset: $rdf.dataset() })
+    const table = $rdf.clownface()
       .namedNode('myTable')
       .addOut(rdf.type, cc.Table)
       .addOut(cc.csvMapping, csvMapping)
@@ -68,14 +66,14 @@ describe('domain/table/update', () => {
       .addOut(cc.identifierTemplate, '{id}')
       .addOut(cc.columnMapping, columnMapping)
 
-    const columnMappingObservation = clownface({ dataset: $rdf.dataset() })
+    const columnMappingObservation = $rdf.clownface()
       .node($rdf.namedNode('columnMappingObservation'))
       .addOut(rdf.type, cc.ColumnMapping)
       .addOut(rdf.type, hydra.Resource)
       .addOut(cc.sourceColumn, $rdf.namedNode('my-column'))
       .addOut(cc.targetProperty, $rdf.namedNode('testObservation'))
 
-    const observationTable = clownface({ dataset: $rdf.dataset() })
+    const observationTable = $rdf.clownface()
       .namedNode('myObservationTable')
       .addOut(rdf.type, cc.Table)
       .addOut(rdf.type, cc.ObservationTable)
@@ -86,7 +84,7 @@ describe('domain/table/update', () => {
       .addOut(cc.identifierTemplate, '{id}')
       .addOut(cc.columnMapping, columnMappingObservation)
 
-    dimensionMetadata = clownface({ dataset: $rdf.dataset() })
+    dimensionMetadata = $rdf.clownface()
       .namedNode('myDimensionMetadata')
       .addOut(rdf.type, cc.DimensionMetadataCollection)
       .addOut(schema.hasPart, $rdf.namedNode('myDimension'), dim => {
@@ -106,7 +104,6 @@ describe('domain/table/update', () => {
     ])
 
     sinon.restore()
-    sinon.stub(DimensionMetadataQueries, 'getDimensionMetaDataCollection').resolves(dimensionMetadata.term)
 
     dimensionIsUsedByOtherMapping = sinon.stub().resolves(false)
     const getReferencingMappingsForTable = sinon.stub().returns([])
@@ -115,15 +112,25 @@ describe('domain/table/update', () => {
       getReferencingMappingsForTable,
     }
 
-    sinon.stub(orgQueries, 'findOrganization').resolves({
-      projectId: project.id,
-      organizationId: organization.id,
-    })
+    getTableReferences = sinon.stub().resolves([])
+    ;({ updateTable } = await esmock('../../../lib/domain/table/update.js', {
+      '../../../lib/domain/organization/query.js': {
+        findOrganization: async () =>
+          ({
+            projectId: project.id,
+            organizationId: organization.id,
+          }),
+        getTableReferences,
+      },
+      '../../../lib/domain/queries/dimension-metadata.js': {
+        getDimensionMetaDataCollection: sinon.stub().resolves(dimensionMetadata.term),
+      },
+    }))
   })
 
   it('updates simple properties', async () => {
     // given
-    const resource = clownface({ dataset: $rdf.dataset() })
+    const resource = $rdf.clownface()
       .namedNode('myTable')
       .addOut(schema.name, 'the other name')
       .addOut(schema.color, '#bababa')
@@ -159,7 +166,7 @@ describe('domain/table/update', () => {
 
     beforeEach(async () => {
       // given
-      const resource = clownface({ dataset: $rdf.dataset() })
+      const resource = $rdf.clownface()
         .namedNode('myTable')
         .addOut(schema.name, 'the other name')
         .addOut(schema.color, '#bababa')
@@ -171,7 +178,7 @@ describe('domain/table/update', () => {
           mapping.addOut(cc.sourceColumn, $rdf.namedNode('id'))
           mapping.addOut(cc.referencedColumn, $rdf.namedNode('id'))
         })
-      sinon.stub(tableQueries, 'getTableReferences').callsFake(async function * () {
+      getTableReferences.callsFake(async function * () {
         yield columnMapping.term
       })
 
@@ -224,7 +231,7 @@ describe('domain/table/update', () => {
 
   it('define as observation table', async () => {
     // given
-    const resource = clownface({ dataset: $rdf.dataset() })
+    const resource = $rdf.clownface()
       .namedNode('myTable')
       .addOut(schema.name, 'the other name')
       .addOut(schema.color, '#bababa')
@@ -264,7 +271,7 @@ describe('domain/table/update', () => {
 
   it('is not an observation table anymore', async () => {
     // given
-    const resource = clownface({ dataset: $rdf.dataset() })
+    const resource = $rdf.clownface()
       .namedNode('myObservationTable')
       .addOut(schema.name, 'the other name')
       .addOut(schema.color, '#bababa')
@@ -296,7 +303,7 @@ describe('domain/table/update', () => {
   it('is not an observation table anymore but shared dimension', async () => {
     // given
     dimensionIsUsedByOtherMapping.resolves(true)
-    const resource = clownface({ dataset: $rdf.dataset() })
+    const resource = $rdf.clownface()
       .namedNode('myObservationTable')
       .addOut(schema.name, 'the other name')
       .addOut(schema.color, '#bababa')

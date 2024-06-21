@@ -1,9 +1,8 @@
 import { RequestHandler } from 'express'
-import clownface from 'clownface'
+import $rdf from '@zazuko/env'
 import asyncMiddleware from 'middleware-async'
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
-import TermSet from '@rdfjs/term-set'
-import { log } from '../log'
+import { log } from '../log.js'
 
 function logRemovedOperation(operation: any) {
   const method = operation.out(hydra.method).value
@@ -17,9 +16,9 @@ export const expectsDisambiguate: RequestHandler = asyncMiddleware(async (req, r
     return next()
   }
 
-  const api = clownface(req.hydra.api)
+  const api = $rdf.clownface(req.hydra.api)
   const resource = await req.resource()
-  const resourceTypes = new TermSet(api.node(resource.out(rdf.type)).terms)
+  const resourceTypes = $rdf.termSet(api.node(resource.out(rdf.type)).terms)
 
   req.hydra.operations = req.hydra.operations.filter(({ operation }) => {
     const expectedClasses = api.node(operation.out(hydra.expects).terms)
@@ -41,9 +40,9 @@ export const preferHydraCollection: RequestHandler = (req, res, next) => {
   }
 
   const collectionOperations = req.hydra.operations
-    .filter(({ operation }) => new TermSet(operation.in(hydra.supportedOperation).terms).has(hydra.Collection))
+    .filter(({ operation }) => $rdf.termSet(operation.in(hydra.supportedOperation).terms).has(hydra.Collection))
   const resourceOperations = req.hydra.operations
-    .filter(({ operation }) => new TermSet(operation.in(hydra.supportedOperation).terms).has(hydra.Resource))
+    .filter(({ operation }) => $rdf.termSet(operation.in(hydra.supportedOperation).terms).has(hydra.Resource))
 
   if (collectionOperations) {
     req.hydra.operations = req.hydra.operations.filter(value => {

@@ -1,9 +1,9 @@
 import type { Term } from '@rdfjs/types'
-import clownface, { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
 import type { Plugin } from '@captaincodeman/rdx/typings/modelStore'
 import { api } from '@/api/index'
-import $rdf from 'rdf-ext'
-import { rdf, schema } from '@tpluscode/rdf-ns-builders/strict'
+import $rdf from '@zazuko/env'
+import { rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { meta } from '@cube-creator/core/namespace'
 import { SetObjectParams } from '@hydrofoil/shaperone-core/models/forms/reducers/updateObject'
 import { PropertyState } from '@hydrofoil/shaperone-core/models/forms'
@@ -72,7 +72,7 @@ export const dimensionMetaHierarchySynchronizer: Plugin = {
 
 async function loadHierarchy (term: Term) {
   const hierarchy = await api.fetchResource(term.value)
-  const copy = clownface({ dataset: $rdf.dataset() })
+  const copy = $rdf.clownface()
     .blankNode()
     .addOut(schema.isBasedOn, term)
     .addOut(rdf.type, meta.Hierarchy)

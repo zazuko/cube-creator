@@ -1,10 +1,10 @@
 import type { NamedNode } from '@rdfjs/types'
-import { HydraBox } from 'hydra-box'
+import { HydraBox } from '@kopflos-cms/core'
 import express from 'express'
-import cf, { GraphPointer } from 'clownface'
-import $rdf from 'rdf-ext'
+import type { GraphPointer } from 'clownface'
+import $rdf from '@zazuko/env'
 import rdfHandler from '@rdfjs/express-handler'
-import { ex } from './lib/namespace'
+import { ex } from './lib/namespace.js'
 
 declare module 'express-serve-static-core' {
   export interface Request {
@@ -21,7 +21,7 @@ export function appMock(prepare?: (hydra: HydraBox) => void): express.RequestHan
     await rdfHandler.attach(req, res)
 
     const hydra: RecursivePartial<HydraBox> = {
-      operation: cf({ dataset: $rdf.dataset() }).blankNode() as any,
+      operation: $rdf.clownface({ dataset: $rdf.dataset() }).blankNode() as any,
       api: {
         dataset: $rdf.dataset(),
         graph: $rdf.namedNode('foo'),
@@ -43,7 +43,7 @@ export function mockResourceMiddleware(): express.RequestHandler {
     req.resource = async () => {
       if (!req.dataset) throw new Error('Missing request `.dataset`')
 
-      return cf({ dataset: await req.dataset() }).namedNode('')
+      return $rdf.clownface({ dataset: await req.dataset() }).namedNode('')
     }
 
     next()

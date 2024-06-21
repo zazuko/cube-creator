@@ -3,27 +3,27 @@ import path from 'path'
 import { before, beforeEach, describe, it } from 'mocha'
 import { expect } from 'chai'
 import { ASK } from '@tpluscode/sparql-builder'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env-node'
 import { mdClients } from '@cube-creator/testing/lib'
 import { insertTestDimensions } from '@cube-creator/testing/lib/seedData'
-import { parsers } from '@rdfjs/formats-common'
-import clownface, { AnyPointer } from 'clownface'
-import namespace from '@rdfjs/namespace'
+import formats from '@rdfjs/formats'
+import type { AnyPointer } from 'clownface'
 import { schema } from '@tpluscode/rdf-ns-builders'
-import { cascadeDelete } from '../../../lib/domain/resource'
-import { store } from '../../../lib/store'
-import env from '../../../lib/env'
+import { cascadeDelete } from '../../../lib/domain/resource.js'
+import { store } from '../../../lib/store.js'
+import env from '../../../lib/env.js'
 
-const ns = namespace('https://cube-creator.lndo.site/shared-dimensions/')
+const __dirname = path.dirname(new URL(import.meta.url).pathname)
+const ns = $rdf.namespace('https://cube-creator.lndo.site/shared-dimensions/')
 
 describe('@cube-creator/shared-dimensions-api/lib/domain/resource @SPARQL', () => {
   const client = mdClients.parsingClient
   let api: AnyPointer
 
   before(async () => {
-    const apiStream = parsers.import('text/turtle', fs.createReadStream(path.join(__dirname, '../../../hydra/index.ttl')))
-    api = clownface({
-      dataset: await $rdf.dataset().import(apiStream!),
+    const apiStream = formats.parsers.import('text/turtle', fs.createReadStream(path.join(__dirname, '../../../hydra/index.ttl'))) as any
+    api = $rdf.clownface({
+      dataset: await $rdf.dataset().import(apiStream),
     })
   })
 
@@ -45,7 +45,7 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/resource @SPARQL', () =
       })
 
       // then
-      await expect(ASK`${term} ?p ?o`.FROM($rdf.namedNode(env.MANAGED_DIMENSIONS_GRAPH)).execute(mdClients.parsingClient.query))
+      await expect(ASK`${term} ?p ?o`.FROM($rdf.namedNode(env.MANAGED_DIMENSIONS_GRAPH)).execute(mdClients.parsingClient))
         .to.eventually.be.false
     })
 
@@ -63,7 +63,7 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/resource @SPARQL', () =
       await new Promise(resolve => setTimeout(resolve, 1000))
 
       // then
-      await expect(ASK`?term ${schema.inDefinedTermSet} ${termSet}`.FROM($rdf.namedNode(env.MANAGED_DIMENSIONS_GRAPH)).execute(mdClients.parsingClient.query))
+      await expect(ASK`?term ${schema.inDefinedTermSet} ${termSet}`.FROM($rdf.namedNode(env.MANAGED_DIMENSIONS_GRAPH)).execute(mdClients.parsingClient))
         .to.eventually.be.false
     })
   })

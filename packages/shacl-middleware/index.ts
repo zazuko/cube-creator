@@ -1,12 +1,12 @@
 import type { Term, Quad, NamedNode, DatasetCore } from '@rdfjs/types'
 import { Request, Response } from 'express'
 import asyncMiddleware from 'middleware-async'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import { hydra, rdf, sh } from '@tpluscode/rdf-ns-builders'
 import SHACLValidator from 'rdf-validate-shacl'
-import clownface, { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
 import { ProblemDocument } from 'http-problem-details'
-import ValidationReport from 'rdf-validate-shacl/src/validation-report'
+import ValidationReport from 'rdf-validate-shacl/src/validation-report.js'
 
 interface ShaclMiddlewareOptions {
   loadShapes?(req: Request): Promise<DatasetCore>
@@ -24,7 +24,7 @@ interface ShaclMiddlewareOptions {
 
 async function defaultParse(req: Request) {
   if (!req.dataset) {
-    return clownface({ dataset: $rdf.dataset() }).node(req.hydra.term)
+    return $rdf.clownface().node(req.hydra.term)
   }
 
   return req.resource()
@@ -103,12 +103,12 @@ export const shaclMiddleware = ({ getTargetNode, loadResource, loadShapes, loadR
 
   let dataset: DatasetCore
   if (disableShClass) {
-    clownface({ dataset: shapes }).has(sh.class).addOut(sh.deactivated, true)
+    $rdf.clownface({ dataset: shapes }).has(sh.class).addOut(sh.deactivated, true)
 
     dataset = resource.dataset
   } else {
     // Load data from linked instances to be able to validate their type
-    const classProperties = clownface({ dataset: shapes })
+    const classProperties = $rdf.clownface({ dataset: shapes })
       .out(sh.property)
       .has(sh.class)
       .out(sh.path)

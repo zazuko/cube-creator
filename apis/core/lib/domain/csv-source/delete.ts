@@ -1,12 +1,12 @@
 import type { NamedNode, Term } from '@rdfjs/types'
 import { cc } from '@cube-creator/core/namespace'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import { CsvSource } from '@cube-creator/model'
-import { ResourceStore } from '../../ResourceStore'
-import { getLinkedTablesForSource } from '../queries/table'
-import { deleteTable } from '../table/delete'
-import type { GetMediaStorage } from '../../storage'
-import { getMediaStorage } from '../../storage'
+import { ResourceStore } from '../../ResourceStore.js'
+import { getLinkedTablesForSource } from '../queries/table.js'
+import { deleteTable } from '../table/delete.js'
+import type { GetMediaStorage } from '../../storage/index.js'
+import { getMediaStorage } from '../../storage/index.js'
 
 interface DeleteSourceCommand {
   resource: NamedNode | Term

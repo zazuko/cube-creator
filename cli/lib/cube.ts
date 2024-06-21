@@ -1,18 +1,17 @@
 import type { DataFactory, DatasetCore, Quad, Term } from '@rdfjs/types'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import { cc } from '@cube-creator/core/namespace'
-import clownface, { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
 import type { Context } from 'barnard59-core'
 import { obj } from 'through2'
 import { CONSTRUCT, sparql } from '@tpluscode/sparql-builder'
-import { schema, sh } from '@tpluscode/rdf-ns-builders/strict'
+import { schema, sh } from '@tpluscode/rdf-ns-builders'
 import { Dataset, PublishJob } from '@cube-creator/model'
-import StreamClient from 'sparql-http-client/StreamClient'
+import StreamClient from 'sparql-http-client/StreamClient.js'
 import { Draft } from '@cube-creator/model/Cube'
-import TermSet from '@rdfjs/term-set'
 import { toRdf } from 'rdf-literal'
-import { loadDataset } from './metadata'
-import { tracer } from './otel/tracer'
+import { loadDataset } from './metadata.js'
+import { tracer } from './otel/tracer.js'
 
 export const getObservationSetId = ({ dataset }: { dataset: DatasetCore }) => {
   const cubeId = [...dataset.match(null, cc.cube)][0].object.value
@@ -67,14 +66,14 @@ export function expirePreviousVersions(this: Pick<Context, 'variables' | 'logger
       !bound(?expires)
     )
   `.FROM($rdf.namedNode(this.variables.get('target-graph')))
-    .execute(client.query)
+    .execute(client)
 }
 
-export async function injectRevision(this: Pick<Context, 'variables' | 'logger'>, jobUri?: string) {
+export async function injectRevision(this: Pick<Context, 'variables' | 'logger' | 'env'>, jobUri?: string) {
   let cubeNamespace = this.variables.get('namespace')
   const revision = this.variables.get('revision')
   const metadata = this.variables.get('metadata')
-  const versionedDimensions = new TermSet()
+  const versionedDimensions = $rdf.termSet()
 
   const attributes = {
     cubeNamespace,
@@ -86,7 +85,7 @@ export async function injectRevision(this: Pick<Context, 'variables' | 'logger'>
     try {
       let dataset: Dataset | undefined
       if (jobUri) {
-        ({ dataset } = await loadDataset(jobUri, this.variables.get('apiClient')))
+        ({ dataset } = await loadDataset(jobUri, this.env))
       }
 
       this.logger.info(`Cube revision ${revision}`)
@@ -133,7 +132,7 @@ export async function injectRevision(this: Pick<Context, 'variables' | 'logger'>
 
     return callback()
   }, function (done) {
-    const metadataPointer = clownface({
+    const metadataPointer = $rdf.clownface({
       dataset: metadata,
     })
 

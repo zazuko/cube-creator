@@ -1,12 +1,12 @@
 import { html, PropertyValues } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
 import { styleMap } from 'lit/directives/style-map.js'
-import clownface, { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
 import './FormSubmitCancel'
 import './LoadingBlock'
 import './HydraOperationError'
-import { ColorsModifiers } from '@oruga-ui/oruga/types/helpers'
-import $rdf from 'rdf-ext'
+import type { ColorsModifiers } from '@oruga-ui/oruga/types/helpers'
+import $rdf from '@zazuko/env'
 import { HydraOperationFormBase } from '@/customElements/HydraOperationFormBase'
 
 @customElement('cc-hydra-operation-form')
@@ -95,7 +95,7 @@ export class HydraOperationForm extends HydraOperationFormBase {
   }
 
   onClear () {
-    this.value = clownface({ dataset: $rdf.dataset() }).blankNode()
+    this.value = $rdf.clownface().blankNode()
     if (this.submitWhenCleared) {
       this.onSubmit()
     }
@@ -123,7 +123,7 @@ function clone (resource: GraphPointer | undefined | null) {
     ...resource.dataset.match(null, null, null, graph)
   ])
 
-  return clownface({
+  return $rdf.clownface({
     dataset: clone,
     term: resource.term,
     graph,

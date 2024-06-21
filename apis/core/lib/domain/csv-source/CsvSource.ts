@@ -2,12 +2,10 @@ import type { NamedNode } from '@rdfjs/types'
 import { cc } from '@cube-creator/core/namespace'
 import { CsvSource } from '@cube-creator/model'
 import * as CsvColumn from '@cube-creator/model/CsvColumn'
-import { fromPointer as mediaObjectFromPointer } from '@cube-creator/model/MediaObject'
 import { Constructor, property } from '@tpluscode/rdfine'
 import { csvw, schema } from '@tpluscode/rdf-ns-builders'
 import type * as Csvw from '@rdfine/csvw'
-import { DialectMixin } from '@rdfine/csvw'
-import * as id from '../identifiers'
+import * as id from '../identifiers.js'
 
 interface CreateOrUpdateColumn {
   name: string
@@ -42,7 +40,7 @@ export default function Mixin<Base extends Constructor<Omit<CsvSource, keyof Api
         this.associatedMedia.pointer.deleteOut()
       }
 
-      this.associatedMedia = mediaObjectFromPointer(this.pointer.blankNode(), {
+      this.associatedMedia = this.env.rdfine.schema.MediaObject(this.pointer.blankNode(), {
         identifierLiteral: key,
         sourceKind,
         contentUrl,
@@ -60,7 +58,7 @@ export default function Mixin<Base extends Constructor<Omit<CsvSource, keyof Api
 
       const dialectJson = dialect.toJSON?.() as any || { ...dialect }
 
-      this.dialect = new DialectMixin.Class(this.dialect.pointer, {
+      this.dialect = this.env.rdfine.csvw.Dialect(this.dialect.pointer, {
         ...dialectJson,
         header: (dialect.headerRowCount || 0) > 0,
       }) as any
@@ -75,7 +73,7 @@ export default function Mixin<Base extends Constructor<Omit<CsvSource, keyof Api
       if (column) {
         column.order = order
       } else {
-        column = CsvColumn.create(this.pointer.node(id.column(this, name)), {
+        column = CsvColumn.create(this.env, this.pointer.node(id.column(this, name)), {
           name,
           order,
         })

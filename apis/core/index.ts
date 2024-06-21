@@ -6,22 +6,28 @@ import express from 'express'
 import * as Sentry from '@sentry/node'
 import * as Tracing from '@sentry/tracing'
 import { hydraBox } from '@hydrofoil/labyrinth'
-import { problemJson } from '@hydrofoil/labyrinth/errors'
+import { problemJson } from '@hydrofoil/labyrinth/errors.js'
 import { sharedDimensions } from '@cube-creator/shared-dimensions-api'
 import { resource } from 'express-rdf-request'
 import cors from 'cors'
-import env from '@cube-creator/core/env'
+import env from '@cube-creator/core/env/node'
 import { errorMappers } from '@cube-creator/api-errors'
-import { error, log } from './lib/log'
-import authentication from './lib/auth'
-import { bootstrap } from './bootstrap'
-import { resourceStore } from './lib/middleware/resource'
-import { expectsDisambiguate, preferHydraCollection } from './lib/middleware/operations'
-import './lib/domain'
-import upload from './lib/upload'
-import Loader from './lib/Loader'
-import * as s3 from './lib/storage/s3'
-import { version } from './package.json'
+import $rdf from '@cube-creator/env'
+import Environment from '@zazuko/env/Environment.js'
+import Fs from '@zazuko/rdf-utils-fs/Factory.js'
+import asyncMiddleware from 'middleware-async'
+import { error, log } from './lib/log.js'
+import authentication from './lib/auth.js'
+import { bootstrap } from './bootstrap/index.js'
+import { resourceStore } from './lib/middleware/resource.js'
+import { expectsDisambiguate, preferHydraCollection } from './lib/middleware/operations.js'
+import upload from './lib/upload.js'
+import Loader from './lib/Loader.js'
+import * as s3 from './lib/storage/s3.js'
+import pkg from './package.json' assert { type: 'json' }
+import './lib/domain/index.js'
+
+const __dirname = path.dirname(new URL(import.meta.url).pathname)
 
 const apiPath = path.resolve(__dirname, 'hydra')
 const codePath = path.resolve(__dirname, 'lib')
@@ -48,7 +54,7 @@ async function main() {
   app.enable('trust proxy')
 
   app.use((req, res, next) => {
-    res.setHeader('x-cube-creator', version)
+    res.setHeader('x-cube-creator', pkg.version)
     next()
   })
 
@@ -83,7 +89,8 @@ async function main() {
   app.use('/upload', upload)
 
   app.use(resourceStore)
-  app.use(await hydraBox({
+  app.use(asyncMiddleware(await hydraBox({
+    env: new Environment([Fs], { parent: $rdf }),
     apiPath,
     codePath,
     baseUri,
@@ -100,12 +107,12 @@ async function main() {
         expectsDisambiguate,
       ],
     },
-    loader: new Loader({
+    loader: new Loader($rdf, {
       endpointUrl,
       user,
       password,
     }),
-  }))
+  })))
 
   app.use(Sentry.Handlers.errorHandler())
   app.use(problemJson({ errorMappers, captureNotFound: true }))

@@ -2,13 +2,12 @@ import { describe, it } from 'mocha'
 import { expect } from 'chai'
 import request from 'supertest'
 import express from 'express'
-import $rdf from 'rdf-ext'
-import clownface from 'clownface'
+import $rdf from '@zazuko/env'
 import { turtle } from '@tpluscode/rdf-string'
 import { rdfs } from '@tpluscode/rdf-ns-builders'
 import { appMock } from '@cube-creator/testing/middleware'
 import { cc } from '@cube-creator/testing/lib/namespace'
-import { resource } from '..'
+import { resource } from '../index.js'
 
 describe('middleware/resource', () => {
   it('replaces empty term in body with req.hydra.term', async function () {
@@ -26,7 +25,7 @@ describe('middleware/resource', () => {
           return dataset.toStream()
         },
         async clownface() {
-          return clownface({ dataset }).node(this.term) as any
+          return $rdf.clownface({ dataset }).node(this.term) as any
         },
       }
     }))

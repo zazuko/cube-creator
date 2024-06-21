@@ -81,7 +81,7 @@ export default defineComponent({
   methods: {
     submitLocal (files: UploadedFile[]): void {
       const mediaObjects = files.map((file) =>
-        clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('') })
+        $rdf.clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('') })
           .addOut(cc.sourceKind, cc.MediaLocal)
           .addOut(schema.name, $rdf.literal(file.name))
           .addOut(schema.identifier, $rdf.literal(file.s3Multipart.key))
@@ -93,7 +93,7 @@ export default defineComponent({
     submitUrl (): void {
       const dataset = $rdf.dataset()
       const fileName = this.fileUrl.split('/').slice(-1)[0]
-      const mediaObject = clownface({ dataset, term: $rdf.namedNode('') })
+      const mediaObject = $rdf.clownface({ dataset, term: $rdf.namedNode('') })
         .addOut(cc.sourceKind, cc.MediaURL)
         .addOut(schema.name, $rdf.literal(fileName))
         .addOut(schema.contentUrl, $rdf.namedNode(this.fileUrl))

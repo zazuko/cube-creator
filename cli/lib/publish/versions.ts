@@ -1,8 +1,7 @@
 import type { Context } from 'barnard59-core'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import through2 from 'through2'
-import clownface from 'clownface'
-import { schema } from '@tpluscode/rdf-ns-builders/strict'
+import { schema } from '@tpluscode/rdf-ns-builders'
 
 export function inject(this: Pick<Context, 'variables'>) {
   const cliVersion = this.variables.get('cliVersion')
@@ -13,7 +12,7 @@ export function inject(this: Pick<Context, 'variables'>) {
   const cubeId = $rdf.namedNode(`${cubeNamespace}/${revision}`)
 
   const dataset = $rdf.dataset()
-  clownface({ dataset })
+  $rdf.clownface({ dataset })
     .node(cubeId)
     .addOut(schema.actionApplication, api => {
       api.addOut(schema.name, 'cube-creator-api').addOut(schema.softwareVersion, apiVersion)
@@ -25,7 +24,7 @@ export function inject(this: Pick<Context, 'variables'>) {
   return through2.obj(
     (chunk, enc, cb) => cb(null, chunk),
     function (done) {
-      dataset.forEach(this.push.bind(this))
+      dataset.forEach(d => this.push(d))
       done()
     })
 }

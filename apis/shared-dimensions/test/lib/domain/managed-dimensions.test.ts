@@ -1,10 +1,10 @@
 import { before, describe, it } from 'mocha'
 import { expect } from 'chai'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env-node'
 import { mdClients } from '@cube-creator/testing/lib'
 import { insertTestDimensions } from '@cube-creator/testing/lib/seedData'
 import { rdf, rdfs, schema } from '@tpluscode/rdf-ns-builders'
-import { getSharedDimensions, getSharedTerms } from '../../../lib/domain/shared-dimensions'
+import { getSharedDimensions, getSharedTerms } from '../../../lib/domain/shared-dimensions.js'
 
 describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimensions @SPARQL', () => {
   before(async () => {

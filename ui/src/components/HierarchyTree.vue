@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
 import { defineAsyncComponent, defineComponent, PropType } from 'vue'
 
 import { NextInHierarchy } from '@/store/types'

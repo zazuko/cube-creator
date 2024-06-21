@@ -5,7 +5,7 @@ env_file:
 services:
   core:
     type: node:custom
-    command: mkdir -p /var/www/.npm-global/lib && npx nodemon -w packages -w apis --verbose --ext ts,ttl,js,trig --ignore **/*.test.ts --ignore **/*.spec-graphs.ts --exec node --inspect=0.0.0.0:45671 -r ts-node/register --inspect apis/core/index.ts
+    command: mkdir -p /var/www/.npm-global/lib && npx nodemon -w packages -w apis --verbose --ext ts,ttl,js,trig --ignore **/*.test.ts --ignore **/*.spec-graphs.ts --exec node --inspect=0.0.0.0:45671 --loader ts-node/esm --inspect apis/core/index.ts
     ssl: true
     overrides:
       image: node:18
@@ -23,7 +23,7 @@ services:
       - 45671
   ui:
     type: node:custom
-    command: (cd ui; yarn serve --public app.cube-creator.lndo.site --hostname 0.0.0.0 --port 80)
+    command: (cd ui; npm i; yarn serve --host 0.0.0.0 --port 80)
     ssl: true
     overrides:
       image: node:18

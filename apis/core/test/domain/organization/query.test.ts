@@ -2,8 +2,8 @@ import { before, describe, it } from 'mocha'
 import { insertTestProject } from '@cube-creator/testing/lib/seedData'
 import { expect } from 'chai'
 import { ccClients } from '@cube-creator/testing/lib'
-import $rdf from 'rdf-ext'
-import { cubeNamespaceAllowed } from '../../../lib/domain/organization/query'
+import $rdf from '@zazuko/env'
+import { cubeNamespaceAllowed } from '../../../lib/domain/organization/query.js'
 
 describe('@cube-creator/core-api/lib/domain/organization/query @SPARQL', () => {
   before(async () => {

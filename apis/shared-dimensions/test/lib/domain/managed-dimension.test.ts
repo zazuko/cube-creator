@@ -6,15 +6,14 @@ import { insertTestDimensions } from '@cube-creator/testing/lib/seedData'
 import { mdClients } from '@cube-creator/testing/lib/index'
 import { dcterms, hydra, rdf, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import { md, meta } from '@cube-creator/core/namespace'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env-node'
 import httpError from 'http-errors'
-import clownface from 'clownface'
 import sinon from 'sinon'
 import { ex } from '@cube-creator/testing/lib/namespace'
-import { create, createTerm, update, getExportedDimension } from '../../../lib/domain/shared-dimension'
-import { SharedDimensionsStore } from '../../../lib/store'
-import { testStore } from '../../support/store'
-import { validateTermSet } from '../../../lib/domain/shared-dimension/import'
+import { create, createTerm, update, getExportedDimension } from '../../../lib/domain/shared-dimension.js'
+import { SharedDimensionsStore } from '../../../lib/store.js'
+import { testStore } from '../../support/store.js'
+import { validateTermSet } from '../../../lib/domain/shared-dimension/import.js'
 
 describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () => {
   describe('create', () => {
@@ -232,7 +231,7 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () =
     })
 
     it('exports set and terms', () => {
-      const graph = clownface({ dataset })
+      const graph = $rdf.clownface({ dataset })
       const termSet = graph.node(termSetId)
 
       // then
@@ -240,7 +239,7 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () =
     })
 
     it('exports dimension properties', () => {
-      const dimension = clownface({ dataset }).node(termSetId)
+      const dimension = $rdf.clownface({ dataset }).node(termSetId)
 
       expect(dimension).to.matchShape({
         property: [{
@@ -258,7 +257,7 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () =
     })
 
     it('exports term properties', () => {
-      const dimension = clownface({ dataset })
+      const dimension = $rdf.clownface({ dataset })
         .namedNode('dimension/technologies/rdf')
 
       expect(dimension).to.matchShape({
@@ -283,7 +282,7 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () =
 
     it('exported data conforms import shape', async () => {
       // given
-      const termSet = clownface({ dataset }).namedNode('dimension/technologies')
+      const termSet = $rdf.clownface({ dataset }).namedNode('dimension/technologies')
 
       // when
       const report = await validateTermSet(termSet)

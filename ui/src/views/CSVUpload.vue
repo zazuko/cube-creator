@@ -15,10 +15,9 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import RdfResourceImpl from '@tpluscode/rdfine'
 import { RuntimeOperation } from 'alcaeus'
-import { GraphPointer } from 'clownface'
-
+import type { GraphPointer } from 'clownface'
+import $rdf from '@cube-creator/env'
 import { api } from '@/api'
 import BMessage from '@/components/BMessage.vue'
 import CsvUploadForm from '@/components/CsvUploadForm.vue'
@@ -59,7 +58,7 @@ export default defineComponent({
     async submit (mediaObjects: GraphPointer[]): Promise<void> {
       const operation = this.operation
       const uploads = mediaObjects.map((mediaObject) => {
-        const resource = RdfResourceImpl.factory.createEntity(mediaObject)
+        const resource = $rdf.rdfine().factory.createEntity(mediaObject)
 
         return api.invokeSaveOperation(operation, resource)
       })

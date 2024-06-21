@@ -1,15 +1,13 @@
 import { describe, it, beforeEach } from 'mocha'
 import express from 'express'
 import request from 'supertest'
-import clownface from 'clownface'
-import $rdf from 'rdf-ext'
-import TermSet from '@rdfjs/term-set'
-import { Resource } from 'hydra-box'
+import $rdf from '@zazuko/env'
+import { Resource } from '@kopflos-cms/core'
 import { turtle } from '@tpluscode/rdf-string'
 import { appMock, mockResourceMiddleware } from '@cube-creator/testing/middleware'
 import { ex } from '@cube-creator/testing/lib/namespace'
 import { hydra, rdf, sh } from '@tpluscode/rdf-ns-builders'
-import { expectsDisambiguate, preferHydraCollection } from '../../lib/middleware/operations'
+import { expectsDisambiguate, preferHydraCollection } from '../../lib/middleware/operations.js'
 
 describe('lib/middleware/operations', () => {
   let resource: Resource
@@ -27,7 +25,7 @@ describe('lib/middleware/operations', () => {
         return dataset.toStream()
       },
       term: ex.resource,
-      types: new TermSet(),
+      types: $rdf.termSet(),
     }
   })
 
@@ -37,7 +35,7 @@ describe('lib/middleware/operations', () => {
       app.use(appMock(hydra => {
         hydra.operations = [{
           resource,
-          operation: clownface(hydra.api).node(ex.Operation),
+          operation: $rdf.clownface(hydra.api).node(ex.Operation),
         }]
       }))
       app.use(expectsDisambiguate)
@@ -57,12 +55,12 @@ describe('lib/middleware/operations', () => {
       app.use(appMock(hydraBox => {
         hydraBox.operations = [{
           resource,
-          operation: clownface(hydraBox.api).node(ex.Operation1),
+          operation: $rdf.clownface(hydraBox.api).node(ex.Operation1),
         }, {
           resource,
-          operation: clownface(hydraBox.api).node(ex.Operation2),
+          operation: $rdf.clownface(hydraBox.api).node(ex.Operation2),
         }]
-        clownface(hydraBox.api)
+        $rdf.clownface(hydraBox.api)
           .node(ex.Super)
           .addOut(rdf.type, hydra.Class)
           .addOut(hydra.supportedOperation, ex.Operation1, postSubClass1 => {
@@ -100,12 +98,12 @@ describe('lib/middleware/operations', () => {
       app.use(appMock(hydraBox => {
         hydraBox.operations = [{
           resource,
-          operation: clownface(hydraBox.api)
+          operation: $rdf.clownface(hydraBox.api)
             .node(ex.ResourceOperation)
             .addIn(hydra.supportedOperation, hydra.Resource),
         }, {
           resource,
-          operation: clownface(hydraBox.api)
+          operation: $rdf.clownface(hydraBox.api)
             .node(ex.CollectionOperation)
             .addIn(hydra.supportedOperation, hydra.Collection),
         }]

@@ -3,8 +3,7 @@ import { NodeShape, PropertyShape } from '@rdfine/shacl'
 import { dash, dcterms, rdf, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import { supportedLanguages } from '@cube-creator/core/languages'
 import { md } from '@cube-creator/core/namespace'
-import $rdf from 'rdf-ext'
-import { fromPointer as propertyGroup } from '@rdfine/shacl/lib/PropertyGroup'
+import $rdf from '@cube-creator/env'
 
 const defaultGroup = $rdf.namedNode('#default-group')
 
@@ -15,7 +14,7 @@ const commonProperties: Initializer<PropertyShape>[] = [{
   uniqueLang: true,
   order: 10,
   minCount: 1,
-  group: propertyGroup(defaultGroup, {
+  group: $rdf.rdfine.sh.PropertyGroup(defaultGroup, {
     label: 'Term',
   }),
 }, {

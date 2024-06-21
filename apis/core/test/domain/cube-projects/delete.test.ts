@@ -2,14 +2,13 @@ import { before, beforeEach, describe, it } from 'mocha'
 import sinon from 'sinon'
 import { expect } from 'chai'
 import { ASK, SELECT } from '@tpluscode/sparql-builder'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import { ccClients } from '@cube-creator/testing/lib'
 import { insertPxCube, insertTestProject } from '@cube-creator/testing/lib/seedData'
 import { cc } from '@cube-creator/core/namespace'
-import { deleteProject } from '../../../lib/domain/cube-projects/delete'
-import ResourceStore from '../../../lib/ResourceStore'
-import '../../../lib/domain'
-import * as storage from '../../../lib/storage'
+import esmock from 'esmock'
+import ResourceStore from '../../../lib/ResourceStore.js'
+import '../../../lib/domain/index.js'
 
 describe('@cube-creator/core-api/lib/domain/cube-projects/delete @SPARQL', function () {
   this.timeout(20000)
@@ -17,10 +16,16 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/delete @SPARQL', funct
   const project = $rdf.namedNode('https://cube-creator.lndo.site/cube-project/ubd')
   const deleteFile = sinon.stub()
 
-  before(() => {
-    sinon.stub(storage, 'getMediaStorage').returns({
-      delete: deleteFile,
-    } as any)
+  let deleteProject: typeof import('../../../lib/domain/cube-projects/delete').deleteProject
+
+  before(async () => {
+    ({ deleteProject } = await esmock('../../../lib/domain/cube-projects/delete.js', {}, {
+      '../../../lib/storage/index.js': {
+        getMediaStorage: () => ({
+          delete: deleteFile,
+        }),
+      },
+    }))
   })
 
   beforeEach(async () => {
@@ -45,7 +50,7 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/delete @SPARQL', funct
       ?s ?p ?o
     }
 
-    filter (strstarts(str(?g), "${project.value}"))`.execute(ccClients.parsingClient.query)
+    filter (strstarts(str(?g), "${project.value}"))`.execute(ccClients.parsingClient)
     await expect(anyGraph).to.eventually.deep.equal([])
   })
 
@@ -54,7 +59,7 @@ describe('@cube-creator/core-api/lib/domain/cube-projects/delete @SPARQL', funct
     const otherProjectStillExists = ASK`graph ${pxCube} {
       ${pxCube} a ${cc.CubeProject}
     }`
-      .execute(ccClients.parsingClient.query, {
+      .execute(ccClients.parsingClient, {
         base: 'https://cube-creator.lndo.site/',
       })
 

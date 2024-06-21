@@ -1,9 +1,9 @@
 import error from 'http-errors'
-import { protectedResource } from '@hydrofoil/labyrinth/resource'
+import { protectedResource } from '@hydrofoil/labyrinth/resource.js'
 import asyncMiddleware from 'middleware-async'
-import $rdf from 'rdf-ext'
-import { describeResource } from '../domain/queries/cube-data'
-import { parsingClient, publicClient } from '../query-client'
+import $rdf from '@zazuko/env'
+import { describeResource } from '../domain/queries/cube-data.js'
+import { parsingClient, publicClient } from '../query-client.js'
 
 export const get = protectedResource(asyncMiddleware(async (req, res, next) => {
   const resourceUri = req.query.resource

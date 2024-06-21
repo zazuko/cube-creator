@@ -1,13 +1,13 @@
 import type { DatasetCore, NamedNode, Term } from '@rdfjs/types'
 import type { Context } from 'barnard59-core'
-import ParsingClient from 'sparql-http-client/ParsingClient'
-import clownface, { AnyContext, AnyPointer, GraphPointer } from 'clownface'
-import $rdf from 'rdf-ext'
+import ParsingClient from 'sparql-http-client/ParsingClient.js'
+import type { AnyContext, AnyPointer, GraphPointer } from 'clownface'
+import $rdf from '@zazuko/env'
 import { hydra, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import * as ns from '@cube-creator/core/namespace'
 import { CONSTRUCT, SELECT } from '@tpluscode/sparql-builder'
-import StreamClient from 'sparql-http-client/StreamClient'
-import DatasetExt from 'rdf-ext/lib/Dataset'
+import StreamClient from 'sparql-http-client/StreamClient.js'
+import { Dataset as DatasetExt } from '@zazuko/env/lib/Dataset.js'
 
 interface DimensionQuery {
   endpoint: NamedNode
@@ -109,23 +109,22 @@ export default async function query(this: Context, { endpoint, cube, graph, meta
     endpointUrl: endpoint.value,
   })
 
-  const Hydra = this.variables.get('apiClient')
-  const { response, representation } = await Hydra.loadResource(metadataResource)
+  const { response, representation } = await this.env.hydra.loadResource(metadataResource)
   if (!representation?.root) {
     throw new Error(`Failed to load existing dimension metadata. Response was: '${response?.xhr.statusText}'`)
   }
   const existingCollection = representation.root.pointer.any()
 
-  const metadataCollection = clownface({ dataset: $rdf.dataset() })
+  const metadataCollection = $rdf.clownface()
     .namedNode(metadataResource)
     .addOut(rdf.type, [ns.cc.DimensionMetadataCollection, hydra.Resource])
 
   const cubeQuery = createCubeQuery(cube, graph)
   const metadataQuery = createMetadataQuery(cube, graph)
 
-  const importedDimensionMetadata = await $rdf.dataset().import(await metadataQuery.execute(streamClient.query))
+  const importedDimensionMetadata = await $rdf.dataset().import(await metadataQuery.execute(streamClient))
 
-  const dimensions = await cubeQuery.execute(client.query)
+  const dimensions = await cubeQuery.execute(client)
   for (let i = 1; i <= dimensions.length; i++) {
     const { dimension } = dimensions[i - 1]
 

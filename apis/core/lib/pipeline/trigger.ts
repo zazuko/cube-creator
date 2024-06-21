@@ -1,21 +1,20 @@
 import { URLSearchParams } from 'url'
 import type { NamedNode } from '@rdfjs/types'
-import nodeFetch, { RequestInit, Response } from 'node-fetch'
-import env from '@cube-creator/core/env'
-import { GraphPointer } from 'clownface'
+import env from '@cube-creator/core/env/node'
+import type { GraphPointer } from 'clownface'
 import { dcterms, rdf } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
-import TermMap from '@rdfjs/term-map'
+import $rdf from '@zazuko/env'
 
 const pipelineURI = env.PIPELINE_URI
 
 function trigger(triggerRequestInit: (job: GraphPointer<NamedNode>, params?: GraphPointer) => RequestInit) {
-  return async (job: GraphPointer<NamedNode>, params?: GraphPointer, fetch = nodeFetch) => {
+  return async (job: GraphPointer<NamedNode>, params?: GraphPointer, _fetch = fetch) => {
     if (!job) {
       throw new Error('Job URI missing')
     }
 
-    const res = await fetch(pipelineURI, triggerRequestInit(job, params))
+    const res = await _fetch(pipelineURI, triggerRequestInit(job, params))
 
     if (!res.ok) {
       const message = await res.text()
@@ -74,7 +73,7 @@ export const gitlab = trigger(job => {
   }
 })
 
-const githubJobTypes = new TermMap([
+const githubJobTypes = $rdf.termMap([
   [cc.TransformJob, 'transform_job'],
   [cc.PublishJob, 'transform_job'],
   [cc.UnlistJob, 'unlist_job'],

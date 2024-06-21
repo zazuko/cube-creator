@@ -2,17 +2,14 @@ import { Readable } from 'stream'
 import type { Literal, NamedNode, Term } from '@rdfjs/types'
 import { SELECT } from '@tpluscode/sparql-builder'
 import { sparql, SparqlTemplateResult } from '@tpluscode/rdf-string'
-import { rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
+import { rdf, schema, sh, prov } from '@tpluscode/rdf-ns-builders'
 import { cc, cube } from '@cube-creator/core/namespace'
-import TermSet from '@rdfjs/term-set'
-import { prov } from '@tpluscode/rdf-ns-builders/strict'
 import { ResourceIdentifier } from '@tpluscode/rdfine'
 import { toRdf } from 'rdf-literal'
 import through2 from 'through2'
-import clownface from 'clownface'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import getStream from 'get-stream'
-import { publicClient, streamClient } from '../../query-client'
+import { publicClient, streamClient } from '../../query-client.js'
 
 async function findCubeGraph(dimensionMapping: Term, client: typeof streamClient): Promise<NamedNode> {
   const patternsToFindCubeGraph = sparql`BIND ( ${dimensionMapping} as ?dimensionMapping )
@@ -39,7 +36,7 @@ async function findCubeGraph(dimensionMapping: Term, client: typeof streamClient
 
   const stream = await SELECT`?cubeGraph`
     .WHERE`${patternsToFindCubeGraph}`
-    .execute(client.query)
+    .execute(client)
 
   const [{ cubeGraph }] = await getStream.array<{ cubeGraph: NamedNode }>(stream)
   return cubeGraph
@@ -84,10 +81,10 @@ export async function getUnmappedValues(dimensionMapping: Term, client = streamC
   const cubeGraph = await findCubeGraph(dimensionMapping, client)
 
   const stream = await unmappedValuesFromQuery(cubeGraph, dimensionMapping)
-    .execute(client.query)
+    .execute(client)
 
   const unmappedValues = await getStream.array<{ value: Literal }>(stream)
-  return new TermSet(unmappedValues.map(result => result.value))
+  return $rdf.termSet(unmappedValues.map(result => result.value))
 }
 
 interface ImportMappingsFromSharedDimension {
@@ -108,7 +105,7 @@ export async function importMappingsFromSharedDimension({ dimensionMapping, dime
     unmappedValues = unmappedValuesOverride.map(value => ({ value }))
   } else {
     const cubeGraph = await findCubeGraph(dimensionMapping, client)
-    unmappedValues = await unmappedValuesFromQuery(cubeGraph, dimensionMapping).execute(client.query)
+    unmappedValues = await unmappedValuesFromQuery(cubeGraph, dimensionMapping).execute(client)
   }
 
   const terms = await getSharedDimensionTerms({ dimension, predicate, validThrough })
@@ -118,7 +115,7 @@ export async function importMappingsFromSharedDimension({ dimensionMapping, dime
       return next()
     }
 
-    const pointer = clownface({ dataset: $rdf.dataset(), graph: dimensionMapping })
+    const pointer = $rdf.clownface({ dataset: $rdf.dataset(), graph: dimensionMapping })
       .node(dimensionMapping)
       .addOut(prov.hadDictionaryMember, member => {
         member
@@ -165,7 +162,7 @@ async function getSharedDimensionTerms({ dimension, predicate, validThrough }: G
 
       ${validThroughFilter}
     `
-    .execute(publicClient.query) as any
+    .execute(publicClient) as any
 
   return new Map(bindings.map(({ identifier, term }) => [identifier.value, { key: identifier, entity: term }]))
 }

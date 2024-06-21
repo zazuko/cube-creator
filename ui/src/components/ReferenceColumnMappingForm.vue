@@ -50,9 +50,9 @@
 <script lang="ts">
 import { defineComponent, PropType, ref, Ref } from 'vue'
 import { RuntimeOperation } from 'alcaeus'
-import clownface, { AnyPointer } from 'clownface'
+import type { AnyPointer } from 'clownface'
 import { rdf, sh } from '@tpluscode/rdf-ns-builders'
-import $rdf from '@rdf-esm/dataset'
+import $rdf from '@cube-creator/env'
 import type { Term } from '@rdfjs/types'
 import slugify from 'slugify'
 import { ReferenceColumnMapping, CsvColumn, CsvSource, Table } from '@cube-creator/model'
@@ -158,7 +158,7 @@ export default defineComponent({
     }),
 
     dimensionTypes (): AnyPointer {
-      const emptyPointer = clownface({ dataset: $rdf.dataset() })
+      const emptyPointer = $rdf.clownface()
 
       if (!this.shape) return emptyPointer
 
@@ -218,7 +218,7 @@ export default defineComponent({
       const data = this.data
 
       const id = this.columnMapping?.id ?? $rdf.namedNode('')
-      const resource = clownface({ dataset: $rdf.dataset() })
+      const resource = $rdf.clownface()
         .node(id)
         .addOut(rdf.type, cc.ReferenceColumnMapping)
 

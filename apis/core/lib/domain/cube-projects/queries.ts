@@ -1,12 +1,12 @@
 import type { NamedNode, Term } from '@rdfjs/types'
 import { ASK, SELECT } from '@tpluscode/sparql-builder'
 import { dcterms, schema } from '@tpluscode/rdf-ns-builders'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import { cc } from '@cube-creator/core/namespace'
 import { DimensionMetadataCollection, Project } from '@cube-creator/model'
 import { sparql, SparqlTemplateResult } from '@tpluscode/rdf-string'
-import { GraphPointer } from 'clownface'
-import { parsingClient } from '../../query-client'
+import type { GraphPointer } from 'clownface'
+import { parsingClient } from '../../query-client.js'
 
 type FindProject = {
   metadataCollection: DimensionMetadataCollection
@@ -36,7 +36,7 @@ export async function findProject(arg: FindProject): Promise<NamedNode | undefin
       }
     `
 
-  const result = await query.execute(parsingClient.query)
+  const result = await query.execute(parsingClient)
 
   return result[0]?.project as any
 }
@@ -90,7 +90,7 @@ export function exists(cubeIdentifierOrUri: string | NamedNode, maintainer: Term
   const [first, ...rest] = patterns
   const union = rest.reduce((current, pattern) => sparql`${current} union { ${pattern} }`, sparql`{ ${first} }`)
 
-  return ASK`${union}`.execute(client.query)
+  return ASK`${union}`.execute(client)
 }
 
 export async function previouslyPublished(project: Project, client = parsingClient): Promise<boolean> {
@@ -99,5 +99,5 @@ export async function previouslyPublished(project: Project, client = parsingClie
          ${schema.actionStatus} ${schema.CompletedActionStatus} ;
          ${cc.project} ${project.id} ;
     .
-  }`.execute(client.query)
+  }`.execute(client)
 }

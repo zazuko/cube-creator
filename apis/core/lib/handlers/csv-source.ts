@@ -1,19 +1,18 @@
 import * as express from 'express'
 import asyncMiddleware from 'middleware-async'
-import * as labyrinth from '@hydrofoil/labyrinth/resource'
+import * as labyrinth from '@hydrofoil/labyrinth/resource.js'
 import { Enrichment } from '@hydrofoil/labyrinth/lib/middleware/preprocessResource'
 import { cc } from '@cube-creator/core/namespace'
-import { fromPointer as mediaObjectFromPointer } from '@cube-creator/model/MediaObject'
-import clownface, { AnyPointer, GraphPointer } from 'clownface'
+import type { AnyPointer, GraphPointer } from 'clownface'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { ResourceIdentifier } from '@tpluscode/rdfine/RdfResource'
-import type { DatasetCore, NamedNode } from '@rdfjs/types'
-import { shaclValidate } from '../middleware/shacl'
-import { createCSVSource } from '../domain/csv-source/upload'
-import { deleteSource } from '../domain/csv-source/delete'
-import { update } from '../domain/csv-source/update'
-import { replaceFile } from '../domain/csv-source/replace'
-import { getMediaStorage } from '../storage'
+import $rdf from '@cube-creator/env'
+import { shaclValidate } from '../middleware/shacl.js'
+import { createCSVSource } from '../domain/csv-source/upload.js'
+import { deleteSource } from '../domain/csv-source/delete.js'
+import { update } from '../domain/csv-source/update.js'
+import { replaceFile } from '../domain/csv-source/replace.js'
+import { getMediaStorage } from '../storage/index.js'
 
 export const post = labyrinth.protectedResource(
   shaclValidate,
@@ -67,8 +66,8 @@ const getCSVSource: express.RequestHandler = asyncMiddleware(async (req, res, ne
     return next()
   }
 
-  const csvSource: { term: NamedNode; dataset: DatasetCore } = await req.hydra.resource.clownface()
-  const directDownload = getPresignedLink(clownface(csvSource))
+  const csvSource = await req.hydra.resource.clownface()
+  const directDownload = getPresignedLink(csvSource)
   if (!directDownload) {
     return next(new Error('s3 key not found'))
   }
@@ -115,7 +114,7 @@ function isGraphPointer(ptr: AnyPointer): ptr is GraphPointer<ResourceIdentifier
 function getPresignedLink(csvSource: GraphPointer): string {
   const mediaPointer = csvSource.out(schema.associatedMedia)
   if (isGraphPointer(mediaPointer)) {
-    const media = mediaObjectFromPointer(mediaPointer)
+    const media = $rdf.rdfine.schema.MediaObject(mediaPointer)
     const storage = getMediaStorage(media)
 
     return storage.getDownloadLink(media)

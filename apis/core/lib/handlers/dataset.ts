@@ -1,29 +1,26 @@
 import { PassThrough } from 'stream'
-import toStream from 'rdf-dataset-ext/toStream.js'
-import type { DatasetCore, NamedNode, Term } from '@rdfjs/types'
+import type { Term } from '@rdfjs/types'
 import asyncMiddleware from 'middleware-async'
-import clownface from 'clownface'
 import parsePreferHeader from 'parse-prefer-header'
-import $rdf from 'rdf-ext'
-import { protectedResource } from '@hydrofoil/labyrinth/resource'
+import $rdf from '@cube-creator/env'
+import { protectedResource } from '@hydrofoil/labyrinth/resource.js'
 import { loadLinkedResources } from '@hydrofoil/labyrinth/lib/query/eagerLinks'
 import merge from 'merge2'
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 import { cc, query, view } from '@cube-creator/core/namespace'
-import { fromPointer } from '@rdfine/hydra/lib/IriTemplate'
-import env from '@cube-creator/core/env'
-import { shaclValidate } from '../middleware/shacl'
-import { update } from '../domain/dataset/update'
-import { loadCubeShapes } from '../domain/queries/cube'
-import * as clients from '../query-client'
-import { getCubesAndGraphs } from '../domain/dataset/queries'
+import env from '@cube-creator/core/env/node'
+import toStream from 'rdf-dataset-ext/toStream.js'
+import { shaclValidate } from '../middleware/shacl.js'
+import { update } from '../domain/dataset/update.js'
+import { loadCubeShapes } from '../domain/queries/cube.js'
+import * as clients from '../query-client.js'
+import { getCubesAndGraphs } from '../domain/dataset/queries.js'
 
 export const put = protectedResource(
   shaclValidate,
   asyncMiddleware(async (req, res) => {
-    const pointer: { term: NamedNode; dataset: DatasetCore } = await req.hydra.resource.clownface()
     const dataset = await update({
-      dataset: clownface(pointer),
+      dataset: await req.hydra.resource.clownface(),
       resource: await req.resource(),
       store: req.resourceStore(),
     })
@@ -37,21 +34,20 @@ export const put = protectedResource(
 export const get = protectedResource(asyncMiddleware(async (req, res) => {
   const { includeInLists } = parsePreferHeader(req.header('Prefer'))
 
-  const ptr: { term: NamedNode; dataset: DatasetCore } = await req.hydra.resource.clownface()
-  const dataset = clownface(ptr)
+  const dataset = await req.hydra.resource.clownface()
   const shapeStreams = [...await loadCubeShapes(req.hydra.resource.term, !includeInLists, clients)]
   const outStream = new PassThrough({
     objectMode: true,
   })
 
-  const types = clownface({
+  const types = $rdf.clownface({
     dataset: req.hydra.api.dataset,
     term: dataset.out(rdf.type).terms,
   })
-  const linkedResources = await loadLinkedResources(dataset, types.out(query.include).toArray(), req.labyrinth.sparql)
+  const linkedResources = await loadLinkedResources($rdf, dataset, types.out(query.include).toArray(), req.labyrinth.sparql)
   const observationsTemplateStream = await observationTemplate(dataset.term)
 
-  merge([toStream(dataset.dataset), ...shapeStreams, linkedResources.toStream(), observationsTemplateStream], { objectMode: true })
+  merge([toStream(dataset.dataset), ...shapeStreams, toStream(linkedResources), observationsTemplateStream], { objectMode: true })
     .pipe(outStream)
 
   return res.quadStream(outStream)
@@ -59,10 +55,10 @@ export const get = protectedResource(asyncMiddleware(async (req, res) => {
 
 async function observationTemplate(dataset: Term) {
   const results = await getCubesAndGraphs(dataset)
-  const cf = clownface({ dataset: $rdf.dataset() })
+  const cf = $rdf.clownface()
 
   for (const { cube, graph } of results) {
-    const template = fromPointer(cf.blankNode(), {
+    const template = $rdf.rdfine.hydra.IriTemplate(cf.blankNode(), {
       template: `${env.API_CORE_BASE}observations?cube=${encodeURIComponent(cube.value)}&graph=${encodeURIComponent(graph.value)}{&view,pageSize,page}`,
       mapping: [{
         property: view.view,

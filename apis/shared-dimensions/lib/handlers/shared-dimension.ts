@@ -1,22 +1,22 @@
 import asyncMiddleware from 'middleware-async'
-import { protectedResource } from '@hydrofoil/labyrinth/resource'
-import clownface from 'clownface'
-import { schema } from '@tpluscode/rdf-ns-builders/strict'
+import { protectedResource } from '@hydrofoil/labyrinth/resource.js'
+import { schema } from '@tpluscode/rdf-ns-builders'
 import cors from 'cors'
-import { serializers } from '@rdfjs-elements/formats-pretty'
+import $rdf from '@cube-creator/env'
+import formats from '@rdfjs-elements/formats-pretty'
 import error from 'http-errors'
 import { md, meta } from '@cube-creator/core/namespace'
 import * as ns from '@tpluscode/rdf-ns-builders'
 import { oa } from '@tpluscode/rdf-ns-builders'
-import { createTerm, getExportedDimension } from '../domain/shared-dimension'
-import { store } from '../store'
-import { shaclValidate } from '../middleware/shacl'
-import { rewrite } from '../rewrite'
+import { createTerm, getExportedDimension } from '../domain/shared-dimension.js'
+import { store } from '../store.js'
+import { shaclValidate } from '../middleware/shacl.js'
+import { rewrite } from '../rewrite.js'
 
 export const post = protectedResource(shaclValidate, asyncMiddleware(async (req, res) => {
   const term = await createTerm({
     resource: rewrite(await req.resource()),
-    termSet: clownface({ dataset: await req.hydra.resource.dataset() }).node(req.hydra.term),
+    termSet: $rdf.clownface({ dataset: await req.hydra.resource.dataset() }).node(req.hydra.term),
     store: store(),
   })
 
@@ -31,7 +31,7 @@ export const getExport = protectedResource(cors({ exposedHeaders: 'content-dispo
   if (!req.dataset) {
     return next(new error.BadRequest())
   }
-  const query = clownface({ dataset: await req.dataset() })
+  const query = $rdf.clownface({ dataset: await req.dataset() })
   const termSet: any = query
     .has(schema.inDefinedTermSet)
     .out(schema.inDefinedTermSet)
@@ -47,7 +47,7 @@ export const getExport = protectedResource(cors({ exposedHeaders: 'content-dispo
   res.setHeader('Content-Disposition', `attachment; filename="${name}.trig"`)
   res.setHeader('Content-Type', 'application/trig')
 
-  const quadStream: any = serializers.import('application/trig', data, {
+  const quadStream: any = formats.serializers.import('application/trig', data, {
     prefixes: {
       md: md().value,
       meta: meta().value,

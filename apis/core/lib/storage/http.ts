@@ -1,14 +1,13 @@
 import { Readable } from 'stream'
 import type { MediaObject } from '@rdfine/schema'
-import fetch from 'node-fetch'
-import type { MediaStorage } from './types'
+import type { MediaStorage } from './types.js'
 
 export const httpStorage: MediaStorage = {
   async getStream(media: MediaObject): Promise<Readable> {
     const url = getUrl(media)
     const response = await fetch(url)
 
-    return response.body as Readable
+    return response.body as unknown as Readable
   },
 
   // Deleting remote file is a noop

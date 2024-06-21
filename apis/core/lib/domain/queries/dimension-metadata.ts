@@ -2,12 +2,12 @@ import type { Term } from '@rdfjs/types'
 import { cc } from '@cube-creator/core/namespace'
 import { CONSTRUCT, SELECT } from '@tpluscode/sparql-builder'
 import { dcterms, rdfs, schema } from '@tpluscode/rdf-ns-builders'
-import { GraphPointer } from 'clownface'
-import { ParsingClient } from 'sparql-http-client/ParsingClient'
-import TermMap from '@rdfjs/term-map'
+import type { GraphPointer } from 'clownface'
+import $rdf from '@cube-creator/env'
+import { ParsingClient } from 'sparql-http-client/ParsingClient.js'
 import type { Organization } from '@rdfine/schema'
-import { parsingClient } from '../../query-client'
-import { ResourceStore } from '../../ResourceStore'
+import { parsingClient } from '../../query-client.js'
+import { ResourceStore } from '../../ResourceStore.js'
 
 export async function findByDimensionMapping(dimensionMapping: Term, client = parsingClient) {
   const [{ metadata }] = await SELECT`?metadata`
@@ -17,7 +17,7 @@ export async function findByDimensionMapping(dimensionMapping: Term, client = pa
       }
     `
     .LIMIT(1)
-    .execute(client.query)
+    .execute(client)
 
   return metadata
 }
@@ -36,12 +36,12 @@ export async function getDimensionMetaDataCollection(csvMapping: Term, client = 
             ?dataset ${cc.dimensionMetadata} ?dimensionMetadata .
         }
         `
-    .execute(client.query)
+    .execute(client)
   if (results.length < 1) {
-    throw new Error(`No DimensionMetadata for table ${csvMapping} found`)
+    throw new Error(`No DimensionMetadata for table ${csvMapping.value} found`)
   }
   if (results.length > 1) {
-    throw new Error(`More than one DimensionMetadata for table ${csvMapping} found`)
+    throw new Error(`More than one DimensionMetadata for table ${csvMapping.value} found`)
   }
   return results[0].dimensionMetadata
 }
@@ -60,9 +60,9 @@ export async function getMappedDimensions(metadata: GraphPointer, dimensionsEndp
         ?mapping ${cc.sharedDimension} ?dimension .
       }
     `
-    .execute(parsingClient.query)
+    .execute(parsingClient)
 
-  const dimensions = dimensionQuads.map(({ object }) => object)
+  const dimensions = [...dimensionQuads].map(({ object }) => object)
   const labelQuads = await CONSTRUCT`
       ?dimension ${rdfs.label} ?label .
     `
@@ -73,7 +73,7 @@ export async function getMappedDimensions(metadata: GraphPointer, dimensionsEndp
         ?dimension ${rdfs.label}|${schema.name} ?label
       }
     `
-    .execute(dimensionsEndpoint.query)
+    .execute(dimensionsEndpoint)
 
   return [...dimensionQuads, ...labelQuads]
 }
@@ -105,10 +105,10 @@ export async function getDimensionTypes(metadata: GraphPointer, store: ResourceS
         OPTIONAL { ?column ${cc.dimensionType} ?dimensionType . }
       }
     `
-    .execute(client.query)
+    .execute(client)
 
   if (!first) {
-    return new TermMap()
+    return $rdf.termMap()
   }
 
   const organization = await store.getResource<Organization>(first.organization)
@@ -124,5 +124,5 @@ export async function getDimensionTypes(metadata: GraphPointer, store: ResourceS
     }
 
     return map
-  }, new TermMap<Term, Term>())
+  }, $rdf.termMap<Term, Term>())
 }

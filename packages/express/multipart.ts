@@ -1,11 +1,12 @@
-import { Readable } from 'stream'
-import type { NamedNode, Stream } from '@rdfjs/types'
+import { Readable } from 'node:stream'
+import type { Readable as RS } from 'readable-stream'
+import type { NamedNode, Stream, BaseQuad } from '@rdfjs/types'
 import E, { Router } from 'express'
-import { parsers } from '@rdfjs-elements/formats-pretty'
+import formats from '@rdfjs-elements/formats-pretty'
 import once from 'once'
-import { BadRequest } from 'http-errors'
-import clownface, { GraphPointer } from 'clownface'
-import $rdf from 'rdf-ext'
+import httpError from 'http-errors'
+import type { GraphPointer } from 'clownface'
+import $rdf from '@zazuko/env'
 import asyncMiddleware from 'middleware-async'
 import mime from 'mime-types'
 import multer from 'multer'
@@ -14,7 +15,7 @@ export function isMultipart(req: E.Request) {
   return req.get('content-type')?.includes('multipart/form-data')
 }
 
-export type Files = Record<string, (baseIri: string) => Stream & Readable>
+export type Files = Record<string, (baseIri: string) => Stream<BaseQuad> & RS>
 
 declare module 'express-serve-static-core' {
   interface Request {
@@ -27,18 +28,18 @@ declare module 'express-serve-static-core' {
 function parseFile(file: Express.Multer.File, baseIRI: string): Stream & Readable {
   const mimeType = mime.lookup(file.originalname)
 
-  let parserStream = parsers.import(file.mimetype, Readable.from(file.buffer), {
+  let parserStream = formats.parsers.import(file.mimetype, Readable.from(file.buffer), {
     baseIRI,
   })
 
   if (!parserStream && mimeType) {
-    parserStream = parsers.import(mimeType, Readable.from(file.buffer), {
+    parserStream = formats.parsers.import(mimeType, Readable.from(file.buffer), {
       baseIRI,
     })
   }
 
   if (!parserStream) {
-    throw new BadRequest(`Parser not found for file ${file.originalname}`)
+    throw new httpError.BadRequest(`Parser not found for file ${file.originalname}`)
   }
 
   return parserStream as any
@@ -52,14 +53,14 @@ multiPartResourceHandler.use(asyncMiddleware((req, res, next) => {
     const { files } = req
 
     if (!(files && Array.isArray(files))) {
-      throw new BadRequest('Unexpected multipart body')
+      throw new httpError.BadRequest('Unexpected multipart body')
     }
     const representation = files.find(file => file.fieldname === 'representation')
     if (!representation) {
-      throw new BadRequest('Missing request part "representation"')
+      throw new httpError.BadRequest('Missing request part "representation"')
     }
 
-    return clownface({
+    return $rdf.clownface({
       dataset: await $rdf.dataset().import(parseFile(representation, req.hydra.term.value)),
       term: req.hydra.term,
     })

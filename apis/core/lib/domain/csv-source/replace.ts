@@ -1,16 +1,16 @@
 import type { NamedNode } from '@rdfjs/types'
-import { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
 import type { MediaObject } from '@rdfine/schema'
 import { CsvSource } from '@cube-creator/model'
-import { fromPointer as mediaObjectFromPointer } from '@cube-creator/model/MediaObject'
 import { DomainError } from '@cube-creator/api-errors'
 import { ResourceNode } from '@tpluscode/rdfine/RdfResource'
-import { parse } from '../csv'
-import { loadFileHeadString } from '../csv/file-head'
-import { ResourceStore } from '../../ResourceStore'
-import type { GetMediaStorage, MediaStorage } from '../../storage'
-import { getMediaStorage } from '../../storage'
-import { createOrUpdateColumns } from './update'
+import $rdf from '@cube-creator/env'
+import { parse } from '../csv/index.js'
+import { loadFileHeadString } from '../csv/file-head.js'
+import { ResourceStore } from '../../ResourceStore.js'
+import type { GetMediaStorage, MediaStorage } from '../../storage/index.js'
+import { getMediaStorage } from '../../storage/index.js'
+import { createOrUpdateColumns } from './update.js'
 
 interface ReplaceCSVCommand {
   csvSourceId: NamedNode
@@ -30,7 +30,7 @@ export async function replaceFile({
   // Remove any previous error
   csvSource.errors = []
 
-  const newMedia = mediaObjectFromPointer(resource)
+  const newMedia = $rdf.rdfine.schema.MediaObject(resource)
   const newStorage = getStorage(newMedia)
 
   try {

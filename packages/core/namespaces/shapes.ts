@@ -1,6 +1,9 @@
+/// <reference types="vite/client" />
 import type { NamedNode } from '@rdfjs/types'
-import namespace from '@rdf-esm/namespace'
-import env from '../env'
+import $rdf from '@zazuko/env'
+import { createProxy } from '../env.js'
+
+const env = createProxy(global.process && global.process.env ? global.process.env : import.meta.env)
 
 export const baseUri = env.maybe.API_CORE_BASE || ''
 
@@ -26,4 +29,4 @@ type ShapeTerms =
 
 type ShapesNamespace = (term: ShapeTerms) => NamedNode
 
-export const shape: ShapesNamespace = namespace(baseUri + 'shape/') as any
+export const shape: ShapesNamespace = $rdf.namespace(baseUri + 'shape/') as any

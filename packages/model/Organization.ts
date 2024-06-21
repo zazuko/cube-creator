@@ -1,10 +1,13 @@
-import type { DatasetCore, NamedNode, Term } from '@rdfjs/types'
-import { Organization, OrganizationMixin as SchemaOrganizationMixin } from '@rdfine/schema'
-import { Constructor, namespace, property, ResourceIdentifier } from '@tpluscode/rdfine'
+import type { NamedNode, Term } from '@rdfjs/types'
+import type { Organization } from '@rdfine/schema'
+import { Constructor, namespace, property } from '@tpluscode/rdfine'
 import { cc } from '@cube-creator/core/namespace'
 import { dcat, schema, _void } from '@tpluscode/rdf-ns-builders'
-import RdfResourceImpl, { Initializer, RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
-import type { GraphPointer } from 'clownface'
+import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
+import { RdfineEnvironment } from '@tpluscode/rdfine/environment'
+import { createFactory } from '@tpluscode/rdfine/factory'
+
+export type { Organization } from '@rdfine/schema'
 
 interface CreateIdentifier {
   cubeIdentifier: string
@@ -74,12 +77,4 @@ export function OrganizationMixin<Base extends Constructor<Omit<Organization, ke
 }
 
 OrganizationMixin.appliesTo = schema.Organization
-
-export const fromPointer = <D extends DatasetCore>(pointer: GraphPointer<ResourceIdentifier, D>, initializer: Initializer<Organization<D>> = {}): Organization<D> => {
-  return RdfResourceImpl.factory.createEntity(pointer, [OrganizationMixin, SchemaOrganizationMixin], {
-    initializer: {
-      ...initializer,
-      types: [schema.Organization],
-    },
-  })
-}
+OrganizationMixin.createFactory = (env: RdfineEnvironment) => createFactory<Organization>([OrganizationMixin], { types: [schema.Organization] }, env)

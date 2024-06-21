@@ -1,13 +1,15 @@
 import type { NamedNode } from '@rdfjs/types'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import { cc } from '@cube-creator/core/namespace'
 import type { Organization } from '@rdfine/schema'
 import { ColumnMapping, DimensionMetadataCollection, CsvProject, Table } from '@cube-creator/model'
-import { ResourceStore } from '../../ResourceStore'
-import { getDimensionMetaDataCollection } from '../queries/dimension-metadata'
-import * as TableQueries from '../queries/table'
-import * as ColumnMappingQueries from '../queries/column-mapping'
-import { findOrganization } from '../organization/query'
+import { ResourceStore } from '../../ResourceStore.js'
+import { getDimensionMetaDataCollection } from '../queries/dimension-metadata.js'
+import * as TableQueries from '../queries/table.js'
+import * as ColumnMappingQueries from '../queries/column-mapping.js'
+import { findOrganization } from '../organization/query.js'
+import { getTableForColumnMapping } from '../queries/table.js'
+import { dimensionIsUsedByOtherMapping } from '../queries/column-mapping.js'
 
 interface DeleteColumnMappingCommand {
   resource: NamedNode
@@ -19,8 +21,6 @@ interface DeleteColumnMappingCommand {
 export async function deleteColumnMapping({
   resource,
   store,
-  tableQueries: { getTableForColumnMapping } = TableQueries,
-  columnMappingQueries: { dimensionIsUsedByOtherMapping } = ColumnMappingQueries,
 }: DeleteColumnMappingCommand): Promise<void> {
   const columnMapping = await store.getResource<ColumnMapping>(resource, { allowMissing: true })
   if (!columnMapping) return

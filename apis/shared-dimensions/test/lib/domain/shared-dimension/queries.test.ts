@@ -1,14 +1,14 @@
 import { insertTestDimensions } from '@cube-creator/testing/lib/seedData'
-import namespace from '@rdfjs/namespace'
-import { schema, rdfs, qb, xsd } from '@tpluscode/rdf-ns-builders/strict'
+import { schema, rdfs, qb, xsd } from '@tpluscode/rdf-ns-builders'
 import { expect } from 'chai'
 import { ASK } from '@tpluscode/sparql-builder'
 import { mdClients } from '@cube-creator/testing/lib/index'
-import { deleteDynamicTerms } from '../../../../lib/domain/shared-dimension/queries'
+import $rdf from '@zazuko/env-node'
+import { deleteDynamicTerms } from '../../../../lib/domain/shared-dimension/queries.js'
 
 const { parsingClient } = mdClients
 
-const ns = namespace('https://ld.admin.ch/cube/dimension/')
+const ns = $rdf.namespace('https://ld.admin.ch/cube/dimension/')
 
 describe('@cube-creator/shared-dimensions-api/lib/shared-dimension/queries @SPARQL', () => {
   describe('deleteDynamicTerms', () => {
@@ -24,7 +24,7 @@ describe('@cube-creator/shared-dimensions-api/lib/shared-dimension/queries @SPAR
 
       // then
       await expect(
-        ASK`${ns['technologies/sparql']} ${schema.color} ?c`.execute(parsingClient.query),
+        ASK`${ns['technologies/sparql']} ${schema.color} ?c`.execute(parsingClient),
       ).to.eventually.be.false
     })
 
@@ -46,7 +46,7 @@ describe('@cube-creator/shared-dimensions-api/lib/shared-dimension/queries @SPAR
           ${schema.color} ?c ;
           ${qb.order} 10 ;
           ${rdfs.comment} "This term has dynamic properties"@en ;
-        .`.execute(parsingClient.query),
+        .`.execute(parsingClient),
       ).to.eventually.be.true
     })
   })

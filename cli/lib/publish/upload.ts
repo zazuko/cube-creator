@@ -1,7 +1,7 @@
 import { spawnSync } from 'child_process'
 import type { VariableMap } from 'barnard59-core'
-import { tracer } from '../otel/tracer'
-import { logger } from '../log'
+import { tracer } from '../otel/tracer.js'
+import { logger } from '../log.js'
 
 export function uploadCube(variables: VariableMap) {
   return tracer.startActiveSpan('cube upload', span => {

@@ -1,5 +1,6 @@
 import type { NamedNode } from '@rdfjs/types'
-import { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
+import $rdf from '@cube-creator/env'
 import { dcterms, rdfs, schema } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import * as Project from '@cube-creator/model/Project'
@@ -7,11 +8,11 @@ import * as Dataset from '@cube-creator/model/Dataset'
 import * as DimensionMetadata from '@cube-creator/model/DimensionMetadata'
 import { DomainError } from '@cube-creator/api-errors'
 import error from 'http-errors'
-import { ResourceStore } from '../../ResourceStore'
-import * as id from '../identifiers'
-import { cubeNamespaceAllowed } from '../organization/query'
-import { createImportJob } from '../job/create'
-import { exists } from './queries'
+import { ResourceStore } from '../../ResourceStore.js'
+import * as id from '../identifiers.js'
+import { cubeNamespaceAllowed } from '../organization/query.js'
+import { createImportJob } from '../job/create.js'
+import { exists } from './queries.js'
 
 interface CreateProjectCommand {
   projectsCollection: GraphPointer<NamedNode>
@@ -41,7 +42,7 @@ async function createCsvProjectResource({ user, projectNode, store, label, maint
     throw new DomainError('Another project is already using same identifier')
   }
 
-  const project = Project.createCsvProject(projectNode, {
+  const project = Project.createCsvProject($rdf, projectNode, {
     creator: user,
     label,
     maintainer,
@@ -49,7 +50,7 @@ async function createCsvProjectResource({ user, projectNode, store, label, maint
     sourceKind,
   })
 
-  const dataset = Dataset.create(store.create(project.dataset.id))
+  const dataset = Dataset.create($rdf, store.create(project.dataset.id))
 
   project.initializeCsvMapping(store)
   const organization = await store.getResource(project.maintainer)
@@ -87,7 +88,7 @@ async function createImportProjectResources({ resource, user, projectNode, store
     throw new DomainError("Imported cube does not match the Organisation's base URI")
   }
 
-  const project = Project.createImportProject(projectNode, {
+  const project = Project.createImportProject($rdf, projectNode, {
     creator: user,
     label,
     maintainer,
@@ -97,7 +98,7 @@ async function createImportProjectResources({ resource, user, projectNode, store
     sourceKind,
   })
 
-  const dataset = Dataset.create(store.create(project.dataset.id), {
+  const dataset = Dataset.create($rdf, store.create(project.dataset.id), {
     [dcterms.identifier.value]: project.sourceCube,
   })
   dataset.addCube(project.sourceCube, user)
@@ -156,7 +157,7 @@ export async function createProject({
   }
 
   project.initializeJobCollection(store)
-  DimensionMetadata.createCollection(store.create(dataset.dimensionMetadata.id))
+  DimensionMetadata.createCollection($rdf, store.create(dataset.dimensionMetadata.id))
 
   if (isImportProject) {
     const job = await createImportJob({

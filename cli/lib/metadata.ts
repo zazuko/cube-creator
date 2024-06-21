@@ -1,33 +1,31 @@
+import { Readable } from 'node:stream'
 import type { Literal, NamedNode, Quad } from '@rdfjs/types'
 import { obj } from 'through2'
-import $rdf from 'rdf-ext'
 import { dcat, dcterms, rdf, schema, sh, _void, foaf, xsd } from '@tpluscode/rdf-ns-builders'
 import { cc, cube } from '@cube-creator/core/namespace'
 import { Dataset, Project, PublishJob } from '@cube-creator/model'
-import { HydraClient } from 'alcaeus/alcaeus'
 import type { Context } from 'barnard59-core'
 import { Published } from '@cube-creator/model/Cube'
 import { CONSTRUCT, sparql } from '@tpluscode/sparql-builder'
-import StreamClient from 'sparql-http-client/StreamClient'
-import { Readable } from 'readable-stream'
+import StreamClient from 'sparql-http-client/StreamClient.js'
 import { fromRdf, toRdf } from 'rdf-literal'
-import { tracer } from './otel/tracer'
-import { loadProject } from './project'
+import { tracer } from './otel/tracer.js'
+import { loadProject } from './project.js'
 
-export async function loadDataset(jobUri: string, Hydra: HydraClient) {
-  const jobResource = await Hydra.loadResource<PublishJob>(jobUri)
+export async function loadDataset(jobUri: string, $rdf: Context['env']) {
+  const jobResource = await $rdf.hydra.loadResource<PublishJob>(jobUri)
   const job = jobResource.representation?.root
   if (!job) {
     throw new Error(`Did not find representation of job ${jobUri}. Server responded ${jobResource.response?.xhr.status}`)
   }
 
-  const projectResource = await Hydra.loadResource<Project>(job.project)
+  const projectResource = await $rdf.hydra.loadResource<Project>(job.project)
   const project = projectResource.representation?.root
   if (!project) {
     throw new Error(`Did not find representation of project ${job.project}. Server responded ${projectResource.response?.xhr.status}`)
   }
 
-  const datasetResource = await Hydra.loadResource<Dataset>(project.dataset.id as any, {
+  const datasetResource = await $rdf.hydra.loadResource<Dataset>(project.dataset.id as any, {
     Prefer: 'include-in-lists',
   })
   const dataset = datasetResource.representation?.root
@@ -166,8 +164,7 @@ function annotateSharedDimensions({ project }: QueryParams) {
 }
 
 export async function loadCubeMetadata(this: Context, { jobUri, endpoint, user, password }: Params) {
-  const Hydra = this.variables.get('apiClient')
-  const baseCube = $rdf.namedNode(this.variables.get('namespace'))
+  const baseCube = this.env.namedNode(this.variables.get('namespace'))
   const revision = toRdf(this.variables.get('revision'))
   const cubeIdentifier = this.variables.get('cubeIdentifier')
   const timestamp = this.variables.get('timestamp')
@@ -181,7 +178,7 @@ export async function loadCubeMetadata(this: Context, { jobUri, endpoint, user, 
   }
   const { maintainer } = await tracer.startActiveSpan('injectMetadata#setup', { attributes }, async span => {
     try {
-      return await loadDataset(jobUri, Hydra)
+      return await loadDataset(jobUri, this.env)
     } finally {
       span.end()
     }
@@ -196,14 +193,14 @@ export async function loadCubeMetadata(this: Context, { jobUri, endpoint, user, 
     timestamp,
   }
 
-  const stream = await CONSTRUCT`
+  const stream = CONSTRUCT`
     ?s1 ?p ?o1 .
     ?cubeVersion
       a ${cube.Cube} ;
       ${schema.version} ${revision} ;
       ${schema.dateModified} ${timestamp} ;
       ${dcterms.modified} ${timestamp} ;
-      ${dcterms.identifier} ${$rdf.literal(cubeIdentifier)} ;
+      ${dcterms.identifier} ${this.env.literal(cubeIdentifier)} ;
       # Set LINDAS query interface and sparql endpoint
       ${dcat.accessURL} ${maintainer.accessURL} ;
       ${_void.sparqlEndpoint} ${maintainer.sparqlEndpoint} ;
@@ -248,21 +245,21 @@ export async function loadCubeMetadata(this: Context, { jobUri, endpoint, user, 
     endpointUrl: endpoint,
     user,
     password,
-  }).query)
+  }))
 
   stream.on('end', span.end.bind(span)).on('error', span.end.bind(span))
 
   const metadata = await this.variables.get('metadata').import(stream)
 
-  const [{ subject: cubeId }] = metadata.match(null, rdf.type, cube.Cube).toArray()
+  const [{ subject: cubeId }] = [...metadata.match(null, rdf.type, cube.Cube)]
 
   const predicatesToCopy = [rdf.type, schema.name, schema.url, schema.encodingFormat]
   job.workExamples.forEach(jobWorkExample => {
-    const workExample = $rdf.blankNode()
-    metadata.add($rdf.quad(cubeId, schema.workExample, workExample))
+    const workExample = this.env.blankNode()
+    metadata.add(this.env.quad(cubeId, schema.workExample, workExample))
     predicatesToCopy.forEach(predicate => {
       jobWorkExample.pointer.out(predicate).forEach(object => {
-        metadata.add($rdf.quad(workExample, predicate, object.term as NamedNode | Literal))
+        metadata.add(this.env.quad(workExample, predicate, object.term as NamedNode | Literal))
       })
     })
   })
@@ -277,9 +274,8 @@ export async function loadCubeMetadata(this: Context, { jobUri, endpoint, user, 
 }
 
 export async function injectObservedBy(this: Context, jobUri: string) {
-  const Hydra = this.variables.get('apiClient')
-
-  const { maintainer } = await loadDataset(jobUri, Hydra)
+  const { env: $rdf } = this
+  const { maintainer } = await loadDataset(jobUri, $rdf)
 
   return obj(function (quad: Quad, _, callback) {
     if (quad.predicate.equals(cube.observedBy)) {

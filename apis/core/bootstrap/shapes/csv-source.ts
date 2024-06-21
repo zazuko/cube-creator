@@ -1,7 +1,7 @@
 import { cc, shape } from '@cube-creator/core/namespace'
 import { csvw, dash, hydra, rdf, rdfs, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import { turtle } from '@tpluscode/rdf-string'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 
 const shapeCreateId = shape('csv-source/create')
 const shapeUpdateId = shape('csv-source/update')

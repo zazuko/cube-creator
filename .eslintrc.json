@@ -8,7 +8,9 @@
     "mocha": true
   },
   "rules": {
-    "@typescript-eslint/indent": ["error", 2, { "SwitchCase": 1, "ignoredNodes": ["PropertyDefinition"] }]
+    "@typescript-eslint/indent": ["error", 2, { "SwitchCase": 1, "ignoredNodes": ["PropertyDefinition"] }],
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-unsafe-declaration-merging": "off"
   },
   "overrides": [{
     "files": ["*.test.ts"],

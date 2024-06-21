@@ -1,11 +1,10 @@
 import asyncMiddleware from 'middleware-async'
-import clownface from 'clownface'
-import { protectedResource } from '@hydrofoil/labyrinth/resource'
+import { protectedResource } from '@hydrofoil/labyrinth/resource.js'
 import { loadLinkedResources } from '@hydrofoil/labyrinth/lib/query/eagerLinks'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import { query } from '@cube-creator/core/namespace'
-import { shaclValidate } from '../../middleware/shacl'
-import { updateTable } from '../../domain/table/update'
+import { shaclValidate } from '../../middleware/shacl.js'
+import { updateTable } from '../../domain/table/update.js'
 
 export const put = protectedResource(
   shaclValidate,
@@ -17,11 +16,11 @@ export const put = protectedResource(
     await req.resourceStore().save()
 
     // Include resources defined with `query:include`
-    const types = clownface({
+    const types = $rdf.clownface({
       dataset: req.hydra.api.dataset,
       term: [...req.hydra.resource.types],
     })
-    const linkedResources = await loadLinkedResources(table, types.out(query.include).toArray(), req.labyrinth.sparql)
+    const linkedResources = await loadLinkedResources($rdf, table, types.out(query.include).toArray(), req.labyrinth.sparql)
     return res.dataset($rdf.dataset([...table.dataset, ...linkedResources]))
   }),
 )

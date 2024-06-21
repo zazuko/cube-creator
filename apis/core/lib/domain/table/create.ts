@@ -1,8 +1,8 @@
 import type { NamedNode } from '@rdfjs/types'
-import { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
 import { csvw, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import {
   CsvColumn,
   CsvMapping,
@@ -13,12 +13,11 @@ import {
   Table,
 } from '@cube-creator/model'
 import type { Organization } from '@rdfine/schema'
-import TermSet from '@rdfjs/term-set'
 import { DomainError } from '@cube-creator/api-errors'
-import * as DimensionMetadataQueries from '../queries/dimension-metadata'
-import { ResourceStore } from '../../ResourceStore'
-import { findOrganization } from '../organization/query'
-import * as TableQueries from '../queries/table'
+import * as DimensionMetadataQueries from '../queries/dimension-metadata.js'
+import { ResourceStore } from '../../ResourceStore.js'
+import { findOrganization } from '../organization/query.js'
+import * as TableQueries from '../queries/table.js'
 
 const trueTerm = $rdf.literal('true', xsd.boolean)
 
@@ -113,7 +112,7 @@ export async function createTable({
 }
 
 async function assertNoDuplicateTargetProperties(table: Table, store: ResourceStore, organization: Organization, cubeIdentifier: string) {
-  const targetProperties = new TermSet(
+  const targetProperties = $rdf.termSet(
     await Promise.all(
       table.columnMappings.map(async link => {
         const columnMapping = await store.getResource<ColumnMapping>(link.id)

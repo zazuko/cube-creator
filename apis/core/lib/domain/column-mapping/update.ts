@@ -1,5 +1,6 @@
 import type { NamedNode } from '@rdfjs/types'
-import { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
+import $rdf from '@cube-creator/env'
 import { cc } from '@cube-creator/core/namespace'
 import {
   ColumnMapping,
@@ -14,28 +15,25 @@ import { NotFoundError, DomainError } from '@cube-creator/api-errors'
 import { createIdentifierMapping } from '@cube-creator/model/ColumnMapping'
 import type { Organization } from '@rdfine/schema'
 import { Dictionary } from '@rdfine/prov'
-import { ResourceStore } from '../../ResourceStore'
-import { getDimensionMetaDataCollection } from '../queries/dimension-metadata'
-import * as TableQueries from '../queries/table'
-import * as id from '../identifiers'
-import { findOrganization } from '../organization/query'
-import { findMapping } from './lib'
+import { ResourceStore } from '../../ResourceStore.js'
+import { getDimensionMetaDataCollection } from '../queries/dimension-metadata.js'
+import { getTableForColumnMapping } from '../queries/table.js'
+import * as id from '../identifiers.js'
+import { findOrganization } from '../organization/query.js'
+import { findMapping } from './lib/index.js'
 
 interface UpdateColumnMappingCommand {
   resource: GraphPointer
   store: ResourceStore
-  tableQueries?: Pick<typeof TableQueries, 'getTableForColumnMapping'>
 }
 
 export async function updateLiteralColumnMapping({
   resource,
   store,
-  tableQueries = TableQueries,
 }: UpdateColumnMappingCommand): Promise<GraphPointer> {
   const { columnMapping, table } = await updateColumnMapping<LiteralColumnMapping>({
     resource,
     store,
-    tableQueries,
   })
 
   const columnId = resource.out(cc.sourceColumn).term!
@@ -62,12 +60,10 @@ export async function updateLiteralColumnMapping({
 export async function updateReferenceColumnMapping({
   resource,
   store,
-  tableQueries = TableQueries,
 }: UpdateColumnMappingCommand): Promise<GraphPointer> {
   const { columnMapping, table } = await updateColumnMapping<ReferenceColumnMapping>({
     resource,
     store,
-    tableQueries,
   })
 
   // Update referencedTable
@@ -91,6 +87,7 @@ export async function updateReferenceColumnMapping({
       if (!referencedColumn) throw new NotFoundError(referencedColumnId)
 
       return createIdentifierMapping(
+        $rdf,
         columnMapping.pointer.node(id.identifierMapping(columnMapping)),
         { sourceColumn, referencedColumn },
       )
@@ -104,7 +101,6 @@ export async function updateReferenceColumnMapping({
 async function updateColumnMapping<T extends ColumnMapping>({
   resource,
   store,
-  tableQueries: { getTableForColumnMapping } = TableQueries,
 }: UpdateColumnMappingCommand): Promise<{ columnMapping: T; table: Table }> {
   const columnMapping = await store.getResource<T>(resource.term)
 

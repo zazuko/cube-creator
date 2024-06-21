@@ -1,5 +1,5 @@
 import { DELETE } from '@tpluscode/sparql-builder'
-import { as } from '@tpluscode/rdf-ns-builders/strict'
+import { as } from '@tpluscode/rdf-ns-builders'
 import { IN } from '@tpluscode/sparql-builder/expressions'
 import { ccClients } from '@cube-creator/testing/lib'
 
@@ -23,5 +23,5 @@ export function removeActivities() {
         )
       }
     `
-    .execute(ccClients.parsingClient.query)
+    .execute(ccClients.parsingClient)
 }

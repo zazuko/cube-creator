@@ -1,7 +1,7 @@
 import { turtle } from '@tpluscode/rdf-string'
 import { dcat, hydra } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
-import env from '@cube-creator/core/env'
+import env from '@cube-creator/core/env/node'
 
 export const entrypoint = turtle`
 <> {

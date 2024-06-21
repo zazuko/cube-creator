@@ -1,13 +1,13 @@
 import { describe, it, beforeEach } from 'mocha'
-import env from '@cube-creator/core/env'
-import $rdf from 'rdf-ext'
-import ParsingClient from 'sparql-http-client/ParsingClient'
+import env from '@cube-creator/core/env/node'
+import $rdf from '@zazuko/env'
+import { ParsingClient } from 'sparql-http-client/ParsingClient.js'
 import sinon from 'sinon'
 import { expect } from 'chai'
-import { loadResourcesTypes } from '../../../lib/domain/queries/resources-types'
+import { loadResourcesTypes } from '../../../lib/domain/queries/resources-types.js'
 
 describe('@cube-creator/core-api/lib/domain/queries/resources-types', () => {
-  let sparql: ParsingClient.ParsingClient
+  let sparql: ParsingClient
 
   beforeEach(() => {
     sparql = {

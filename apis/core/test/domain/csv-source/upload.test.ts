@@ -4,16 +4,18 @@ import { Readable } from 'stream'
 import { describe, it, beforeEach } from 'mocha'
 import { expect } from 'chai'
 import sinon from 'sinon'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import { cc } from '@cube-creator/core/namespace'
-import { Conflict } from 'http-errors'
+import httpError from 'http-errors'
 import { csvw, dtype, hydra, rdf, schema, sh, xsd } from '@tpluscode/rdf-ns-builders'
-import clownface, { GraphPointer } from 'clownface'
-import { createCSVSource } from '../../../lib/domain/csv-source/upload'
-import { TestResourceStore } from '../../support/TestResourceStore'
-import type * as CsvSourceQueries from '../../../lib/domain/queries/csv-source'
-import '../../../lib/domain'
-import type { GetMediaStorage, MediaStorage } from '../../../lib/storage'
+import type { GraphPointer } from 'clownface'
+import { createCSVSource } from '../../../lib/domain/csv-source/upload.js'
+import { TestResourceStore } from '../../support/TestResourceStore.js'
+import type * as CsvSourceQueries from '../../../lib/domain/queries/csv-source.js'
+import '../../../lib/domain/index.js'
+import type { GetMediaStorage, MediaStorage } from '../../../lib/storage/index.js'
+
+const __dirname = path.dirname(new URL(import.meta.url).pathname)
 
 describe('domain/csv-sources/upload', () => {
   let storage: MediaStorage
@@ -21,7 +23,7 @@ describe('domain/csv-sources/upload', () => {
   let csvSourceQueries: typeof CsvSourceQueries
   let sourceWithFilenameExists: sinon.SinonStub
   let fileStream: Readable
-  const data = clownface({ dataset: $rdf.dataset() })
+  const data = $rdf.clownface()
     .namedNode('')
     .addOut(cc.sourceKind, cc.MediaLocal)
     .addOut(schema.name, $rdf.literal('source.csv'))
@@ -41,7 +43,7 @@ describe('domain/csv-sources/upload', () => {
     }
   })
 
-  const csvMapping = clownface({ dataset: $rdf.dataset() })
+  const csvMapping = $rdf.clownface()
     .namedNode('csv-mapping')
     .addOut(rdf.type, cc.CsvMapping)
 
@@ -176,7 +178,7 @@ describe('domain/csv-sources/upload', () => {
       })
 
       // then
-      expect(creatingSource).to.be.rejectedWith(Conflict)
+      expect(creatingSource).to.be.rejectedWith(httpError.Conflict)
     })
   })
 

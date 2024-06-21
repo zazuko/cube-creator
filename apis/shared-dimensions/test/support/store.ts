@@ -1,11 +1,10 @@
-import TermMap from '@rdfjs/term-map'
 import { rdf } from '@tpluscode/rdf-ns-builders'
 import sinon from 'sinon'
-import $rdf from 'rdf-ext'
-import { SharedDimensionsStore } from '../../lib/store'
+import $rdf from '@zazuko/env-node'
+import { SharedDimensionsStore } from '../../lib/store.js'
 
 export function testStore(): SharedDimensionsStore {
-  const resources = new TermMap()
+  const resources = $rdf.termMap()
 
   const store: SharedDimensionsStore = {
     graph: $rdf.namedNode('https://lindas.admin.ch/cube/dimension'),

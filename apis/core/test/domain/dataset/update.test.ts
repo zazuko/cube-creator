@@ -2,15 +2,15 @@ import type { NamedNode } from '@rdfjs/types'
 import { describe, it, beforeEach } from 'mocha'
 import { expect } from 'chai'
 import sinon from 'sinon'
-import clownface, { GraphPointer } from 'clownface'
-import $rdf from 'rdf-ext'
-import DatasetExt from 'rdf-ext/lib/Dataset'
-import { dcat, dcterms, hydra, rdf, schema, sh, vcard, _void, xsd } from '@tpluscode/rdf-ns-builders'
+import type { GraphPointer } from 'clownface'
+import $rdf from '@zazuko/env'
+import { Dataset as DatasetExt } from '@zazuko/env/lib/Dataset.js'
+import { dcat, dcterms, hydra, rdf, schema, sh, vcard, _void, xsd } from '@tpluscode/rdf-ns-builders/loose'
 import { cc, cube, lindasSchema } from '@cube-creator/core/namespace'
 import { ex } from '@cube-creator/testing/lib/namespace'
 import { namedNode } from '@cube-creator/testing/clownface'
-import { TestResourceStore } from '../../support/TestResourceStore'
-import { update } from '../../../lib/domain/dataset/update'
+import { TestResourceStore } from '../../support/TestResourceStore.js'
+import { update } from '../../../lib/domain/dataset/update.js'
 
 describe('domain/dataset/update', () => {
   let store: TestResourceStore
@@ -172,7 +172,7 @@ describe('domain/dataset/update', () => {
 
   it('populates schema contact point from dcat contact point', async () => {
     // given
-    const updatedResource = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('dataset') })
+    const updatedResource = $rdf.clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('dataset') })
       .addOut(dcterms.title, 'title')
       .addOut(dcat.contactPoint, org => {
         org

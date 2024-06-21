@@ -1,19 +1,18 @@
-import type { DatasetCore, Quad, Term } from '@rdfjs/types'
-import $rdf from 'rdf-ext'
+import type { BaseQuad, DatasetCore, Quad, Term } from '@rdfjs/types'
+import $rdf from '@zazuko/env'
 import { ImportJob, TransformJob } from '@cube-creator/model'
 import { HydraClient } from 'alcaeus/alcaeus'
 import type { Context } from 'barnard59-core'
 import { Dictionary } from '@rdfine/prov'
-import { prov, schema, qudt } from '@tpluscode/rdf-ns-builders/strict'
+import { prov, schema, qudt, rdf } from '@tpluscode/rdf-ns-builders'
 import { cc, cube } from '@cube-creator/core/namespace'
-import TermMap from '@rdfjs/term-map'
-import { MultiPointer } from 'clownface'
+import type { MultiPointer } from 'clownface'
 import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import { HydraResponse } from 'alcaeus'
 import { DefaultCsvwLiteral } from '@cube-creator/core/mapping'
 import through2 from 'through2'
-import { rdf } from '@tpluscode/rdf-ns-builders'
-import { importDynamic } from './module'
+import type { Environment } from 'barnard59-env'
+import map, { MapCallback } from 'barnard59-base/map.js'
 
 const undef = $rdf.literal('', cube.Undefined)
 
@@ -51,8 +50,8 @@ async function loadMetadata(jobUri: string, Hydra: HydraClient) {
   return dimensionMetadataResource.representation.root
 }
 
-export async function loadDimensionMapping(mappingUri: string, Hydra: HydraClient) {
-  const mappingResource = await load<Dictionary>(mappingUri, Hydra, {
+export async function loadDimensionMapping(mappingUri: string, env: Environment) {
+  const mappingResource = await load<Dictionary>(mappingUri, env.hydra, {
     Prefer: 'return=canonical, only-mapped',
   })
   if (!mappingResource.representation) {
@@ -62,10 +61,10 @@ export async function loadDimensionMapping(mappingUri: string, Hydra: HydraClien
   return mappingResource.representation.root?.pointer
 }
 
-export async function mapDimensions(this: Pick<Context, 'variables'>) {
-  const mappingCache = new TermMap<Term, MultiPointer | null>()
+export async function mapDimensions(this: Context) {
+  const mappingCache = $rdf.termMap<Term, MultiPointer | null>()
   const jobUri = this.variables.get('jobUri')
-  const dimensionMetadataCollection = await loadMetadata(jobUri, this.variables.get('apiClient'))
+  const dimensionMetadataCollection = await loadMetadata(jobUri, this.env.hydra)
 
   function getDimensionMapping(predicate: Term) {
     let mappingTerm = mappingCache.get(predicate)
@@ -80,9 +79,9 @@ export async function mapDimensions(this: Pick<Context, 'variables'>) {
     return mappingTerm
   }
 
-  const valueCache = new TermMap<Term, Map<string, Term | undefined>>()
+  const valueCache = $rdf.termMap<Term, Map<string, Term | undefined>>()
   const getMappedValue = async (mappingTerm: string, object: Term) => {
-    const dict = await loadDimensionMapping(mappingTerm, this.variables.get('apiClient'))
+    const dict = await loadDimensionMapping(mappingTerm, this.env)
     if (!dict) {
       return undefined
     }
@@ -111,9 +110,7 @@ export async function mapDimensions(this: Pick<Context, 'variables'>) {
   const originalValueQuads = $rdf.dataset()
   this.variables.set('originalValueQuads', originalValueQuads)
 
-  const { default: map } = await importDynamic('barnard59-base/map.js')
-
-  return map(async (quad: Quad) => {
+  const cb: MapCallback<Quad, BaseQuad> = async (quad): Promise<BaseQuad> => {
     const { subject, predicate, object, graph } = quad
     const mappingTerm = getDimensionMapping(predicate)
     if (mappingTerm?.value) {
@@ -134,7 +131,9 @@ export async function mapDimensions(this: Pick<Context, 'variables'>) {
     }
 
     return quad
-  })
+  }
+
+  return map.call(this, cb as any)
 }
 
 export function injectOriginalValueQuads(this: Pick<Context, 'variables'>) {
@@ -168,7 +167,7 @@ export function substituteUndefined(quad: Quad): Quad {
 export function substituteUndefinedReferences(this: Context) {
   const { csvwResource } = this.variables.get('transformed')
 
-  const patterns = new TermMap(csvwResource.tableSchema?.column
+  const patterns = $rdf.termMap(csvwResource.tableSchema?.column
     .filter(column => column.propertyUrl)
     .map(column => {
       const pattern = column.pointer.out(qudt.pattern).value

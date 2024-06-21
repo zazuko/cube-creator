@@ -1,6 +1,6 @@
 import type { NamedNode, Term } from '@rdfjs/types'
 import { cc } from '@cube-creator/core/namespace'
-import { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
 import {
   CsvSource,
   DimensionMetadataCollection,
@@ -10,13 +10,13 @@ import {
 } from '@cube-creator/model'
 import { NotFoundError, DomainError } from '@cube-creator/api-errors'
 import { rdf } from '@tpluscode/rdf-ns-builders'
-import TermSet from '@rdfjs/term-set'
+import $rdf from '@zazuko/env'
 import type { Organization } from '@rdfine/schema'
 import { CsvProject } from '@cube-creator/model/Project'
-import { findOrganization } from '../organization/query'
-import { ResourceStore } from '../../ResourceStore'
-import { getDimensionMetaDataCollection } from '../queries/dimension-metadata'
-import { findMapping } from './lib'
+import { findOrganization } from '../organization/query.js'
+import { ResourceStore } from '../../ResourceStore.js'
+import { getDimensionMetaDataCollection } from '../queries/dimension-metadata.js'
+import { findMapping } from './lib/index.js'
 
 interface CreateColumnMappingCommand {
   tableId: NamedNode
@@ -41,7 +41,7 @@ export async function createColumnMapping({
 
   const source = await store.getResource<CsvSource>(table.csvSource?.id)
 
-  const resourceTypes = new TermSet(resource.out(rdf.type).terms)
+  const resourceTypes = $rdf.termSet(resource.out(rdf.type).terms)
   const columnMapping = resourceTypes.has(cc.ReferenceColumnMapping)
     ? await createReferenceColumnMapping({ targetProperty, table, source, resource, store })
     : await createLiteralColumnMapping({ targetProperty, table, source, resource, store })

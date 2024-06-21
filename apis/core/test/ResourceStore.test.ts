@@ -1,22 +1,23 @@
 import { describe, it, beforeEach, before, after } from 'mocha'
 import { expect } from 'chai'
 import sinon from 'sinon'
-import $rdf from 'rdf-ext'
-import { StreamClient } from 'sparql-http-client/StreamClient'
-import StreamQuery from 'sparql-http-client/StreamQuery'
-import StreamStore from 'sparql-http-client/StreamStore'
+import $rdf from '@zazuko/env'
+import { StreamClient } from 'sparql-http-client/StreamClient.js'
+import StreamQuery from 'sparql-http-client/StreamQuery.js'
+import StreamStore from 'sparql-http-client/StreamStore.js'
 import { ex } from '@cube-creator/testing/lib/namespace'
 import { as, hydra, rdf, rdfs, schema } from '@tpluscode/rdf-ns-builders'
 import { ASK, DELETE, INSERT } from '@tpluscode/sparql-builder'
 import { ccClients } from '@cube-creator/testing/lib'
-import ResourceStore, { SparqlStoreFacade } from '../lib/ResourceStore'
-import { manages } from '../lib/resources/hydraManages'
-import * as Activity from '../lib/activity'
+import esmock from 'esmock'
+import { manages } from '../lib/resources/hydraManages.js'
 
 describe('ResourceStore', () => {
   let client: StreamClient
   let query: sinon.SinonStubbedInstance<StreamQuery>
   let store: sinon.SinonStubbedInstance<StreamStore>
+
+  let ResourceStore: typeof import('../lib/ResourceStore.js').default
 
   beforeEach(() => {
     query = sinon.createStubInstance(StreamQuery)
@@ -27,11 +28,15 @@ describe('ResourceStore', () => {
     }
   })
 
-  before(() => {
-    sinon.stub(Activity, 'now')
-      .returns(new Date(Date.parse('2021-10-26T08:00:00.000Z')))
-    sinon.stub(Activity, 'newId')
-      .returns($rdf.namedNode('https://cube-creator.lndo.site/activity/test-activity'))
+  before(async () => {
+    ({ default: ResourceStore } = await esmock('../lib/ResourceStore.js', {
+      '../lib/activity/index.js': {
+        now: sinon.stub()
+          .returns(new Date(Date.parse('2021-10-26T08:00:00.000Z'))),
+        newId: sinon.stub()
+          .returns($rdf.namedNode('https://cube-creator.lndo.site/activity/test-activity')),
+      },
+    }))
   })
 
   after(() => {
@@ -42,7 +47,7 @@ describe('ResourceStore', () => {
     it('loads resource from sparql endpoint', async () => {
       // given
       const store = new ResourceStore(client)
-      query.construct.resolves($rdf.dataset([
+      query.construct.returns($rdf.dataset([
         $rdf.quad(ex.Foo, rdfs.label, $rdf.literal('foo')),
       ]).toStream())
 
@@ -56,7 +61,7 @@ describe('ResourceStore', () => {
     it('called twice returns same object', async () => {
       // given
       const store = new ResourceStore(client)
-      query.construct.resolves($rdf.dataset([
+      query.construct.returns($rdf.dataset([
         $rdf.quad(ex.Foo, rdfs.label, $rdf.literal('foo')),
       ]).toStream())
       const expected = await store.get(ex.Foo)
@@ -84,7 +89,7 @@ describe('ResourceStore', () => {
     it('returns "undefined" when it is allowed resource comes back empty', async () => {
       // given
       const store = new ResourceStore(client)
-      query.construct.resolves($rdf.dataset().toStream())
+      query.construct.returns($rdf.dataset().toStream())
 
       // when
       const resource = await store.get('foo', { allowMissing: true })
@@ -96,7 +101,7 @@ describe('ResourceStore', () => {
     it('throws if resource comes back empty', async () => {
       // given
       const store = new ResourceStore(client)
-      query.construct.resolves($rdf.dataset().toStream())
+      query.construct.returns($rdf.dataset().toStream())
 
       // when
       const promise = store.get('foo')
@@ -208,7 +213,7 @@ describe('ResourceStore', () => {
     it('does not update store if nothing changes', async () => {
       // given
       const store = new ResourceStore(client)
-      query.construct.callsFake(async () => $rdf.dataset([
+      query.construct.callsFake(() => $rdf.dataset([
         $rdf.quad(ex.Resource, rdfs.label, $rdf.literal('foo')),
       ]).toStream())
 
@@ -225,7 +230,7 @@ describe('ResourceStore', () => {
     it('only saves changed resources', async function () {
       // given
       const store = new ResourceStore(client)
-      query.construct.callsFake(async () => $rdf.dataset([
+      query.construct.callsFake(() => $rdf.dataset([
         $rdf.quad($rdf.namedNode('baz'), rdfs.label, $rdf.literal('foo')),
       ]).toStream())
 
@@ -243,7 +248,7 @@ describe('ResourceStore', () => {
     it('only deletes graph if all resource triples were removed', async function () {
       // given
       const store = new ResourceStore(client)
-      query.construct.resolves($rdf.dataset([
+      query.construct.returns($rdf.dataset([
         $rdf.quad($rdf.namedNode('baz'), rdfs.label, $rdf.literal('foo')),
         $rdf.quad($rdf.namedNode('baz'), rdfs.comment, $rdf.literal('bar')),
       ]).toStream())
@@ -288,9 +293,10 @@ describe('ResourceStore', () => {
 
 describe('ResourceStore @SPARQL', () => {
   const testResource = ex.TestResource
-  let store: ResourceStore
+  let store: import('../lib/ResourceStore.js').default
 
   beforeEach(async () => {
+    const { default: ResourceStore, SparqlStoreFacade } = await import('../lib/ResourceStore.js')
     store = new ResourceStore(new SparqlStoreFacade(ccClients.streamClient, () => ex.User))
     await DELETE`
       graph ?resource { ?rs ?rp ?ro }
@@ -309,7 +315,7 @@ describe('ResourceStore @SPARQL', () => {
           ?as ?ap ?ao .
         }
       }
-    `.execute(ccClients.streamClient.query)
+    `.execute(ccClients.streamClient)
   })
 
   describe('created', () => {
@@ -327,7 +333,7 @@ describe('ResourceStore @SPARQL', () => {
                   ${as.startTime} ?time ;
                   ${as.endTime} ?time ;
         .
-      }`.execute(ccClients.streamClient.query)
+      }`.execute(ccClients.streamClient)
 
       await expect(activityCreated).to.eventually.be.true
     })
@@ -335,7 +341,7 @@ describe('ResourceStore @SPARQL', () => {
     it('stores changed resource', async () => {
       const resourceCreated = ASK`
         ${testResource} a ${schema.Person} .
-      `.FROM(testResource).execute(ccClients.streamClient.query)
+      `.FROM(testResource).execute(ccClients.streamClient)
 
       await expect(resourceCreated).to.eventually.be.true
     })
@@ -347,7 +353,7 @@ describe('ResourceStore @SPARQL', () => {
         graph ${testResource} {
           ${testResource} a ${schema.Person} ; ${schema.name} "john"
         }
-      `.execute(ccClients.streamClient.query)
+      `.execute(ccClients.streamClient)
 
       const ptr = await store.get(testResource)
       ptr.addOut(schema.name, 'John')
@@ -362,7 +368,7 @@ describe('ResourceStore @SPARQL', () => {
                   ${as.startTime} ?time ;
                   ${as.endTime} ?time ;
         .
-      }`.execute(ccClients.streamClient.query)
+      }`.execute(ccClients.streamClient)
 
       await expect(activityCreated).to.eventually.be.true
     })
@@ -370,7 +376,7 @@ describe('ResourceStore @SPARQL', () => {
     it('stores changed resource', async () => {
       const resourceCreated = ASK`
         ${testResource} a ${schema.Person}; ${schema.name} "John" .
-      `.FROM(testResource).execute(ccClients.streamClient.query)
+      `.FROM(testResource).execute(ccClients.streamClient)
 
       await expect(resourceCreated).to.eventually.be.true
     })
@@ -382,7 +388,7 @@ describe('ResourceStore @SPARQL', () => {
         graph ${testResource} {
           ${testResource} a ${schema.Person}
         }
-      `.execute(ccClients.streamClient.query)
+      `.execute(ccClients.streamClient)
 
       store.delete(testResource)
       await store.save()
@@ -391,7 +397,7 @@ describe('ResourceStore @SPARQL', () => {
     it('removes resource data', async () => {
       const resourceExists = ASK`
         ?s ?p ?o
-      `.FROM(testResource).execute(ccClients.streamClient.query)
+      `.FROM(testResource).execute(ccClients.streamClient)
 
       await expect(resourceExists).to.eventually.be.false
     })
@@ -404,7 +410,7 @@ describe('ResourceStore @SPARQL', () => {
                   ${as.startTime} ?time ;
                   ${as.endTime} ?time ;
         .
-      }`.execute(ccClients.streamClient.query)
+      }`.execute(ccClients.streamClient)
 
       await expect(activityCreated).to.eventually.be.true
     })

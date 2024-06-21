@@ -1,17 +1,18 @@
 import path from 'path'
 import type { Quad, Stream, Term } from '@rdfjs/types'
 import { hydra, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
-import $rdf from 'rdf-ext'
+import $rdf from '@cube-creator/env'
 import { toRdf } from 'rdf-literal'
-import { fromFile } from 'rdf-utils-fs'
-import clownface from 'clownface'
+import { fromFile } from '@zazuko/rdf-utils-fs'
 import { isGraphPointer } from 'is-graph-pointer'
-import { StreamClient } from 'sparql-http-client/StreamClient'
-import { ParsingClient } from 'sparql-http-client/ParsingClient'
+import { StreamClient } from 'sparql-http-client/StreamClient.js'
+import { ParsingClient } from 'sparql-http-client/ParsingClient.js'
 import { md } from '@cube-creator/core/namespace'
-import env from '../env'
-import shapeToQuery, { rewriteTemplates } from '../shapeToQuery'
-import { getDynamicProperties } from './shared-dimension'
+import env from '../env.js'
+import shapeToQuery, { rewriteTemplates } from '../shapeToQuery.js'
+import { getDynamicProperties } from './shared-dimension.js'
+
+const __dirname = path.dirname(new URL(import.meta.url).pathname)
 
 interface GetSharedDimensions {
   freetextQuery?: string
@@ -34,15 +35,15 @@ export async function getSharedDimensions(client: StreamClient, { freetextQuery 
   }))
   await rewriteTemplates(shape, variables)
 
-  const dataset = await $rdf.dataset().import(await constructQuery(shape).execute(client))
-  clownface({ dataset })
+  const dataset = await $rdf.dataset().import(constructQuery(shape).execute(client))
+  $rdf.clownface({ dataset })
     .has(rdf.type, schema.DefinedTermSet)
     .forEach(termSet => {
       termSet.addOut(md.export, $rdf.namedNode(`${MANAGED_DIMENSIONS_BASE}dimension/_export?dimension=${termSet.value}`))
       termSet.addOut(md.terms, $rdf.namedNode(`${MANAGED_DIMENSIONS_BASE}dimension/_terms?dimension=${termSet.value}`))
     })
 
-  return dataset.toArray()
+  return [...dataset]
 }
 
 interface GetSharedTerms {
@@ -90,9 +91,9 @@ export async function getSharedTerms<C extends StreamClient | ParsingClient>({ s
 }
 
 async function loadShape(shape: string) {
-  const dataset = await $rdf.dataset().import(fromFile(path.resolve(__dirname, `../shapes/${shape}.ttl`)))
+  const dataset = await $rdf.dataset().import(fromFile($rdf, path.resolve(__dirname, `../shapes/${shape}.ttl`)))
 
-  const ptr = clownface({
+  const ptr = $rdf.clownface({
     dataset,
   }).has(rdf.type, sh.NodeShape)
 

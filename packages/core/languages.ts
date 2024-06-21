@@ -1,3 +1,3 @@
-import { literal } from '@rdf-esm/data-model'
+import $rdf from '@zazuko/env'
 
-export const supportedLanguages = ['de', 'fr', 'it', 'rm', 'en'].map(v => literal(v))
+export const supportedLanguages = ['de', 'fr', 'it', 'rm', 'en'].map(v => $rdf.literal(v))

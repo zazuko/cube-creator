@@ -1,22 +1,17 @@
 import type { NamedNode } from '@rdfjs/types'
 import { cc } from '@cube-creator/core/namespace'
-import { ResourceStore } from '../../ResourceStore'
-import * as TableQueries from '../queries/table'
-import * as ColumnMappingQueries from '../queries/column-mapping'
-import { deleteColumnMapping } from '../column-mapping/delete'
+import { ResourceStore } from '../../ResourceStore.js'
+import { deleteColumnMapping } from '../column-mapping/delete.js'
+import { getReferencingMappingsForTable } from '../queries/column-mapping.js'
 
 interface DeleteTableCommand {
   resource: NamedNode
   store: ResourceStore
-  tableQueries?: Pick<typeof TableQueries, 'getTableForColumnMapping'>
-  columnMappingQueries?: Pick<typeof ColumnMappingQueries, 'dimensionIsUsedByOtherMapping'| 'getReferencingMappingsForTable'>
 }
 
 export async function deleteTable({
   resource: tableTerm,
   store,
-  tableQueries: { getTableForColumnMapping } = TableQueries,
-  columnMappingQueries: { dimensionIsUsedByOtherMapping, getReferencingMappingsForTable } = ColumnMappingQueries,
 }: DeleteTableCommand): Promise<void> {
   if (tableTerm.termType !== 'NamedNode') return
 
@@ -30,8 +25,6 @@ export async function deleteTable({
       await deleteColumnMapping({
         resource: columnMapping,
         store,
-        tableQueries: { getTableForColumnMapping },
-        columnMappingQueries: { dimensionIsUsedByOtherMapping },
       })
     }
   }
@@ -43,8 +36,6 @@ export async function deleteTable({
       await deleteColumnMapping({
         resource: columnMapping,
         store,
-        tableQueries: { getTableForColumnMapping },
-        columnMappingQueries: { dimensionIsUsedByOtherMapping },
       })
     }
   }

@@ -3,18 +3,17 @@ import { before, beforeEach, describe, it } from 'mocha'
 import { ccClients } from '@cube-creator/testing/lib'
 import { insertTestProject } from '@cube-creator/testing/lib/seedData'
 import { namedNode } from '@cube-creator/testing/clownface'
-import { GraphPointer } from 'clownface'
-import DatasetExt from 'rdf-ext/lib/Dataset'
+import type { GraphPointer } from 'clownface'
+import { Dataset as DatasetExt } from '@zazuko/env/lib/Dataset.js'
 import { expect } from 'chai'
 import { rdf, schema } from '@tpluscode/rdf-ns-builders'
-import namespace from '@rdfjs/namespace'
 import { cc, cube } from '@cube-creator/core/namespace'
-import $rdf from 'rdf-ext'
-import { preselectDimensionType } from '../../lib/handlers/dimension'
-import { TestResourceStore } from '../support/TestResourceStore'
-import '../../lib/domain'
+import $rdf from '@zazuko/env'
+import { preselectDimensionType } from '../../lib/handlers/dimension.js'
+import { TestResourceStore } from '../support/TestResourceStore.js'
+import '../../lib/domain/index.js'
 
-const ns = namespace('https://cube-creator.lndo.site/cube-project/ubd/')
+const ns = $rdf.namespace('https://cube-creator.lndo.site/cube-project/ubd/')
 
 describe('lib/handlers/dimension @SPARQL', function () {
   this.timeout(20000)

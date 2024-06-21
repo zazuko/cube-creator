@@ -1,5 +1,5 @@
 import type { NamedNode, Term } from '@rdfjs/types'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import { Constructor } from '@tpluscode/rdfine'
 import { _void, schema } from '@tpluscode/rdf-ns-builders'
 import { Dataset } from '@cube-creator/model'
@@ -19,7 +19,7 @@ declare module '@cube-creator/model' {
 export default function Mixin<Base extends Constructor<Omit<Dataset, keyof ApiDataset>>>(Resource: Base) {
   return class extends Resource implements ApiDataset {
     addCube(cube: NamedNode, creator: NamedNode) {
-      Cube.create(this.pointer.node(cube), { creator })
+      Cube.create(this.env, this.pointer.node(cube), { creator })
 
       this.pointer.addOut(schema.hasPart, cube)
     }

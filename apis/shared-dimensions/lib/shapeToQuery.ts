@@ -1,27 +1,26 @@
 import onetime from 'onetime'
 import { md } from '@cube-creator/core/namespace'
-import { AnyPointer, GraphPointer } from 'clownface'
+import type { AnyPointer, GraphPointer } from 'clownface'
 import { isGraphPointer } from 'is-graph-pointer'
 import { hydra } from '@tpluscode/rdf-ns-builders'
-import { Parameters, PropertyShape } from '@hydrofoil/shape-to-query/model/constraint/ConstraintComponent'
+import ConstraintComponent, { Parameters, PropertyShape } from '@hydrofoil/shape-to-query/model/constraint/ConstraintComponent.js'
 import evalTemplateLiteral from 'rdf-loader-code/evalTemplateLiteral.js'
-import namespace from '@rdfjs/namespace'
 import { sparql } from '@tpluscode/sparql-builder'
-import $rdf from 'rdf-ext'
+import $rdf from '@cube-creator/env'
+import { constructQuery, deleteQuery, s2q } from '@hydrofoil/shape-to-query'
+import { constraintComponents } from '@hydrofoil/shape-to-query/model/constraint/index.js'
+import { PatternConstraintComponent } from '@hydrofoil/shape-to-query/model/constraint/pattern.js'
+import { SparqlTemplateResult } from '@tpluscode/rdf-string'
 import type { Literal } from '@rdfjs/types'
-import env from './env'
+import env from './env.js'
 
 /*
  The @hydrofoil/shape-to-query is an ES Module and as long as we compile to CJS, it needs to be loaded dynamically
  using this ugly TS hack
  */
-// eslint-disable-next-line no-new-func
-const _importDynamic = new Function('modulePath', 'return import(modulePath)')
 
 export default async function shapeToQuery(): Promise<Pick<typeof import('@hydrofoil/shape-to-query'), 'constructQuery' | 'deleteQuery' | 's2q'>> {
   await setup()
-
-  const { constructQuery, deleteQuery, s2q } = await _importDynamic('@hydrofoil/shape-to-query')
 
   return {
     constructQuery,
@@ -74,10 +73,6 @@ const setup = onetime(async () => {
 })
 
 async function defineConstraintComponents() {
-  const { default: ConstraintComponent } = await _importDynamic('@hydrofoil/shape-to-query/model/constraint/ConstraintComponent.js')
-  const { constraintComponents } = await _importDynamic('@hydrofoil/shape-to-query/model/constraint/index.js')
-  const { PatternConstraintComponent } = await _importDynamic('@hydrofoil/shape-to-query/model/constraint/pattern.js')
-
   constraintComponents.set(md.FreeTextSearchConstraintComponent, class TextSearch extends ConstraintComponent {
     static match(pointer: GraphPointer) {
       return isGraphPointer(pointer.out(hydra.freetextQuery))
@@ -110,7 +105,7 @@ async function defineConstraintComponents() {
 
     buildPatterns({ focusNode, valueNode, propertyPath }: Parameters): any {
       if (this.vendor === 'stardog') {
-        const fts = namespace('tag:stardog:api:search:')
+        const fts = $rdf.namespace('tag:stardog:api:search:')
         return sparql`
         service ${fts.textMatch} {
           [] ${fts.query} """${this.pattern + '*'}""";
@@ -131,6 +126,10 @@ async function defineConstraintComponents() {
       }
 
       throw new Error('Unsupported vendor')
+    }
+
+    buildPropertyShapePatterns(arg: Parameters): string | SparqlTemplateResult | SparqlTemplateResult[] {
+      return ''
     }
   })
 }

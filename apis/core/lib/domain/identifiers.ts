@@ -1,8 +1,8 @@
 import type { NamedNode } from '@rdfjs/types'
 import UrlSlugify from 'url-slugify'
-import $rdf from 'rdf-ext'
-import { GraphPointer } from 'clownface'
-import env from '@cube-creator/core/env'
+import $rdf from '@zazuko/env'
+import type { GraphPointer } from 'clownface'
+import env from '@cube-creator/core/env/node'
 import { nanoid } from 'nanoid'
 import { ColumnMapping, CsvMapping, CsvSource, Project, Table } from '@cube-creator/model'
 

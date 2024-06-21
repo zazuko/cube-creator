@@ -1,15 +1,15 @@
 import type { NamedNode, Quad } from '@rdfjs/types'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env-node'
 import { sparql } from '@tpluscode/rdf-string'
-import { AnyPointer, GraphPointer } from 'clownface'
+import type { AnyPointer, GraphPointer } from 'clownface'
 import { rdf, sh } from '@tpluscode/rdf-ns-builders'
 import { query } from '@cube-creator/core/namespace'
 import { SELECT } from '@tpluscode/sparql-builder'
-import { ParsingClient } from 'sparql-http-client/ParsingClient'
-import { SharedDimensionsStore } from '../store'
-import { error } from '../log'
-import env from '../env'
-import { parsingClient } from '../sparql'
+import { ParsingClient } from 'sparql-http-client/ParsingClient.js'
+import { SharedDimensionsStore } from '../store.js'
+import { error } from '../log.js'
+import env from '../env.js'
+import { parsingClient } from '../sparql.js'
 
 interface CascadeDelete {
   store: SharedDimensionsStore
@@ -47,7 +47,7 @@ async function findResourcesToDelete(term: NamedNode, paths: GraphPointer[], cli
     }
   }, SELECT`?term`.FROM($rdf.namedNode(env.MANAGED_DIMENSIONS_GRAPH)))
 
-  const results = await query.execute(client.query)
+  const results = await query.execute(client)
 
   return results.map(row => row.term as NamedNode)
 }

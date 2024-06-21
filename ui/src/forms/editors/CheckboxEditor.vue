@@ -5,7 +5,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
 import type { Term } from '@rdfjs/types'
-import { literal } from '@rdf-esm/data-model'
+import $rdf from '@cube-creator/env'
 import { xsd } from '@tpluscode/rdf-ns-builders'
 
 export default defineComponent({
@@ -23,7 +23,7 @@ export default defineComponent({
 
   methods: {
     emit (value: boolean): void {
-      this.update(literal(value.toString(), xsd.boolean))
+      this.update($rdf.literal(value.toString(), xsd.boolean))
     },
   },
 })

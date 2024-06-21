@@ -1,6 +1,5 @@
 import type { Term } from '@rdfjs/types'
-import * as Csvw from '@rdfine/csvw'
-import TermMap from '@rdfjs/term-map'
+import type * as Csvw from '@rdfine/csvw'
 import {
   ColumnMapping,
   CsvColumn,
@@ -10,21 +9,15 @@ import {
   ReferenceColumnMapping,
   Table,
 } from '@cube-creator/model'
-import cf from 'clownface'
-import $rdf from 'rdf-ext'
-import RdfResource from '@tpluscode/rdfine'
+import $rdf from '@cube-creator/env'
 import { Initializer } from '@tpluscode/rdfine/RdfResource'
 import type { Organization } from '@rdfine/schema'
 import { cc } from '@cube-creator/core/namespace'
 import { DefaultCsvwLiteral } from '@cube-creator/core/mapping'
-import { qudt } from '@tpluscode/rdf-ns-builders/strict'
-import { ResourceStore } from '../ResourceStore'
-import { warning } from '../log'
-import { findOrganization } from '../domain/organization/query'
-
-RdfResource.factory.addMixin(
-  ...Object.values(Csvw),
-)
+import { qudt } from '@tpluscode/rdf-ns-builders'
+import { ResourceStore } from '../ResourceStore.js'
+import { warning } from '../log.js'
+import { findOrganization } from '../domain/organization/query.js'
 
 function unmappedColumn({ column }: { column: CsvColumn }): Initializer<Csvw.Column> {
   const initializer: Initializer<Csvw.Column> = {
@@ -118,7 +111,7 @@ async function mappedReferenceColumn({ cubeIdentifier, organization, columnMappi
 }
 
 async function * buildColumns({ cubeIdentifier, table, source, resources, organization }: CsvwBuildingContext & { table: Table }) {
-  const unmappedColumns = new TermMap([...source.columns.map<[Term, CsvColumn]>(c => [c.id, c])])
+  const unmappedColumns = $rdf.termMap([...source.columns.map<[Term, CsvColumn]>(c => [c.id, c])])
 
   for (const columnMappingLink of table.columnMappings) {
     const columnMapping = await resources.getResource<ColumnMapping>(columnMappingLink.id, { allowMissing: true })
@@ -185,7 +178,7 @@ export async function buildCsvw({ table, resources }: { table: Table; resources:
     column.push(csvwColumn)
   }
 
-  const csvw = new Csvw.TableMixin.Class(cf({ dataset: $rdf.dataset(), term: table.csvw.id }), {
+  const csvw = $rdf.rdfine.csvw.Table($rdf.clownface({ dataset: $rdf.dataset(), term: table.csvw.id }), {
     url: source.id.value,
     dialect: {
       ...source.dialect.toJSON(),

@@ -2,9 +2,9 @@ import program from 'commander'
 import * as Sentry from '@sentry/node'
 import '@sentry/tracing'
 import { SpanStatusCode } from '@opentelemetry/api'
-import { capture } from './lib/telemetry'
-import './lib/variables'
-import { opentelemetry } from './lib/otel'
+import { capture } from './lib/telemetry.js'
+import './lib/variables.js'
+import { opentelemetry } from './lib/otel/index.js'
 
 function parseVariables(str: string, all: Map<string, string>) {
   return str

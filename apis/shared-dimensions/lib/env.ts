@@ -1,5 +1,5 @@
 import { createProxy } from '@cube-creator/core/env'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env-node'
 
 const prefix = 'MANAGED_DIMENSIONS_'
 
@@ -15,7 +15,7 @@ type ENV_VARS = 'GRAPH'
 
 type PREFIXED_ENV_VARS<U> = U extends ENV_VARS ? `${typeof prefix}${U}` : never
 
-const env = createProxy<PREFIXED_ENV_VARS<ENV_VARS>>()
+const env = createProxy<PREFIXED_ENV_VARS<ENV_VARS>>(process.env)
 
 export default env
 export const graph = $rdf.namedNode(env.MANAGED_DIMENSIONS_GRAPH)

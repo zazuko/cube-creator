@@ -3,10 +3,9 @@ import * as Rdfs from '@rdfine/rdfs'
 import { Constructor, namespace, property, RdfResource } from '@tpluscode/rdfine'
 import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import { qudt, schema, sh } from '@tpluscode/rdf-ns-builders'
-import * as Thing from '@rdfine/schema/lib/Thing'
 import { cc, cube, meta } from '@cube-creator/core/namespace'
-import { initializer } from './lib/initializer'
-import './BaseResource'
+import { initializer } from './lib/initializer.js'
+import './BaseResource.js'
 
 export interface DimensionMetadata extends RdfResource {
   about: NamedNode
@@ -76,19 +75,21 @@ export const Error = {
   DimensionMappingChanged: 'DimensionMappingChanged',
 } as const
 
-export const createNoMeasureDimensionError = Thing.fromPointer({
+export const noMeasureDimensionError = {
+  type: schema.Thing,
   identifierLiteral: Error.MissingMeasureDimension,
   description: 'No Measure dimension defined',
-})
+}
 
-export const dimensionChangedWarning = Thing.fromPointer({
+export const dimensionChangedWarning = {
+  type: schema.Thing,
   identifierLiteral: Error.DimensionMappingChanged,
   description: 'Dimension mappings changed. It may be necessary to run transformation',
-})
+}
 
 export const createCollection = initializer<DimensionMetadataCollection>(DimensionMetadataCollectionMixin, {
   types: [cc.DimensionMetadataCollection],
-  [schema.error.value]: [createNoMeasureDimensionError],
+  [schema.error.value]: [noMeasureDimensionError],
 })
 
 type RequiredProperties = 'about'

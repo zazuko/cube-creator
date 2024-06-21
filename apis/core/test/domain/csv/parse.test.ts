@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { parse } from '../../../lib/domain/csv'
+import { parse } from '../../../lib/domain/csv/index.js'
 
 describe('domain/csv/parse', () => {
   it('trims headers', async () => {

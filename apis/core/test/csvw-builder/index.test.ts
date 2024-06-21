@@ -1,26 +1,23 @@
 import { describe, it, beforeEach } from 'mocha'
 import { expect } from 'chai'
-import clownface, { AnyContext, AnyPointer } from 'clownface'
-import $rdf from 'rdf-ext'
+import type { AnyContext, AnyPointer } from 'clownface'
+import $rdf from '@cube-creator/env'
 import * as CsvMapping from '@cube-creator/model/CsvMapping'
 import * as CsvSource from '@cube-creator/model/CsvSource'
 import * as CsvColumn from '@cube-creator/model/CsvColumn'
 import * as ColumnMapping from '@cube-creator/model/ColumnMapping'
 import * as Table from '@cube-creator/model/Table'
-import * as Organization from '@cube-creator/model/Organization'
-import * as Project from '@cube-creator/model/Project'
 import { cc } from '@cube-creator/core/namespace'
 import * as ns from '@tpluscode/rdf-ns-builders'
-import { schema, xsd, qudt } from '@tpluscode/rdf-ns-builders/strict'
-import DatasetExt from 'rdf-ext/lib/Dataset'
+import { schema, xsd, qudt } from '@tpluscode/rdf-ns-builders'
+import { Dataset as DatasetExt } from '@zazuko/env/lib/Dataset.js'
 import sinon from 'sinon'
 import { namedNode } from '@cube-creator/testing/clownface'
 import { DefaultCsvwLiteral } from '@cube-creator/core/mapping'
-import { buildCsvw } from '../../lib/csvw-builder'
-import '../../lib/domain'
-import * as orgQueries from '../../lib/domain/organization/query'
-import { TestResourceStore } from '../support/TestResourceStore'
-import { findColumn } from './support'
+import esmock from 'esmock'
+import { TestResourceStore } from '../support/TestResourceStore.js'
+import { findColumn } from './support.js'
+import '../../lib/domain/index.js'
 
 describe('lib/csvw-builder', () => {
   let graph: AnyPointer<AnyContext, DatasetExt>
@@ -29,25 +26,27 @@ describe('lib/csvw-builder', () => {
   let csvMapping: CsvMapping.CsvMapping
   let resources: TestResourceStore
 
-  beforeEach(() => {
+  let buildCsvw: typeof import('../../lib/csvw-builder/index.js').buildCsvw
+
+  beforeEach(async () => {
     sinon.restore()
 
-    graph = clownface({ dataset: $rdf.dataset() })
+    graph = $rdf.clownface()
     const csvSourcePointer = graph.namedNode('csv-mapping')
     const csvMappingPointer = graph.namedNode('table-source')
-    const organization = Organization.fromPointer(namedNode('org'), {
+    const organization = $rdf.rdfine.cc.Organization(namedNode('org'), {
       namespace: $rdf.namedNode('http://example.com/'),
     })
-    const project = Project.fromPointer(namedNode('project'), {
+    const project = $rdf.rdfine.cc.Project(namedNode('project'), {
       maintainer: organization,
       cubeIdentifier: 'test-cube',
     })
 
-    csvMapping = CsvMapping.create(csvMappingPointer, {
+    csvMapping = CsvMapping.create($rdf, csvMappingPointer, {
       project: $rdf.namedNode('project'),
     })
 
-    csvSource = CsvSource.create(csvSourcePointer, {
+    csvSource = CsvSource.create($rdf, csvSourcePointer, {
       name: 'test-observation.csv',
       csvMapping,
       dialect: {
@@ -66,7 +65,7 @@ describe('lib/csvw-builder', () => {
       }],
     })
 
-    table = Table.create(graph.namedNode('table'), {
+    table = Table.create($rdf, graph.namedNode('table'), {
       name: 'test observation table',
       identifierTemplate: '{id}-{sub_id}',
       csvMapping,
@@ -80,10 +79,15 @@ describe('lib/csvw-builder', () => {
       organization,
     ])
 
-    sinon.stub(orgQueries, 'findOrganization').resolves({
-      projectId: project.id,
-      organizationId: organization.id,
-    })
+    ;({ buildCsvw } = await esmock('../../lib/csvw-builder/index.js', {
+      '../../lib/domain/organization/query.js': {
+        findOrganization: async () =>
+          ({
+            projectId: project.id,
+            organizationId: organization.id,
+          }),
+      },
+    }))
   })
 
   it("create a csvw resource with table's csvw URI", async () => {
@@ -145,7 +149,7 @@ describe('lib/csvw-builder', () => {
   it('returns unmapped source column as suppressed', async () => {
     // given
     csvSource.columns = [
-      CsvColumn.fromPointer(csvSource.pointer.blankNode(), { name: 'id' }),
+      CsvColumn.fromPointer($rdf, csvSource.pointer.blankNode(), { name: 'id' }),
     ]
 
     // when
@@ -160,9 +164,9 @@ describe('lib/csvw-builder', () => {
   it("combines namespace and source column's target property csvw:propertyUrl", async () => {
     // given
     csvSource.columns = [
-      CsvColumn.fromPointer(csvSource.pointer.namedNode('jahr-column'), { name: 'JAHR' }),
+      CsvColumn.fromPointer($rdf, csvSource.pointer.namedNode('jahr-column'), { name: 'JAHR' }),
     ]
-    const columnMapping = ColumnMapping.literalFromPointer(clownface({ dataset: $rdf.dataset() }).namedNode('year-mapping'), {
+    const columnMapping = ColumnMapping.literalFromPointer($rdf, $rdf.clownface().namedNode('year-mapping'), {
       sourceColumn: $rdf.namedNode('jahr-column') as any,
       targetProperty: $rdf.literal('year'),
     })
@@ -180,9 +184,9 @@ describe('lib/csvw-builder', () => {
   it('does not add a duplicate csvw:column as suppressed', async () => {
     // given
     csvSource.columns = [
-      CsvColumn.fromPointer(csvSource.pointer.namedNode('jahr-column'), { name: 'JAHR' }),
+      CsvColumn.fromPointer($rdf, csvSource.pointer.namedNode('jahr-column'), { name: 'JAHR' }),
     ]
-    const columnMapping = ColumnMapping.literalFromPointer(clownface({ dataset: $rdf.dataset() }).namedNode('year-mapping'), {
+    const columnMapping = ColumnMapping.literalFromPointer($rdf, $rdf.clownface().namedNode('year-mapping'), {
       sourceColumn: $rdf.namedNode('jahr-column') as any,
       targetProperty: $rdf.literal('year'),
     })
@@ -200,9 +204,9 @@ describe('lib/csvw-builder', () => {
   it("takes source column's target property as-is when it is a NamedNode", async () => {
     // given
     csvSource.columns = [
-      CsvColumn.fromPointer(csvSource.pointer.namedNode('jahr-column'), { name: 'JAHR' }),
+      CsvColumn.fromPointer($rdf, csvSource.pointer.namedNode('jahr-column'), { name: 'JAHR' }),
     ]
-    const columnMapping = ColumnMapping.literalFromPointer(clownface({ dataset: $rdf.dataset() }).namedNode('year-mapping'), {
+    const columnMapping = ColumnMapping.literalFromPointer($rdf, $rdf.clownface().namedNode('year-mapping'), {
       sourceColumn: $rdf.namedNode('jahr-column') as any,
       targetProperty: schema.yearBuilt,
     })
@@ -220,9 +224,9 @@ describe('lib/csvw-builder', () => {
   it('maps column with datatype', async () => {
     // given
     csvSource.columns = [
-      CsvColumn.fromPointer(csvSource.pointer.namedNode('jahr-column'), { name: 'JAHR' }),
+      CsvColumn.fromPointer($rdf, csvSource.pointer.namedNode('jahr-column'), { name: 'JAHR' }),
     ]
-    const columnMapping = ColumnMapping.literalFromPointer(clownface({ dataset: $rdf.dataset() }).namedNode('year-mapping'), {
+    const columnMapping = ColumnMapping.literalFromPointer($rdf, $rdf.clownface().namedNode('year-mapping'), {
       sourceColumn: $rdf.namedNode('jahr-column') as any,
       targetProperty: schema.yearBuilt,
       datatype: xsd.gYear,
@@ -241,9 +245,9 @@ describe('lib/csvw-builder', () => {
   it('maps column with language', async () => {
     // given
     csvSource.columns = [
-      CsvColumn.fromPointer(csvSource.pointer.namedNode('jahr-column'), { name: 'JAHR' }),
+      CsvColumn.fromPointer($rdf, csvSource.pointer.namedNode('jahr-column'), { name: 'JAHR' }),
     ]
-    const columnMapping = ColumnMapping.literalFromPointer(clownface({ dataset: $rdf.dataset() }).namedNode('year-mapping'), {
+    const columnMapping = ColumnMapping.literalFromPointer($rdf, $rdf.clownface().namedNode('year-mapping'), {
       sourceColumn: $rdf.namedNode('jahr-column') as any,
       targetProperty: schema.yearBuilt,
       language: 'de-DE',
@@ -262,9 +266,9 @@ describe('lib/csvw-builder', () => {
   it('maps column with default value', async () => {
     // given
     csvSource.columns = [
-      CsvColumn.fromPointer(csvSource.pointer.namedNode('jahr-column'), { name: 'JAHR' }),
+      CsvColumn.fromPointer($rdf, csvSource.pointer.namedNode('jahr-column'), { name: 'JAHR' }),
     ]
-    const columnMapping = ColumnMapping.literalFromPointer(clownface({ dataset: $rdf.dataset() }).namedNode('year-mapping'), {
+    const columnMapping = ColumnMapping.literalFromPointer($rdf, $rdf.clownface().namedNode('year-mapping'), {
       sourceColumn: $rdf.namedNode('jahr-column') as any,
       targetProperty: schema.yearBuilt,
       defaultValue: '2020',
@@ -283,9 +287,9 @@ describe('lib/csvw-builder', () => {
   it('sets substitution default value for observation table literal columns without explicit default', async () => {
     // given
     csvSource.columns = [
-      CsvColumn.fromPointer(csvSource.pointer.namedNode('jahr-column'), { name: 'JAHR' }),
+      CsvColumn.fromPointer($rdf, csvSource.pointer.namedNode('jahr-column'), { name: 'JAHR' }),
     ]
-    const columnMapping = ColumnMapping.literalFromPointer(clownface({ dataset: $rdf.dataset() }).namedNode('year-mapping'), {
+    const columnMapping = ColumnMapping.literalFromPointer($rdf, $rdf.clownface().namedNode('year-mapping'), {
       sourceColumn: $rdf.namedNode('jahr-column') as any,
       targetProperty: schema.yearBuilt,
     })
@@ -303,17 +307,17 @@ describe('lib/csvw-builder', () => {
 
   it('maps column from reference column mapping', async () => {
     // given
-    const stationSource = CsvSource.create(graph.namedNode('station-source'), {
+    const stationSource = CsvSource.create($rdf, graph.namedNode('station-source'), {
       name: 'test-station.csv',
       csvMapping,
       dialect: { delimiter: '-', quoteChar: '""' },
     })
     stationSource.columns = [
-      CsvColumn.fromPointer(stationSource.pointer.namedNode('column-station-id'), { name: 'ID' }),
-      CsvColumn.fromPointer(stationSource.pointer.namedNode('column-station-name'), { name: 'NAME' }),
+      CsvColumn.fromPointer($rdf, stationSource.pointer.namedNode('column-station-id'), { name: 'ID' }),
+      CsvColumn.fromPointer($rdf, stationSource.pointer.namedNode('column-station-name'), { name: 'NAME' }),
     ]
     resources.push(stationSource.pointer as any)
-    const stationTable = Table.create(graph.namedNode('table-station'), {
+    const stationTable = Table.create($rdf, graph.namedNode('table-station'), {
       name: 'test station table',
       identifierTemplate: 'Station/{ID}/{NAME}',
       csvMapping,
@@ -321,10 +325,10 @@ describe('lib/csvw-builder', () => {
     })
     resources.push(stationTable.pointer as any)
     csvSource.columns = [
-      CsvColumn.fromPointer(csvSource.pointer.namedNode('ref-station'), { name: 'STATION' }),
-      CsvColumn.fromPointer(csvSource.pointer.namedNode('ref-station-name'), { name: 'STATION-NAME' }),
+      CsvColumn.fromPointer($rdf, csvSource.pointer.namedNode('ref-station'), { name: 'STATION' }),
+      CsvColumn.fromPointer($rdf, csvSource.pointer.namedNode('ref-station-name'), { name: 'STATION-NAME' }),
     ]
-    const columnMapping = ColumnMapping.referenceFromPointer(clownface({ dataset: $rdf.dataset() }).namedNode('station-mapping'), {
+    const columnMapping = ColumnMapping.referenceFromPointer($rdf, $rdf.clownface().namedNode('station-mapping'), {
       targetProperty: $rdf.namedNode('station'),
       referencedTable: stationTable,
       identifierMapping: [

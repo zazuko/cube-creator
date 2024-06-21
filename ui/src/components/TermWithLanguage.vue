@@ -6,9 +6,9 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
 import type { Literal } from '@rdfjs/types'
-import { MultiPointer } from 'clownface'
-import { taggedLiteral } from 'clownface/filter'
-import { displayLanguage } from '@/store/serializers'
+import type { MultiPointer } from 'clownface'
+import filter from 'clownface/filter.js'
+import { displayLanguage } from '../store/serializers'
 
 export default defineComponent({
   name: 'TermWithLanguage',
@@ -39,7 +39,7 @@ export default defineComponent({
         return undefined
       }
 
-      const term = this.values?.filter(taggedLiteral([
+      const term = this.values?.filter(filter.taggedLiteral([
         this.selectedLanguage,
         ...displayLanguage,
         '*'

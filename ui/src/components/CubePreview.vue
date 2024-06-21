@@ -139,7 +139,7 @@ import clownface from 'clownface'
 import { Collection } from 'alcaeus'
 import { hydra, qudt } from '@tpluscode/rdf-ns-builders'
 import * as Schema from '@rdfine/schema'
-import * as $rdf from '@rdf-esm/dataset'
+import $rdf from '@cube-creator/env'
 import { debounce } from 'debounce'
 import type { Cube, Dataset, DimensionMetadata, DimensionMetadataCollection } from '@cube-creator/model'
 import { api } from '@/api'
@@ -284,7 +284,7 @@ export default defineComponent({
         return
       }
 
-      const filters = clownface({ dataset: $rdf.dataset() })
+      const filters = $rdf.clownface()
         .blankNode()
         .addOut(hydra.limit, this.pageSize)
         .addOut(hydra.pageIndex, this.page)

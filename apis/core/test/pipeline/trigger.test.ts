@@ -1,24 +1,23 @@
 import { describe, it } from 'mocha'
 import { expect } from 'chai'
 import sinon from 'sinon'
-import $rdf from 'rdf-ext'
-import clownface from 'clownface'
+import $rdf from '@zazuko/env'
 import { dcterms, rdf } from '@tpluscode/rdf-ns-builders'
-import env from '@cube-creator/core/env'
+import env from '@cube-creator/core/env/node'
 import { cc } from '@cube-creator/core/namespace'
-import * as trigger from '../../lib/pipeline/trigger'
+import * as trigger from '../../lib/pipeline/trigger.js'
 
 describe('pipeline/trigger', () => {
-  const transformJob = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('transformjob') })
+  const transformJob = $rdf.clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('transformjob') })
     .addOut(rdf.type, cc.TransformJob)
-  const publishJob = clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('publishjob') })
+  const publishJob = $rdf.clownface({ dataset: $rdf.dataset(), term: $rdf.namedNode('publishjob') })
     .addOut(rdf.type, cc.PublishJob)
 
   describe('github', () => {
     it('sends authenticated transform POST to github', () => {
       // given
 
-      const params = clownface({ dataset: $rdf.dataset() })
+      const params = $rdf.clownface()
         .blankNode()
         .addOut(dcterms.identifier, 'token')
       const fetch: any = sinon.spy()
@@ -41,7 +40,7 @@ describe('pipeline/trigger', () => {
     it('sends authenticated publish POST to github', () => {
       // given
 
-      const params = clownface({ dataset: $rdf.dataset() })
+      const params = $rdf.clownface()
         .blankNode()
         .addOut(dcterms.identifier, 'token')
       const fetch: any = sinon.spy()
@@ -65,7 +64,7 @@ describe('pipeline/trigger', () => {
   describe('gitlab', () => {
     it('sends authenticated transform POST to gitlab', () => {
       // given
-      const params = clownface({ dataset: $rdf.dataset() }).blankNode()
+      const params = $rdf.clownface().blankNode()
       const fetch: any = sinon.spy()
       env.PIPELINE_TOKEN = 'token'
       env.PIPELINE_ENV = 'UNITTEST'
@@ -90,7 +89,7 @@ describe('pipeline/trigger', () => {
 
     it('sends authenticated publish POST to gitlab', () => {
       // given
-      const params = clownface({ dataset: $rdf.dataset() }).blankNode()
+      const params = $rdf.clownface().blankNode()
       const fetch: any = sinon.spy()
       env.PIPELINE_TOKEN = 'token'
       env.PIPELINE_ENV = 'UNITTEST'

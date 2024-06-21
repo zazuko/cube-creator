@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const uriTemplate = require('uri-template')
-const isUri = require('is-uri')
+import uriTemplate from 'uri-template'
+import isUri from 'is-uri'
 
 class ParsedTemplateWrapper {
   constructor(template) {

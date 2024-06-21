@@ -2,20 +2,16 @@ import type { DatasetCore } from '@rdfjs/types'
 import { insertTestProject } from '@cube-creator/testing/lib/seedData'
 import { before, describe, it } from 'mocha'
 import getStream from 'get-stream'
-import env from '@cube-creator/core/env'
-import clownface, { GraphPointer } from 'clownface'
+import type { Context, VariableMap, Variables } from 'barnard59-core'
+import env from '@cube-creator/core/env/node'
+import type { GraphPointer } from 'clownface'
 import { expect } from 'chai'
-import { Context, VariableMap, Variables } from 'barnard59-core'
-import { Hydra } from 'alcaeus/node'
-import * as Models from '@cube-creator/model'
 import { toRdf } from 'rdf-literal'
-import $rdf from 'rdf-ext'
-import { sh } from '@tpluscode/rdf-ns-builders/strict'
-import { setupEnv } from '../support/env'
-import { loadCubeMetadata } from '../../lib/metadata'
-import { logger } from '../support/logger'
-
-Hydra.resources.factory.addMixin(...Object.values(Models))
+import $rdf from '@zazuko/env'
+import { sh } from '@tpluscode/rdf-ns-builders'
+import { setupEnv } from '../support/env.js'
+import { loadCubeMetadata } from '../../lib/metadata.js'
+import { logger } from '../support/logger.js'
 
 describe('@cube-creator/cli/lib/metadata @SPARQL', function () {
   this.timeout(20000)
@@ -31,14 +27,13 @@ describe('@cube-creator/cli/lib/metadata @SPARQL', function () {
       ['revision', 1],
       ['namespace', 'https://environment.ld.admin.ch/foen/'],
       ['cubeIdentifier', 'ubd/28'],
-      ['apiClient', Hydra],
       ['timestamp', toRdf(new Date())],
       ['metadata', $rdf.dataset()],
     ])
     context = <any>{
       variables,
       logger,
-    }
+    } as any
   })
 
   describe('loadCubeMetadata', () => {
@@ -53,7 +48,7 @@ describe('@cube-creator/cli/lib/metadata @SPARQL', function () {
       }))
 
       // then
-      const concept = clownface({ dataset })
+      const concept = $rdf.clownface({ dataset })
         .namedNode('https://environment.ld.admin.ch/foen/ubd/28/1/station/blBAS')
       expect(concept.out().terms).to.have.length(0)
       expect(concept.in().terms).to.have.length.greaterThan(0)
@@ -71,7 +66,7 @@ describe('@cube-creator/cli/lib/metadata @SPARQL', function () {
     }))
 
     // then
-    const shOr = clownface({ dataset })
+    const shOr = $rdf.clownface({ dataset })
       .has(sh.path, $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/dimension/year'))
       .out(sh.or)
       .list()!

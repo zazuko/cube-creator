@@ -1,5 +1,5 @@
 import type { DatasetCore, Quad } from '@rdfjs/types'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 
 interface Changes {
   added: DatasetCore

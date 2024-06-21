@@ -1,21 +1,23 @@
 import { createReadStream } from 'fs'
 import path from 'path'
 import type { NamedNode, Quad } from '@rdfjs/types'
-import httpError, { BadRequest } from 'http-errors'
+import httpError from 'http-errors'
 import { Files } from '@cube-creator/express/multipart'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env-node'
 import SHACLValidator from 'rdf-validate-shacl'
-import ValidationReport from 'rdf-validate-shacl/src/validation-report'
-import { parsers } from '@rdfjs/formats-common'
-import clownface, { AnyPointer, GraphPointer } from 'clownface'
+import ValidationReport from 'rdf-validate-shacl/src/validation-report.js'
+import formats from '@rdfjs/formats'
+import type { AnyPointer, GraphPointer } from 'clownface'
 import { rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { INSERT } from '@tpluscode/sparql-builder'
-import { StreamClient } from 'sparql-http-client/StreamClient'
+import { StreamClient } from 'sparql-http-client/StreamClient.js'
 import through2 from 'through2'
 import { md } from '@cube-creator/core/namespace'
-import env from '../../env'
-import { SharedDimensionsStore } from '../../store'
-import { streamClient } from '../../sparql'
+import env from '../../env.js'
+import { SharedDimensionsStore } from '../../store.js'
+import { streamClient } from '../../sparql.js'
+
+const __dirname = path.dirname(new URL(import.meta.url).pathname)
 
 interface ImportedDimension {
   termSet: GraphPointer
@@ -34,9 +36,9 @@ function isNamedNode(pointer: AnyPointer): pointer is GraphPointer<NamedNode> {
 
 const shapesPath = path.join(__dirname, 'importShapes.ttl')
 export async function validateTermSet(termSet: GraphPointer): Promise<ValidationReport> {
-  const shapes = await $rdf.dataset().import(parsers.import('text/turtle', createReadStream(shapesPath), {
+  const shapes = await $rdf.dataset().import(formats.parsers.import('text/turtle', createReadStream(shapesPath), {
     baseIRI: termSet.value,
-  })!)
+  }) as any)
   const validator = new SHACLValidator(shapes)
 
   return validator.validate(termSet.dataset)
@@ -50,12 +52,12 @@ export async function importDimension({
 }: ImportDimension): Promise<ImportedDimension | ValidationReport> {
   const importedDimension = resource.out(md.export).value
   if (!importedDimension) {
-    throw new BadRequest('Import must contain exactly one Shared Dimension')
+    throw new httpError.BadRequest('Import must contain exactly one Shared Dimension')
   }
 
   const exportedData = files[importedDimension]
   if (!exportedData) {
-    throw new BadRequest(`Missing data for file ${importedDimension}`)
+    throw new httpError.BadRequest(`Missing data for file ${importedDimension}`)
   }
 
   const graph = $rdf.namedNode(env.MANAGED_DIMENSIONS_GRAPH)
@@ -64,11 +66,11 @@ export async function importDimension({
       this.push($rdf.quad(subject, predicate, object, graph))
       next()
     }))
-  const termSet = clownface({ dataset: await $rdf.dataset().import(importStream) })
+  const termSet = $rdf.clownface({ dataset: await $rdf.dataset().import(importStream) })
     .has(rdf.type, md.SharedDimension)
 
   if (!termSet.term || !isNamedNode(termSet)) {
-    throw new BadRequest('Import must contain exactly one Shared Dimension')
+    throw new httpError.BadRequest('Import must contain exactly one Shared Dimension')
   }
 
   const report = await validateTermSet(termSet)
@@ -81,7 +83,7 @@ export async function importDimension({
     throw new httpError.Conflict(`Shared Dimension '${identifier}' already exists`)
   }
 
-  await INSERT.DATA`${termSet.dataset}`.execute(client.query)
+  await INSERT.DATA`${termSet.dataset}`.execute(client)
 
   return {
     termSet: await store.load(termSet.term),

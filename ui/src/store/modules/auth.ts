@@ -5,7 +5,7 @@ import { WebStorageStateStore } from 'oidc-client'
 import { RootState } from '../types'
 
 const oidc = window.APP_CONFIG.oidc
-const base = new URL(process.env.BASE_URL || '/', window.location.toString())
+const base = new URL(import.meta.env.BASE_URL || '/', window.location.toString())
 
 const cookieStorage = new CookieStorage({
   path: base.pathname,
@@ -28,7 +28,7 @@ export function auth (): Module<VuexOidcState, RootState> {
   return vuexOidcCreateStoreModule(oidcSettings, {
     namespaced: true,
     publicRoutePaths: ['/oidc-error', '/logout'],
-    routeBase: process.env.BASE_URL,
+    routeBase: import.meta.env.BASE_URL,
     dispatchEventsOnWindow: true,
   })
 }

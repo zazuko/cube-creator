@@ -1,7 +1,7 @@
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import Parser from '@rdfjs/parser-n3'
 import toStream from 'string-to-stream'
-import StreamClient from 'sparql-http-client/StreamClient'
+import StreamClient from 'sparql-http-client/StreamClient.js'
 import { TurtleTemplateResult } from '@tpluscode/rdf-string'
 
 const parser = new Parser()

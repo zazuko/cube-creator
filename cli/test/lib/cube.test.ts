@@ -1,10 +1,11 @@
 import { describe, it } from 'mocha'
 import { expect } from 'chai'
-import $rdf from 'rdf-ext'
+import $rdf from '@zazuko/env'
 import { cc, cube } from '@cube-creator/core/namespace'
 import { rdf } from '@tpluscode/rdf-ns-builders'
-import { getObservationSetId, injectRevision } from '../../lib/cube'
-import { logger } from '../support/logger'
+import type { Context } from 'barnard59-core'
+import { getObservationSetId, injectRevision } from '../../lib/cube.js'
+import { logger } from '../support/logger.js'
 
 describe('lib/cube', () => {
   describe('getObservationSetId', () => {
@@ -69,7 +70,7 @@ describe('lib/cube', () => {
             ['namespace', 'http://example.com/cube/' + namespace],
             ['revision', 5],
           ]),
-        }
+        } as unknown as Context
         const quads = $rdf.dataset([
           $rdf.quad(
             $rdf.namedNode('http://example.com/cube/' + term),
@@ -82,7 +83,7 @@ describe('lib/cube', () => {
         const transformed = await $rdf.dataset().import(quads.pipe(transform))
 
         // then
-        expect(transformed.toArray()[0].subject).to.deep.eq($rdf.namedNode('http://example.com/cube/' + expected))
+        expect([...transformed][0].subject).to.deep.eq($rdf.namedNode('http://example.com/cube/' + expected))
       })
     })
   })

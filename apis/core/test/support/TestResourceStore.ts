@@ -1,16 +1,16 @@
 import type { NamedNode, Term } from '@rdfjs/types'
-import DatasetExt from 'rdf-ext/lib/Dataset'
-import clownface, { GraphPointer } from 'clownface'
-import TermMap from '@rdfjs/term-map'
+import { Dataset as DatasetExt } from '@zazuko/env/lib/Dataset.js'
+import type { GraphPointer } from 'clownface'
 import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
-import ResourceStore from '../../lib/ResourceStore'
-import { ChangelogDataset } from '../../lib/ChangelogDataset'
+import $rdf from '@zazuko/env'
+import ResourceStore from '../../lib/ResourceStore.js'
+import { ChangelogDataset } from '../../lib/ChangelogDataset.js'
 
 class InMemoryStorage {
-  private readonly __resources: TermMap<NamedNode, GraphPointer<NamedNode, ChangelogDataset<DatasetExt>>>
+  private readonly __resources: Map<NamedNode, GraphPointer<NamedNode, ChangelogDataset<DatasetExt>>>
 
   constructor(pointers: Array<GraphPointer<NamedNode, DatasetExt> | RdfResourceCore<DatasetExt>>) {
-    this.__resources = new TermMap()
+    this.__resources = $rdf.termMap()
     for (const pointer of pointers) {
       this.push(pointer)
     }
@@ -33,7 +33,7 @@ class InMemoryStorage {
       throw new Error('Pointer must be named node')
     }
 
-    const changelogPointer = clownface({ dataset: new ChangelogDataset(pointer.dataset) }).node(pointer.term)
+    const changelogPointer = $rdf.clownface({ dataset: new ChangelogDataset(pointer.dataset) }).node(pointer.term)
     this.__resources.set(pointer.term, changelogPointer)
   }
 }

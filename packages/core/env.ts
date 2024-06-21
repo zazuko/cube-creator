@@ -29,7 +29,7 @@ const handler = {
   },
 }
 
-type ENV_VARS =
+export type ENV_VARS =
   'AUTH_ISSUER'
   | 'AUTH_AUDIENCE'
   | 'AUTH_CONFIG_FILE'
@@ -61,10 +61,8 @@ type KnownVariables<T extends string> = {
   [P in T]: string
 }
 
-export const createProxy = <T extends string>() => new Proxy(process.env, handler) as KnownVariables<T> & {
+export const createProxy = <T extends string>(env: Record<any, any>) => new Proxy(env, handler) as KnownVariables<T> & {
   has(name: ENV_VARS): boolean
   production: boolean
   maybe: Partial<KnownVariables<T>>
 }
-
-export default createProxy<ENV_VARS>()

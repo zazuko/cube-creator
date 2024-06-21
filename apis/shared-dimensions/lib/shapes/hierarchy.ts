@@ -1,11 +1,11 @@
+import $rdf from '@cube-creator/env'
 import { Initializer } from '@tpluscode/rdfine/RdfResource'
-import { NodeShape, fromPointer as nodeShape } from '@rdfine/shacl/lib/NodeShape'
+import { NodeShape } from '@rdfine/shacl/lib/NodeShape'
 import { PropertyShape } from '@rdfine/shacl'
-import { fromPointer as iriTemplate } from '@rdfine/hydra/lib/IriTemplate'
-import { dash, dcterms, foaf, hydra, rdf, schema, sd, sh, xsd } from '@tpluscode/rdf-ns-builders/strict'
+import { dash, dcterms, foaf, hydra, rdf, schema, sd, sh, xsd } from '@tpluscode/rdf-ns-builders'
 import { editor, md, meta } from '@cube-creator/core/namespace'
-import { AnyPointer } from 'clownface'
-import env from '@cube-creator/core/env'
+import type { AnyPointer } from 'clownface'
+import env from '@cube-creator/core/env/node'
 
 export default function ({ rdfTypeProperty = false }: { rdfTypeProperty?: boolean } = {}) {
   return (graph: AnyPointer): Initializer<NodeShape> => {
@@ -15,7 +15,7 @@ export default function ({ rdfTypeProperty = false }: { rdfTypeProperty?: boolea
       .addOut(foaf.page, env.TRIFID_UI)
 
     const nextInHierarchyShapeId = graph.blankNode()
-    const nextInHierarchyShape = nodeShape(nextInHierarchyShapeId, {
+    const nextInHierarchyShape = $rdf.rdfine.sh.NodeShape(nextInHierarchyShapeId, {
       property: [{
         name: 'Name',
         path: schema.name,
@@ -38,7 +38,7 @@ export default function ({ rdfTypeProperty = false }: { rdfTypeProperty?: boolea
         path: sh.path,
         minCount: 1,
         maxCount: 1,
-        node: nodeShape({
+        node: $rdf.rdfine.sh.NodeShape({
           xone: [{
             nodeKind: sh.IRI,
           }, {
@@ -79,7 +79,7 @@ export default function ({ rdfTypeProperty = false }: { rdfTypeProperty?: boolea
       maxCount: 1,
       nodeKind: sh.IRI,
       [dash.editor.value]: dash.InstancesSelectEditor,
-      [hydra.search.value]: iriTemplate({
+      [hydra.search.value]: $rdf.rdfine.hydra.IriTemplate({
         template: 'dimension/_term-sets{?q}',
         mapping: {
           variable: 'q',
@@ -95,7 +95,7 @@ export default function ({ rdfTypeProperty = false }: { rdfTypeProperty?: boolea
       nodeKind: sh.IRI,
       [dash.editor.value]: dash.AutoCompleteEditor,
       order: 10,
-      [hydra.search.value]: iriTemplate({
+      [hydra.search.value]: $rdf.rdfine.hydra.IriTemplate({
         variableRepresentation: hydra.ExplicitRepresentation,
         template: '/dimension/_terms?canonical&dimension={dimension}{&q}',
         mapping: [{

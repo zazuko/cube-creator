@@ -1,11 +1,10 @@
 import { describe, it } from 'mocha'
-import RdfResource from '@tpluscode/rdfine/RdfResource'
 import { blankNode } from '@cube-creator/testing/clownface'
-import { fromPointer } from '@rdfine/schema/lib/Thing'
 import { expect } from 'chai'
-import { schema } from '@tpluscode/rdf-ns-builders/strict'
-import { literal } from '@rdf-esm/data-model'
-import { BaseResourceMixin } from '../BaseResource'
+import { schema } from '@tpluscode/rdf-ns-builders'
+// eslint-disable-next-line import/no-extraneous-dependencies
+import $rdf from '@cube-creator/env'
+import { BaseResourceMixin } from '../BaseResource.js'
 
 describe('@cube-creator/model/BaseResource', () => {
   describe('addError', () => {
@@ -15,8 +14,8 @@ describe('@cube-creator/model/BaseResource', () => {
         .addOut(schema.error, err => {
           err.addOut(schema.identifier, 'Current')
         })
-      const resource = RdfResource.factory.createEntity(graph, [BaseResourceMixin])
-      const error = fromPointer({
+      const resource = $rdf.rdfine().factory.createEntity(graph, [BaseResourceMixin])
+      const error = $rdf.rdfine.schema.Thing({
         identifierLiteral: 'my error',
       })
 
@@ -25,8 +24,8 @@ describe('@cube-creator/model/BaseResource', () => {
 
       // then
       expect(graph.out(schema.error).out(schema.identifier).terms).to.deep.contain.members([
-        literal('Current'),
-        literal('my error'),
+        $rdf.literal('Current'),
+        $rdf.literal('my error'),
       ])
     })
 
@@ -36,8 +35,8 @@ describe('@cube-creator/model/BaseResource', () => {
         .addOut(schema.error, err => {
           err.addOut(schema.identifier, 'the error')
         })
-      const resource = RdfResource.factory.createEntity(graph, [BaseResourceMixin])
-      const error = fromPointer({
+      const resource = $rdf.rdfine().factory.createEntity(graph, [BaseResourceMixin])
+      const error = $rdf.rdfine.schema.Thing({
         identifierLiteral: 'the error',
       })
 
@@ -45,7 +44,7 @@ describe('@cube-creator/model/BaseResource', () => {
       resource.addError?.(error)
 
       // then
-      expect(graph.out(schema.error).out(schema.identifier).term).to.deep.eq(literal('the error'))
+      expect(graph.out(schema.error).out(schema.identifier).term).to.deep.eq($rdf.literal('the error'))
     })
   })
 
@@ -56,7 +55,7 @@ describe('@cube-creator/model/BaseResource', () => {
         .addOut(schema.error, err => {
           err.addOut(schema.identifier, 'the error')
         })
-      const resource = RdfResource.factory.createEntity(graph, [BaseResourceMixin])
+      const resource = $rdf.rdfine().factory.createEntity(graph, [BaseResourceMixin])
 
       // when
       resource.removeError?.('the error')

@@ -1,5 +1,5 @@
 import { html, Lazy, SingleEditorComponent } from '@hydrofoil/shaperone-wc'
-import { dash, rdfs, schema, sh } from '@tpluscode/rdf-ns-builders/strict'
+import { dash, rdfs, schema, sh } from '@tpluscode/rdf-ns-builders'
 import { createCustomElement } from '@/forms/custom-element'
 import { api } from '@/api'
 import { SingleEditorRenderParams } from '@hydrofoil/shaperone-core/models/components/index'

@@ -4,11 +4,11 @@ import { expect } from 'chai'
 import { namedNode } from '@cube-creator/testing/clownface'
 import { DomainError } from '@cube-creator/api-errors'
 import { schema, xsd } from '@tpluscode/rdf-ns-builders'
-import { GraphPointer } from 'clownface'
-import $rdf from 'rdf-ext'
-import { updateTerm } from '../../../lib/domain/shared-dimension-term'
-import { SharedDimensionsStore } from '../../../lib/store'
-import { testStore } from '../../support/store'
+import type { GraphPointer } from 'clownface'
+import $rdf from '@zazuko/env-node'
+import { updateTerm } from '../../../lib/domain/shared-dimension-term.js'
+import { SharedDimensionsStore } from '../../../lib/store.js'
+import { testStore } from '../../support/store.js'
 
 describe('@cube-creator/shared-dimensions-api/lib/domain/sahred-dimension-term', () => {
   describe('updateTerm', () => {

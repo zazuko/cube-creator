@@ -1,15 +1,14 @@
 import { PassThrough } from 'stream'
 import type { NamedNode } from '@rdfjs/types'
 import { SELECT } from '@tpluscode/sparql-builder'
-import type HydraBox from 'hydra-box'
+import type { ResourceLoader, Resource, PropertyResource } from '@kopflos-cms/core'
 import { rdf } from '@tpluscode/rdf-ns-builders'
-import TermSet from '@rdfjs/term-set'
-import $rdf from 'rdf-ext'
-import { ParsingClient } from 'sparql-http-client/ParsingClient'
-import { StreamClient } from 'sparql-http-client/StreamClient'
-import once from 'once'
-import toStream from 'rdf-dataset-ext/toStream'
-import { store } from './store'
+import $rdf from '@zazuko/env-node'
+import { ParsingClient } from 'sparql-http-client/ParsingClient.js'
+import { StreamClient } from 'sparql-http-client/StreamClient.js'
+import once from 'onetime'
+import toStream from 'rdf-dataset-ext/toStream.js'
+import { store } from './store.js'
 
 interface LoaderOptions {
   graph: NamedNode
@@ -17,14 +16,14 @@ interface LoaderOptions {
   stream: StreamClient
 }
 
-export default class Loader implements HydraBox.ResourceLoader {
+export default class Loader implements ResourceLoader {
   constructor(private options: LoaderOptions) {
   }
 
-  async forClassOperation(term: NamedNode): Promise<HydraBox.Resource[]> {
+  async forClassOperation(term: NamedNode): Promise<Resource[]> {
     const results = await SELECT`?type`
       .WHERE`GRAPH ${this.options.graph} { ${term} ${rdf.type} ?type }`
-      .execute(this.options.sparql.query)
+      .execute(this.options.sparql)
 
     if (results.length === 0) {
       return []
@@ -32,7 +31,7 @@ export default class Loader implements HydraBox.ResourceLoader {
 
     const types = results.reduce((set, { type }) => {
       return type.termType !== 'NamedNode' ? set : set.add(type)
-    }, new TermSet<NamedNode>())
+    }, $rdf.termSet<NamedNode>())
 
     const prefetchDataset = $rdf.dataset([...types].map(type => {
       return $rdf.quad(term, rdf.type, type)
@@ -62,7 +61,7 @@ export default class Loader implements HydraBox.ResourceLoader {
     }]
   }
 
-  forPropertyOperation(): Promise<HydraBox.PropertyResource[]> {
+  forPropertyOperation(): Promise<PropertyResource[]> {
     return Promise.resolve([])
   }
 }

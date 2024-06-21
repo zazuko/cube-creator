@@ -1,6 +1,7 @@
 import stream from 'readable-stream'
 import type Pipeline from 'barnard59-core/lib/Pipeline'
 import { metrics } from '@opentelemetry/api'
+import { writable as isWritable } from 'is-stream'
 
 const { finished } = stream as any
 
@@ -23,7 +24,7 @@ function bufferInfo(pipeline: Pipeline) {
   }
 
   return steps.reduce<Record<string, number>>((data, step, index) => {
-    if ('_writableState' in step.stream!) {
+    if (isWritable(step.stream)) {
       const { key, value } = bufferStatePair({
         index,
         mode: 'write',

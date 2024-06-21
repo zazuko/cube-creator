@@ -1,19 +1,20 @@
-import type { DatasetCore, NamedNode } from '@rdfjs/types'
+import type { NamedNode } from '@rdfjs/types'
 import { ResourceMixin } from '@rdfine/rdfs'
-import { Constructor, namespace, property, RdfResource, ResourceIdentifier } from '@tpluscode/rdfine'
+import { Constructor, namespace, property, RdfResource } from '@tpluscode/rdfine'
 import type { GraphPointer } from 'clownface'
-import RdfResourceImpl, { Initializer, RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import { Mixin } from '@tpluscode/rdfine/lib/ResourceFactory'
 import { cc, lindasSchema } from '@cube-creator/core/namespace'
 import { dcterms, schema } from '@tpluscode/rdf-ns-builders'
 import { Organization, Person, PersonMixin } from '@rdfine/schema'
 import type { Collection } from '@rdfine/hydra'
-import { initializer } from './lib/initializer'
-import { childResource } from './lib/resourceIdentifiers'
-import { Link } from './lib/Link'
-import { CsvMapping, CsvMappingMixin } from './CsvMapping'
-import { JobCollection } from './Job'
-import { Dataset } from './Dataset'
+import { RdfineEnvironment } from '@tpluscode/rdfine/environment'
+import { createFactory } from '@tpluscode/rdfine/factory'
+import { initializer } from './lib/initializer.js'
+import { childResource } from './lib/resourceIdentifiers.js'
+import { Link } from './lib/Link.js'
+import { CsvMapping, CsvMappingMixin } from './CsvMapping.js'
+import { JobCollection } from './Job.js'
+import { Dataset } from './Dataset.js'
 
 export interface Project extends RdfResource {
   csvMapping?: CsvMapping
@@ -113,11 +114,4 @@ export const createCsvProject = initializer<CsvProject, CsvProjectMandatoryField
 type ImportProjectMandatoryFields = MinimalFields | 'sourceCube' | 'sourceEndpoint' | 'sourceKind'
 export const createImportProject = initializer<ImportProject, ImportProjectMandatoryFields>(ProjectMixin)
 
-export const fromPointer = <D extends DatasetCore>(pointer: GraphPointer<ResourceIdentifier, D>, initializer: Initializer<Project> = {}): Project & RdfResourceCore<D> => {
-  return RdfResourceImpl.factory.createEntity(pointer, [ProjectMixin], {
-    initializer: {
-      ...initializer,
-      types: [cc.CubeProject],
-    },
-  })
-}
+ProjectMixin.createFactory = (env: RdfineEnvironment) => createFactory<Project>([ProjectMixin], { types: [cc.CubeProject] }, env)

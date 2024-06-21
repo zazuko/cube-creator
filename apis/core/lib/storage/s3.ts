@@ -2,9 +2,9 @@ import { Readable } from 'stream'
 import aws from 'aws-sdk'
 import { PromiseResult } from 'aws-sdk/lib/request'
 import type { MediaObject } from '@rdfine/schema'
-import env from '@cube-creator/core/env'
-import { log } from '../log'
-import type { MediaStorage } from './types'
+import env from '@cube-creator/core/env/node'
+import { log } from '../log.js'
+import type { MediaStorage } from './types.js'
 
 const logError = log.extend('s3').extend('error')
 const logWarning = log.extend('s3').extend('warning')

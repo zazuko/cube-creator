@@ -1,17 +1,15 @@
-import { protectedResource } from '@hydrofoil/labyrinth/resource'
+import { protectedResource } from '@hydrofoil/labyrinth/resource.js'
 import { multiPartResourceHandler } from '@cube-creator/express/multipart'
 import asyncMiddleware from 'middleware-async'
 import { INSERT } from '@tpluscode/sparql-builder'
-import clownface from 'clownface'
-import $rdf from 'rdf-ext'
-import { parsers } from '@rdfjs-elements/formats-pretty'
+import $rdf from '@zazuko/env'
+import formats from '@rdfjs-elements/formats-pretty'
 import toStream from 'string-to-stream'
-import type { DatasetCore, NamedNode } from '@rdfjs/types'
-import { shaclValidate } from '../../middleware/shacl'
-import { importProject } from '../../domain/cube-projects/import'
-import { streamClient } from '../../query-client'
-import { DatasetShape } from '../../../bootstrap/shapes/dataset'
-import { ColumnMappingShape } from '../../../bootstrap/shapes/column-mapping'
+import { shaclValidate } from '../../middleware/shacl.js'
+import { importProject } from '../../domain/cube-projects/import.js'
+import { streamClient } from '../../query-client.js'
+import { DatasetShape } from '../../../bootstrap/shapes/dataset.js'
+import { ColumnMappingShape } from '../../../bootstrap/shapes/column-mapping.js'
 
 export const postImportedProject = protectedResource(
   multiPartResourceHandler,
@@ -25,9 +23,8 @@ export const postImportedProject = protectedResource(
       throw new Error('User is not defined')
     }
 
-    const pointer: { term: NamedNode; dataset: DatasetCore } = await req.hydra.resource.clownface()
     const { project, importedDataset } = await importProject({
-      projectsCollection: clownface(pointer),
+      projectsCollection: await req.hydra.resource.clownface(),
       resource: await req.parseFromMultipart(),
       files: req.multipartFileQuadsStreams(),
       store: req.resourceStore(),
@@ -41,7 +38,7 @@ export const postImportedProject = protectedResource(
     disableShClass: true,
     async parseResource(req, res) {
       const { project, importedDataset } = res.locals
-      return clownface({ dataset: importedDataset }).node(project.id)
+      return $rdf.clownface({ dataset: importedDataset }).node(project.id)
     },
     async loadShapes() {
       const shapes = [
@@ -49,14 +46,14 @@ export const postImportedProject = protectedResource(
         ColumnMappingShape,
       ].map(ttlStr => ttlStr.toString()).join('\n')
 
-      return $rdf.dataset().import(parsers.import('text/turtle', toStream(shapes))!)
+      return $rdf.dataset().import(formats.parsers.import('text/turtle', toStream(shapes))!)
     },
   }),
   asyncMiddleware(async (req, res) => {
     const { project, importedDataset } = res.locals
 
     await req.resourceStore().save()
-    await INSERT.DATA`${importedDataset}`.execute(streamClient.query)
+    await INSERT.DATA`${importedDataset}`.execute(streamClient)
 
     res.status(201)
     res.header('Location', project.pointer.value)

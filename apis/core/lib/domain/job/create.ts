@@ -1,18 +1,18 @@
 import type { NamedNode, Term } from '@rdfjs/types'
-import $rdf from 'rdf-ext'
+import $rdf from '@cube-creator/env'
 import { cc } from '@cube-creator/core/namespace'
-import { GraphPointer } from 'clownface'
+import type { GraphPointer } from 'clownface'
 import { DESCRIBE } from '@tpluscode/sparql-builder'
 import * as Job from '@cube-creator/model/Job'
 import * as ImportJob from '@cube-creator/model/ImportJob'
 import { CsvMapping, Project, Dataset, ImportProject, CsvProject } from '@cube-creator/model'
 import { DomainError } from '@cube-creator/api-errors'
-import env from '@cube-creator/core/env'
+import env from '@cube-creator/core/env/node'
 import { schema } from '@tpluscode/rdf-ns-builders'
 import { isCsvProject } from '@cube-creator/model/Project'
-import * as id from '../identifiers'
-import { ResourceStore } from '../../ResourceStore'
-import * as TableQueries from '../queries/table'
+import * as id from '../identifiers.js'
+import { ResourceStore } from '../../ResourceStore.js'
+import * as TableQueries from '../queries/table.js'
 
 interface StartTransformationCommand {
   resource: NamedNode
@@ -40,7 +40,7 @@ export async function createTransformJob({
   const dataset = await store.getResource<Dataset>(project.dataset.id)
 
   const jobPointer = await store.createMember(jobCollection.term, id.job(jobCollection))
-  Job.createTransform(jobPointer, {
+  Job.createTransform($rdf, jobPointer, {
     cubeGraph: project.cubeGraph,
     name: 'Transformation job',
     tableCollection: csvMapping.tableCollection,
@@ -77,7 +77,7 @@ export async function createPublishJob({
   const metadata = await store.getResource(project.dataset)
 
   const jobPointer = await store.createMember(jobCollection.term, id.job(jobCollection))
-  const job = Job.createPublish(jobPointer, {
+  const job = Job.createPublish($rdf, jobPointer, {
     project: projectPointer,
     name: 'Publish job',
     revision: project.nextRevision,
@@ -118,7 +118,7 @@ export async function createUnlistJob({
   }
 
   const jobPointer = await store.createMember(jobCollection.term, id.job(jobCollection))
-  Job.createUnlist(jobPointer, {
+  Job.createUnlist($rdf, jobPointer, {
     project: projectPointer,
     name: 'Unlist job',
     publishGraph: organization.publishGraph,
@@ -186,7 +186,7 @@ export async function createImportJob({ store, resource }: StartImportCommand): 
   const dataset = await store.getResource<Dataset>(project.dataset)
   const jobPointer = await store.createMember(jobCollection.term, id.job(jobCollection))
 
-  ImportJob.create(jobPointer, {
+  ImportJob.create($rdf, jobPointer, {
     name: 'Import cube',
     sourceCube: project.sourceCube,
     sourceGraph: project.sourceGraph,

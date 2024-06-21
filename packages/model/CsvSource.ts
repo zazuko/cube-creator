@@ -8,12 +8,11 @@ import { cc } from '@cube-creator/core/namespace'
 import { DialectMixin } from '@rdfine/csvw'
 import { MediaObjectMixin as SchemaMediaObjectMixin } from '@rdfine/schema'
 import type { Collection } from '@rdfine/hydra'
-import { blankNode } from '@rdf-esm/data-model'
-import { initializer } from './lib/initializer'
-import { Link } from './lib/Link'
-import { CsvMapping } from './CsvMapping'
-import { CsvColumn, CsvColumnMixin } from './CsvColumn'
-import { MediaObjectMixin } from './MediaObject'
+import { initializer } from './lib/initializer.js'
+import { Link } from './lib/Link.js'
+import { CsvMapping } from './CsvMapping.js'
+import { CsvColumn, CsvColumnMixin } from './CsvColumn.js'
+import { MediaObjectMixin } from './MediaObject.js'
 
 export interface CsvSource extends RdfResource {
   associatedMedia: Schema.MediaObject | undefined
@@ -40,7 +39,7 @@ export function CsvSourceMixin<Base extends Constructor>(base: Base): Mixin {
     @property.literal({ path: schema.error, values: 'array' })
     errorMessages!: string[]
 
-    @property.resource({ path: csvw.dialect, as: [DialectMixin], initial: () => blankNode() })
+    @property.resource({ path: csvw.dialect, as: [DialectMixin], initial: ({ env }) => env.blankNode() })
     dialect!: Csvw.Dialect
 
     @property.resource({ path: cc.csvMapping })

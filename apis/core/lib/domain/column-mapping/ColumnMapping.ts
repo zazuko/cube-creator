@@ -40,7 +40,7 @@ export function ReferenceColumnMappingMixin<Base extends Constructor<Omit<Refere
         mapping.pointer.deleteOut()
       })
 
-      this.identifierMapping = referencedColumns.map(referencedColumn => createIdentifierMapping(this.pointer.blankNode(), {
+      this.identifierMapping = referencedColumns.map(referencedColumn => createIdentifierMapping(this.env, this.pointer.blankNode(), {
         referencedColumn,
       }))
     }

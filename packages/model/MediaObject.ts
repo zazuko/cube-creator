@@ -1,11 +1,11 @@
-import type { DatasetCore, NamedNode } from '@rdfjs/types'
+import type { NamedNode } from '@rdfjs/types'
 import type * as Schema from '@rdfine/schema'
-import RdfResourceImpl, { Initializer, RdfResourceCore, ResourceIdentifier } from '@tpluscode/rdfine/RdfResource'
+import { RdfResourceCore } from '@tpluscode/rdfine/RdfResource'
 import { Constructor, property } from '@tpluscode/rdfine'
-import { MediaObjectMixin as SchemaMediaObjectMixin } from '@rdfine/schema'
 import { schema } from '@tpluscode/rdf-ns-builders'
-import type { GraphPointer } from 'clownface'
 import { cc } from '@cube-creator/core/namespace'
+import { RdfineEnvironment } from '@tpluscode/rdfine/environment'
+import { createFactory } from '@tpluscode/rdfine/factory'
 
 export interface MediaObjectEx {
   sourceKind: NamedNode
@@ -26,12 +26,4 @@ export function MediaObjectMixin<Base extends Constructor<Omit<Schema.MediaObjec
 }
 
 MediaObjectMixin.appliesTo = schema.MediaObject
-
-export const fromPointer = <D extends DatasetCore>(pointer: GraphPointer<ResourceIdentifier, D>, initializer: Initializer<Schema.MediaObject<D>> = {}): Schema.MediaObject<D> => {
-  return RdfResourceImpl.factory.createEntity(pointer, [MediaObjectMixin, SchemaMediaObjectMixin], {
-    initializer: {
-      ...initializer,
-      types: [schema.MediaObject],
-    },
-  })
-}
+MediaObjectMixin.createFactory = (env: RdfineEnvironment) => createFactory<Schema.MediaObject>([MediaObjectMixin], { types: [schema.MediaObject] }, env)
