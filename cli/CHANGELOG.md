@@ -1,5 +1,27 @@
 # @cube-creator/cli
 
+## 4.0.0
+
+### Major Changes
+
+- a7c3681: Using `barnard59-cube` for constructing the cube constraint shape (closes #1469, closes #1470)
+
+### Patch Changes
+
+- 2302932: Avoid duplicate datePublished on first revision
+- 3050844: Update barnard59 packages:
+  - barnard59 1.1.0 => 5.0.1
+  - barnard59-base 1.1.0 => 2.4.2
+  - barnard59-formats 1.1.0 => 2.1.1
+  - barnard59-graph-store 1.0.0 => 5.1.2
+  - barnard59-http 1.1.1 => 2.0.0
+  - barnard59-rdf 1.0.0 => 3.4.0
+  - barnard59-validate-shacl 0.3.0 => barnard59-shacl 1.4.5
+- 3050844: Use package barnard59-cube
+- aba5441: Improve error messages and prevent mixing language and datatype
+- 4e1345d: Empty lines will be ignored when parsing CSVs (fixes #1495)
+- 4e1345d: Whitespace will be trimmed from CSV headers. A message will be displayed to the user in that case. (fixes #1232)
+
 ## 3.0.0
 
 ### Major Changes
