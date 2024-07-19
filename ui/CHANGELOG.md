@@ -1,5 +1,14 @@
 # @cube-creator/ui
 
+## 1.13.8
+
+### Patch Changes
+
+- 5b45771: CSV mapping: Removed the default value of the identifier field. Fixes #1494
+- 5b45771: CSV mapping: it was impossible to save an existing table with auto-generated identifier. Fixes #1373
+- 81fb87a: Use another language or IRI when missing translation
+- aba5441: Improve error messages and prevent mixing language and datatype
+
 ## 1.13.7
 
 ### Patch Changes

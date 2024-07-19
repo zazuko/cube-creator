@@ -1,5 +1,17 @@
 # @cube-creator/core-api
 
+## 2.3.5
+
+### Patch Changes
+
+- 4e1345d: Updates `csv-parse` to v5
+- 2302932: Avoid duplicate datePublished on first revision
+- 8d5e92b: Fix transformation of invalid dates
+- Updated dependencies [88f2cbb]
+- Updated dependencies [78de1cd]
+- Updated dependencies [88f2cbb]
+  - @cube-creator/shared-dimensions-api@3.1.0
+
 ## 2.3.4
 
 ### Patch Changes
