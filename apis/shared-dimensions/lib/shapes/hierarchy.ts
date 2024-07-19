@@ -78,7 +78,7 @@ export default function ({ rdfTypeProperty = false }: { rdfTypeProperty?: boolea
       minCount: 1,
       maxCount: 1,
       nodeKind: sh.IRI,
-      [dash.editor.value]: dash.InstancesSelectEditor,
+      [dash.editor.value]: dash.AutoCompleteEditor,
       [hydra.search.value]: iriTemplate({
         template: 'dimension/_term-sets{?q}',
         mapping: {
