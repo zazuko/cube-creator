@@ -276,6 +276,7 @@ export async function loadCubeMetadata(this: Context, { jobUri, endpoint, user, 
   })
 }
 
+/*
 export async function injectObservedBy(this: Context, jobUri: string) {
   const Hydra = this.variables.get('apiClient')
 
@@ -296,6 +297,7 @@ export async function injectObservedBy(this: Context, jobUri: string) {
     callback()
   })
 }
+*/
 
 export async function getObserver(this: Context, jobUri: string) {
   const Hydra = this.variables.get('apiClient')
