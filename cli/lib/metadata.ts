@@ -296,3 +296,17 @@ export async function injectObservedBy(this: Context, jobUri: string) {
     callback()
   })
 }
+
+export async function getObserver(this: Context, jobUri: string) {
+  const Hydra = this.variables.get('apiClient')
+  const { maintainer } = await loadDataset(jobUri, Hydra)
+  return obj(function (quad: Quad, _, callback) {
+    const creatorTerms = maintainer.pointer.out(cube.observedBy).terms
+    for (const creator of creatorTerms) {
+      if (creator.termType === 'NamedNode') {
+        return creator
+      }
+    }
+    callback()
+  })
+}

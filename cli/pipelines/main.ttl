@@ -168,12 +168,17 @@
                        code:link <node:barnard59-cube/cube.js#toObservation>
                      ] ;
   code:arguments [
+                      code:name "observer";
+                      code:value [
+		                   a code:EcmaScript ;
+                                   code:link <file:../lib/metadata#getObserver>
+		                 ]
+                   ], [
                       code:name "observations";
                                 code:value [
                                              a code:EcmaScript ;
                                              code:link <file:../lib/cube#getObservationSetId>
                                          ]
-
                     ], [
                          code:name "observation";
                          code:value "({ dataset, observations }) => ([...dataset][0].subject)"^^code:EcmaScript
