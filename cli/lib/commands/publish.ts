@@ -29,7 +29,7 @@ export default runner.create<PublishRunOptions>({
     const { publishStore, job: jobUri } = options
     const Hydra = variable.get('apiClient')
 
-    const { job, namespace, cubeIdentifier, cubeCreatorVersion } = await getJob(jobUri, Hydra)
+    const { job, namespace, cubeIdentifier, cubeCreatorVersion, profile } = await getJob(jobUri, Hydra)
 
     if (options.to === 'filesystem' && !variable.has('targetFile')) {
       variable.set('targetFile', tempy.file())
@@ -43,6 +43,7 @@ export default runner.create<PublishRunOptions>({
     variable.set('metadata', $rdf.dataset())
     // this should be possible as relative path in pipeline ttl but does not work
     variable.set('shapesPath', path.resolve(__dirname, '../../shapes.ttl'))
+    variable.set('profile', profile)
 
     if (cubeCreatorVersion) {
       variable.set('cubeCreatorVersion', cubeCreatorVersion)
@@ -77,12 +78,29 @@ async function getJob(jobUri: string, Hydra: HydraClient): Promise<{
   namespace: string
   cubeIdentifier: string
   cubeCreatorVersion: string | undefined | null
+  profile: string
 }> {
   const jobResource = await Hydra.loadResource<PublishJob>(jobUri)
   const cubeCreatorVersion = jobResource.response?.xhr.headers.get('x-cube-creator')
   const job = jobResource.representation?.root
   if (!job) {
     throw new Error(`Did not find representation of job ${jobUri}. Server responded ${jobResource.response?.xhr.status}`)
+  }
+
+  const getProfile = () => {
+    // 'https://cube.link/v0.2.1/shape/standalone-constraint-constraint'
+    // 'https://cube.link/latest/shape/standalone-constraint-constraint'
+    // 'https://cube.link/latest/shape/profile-opendataswiss'
+    // 'https://cube.link/latest/shape/profile-visualize'
+    const publishedTo = jobResource.representation?.root?.publishedTo?.value
+    if (publishedTo === 'https://ld.admin.ch/application/opendataswiss') {
+      return 'https://cube.link/latest/shape/profile-opendataswiss'
+    }
+    if (publishedTo === 'https://ld.admin.ch/application/visualize') {
+      return 'https://cube.link/latest/shape/profile-visualize'
+    }
+
+    return 'https://cube.link/v0.2.1/shape/standalone-constraint-constraint'
   }
 
   const projectResource = await Hydra.loadResource<CsvProject | ImportProject>(job.project)
@@ -105,5 +123,6 @@ async function getJob(jobUri: string, Hydra: HydraClient): Promise<{
     namespace: datasetResource.representation?.root?.hasPart[0].id.value,
     cubeIdentifier,
     cubeCreatorVersion,
+    profile: getProfile(),
   }
 }
