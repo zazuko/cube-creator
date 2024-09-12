@@ -83,7 +83,7 @@ export async function createPublishJob({
     revision: project.nextRevision,
     publishGraph: organization.publishGraph,
     status: metadata?.pointer.out(schema.creativeWorkStatus).term,
-    publishedTo: metadata?.pointer.out(schema.workExample).term,
+    publishedTo: metadata?.pointer.out(schema.workExample).terms,
   })
 
   const cubeId = isCsvProject(project)

@@ -35,8 +35,8 @@
             <span v-if="job.status" class="tag">
               <external-term :resource="job.status" />
             </span>
-            <span v-if="job.publishedTo" class="tag">
-              <external-term :resource="job.publishedTo" />
+            <span v-for="(publication, index) in job.publishedTo" :key="index" class="tag">
+              <external-term :resource="publication" />
             </span>
           </div>
         </job-item>

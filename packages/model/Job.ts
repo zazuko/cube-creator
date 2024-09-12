@@ -36,7 +36,7 @@ export interface PublishJob extends Job {
   project: NamedNode
   revision: number
   publishGraph: NamedNode
-  publishedTo: Term | undefined
+  publishedTo: Term[]
   status?: Term
   query?: string
   workExamples: CreativeWork[]
@@ -137,17 +137,17 @@ export function PublishJobMixin<Base extends Constructor<RdfResource>>(base: Bas
     @property({ path: schema.creativeWorkStatus })
     status?: NamedNode
 
-    get publishedTo(): Term | undefined {
+    get publishedTo(): Term[] {
       return this.pointer
         .out(schema.workExample)
         .filter(example => example.out(schema.encodingFormat).terms.length === 0)
-        .term
+        .terms
     }
 
-    set publishedTo(term: Term | undefined) {
-      if (term) {
+    set publishedTo(terms: Term[]) {
+      terms.forEach(term => {
         this.pointer.addOut(schema.workExample, term)
-      }
+      })
     }
 
     get workExamples(): CreativeWork[] {

@@ -88,19 +88,21 @@ async function getJob(jobUri: string, Hydra: HydraClient): Promise<{
   }
 
   const getProfile = () => {
-    // 'https://cube.link/v0.2.1/shape/standalone-constraint-constraint'
-    // 'https://cube.link/latest/shape/standalone-constraint-constraint'
-    // 'https://cube.link/latest/shape/profile-opendataswiss'
-    // 'https://cube.link/latest/shape/profile-visualize'
-    const publishedTo = jobResource.representation?.root?.publishedTo?.value
-    if (publishedTo === 'https://ld.admin.ch/application/opendataswiss') {
-      return 'https://cube.link/latest/shape/profile-opendataswiss'
+    const publishedTo = jobResource.representation?.root?.publishedTo
+    if (publishedTo?.length === 1) {
+      if (publishedTo[0].value === 'https://ld.admin.ch/application/opendataswiss') {
+        return 'https://cube.link/v0.2.2/shape/profile-opendataswiss-lindas'
+      }
+      if (publishedTo[0].value === 'https://ld.admin.ch/application/visualize') {
+        return 'https://cube.link/v0.2.2/shape/profile-visualize'
+      }
     }
-    if (publishedTo === 'https://ld.admin.ch/application/visualize') {
-      return 'https://cube.link/latest/shape/profile-visualize'
+    if (publishedTo?.length === 2) {
+      // todo
+      return 'https://cube.link/v0.2.2/shape/profile-visualize'
     }
 
-    return 'https://cube.link/v0.2.1/shape/standalone-constraint-constraint'
+    return 'https://cube.link/v0.2.2/shape/standalone-constraint-constraint'
   }
 
   const projectResource = await Hydra.loadResource<CsvProject | ImportProject>(job.project)
