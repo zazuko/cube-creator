@@ -1,7 +1,7 @@
 import winston from 'winston'
 import { OnViolation } from 'barnard59-shacl/validate'
 import { fromPointer } from '@rdfine/shacl/lib/ValidationReport'
-// import { sh } from '@tpluscode/rdf-ns-builders'
+import { sh } from '@tpluscode/rdf-ns-builders'
 
 export const logger = winston.createLogger({
   format: winston.format.combine(
@@ -14,11 +14,9 @@ export const logger = winston.createLogger({
 })
 
 export const prettyPrintReport: OnViolation = ({ context, report }) => {
-  const jsonld = fromPointer(report.pointer).toJSON()
+  const jsonld = fromPointer(<any>report.pointer).toJSON()
   context.logger.error(JSON.stringify(jsonld, null, 2))
 
-  // const hasViolations = report.results.map.some(result => sh.Violation.equals(result.severity))
-  // return !hasViolations
-
-  return false
+  const hasViolations = report.results.some(result => sh.Violation.equals(result.severity))
+  return !hasViolations
 }
