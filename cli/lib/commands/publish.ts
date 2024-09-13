@@ -87,22 +87,37 @@ async function getJob(jobUri: string, Hydra: HydraClient): Promise<{
     throw new Error(`Did not find representation of job ${jobUri}. Server responded ${jobResource.response?.xhr.status}`)
   }
 
-  const getProfile = () => {
-    const publishedTo = jobResource.representation?.root?.publishedTo
-    if (publishedTo?.length === 1) {
-      if (publishedTo[0].value === 'https://ld.admin.ch/application/opendataswiss') {
-        return 'https://cube.link/v0.2.2/shape/profile-opendataswiss-lindas'
-      }
-      if (publishedTo[0].value === 'https://ld.admin.ch/application/visualize') {
-        return 'https://cube.link/v0.2.2/shape/profile-visualize'
-      }
+  type opendataswiss = 'https://ld.admin.ch/application/opendataswiss'
+  type visualize = 'https://ld.admin.ch/application/visualize'
+  type knownTarget = opendataswiss | visualize
+
+  function isKnownTarget(value: string): value is knownTarget {
+    return value === 'https://ld.admin.ch/application/opendataswiss' ||
+      value === 'https://ld.admin.ch/application/visualize'
+  }
+
+  const getProfileURL = (version: string) => (target: knownTarget) => {
+    switch (target) {
+      case 'https://ld.admin.ch/application/opendataswiss':
+        return `https://cube.link/${version}/shape/profile-opendataswiss-lindas`
+      case 'https://ld.admin.ch/application/visualize':
+        return `https://cube.link/${version}/shape/profile-visualize`
     }
-    if (publishedTo?.length === 2) {
-      // todo
-      return 'https://cube.link/v0.2.2/shape/profile-visualize'
+  }
+
+  const getProfile = (version: string) => {
+    const publishedTo = jobResource.representation?.root?.publishedTo ?? []
+    const found = publishedTo
+      .map((target) => target.value)
+      .filter(isKnownTarget)
+      .map(getProfileURL(version))
+    if (found.length === 1) return found[0]
+    if (found.length === 2) {
+      // todo a combination of both
+      return `https://cube.link/${version}/shape/profile-visualize`
     }
 
-    return 'https://cube.link/v0.2.2/shape/standalone-constraint-constraint'
+    return `https://cube.link/${version}/shape/standalone-constraint-constraint`
   }
 
   const projectResource = await Hydra.loadResource<CsvProject | ImportProject>(job.project)
@@ -125,6 +140,6 @@ async function getJob(jobUri: string, Hydra: HydraClient): Promise<{
     namespace: datasetResource.representation?.root?.hasPart[0].id.value,
     cubeIdentifier,
     cubeCreatorVersion,
-    profile: getProfile(),
+    profile: getProfile('v0.2.2'),
   }
 }
