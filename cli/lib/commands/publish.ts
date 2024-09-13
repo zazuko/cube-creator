@@ -42,8 +42,8 @@ export default runner.create<PublishRunOptions>({
     variable.set('publish-graph-store-password', publishStore?.password || process.env.PUBLISH_GRAPH_STORE_PASSWORD)
     variable.set('metadata', $rdf.dataset())
     // this should be possible as relative path in pipeline ttl but does not work
-    variable.set('shapesPath', path.resolve(__dirname, '../../shapes.ttl'))
-    variable.set('profile', profile)
+    // variable.set('shapesPath', path.resolve(__dirname, '../../shapes.ttl'))
+    variable.set('shapesPath', path.resolve(__dirname, `../../${profile}.ttl`))
 
     if (cubeCreatorVersion) {
       variable.set('cubeCreatorVersion', cubeCreatorVersion)
@@ -96,28 +96,28 @@ async function getJob(jobUri: string, Hydra: HydraClient): Promise<{
       value === 'https://ld.admin.ch/application/visualize'
   }
 
-  const getProfileURL = (version: string) => (target: knownTarget) => {
+  const getProfileURL = (target: knownTarget) => {
     switch (target) {
       case 'https://ld.admin.ch/application/opendataswiss':
-        return `https://cube.link/${version}/shape/profile-opendataswiss-lindas`
+        return 'shapes-opendataswiss'
       case 'https://ld.admin.ch/application/visualize':
-        return `https://cube.link/${version}/shape/profile-visualize`
+        return 'shapes-visualize'
     }
   }
 
-  const getProfile = (version: string) => {
+  const getProfile = () => {
     const publishedTo = jobResource.representation?.root?.publishedTo ?? []
     const found = publishedTo
       .map((target) => target.value)
       .filter(isKnownTarget)
-      .map(getProfileURL(version))
+      .map(getProfileURL)
     if (found.length === 1) return found[0]
     if (found.length === 2) {
       // todo a combination of both
-      return `https://cube.link/${version}/shape/profile-visualize`
+      return 'shapes-all'
     }
 
-    return `https://cube.link/${version}/shape/standalone-constraint-constraint`
+    return 'shapes-default'
   }
 
   const projectResource = await Hydra.loadResource<CsvProject | ImportProject>(job.project)
@@ -140,6 +140,6 @@ async function getJob(jobUri: string, Hydra: HydraClient): Promise<{
     namespace: datasetResource.representation?.root?.hasPart[0].id.value,
     cubeIdentifier,
     cubeCreatorVersion,
-    profile: getProfile('v0.2.2'),
+    profile: getProfile(),
   }
 }
