@@ -41,8 +41,6 @@ export default runner.create<PublishRunOptions>({
     variable.set('publish-graph-store-user', publishStore?.user || process.env.PUBLISH_GRAPH_STORE_USER)
     variable.set('publish-graph-store-password', publishStore?.password || process.env.PUBLISH_GRAPH_STORE_PASSWORD)
     variable.set('metadata', $rdf.dataset())
-    // this should be possible as relative path in pipeline ttl but does not work
-    // variable.set('shapesPath', path.resolve(__dirname, '../../shapes.ttl'))
     variable.set('shapesPath', path.resolve(__dirname, `../../${profile}.ttl`))
 
     if (cubeCreatorVersion) {
@@ -108,12 +106,11 @@ async function getJob(jobUri: string, Hydra: HydraClient): Promise<{
   const getProfile = () => {
     const publishedTo = jobResource.representation?.root?.publishedTo ?? []
     const found = publishedTo
-      .map((target) => target.value)
+      .map(target => target.value)
       .filter(isKnownTarget)
       .map(getProfileURL)
     if (found.length === 1) return found[0]
     if (found.length === 2) {
-      // todo a combination of both
       return 'shapes-all'
     }
 
