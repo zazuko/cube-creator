@@ -276,29 +276,6 @@ export async function loadCubeMetadata(this: Context, { jobUri, endpoint, user, 
   })
 }
 
-/*
-export async function injectObservedBy(this: Context, jobUri: string) {
-  const Hydra = this.variables.get('apiClient')
-
-  const { maintainer } = await loadDataset(jobUri, Hydra)
-
-  return obj(function (quad: Quad, _, callback) {
-    if (quad.predicate.equals(cube.observedBy)) {
-      const creatorTerms = maintainer.pointer.out(cube.observedBy).terms
-      for (const creator of creatorTerms) {
-        if (creator.termType === 'NamedNode') {
-          this.push($rdf.quad(quad.subject, cube.observedBy, creator))
-        }
-      }
-    } else {
-      this.push(quad)
-    }
-
-    callback()
-  })
-}
-*/
-
 export async function getObserver(this: Context, jobUri: string) {
   const Hydra = this.variables.get('apiClient')
   const { maintainer } = await loadDataset(jobUri, Hydra)
