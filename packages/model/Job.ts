@@ -27,6 +27,7 @@ export interface Job extends Action, Rdfs.Resource, RdfResource {
 }
 
 export interface TransformJob extends Job {
+  project: NamedNode
   cubeGraph: NamedNode
   tableCollection: Link<TableCollection>
   dimensionMetadata: Link<DimensionMetadataCollection>
@@ -95,6 +96,9 @@ JobMixin.appliesTo = cc.Job
 
 export function TransformJobMixin<Base extends Constructor<RdfResource>>(base: Base): Mixin {
   class Impl extends ResourceMixin(ActionMixin(base)) implements Partial<TransformJob> {
+    @property({ path: cc.project })
+    project!: NamedNode
+
     @property.resource({ path: cc.tables })
     tableCollection!: Link<TableCollection>
 

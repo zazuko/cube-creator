@@ -169,10 +169,7 @@
                      ] ;
   code:arguments [
                       code:name "observer";
-                      code:value [
-		                   a code:EcmaScript ;
-                                   code:link <file:../lib/metadata#getObserver>
-		                 ]
+                      code:value "observer"^^:VariableName
                    ], [
                       code:name "observations";
                                 code:value [
