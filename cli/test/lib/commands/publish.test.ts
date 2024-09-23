@@ -476,9 +476,9 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
         },
       })
 
-      const observedByIns = [props.has(sh.path, cube.observedBy).out(sh.in).list()!].map(ptr => ptr.term)
-      expect(observedByIns).to.deep.contain.members([$rdf.namedNode('https://ld.admin.ch/office/VII.1.7')])
+      const observedByIns = Array.from(props.has(sh.path, cube.observedBy).out(sh.in).list() ?? [])
       expect(observedByIns).to.have.length(1)
+      expect(observedByIns[0].value).to.equal('https://ld.admin.ch/office/VII.1.7')
     })
 
     it('removes all csvw triples', async () => {
