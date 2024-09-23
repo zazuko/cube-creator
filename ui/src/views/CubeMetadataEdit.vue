@@ -1,5 +1,5 @@
 <template>
-  <side-pane :title="title" @close="onCancel">
+  <side-pane :title="title" @close="onCancel" style="min-width: 600px">
     <cc-hydra-operation-form-with-raw
       v-if="resource && operation"
       :operation.prop="operation"

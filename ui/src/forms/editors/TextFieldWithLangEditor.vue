@@ -63,7 +63,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.text-input {
+.field :first-child {
   flex-grow: 1;
 }
 </style>
