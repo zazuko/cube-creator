@@ -479,7 +479,7 @@ ${shapeId} {
       ${sh.order} 50 ;
     ] , [
       ${sh.name} "Format" ;
-      ${sh.path} ${dcat.format} ;
+      ${sh.path} ${dcterms.format} ;
       ${sh.maxCount} 1 ;
       ${sh.nodeKind} ${sh.IRI} ;
       ${dash.editor} ${dash.AutoCompleteEditor} ;
