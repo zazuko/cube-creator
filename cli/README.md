@@ -96,12 +96,12 @@ Here's an example of converting local files using a locally-built image:
 1. (optionally) Ensure a fresh container is built
 
     ```
-    docker-composer build cli
+    docker compose build cli
     ```
-1. Run with docker-compose
+1. Run with `docker compose`
 
     ```
-    docker-compose run --rm cli transform \ 
+    docker compose run --rm cli transform \ 
         --to filesystem \
         --job <URI>
         --debug
