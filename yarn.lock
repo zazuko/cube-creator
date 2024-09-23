@@ -3136,10 +3136,10 @@
     commander "^7.2.0"
     fs-extra "^10.0.0"
 
-"@tpluscode/rdf-string@^0.2.18", "@tpluscode/rdf-string@^0.2.21", "@tpluscode/rdf-string@^0.2.24", "@tpluscode/rdf-string@^0.2.26", "@tpluscode/rdf-string@^0.2.27", "@tpluscode/rdf-string@^0.2.28":
-  version "0.2.28"
-  resolved "https://registry.yarnpkg.com/@tpluscode/rdf-string/-/rdf-string-0.2.28.tgz#94168168f4715f037fe7052b0dcae06ddbf679d8"
-  integrity sha512-gYA2WF3UKnYFEZwBshbfxdt490BPTO9PLdr3M1eFULuROevBms1MrTMWrEWGhAyAZpj4ccCbk+iRh9pY7wVYzQ==
+"@tpluscode/rdf-string@^0.2.18", "@tpluscode/rdf-string@^0.2.21", "@tpluscode/rdf-string@^0.2.24", "@tpluscode/rdf-string@^0.2.26", "@tpluscode/rdf-string@^0.2.27", "@tpluscode/rdf-string@^0.2.29":
+  version "0.2.29"
+  resolved "https://registry.yarnpkg.com/@tpluscode/rdf-string/-/rdf-string-0.2.29.tgz#baa98ac2b2f6ffae81355e6bafadb8cfede4fff9"
+  integrity sha512-94IJqiDT0o1nQ1gZdoxdX9FJMW+ftWlv2MWEoIJblWdkseuyRw5xRWn9vr6mVdmMYjjPhSWXNHCrxnuCW9JRMg==
   dependencies:
     "@rdf-esm/data-model" "^0.5.3"
     "@rdf-esm/term-map" "^0.5.0"
