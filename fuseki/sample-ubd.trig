@@ -769,7 +769,6 @@ graph <cube-project/ubd/jobs> {
 graph <cube-project/ubd/csv-mapping/jobs/test-job> {
   <cube-project/ubd/csv-mapping/jobs/test-job>
     a hydra:Resource, cc:Job, cc:TransformJob ;
-    cc:project <cube-project/ubd> ;
     cc:tables <cube-project/ubd/csv-mapping/tables> ;
     cc:dimensionMetadata <cube-project/ubd/dimensions-metadata> ;
     schema:name "cli-test" ;
@@ -785,7 +784,6 @@ graph <cube-project/ubd/csv-mapping/jobs/test-job> {
 graph <cube-project/ubd/csv-mapping/jobs/failed-job> {
   <cube-project/ubd/csv-mapping/jobs/failed-job>
     a hydra:Resource, cc:Job, cc:TransformJob ;
-    cc:project <cube-project/ubd> ;
     cc:tables <cube-project/ubd/csv-mapping/tables> ;
     cc:dimensionMetadata <cube-project/ubd/dimensions-metadata> ;
     schema:name "failed job" ;
@@ -808,7 +806,6 @@ graph <cube-project/ubd/csv-mapping/jobs/failed-job> {
 graph <cube-project/ubd/csv-mapping/jobs/hung-job> {
   <cube-project/ubd/csv-mapping/jobs/hung-job>
     a hydra:Resource, cc:Job, cc:TransformJob ;
-    cc:project <cube-project/ubd> ;
     cc:tables <cube-project/ubd/csv-mapping/tables> ;
     cc:dimensionMetadata <cube-project/ubd/dimensions-metadata> ;
     schema:name "hung job" ;
@@ -824,7 +821,6 @@ graph <cube-project/ubd/csv-mapping/jobs/hung-job> {
 graph <cube-project/ubd/csv-mapping/jobs/active-job> {
   <cube-project/ubd/csv-mapping/jobs/active-job>
     a hydra:Resource, cc:Job, cc:TransformJob ;
-    cc:project <cube-project/ubd> ;
     cc:tables <cube-project/ubd/csv-mapping/tables> ;
     cc:project <cube-project/ubd> ;
     cc:dimensionMetadata <cube-project/ubd/dimensions-metadata> ;
@@ -840,7 +836,6 @@ graph <cube-project/ubd/csv-mapping/jobs/active-job> {
 graph <cube-project/ubd/csv-mapping/jobs/broken-job> {
   <cube-project/ubd/csv-mapping/jobs/broken-job>
     a hydra:Resource, cc:Job, cc:TransformJob ;
-    cc:project <cube-project/ubd> ;
     cc:tables <cube-project/ubd/csv-mapping/no-tables> ;
     cc:dimensionMetadata <cube-project/ubd/dimensions-metadata> ;
     schema:name "broken job" ;
@@ -905,7 +900,6 @@ graph <cube-project/ubd/csv-mapping/jobs/test-unlist-job> {
 graph <cube-project/ubd/csv-mapping/jobs/canceled-job> {
   <cube-project/ubd/csv-mapping/jobs/canceled-job>
     a hydra:Resource, cc:Job, cc:TransformJob ;
-    cc:project <cube-project/ubd> ;
     cc:tables <cube-project/ubd/csv-mapping/tables> ;
     cc:project <cube-project/ubd> ;
     cc:dimensionMetadata <cube-project/ubd/dimensions-metadata> ;
