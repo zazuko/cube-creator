@@ -443,6 +443,7 @@ ${shapeId} {
       ${sh.minCount} 1 ;
       ${sh.nodeKind} ${sh.IRI} ;
       ${sh.order} 10 ;
+      ${sh.message} "Web page address to access the data is required" ;
     ] , [
       ${sh.name} "Download URL" ;
       ${sh.path} ${dcat.downloadURL} ;
