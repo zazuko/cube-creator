@@ -21,6 +21,7 @@ jobs:
       - run: yarn ${{ matrix.command }}
         env:
           AUTH_RUNNER_CLIENT_SECRET: ${{ secrets.AUTH_RUNNER_CLIENT_SECRET }}
+          NODE_TLS_REJECT_UNAUTHORIZED: 0
       - name: logs on fail
         if: ${{ failure() }}
         run: lando logs -s core
