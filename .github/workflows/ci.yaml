@@ -7,13 +7,18 @@ on:
 jobs:
   unit-test:
     runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        command:
+          - test
+          - test:queries
+          - test:cli:rest
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/workflows/setup-env
-      - run: yarn test
-      - run: yarn test:queries
-      - run: yarn test:cli:rest
+      - run: yarn ${{ matrix.command }}
         env:
           AUTH_RUNNER_CLIENT_SECRET: ${{ secrets.AUTH_RUNNER_CLIENT_SECRET }}
       - name: logs on fail
