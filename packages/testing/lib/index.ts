@@ -2,9 +2,9 @@ import StreamClient from 'sparql-http-client/StreamClient'
 import ParsingClient from 'sparql-http-client/ParsingClient'
 
 const endpoints = (db: 'cube-creator' | 'shared-dimensions') => ({
-  updateUrl: `http://db.cube-creator.lndo.site/${db}/update`,
-  endpointUrl: `http://db.cube-creator.lndo.site/${db}/query`,
-  storeUrl: `http://db.cube-creator.lndo.site/${db}/data`,
+  updateUrl: `https://db.cube-creator.lndo.site/${db}/update`,
+  endpointUrl: `https://db.cube-creator.lndo.site/${db}/query`,
+  storeUrl: `https://db.cube-creator.lndo.site/${db}/data`,
 })
 
 export const ccClients = {

@@ -31,7 +31,7 @@ graph <cube-project/px> {
     cc:projectSourceKind <https://cube-creator.zazuko.com/vocab#projectSourceKind/ExistingCube> ;
     CubeProject:sourceCube <https://environment.ld.admin.ch/foen/example/px-cube> ;
     CubeProject:sourceGraph <http://example.org/px-cube> ;
-    CubeProject:sourceEndpoint <http://db.cube-creator.lndo.site/px-cube> ;
+    CubeProject:sourceEndpoint <https://db.cube-creator.lndo.site/px-cube> ;
     cc:projectDetails <cube-project/px/details> ;
 }
 
@@ -135,6 +135,6 @@ graph <cube-project/px/jobs/import-job> {
     cc:dataset <cube-project/px/dataset> ;
     CubeProject:sourceCube <https://environment.ld.admin.ch/foen/example/px-cube> ;
     CubeProject:sourceGraph <http://example.org/px-cube> ;
-    CubeProject:sourceEndpoint <http://db.cube-creator.lndo.site/px-cube> ;
+    CubeProject:sourceEndpoint <https://db.cube-creator.lndo.site/px-cube> ;
   .
 }

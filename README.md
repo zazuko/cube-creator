@@ -84,7 +84,7 @@ There are two types of e2e tests:
 
 ### API e2e tests
 
-Running the E2E tests can be done using: `docker-compose run --rm e2e-tests`, and `docker-compose run --rm e2e-tests -- --grep pattern` lets you select which tests to run.
+Running the E2E tests can be done using: `docker compose run --rm e2e-tests`, and `docker compose run --rm e2e-tests -- --grep pattern` lets you select which tests to run.
 
 For brevity, use npm script `npm run test:e2e --grep pattern`
 

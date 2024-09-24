@@ -5,14 +5,19 @@ import { sparql, turtle } from '@tpluscode/rdf-string'
 import $rdf from 'rdf-ext'
 import { Draft } from '@cube-creator/model/Cube'
 import env from '@cube-creator/core/env'
-import { lindasQuery } from '../lib/query'
+import namespace from '@rdfjs/namespace'
+import { lindasQuery, lindasQueryTemplate } from '../lib/query'
+
+const euvoc = namespace('http://publications.europa.eu/ontology/euvoc#')
 
 const shapeId = shape('dataset/edit-metadata')
 const temporalFromTo = $rdf.namedNode(shapeId.value + '#temporalFromTo')
 const vcardOrganization = $rdf.namedNode(shapeId.value + '#vcardOrganization')
+const opendataSwissResources = $rdf.namedNode(shapeId.value + '#opendataSwissResources')
 
 const mainGroup = $rdf.blankNode()
 const opendataGroup = $rdf.blankNode()
+const opendataResourcesGroup = $rdf.blankNode()
 const aboutGroup = $rdf.blankNode()
 
 const themesQuery = sparql`construct {
@@ -43,6 +48,40 @@ const euThemesQuery = sparql`construct {
       ${skos.inScheme} <http://publications.europa.eu/resource/authority/data-theme> .
 
     filter (lang(?name) in ("en", "de", "rm", "fr", "it" ))
+  }
+}`
+
+const fileTypesQuery = sparql`construct {
+  ?c a ${hydra.Collection} .
+  ?c ${hydra.member} ?term .
+  ?term ${rdfs.label} ?name .
+} WHERE {
+  BIND ( bnode('collection') as ?c )
+
+  graph <https://lindas.admin.ch/ontologies> {
+    ?term a ${euvoc.FileType} ;
+     ${skos.prefLabel} ?name ;
+      ${skos.inScheme} <http://publications.europa.eu/resource/authority/file-type> .
+
+    FILTER(regex(?name, "_q_", "i"))
+  }
+}`
+
+const mediaTypesQuery = sparql`construct {
+  ?c a ${hydra.Collection} .
+  ?c ${hydra.member} ?term .
+  ?term ${rdfs.label} ?name .
+} WHERE {
+  BIND ( bnode('collection') as ?c )
+
+  graph <https://lindas.admin.ch/ontologies> {
+    ?term a ${dcterms.MediaType} ;
+      ${dcterms.identifier} ?imt ;
+      ${skos.inScheme} <https://www.iana.org/assignments/media-types> .
+
+    BIND(str(?imt) as ?name)
+
+    FILTER(regex(?name, "_q_", "i"))
   }
 }`
 
@@ -118,7 +157,8 @@ export const DatasetShape = turtle`
 ${shapeId} {
   ${mainGroup} ${rdfs.label} "Cube Metadata" ; ${sh.order} 1 .
   ${opendataGroup} ${rdfs.label} "Opendata.swiss" ; ${sh.order} 2 .
-  ${aboutGroup} ${rdfs.label} "About" ; ${sh.order} 3 .
+  ${opendataResourcesGroup} ${rdfs.label} "Opendata.swiss Resources" ; ${sh.order} 3 .
+  ${aboutGroup} ${rdfs.label} "About" ; ${sh.order} 4 .
 
   ${shapeId} a ${sh.NodeShape}, ${hydra.Resource} ;
     ${sh.targetClass} ${_void.Dataset} ;
@@ -317,7 +357,7 @@ ${shapeId} {
       ${sh.order} 105 ;
       ${sh.description} "The Data Theme Category for the classification in the European Data Catalogs.";
       ${sh.nodeKind} ${sh.IRI} ;
-      ${sh.class} <http://publications.europa.eu/ontology/euvoc#DataTheme> ;
+      ${sh.class} ${euvoc.DataTheme} ;
       ${hydra.collection} ${lindasQuery(euThemesQuery)} ;
       ${sh.group} ${aboutGroup} ;
     ] ;
@@ -383,6 +423,83 @@ ${shapeId} {
       ${dash.hidden} true ;
       ${sh.message} "Metadata must not have the dcterms:identifier property. Please remove it in advanced RDF editor" ;
       ${sh.group} ${mainGroup} ;
+    ] ;
+    ${sh.property} [
+      ${sh.name} "Resources" ;
+      ${sh.path} ${dcat.distribution} ;
+      ${sh.class} ${dcat.Distribution} ;
+      ${sh.nodeKind} ${sh.BlankNode} ;
+      ${dash.editor} ${dash.DetailsEditor} ;
+      ${sh.node} ${opendataSwissResources} ;
+      ${sh.order} 10 ;
+      ${sh.group} ${opendataResourcesGroup} ;
+    ] ;
+  .
+
+  ${opendataSwissResources} a ${sh.NodeShape} ;
+    ${sh.property} [
+      ${sh.name} "Access URL" ;
+      ${sh.path} ${dcat.accessURL} ;
+      ${sh.minCount} 1 ;
+      ${sh.nodeKind} ${sh.IRI} ;
+      ${sh.order} 10 ;
+      ${sh.message} "Web page address to access the data is required" ;
+    ] , [
+      ${sh.name} "Download URL" ;
+      ${sh.path} ${dcat.downloadURL} ;
+      ${sh.nodeKind} ${sh.IRI} ;
+      ${sh.order} 20 ;
+    ] , [
+      ${sh.name} "Title" ;
+      ${sh.path} ${dcterms.title} ;
+      ${sh.maxCount} 1 ;
+      ${sh.order} 30 ;
+      ${sh.datatype} ${rdf.langString} ;
+      ${sh.languageIn} ( ${supportedLanguages} ) ;
+    ] , [
+      ${sh.name} "Description" ;
+      ${sh.path} ${dcterms.description} ;
+      ${sh.order} 40 ;
+      ${sh.datatype} ${rdf.langString} ;
+      ${sh.languageIn} ( ${supportedLanguages} ) ;
+    ] , [
+      ${sh.name} "Media type" ;
+      ${sh.path} ${dcat.mediaType} ;
+      ${sh.maxCount} 1 ;
+      ${sh.nodeKind} ${sh.IRI} ;
+      ${dash.editor} ${dash.AutoCompleteEditor} ;
+      ${hydra.search} [
+        a ${hydra.IriTemplate} ;
+        ${hydra.template} "${lindasQueryTemplate(mediaTypesQuery, 'q')}" ; ;
+        ${hydra.mapping} [
+          ${hydra.property} ${hydra.freetextQuery} ;
+          ${hydra.variable} "q" ;
+          ${sh.minLength} 3 ;
+        ] ;
+      ] ;
+      ${sh.order} 50 ;
+    ] , [
+      ${sh.name} "Format" ;
+      ${sh.path} ${dcterms.format} ;
+      ${sh.maxCount} 1 ;
+      ${sh.nodeKind} ${sh.IRI} ;
+      ${dash.editor} ${dash.AutoCompleteEditor} ;
+      ${hydra.search} [
+        a ${hydra.IriTemplate} ;
+        ${hydra.template} "${lindasQueryTemplate(fileTypesQuery, 'q')}" ; ;
+        ${hydra.mapping} [
+          ${hydra.property} ${hydra.freetextQuery} ;
+          ${hydra.variable} "q" ;
+          ${sh.minLength} 3 ;
+        ] ;
+      ] ;
+      ${sh.order} 60 ;
+    ] , [
+      ${sh.path} ${dcat.byteSize} ;
+      ${sh.name} "Size [bytes]" ;
+      ${sh.maxCount} 1 ;
+      ${sh.datatype} ${xsd.decimal} ;
+      ${sh.order} 70 ;
     ] ;
   .
 
