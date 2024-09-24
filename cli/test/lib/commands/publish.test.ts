@@ -475,6 +475,10 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
           minCount: 1,
         },
       })
+
+      const observedByIns = Array.from(props.has(sh.path, cube.observedBy).out(sh.in).list() ?? [])
+      expect(observedByIns).to.have.length(1)
+      expect(observedByIns[0].value).to.equal('https://ld.admin.ch/office/VII.1.7')
     })
 
     it('removes all csvw triples', async () => {

@@ -1,5 +1,4 @@
-import type { Literal, NamedNode, Quad } from '@rdfjs/types'
-import { obj } from 'through2'
+import type { Literal, NamedNode } from '@rdfjs/types'
 import $rdf from 'rdf-ext'
 import { dcat, dcterms, rdf, schema, sh, _void, foaf, xsd } from '@tpluscode/rdf-ns-builders'
 import { cc, cube } from '@cube-creator/core/namespace'
@@ -273,26 +272,5 @@ export async function loadCubeMetadata(this: Context, { jobUri, endpoint, user, 
       this.push(metadata)
       this.push(null)
     },
-  })
-}
-
-export async function injectObservedBy(this: Context, jobUri: string) {
-  const Hydra = this.variables.get('apiClient')
-
-  const { maintainer } = await loadDataset(jobUri, Hydra)
-
-  return obj(function (quad: Quad, _, callback) {
-    if (quad.predicate.equals(cube.observedBy)) {
-      const creatorTerms = maintainer.pointer.out(cube.observedBy).terms
-      for (const creator of creatorTerms) {
-        if (creator.termType === 'NamedNode') {
-          this.push($rdf.quad(quad.subject, cube.observedBy, creator))
-        }
-      }
-    } else {
-      this.push(quad)
-    }
-
-    callback()
   })
 }

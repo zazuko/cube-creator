@@ -84,9 +84,12 @@ describe('@cube-creator/cli/lib/commands/transform', function () {
           path: rdf.type,
           hasValue: cube.Observation,
           minCount: 1,
+          maxCount: 1,
         }, {
           path: cube.observedBy,
+          hasValue: $rdf.namedNode('https://ld.admin.ch/office/VII.1.7'),
           minCount: 1,
+          maxCount: 1,
         }, {
           path: $rdf.namedNode('https://environment.ld.admin.ch/foen/ubd/28/dimension/year'),
           hasValue: $rdf.literal('2000', xsd.gYear),

@@ -32,12 +32,12 @@ async function loadTransformJob(jobUri: string, log: Logger, variables: Params['
     throw new Error(`Did not find representation of job ${jobUri}. Server responded ${response?.xhr.status}`)
   }
 
-  if (!representation.root.cubeGraph) {
-    throw new Error('Cannot transform project. Missing output cube id')
+  if (representation.root.cubeGraph) {
+    log.info(`Will write output triples to graph <${representation.root.cubeGraph.value}>`)
+    variables.set('graph', representation.root.cubeGraph.value)
+  } else {
+    log.warn('Cannot transform project. Missing output cube id')
   }
-
-  log.info(`Will write output triples to graph <${representation.root.cubeGraph.value}>`)
-  variables.set('graph', representation.root.cubeGraph.value)
 
   return representation.root
 }
