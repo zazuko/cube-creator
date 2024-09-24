@@ -7,7 +7,7 @@
     "lint": "eslint . --ext .ts,.vue,.tsx --quiet --ignore-path .gitignore",
     "c8": "c8 --reporter lcovonly",
     "test": "yarn c8 -o coverage/apis mocha --recursive apis/**/*.test.ts packages/**/*.test.ts --grep @SPARQL --invert",
-    "test:queries": "yarn c8 -o coverage/queries mocha --recursive apis/**/*.test.ts ui/**/*.test.ts --grep @SPARQL",
+    "test:queries": "yarn c8 -o coverage/queries mocha -t 10000 --recursive apis/**/*.test.ts ui/**/*.test.ts --grep @SPARQL",
     "test:cli": "run-s test:cli:*",
     "test:cli:rest": "yarn c8 -o coverage/publish mocha --recursive cli/**/*.test.ts --grep @cube-creator/cli/lib/commands/* --invert",
     "test:cli:import": "yarn c8 -o coverage/publish mocha --recursive cli/**/*.test.ts --grep @cube-creator/cli/lib/commands/import",
