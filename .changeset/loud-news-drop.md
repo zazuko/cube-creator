@@ -4,4 +4,4 @@
 "@cube-creator/cli": patch
 ---
 
-Fix: set correct cube:observedBy during transform
+Fix: set correct `cube:observedBy` during transform
