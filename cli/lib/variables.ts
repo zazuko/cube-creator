@@ -28,6 +28,7 @@ declare module 'barnard59-core' {
     bnodeUuid: string
     metadata: DatasetExt
     shapesPath: string
+    shapesVersion: string
     sourceCube: NamedNode
     sourceEndpoint: NamedNode
     sourceGraph: NamedNode | undefined
