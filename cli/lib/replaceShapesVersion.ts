@@ -1,7 +1,7 @@
 import type { Quad } from '@rdfjs/types'
 import { Context } from 'barnard59-core'
 
-export default function replace(this: Context, version: string) {
+export default function replaceShapesVersion(this: Context, version = 'v0.2.2') {
   const prefix = 'https://cube.link/latest/'
   const replacement = `https://cube.link/${version}/`
   const { env } = this

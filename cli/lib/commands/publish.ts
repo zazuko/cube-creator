@@ -42,7 +42,6 @@ export default runner.create<PublishRunOptions>({
     variable.set('publish-graph-store-password', publishStore?.password || process.env.PUBLISH_GRAPH_STORE_PASSWORD)
     variable.set('metadata', $rdf.dataset())
     variable.set('shapesPath', path.resolve(__dirname, `../../${profile}.ttl`))
-    variable.set('shapesVersion', 'v0.2.2')
 
     if (cubeCreatorVersion) {
       variable.set('cubeCreatorVersion', cubeCreatorVersion)

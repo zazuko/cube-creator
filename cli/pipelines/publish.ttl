@@ -21,6 +21,11 @@
           :name "executionUrl" ;
           :required false
         ] ;
+      :variable
+        [
+          :name "shapesVersion" ;
+          :required false
+        ] ;
     ] ;
   :steps
     [
@@ -112,7 +117,7 @@
   code:implementedBy
     [
       a code:EcmaScript ;
-      code:link <file:../lib/replace#default>
+      code:link <file:../lib/replaceShapesVersion#default>
     ] ;
   code:arguments ( 'shapesVersion'^^:VariableName )
 .
