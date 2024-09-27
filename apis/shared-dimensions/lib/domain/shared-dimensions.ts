@@ -5,7 +5,7 @@ import $rdf from 'rdf-ext'
 import { toRdf } from 'rdf-literal'
 import { fromFile } from 'rdf-utils-fs'
 import clownface from 'clownface'
-import { isGraphPointer } from 'is-graph-pointer'
+import { isResource } from 'is-graph-pointer'
 import { StreamClient } from 'sparql-http-client/StreamClient'
 import { ParsingClient } from 'sparql-http-client/ParsingClient'
 import { md } from '@cube-creator/core/namespace'
@@ -96,8 +96,8 @@ async function loadShape(shape: string) {
     dataset,
   }).has(rdf.type, sh.NodeShape)
 
-  if (!isGraphPointer(ptr)) {
-    throw new Error('Multiple shapes found')
+  if (!isResource(ptr)) {
+    throw new Error('Expected a single blank node or named node')
   }
 
   return ptr

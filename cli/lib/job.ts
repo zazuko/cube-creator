@@ -124,7 +124,7 @@ function isValidationError(error: string | Error): error is ValidationError {
   return typeof error !== 'string' && 'report' in error
 }
 
-function mergeDatasetIn(target: GraphPointer, toMerge: GraphPointer): GraphPointer {
+function mergeDatasetIn(target: GraphPointer, toMerge: Pick<GraphPointer, 'dataset' | 'term'>): GraphPointer {
   const blanks = new TermMap()
 
   const rewriteBlank = (term: Term): any => {

@@ -70,3 +70,6 @@ base <https://cube-creator.zazuko.com/shape#>
     sh:maxCount 1 ;
   ] ;
 .
+# consider instead removing sh:closed from :listnode in standalone-constraint-constraint
+<https://cube.link/shape/standalone-constraint-constraint#listnode> sh:deactivated true .
+<https://cube.link/shape/standalone-constraint-constraint#restvalue> sh:deactivated true .

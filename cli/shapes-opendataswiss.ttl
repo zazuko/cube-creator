@@ -1,0 +1,11 @@
+prefix code: <https://code.described.at/>
+
+[
+    code:imports <./shapes> ;
+    code:extension "ttl" ;
+] .
+
+[
+    code:imports <https://cube.link/latest/shape/profile-opendataswiss-lindas> ;
+    code:extension "ttl" ;
+] .

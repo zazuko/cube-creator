@@ -1,0 +1,18 @@
+diff --git a/node_modules/rdf-transform-graph-imports/index.js b/node_modules/rdf-transform-graph-imports/index.js
+index 203346b..b01c226 100644
+--- a/node_modules/rdf-transform-graph-imports/index.js
++++ b/node_modules/rdf-transform-graph-imports/index.js
+@@ -20,7 +20,7 @@ function transform(env) {
+                 return resolveImport(importPath, { extension });
+             });
+             for (const importTarget of imports) {
+-                log.debug(`Importing ${importTarget}`);
++                // log.debug(`Importing ${importTarget}`);
+                 const fetchStream = await fetchImport(env, importTarget);
+                 const importStream = fetchStream.pipe(transform(env));
+                 for await (const importedQuad of importStream) {
+@@ -35,3 +35,4 @@ function transform(env) {
+     });
+ }
+ export default transform;
++

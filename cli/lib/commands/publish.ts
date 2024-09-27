@@ -29,7 +29,7 @@ export default runner.create<PublishRunOptions>({
     const { publishStore, job: jobUri } = options
     const Hydra = variable.get('apiClient')
 
-    const { job, namespace, cubeIdentifier, cubeCreatorVersion } = await getJob(jobUri, Hydra)
+    const { job, namespace, cubeIdentifier, cubeCreatorVersion, profile } = await getJob(jobUri, Hydra)
 
     if (options.to === 'filesystem' && !variable.has('targetFile')) {
       variable.set('targetFile', tempy.file())
@@ -41,8 +41,7 @@ export default runner.create<PublishRunOptions>({
     variable.set('publish-graph-store-user', publishStore?.user || process.env.PUBLISH_GRAPH_STORE_USER)
     variable.set('publish-graph-store-password', publishStore?.password || process.env.PUBLISH_GRAPH_STORE_PASSWORD)
     variable.set('metadata', $rdf.dataset())
-    // this should be possible as relative path in pipeline ttl but does not work
-    variable.set('shapesPath', path.resolve(__dirname, '../../shapes.ttl'))
+    variable.set('shapesPath', path.resolve(__dirname, `../../${profile}.ttl`))
 
     if (cubeCreatorVersion) {
       variable.set('cubeCreatorVersion', cubeCreatorVersion)
@@ -77,12 +76,45 @@ async function getJob(jobUri: string, Hydra: HydraClient): Promise<{
   namespace: string
   cubeIdentifier: string
   cubeCreatorVersion: string | undefined | null
+  profile: string
 }> {
   const jobResource = await Hydra.loadResource<PublishJob>(jobUri)
   const cubeCreatorVersion = jobResource.response?.xhr.headers.get('x-cube-creator')
   const job = jobResource.representation?.root
   if (!job) {
     throw new Error(`Did not find representation of job ${jobUri}. Server responded ${jobResource.response?.xhr.status}`)
+  }
+
+  type opendataswiss = 'https://ld.admin.ch/application/opendataswiss'
+  type visualize = 'https://ld.admin.ch/application/visualize'
+  type knownTarget = opendataswiss | visualize
+
+  function isKnownTarget(value: string): value is knownTarget {
+    return value === 'https://ld.admin.ch/application/opendataswiss' ||
+      value === 'https://ld.admin.ch/application/visualize'
+  }
+
+  const getProfileURL = (target: knownTarget) => {
+    switch (target) {
+      case 'https://ld.admin.ch/application/opendataswiss':
+        return 'shapes-opendataswiss'
+      case 'https://ld.admin.ch/application/visualize':
+        return 'shapes-visualize'
+    }
+  }
+
+  const getProfile = () => {
+    const publishedTo = jobResource.representation?.root?.publishedTo ?? []
+    const found = publishedTo
+      .map(target => target.value)
+      .filter(isKnownTarget)
+      .map(getProfileURL)
+    if (found.length === 1) return found[0]
+    if (found.length === 2) {
+      return 'shapes-all'
+    }
+
+    return 'shapes-default'
   }
 
   const projectResource = await Hydra.loadResource<CsvProject | ImportProject>(job.project)
@@ -105,5 +137,6 @@ async function getJob(jobUri: string, Hydra: HydraClient): Promise<{
     namespace: datasetResource.representation?.root?.hasPart[0].id.value,
     cubeIdentifier,
     cubeCreatorVersion,
+    profile: getProfile(),
   }
 }
