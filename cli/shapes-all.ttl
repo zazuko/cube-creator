@@ -6,11 +6,11 @@ prefix code: <https://code.described.at/>
 ] .
 
 [
-    code:imports <https://cube.link/v0.2.2/shape/profile-opendataswiss-lindas> ;
+    code:imports <https://cube.link/latest/shape/profile-opendataswiss-lindas> ;
     code:extension "ttl" ;
 ] .
 
 [
-    code:imports <https://cube.link/v0.2.2/shape/profile-visualize> ;
+    code:imports <https://cube.link/latest/shape/profile-visualize> ;
     code:extension "ttl" ;
 ] .

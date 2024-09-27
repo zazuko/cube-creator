@@ -21,6 +21,11 @@
           :name "executionUrl" ;
           :required false
         ] ;
+      :variable
+        [
+          :name "shapesVersion" ;
+          :required false
+        ] ;
     ] ;
   :steps
     [
@@ -94,6 +99,7 @@
       :stepList
         (
           <#open>
+          <#replace>
           <#imports>
         )
     ] .
@@ -105,6 +111,15 @@
       code:link <node:barnard59-rdf/open.js#default>
     ] ;
   code:arguments ( 'shapesPath'^^:VariableName )
+.
+
+<#replace> a :Step ;
+  code:implementedBy
+    [
+      a code:EcmaScript ;
+      code:link <file:../lib/replaceShapesVersion#default>
+    ] ;
+  code:arguments ( 'shapesVersion'^^:VariableName )
 .
 
 <#imports> a :Step ;
