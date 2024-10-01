@@ -1,5 +1,19 @@
 # @cube-creator/ui
 
+## 1.14.0
+
+### Minor Changes
+
+- 47b072a: Choose validation profile based on publishing target
+
+### Patch Changes
+
+- 1b10591: Increase the default width of metadata panel
+- 1b10591: Improve rendering of translated form fields to fill available space
+- Updated dependencies [0241dbd]
+- Updated dependencies [47b072a]
+  - @cube-creator/model@0.2.0
+
 ## 1.13.8
 
 ### Patch Changes
