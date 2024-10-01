@@ -2,14 +2,14 @@
 FROM node:18-alpine AS builder
 
 WORKDIR /app
-ADD package.json yarn.lock ./
-ADD ./cli/package.json ./cli/
-ADD ./packages/core/package.json ./packages/core/
-ADD ./packages/model/package.json ./packages/model/
-ADD ./packages/testing/package.json ./packages/testing/
+COPY package.json yarn.lock ./
+COPY ./cli/package.json ./cli/
+COPY ./packages/core/package.json ./packages/core/
+COPY ./packages/model/package.json ./packages/model/
+COPY ./packages/testing/package.json ./packages/testing/
 
 # for every new package foo add:
-# ADD ./packages/foo/package.json ./packages/foo/
+# COPY ./packages/foo/package.json ./packages/foo/
 
 # install and build backend
 RUN yarn install --frozen-lockfile
@@ -30,16 +30,16 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-ADD package.json yarn.lock ./
-ADD ./cli/package.json ./cli/
-ADD ./cli/shapes.ttl ./cli/
-ADD ./cli/pipelines ./cli/pipelines/
-ADD ./packages/core/package.json ./packages/core/
-ADD ./packages/model/package.json ./packages/model/
-ADD ./packages/testing/package.json ./packages/testing/
+COPY package.json yarn.lock ./
+COPY ./cli/package.json ./cli/
+COPY ./cli/*.ttl ./cli/
+COPY ./cli/pipelines ./cli/pipelines/
+COPY ./packages/core/package.json ./packages/core/
+COPY ./packages/model/package.json ./packages/model/
+COPY ./packages/testing/package.json ./packages/testing/
 
 # for every new package foo add
-#ADD ./packages/foo/package.json ./packages/foo/
+#COPY ./packages/foo/package.json ./packages/foo/
 
 RUN yarn install --production --frozen-lockfile
 COPY --from=builder /app/dist/cli ./cli/
