@@ -1,5 +1,15 @@
 # @cube-creator/model
 
+## 0.2.0
+
+### Minor Changes
+
+- 47b072a: Choose validation profile based on publishing target
+
+### Patch Changes
+
+- 0241dbd: Fix: set correct `cube:observedBy` during transform
+
 ## 0.1.27
 
 ### Patch Changes
