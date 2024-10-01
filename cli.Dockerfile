@@ -32,7 +32,7 @@ WORKDIR /app
 
 ADD package.json yarn.lock ./
 ADD ./cli/package.json ./cli/
-ADD ./cli/shapes.ttl ./cli/
+COPY ./cli/*.ttl ./cli/
 ADD ./cli/pipelines ./cli/pipelines/
 ADD ./packages/core/package.json ./packages/core/
 ADD ./packages/model/package.json ./packages/model/
