@@ -2,4 +2,4 @@
 "@cube-creator/cli": patch
 ---
 
-fix: include missing shape files
+fix: missing shape files in docker image caused Publish pipeline to fail
