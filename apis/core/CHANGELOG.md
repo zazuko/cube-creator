@@ -1,5 +1,21 @@
 # @cube-creator/core-api
 
+## 2.4.0
+
+### Minor Changes
+
+- 47b072a: Choose validation profile based on publishing target
+- 1b02005: Added resources to Opendata.swiss cube metadata (`dcat:Distribution`). re https://gitlab.ldbar.ch/bafu/visualize/-/issues/560
+
+### Patch Changes
+
+- 0241dbd: Fix: set correct `cube:observedBy` during transform
+- Updated dependencies [eb83409]
+- Updated dependencies [0241dbd]
+- Updated dependencies [47b072a]
+  - @cube-creator/shared-dimensions-api@3.2.0
+  - @cube-creator/model@0.2.0
+
 ## 2.3.5
 
 ### Patch Changes

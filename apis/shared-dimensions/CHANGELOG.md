@@ -1,5 +1,15 @@
 # @cube-creator/shared-dimensions-api
 
+## 3.2.0
+
+### Minor Changes
+
+- 47b072a: Choose validation profile based on publishing target
+
+### Patch Changes
+
+- eb83409: Querying hierarchies could cause `414 (URI Too Long)` error (re #1544)
+
 ## 3.1.0
 
 ### Minor Changes
