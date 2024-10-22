@@ -1,5 +1,20 @@
 # @cube-creator/cli
 
+## 4.1.0
+
+### Minor Changes
+
+- 47b072a: Choose validation profile based on publishing target
+
+### Patch Changes
+
+- 1d179e2: Re-enable validation of RDF Lists in publishing pipeline
+- 0241dbd: Fix: set correct `cube:observedBy` during transform
+- 5e6e9a6: fix: missing shape files in docker image caused Publish pipeline to fail
+- Updated dependencies [0241dbd]
+- Updated dependencies [47b072a]
+  - @cube-creator/model@0.2.0
+
 ## 4.0.0
 
 ### Major Changes
