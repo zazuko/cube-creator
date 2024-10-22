@@ -6,7 +6,7 @@
   "dependencies": {
     "@tpluscode/rdf-ns-builders": "^1.0.0",
     "clownface": "^1.2.0",
-    "express": "^4.17.1",
+    "express": "^4.20.0",
     "http-problem-details": "^0.1.5",
     "hydra-box": "^0.6.2",
     "middleware-async": "^1.2.7",
