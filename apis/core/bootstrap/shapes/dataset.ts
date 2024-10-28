@@ -452,16 +452,17 @@ ${shapeId} {
     ] , [
       ${sh.name} "Title" ;
       ${sh.path} ${dcterms.title} ;
-      ${sh.maxCount} 1 ;
       ${sh.order} 30 ;
       ${sh.datatype} ${rdf.langString} ;
       ${sh.languageIn} ( ${supportedLanguages} ) ;
+      ${sh.uniqueLang} true ;
     ] , [
       ${sh.name} "Description" ;
       ${sh.path} ${dcterms.description} ;
       ${sh.order} 40 ;
       ${sh.datatype} ${rdf.langString} ;
       ${sh.languageIn} ( ${supportedLanguages} ) ;
+      ${sh.uniqueLang} true ;
     ] , [
       ${sh.name} "Media type" ;
       ${sh.path} ${dcat.mediaType} ;
