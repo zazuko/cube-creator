@@ -1,5 +1,11 @@
 # @cube-creator/core-api
 
+## 2.4.1
+
+### Patch Changes
+
+- 38b7552: OpenDataSwiss resource title should allow more than one value (one for each language)
+
 ## 2.4.0
 
 ### Minor Changes
