@@ -4,12 +4,17 @@ import { Constructor, property, ResourceIdentifier } from '@tpluscode/rdfine'
 import type { GraphPointer } from 'clownface'
 import { csvw, dtype, schema } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
+import { NamedNode } from '@rdfjs/types'
 import { initializer } from './lib/initializer'
+import { DatatypeChecker } from './DatatypeChecker'
+
+const datatypeChecker = new DatatypeChecker()
 
 export interface CsvColumn extends RdfResource {
   name: string
   order: number
   samples: string[]
+  defaultDatatype: NamedNode
 }
 
 export function CsvColumnMixin<Base extends Constructor>(Resource: Base): Mixin {
@@ -22,6 +27,10 @@ export function CsvColumnMixin<Base extends Constructor>(Resource: Base): Mixin 
 
     @property.literal({ path: cc.csvColumnSample, values: 'array' })
     samples!: string[]
+
+    get defaultDatatype(): NamedNode {
+      return datatypeChecker.determineDatatype(this.samples)
+    }
   }
 
   return Impl
