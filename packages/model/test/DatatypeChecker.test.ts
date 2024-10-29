@@ -5,7 +5,7 @@ import { DatatypeChecker } from '../DatatypeChecker'
 
 const datatypeChecker = new DatatypeChecker()
 
-describe.only('@cube-creator/model/DatatypeChecker', () => {
+describe('@cube-creator/model/DatatypeChecker', () => {
   it('recognize datatype', () => {
     expect(datatypeChecker.determineDatatype(['42']).equals(xsd.integer)).to.be.true
     expect(datatypeChecker.determineDatatype(['42', '42']).equals(xsd.integer)).to.be.true
