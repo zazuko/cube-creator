@@ -92,6 +92,7 @@ export default function mixin<Base extends Constructor<Table>>(Resource: Base): 
       return this.addLiteralColumnMapping({
         store,
         sourceColumn: column,
+        datatype: column.defaultDatatype,
         targetProperty: $rdf.literal(slug(column.name)),
       })
     }
