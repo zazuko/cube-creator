@@ -9,33 +9,42 @@ interface Datatype {
   name: NamedNode
 }
 
-export class DatatypeChecker {
-  private datatypes: Datatype[] = []
-
-  constructor() {
-    this.add(xsd.integer)
-    this.add(xsd.decimal)
-    this.add(xsd.date)
+const skipEmpty = function * (values: Iterable<string>) {
+  for (const value of values) {
+    if (value !== '') {
+      yield value
+    }
   }
+}
 
-  private add(name: NamedNode) {
+const getDatatypes = function * () {
+  const datatypes: Datatype[] = []
+
+  const add = (name: NamedNode) => {
     const check = validators.find(name)
     if (check) {
-      this.datatypes.push({ check, name })
+      datatypes.push({ check, name })
     }
   }
 
-  public determineDatatype(values: string[]): NamedNode {
-    let i = 0
-    let current = this.datatypes[i]
-    for (const value of values) {
-      while (!current.check(value)) {
-        if (++i === this.datatypes.length) {
-          return xsd.string
-        }
-        current = this.datatypes[i]
+  add(xsd.integer)
+  add(xsd.decimal)
+  add(xsd.date)
+
+  yield * datatypes
+}
+
+export class DatatypeChecker {
+  public determineDatatype(values: Iterable<string>): NamedNode {
+    let count = 0
+    const datatypes = getDatatypes()
+    let current = datatypes.next().value
+    for (const value of skipEmpty(values)) {
+      count++
+      while (current && !current.check(value)) {
+        current = datatypes.next().value
       }
     }
-    return current.name
+    return count > 0 && current ? current.name : xsd.string
   }
 }
