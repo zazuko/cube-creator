@@ -21,7 +21,8 @@
   "include": [
     "packages",
     "apis",
-    "cli"
+    "cli",
+    "mocha-setup.js" 
   ],
   "exclude": [
     "node_modules"

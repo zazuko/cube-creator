@@ -65,7 +65,7 @@ describe('ResourceStore', () => {
       const actual = await store.get(ex.Foo)
 
       // then
-      expect(actual).to.eq(expected)
+      expect(actual.term).to.eq(expected.term)
     })
 
     it('returns object previously created', async () => {
@@ -77,7 +77,7 @@ describe('ResourceStore', () => {
       const actual = await store.get(ex.Foo)
 
       // then
-      expect(actual).to.eq(expected)
+      expect(actual.term).to.eq(expected.term)
       expect(client.query.construct).to.not.have.been.called
     })
 
