@@ -4,47 +4,58 @@ import { validators } from 'rdf-validate-datatype'
 
 type Validator = (value: string) => boolean
 
+const getValidator = (name: NamedNode): Validator =>
+  validators.find(name) ?? (() => false)
+
 interface Datatype {
   check: Validator
   name: NamedNode
+  broader: Datatype[]
 }
 
-const skipEmpty = function * (values: Iterable<string>) {
-  for (const value of values) {
-    if (value !== '') {
-      yield value
-    }
-  }
+const getDatatype = (name: NamedNode, ...broader: Datatype[]): Datatype =>
+  ({ name, check: getValidator(name), broader })
+
+const getDatatypes = () => {
+  const decimal = getDatatype(xsd.decimal)
+  const integer = getDatatype(xsd.integer, decimal)
+  const date = getDatatype(xsd.date)
+  return [integer, decimal, date]
 }
 
-const getDatatypes = function * () {
-  const datatypes: Datatype[] = []
-
-  const add = (name: NamedNode) => {
-    const check = validators.find(name)
-    if (check) {
-      datatypes.push({ check, name })
+const nextUntil = <T>(iterator: Iterator<T>, predicate: (value: T) => boolean) => {
+  while (true) {
+    const result = iterator.next()
+    if (result.done || predicate(result.value)) {
+      return result
     }
   }
-
-  add(xsd.integer)
-  add(xsd.decimal)
-  add(xsd.date)
-
-  yield * datatypes
 }
 
 export class DatatypeChecker {
   public determineDatatype(values: Iterable<string>): NamedNode {
-    let count = 0
-    const datatypes = getDatatypes()
-    let current = datatypes.next().value
-    for (const value of skipEmpty(values)) {
-      count++
-      while (current && !current.check(value)) {
-        current = datatypes.next().value
+    // get the first datatype that matches the first (non-empty) value
+    const valueIterator = values[Symbol.iterator]()
+    let currentValue = nextUntil(valueIterator, value => value !== '')
+    if (currentValue.done) {
+      return xsd.string // no values to check
+    }
+    const datatypeIterator = getDatatypes()[Symbol.iterator]()
+    let currentDatatype = nextUntil(datatypeIterator, type => type.check(currentValue.value))
+    if (currentDatatype.done) {
+      return xsd.string // no datatype found that matches the first value
+    }
+    // iterate over the rest of the values, moving to broader types if needed
+    while (true) {
+      currentValue = nextUntil(valueIterator, value => value !== '' && !currentDatatype.value.check(value))
+      if (currentValue.done) {
+        return currentDatatype.value.name // all values successfuly checked
+      }
+      // look for broader types
+      currentDatatype = nextUntil(currentDatatype.value.broader[Symbol.iterator](), type => type.check(currentValue.value))
+      if (currentDatatype.done) {
+        return xsd.string // no broader type found that matches the value
       }
     }
-    return count > 0 && current ? current.name : xsd.string
   }
 }
