@@ -17,10 +17,16 @@ const getDatatype = (name: NamedNode, ...broader: Datatype[]): Datatype =>
   ({ name, check: getValidator(name), broader })
 
 const getDatatypes = () => {
+  // avoid gDay, gMonth and gYear because they are easily confused with integer
   const decimal = getDatatype(xsd.decimal)
   const integer = getDatatype(xsd.integer, decimal)
+  const gYearMonth = getDatatype(xsd.gYearMonth)
   const date = getDatatype(xsd.date)
-  return [integer, decimal, date]
+  const time = getDatatype(xsd.time)
+  const dateTime = getDatatype(xsd.dateTime)
+  const boolean = getDatatype(xsd.boolean)
+  // integer before decimal because decimal is broader
+  return [integer, decimal, date, time, dateTime, gYearMonth, boolean]
 }
 
 const nextUntil = <T>(iterator: Iterator<T>, predicate: (value: T) => boolean) => {
