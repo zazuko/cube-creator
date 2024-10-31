@@ -6,9 +6,7 @@ import { csvw, dtype, schema } from '@tpluscode/rdf-ns-builders'
 import { cc } from '@cube-creator/core/namespace'
 import { NamedNode } from '@rdfjs/types'
 import { initializer } from './lib/initializer'
-import { DatatypeChecker } from './DatatypeChecker'
-
-const datatypeChecker = new DatatypeChecker()
+import { inferDatatype } from './lib/datatypeInference'
 
 export interface CsvColumn extends RdfResource {
   name: string
@@ -29,7 +27,7 @@ export function CsvColumnMixin<Base extends Constructor>(Resource: Base): Mixin 
     samples!: string[]
 
     get defaultDatatype(): NamedNode {
-      return datatypeChecker.determineDatatype(this.samples)
+      return inferDatatype(this.samples)
     }
   }
 

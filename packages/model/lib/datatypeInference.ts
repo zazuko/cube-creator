@@ -38,30 +38,28 @@ const nextUntil = <T>(iterator: Iterator<T>, predicate: (value: T) => boolean) =
   }
 }
 
-export class DatatypeChecker {
-  public determineDatatype(values: Iterable<string>): NamedNode {
-    // get the first datatype that matches the first (non-empty) value
-    const valueIterator = values[Symbol.iterator]()
-    let currentValue = nextUntil(valueIterator, value => value !== '')
+export function inferDatatype(values: Iterable<string>): NamedNode {
+  // get the first datatype that matches the first (non-empty) value
+  const valueIterator = values[Symbol.iterator]()
+  let currentValue = nextUntil(valueIterator, value => value !== '')
+  if (currentValue.done) {
+    return xsd.string // no values to check
+  }
+  const datatypeIterator = getDatatypes()[Symbol.iterator]()
+  let currentDatatype = nextUntil(datatypeIterator, type => type.check(currentValue.value))
+  if (currentDatatype.done) {
+    return xsd.string // no datatype found that matches the first value
+  }
+  // iterate over the rest of the values, moving to broader types if needed
+  while (true) {
+    currentValue = nextUntil(valueIterator, value => value !== '' && !currentDatatype.value.check(value))
     if (currentValue.done) {
-      return xsd.string // no values to check
+      return currentDatatype.value.name // all values successfuly checked
     }
-    const datatypeIterator = getDatatypes()[Symbol.iterator]()
-    let currentDatatype = nextUntil(datatypeIterator, type => type.check(currentValue.value))
+    // look for broader types
+    currentDatatype = nextUntil(currentDatatype.value.broader[Symbol.iterator](), type => type.check(currentValue.value))
     if (currentDatatype.done) {
-      return xsd.string // no datatype found that matches the first value
-    }
-    // iterate over the rest of the values, moving to broader types if needed
-    while (true) {
-      currentValue = nextUntil(valueIterator, value => value !== '' && !currentDatatype.value.check(value))
-      if (currentValue.done) {
-        return currentDatatype.value.name // all values successfuly checked
-      }
-      // look for broader types
-      currentDatatype = nextUntil(currentDatatype.value.broader[Symbol.iterator](), type => type.check(currentValue.value))
-      if (currentDatatype.done) {
-        return xsd.string // no broader type found that matches the value
-      }
+      return xsd.string // no broader type found that matches the value
     }
   }
 }
