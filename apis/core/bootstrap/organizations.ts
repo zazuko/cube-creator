@@ -156,6 +156,23 @@ export const organizations = turtle`
   .
 }
 
+<organization/foag> {
+  <organization/foag>
+    a ${schema.Organization} ;
+    ${cc.publishGraph}  <https://lindas.admin.ch/foag/cube> ;
+    ${cc.namespace} <https://agriculture.ld.admin.ch/foag/> ;
+    ${schema.dataset} <https://agriculture.ld.admin.ch/.well-known/void> ;
+    ${rdfs.label} "Federal Office for Agriculture"@en ;
+    ${rdfs.label} "Bundesamt für Landwirtschaft"@de ;
+    ${rdfs.label} "Ufficio federale dell'agricoltura"@it ;
+    ${rdfs.label} "Office fédéral de l'agriculture"@fr ;
+    ${dcat.accessURL} <https://agriculture.ld.admin.ch/sparql> ;
+    ${_void.sparqlEndpoint} <https://agriculture.ld.admin.ch/query> ;
+    ${cube.observedBy} <https://ld.admin.ch/office/VI.1.5> ;
+    
+  .
+}
+
 
 
 `
