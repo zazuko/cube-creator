@@ -25,6 +25,6 @@
     "alcaeus": "^2",
     "chai": "^4.3.4",
     "mocha": "^10",
-    "mocha-chai-rdf": "^0.1.4"
+    "mocha-chai-rdf": "^0.1.5"
   }
 }
