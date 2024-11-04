@@ -26,6 +26,9 @@ describe('@cube-creator/model/DatatypeChecker', () => {
   it('recognize xsd:gYearMonth', () => {
     expect(inferDatatype(['2021-12'])).to.eq(xsd.gYearMonth)
   })
+  it('recognize xsd:string', () => {
+    expect(inferDatatype(['abc'])).to.eq(xsd.string)
+  })
   it('recognize two xsd:integer values', () => {
     expect(inferDatatype(['42', '42'])).to.eq(xsd.integer)
   })
