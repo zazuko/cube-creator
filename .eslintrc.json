@@ -1,6 +1,12 @@
 {
   "root": true,
-  "extends": [ "@tpluscode" ],
+  "extends": [
+    "@tpluscode",
+    "plugin:mocha/recommended"
+  ],
+  "plugins": [
+    "mocha"
+  ],
   "parserOptions": {
     "project": "./tsconfig.json"
   },
@@ -8,7 +14,10 @@
     "mocha": true
   },
   "rules": {
-    "@typescript-eslint/indent": ["error", 2, { "SwitchCase": 1, "ignoredNodes": ["PropertyDefinition"] }]
+    "@typescript-eslint/indent": ["error", 2, { "SwitchCase": 1, "ignoredNodes": ["PropertyDefinition"] }],
+    "mocha/no-setup-in-describe": "warn",
+    "mocha/no-sibling-hooks": "warn",
+    "mocha/max-top-level-suites": "off"
   },
   "overrides": [{
     "files": ["*.test.ts"],

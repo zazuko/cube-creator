@@ -151,6 +151,7 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
 
   describe('publishing published', () => {
     before(resetData)
+
     before(function makeCubePublished() {
       return WITH(job, DELETE`
         ${job} ${schema.creativeWorkStatus} ?status
@@ -160,10 +161,13 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
         ${job} ${schema.creativeWorkStatus} ?status
       `).execute(ccClients.parsingClient.query)
     })
+
     before(runJob)
 
     it('removes hydra terms', removesHydraTerms)
+
     it('removes original values of mapped dimensions', removesMappingsOriginalValues)
+
     it('adds qudt:hasUnit', duplicatesQudtUnit)
 
     it('does not publish a cube with trailing slash', async () => {
@@ -214,11 +218,15 @@ describe('@cube-creator/cli/lib/commands/publish', function () {
 
   describe('publishing draft', () => {
     before(resetData)
+
     before(runJob)
 
     it('removes hydra terms', removesHydraTerms)
+
     it('adds qudt:hasUnit', duplicatesQudtUnit)
+
     it('removes original values of mapped dimensions', removesMappingsOriginalValues)
+
     it('adds software versions', addsSoftwareVersions)
 
     it('does not remove previously published triples', () => {

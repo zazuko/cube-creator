@@ -1,8 +1,8 @@
 import { expect } from 'chai'
 import { parse } from '../../../lib/domain/csv'
 
-describe('domain/csv/parse', () => {
-  it('trims headers', async () => {
+describe('domain/csv/parse', function () {
+  it('trims headers', async function () {
     // given
     const input = '"  station_id  ","\tpollutant_id\t","aggregation_id\t","\tlimitvalue","year"'
 
@@ -14,7 +14,7 @@ describe('domain/csv/parse', () => {
     expect(header).to.contain.ordered.members(['station_id', 'pollutant_id', 'aggregation_id', 'limitvalue', 'year'])
   })
 
-  it('parses header', async () => {
+  it('parses header', async function () {
     // given
     const input = '"station_id","pollutant_id","aggregation_id","limitvalue","year"'
 

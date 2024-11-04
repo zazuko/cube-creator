@@ -10,11 +10,11 @@ const { parsingClient } = mdClients
 
 const ns = namespace('https://ld.admin.ch/cube/dimension/')
 
-describe('@cube-creator/shared-dimensions-api/lib/shared-dimension/queries @SPARQL', () => {
-  describe('deleteDynamicTerms', () => {
+describe('@cube-creator/shared-dimensions-api/lib/shared-dimension/queries @SPARQL', function () {
+  describe('deleteDynamicTerms', function () {
     beforeEach(insertTestDimensions)
 
-    it('deletes dynamic property from terms', async () => {
+    it('deletes dynamic property from terms', async function () {
       // when
       await deleteDynamicTerms({
         dimension: ns.technologies,
@@ -28,7 +28,7 @@ describe('@cube-creator/shared-dimensions-api/lib/shared-dimension/queries @SPAR
       ).to.eventually.be.false
     })
 
-    it('does nothing when there are no deleted dimensions', async () => {
+    it('does nothing when there are no deleted dimensions', async function () {
       // when
       await deleteDynamicTerms({
         dimension: ns.technologies,
