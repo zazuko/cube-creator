@@ -63,6 +63,7 @@ describe('@cube-creator/cli/lib/commands/unlist', function () {
   }
 
   before(resetData)
+
   before(runJob)
 
   it('"deprecates" previous cubes', async function () {

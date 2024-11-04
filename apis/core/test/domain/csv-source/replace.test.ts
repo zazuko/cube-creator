@@ -41,6 +41,7 @@ describe('domain/csv-sources/replace', () => {
 
   describe('when source is successfully parsed', () => {
     let csvSourceUpdate: GraphPointer
+
     beforeEach(async () => {
       // given
       csvSource = clownface({ dataset: $rdf.dataset() })
@@ -176,6 +177,7 @@ describe('domain/csv-sources/replace', () => {
 
   describe('when source has different column order', () => {
     let csvSourceUpdate: GraphPointer
+
     beforeEach(async () => {
       // given
       csvSource = clownface({ dataset: $rdf.dataset() })

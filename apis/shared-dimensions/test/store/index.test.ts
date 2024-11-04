@@ -18,13 +18,13 @@ const graph = $rdf.namedNode('https://lindas.admin.ch/cube/dimension')
 const ns = namespace('https://ld.admin.ch/cube/dimension/')
 const { parsingClient } = mdClients
 
-describe('@cube-creator/shared-dimensions-api/lib/store/index @SPARQL', () => {
+describe('@cube-creator/shared-dimensions-api/lib/store/index @SPARQL', function () {
   let store: SharedDimensionsStore
 
-  describe('exists', () => {
+  describe('exists', function () {
     before(prepareStore)
 
-    it('returns true when a resource with given type exists in graph', async () => {
+    it('returns true when a resource with given type exists in graph', async function () {
       // given
       const id = $rdf.namedNode('https://ld.admin.ch/cube/dimension/technologies')
 
@@ -34,7 +34,7 @@ describe('@cube-creator/shared-dimensions-api/lib/store/index @SPARQL', () => {
       await expect(exists).to.eventually.be.true
     })
 
-    it('returns false when a resource with given type exists in a different graph', async () => {
+    it('returns false when a resource with given type exists in a different graph', async function () {
       // given
       const id = $rdf.namedNode('https://ld.admin.ch/cube/dimension/technologies')
       await INSERT.DATA`
@@ -49,7 +49,7 @@ describe('@cube-creator/shared-dimensions-api/lib/store/index @SPARQL', () => {
       await expect(exists).to.eventually.be.true
     })
 
-    it('returns false when a resource exists in graph but not with the type', async () => {
+    it('returns false when a resource exists in graph but not with the type', async function () {
       // given
       const id = $rdf.namedNode('https://ld.admin.ch/cube/dimension/technologies')
 
@@ -59,7 +59,7 @@ describe('@cube-creator/shared-dimensions-api/lib/store/index @SPARQL', () => {
       await expect(exists).to.eventually.be.false
     })
 
-    it('returns false when a resource does no exist', async () => {
+    it('returns false when a resource does no exist', async function () {
       // given
       const id = $rdf.namedNode('https://ld.admin.ch/cube/dimension/foobar')
 
@@ -70,9 +70,10 @@ describe('@cube-creator/shared-dimensions-api/lib/store/index @SPARQL', () => {
     })
   })
 
-  describe('load', () => {
+  describe('load', function () {
     beforeEach(prepareStore)
-    before(async () => {
+
+    before(async function () {
       await INSERT.DATA`
         GRAPH ${ex.otherGraph} {
           ${ns['technologies/sparql']} a ${ex.Something}
@@ -80,14 +81,14 @@ describe('@cube-creator/shared-dimensions-api/lib/store/index @SPARQL', () => {
       `.execute(parsingClient.query)
     })
 
-    context('existing dimension', () => {
+    context('existing dimension', function () {
       let dimension: GraphPointer
 
-      before(async () => {
+      before(async function () {
         dimension = await store.load(ns.technologies)
       })
 
-      it('loads base properties', () => {
+      it('loads base properties', function () {
         expect(dimension).to.matchShape({
           property: [{
             path: rdf.type,
@@ -106,7 +107,7 @@ describe('@cube-creator/shared-dimensions-api/lib/store/index @SPARQL', () => {
         })
       })
 
-      it('loads dynamic properties', () => {
+      it('loads dynamic properties', function () {
         const langStringProperty: Initializer<NodeShape> = {
           property: [{
             path: md.dynamicPropertyType,
@@ -177,14 +178,14 @@ describe('@cube-creator/shared-dimensions-api/lib/store/index @SPARQL', () => {
       })
     })
 
-    context('term with dynamic properties', () => {
+    context('term with dynamic properties', function () {
       let dimensionTerm: GraphPointer
 
-      beforeEach(async () => {
+      beforeEach(async function () {
         dimensionTerm = await store.load(ns['technologies/sparql'])
       })
 
-      it('does not load data from other graphs', async () => {
+      it('does not load data from other graphs', async function () {
         expect(dimensionTerm).not.to.matchShape({
           property: {
             path: rdf.type,
@@ -193,7 +194,7 @@ describe('@cube-creator/shared-dimensions-api/lib/store/index @SPARQL', () => {
         })
       })
 
-      it('gets loaded with common properties', () => {
+      it('gets loaded with common properties', function () {
         expect(dimensionTerm).to.matchShape({
           property: [{
             path: schema.validFrom,
@@ -214,7 +215,7 @@ describe('@cube-creator/shared-dimensions-api/lib/store/index @SPARQL', () => {
         })
       })
 
-      it('gets loaded with dynamic property values', () => {
+      it('gets loaded with dynamic property values', function () {
         expect(dimensionTerm).to.matchShape({
           property: [{
             path: rdfs.comment,
@@ -231,9 +232,10 @@ describe('@cube-creator/shared-dimensions-api/lib/store/index @SPARQL', () => {
     })
   })
 
-  describe('delete', () => {
+  describe('delete', function () {
     beforeEach(prepareStore)
-    beforeEach(async () => {
+
+    beforeEach(async function () {
       await INSERT.DATA`
         GRAPH ${ex.otherGraph} {
           ${ns['technologies/sparql']} a ${ex.Something}
@@ -241,7 +243,7 @@ describe('@cube-creator/shared-dimensions-api/lib/store/index @SPARQL', () => {
       `.execute(parsingClient.query)
     })
 
-    it('does not delete data from other graphs', async () => {
+    it('does not delete data from other graphs', async function () {
       // given
       const term = ns['technologies/sparql']
 
@@ -252,7 +254,7 @@ describe('@cube-creator/shared-dimensions-api/lib/store/index @SPARQL', () => {
       await expect(ASK`${term} ?p ?o`.FROM(ex.otherGraph).execute(parsingClient.query)).to.eventually.be.true
     })
 
-    it('deletes dimension term with dynamic properties', async () => {
+    it('deletes dimension term with dynamic properties', async function () {
       // given
       const term = ns['technologies/sparql']
 
@@ -263,7 +265,7 @@ describe('@cube-creator/shared-dimensions-api/lib/store/index @SPARQL', () => {
       await expect(ASK`${term} ?p ?o`.FROM(graph).execute(parsingClient.query)).to.eventually.be.false
     })
 
-    it('deletes dimension deep', async () => {
+    it('deletes dimension deep', async function () {
       // given
       const term = ns.technologies
 
@@ -275,10 +277,10 @@ describe('@cube-creator/shared-dimensions-api/lib/store/index @SPARQL', () => {
     })
   })
 
-  describe('save', () => {
+  describe('save', function () {
     before(prepareStore)
 
-    it('inserts new resource', async () => {
+    it('inserts new resource', async function () {
       // given
       const term = namedNode(ns['technologies/owl'])
         .addOut(rdf.type, [md.SharedDimensionTerm, hydra.Resource, schema.DefinedTerm])
@@ -300,7 +302,7 @@ describe('@cube-creator/shared-dimensions-api/lib/store/index @SPARQL', () => {
       `.execute(parsingClient.query)).to.eventually.be.true
     })
 
-    it('updates existing resource', async () => {
+    it('updates existing resource', async function () {
       // given
       const term = namedNode(ns['technologies/rdf'])
         .addOut(rdf.type, [md.SharedDimensionTerm, hydra.Resource, schema.DefinedTerm])
@@ -325,7 +327,7 @@ describe('@cube-creator/shared-dimensions-api/lib/store/index @SPARQL', () => {
       `.execute(parsingClient.query)).to.eventually.be.false
     })
 
-    it('updates dynamic properties', async () => {
+    it('updates dynamic properties', async function () {
       // given
       const term = namedNode(ns['technologies/sparql'])
         .addOut(rdf.type, [md.SharedDimensionTerm, hydra.Resource, schema.DefinedTerm])

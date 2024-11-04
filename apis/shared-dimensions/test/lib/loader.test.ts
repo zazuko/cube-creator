@@ -33,6 +33,7 @@ graph ${ex('different-graph')} {
 describe('shared-dimensions/lib/loader @SPARQL', () => {
   const req = {} as any
   let loader: ResourceLoader
+
   before(async () => {
     loader = new Loader({
       graph,
