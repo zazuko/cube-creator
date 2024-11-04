@@ -7,6 +7,7 @@ import * as ColumnMapping from '@cube-creator/model/ColumnMapping'
 import $rdf from 'rdf-ext'
 import slug from 'slug'
 import { Link } from '@cube-creator/model/lib/Link'
+import { inferDatatype } from '@cube-creator/model/lib/datatypeInference'
 import { ResourceStore } from '../../ResourceStore'
 import * as id from '../identifiers'
 
@@ -92,6 +93,7 @@ export default function mixin<Base extends Constructor<Table>>(Resource: Base): 
       return this.addLiteralColumnMapping({
         store,
         sourceColumn: column,
+        datatype: inferDatatype(column.samples),
         targetProperty: $rdf.literal(slug(column.name)),
       })
     }
