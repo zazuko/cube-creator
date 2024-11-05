@@ -21,9 +21,13 @@ export { importDimension } from './shared-dimension/import'
 interface CreateSharedDimension {
   resource: GraphPointer<NamedNode>
   store: SharedDimensionsStore
+  contributor: {
+    name: string
+    email?: string
+  }
 }
 
-export async function create({ resource, store }: CreateSharedDimension): Promise<GraphPointer> {
+export async function create({ resource, store, contributor }: CreateSharedDimension): Promise<GraphPointer> {
   const identifier = resource.out(dcterms.identifier).value
   if (!identifier) {
     throw new DomainError('Missing dimension identifier')
@@ -39,6 +43,8 @@ export async function create({ resource, store }: CreateSharedDimension): Promis
     .namedNode(termSetId)
     .addOut(rdf.type, [hydra.Resource, schema.DefinedTermSet, meta.SharedDimension, md.SharedDimension])
     .deleteOut(md.createAs)
+
+  setDefaultContributor(termSet, contributor)
 
   await store.save(termSet)
   return termSet
@@ -81,6 +87,10 @@ interface UpdateSharedDimension {
   store: SharedDimensionsStore
   shape: MultiPointer | undefined
   queries?: typeof queries
+  contributor: {
+    name: string
+    email?: string
+  }
 }
 
 function removeSubgraph(pointer: GraphPointer, predicate?: Term) {
@@ -92,7 +102,7 @@ function removeSubgraph(pointer: GraphPointer, predicate?: Term) {
   }
 }
 
-export async function update({ resource, store, shape, queries }: UpdateSharedDimension): Promise<GraphPointer> {
+export async function update({ resource, store, shape, queries, contributor }: UpdateSharedDimension): Promise<GraphPointer> {
   const ignoredProperties = shape
     ?.out(sh.ignoredProperties)
     .list() || []
@@ -107,6 +117,8 @@ export async function update({ resource, store, shape, queries }: UpdateSharedDi
     deletedProperties.delete(prop)
   }
 
+  setDefaultContributor(resource, contributor)
+
   await store.save(resource)
   await queries?.deleteDynamicTerms({
     dimension: resource.term,
@@ -114,6 +126,20 @@ export async function update({ resource, store, shape, queries }: UpdateSharedDi
     graph: env.MANAGED_DIMENSIONS_GRAPH,
   })
   return resource
+}
+
+function setDefaultContributor(termSet: GraphPointer, contributor: {
+  name: string
+  email?: string
+}) {
+  if (termSet.out(dcterms.contributor).terms.length === 0) {
+    termSet.addOut(dcterms.contributor, contributorPtr => {
+      contributorPtr.addOut(schema.name, contributor.name)
+      if (contributor.email) {
+        contributorPtr.addOut(schema.email, contributor.email)
+      }
+    })
+  }
 }
 
 interface GetExportedDimension {

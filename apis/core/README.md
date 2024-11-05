@@ -20,6 +20,7 @@ The API is secured with a JWT middleware. To configure set these environment var
 In the local environment it is possible to authorize requests with HTTP headers serving as a testing backdoor
 
 - `X-USER` - the user id
+- `X-EMAIL` - the user email
 - `X-PERMISSION` - authorized permissions (multiple values allowed)
 
 ### Debugging

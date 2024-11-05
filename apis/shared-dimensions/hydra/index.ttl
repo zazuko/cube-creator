@@ -263,7 +263,7 @@ md:SharedDimension
       code:implementedBy
         [
           a code:EcmaScript ;
-          code:link <file:handlers/resource#put> ;
+          code:link <file:handlers/shared-dimension#put> ;
         ] ;
     ] ;
 .

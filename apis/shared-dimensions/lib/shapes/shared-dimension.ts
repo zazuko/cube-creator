@@ -297,6 +297,28 @@ const properties: Initializer<PropertyShape>[] = [{
       }],
     })],
   },
+}, {
+  name: 'Contributors',
+  description: 'Currently logged-in user will be used, if not set',
+  path: dcterms.contributor,
+  order: 50,
+  nodeKind: sh.BlankNode,
+  group: propertyGroup({
+    label: 'Contributors',
+  }),
+  node: {
+    property: [{
+      name: 'Name',
+      path: schema.name,
+      minCount: 1,
+      maxCount: 1,
+    }, {
+      name: 'Email',
+      path: schema.email,
+      minCount: 1,
+      maxCount: 1,
+    }],
+  },
 }]
 
 export const create = (): Initializer<NodeShape> => ({

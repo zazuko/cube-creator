@@ -108,6 +108,7 @@ const postDirect = protectedResource(shaclValidate, asyncMiddleware(async (req, 
   const pointer = await create({
     resource: rewrite(await req.resource()),
     store: store(),
+    contributor: req.user!,
   })
 
   res.setHeader('Location', pointer.value)

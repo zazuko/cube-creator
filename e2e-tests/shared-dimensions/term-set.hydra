@@ -11,6 +11,7 @@ ENTRYPOINT "dimension/technologies"
 HEADERS {
   x-user "john-doe"
   x-permission "pipelines:write"
+  x-email "john@doe.tech"
 }
 
 With Class meta:SharedDimension {
@@ -42,6 +43,10 @@ With Class meta:SharedDimension {
             Expect Property schema:validThrough
             Expect Property oa:canonical {
                 Expect Id <https://ld.admin.ch/cube/dimension/technologies/node-js>
+            }
+            Expect Property dcterms:contributor {
+                Expect Property schema:name "John Doe"
+                Expect Property schema:email "john@doe.tech"
             }
         }
 
