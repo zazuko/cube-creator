@@ -4,12 +4,14 @@ PREFIX schema: <http://schema.org/>
 PREFIX qudt: <http://qudt.org/schema/qudt/>
 PREFIX meta: <https://cube.link/meta/>
 PREFIX sh: <http://www.w3.org/ns/shacl#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
 
 ENTRYPOINT "dimension/"
 
 HEADERS {
   x-user "john-doe"
   x-permission "pipelines:write"
+  x-email "john@doe.tech"
 }
 
 With Class hydra:Resource {
@@ -52,6 +54,10 @@ With Class hydra:Resource {
                     Expect Property schema:name
                     Expect Property qudt:scaleType
                     Expect Property meta:dataKind
+                }
+                Expect Property dcterms:contributor {
+                    Expect Property schema:name "john-doe"
+                    Expect Property schema:email "john@doe.tech"
                 }
             }
 
