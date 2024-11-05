@@ -18,13 +18,15 @@ import * as queries from './shared-dimension/queries'
 
 export { importDimension } from './shared-dimension/import'
 
+interface Contributor {
+  name: string
+  email?: string
+}
+
 interface CreateSharedDimension {
   resource: GraphPointer<NamedNode>
   store: SharedDimensionsStore
-  contributor: {
-    name: string
-    email?: string
-  }
+  contributor: Contributor
 }
 
 export async function create({ resource, store, contributor }: CreateSharedDimension): Promise<GraphPointer> {
@@ -87,10 +89,7 @@ interface UpdateSharedDimension {
   store: SharedDimensionsStore
   shape: MultiPointer | undefined
   queries?: typeof queries
-  contributor: {
-    name: string
-    email?: string
-  }
+  contributor: Contributor
 }
 
 function removeSubgraph(pointer: GraphPointer, predicate?: Term) {
@@ -128,10 +127,7 @@ export async function update({ resource, store, shape, queries, contributor }: U
   return resource
 }
 
-function setDefaultContributor(termSet: GraphPointer, contributor: {
-  name: string
-  email?: string
-}) {
+function setDefaultContributor(termSet: GraphPointer, contributor: Contributor) {
   if (termSet.out(dcterms.contributor).terms.length === 0) {
     termSet.addOut(dcterms.contributor, contributorPtr => {
       contributorPtr.addOut(schema.name, contributor.name)
