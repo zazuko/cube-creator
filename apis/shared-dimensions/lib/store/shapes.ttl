@@ -1,3 +1,4 @@
+PREFIX dcterm: <http://purl.org/dc/terms/>
 PREFIX time: <http://www.w3.org/2006/time#>
 PREFIX qudt: <http://qudt.org/schema/qudt/>
 PREFIX meta: <https://cube.link/meta/>
@@ -82,6 +83,19 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
               sh:path sh:languageIn ;
             ] ;
         ] ;
+    ],
+    [
+      sh:path dcterm:contributor ;
+      sh:node
+        [
+          sh:property
+            [
+              sh:path schema:name ;
+            ] ,
+            [
+              sh:path schema:email ;
+            ] ;
+        ]
     ] ;
 ] .
 

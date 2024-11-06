@@ -14,6 +14,7 @@ declare module '@hydrofoil/labyrinth' {
   export interface User {
     sub: string
     name: string
+    email?: string
     permissions: string[]
   }
 }
@@ -46,11 +47,15 @@ function devAuthHandler(req: Request, res: Response, next: NextFunction) {
 
   if (sub) {
     const permissionHeader = req.headers['x-permission']
+    const emailHeader = req.headers['x-email']
+
     const permissions = typeof permissionHeader === 'string' ? permissionHeader.split(',').map(s => s.trim()) : permissionHeader || []
+    const email = typeof emailHeader === 'string' ? emailHeader : (emailHeader || []).shift()
 
     req.user = {
       sub,
       name: sub,
+      email,
       permissions,
     }
 

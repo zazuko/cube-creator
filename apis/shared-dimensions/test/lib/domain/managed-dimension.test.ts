@@ -9,7 +9,7 @@ import { md, meta } from '@cube-creator/core/namespace'
 import $rdf from 'rdf-ext'
 import httpError from 'http-errors'
 import clownface from 'clownface'
-import sinon from 'sinon'
+import sinon, { SinonSpy } from 'sinon'
 import { ex } from '@cube-creator/testing/lib/namespace'
 import { create, createTerm, update, getExportedDimension } from '../../../lib/domain/shared-dimension'
 import { SharedDimensionsStore } from '../../../lib/store'
@@ -19,9 +19,17 @@ import { validateTermSet } from '../../../lib/domain/shared-dimension/import'
 describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () => {
   describe('create', () => {
     let store: SharedDimensionsStore
+    let contributor: {
+      name: string
+      email?: string
+    }
 
     beforeEach(() => {
       store = testStore()
+      contributor = {
+        name: 'John Doe',
+        email: 'john@doe.tech',
+      }
     })
 
     it('creates id using provided identifier', async () => {
@@ -30,10 +38,111 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () =
         .addOut(dcterms.identifier, 'canton')
 
       // when
-      const termSet = await create({ resource, store })
+      const termSet = await create({ resource, store, contributor })
 
       // then
       expect(termSet.value).to.eq('https://ld.admin.ch/cube/dimension/canton')
+    })
+
+    it('sets default contributor', async () => {
+      // given
+      const resource = namedNode('')
+        .addOut(dcterms.identifier, 'canton')
+
+      // when
+      const termSet = await create({ resource, store, contributor })
+
+      // then
+      expect(termSet).to.matchShape({
+        property: [{
+          path: [
+            dcterms.contributor,
+            schema.name,
+          ],
+          hasValue: 'John Doe',
+          minCount: 1,
+          maxCount: 1,
+        }, {
+          path: [
+            dcterms.contributor,
+            schema.email,
+          ],
+          hasValue: 'john@doe.tech',
+          minCount: 1,
+          maxCount: 1,
+        }],
+      })
+    })
+
+    it('default contributor can have no email', async () => {
+      // given
+      const resource = namedNode('')
+        .addOut(dcterms.identifier, 'canton')
+
+      // when
+      const termSet = await create({
+        resource,
+        store,
+        contributor: {
+          name: 'John Doe',
+        },
+      })
+
+      // then
+      expect(termSet).to.matchShape({
+        property: [{
+          path: [
+            dcterms.contributor,
+            schema.name,
+          ],
+          hasValue: 'John Doe',
+          minCount: 1,
+          maxCount: 1,
+        }, {
+          path: [
+            dcterms.contributor,
+            schema.email,
+          ],
+          maxCount: 0,
+        }],
+      })
+    })
+
+    it('keeps payload contributor if present', async () => {
+      // given
+      const resource = namedNode('')
+        .addOut(dcterms.identifier, 'canton')
+        .addOut(dcterms.contributor, contributorPtr => {
+          contributorPtr.addOut(schema.name, 'Jane Doe')
+          contributorPtr.addOut(schema.email, 'jane@doe.tv')
+        })
+
+      // when
+      const termSet = await create({ resource, store, contributor })
+
+      // then
+      expect(termSet).to.matchShape({
+        property: [{
+          path: dcterms.contributor,
+          maxCount: 1,
+        }, {
+          path: [
+            dcterms.contributor,
+            schema.name,
+          ],
+          hasValue: 'Jane Doe',
+          minCount: 1,
+          maxCount: 1,
+        }, {
+          path: [
+            dcterms.contributor,
+            schema.email,
+          ],
+          hasValue: 'jane@doe.tv',
+          minCount: 1,
+          maxCount: 1,
+        }],
+      })
     })
 
     it('saves to the store', async () => {
@@ -42,7 +151,7 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () =
         .addOut(dcterms.identifier, 'canton')
 
       // when
-      await create({ resource, store })
+      await create({ resource, store, contributor })
 
       // then
       expect(store.save).to.have.been.called
@@ -54,7 +163,7 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () =
         .addOut(dcterms.identifier, 'canton')
 
       // when
-      const termSet = await create({ resource, store })
+      const termSet = await create({ resource, store, contributor })
 
       // then
       expect(termSet).to.matchShape({
@@ -74,7 +183,7 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () =
         .addOut(md.createAs, 'Import')
 
       // when
-      const termSet = await create({ resource, store })
+      const termSet = await create({ resource, store, contributor })
 
       // then
       expect(termSet).to.matchShape({
@@ -92,7 +201,7 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () =
         .addOut(dcterms.identifier, 'canton')
 
       // when
-      const promise = create({ resource, store })
+      const promise = create({ resource, store, contributor })
 
       // then
       expect(promise).eventually.rejectedWith(httpError.Conflict)
@@ -176,11 +285,26 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () =
   })
 
   describe('update', () => {
-    it('deletes term properties triples when removed from dimensions', async () => {
-      // given
-      const queries = {
+    let store: SharedDimensionsStore
+    let contributor: {
+      name: string
+      email?: string
+    }
+    let queries: { deleteDynamicTerms: SinonSpy }
+
+    beforeEach(() => {
+      queries = {
         deleteDynamicTerms: sinon.spy(),
       }
+      store = testStore()
+      contributor = {
+        name: 'John Doe',
+        email: 'john@doe.tech',
+      }
+    })
+
+    it('deletes term properties triples when removed from dimensions', async () => {
+      // given
       const before = namedNode('')
         .addOut(dcterms.identifier, 'foo')
         .addOut(schema.name, 'Term set')
@@ -190,7 +314,6 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () =
         .addOut(dcterms.identifier, 'foo')
         .addOut(schema.name, 'Term set')
         .addOut(schema.additionalProperty, dyn => dyn.addOut(rdf.predicate, ex.bar))
-      const store = testStore()
       await store.save(before)
 
       // when
@@ -199,6 +322,7 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () =
         shape: blankNode(),
         resource: after,
         queries,
+        contributor,
       })
 
       // then
@@ -206,6 +330,151 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimension', () =
         dimension: before.term,
         properties: [ex.foo],
         graph: 'https://lindas.admin.ch/cube/dimension',
+      })
+    })
+
+    it('sets default contributor', async () => {
+      // given
+      const before = namedNode('')
+        .addOut(dcterms.identifier, 'foo')
+        .addOut(schema.name, 'Term set')
+        .addOut(dcterms.contributor, contributorPtr => {
+          contributorPtr.addOut(schema.name, 'Jane Doe')
+          contributorPtr.addOut(schema.email, 'jane@doe.tv')
+        })
+      const after = namedNode('')
+        .addOut(dcterms.identifier, 'foo')
+        .addOut(schema.name, 'Term set')
+      await store.save(before)
+
+      // when
+      await update({
+        store,
+        shape: blankNode(),
+        resource: after,
+        queries,
+        contributor,
+      })
+
+      // then
+      const termSet = await store.load(after.term)
+      expect(termSet).to.matchShape({
+        property: [{
+          path: [
+            dcterms.contributor,
+            schema.name,
+          ],
+          hasValue: 'John Doe',
+          minCount: 1,
+          maxCount: 1,
+        }, {
+          path: [
+            dcterms.contributor,
+            schema.email,
+          ],
+          hasValue: 'john@doe.tech',
+          minCount: 1,
+          maxCount: 1,
+        }],
+      })
+    })
+
+    it('default contributor can have no email', async () => {
+      // given
+      const before = namedNode('')
+        .addOut(dcterms.identifier, 'foo')
+        .addOut(schema.name, 'Term set')
+        .addOut(dcterms.contributor, contributorPtr => {
+          contributorPtr.addOut(schema.name, 'Jane Doe')
+          contributorPtr.addOut(schema.email, 'jane@doe.tv')
+        })
+      const after = namedNode('')
+        .addOut(dcterms.identifier, 'foo')
+        .addOut(schema.name, 'Term set')
+      await store.save(before)
+
+      // when
+      await update({
+        store,
+        shape: blankNode(),
+        resource: after,
+        queries,
+        contributor: {
+          name: 'John Doe',
+        },
+      })
+
+      // then
+      const termSet = await store.load(after.term)
+      expect(termSet).to.matchShape({
+        property: [{
+          path: [
+            dcterms.contributor,
+            schema.name,
+          ],
+          hasValue: 'John Doe',
+          minCount: 1,
+          maxCount: 1,
+        }, {
+          path: [
+            dcterms.contributor,
+            schema.email,
+          ],
+          maxCount: 0,
+        }],
+      })
+    })
+
+    it('keeps payload contributor if present', async () => {
+      // given
+      const before = namedNode('')
+        .addOut(dcterms.identifier, 'foo')
+        .addOut(schema.name, 'Term set')
+        .addOut(dcterms.contributor, contributorPtr => {
+          contributorPtr.addOut(schema.name, 'John Doe')
+          contributorPtr.addOut(schema.email, 'john@doe.tech')
+        })
+      const after = namedNode('')
+        .addOut(dcterms.identifier, 'foo')
+        .addOut(schema.name, 'Term set')
+        .addOut(dcterms.contributor, contributorPtr => {
+          contributorPtr.addOut(schema.name, 'Jane Doe')
+          contributorPtr.addOut(schema.email, 'jane@doe.tv')
+        })
+      await store.save(before)
+
+      // when
+      await update({
+        store,
+        shape: blankNode(),
+        resource: after,
+        queries,
+        contributor,
+      })
+
+      // then
+      const termSet = await store.load(after.term)
+      expect(termSet).to.matchShape({
+        property: [{
+          path: dcterms.contributor,
+          maxCount: 1,
+        }, {
+          path: [
+            dcterms.contributor,
+            schema.name,
+          ],
+          hasValue: 'Jane Doe',
+          minCount: 1,
+          maxCount: 1,
+        }, {
+          path: [
+            dcterms.contributor,
+            schema.email,
+          ],
+          hasValue: 'jane@doe.tv',
+          minCount: 1,
+          maxCount: 1,
+        }],
       })
     })
   })
