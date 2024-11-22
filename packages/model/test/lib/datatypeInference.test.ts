@@ -1,7 +1,23 @@
 import { describe, it } from 'mocha'
 import { expect } from 'chai'
 import { xsd } from '@tpluscode/rdf-ns-builders'
+import * as fc from 'fast-check'
 import { inferDatatype } from '../../lib/datatypeInference'
+
+describe('datatypeInference for strange values', () => {
+  it('recognize strange values', () => {
+    expect(inferDatatype(['4^2'])).to.eq(xsd.string)
+    expect(inferDatatype(['4.2.1'])).to.eq(xsd.string)
+    expect(inferDatatype(['*&^%'])).to.eq(xsd.string)
+    expect(inferDatatype(['4%2'])).to.eq(xsd.string)
+  })
+
+  it('recognize random values', () => {
+    fc.assert(fc.property(fc.string(), value => {
+      expect(inferDatatype([value])).to.have.property('termType', 'NamedNode')
+    }))
+  })
+})
 
 describe('@cube-creator/model/DatatypeChecker', () => {
   it('recognize xsd:integer', () => {
