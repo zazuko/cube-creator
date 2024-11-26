@@ -25,6 +25,7 @@
     "alcaeus": "^2",
     "chai": "^4.3.4",
     "mocha": "^10",
-    "mocha-chai-rdf": "^0.1.5"
+    "mocha-chai-rdf": "^0.1.5",
+    "fast-check": "^3.3.0"
   }
 }
