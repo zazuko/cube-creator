@@ -1,5 +1,11 @@
 # @cube-creator/shared-dimensions-api
 
+## 3.2.1
+
+### Patch Changes
+
+- 2d4d9d1: Added `Contributors` to shared dimension
+
 ## 3.2.0
 
 ### Minor Changes

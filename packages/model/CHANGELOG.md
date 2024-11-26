@@ -1,5 +1,11 @@
 # @cube-creator/model
 
+## 0.2.1
+
+### Patch Changes
+
+- 9fbee49: Guess default column datatype from CSV sample values
+
 ## 0.2.0
 
 ### Minor Changes
