@@ -28,7 +28,7 @@
 import { defineComponent, ref, Ref } from 'vue'
 import { mapState } from 'vuex'
 import { useRoute } from 'vue-router'
-import $rdf from '@rdfjs/data-model'
+import $rdf from '@rdf-esm/data-model'
 import type { NamedNode, Term } from '@rdfjs/types'
 import TermSet from '@rdf-esm/term-set'
 import RdfResource from '@tpluscode/rdfine/RdfResource'

@@ -9,8 +9,10 @@ import { editor, iso6391, md, meta, sh1 } from '@cube-creator/core/namespace'
 import { fromPointer as nodeShape } from '@rdfine/shacl/lib/NodeShape'
 import { fromPointer as propertyGroup } from '@rdfine/shacl/lib/PropertyGroup'
 import { fromPointer as resource } from '@rdfine/rdfs/lib/Resource'
+import { dcat } from '@tpluscode/rdf-ns-builders'
 
 const defaultGroup = $rdf.namedNode('#default-group')
+const i14yGroup = $rdf.namedNode('#i14y-group')
 const datatypeUri = [xsd.anyURI, ['URI']]
 
 const commonProperties = [
@@ -19,6 +21,46 @@ const commonProperties = [
   rdfs.label,
   schema.multipleValues,
 ]
+
+const i14yProperties = [{
+  name: 'Identifier',
+  path: schema.identifier,
+  order: 10,
+  datatype: xsd.string,
+  maxCount: 1,
+  group: propertyGroup(i14yGroup, {
+    label: 'I14Y',
+  }),
+}, {
+  name: 'Version',
+  path: schema.version,
+  order: 20,
+  datatype: xsd.string,
+  maxCount: 1,
+  pattern: '^\\d+(\\.\\d+(\\.\\d+)?)?$',
+  group: i14yGroup,
+  message: 'Version must be one of the formats: x, x.y, x.y.z',
+}, {
+  name: 'Themes',
+  path: dcat.theme,
+  order: 30,
+  nodeKind: sh.IRI,
+  editor: dash.URIEditor,
+  group: i14yGroup,
+}, {
+  name: 'Keywords',
+  path: dcat.keyword,
+  order: 40,
+  nodeKind: sh.Literal,
+  group: i14yGroup,
+}, {
+  name: 'Conforms to',
+  path: dcterms.conformsTo,
+  order: 50,
+  nodeKind: sh.IRI,
+  editor: dash.URIEditor,
+  group: i14yGroup,
+}]
 
 const properties: Initializer<PropertyShape>[] = [{
   name: 'Name',
@@ -319,7 +361,7 @@ const properties: Initializer<PropertyShape>[] = [{
       maxCount: 1,
     }],
   },
-}]
+}, ...i14yProperties]
 
 export const create = (): Initializer<NodeShape> => ({
   [sh1.xoneDiscriminator.value]: md.createAs,

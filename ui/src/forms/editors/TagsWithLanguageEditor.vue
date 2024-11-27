@@ -23,7 +23,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
 import { PropertyState } from '@hydrofoil/shaperone-core/models/forms'
-import $rdf from '@rdfjs/data-model'
+import $rdf from '@rdf-esm/data-model'
 import type { Literal, Term } from '@rdfjs/types'
 
 export default defineComponent({
