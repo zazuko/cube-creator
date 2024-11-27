@@ -1,3 +1,4 @@
+PREFIX dcat: <http://www.w3.org/ns/dcat#>
 PREFIX dcterm: <http://purl.org/dc/terms/>
 PREFIX time: <http://www.w3.org/2006/time#>
 PREFIX qudt: <http://qudt.org/schema/qudt/>
@@ -26,6 +27,21 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     ],
     [
       sh:path schema:alternateName ;
+    ],
+    [
+      sh:path schema:identifier ;
+    ],
+    [
+      sh:path schema:version ;
+    ],
+    [
+      sh:path dcat:theme ;
+    ],
+    [
+      sh:path dcat:keyword ;
+    ],
+    [
+      sh:path dcterm:conformsTo ;
     ],
     [
       sh:path sh:property ;
