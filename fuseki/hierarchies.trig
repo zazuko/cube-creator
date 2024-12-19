@@ -9,6 +9,10 @@ base <https://ld.admin.ch/cube/dimension/hierarchy/>
 
 <ch-canton-station> a void:rootResource .
 
+<hierarchies> a void:Dataset .
+<https://lindas.admin.ch/cube/dimension> void:inDataset <hierarchies> .
+<http://example.com/external-hierarchies> void:inDataset <hierarchies> .
+
 graph <https://lindas.admin.ch/cube/dimension> {
   <ch-canton-station> a meta:Hierarchy, hydra:Resource, md:Hierarchy ;
     schema:name "CH - Canton - District" ;
@@ -25,6 +29,22 @@ graph <https://lindas.admin.ch/cube/dimension> {
           [
             schema:name "District" ;
             sh:path schema:containsPlace ;
+          ] ;
+      ] ;
+  .
+}
+
+graph <http://example.com/external-hierarchies> {
+  <http://example.com/hierarchy/de-bundesland> a meta:Hierarchy, hydra:Resource, md:Hierarchy ;
+    schema:name "DE - Bundesland" ;
+    md:sharedDimension <http://example.com/dimension/countries> ;
+    meta:hierarchyRoot <http://example.com/dimension/countries/Germany> ;
+    meta:nextInHierarchy
+      [
+        schema:name "Bundesland" ;
+        sh:path
+          [
+            sh:inversePath schema:containedInPlace ;
           ] ;
       ] ;
   .
