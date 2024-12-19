@@ -139,7 +139,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 ] .
 
 [
-  sh:targetClass meta:Hierarchy ;
+  sh:targetClass md:Hierarchy ;
   sh:property
     [
       sh:path rdf:type ;

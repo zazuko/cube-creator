@@ -14,11 +14,6 @@ const getters: GetterTree<HierarchyState, RootState> = {}
 
 const actions: ActionTree<HierarchyState, RootState> = {
   async fetchHierarchy (context, id) {
-    if (!context.rootState.hierarchies.collection) {
-      await context.dispatch('sharedDimensions/fetchEntrypoint', {}, { root: true })
-      await context.dispatch('hierarchies/fetchCollection', {}, { root: true })
-    }
-
     context.commit('storeHierarchy', await api.fetchResource(id.replaceAll('!!', '/')))
   },
 

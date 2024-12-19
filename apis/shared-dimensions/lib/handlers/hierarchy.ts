@@ -3,7 +3,7 @@ import { dcterms, schema, sd } from '@tpluscode/rdf-ns-builders'
 import { asyncMiddleware } from 'middleware-async'
 import $rdf from 'rdf-ext'
 import env from '@cube-creator/core/env'
-import { meta } from '@cube-creator/core/namespace'
+import { md, meta } from '@cube-creator/core/namespace'
 import onetime from 'onetime'
 import { sh } from '@tpluscode/rdf-ns-builders/strict'
 import { isGraphPointer, isNamedNode } from 'is-graph-pointer'
@@ -37,7 +37,7 @@ export const get = asyncMiddleware(async (req, res) => {
 const loadShapesOnce = onetime(loadShapes)
 
 export const getExternal = asyncMiddleware(async (req, res) => {
-  const shape: AnyPointer = (await loadShapesOnce()).has(sh.targetClass, meta.Hierarchy)
+  const shape: AnyPointer = (await loadShapesOnce()).has(sh.targetClass, md.Hierarchy)
 
   if (!isGraphPointer(shape)) {
     throw new Error('Shape not found')
