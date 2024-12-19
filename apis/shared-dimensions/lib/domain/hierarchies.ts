@@ -36,7 +36,7 @@ export function getHierarchies({ freetextQuery, limit, offset }: GetHierarchies)
   }
 
   return CONSTRUCT`
-    ${hierarchy} ?p ?o .
+    ?proxyUrl ?p ?o .
   `
     .WHERE`
       {
@@ -44,6 +44,8 @@ export function getHierarchies({ freetextQuery, limit, offset }: GetHierarchies)
       }
 
       ${hierarchy} ?p ?o .
+
+      BIND(IRI(CONCAT("${env.MANAGED_DIMENSIONS_API_BASE}", "dimension/_hierarchy/proxy?id=", ENCODE_FOR_URI(STR(${hierarchy})))) AS ?proxyUrl)
     `
 }
 

@@ -1,6 +1,6 @@
-import { ActionTree, MutationTree, GetterTree } from 'vuex'
+import { ActionTree, GetterTree, MutationTree } from 'vuex'
 import { api } from '@/api'
-import { RootState, Hierarchy } from '../types'
+import { Hierarchy, RootState } from '../types'
 
 export interface HierarchyState {
   hierarchy: null | Hierarchy
@@ -14,7 +14,12 @@ const getters: GetterTree<HierarchyState, RootState> = {}
 
 const actions: ActionTree<HierarchyState, RootState> = {
   async fetchHierarchy (context, id) {
-    context.commit('storeHierarchy', await api.fetchResource(id))
+    if (!context.rootState.hierarchies.collection) {
+      await context.dispatch('sharedDimensions/fetchEntrypoint', {}, { root: true })
+      await context.dispatch('hierarchies/fetchCollection', {}, { root: true })
+    }
+
+    context.commit('storeHierarchy', await api.fetchResource(id.replaceAll('!!', '/')))
   },
 
   reset (context) {
