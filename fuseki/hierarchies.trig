@@ -9,10 +9,6 @@ base <https://ld.admin.ch/cube/dimension/hierarchy/>
 
 <ch-canton-station> a void:rootResource .
 
-<hierarchies> a void:Dataset .
-<https://lindas.admin.ch/cube/dimension> void:inDataset <hierarchies> .
-<http://example.com/external-hierarchies> void:inDataset <hierarchies> .
-
 graph <https://lindas.admin.ch/cube/dimension> {
   <ch-canton-station> a meta:Hierarchy, hydra:Resource, md:Hierarchy ;
     schema:name "CH - Canton - District" ;
