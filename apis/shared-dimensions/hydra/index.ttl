@@ -1,3 +1,4 @@
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
 BASE <urn:hydra-box:api>
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix schema: <http://schema.org/> .
@@ -41,8 +42,9 @@ md:SharedDimensions
   rdfs:subClassOf hydra:Collection ;
   hydra:supportedOperation
     [
-      a hydra:Operation ;
+      a hydra:Operation, schema:DownloadAction ;
       hydra:method "GET" ;
+      hydra:expects <dimension/_shape/shared-dimension-search> ;
       code:implementedBy
         [
           a code:EcmaScript ;
@@ -51,7 +53,7 @@ md:SharedDimensions
       hydra-box:variables
         [
           a hydra:IriTemplate ;
-          hydra:template "/_term-sets{?q,pageSize,page}" ;
+          hydra:template "/_term-sets{?q,pageSize,page,includeDeprecated}" ;
           hydra:mapping
             [
               a hydra:IriTemplateMapping ;
@@ -67,6 +69,11 @@ md:SharedDimensions
               a hydra:IriTemplateMapping ;
               hydra:property hydra:pageIndex ;
               hydra:variable "page" ;
+            ],
+            [
+              a hydra:IriTemplateMapping ;
+              hydra:property owl:deprecated ;
+              hydra:variable "includeDeprecated" ;
             ] ;
         ] ;
     ], [
@@ -85,6 +92,7 @@ md:SharedDimensions
 
 <dimension/_shape/shared-dimension-create> a sh:NodeShape, sh:Shape .
 <dimension/_shape/shared-dimension-update> a sh:NodeShape, sh:Shape .
+<dimension/_shape/shared-dimension-search> a sh:NodeShape, sh:Shape .
 
 md:Hierarchies
   a hydra:Class ;
@@ -320,6 +328,3 @@ md:SharedDimensionTerm
         ] ;
     ] ;
 .
-
-<dimension/_shape/shared-dimension-term-create> a sh:Shape .
-<dimension/_shape/shared-dimension-term-update> a sh:Shape .

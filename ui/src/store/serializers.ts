@@ -24,7 +24,7 @@ import { clone } from '@/store/searchParams'
 
 export const displayLanguage = ['en', 'de', 'fr', '']
 
-export function serializeProjectsCollection (collection: ProjectsCollection): ProjectsCollection {
+export function serializeCollection (collection: ProjectsCollection): ProjectsCollection {
   return Object.freeze({
     ...serializeResource(collection),
     searchParams: clone(collection.pointer),

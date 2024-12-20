@@ -30,10 +30,11 @@ export default class implements SharedDimensionsStore {
     const { constructQuery } = await shapeToQuery()
     const query = constructQuery(shape, {
       focusNode: term,
-    }).FROM(this.graph)
+    })
 
-    const quads = await query.execute(this.client, {
+    const quads = await this.client.query.construct(query, {
       operation: 'postDirect',
+      defaultGraphUri: [this.graph],
     })
     return clownface({
       dataset: $rdf.dataset(quads),

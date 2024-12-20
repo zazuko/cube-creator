@@ -1,5 +1,5 @@
 import path from 'path'
-import type { Quad, Stream, Term } from '@rdfjs/types'
+import type { Quad, Stream, Term, Literal } from '@rdfjs/types'
 import { hydra, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import $rdf from 'rdf-ext'
 import { toRdf } from 'rdf-literal'
@@ -17,9 +17,10 @@ interface GetSharedDimensions {
   freetextQuery?: string
   limit?: number
   offset?: number
+  includeDeprecated?: Literal
 }
 
-export async function getSharedDimensions(client: StreamClient, { freetextQuery = '', limit = 10, offset = 0 }: GetSharedDimensions = {}): Promise<Quad[]> {
+export async function getSharedDimensions(client: StreamClient, { freetextQuery = '', limit = 10, offset = 0, includeDeprecated }: GetSharedDimensions = {}): Promise<Quad[]> {
   const { constructQuery } = await shapeToQuery()
 
   const shape = await loadShape('dimensions-query-shape')
@@ -30,11 +31,12 @@ export async function getSharedDimensions(client: StreamClient, { freetextQuery 
     limit,
     offset,
     freetextQuery,
+    includeDeprecated,
     orderBy: schema.name,
   }))
   await rewriteTemplates(shape, variables)
 
-  const dataset = await $rdf.dataset().import(await constructQuery(shape).execute(client))
+  const dataset = await $rdf.dataset().import(await client.query.construct(constructQuery(shape)))
   clownface({ dataset })
     .has(rdf.type, schema.DefinedTermSet)
     .forEach(termSet => {
@@ -86,7 +88,7 @@ export async function getSharedTerms<C extends StreamClient | ParsingClient>({ s
   }
 
   const { constructQuery } = await shapeToQuery()
-  return constructQuery(shape).execute(client, {
+  return client.query.construct(constructQuery(shape), {
     operation: 'postDirect',
   }) as any
 }

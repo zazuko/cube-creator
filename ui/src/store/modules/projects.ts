@@ -1,9 +1,9 @@
 import { ActionTree, MutationTree, GetterTree } from 'vuex'
-import { api, rootURL } from '@/api'
+import { api } from '@/api'
 import { RootState } from '../types'
 import * as ns from '@cube-creator/core/namespace'
 import { Project, ProjectsCollection } from '@cube-creator/model'
-import { serializeProjectDetails, serializeProjectsCollection } from '../serializers'
+import { serializeProjectDetails, serializeCollection } from '../serializers'
 import { RdfResource } from 'alcaeus'
 
 export interface ProjectsState {
@@ -53,7 +53,7 @@ const actions: ActionTree<ProjectsState, RootState> = {
 
 const mutations: MutationTree<ProjectsState> = {
   storeCollection (state, collection) {
-    state.collection = collection ? serializeProjectsCollection(collection) : null
+    state.collection = collection ? serializeCollection(collection) : null
   },
 
   storeProjectDetails (state, { project, details }) {

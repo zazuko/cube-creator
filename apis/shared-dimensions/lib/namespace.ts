@@ -3,6 +3,7 @@ import env from './env'
 
 type Shapes = 'shape/shared-dimension-create'
 | 'shape/shared-dimension-update'
+| 'shape/shared-dimension-search'
 | 'shape/shared-dimension-term-create'
 | 'shape/shared-dimension-term-update'
 | 'shape/hierarchy-create'

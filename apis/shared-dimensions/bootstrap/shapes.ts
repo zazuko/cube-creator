@@ -11,6 +11,10 @@ const SharedDimensionUpdate = clownface({ dataset: $rdf.dataset() })
   .namedNode(shape('shape/shared-dimension-update'))
   .addOut(rdf.type, sh.NodeShape)
 
+const SharedDimensionSearch = clownface({ dataset: $rdf.dataset() })
+  .namedNode(shape('shape/shared-dimension-search'))
+  .addOut(rdf.type, sh.NodeShape)
+
 const SharedDimensionTermCreate = clownface({ dataset: $rdf.dataset() })
   .namedNode(shape('shape/shared-dimension-term-create'))
   .addOut(rdf.type, sh.NodeShape)
@@ -30,6 +34,7 @@ const HierarchyCreate = clownface({ dataset: $rdf.dataset() })
 export default [
   SharedDimensionCreate,
   SharedDimensionUpdate,
+  SharedDimensionSearch,
   SharedDimensionTermCreate,
   SharedDimensionTermUpdate,
   Hierarchy,

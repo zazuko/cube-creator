@@ -22,13 +22,18 @@
     </div>
     <div v-if="collection">
       <div class="panel-block is-flex is-justify-content-center">
-        <o-checkbox :model-value="showAll" @update:modelValue="toggleDisplay">
-          show deprecated
-        </o-checkbox>
+        <cc-hydra-operation-form
+          inline clearable
+          :operation.prop="operation"
+          :resource.prop="searchParams"
+          :shape.prop="shape"
+          @submit="onSearch"
+          submit-when-cleared
+        />
       </div>
       <div v-if="dimensions.length > 0" class="panel">
         <router-link
-          v-for="dimension in displayed"
+          v-for="dimension in dimensions"
           :key="dimension.id.value"
           :to="{ name: 'SharedDimension', params: { id: dimension.clientPath } }"
           class="panel-block"
@@ -59,7 +64,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, shallowRef } from 'vue'
 import PageContent from '@/components/PageContent.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import HydraOperationButton from '@/components/HydraOperationButton.vue'
@@ -68,6 +73,8 @@ import { mapGetters, mapState } from 'vuex'
 import LanguageSelect from '@/components/LanguageSelect.vue'
 import TermWithLanguage from '@/components/TermWithLanguage.vue'
 import { SharedDimension } from '@/store/types'
+import { useHydraForm } from '@/use-hydra-form'
+import { getRouteSearchParamsFromTemplatedOperation } from '@/router'
 
 export default defineComponent({
   name: 'CubeProjectsView',
@@ -80,15 +87,23 @@ export default defineComponent({
     LanguageSelect
   },
 
-  data () {
-    return {
-      showAll: false
-    }
-  },
-
   async mounted (): Promise<void> {
     await this.$store.dispatch('sharedDimensions/fetchEntrypoint')
     await this.$store.dispatch('sharedDimensions/fetchCollection')
+
+    this.operation = this.collection.actions.get
+    this.searchParams = this.collection.searchParams
+  },
+
+  setup () {
+    const operation = shallowRef()
+
+    const form = useHydraForm(operation)
+
+    return {
+      ...form,
+      searchParams: shallowRef()
+    }
   },
 
   computed: {
@@ -101,12 +116,11 @@ export default defineComponent({
     ...mapGetters('sharedDimensions', {
       dimensions: 'dimensions',
     }),
-    displayed (): SharedDimension[] {
-      if (this.showAll) { return this.dimensions }
+  },
 
-      return this.dimensions
-        .filter((dimension: any) => !dimension.deprecated)
-    },
+  async beforeRouteUpdate (to) {
+    await this.$store.dispatch('sharedDimensions/fetchCollection', to.query)
+    this.searchParams = this.collection.searchParams
   },
 
   methods: {
@@ -114,8 +128,12 @@ export default defineComponent({
       this.$store.dispatch('app/selectLanguage', language)
     },
 
-    toggleDisplay () {
-      this.showAll = !this.showAll
+    onSearch (e: CustomEvent) {
+      if (this.operation && e.detail?.value) {
+        this.$router.push({
+          query: getRouteSearchParamsFromTemplatedOperation(this.operation, e.detail?.value),
+        })
+      }
     }
   }
 })
@@ -124,5 +142,9 @@ export default defineComponent({
 <style scoped>
 .abbreviations span {
   margin-right: 20px
+}
+
+cc-hydra-operation-form {
+  width: 100%;
 }
 </style>

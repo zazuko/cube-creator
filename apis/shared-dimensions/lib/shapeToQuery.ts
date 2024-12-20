@@ -2,7 +2,7 @@ import onetime from 'onetime'
 import { md } from '@cube-creator/core/namespace'
 import { AnyPointer, GraphPointer } from 'clownface'
 import { isGraphPointer } from 'is-graph-pointer'
-import { hydra } from '@tpluscode/rdf-ns-builders'
+import { hydra, sh } from '@tpluscode/rdf-ns-builders'
 import { Parameters, PropertyShape } from '@hydrofoil/shape-to-query/model/constraint/ConstraintComponent'
 import evalTemplateLiteral from 'rdf-loader-code/evalTemplateLiteral.js'
 import namespace from '@rdfjs/namespace'
@@ -58,11 +58,13 @@ export async function rewriteTemplates(shape: AnyPointer, variables: Map<string,
         return
       }
 
-      const value = variables.get(variableName) as any
+      const value: any = variables.get(variableName) || templateNode.out(sh.defaultValue).term
 
       ;[...shape.dataset.match(null, null, templateNode.term)].forEach(quad => {
         shape.dataset.delete(quad)
-        shape.dataset.add($rdf.quad(quad.subject, quad.predicate, value, quad.graph))
+        if (value) {
+          shape.dataset.add($rdf.quad(quad.subject, quad.predicate, value, quad.graph))
+        }
       })
 
       templateNode.deleteOut()
