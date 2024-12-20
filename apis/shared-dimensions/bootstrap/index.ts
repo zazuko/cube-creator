@@ -8,7 +8,7 @@ import { store } from '../lib/store'
 import { terms, termSets, exportSet } from './termSetCollections'
 import { entrypoint } from './entrypoint'
 import shapes from './shapes'
-import { hierarchies } from './hierarchies'
+import { hierarchies, externalHierarchy } from './hierarchies'
 
 export interface BootstrappedResourceFactory {
   (term: string): GraphPointer<NamedNode>
@@ -21,6 +21,7 @@ const resources = [
   terms(pointerFactory),
   termSets(pointerFactory),
   hierarchies(pointerFactory),
+  externalHierarchy(pointerFactory),
   exportSet(pointerFactory),
   entrypoint(pointerFactory, ns),
   ...shapes,

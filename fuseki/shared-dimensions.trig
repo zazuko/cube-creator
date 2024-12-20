@@ -37,6 +37,29 @@ graph <http://example.com/dimension/cantons> {
     schema:inDefinedTermSet <http://example.com/dimension/cantons> ;
 }
 
+<http://example.com/dimension/bundeslander> void:inDataset <shared-dimensions> .
+graph <http://example.com/dimension/bundeslander> {
+  <http://example.com/dimension/bundeslander>
+    a schema:DefinedTermSet, meta:SharedDimension ;
+    schema:name "Bundesländer"@de, "Federal states"@en ;
+  .
+
+  <http://example.com/dimension/bundesland/BW>
+    a schema:DefinedTerm, <http://example.com/vocab#Bundesland> ;
+    schema:identifier "BW" ;
+    schema:containedInPlace <http://example.com/dimension/countries/Germany> ;
+    schema:name "Baden-Württemberg"@de, "Baden-Württemberg"@en ;
+    schema:inDefinedTermSet <http://example.com/dimension/bundeslander> ;
+  .
+
+  <http://example.com/dimension/bundesland/BY>
+    a schema:DefinedTerm, <http://example.com/vocab#Bundesland> ;
+    schema:identifier "BY" ;
+    schema:containedInPlace <http://example.com/dimension/countries/Germany> ;
+    schema:name "Bayern"@de, "Bavaria"@en ;
+    schema:inDefinedTermSet <http://example.com/dimension/bundeslander> ;
+}
+
 <http://example.com/dimension/districts> void:inDataset <shared-dimensions> .
 graph <http://example.com/dimension/districts> {
   <http://example.com/dimension/districts>
@@ -105,6 +128,14 @@ graph <http://example.com/dimension/countries> {
     schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
     schema:identifier "PL" ;
     schema:name "Poland"@en, "Polen"@de, "Pologne"@fr, "Polonia"@it ;
+    schema:inDefinedTermSet <http://example.com/dimension/countries> ;
+  .
+
+  <http://example.com/dimension/countries/Germany>
+    a schema:DefinedTerm ;
+    schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
+    schema:identifier "DE" ;
+    schema:name "Germany"@en, "Deutschland"@de, "Allemagne"@fr, "Germania"@it ;
     schema:inDefinedTermSet <http://example.com/dimension/countries> ;
   .
 }
