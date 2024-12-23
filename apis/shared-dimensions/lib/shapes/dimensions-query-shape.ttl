@@ -25,32 +25,7 @@ prefix md: <https://cube-creator.zazuko.com/shared-dimensions/vocab#>
                       sh:orderBy [ sh:path [ s2q:variable "orderBy" ] ] ;
                       sh:nodes
                         [
-                          sh:filterShape
-                            [
-                              sh:property
-                                [
-                                  sh:path schema:name ;
-                                  sh:pattern
-                                    [
-                                      s2q:template "^${freetextQuery}" ;
-                                    ] ;
-                                  sh:flags "i" ;
-                                ] ;
-                              sh:property
-                                [
-                                  sh:path rdf:type ;
-                                  sh:hasValue schema:DefinedTermSet, meta:SharedDimension ;
-                                ] ;
-                              sh:expression
-                                [
-                                  sh:deactivated [ s2q:variable "includeDeprecated" ; sh:defaultValue false ] ;
-                                  sparql:or
-                                    (
-                                      [ sparql:not ( [ sparql:bound ( _:validThrough ) ] ) ]
-                                      [ sparql:gt ( _:validThrough [ sparql:now () ] ) ]
-                                    ) ;
-                                ] ;
-                            ] ;
+                          sh:filterShape _:FilterShape ;
                         ] ;
                     ] ;
                 ] ;
@@ -115,5 +90,35 @@ _:validThrough
   s2q:optional
     [
       sh:path schema:validThrough ;
+    ] ;
+.
+
+_:FilterShape
+  sh:property
+    [
+      sh:path schema:name ;
+      sh:pattern
+        [
+          s2q:template "^${freetextQuery}" ;
+        ] ;
+      sh:flags "i" ;
+    ] ;
+  sh:property
+    [
+      sh:path rdf:type ;
+      sh:hasValue schema:DefinedTermSet, meta:SharedDimension ;
+    ] ;
+  sh:expression
+    [
+      sh:deactivated
+        [
+          s2q:variable "includeDeprecated" ;
+          sh:defaultValue false
+        ] ;
+      sparql:or
+        (
+          [ sparql:not ( [ sparql:bound ( _:validThrough ) ] ) ]
+          [ sparql:gt ( _:validThrough [ sparql:now () ] ) ]
+        ) ;
     ] ;
 .

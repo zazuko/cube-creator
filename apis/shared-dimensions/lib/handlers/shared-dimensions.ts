@@ -37,7 +37,7 @@ export const get = asyncMiddleware(async (req, res, next) => {
 
   const collection = getCollection({
     view: $rdf.namedNode(req.absoluteUrl()),
-    memberQuads: await getSharedDimensions(streamClient, queryParams),
+    data: await getSharedDimensions(streamClient, queryParams),
     collectionType: ns.md.SharedDimensions,
     memberType: schema.DefinedTermSet,
     collection: req.hydra.resource.term,
@@ -96,7 +96,7 @@ export const getTerms = asyncMiddleware(async (req, res, next) => {
   }
 
   const collection = getCollection({
-    memberQuads: await getSharedTerms(queryParams, parsingClient),
+    data: await getSharedTerms(queryParams, parsingClient),
     memberType: schema.DefinedTerm,
     collectionType: ns.md.SharedDimensionTerms,
     collection: termsCollectionId(sharedDimensions, queryParams.freetextQuery),

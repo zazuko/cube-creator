@@ -52,6 +52,7 @@
           </div>
           <shared-dimension-tags :dimension="dimension" />
         </router-link>
+        <o-pagination simple total="20" per-page="20" />
       </div>
       <p v-else class="has-text-grey">
         No shared dimension yet
@@ -84,7 +85,7 @@ export default defineComponent({
     LoadingBlock,
     HydraOperationButton,
     SharedDimensionTags,
-    LanguageSelect
+    LanguageSelect,
   },
 
   async mounted (): Promise<void> {

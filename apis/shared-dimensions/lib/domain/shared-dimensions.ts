@@ -11,6 +11,7 @@ import { ParsingClient } from 'sparql-http-client/ParsingClient'
 import { md } from '@cube-creator/core/namespace'
 import env from '../env'
 import shapeToQuery, { rewriteTemplates } from '../shapeToQuery'
+import { CollectionData } from '../handlers/collection'
 import { getDynamicProperties } from './shared-dimension'
 
 interface GetSharedDimensions {
@@ -20,7 +21,7 @@ interface GetSharedDimensions {
   includeDeprecated?: Literal
 }
 
-export async function getSharedDimensions(client: StreamClient, { freetextQuery = '', limit = 10, offset = 0, includeDeprecated }: GetSharedDimensions = {}): Promise<Quad[]> {
+export async function getSharedDimensions(client: StreamClient, { freetextQuery = '', limit = 10, offset = 0, includeDeprecated }: GetSharedDimensions = {}): Promise<CollectionData<Quad[]>> {
   const { constructQuery } = await shapeToQuery()
 
   const shape = await loadShape('dimensions-query-shape')
@@ -44,7 +45,10 @@ export async function getSharedDimensions(client: StreamClient, { freetextQuery 
       termSet.addOut(md.terms, $rdf.namedNode(`${MANAGED_DIMENSIONS_BASE}dimension/_terms?dimension=${termSet.value}`))
     })
 
-  return dataset.toArray()
+  return {
+    members: dataset,
+    totalItems: dataset.match(null, rdf.type, schema.DefinedTermSet).length,
+  }
 }
 
 interface GetSharedTerms {
@@ -55,7 +59,7 @@ interface GetSharedTerms {
   validThrough?: Date
 }
 
-export async function getSharedTerms<C extends StreamClient | ParsingClient>({ sharedDimensions, freetextQuery, validThrough, limit = 10, offset = 0 }: GetSharedTerms, client: C): Promise<C extends StreamClient ? Stream : Quad[]> {
+export async function getSharedTerms<C extends StreamClient | ParsingClient>({ sharedDimensions, freetextQuery, validThrough, limit = 10, offset = 0 }: GetSharedTerms, client: C): Promise<CollectionData<C extends StreamClient ? Stream : Quad[]>> {
   const shape = await loadShape('terms-query-shape')
 
   shape.addOut(sh.targetNode, sharedDimensions)
