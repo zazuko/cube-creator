@@ -1,5 +1,16 @@
 # @cube-creator/shared-dimensions-api
 
+## 3.3.0
+
+### Minor Changes
+
+- 48f3f2c: Added I14Y properties to Shared Dimensions (re https://gitlab.ldbar.ch/zazuko/misc/-/issues/195)
+- cb0abb1: Hierarchies can now exist in any graph in Lindas
+
+### Patch Changes
+
+- 2d4d9d1: Added `Contributors` to shared dimension
+
 ## 3.2.0
 
 ### Minor Changes
