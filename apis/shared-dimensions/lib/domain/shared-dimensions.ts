@@ -1,8 +1,8 @@
 import path from 'path'
-import type { Quad, Stream, Term, Literal } from '@rdfjs/types'
+import type { Quad, Stream, Term, Literal, NamedNode } from '@rdfjs/types'
 import { hydra, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import $rdf from 'rdf-ext'
-import { toRdf } from 'rdf-literal'
+import { toRdf, fromRdf } from 'rdf-literal'
 import { fromFile } from 'rdf-utils-fs'
 import clownface from 'clownface'
 import { isResource } from 'is-graph-pointer'
@@ -21,10 +21,11 @@ interface GetSharedDimensions {
   includeDeprecated?: Literal
 }
 
-export async function getSharedDimensions(client: StreamClient, { freetextQuery = '', limit = 10, offset = 0, includeDeprecated }: GetSharedDimensions = {}): Promise<CollectionData<Quad[]>> {
+export async function getSharedDimensions(client: StreamClient, { freetextQuery = '', limit = 10, offset = 0, includeDeprecated }: GetSharedDimensions = {}): Promise<CollectionData<Iterable<Quad>>> {
   const { constructQuery } = await shapeToQuery()
 
-  const shape = await loadShape('dimensions-query-shape')
+  const memberQueryShape = await loadShape('dimensions-query-shape', md.MembersQueryShape)
+  const totalQueryShape = await loadShape('dimensions-query-shape', md.CountQueryShape)
 
   const { MANAGED_DIMENSIONS_BASE } = env
   const variables = new Map(Object.entries({
@@ -35,9 +36,10 @@ export async function getSharedDimensions(client: StreamClient, { freetextQuery 
     includeDeprecated,
     orderBy: schema.name,
   }))
-  await rewriteTemplates(shape, variables)
+  await rewriteTemplates(memberQueryShape, variables)
+  await rewriteTemplates(totalQueryShape, variables)
 
-  const dataset = await $rdf.dataset().import(await client.query.construct(constructQuery(shape)))
+  const dataset = await $rdf.dataset().import(await client.query.construct(constructQuery(memberQueryShape)))
   clownface({ dataset })
     .has(rdf.type, schema.DefinedTermSet)
     .forEach(termSet => {
@@ -45,9 +47,13 @@ export async function getSharedDimensions(client: StreamClient, { freetextQuery 
       termSet.addOut(md.terms, $rdf.namedNode(`${MANAGED_DIMENSIONS_BASE}dimension/_terms?dimension=${termSet.value}`))
     })
 
+  const totalItems = clownface({
+    dataset: await $rdf.dataset().import(await client.query.construct(constructQuery(totalQueryShape))),
+  }).has(hydra.totalItems).out(hydra.totalItems).term as Literal
+
   return {
     members: dataset,
-    totalItems: dataset.match(null, rdf.type, schema.DefinedTermSet).length,
+    totalItems: fromRdf(totalItems),
   }
 }
 
@@ -97,12 +103,12 @@ export async function getSharedTerms<C extends StreamClient | ParsingClient>({ s
   }) as any
 }
 
-async function loadShape(shape: string) {
+async function loadShape(shape: string, shapeType: NamedNode = sh.NodeShape) {
   const dataset = await $rdf.dataset().import(fromFile(path.resolve(__dirname, `../shapes/${shape}.ttl`)))
 
   const ptr = clownface({
     dataset,
-  }).has(rdf.type, sh.NodeShape)
+  }).has(rdf.type, shapeType)
 
   if (!isResource(ptr)) {
     throw new Error('Expected a single blank node or named node')

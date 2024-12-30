@@ -115,7 +115,9 @@ type SharedDimensionsTerms =
   'Hierarchies' |
   'Hierarchy' |
   'Entrypoint' |
-  'FreeTextSearchConstraintComponent'
+  'FreeTextSearchConstraintComponent' |
+  'MembersQueryShape' |
+  'CountQueryShape'
 
 prefixes.view = 'https://cube.link/view/'
 

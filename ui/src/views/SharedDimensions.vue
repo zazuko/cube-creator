@@ -52,7 +52,13 @@
           </div>
           <shared-dimension-tags :dimension="dimension" />
         </router-link>
-        <o-pagination simple total="20" per-page="20" />
+        <o-pagination
+          simple
+          :current="page"
+          :total="collection.totalItems"
+          :per-page="pageSize"
+          @change="fetchPage"
+        />
       </div>
       <p v-else class="has-text-grey">
         No shared dimension yet
@@ -76,6 +82,7 @@ import TermWithLanguage from '@/components/TermWithLanguage.vue'
 import { SharedDimension } from '@/store/types'
 import { useHydraForm } from '@/use-hydra-form'
 import { getRouteSearchParamsFromTemplatedOperation } from '@/router'
+import { hydra } from '@tpluscode/rdf-ns-builders'
 
 export default defineComponent({
   name: 'CubeProjectsView',
@@ -94,6 +101,8 @@ export default defineComponent({
 
     this.operation = this.collection.actions.get
     this.searchParams = this.collection.searchParams
+    this.pageSize = this.searchParams.out(hydra.limit).value
+    this.page = parseInt(this.$router.currentRoute.value.query.page) || 1
   },
 
   setup () {
@@ -103,6 +112,8 @@ export default defineComponent({
 
     return {
       ...form,
+      page: 1,
+      pageSize: 0,
       searchParams: shallowRef()
     }
   },
@@ -122,6 +133,8 @@ export default defineComponent({
   async beforeRouteUpdate (to) {
     await this.$store.dispatch('sharedDimensions/fetchCollection', to.query)
     this.searchParams = this.collection.searchParams
+    this.pageSize = this.searchParams.out(hydra.limit).value
+    this.page = parseInt(to.query.page) || 1
   },
 
   methods: {
@@ -131,11 +144,34 @@ export default defineComponent({
 
     onSearch (e: CustomEvent) {
       if (this.operation && e.detail?.value) {
-        this.$router.push({
-          query: getRouteSearchParamsFromTemplatedOperation(this.operation, e.detail?.value),
-        })
+        this.page = 1
+        const query = {
+          ...getRouteSearchParamsFromTemplatedOperation(this.operation, e.detail?.value),
+          page: 1
+        }
+        this.$router.push({ query })
       }
-    }
+    },
+
+    nextPage () {
+      this.fetchPage(this.page + 1)
+    },
+
+    prevPage () {
+      this.fetchPage(this.page - 1)
+    },
+
+    fetchPage (page: number) {
+      if (this.operation) {
+        this.page = page
+        const query = {
+          ...getRouteSearchParamsFromTemplatedOperation(this.operation, this.searchParams),
+          page
+        }
+
+        this.$router.push({ query, })
+      }
+    },
   }
 })
 </script>

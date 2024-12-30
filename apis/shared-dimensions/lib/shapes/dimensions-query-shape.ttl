@@ -1,3 +1,4 @@
+PREFIX hydra: <http://www.w3.org/ns/hydra/core#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -8,7 +9,26 @@ PREFIX sparql: <http://datashapes.org/sparql#>
 prefix md: <https://cube-creator.zazuko.com/shared-dimensions/vocab#>
 
 [
-  a sh:NodeShape ;
+  a sh:NodeShape, md:CountQueryShape ;
+  sh:rule
+    [
+      sh:subject hydra:Collection ;
+      sh:predicate hydra:totalItems ;
+      sh:object
+        [
+          sh:count
+            [
+              sh:distinct
+                [
+                  sh:filterShape _:FilterShape ;
+                ] ;
+            ]
+        ] ;
+    ] ;
+] .
+
+[
+  a sh:NodeShape, md:MembersQueryShape ;
   sh:target
     [
       a s2q:NodeExpressionTarget ;

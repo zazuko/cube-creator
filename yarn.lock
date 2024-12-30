@@ -1566,10 +1566,10 @@
     rdf-loaders-registry "^0.2.0"
     sparql-http-client "^2.2.2"
 
-"@hydrofoil/shape-to-query@^0.13.2":
-  version "0.13.2"
-  resolved "https://registry.yarnpkg.com/@hydrofoil/shape-to-query/-/shape-to-query-0.13.2.tgz#475939fe9ec5a3c0bd316f6a32bfaf4caf32cf83"
-  integrity sha512-7w1wPexW0XDiF7WtRkQtqnZTcJvhYKW+2rNIbl9cqZqto3A/8aKT+Hm4OKM3WTOgmGDpyDwbtE/itu5LkjzoEA==
+"@hydrofoil/shape-to-query@^0.13.4":
+  version "0.13.4"
+  resolved "https://registry.yarnpkg.com/@hydrofoil/shape-to-query/-/shape-to-query-0.13.4.tgz#61ac73a33a1c8a34f6652a284ec7e2fdf5101b12"
+  integrity sha512-Q9GDAacePZZQkwnOxOD43BlkWBNDKr+VR05l3B8Q99D9gKYZ5AeF8kNDdH3za9LzES9Hc3hs/g0R8sM0Rz8WiQ==
   dependencies:
     "@hydrofoil/sparql-processor" "^0.1.2"
     "@tpluscode/rdf-ns-builders" ">=3.0.2"

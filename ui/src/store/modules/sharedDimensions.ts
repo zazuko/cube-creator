@@ -4,6 +4,7 @@ import { RootState } from '../types'
 import { cc, md } from '@cube-creator/core/namespace'
 import { Collection, RdfResource } from 'alcaeus'
 import { serializeCollection } from '@/store/serializers'
+import { schema } from '@tpluscode/rdf-ns-builders'
 
 export interface SharedDimensionsState {
   entrypoint: null | RdfResource
@@ -63,8 +64,12 @@ const mutations: MutationTree<SharedDimensionsState> = {
   },
 
   storeCollection (state, collection) {
-    state.collection = collection ? serializeCollection(collection) : null
+    state.collection = collection ? serializeCollection(collection, sortByName) : null
   },
+}
+
+function sortByName (l: RdfResource, r: RdfResource) {
+  return l.pointer.out(schema.name).value?.localeCompare(r.pointer.out(schema.name).value || '') || 0
 }
 
 export default {

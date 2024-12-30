@@ -7,7 +7,7 @@
     "@cube-creator/core": "1.0.0",
     "@cube-creator/express": "0.0.0",
     "@hydrofoil/labyrinth": "^0.4.2",
-    "@hydrofoil/shape-to-query": "^0.13.2",
+    "@hydrofoil/shape-to-query": "^0.13.4",
     "@rdfine/hydra": "^0.8.2",
     "@rdfine/rdfs": "^0.6.4",
     "@rdfine/schema": "^0.6.3",
