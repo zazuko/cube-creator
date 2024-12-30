@@ -4,6 +4,10 @@ import { rdf, schema } from '@tpluscode/rdf-ns-builders'
 import { Actions } from '@/api/mixins/ApiResource'
 
 export function findOperation (resource: RdfResource, idOrType: NamedNode): RuntimeOperation | null {
+  if (!resource.id.value.includes(window.APP_CONFIG.apiCoreBase)) {
+    return null
+  }
+
   const matches = resource.operations.filter(op => op.pointer.has(rdf.type, idOrType).values.length)
 
   if (matches.length > 1) {

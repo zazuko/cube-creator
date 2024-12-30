@@ -114,6 +114,7 @@ type SharedDimensionsTerms =
   'hierarchies' |
   'Hierarchies' |
   'Hierarchy' |
+  'HierarchyProxy' |
   'Entrypoint' |
   'FreeTextSearchConstraintComponent' |
   'MembersQueryShape' |

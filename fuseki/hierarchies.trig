@@ -29,3 +29,19 @@ graph <https://lindas.admin.ch/cube/dimension> {
       ] ;
   .
 }
+
+graph <http://example.com/external-hierarchies> {
+  <http://example.com/hierarchy/de-bundesland> a meta:Hierarchy, hydra:Resource, md:Hierarchy ;
+    schema:name "DE - Bundesland" ;
+    md:sharedDimension <http://example.com/dimension/countries> ;
+    meta:hierarchyRoot <http://example.com/dimension/countries/Germany> ;
+    meta:nextInHierarchy
+      [
+        schema:name "Bundesland" ;
+        sh:path
+          [
+            sh:inversePath schema:containedInPlace ;
+          ] ;
+      ] ;
+  .
+}

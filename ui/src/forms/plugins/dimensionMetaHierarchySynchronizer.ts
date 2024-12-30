@@ -9,7 +9,7 @@ import { SetObjectParams } from '@hydrofoil/shaperone-core/models/forms/reducers
 import { PropertyState } from '@hydrofoil/shaperone-core/models/forms'
 
 function copyGraph (from: GraphPointer, to: GraphPointer) {
-  const quads = from.dataset.match(null, null, null, from.term)
+  const quads = from.dataset.match(null, null, null, from._context[0].graph)
 
   function replace (term: Term) {
     return term.equals(from.term) ? to.term : term

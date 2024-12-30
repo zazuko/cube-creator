@@ -300,6 +300,33 @@ md:Hierarchy
     ] ;
 .
 
+md:HierarchyProxy
+  a hydra:Class ;
+  hydra:supportedOperation
+    [
+      a hydra:Operation ;
+      hydra:method "GET" ;
+      code:implementedBy
+        [
+          a code:EcmaScript ;
+          code:link <file:handlers/hierarchy#getExternal> ;
+        ] ;
+      hydra-box:variables
+        [
+          a hydra:IriTemplate ;
+          hydra:template "/_hierarchy/proxy{?id}" ;
+          hydra:variableRepresentation hydra:ExplicitRepresentation ;
+          hydra:mapping
+            [
+              a hydra:IriTemplateMapping ;
+              hydra:property schema:identifier ;
+              hydra:required true ;
+              hydra:variable "id" ;
+            ] ;
+        ] ;
+    ] ;
+.
+
 <dimension/_shape/hierarchy> a sh:Shape .
 <dimension/_shape/hierarchy-create> a sh:Shape .
 
