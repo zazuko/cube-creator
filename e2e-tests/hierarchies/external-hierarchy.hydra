@@ -1,0 +1,23 @@
+PREFIX md: <https://cube-creator.zazuko.com/shared-dimensions/vocab#>
+PREFIX hydra: <http://www.w3.org/ns/hydra/core#>
+PREFIX schema: <http://schema.org/>
+PREFIX qudt: <http://qudt.org/schema/qudt/>
+PREFIX meta: <https://cube.link/meta/>
+PREFIX sh: <http://www.w3.org/ns/shacl#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+
+ENTRYPOINT "dimension/_hierarchy/proxy?id=http://example.com/hierarchy/de-bundesland"
+
+HEADERS {
+  x-user "john-doe"
+  x-permission "pipelines:write"
+  x-email "john@doe.tech"
+}
+
+With Class md:Hierarchy {
+    Expect Property schema:name "DE - Bundesland"
+    Expect Property meta:nextInHierarchy {
+        Expect Property schema:name "Bundesland"
+        Expect Property sh:path
+    }
+}
