@@ -32,7 +32,7 @@
     "hydra-box-middleware-shacl": "1.1.0",
     "is-graph-pointer": "^1.2.2",
     "middleware-async": "^1.2.7",
-    "nanoid": "^3.1.23",
+    "nanoid": "^3.3.8",
     "once": "^1.4.0",
     "onetime": "^5",
     "parse-prefer-header": "^1.0.0",
