@@ -3,7 +3,7 @@ import { expect } from 'chai'
 import $rdf from 'rdf-ext'
 import { mdClients } from '@cube-creator/testing/lib'
 import { insertTestDimensions } from '@cube-creator/testing/lib/seedData'
-import { rdf, rdfs, schema } from '@tpluscode/rdf-ns-builders'
+import { rdf, rdfs, schema, xsd } from '@tpluscode/rdf-ns-builders'
 import { getSharedDimensions, getSharedTerms } from '../../../lib/domain/shared-dimensions'
 
 describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimensions @SPARQL', () => {
@@ -24,7 +24,7 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimensions @SPAR
       // then
       const termSets = [...dataset.match(null, rdf.type, schema.DefinedTermSet)].map(({ subject }) => subject)
       expect(termSets).to.deep.contain.members([
-        $rdf.namedNode('http://example.com/dimension/colors'),
+        $rdf.namedNode('https://ld.admin.ch/cube/dimension/technologies'),
         $rdf.namedNode('http://example.com/dimension/countries'),
         $rdf.namedNode('http://example.com/dimension/chemicals'),
       ])
@@ -33,7 +33,27 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimensions @SPAR
     it('returns filtered by name', async () => {
       // given
       const collectionData = await getSharedDimensions(mdClients.streamClient, {
+        freetextQuery: 'techno',
+      })
+
+      // when
+      const dataset = $rdf.dataset([
+        ...collectionData.members,
+      ])
+
+      // then
+      const termSets = [...dataset.match(null, rdf.type, schema.DefinedTermSet)].map(({ subject }) => subject)
+      expect(termSets).to.have.length(1)
+      expect(termSets).to.deep.contain.members([
+        $rdf.namedNode('https://ld.admin.ch/cube/dimension/technologies'),
+      ])
+    })
+
+    it('returns filtered to include deprecated', async () => {
+      // given
+      const collectionData = await getSharedDimensions(mdClients.streamClient, {
         freetextQuery: 'colors',
+        includeDeprecated: $rdf.literal('true', xsd.boolean),
       })
 
       // when
