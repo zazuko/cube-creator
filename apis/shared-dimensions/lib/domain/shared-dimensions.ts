@@ -98,9 +98,11 @@ export async function getSharedTerms<C extends StreamClient | ParsingClient>({ s
   }
 
   const { constructQuery } = await shapeToQuery()
-  return client.query.construct(constructQuery(shape), {
-    operation: 'postDirect',
-  }) as any
+  return {
+    members: await client.query.construct(constructQuery(shape), {
+      operation: 'postDirect',
+    }) as any,
+  }
 }
 
 async function loadShape(shape: string, shapeType: NamedNode = sh.NodeShape) {

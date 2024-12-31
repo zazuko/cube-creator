@@ -5,7 +5,7 @@ import { hydra, rdf } from '@tpluscode/rdf-ns-builders'
 
 export interface CollectionData<M extends Stream | Iterable<Quad> = Stream | Iterable<Quad>> {
   members: M
-  totalItems: number
+  totalItems?: number
 }
 
 interface CollectionHandler {
@@ -25,7 +25,12 @@ export function getCollection({ collection, view, data: { members: memberQuads, 
   graph.node(collection)
     .addOut(rdf.type, [hydra.Collection, collectionType])
     .addOut(hydra.member, members)
-    .addOut(hydra.totalItems, totalItems)
+
+  if (totalItems) {
+    graph.node(collection).addOut(hydra.totalItems, totalItems)
+  } else {
+    graph.node(collection).addOut(hydra.totalItems, members.terms.length)
+  }
 
   if (view) {
     graph.node(view)
