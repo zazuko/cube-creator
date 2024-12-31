@@ -13,9 +13,12 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimensions @SPAR
 
   describe('getSharedDimensions', () => {
     it('returns from all graphs', async () => {
+      // given
+      const collectionData = await getSharedDimensions(mdClients.streamClient)
+
       // when
       const dataset = $rdf.dataset([
-        ...await getSharedDimensions(mdClients.streamClient),
+        ...collectionData.members,
       ])
 
       // then
@@ -28,11 +31,14 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimensions @SPAR
     })
 
     it('returns filtered by name', async () => {
+      // given
+      const collectionData = await getSharedDimensions(mdClients.streamClient, {
+        freetextQuery: 'colors',
+      })
+
       // when
       const dataset = $rdf.dataset([
-        ...await getSharedDimensions(mdClients.streamClient, {
-          freetextQuery: 'colors',
-        }),
+        ...collectionData.members,
       ])
 
       // then
@@ -51,10 +57,11 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimensions @SPAR
         sharedDimensions: [$rdf.namedNode('http://example.com/dimension/colors')],
         freetextQuery: undefined,
       }
+      const collectionData = await getSharedTerms(search, mdClients.streamClient)
 
       // when
       const dataset = await $rdf.dataset()
-        .import(await getSharedTerms(search, mdClients.streamClient))
+        .import(collectionData.members)
 
       // then
       expect(dataset.match(null, rdf.type, schema.DefinedTerm))
@@ -82,10 +89,11 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimensions @SPAR
         sharedDimensions: [$rdf.namedNode('https://ld.admin.ch/cube/dimension/technologies')],
         freetextQuery: 'sparql',
       }
+      const collectionData = await getSharedTerms(search, mdClients.streamClient)
 
       // when
       const dataset = await $rdf.dataset()
-        .import(await getSharedTerms(search, mdClients.streamClient))
+        .import(collectionData.members)
 
       // then
       expect(dataset.match(null, rdf.type, schema.DefinedTerm))
@@ -118,10 +126,11 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimensions @SPAR
         freetextQuery: undefined,
         limit: 1,
       }
+      const collectionData = await getSharedTerms(search, mdClients.streamClient)
 
       // when
       const dataset = await $rdf.dataset()
-        .import(await getSharedTerms(search, mdClients.streamClient))
+        .import(collectionData.members)
 
       // then
       expect(dataset.match(null, rdf.type, schema.DefinedTerm))
@@ -134,9 +143,11 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimensions @SPAR
         sharedDimensions: [$rdf.namedNode('http://example.com/dimension/colors')],
         freetextQuery: 'r',
       }
+      const collectionData = await getSharedTerms(search, mdClients.streamClient)
+
       // when
       const dataset = await $rdf.dataset()
-        .import(await getSharedTerms(search, mdClients.streamClient))
+        .import(collectionData.members)
 
       // then
       const [term, ...more] = dataset.match(null, rdf.type, schema.DefinedTerm)
@@ -151,9 +162,11 @@ describe('@cube-creator/shared-dimensions-api/lib/domain/shared-dimensions @SPAR
         freetextQuery: undefined,
         validThrough: new Date(Date.parse('2021-04-15')),
       }
+      const collectionData = await getSharedTerms(search, mdClients.streamClient)
+
       // when
       const dataset = await $rdf.dataset()
-        .import(await getSharedTerms(search, mdClients.streamClient))
+        .import(collectionData.members)
 
       // then
       const terms = [...dataset.match(null, rdf.type, schema.DefinedTerm)].map(({ subject }) => subject)

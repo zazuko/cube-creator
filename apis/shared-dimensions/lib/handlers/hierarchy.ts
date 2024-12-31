@@ -56,7 +56,7 @@ export const getExternal = asyncMiddleware(async (req, res) => {
   })
 
   const hierarchy = clownface({
-    dataset: $rdf.dataset(await query.execute(parsingClient)),
+    dataset: $rdf.dataset(await parsingClient.query.construct(query)),
   }).namedNode(url)
   ensureEndpoint(hierarchy)
 

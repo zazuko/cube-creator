@@ -27,7 +27,7 @@ export const get = asyncMiddleware(async (req, res, next) => {
     offset,
   }
   const collection = await getCollection({
-    memberQuads: await getHierarchies(queryParams).execute(parsingClient.query),
+    data: await getHierarchies(queryParams, parsingClient),
     collectionType: md.Hierarchies,
     memberType: md.Hierarchy,
     collection: req.hydra.resource.term,
