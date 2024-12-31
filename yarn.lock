@@ -3009,11 +3009,6 @@
   dependencies:
     xmlchars "^2.2.0"
 
-"@sec-ant/readable-stream@^0.4.1":
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/@sec-ant/readable-stream/-/readable-stream-0.4.1.tgz#60de891bb126abfdc5410fdc6166aca065f10a0c"
-  integrity sha512-831qok9r2t8AlxLko40y2ebgSDhenenCatLVeW/uBtnHPyhHOvG0C7TvfgecV+wHzIm5KUICgzmVpWS+IMEAeg==
-
 "@sentry/browser@6.17.9":
   version "6.17.9"
   resolved "https://registry.yarnpkg.com/@sentry/browser/-/browser-6.17.9.tgz#62eac0cc3c7c788df6b4677fe9882d3974d84027"
@@ -4961,10 +4956,10 @@
     "@zazuko/env" "^2.1.1"
     "@zazuko/rdf-utils-fs" "^3.3.0"
 
-"@zazuko/env@^2.1.1", "@zazuko/env@^2.4.2":
-  version "2.4.2"
-  resolved "https://registry.yarnpkg.com/@zazuko/env/-/env-2.4.2.tgz#a9c3df642e3567f681ad23c3635cafa6bb2fb85d"
-  integrity sha512-mq3YTIs9dmXh2nyS2Hm94bNRHuItlgrp+5QS1zG6ClSpmgztKhMYNRhssmZvd0kBcpYZSV4+EogI/QxrkCg6ww==
+"@zazuko/env@2.2.0", "@zazuko/env@^2.1.1", "@zazuko/env@^2.4.2":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@zazuko/env/-/env-2.2.0.tgz#090ca10466113428483bfffeedf981b0b411d8e5"
+  integrity sha512-73KwqrckawQTmoPAizlkHIRpsqFOaR31LA4XEZUnLM6CbGF/DhmbclfhMtg8GBAiZLIVdgXj6GZAW0lUmA4knQ==
   dependencies:
     "@rdfjs/data-model" "^2.0.1"
     "@rdfjs/dataset" "^2.0.1"
@@ -4977,7 +4972,7 @@
     "@zazuko/env-core" "^1.1.2"
     "@zazuko/prefixes" "^2.1.0"
     clownface "^2.0.2"
-    get-stream "^9.0.1"
+    get-stream "^8.0.1"
     rdf-dataset-ext "^1.1.0"
 
 "@zazuko/node-fetch@^2.6.6":
@@ -8930,14 +8925,6 @@ get-stream@^8.0.1:
   resolved "https://registry.yarnpkg.com/get-stream/-/get-stream-8.0.1.tgz#def9dfd71742cd7754a7761ed43749a27d02eca2"
   integrity sha512-VaUJspBffn/LMCJVoMvSAdmscJyS1auj5Zulnn5UoYcY531UWmdwhRWkcGKnGU93m5HSXP9LP2usOryrBtQowA==
 
-get-stream@^9.0.1:
-  version "9.0.1"
-  resolved "https://registry.yarnpkg.com/get-stream/-/get-stream-9.0.1.tgz#95157d21df8eb90d1647102b63039b1df60ebd27"
-  integrity sha512-kVCxPF3vQM/N0B1PmoqVUqgHP+EeVjmZSQn+1oCRPxd2P21P2F19lIgbR3HBosbB1PUhOAoctJnfEn2GbN2eZA==
-  dependencies:
-    "@sec-ant/readable-stream" "^0.4.1"
-    is-stream "^4.0.1"
-
 get-symbol-description@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/get-symbol-description/-/get-symbol-description-1.0.0.tgz#7fdb81c900101fbd564dd5f1a30af5aadc1e58d6"
@@ -9885,11 +9872,6 @@ is-stream@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/is-stream/-/is-stream-3.0.0.tgz#e6bfd7aa6bef69f4f472ce9bb681e3e57b4319ac"
   integrity sha512-LnQR4bZ9IADDRSkvpqMGvt/tEJWclzklNgSw48V5EAaAeDd6qGvN8ei6k5p0tvxSR171VmGyHuTiAOfxAbr8kA==
-
-is-stream@^4.0.1:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/is-stream/-/is-stream-4.0.1.tgz#375cf891e16d2e4baec250b85926cffc14720d9b"
-  integrity sha512-Dnz92NInDqYckGEUJv689RbRiTSEHCQ7wOVeALbkOz999YpqT46yMRIGtSNl2iCL1waAZSx40+h59NV/EwzV/A==
 
 is-string@^1.0.5, is-string@^1.0.7:
   version "1.0.7"
