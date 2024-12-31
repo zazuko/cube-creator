@@ -102,7 +102,7 @@ export default defineComponent({
     this.operation = this.collection.actions.get
     this.searchParams = this.collection.searchParams
     this.pageSize = this.searchParams.out(hydra.limit).value
-    this.page = parseInt(this.$router.currentRoute.value.query.page) || 1
+    this.page = parseInt(this.$router.currentRoute.value.query.page as any) || 1
   },
 
   setup () {
@@ -134,7 +134,7 @@ export default defineComponent({
     await this.$store.dispatch('sharedDimensions/fetchCollection', to.query)
     this.searchParams = this.collection.searchParams
     this.pageSize = this.searchParams.out(hydra.limit).value
-    this.page = parseInt(to.query.page) || 1
+    this.page = parseInt(to.query.page as any) || 1
   },
 
   methods: {
