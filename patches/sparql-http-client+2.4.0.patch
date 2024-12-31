@@ -143,3 +143,46 @@ index 5aa6bfc..1538933 100644
    }
  }
  
+diff --git a/node_modules/sparql-http-client/StreamQuery.js b/node_modules/sparql-http-client/StreamQuery.js
+index 163b325..bbbe20d 100644
+--- a/node_modules/sparql-http-client/StreamQuery.js
++++ b/node_modules/sparql-http-client/StreamQuery.js
+@@ -27,8 +27,8 @@ class StreamQuery extends RawQuery {
+    * @param {'get'|'postUrlencoded'|'postDirect'} [init.operation='get']
+    * @return {Promise<boolean>}
+    */
+-  async ask (query, { headers, operation } = {}) {
+-    const res = await super.ask(query, { headers, operation })
++  async ask (query, { headers, operation, ...options } = {}) {
++    const res = await super.ask(query, { headers, operation, ...options })
+ 
+     await checkResponse(res)
+ 
+@@ -44,14 +44,14 @@ class StreamQuery extends RawQuery {
+    * @param {'get'|'postUrlencoded'|'postDirect'} [init.operation='get']
+    * @return {Promise<Stream>}
+    */
+-  async construct (query, { headers, operation } = {}) {
++  async construct (query, { headers, operation, ...options } = {}) {
+     headers = new this.endpoint.fetch.Headers(headers)
+ 
+     if (!headers.has('accept')) {
+       headers.set('accept', 'application/n-triples, text/turtle')
+     }
+ 
+-    const res = await super.construct(query, { headers, operation })
++    const res = await super.construct(query, { headers, operation, ...options })
+ 
+     await checkResponse(res)
+ 
+@@ -67,8 +67,8 @@ class StreamQuery extends RawQuery {
+    * @param {'get'|'postUrlencoded'|'postDirect'} [init.operation='get']
+    * @return {Promise<Stream>}
+    */
+-  async select (query, { headers, operation } = {}) {
+-    const res = await super.select(query, { headers, operation })
++  async select (query, { headers, operation, ...options } = {}) {
++    const res = await super.select(query, { headers, operation, ...options })
+ 
+     await checkResponse(res)
+ 
