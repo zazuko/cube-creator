@@ -60,7 +60,7 @@ export default class implements SharedDimensionsStore {
 
   async delete(id: NamedNode): Promise<void> {
     const shape = await this.getShape(id)
-    await (await this.deleteQuery(shape, id)).execute(this.client)
+    await this.client.query.update(await this.deleteQuery(shape, id))
   }
 
   private async deleteQuery(shape: GraphPointer, focusNode: NamedNode) {
