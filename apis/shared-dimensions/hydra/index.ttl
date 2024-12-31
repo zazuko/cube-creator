@@ -355,3 +355,6 @@ md:SharedDimensionTerm
         ] ;
     ] ;
 .
+
+<dimension/_shape/shared-dimension-term-create> a sh:Shape .
+<dimension/_shape/shared-dimension-term-update> a sh:Shape .
