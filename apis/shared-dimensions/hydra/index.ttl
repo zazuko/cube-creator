@@ -44,6 +44,7 @@ md:SharedDimensions
     [
       a hydra:Operation, schema:DownloadAction ;
       hydra:method "GET" ;
+      hydra:title "Search" ;
       hydra:expects <dimension/_shape/shared-dimension-search> ;
       code:implementedBy
         [
