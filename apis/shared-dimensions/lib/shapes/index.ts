@@ -45,6 +45,7 @@ function entry(id: NamedNode, init: (graph: AnyPointer) => Initializer<NodeShape
 export default new TermMap<NamedNode, ShapeFactory>([
   entry(shape['shape/shared-dimension-create'], sharedDimension.create),
   entry(shape['shape/shared-dimension-update'], sharedDimension.update),
+  entry(shape['shape/shared-dimension-search'], sharedDimension.search),
   entry(shape['shape/shared-dimension-term-create'], dimensionTerm.create),
   entry(shape['shape/shared-dimension-term-update'], dimensionTerm.update),
   entry(shape['shape/hierarchy-create'], hierarchy()),

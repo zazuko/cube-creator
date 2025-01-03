@@ -16,15 +16,15 @@ describe('Shared dimensions', () => {
 
     cy.contains('.button', 'Create shared dimension').click()
 
-    cy.contains('form-property', 'Identifier')
+    cy.get('.quickview').contains('form-property', 'Identifier')
       .find('input')
       .type(toIdentifier(dimensionName))
 
-    cy.contains('form-property', 'Name')
+    cy.get('.quickview').contains('form-property', 'Name')
       .find('input')
       .type(dimensionName)
 
-    cy.contains('form-property', 'Name')
+    cy.get('.quickview').contains('form-property', 'Name')
       .find('select')
       .select('en')
 

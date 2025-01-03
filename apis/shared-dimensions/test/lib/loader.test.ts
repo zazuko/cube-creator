@@ -5,6 +5,7 @@ import { INSERT } from '@tpluscode/sparql-builder'
 import { mdClients } from '@cube-creator/testing/lib'
 import namespace from '@rdfjs/namespace'
 import { hydra, schema, sh } from '@tpluscode/rdf-ns-builders'
+import { md } from '@cube-creator/core/namespace'
 import Loader from '../../lib/loader'
 
 const ex = namespace('http://example.com/')
@@ -12,7 +13,7 @@ const graph = ex('shared-dimensions')
 const testResources = INSERT.DATA`
 graph ${graph} {
   ${ex.foo}
-    a ${hydra.Resource} ;
+    a ${md.SharedDimension} ;
     ${schema.name} "Yes" ;
     ${ex.hidden} "foo" ;
   .
@@ -53,7 +54,7 @@ describe('shared-dimensions/lib/loader @SPARQL', () => {
       // then
       expect(resource.types).to.have.property('size', 1)
       expect([...resource.types]).to.deep.contain.members([
-        hydra.Resource,
+        md.SharedDimension,
       ])
     })
 

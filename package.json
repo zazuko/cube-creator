@@ -78,7 +78,8 @@
     ]
   },
   "resolutions": {
-    "@types/eslint": "^8"
+    "@types/eslint": "^8",
+    "@zazuko/env": "2.2.0"
   },
   "lint-staged": {
     "*.{js,ts,vue}": [

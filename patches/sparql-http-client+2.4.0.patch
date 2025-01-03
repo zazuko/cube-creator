@@ -1,0 +1,188 @@
+diff --git a/node_modules/sparql-http-client/Endpoint.js b/node_modules/sparql-http-client/Endpoint.js
+index 766b417..a9ee851 100644
+--- a/node_modules/sparql-http-client/Endpoint.js
++++ b/node_modules/sparql-http-client/Endpoint.js
+@@ -36,7 +36,7 @@ class Endpoint {
+    * @param {boolean} [options.update=false] if true, performs a SPARQL Update
+    * @return {Promise<Response>}
+    */
+-  async get (query, { headers, update = false } = {}) {
++  async get (query, { headers, update = false, defaultGraphUri = [], namedGraphUri = [] } = {}) {
+     let url = null
+ 
+     if (!update) {
+@@ -47,6 +47,13 @@ class Endpoint {
+       url.searchParams.append('update', query)
+     }
+ 
++    for (const uri of defaultGraphUri) {
++      url.searchParams.append('default-graph-uri', uri)
++    }
++    for (const uri of namedGraphUri) {
++      url.searchParams.append('named-graph-uri', uri)
++    }
++
+     return this.fetch(url.toString().replace(/\+/g, '%20'), {
+       method: 'GET',
+       headers: this.mergeHeaders(headers)
+@@ -61,7 +68,7 @@ class Endpoint {
+    * @param {boolean} [options.update=false] if true, performs a SPARQL Update
+    * @return {Promise<Response>}
+    */
+-  async postDirect (query, { headers, update = false } = {}) {
++  async postDirect (query, { headers, update = false, defaultGraphUri = [], namedGraphUri = [] } = {}) {
+     let url = null
+ 
+     if (!update) {
+@@ -76,6 +83,13 @@ class Endpoint {
+       headers.set('content-type', 'application/sparql-query; charset=utf-8')
+     }
+ 
++    for (const uri of defaultGraphUri) {
++      url.searchParams.append('default-graph-uri', uri)
++    }
++    for (const uri of namedGraphUri) {
++      url.searchParams.append('named-graph-uri', uri)
++    }
++
+     return this.fetch(url, {
+       method: 'POST',
+       headers,
+@@ -91,7 +105,7 @@ class Endpoint {
+    * @param {boolean} [options.update=false] if true, performs a SPARQL Update
+    * @return {Promise<Response>}
+    */
+-  async postUrlencoded (query, { headers, update = false } = {}) {
++  async postUrlencoded (query, { headers, update = false, defaultGraphUri = [], namedGraphUri = [] } = {}) {
+     let url = null
+     let body = null
+ 
+@@ -103,6 +117,13 @@ class Endpoint {
+       body = 'update=' + encodeURIComponent(query)
+     }
+ 
++    for (const uri of defaultGraphUri) {
++      url.searchParams.append('default-graph-uri', uri)
++    }
++    for (const uri of namedGraphUri) {
++      url.searchParams.append('named-graph-uri', uri)
++    }
++
+     headers = this.mergeHeaders(headers)
+ 
+     if (!headers.has('content-type')) {
+diff --git a/node_modules/sparql-http-client/RawQuery.js b/node_modules/sparql-http-client/RawQuery.js
+index 5aa6bfc..1538933 100644
+--- a/node_modules/sparql-http-client/RawQuery.js
++++ b/node_modules/sparql-http-client/RawQuery.js
+@@ -21,14 +21,14 @@ class RawQuery {
+    * @param {'get'|'postUrlencoded'|'postDirect'} [init.operation='get']
+    * @return {Promise<Response>}
+    */
+-  async ask (query, { headers, operation = 'get' } = {}) {
++  async ask (query, { headers, operation = 'get', ...options } = {}) {
+     headers = this.endpoint.mergeHeaders(headers)
+ 
+     if (!headers.has('accept')) {
+       headers.set('accept', 'application/sparql-results+json')
+     }
+ 
+-    return this.endpoint[operation](query, { headers })
++    return this.endpoint[operation](query, { headers, ...options })
+   }
+ 
+   /**
+@@ -41,14 +41,14 @@ class RawQuery {
+    * @param {'get'|'postUrlencoded'|'postDirect'} [init.operation='get']
+    * @return {Promise<Response>}
+    */
+-  async construct (query, { headers, operation = 'get' } = {}) {
++  async construct (query, { headers, operation = 'get', ...options } = {}) {
+     headers = new this.endpoint.fetch.Headers(headers)
+ 
+     if (!headers.has('accept')) {
+       headers.set('accept', 'application/n-triples')
+     }
+ 
+-    return this.endpoint[operation](query, { headers })
++    return this.endpoint[operation](query, { headers, ...options })
+   }
+ 
+   /**
+@@ -61,14 +61,14 @@ class RawQuery {
+    * @param {'get'|'postUrlencoded'|'postDirect'} [init.operation='get']
+    * @return {Promise<Response>}
+    */
+-  async select (query, { headers, operation = 'get' } = {}) {
++  async select (query, { headers, operation = 'get', ...options } = {}) {
+     headers = this.endpoint.mergeHeaders(headers)
+ 
+     if (!headers.has('accept')) {
+       headers.set('accept', 'application/sparql-results+json')
+     }
+ 
+-    return this.endpoint[operation](query, { headers })
++    return this.endpoint[operation](query, { headers, ...options })
+   }
+ 
+   /**
+@@ -81,14 +81,14 @@ class RawQuery {
+    * @param {'get'|'postUrlencoded'|'postDirect'} [init.operation='postUrlencoded']
+    * @return {Promise<Response>}
+    */
+-  async update (query, { headers, operation = 'postUrlencoded' } = {}) {
++  async update (query, { headers, operation = 'postUrlencoded', ...options } = {}) {
+     headers = new this.endpoint.fetch.Headers(headers)
+ 
+     if (!headers.has('accept')) {
+       headers.set('accept', '*/*')
+     }
+ 
+-    return this.endpoint[operation](query, { headers, update: true })
++    return this.endpoint[operation](query, { headers, update: true, ...options })
+   }
+ }
+ 
+diff --git a/node_modules/sparql-http-client/StreamQuery.js b/node_modules/sparql-http-client/StreamQuery.js
+index 163b325..bbbe20d 100644
+--- a/node_modules/sparql-http-client/StreamQuery.js
++++ b/node_modules/sparql-http-client/StreamQuery.js
+@@ -27,8 +27,8 @@ class StreamQuery extends RawQuery {
+    * @param {'get'|'postUrlencoded'|'postDirect'} [init.operation='get']
+    * @return {Promise<boolean>}
+    */
+-  async ask (query, { headers, operation } = {}) {
+-    const res = await super.ask(query, { headers, operation })
++  async ask (query, { headers, operation, ...options } = {}) {
++    const res = await super.ask(query, { headers, operation, ...options })
+ 
+     await checkResponse(res)
+ 
+@@ -44,14 +44,14 @@ class StreamQuery extends RawQuery {
+    * @param {'get'|'postUrlencoded'|'postDirect'} [init.operation='get']
+    * @return {Promise<Stream>}
+    */
+-  async construct (query, { headers, operation } = {}) {
++  async construct (query, { headers, operation, ...options } = {}) {
+     headers = new this.endpoint.fetch.Headers(headers)
+ 
+     if (!headers.has('accept')) {
+       headers.set('accept', 'application/n-triples, text/turtle')
+     }
+ 
+-    const res = await super.construct(query, { headers, operation })
++    const res = await super.construct(query, { headers, operation, ...options })
+ 
+     await checkResponse(res)
+ 
+@@ -67,8 +67,8 @@ class StreamQuery extends RawQuery {
+    * @param {'get'|'postUrlencoded'|'postDirect'} [init.operation='get']
+    * @return {Promise<Stream>}
+    */
+-  async select (query, { headers, operation } = {}) {
+-    const res = await super.select(query, { headers, operation })
++  async select (query, { headers, operation, ...options } = {}) {
++    const res = await super.select(query, { headers, operation, ...options })
+ 
+     await checkResponse(res)
+ 

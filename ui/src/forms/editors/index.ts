@@ -90,7 +90,7 @@ export const checkBox: Lazy<SingleEditorComponent> = {
     await import('./CheckboxEditor.vue').then(createCustomElement('cc-checkbox'))
 
     return ({ value }, { update }) => {
-      const booleanValue = trueTerm.equals(value.object?.term)
+      const booleanValue = value.object?.value === 'true'
       return html`<cc-checkbox .value="${booleanValue}" .update="${update}"></cc-checkbox>`
     }
   },

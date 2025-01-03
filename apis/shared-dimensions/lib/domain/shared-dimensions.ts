@@ -1,8 +1,8 @@
 import path from 'path'
-import type { Quad, Stream, Term } from '@rdfjs/types'
+import type { Quad, Stream, Term, Literal, NamedNode } from '@rdfjs/types'
 import { hydra, rdf, schema, sh } from '@tpluscode/rdf-ns-builders'
 import $rdf from 'rdf-ext'
-import { toRdf } from 'rdf-literal'
+import { toRdf, fromRdf } from 'rdf-literal'
 import { fromFile } from 'rdf-utils-fs'
 import clownface from 'clownface'
 import { isResource } from 'is-graph-pointer'
@@ -11,18 +11,21 @@ import { ParsingClient } from 'sparql-http-client/ParsingClient'
 import { md } from '@cube-creator/core/namespace'
 import env from '../env'
 import shapeToQuery, { rewriteTemplates } from '../shapeToQuery'
+import { CollectionData } from '../handlers/collection'
 import { getDynamicProperties } from './shared-dimension'
 
 interface GetSharedDimensions {
   freetextQuery?: string
   limit?: number
   offset?: number
+  includeDeprecated?: Literal
 }
 
-export async function getSharedDimensions(client: StreamClient, { freetextQuery = '', limit = 10, offset = 0 }: GetSharedDimensions = {}): Promise<Quad[]> {
+export async function getSharedDimensions(client: StreamClient, { freetextQuery = '', limit = 10, offset = 0, includeDeprecated }: GetSharedDimensions = {}): Promise<CollectionData<Iterable<Quad>>> {
   const { constructQuery } = await shapeToQuery()
 
-  const shape = await loadShape('dimensions-query-shape')
+  const memberQueryShape = await loadShape('dimensions-query-shape', md.MembersQueryShape)
+  const totalQueryShape = await loadShape('dimensions-query-shape', md.CountQueryShape)
 
   const { MANAGED_DIMENSIONS_BASE } = env
   const variables = new Map(Object.entries({
@@ -30,11 +33,13 @@ export async function getSharedDimensions(client: StreamClient, { freetextQuery 
     limit,
     offset,
     freetextQuery,
+    includeDeprecated,
     orderBy: schema.name,
   }))
-  await rewriteTemplates(shape, variables)
+  await rewriteTemplates(memberQueryShape, variables)
+  await rewriteTemplates(totalQueryShape, variables)
 
-  const dataset = await $rdf.dataset().import(await constructQuery(shape).execute(client))
+  const dataset = await $rdf.dataset().import(await client.query.construct(constructQuery(memberQueryShape)))
   clownface({ dataset })
     .has(rdf.type, schema.DefinedTermSet)
     .forEach(termSet => {
@@ -42,7 +47,14 @@ export async function getSharedDimensions(client: StreamClient, { freetextQuery 
       termSet.addOut(md.terms, $rdf.namedNode(`${MANAGED_DIMENSIONS_BASE}dimension/_terms?dimension=${termSet.value}`))
     })
 
-  return dataset.toArray()
+  const totalItems = clownface({
+    dataset: await $rdf.dataset().import(await client.query.construct(constructQuery(totalQueryShape))),
+  }).has(hydra.totalItems).out(hydra.totalItems).term as Literal
+
+  return {
+    members: dataset,
+    totalItems: fromRdf(totalItems),
+  }
 }
 
 interface GetSharedTerms {
@@ -53,7 +65,7 @@ interface GetSharedTerms {
   validThrough?: Date
 }
 
-export async function getSharedTerms<C extends StreamClient | ParsingClient>({ sharedDimensions, freetextQuery, validThrough, limit = 10, offset = 0 }: GetSharedTerms, client: C): Promise<C extends StreamClient ? Stream : Quad[]> {
+export async function getSharedTerms<C extends StreamClient | ParsingClient>({ sharedDimensions, freetextQuery, validThrough, limit = 10, offset = 0 }: GetSharedTerms, client: C): Promise<CollectionData<C extends StreamClient ? Stream : Quad[]>> {
   const shape = await loadShape('terms-query-shape')
 
   shape.addOut(sh.targetNode, sharedDimensions)
@@ -86,17 +98,19 @@ export async function getSharedTerms<C extends StreamClient | ParsingClient>({ s
   }
 
   const { constructQuery } = await shapeToQuery()
-  return constructQuery(shape).execute(client, {
-    operation: 'postDirect',
-  }) as any
+  return {
+    members: await client.query.construct(constructQuery(shape), {
+      operation: 'postDirect',
+    }) as any,
+  }
 }
 
-async function loadShape(shape: string) {
+async function loadShape(shape: string, shapeType: NamedNode = sh.NodeShape) {
   const dataset = await $rdf.dataset().import(fromFile(path.resolve(__dirname, `../shapes/${shape}.ttl`)))
 
   const ptr = clownface({
     dataset,
-  }).has(rdf.type, sh.NodeShape)
+  }).has(rdf.type, shapeType)
 
   if (!isResource(ptr)) {
     throw new Error('Expected a single blank node or named node')

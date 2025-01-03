@@ -1,0 +1,12 @@
+diff --git a/node_modules/@types/sparql-http-client/StreamClient.d.ts b/node_modules/@types/sparql-http-client/StreamClient.d.ts
+index e4e1e60..9d9e621 100755
+--- a/node_modules/@types/sparql-http-client/StreamClient.d.ts
++++ b/node_modules/@types/sparql-http-client/StreamClient.d.ts
+@@ -13,6 +13,7 @@ declare namespace StreamClient {
+     interface QueryOptions {
+         headers?: HeadersInit | undefined;
+         operation?: 'get' | 'postUrlencoded' | 'postDirect' | undefined;
++        defaultGraphUri?: Array<NamedNode> | undefined;
+     }
+ 
+     interface QueryInit {

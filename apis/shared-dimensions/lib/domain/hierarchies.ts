@@ -1,4 +1,4 @@
-import type { NamedNode } from '@rdfjs/types'
+import type { NamedNode, Quad } from '@rdfjs/types'
 import { CONSTRUCT, SELECT } from '@tpluscode/sparql-builder'
 import { md, meta } from '@cube-creator/core/namespace'
 import clownface, { GraphPointer } from 'clownface'
@@ -7,9 +7,11 @@ import httpError from 'http-errors'
 import $rdf from 'rdf-ext'
 import slugify from 'slugify'
 import { DomainError } from '@cube-creator/api-errors'
+import { ParsingClient } from 'sparql-http-client/ParsingClient'
 import { SharedDimensionsStore } from '../store'
 import env from '../env'
 import { textSearch } from '../query'
+import { CollectionData } from '../handlers/collection'
 import { newId, replace } from './resource'
 
 interface GetHierarchies {
@@ -18,7 +20,7 @@ interface GetHierarchies {
   offset: number
 }
 
-export function getHierarchies({ freetextQuery, limit, offset }: GetHierarchies) {
+export async function getHierarchies({ freetextQuery, limit, offset }: GetHierarchies, client: ParsingClient): Promise<CollectionData<Iterable<Quad>>> {
   const hierarchy = $rdf.variable('hierarchy')
   const name = $rdf.variable('name')
 
@@ -35,10 +37,11 @@ export function getHierarchies({ freetextQuery, limit, offset }: GetHierarchies)
       .ORDER().BY(name)
   }
 
-  return CONSTRUCT`
+  return {
+    members: await CONSTRUCT`
     ?proxyUrl ?p ?o .
   `
-    .WHERE`
+      .WHERE`
       {
         ${select}
       }
@@ -46,7 +49,9 @@ export function getHierarchies({ freetextQuery, limit, offset }: GetHierarchies)
       ${hierarchy} ?p ?o .
 
       BIND(IRI(CONCAT("${env.MANAGED_DIMENSIONS_API_BASE}", "dimension/_hierarchy/proxy?id=", ENCODE_FOR_URI(STR(${hierarchy})))) AS ?proxyUrl)
-    `
+    `.execute(client.query),
+    totalItems: 0,
+  }
 }
 
 interface CreateHierarchy {

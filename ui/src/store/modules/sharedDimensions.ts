@@ -3,6 +3,8 @@ import { api } from '@/api'
 import { RootState } from '../types'
 import { cc, md } from '@cube-creator/core/namespace'
 import { Collection, RdfResource } from 'alcaeus'
+import { serializeCollection } from '@/store/serializers'
+import { schema } from '@tpluscode/rdf-ns-builders'
 
 export interface SharedDimensionsState {
   entrypoint: null | RdfResource
@@ -33,13 +35,25 @@ const actions: ActionTree<SharedDimensionsState, RootState> = {
     return entrypoint
   },
 
-  async fetchCollection (context) {
+  async fetchCollection (context, query) {
     const entrypoint = context.state.entrypoint
     const collectionURI = entrypoint?.get(md.sharedDimensions)?.id
 
+    let params = new URLSearchParams()
+    if (query) {
+      params = new URLSearchParams(query)
+    } else if (location.search) {
+      params = new URLSearchParams(location.search)
+    }
+
     if (!collectionURI) throw new Error('Missing shared dimensions collection in entrypoint')
 
-    const collection = await api.fetchResource(collectionURI.value)
+    const collectionUrl = new URL(collectionURI.value)
+    for (const [key, value] of params) {
+      collectionUrl.searchParams.set(key, value)
+    }
+
+    const collection = await api.fetchResource(collectionUrl.toString())
     context.commit('storeCollection', collection)
   },
 }
@@ -50,8 +64,12 @@ const mutations: MutationTree<SharedDimensionsState> = {
   },
 
   storeCollection (state, collection) {
-    state.collection = collection
+    state.collection = collection ? serializeCollection(collection, sortByName) : null
   },
+}
+
+function sortByName (l: RdfResource, r: RdfResource) {
+  return l.pointer.out(schema.name).value?.localeCompare(r.pointer.out(schema.name).value || '') || 0
 }
 
 export default {
