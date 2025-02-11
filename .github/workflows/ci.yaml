@@ -64,7 +64,7 @@ jobs:
       - name: UI e2e tests
         run: yarn workspace @cube-creator/ui test:e2e --url https://app.cube-creator.lndo.site --headless
       - name: Save Cypress videos
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: cypress-videos
