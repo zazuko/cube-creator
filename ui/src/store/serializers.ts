@@ -10,40 +10,38 @@ import {
   DimensionMetadata,
   DimensionMetadataCollection,
   JobCollection,
-  ProjectsCollection,
   SourcesCollection,
   Table,
   TableCollection,
 } from '@cube-creator/model'
 import { IdentifierMapping, LiteralColumnMapping, ReferenceColumnMapping } from '@cube-creator/model/ColumnMapping'
 import { Link } from '@cube-creator/model/lib/Link'
-import { dcterms, oa, rdf, rdfs, schema } from '@tpluscode/rdf-ns-builders'
+import { dcterms, hydra, oa, rdf, rdfs, schema } from '@tpluscode/rdf-ns-builders'
 import { RdfResource, ResourceIdentifier } from '@tpluscode/rdfine/RdfResource'
 import { ProjectDetails, SharedDimensionTerm } from './types'
 import { clone } from '@/store/searchParams'
+import type { Collection } from '@rdfine/hydra'
+import type { GraphPointer } from 'clownface'
 
 export const displayLanguage = ['en', 'de', 'fr', '']
 
-export function serializeProjectsCollection (collection: ProjectsCollection): ProjectsCollection {
+declare module '@rdfine/hydra' {
+  interface Collection {
+    searchParams: GraphPointer
+    pageSize: number
+    perPage: number
+  }
+}
+
+export function serializeCollection <T extends RdfResource> (collection: Collection<T>, sort: (l: T, r: T) => number): Collection<T> {
+  const member = sort ? collection.member.sort(sort) : collection.member
+
   return Object.freeze({
     ...serializeResource(collection),
     searchParams: clone(collection.pointer),
-    member: collection.member.sort(sortProject),
-  }) as ProjectsCollection
-}
-
-function sortProject (a: CubeProject, b: CubeProject) {
-  const aPlannedUpdate = a.plannedNextUpdate?.toISOString()
-  if (!aPlannedUpdate) {
-    return 1
-  }
-
-  const bPlannedUpdate = b.plannedNextUpdate?.toISOString()
-  if (!bPlannedUpdate) {
-    return -1
-  }
-
-  return aPlannedUpdate.localeCompare(bPlannedUpdate) || a.label.localeCompare(b.label)
+    member,
+    totalItems: collection.totalItems,
+  }) as Collection<T>
 }
 
 export function serializeProjectDetails (details: RdfResource): ProjectDetails {

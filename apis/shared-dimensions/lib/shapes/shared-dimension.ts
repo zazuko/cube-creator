@@ -9,7 +9,7 @@ import { editor, iso6391, md, meta, sh1 } from '@cube-creator/core/namespace'
 import { fromPointer as nodeShape } from '@rdfine/shacl/lib/NodeShape'
 import { fromPointer as propertyGroup } from '@rdfine/shacl/lib/PropertyGroup'
 import { fromPointer as resource } from '@rdfine/rdfs/lib/Resource'
-import { dcat } from '@tpluscode/rdf-ns-builders'
+import { dcat, owl } from '@tpluscode/rdf-ns-builders'
 
 const defaultGroup = $rdf.namedNode('#default-group')
 const i14yGroup = $rdf.namedNode('#i14y-group')
@@ -426,6 +426,27 @@ export const update = (): Initializer<NodeShape> => ({
       hasValue: [hydra.Resource, schema.DefinedTermSet, meta.SharedDimension, md.SharedDimension],
       [dash.hidden.value]: true,
       group: defaultGroup,
+    },
+  ],
+})
+
+export const search = (): Initializer<NodeShape> => ({
+  property: [
+    {
+      path: hydra.freetextQuery,
+      name: 'Name',
+      minCount: 1,
+      maxCount: 1,
+      order: 1,
+    },
+    {
+      path: owl.deprecated,
+      name: 'Show deprecated',
+      minCount: 1,
+      maxCount: 1,
+      defaultValue: false,
+      datatype: xsd.boolean,
+      order: 2,
     },
   ],
 })

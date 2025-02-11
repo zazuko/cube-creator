@@ -145,6 +145,7 @@ graph <http://example.com/dimension/colors> {
   <http://example.com/dimension/colors>
     a schema:DefinedTermSet, meta:SharedDimension ;
     schema:validFrom "2021-01-20T23:59:59Z"^^xsd:dateTime ;
+    schema:validThrough "2021-04-20T23:59:59Z"^^xsd:dateTime ;
     schema:name "Colors"@en, "Farben"@de, "I colori"@it, "Les couleurs"@fr ;
   .
 

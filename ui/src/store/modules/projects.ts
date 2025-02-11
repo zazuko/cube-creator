@@ -1,9 +1,9 @@
 import { ActionTree, MutationTree, GetterTree } from 'vuex'
-import { api, rootURL } from '@/api'
+import { api } from '@/api'
 import { RootState } from '../types'
 import * as ns from '@cube-creator/core/namespace'
-import { Project, ProjectsCollection } from '@cube-creator/model'
-import { serializeProjectDetails, serializeProjectsCollection } from '../serializers'
+import { CubeProject, Project, ProjectsCollection } from '@cube-creator/model'
+import { serializeProjectDetails, serializeCollection } from '../serializers'
 import { RdfResource } from 'alcaeus'
 
 export interface ProjectsState {
@@ -53,7 +53,7 @@ const actions: ActionTree<ProjectsState, RootState> = {
 
 const mutations: MutationTree<ProjectsState> = {
   storeCollection (state, collection) {
-    state.collection = collection ? serializeProjectsCollection(collection) : null
+    state.collection = collection ? serializeCollection(collection, sortProject) : null
   },
 
   storeProjectDetails (state, { project, details }) {
@@ -62,6 +62,20 @@ const mutations: MutationTree<ProjectsState> = {
       [project.id.value]: serializeProjectDetails(details),
     }
   },
+}
+
+function sortProject (a: CubeProject, b: CubeProject) {
+  const aPlannedUpdate = a.plannedNextUpdate?.toISOString()
+  if (!aPlannedUpdate) {
+    return 1
+  }
+
+  const bPlannedUpdate = b.plannedNextUpdate?.toISOString()
+  if (!bPlannedUpdate) {
+    return -1
+  }
+
+  return aPlannedUpdate.localeCompare(bPlannedUpdate) || a.label.localeCompare(b.label)
 }
 
 export default {

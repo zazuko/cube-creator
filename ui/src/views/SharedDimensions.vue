@@ -22,13 +22,18 @@
     </div>
     <div v-if="collection">
       <div class="panel-block is-flex is-justify-content-center">
-        <o-checkbox :model-value="showAll" @update:modelValue="toggleDisplay">
-          show deprecated
-        </o-checkbox>
+        <cc-hydra-operation-form
+          inline clearable
+          :operation.prop="operation"
+          :resource.prop="searchParams"
+          :shape.prop="shape"
+          @submit="onSearch"
+          submit-when-cleared
+        />
       </div>
       <div v-if="dimensions.length > 0" class="panel">
         <router-link
-          v-for="dimension in displayed"
+          v-for="dimension in dimensions"
           :key="dimension.id.value"
           :to="{ name: 'SharedDimension', params: { id: dimension.clientPath } }"
           class="panel-block"
@@ -47,6 +52,13 @@
           </div>
           <shared-dimension-tags :dimension="dimension" />
         </router-link>
+        <o-pagination
+          simple
+          :current="page"
+          :total="collection.totalItems"
+          :per-page="pageSize"
+          @change="fetchPage"
+        />
       </div>
       <p v-else class="has-text-grey">
         No shared dimension yet
@@ -59,7 +71,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, shallowRef } from 'vue'
 import PageContent from '@/components/PageContent.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import HydraOperationButton from '@/components/HydraOperationButton.vue'
@@ -68,6 +80,9 @@ import { mapGetters, mapState } from 'vuex'
 import LanguageSelect from '@/components/LanguageSelect.vue'
 import TermWithLanguage from '@/components/TermWithLanguage.vue'
 import { SharedDimension } from '@/store/types'
+import { useHydraForm } from '@/use-hydra-form'
+import { getRouteSearchParamsFromTemplatedOperation } from '@/router'
+import { hydra } from '@tpluscode/rdf-ns-builders'
 
 export default defineComponent({
   name: 'CubeProjectsView',
@@ -77,18 +92,30 @@ export default defineComponent({
     LoadingBlock,
     HydraOperationButton,
     SharedDimensionTags,
-    LanguageSelect
-  },
-
-  data () {
-    return {
-      showAll: false
-    }
+    LanguageSelect,
   },
 
   async mounted (): Promise<void> {
     await this.$store.dispatch('sharedDimensions/fetchEntrypoint')
     await this.$store.dispatch('sharedDimensions/fetchCollection')
+
+    this.operation = this.collection.actions.get
+    this.searchParams = this.collection.searchParams
+    this.pageSize = this.searchParams.out(hydra.limit).value
+    this.page = parseInt(this.$router.currentRoute.value.query.page as any) || 1
+  },
+
+  setup () {
+    const operation = shallowRef()
+
+    const form = useHydraForm(operation)
+
+    return {
+      ...form,
+      page: 1,
+      pageSize: 0,
+      searchParams: shallowRef()
+    }
   },
 
   computed: {
@@ -101,12 +128,13 @@ export default defineComponent({
     ...mapGetters('sharedDimensions', {
       dimensions: 'dimensions',
     }),
-    displayed (): SharedDimension[] {
-      if (this.showAll) { return this.dimensions }
+  },
 
-      return this.dimensions
-        .filter((dimension: any) => !dimension.deprecated)
-    },
+  async beforeRouteUpdate (to) {
+    await this.$store.dispatch('sharedDimensions/fetchCollection', to.query)
+    this.searchParams = this.collection.searchParams
+    this.pageSize = this.searchParams.out(hydra.limit).value
+    this.page = parseInt(to.query.page as any) || 1
   },
 
   methods: {
@@ -114,9 +142,36 @@ export default defineComponent({
       this.$store.dispatch('app/selectLanguage', language)
     },
 
-    toggleDisplay () {
-      this.showAll = !this.showAll
-    }
+    onSearch (e: CustomEvent) {
+      if (this.operation && e.detail?.value) {
+        this.page = 1
+        const query = {
+          ...getRouteSearchParamsFromTemplatedOperation(this.operation, e.detail?.value),
+          page: 1
+        }
+        this.$router.push({ query })
+      }
+    },
+
+    nextPage () {
+      this.fetchPage(this.page + 1)
+    },
+
+    prevPage () {
+      this.fetchPage(this.page - 1)
+    },
+
+    fetchPage (page: number) {
+      if (this.operation) {
+        this.page = page
+        const query = {
+          ...getRouteSearchParamsFromTemplatedOperation(this.operation, this.searchParams),
+          page
+        }
+
+        this.$router.push({ query, })
+      }
+    },
   }
 })
 </script>
@@ -124,5 +179,9 @@ export default defineComponent({
 <style scoped>
 .abbreviations span {
   margin-right: 20px
+}
+
+cc-hydra-operation-form {
+  width: 100%;
 }
 </style>

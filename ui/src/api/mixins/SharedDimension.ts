@@ -22,10 +22,6 @@ export default function mixin<Base extends Constructor> (base: Base) {
 
     @property.literal({ path: schema.validThrough, type: Date })
     validThrough?: Date
-
-    get deprecated () {
-      return this.validThrough && this.validThrough <= new Date()
-    }
   }
 
   return Impl
