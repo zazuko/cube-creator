@@ -1,5 +1,17 @@
 # @cube-creator/ui
 
+## 1.15.0
+
+### Minor Changes
+
+- 1fe9ee2: Searching and paging Shared Dimensions
+- cb0abb1: Hierarchies can now exist in any graph in Lindas
+
+### Patch Changes
+
+- Updated dependencies [9fbee49]
+  - @cube-creator/model@0.2.1
+
 ## 1.14.0
 
 ### Minor Changes
