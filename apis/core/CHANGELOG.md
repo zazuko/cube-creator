@@ -1,5 +1,19 @@
 # @cube-creator/core-api
 
+## 2.4.2
+
+### Patch Changes
+
+- 9fbee49: Guess default column datatype from CSV sample values
+- 0b23110: Added profile for FOAG (Bundesamt für Landwirtschaft)
+- Updated dependencies [2d4d9d1]
+- Updated dependencies [9fbee49]
+- Updated dependencies [48f3f2c]
+- Updated dependencies [1fe9ee2]
+- Updated dependencies [cb0abb1]
+  - @cube-creator/shared-dimensions-api@3.3.0
+  - @cube-creator/model@0.2.1
+
 ## 2.4.1
 
 ### Patch Changes
