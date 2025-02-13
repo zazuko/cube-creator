@@ -1566,25 +1566,25 @@
     rdf-loaders-registry "^0.2.0"
     sparql-http-client "^2.2.2"
 
-"@hydrofoil/shape-to-query@^0.13.5":
-  version "0.13.5"
-  resolved "https://registry.yarnpkg.com/@hydrofoil/shape-to-query/-/shape-to-query-0.13.5.tgz#246ffcaaf51d1ee3f1f62162310c23a2ad28d7d9"
-  integrity sha512-bwjUzeOLEV48tldt+0pGH8y21MOTO9cw6A78boM9i+bpKR6UJqAZ6Rv8RmeGSY5GTIILfuelqP/kgOgvM0C6Xw==
+"@hydrofoil/shape-to-query@^0.13.9":
+  version "0.13.9"
+  resolved "https://registry.yarnpkg.com/@hydrofoil/shape-to-query/-/shape-to-query-0.13.9.tgz#3be4f23dd5fba4d4872abcce32ab15d1d8cf9760"
+  integrity sha512-E0J74fyqFuqlOvln4rb0MsSH7dehm5zSg4znWHK7DBFf1pyXgKURglqFAZqsxqIKc4RQ3LDoN5ORwfFedDFWwA==
   dependencies:
-    "@hydrofoil/sparql-processor" "^0.1.3"
+    "@hydrofoil/sparql-processor" "^0.1.4"
     "@tpluscode/rdf-ns-builders" ">=3.0.2"
-    "@tpluscode/rdf-string" "^1.3.3"
+    "@tpluscode/rdf-string" "^1.3.4"
     "@types/sparqljs" "^3.1.11"
     "@vocabulary/dash" "^1.0.4"
     "@vocabulary/dash-sparql" "^1.0.4"
     "@vocabulary/sh" "^1.1.5"
-    "@zazuko/env" "^2.4.2"
+    "@zazuko/env" "^2.5.1"
     "@zazuko/prefixes" ">=2"
     clownface-shacl-path "^2.2"
     is-graph-pointer "^2.0.0"
-    rdf-literal "^1.3.2"
+    rdf-literal "^2.0.0"
     sparqljs "^3.6.1"
-    ts-pattern "^5.2.0"
+    ts-pattern "^5.6.0"
 
 "@hydrofoil/shaperone-core@^0.11", "@hydrofoil/shaperone-core@^0.11.0":
   version "0.11.0"
@@ -1667,14 +1667,14 @@
     concat-merge "^1.0.3"
     lit "^2.0.0"
 
-"@hydrofoil/sparql-processor@^0.1.3":
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/@hydrofoil/sparql-processor/-/sparql-processor-0.1.3.tgz#076b1a5ef53fc9ee65143afbad390b7247531689"
-  integrity sha512-QVgIy+H3038t0r2EtPuknn1I9Cn2foVKk36uU3Wk+npceFu995kTkH1T77AN4KRxsSZBUyENN9XUxaCvUwiN+Q==
+"@hydrofoil/sparql-processor@^0.1.4":
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@hydrofoil/sparql-processor/-/sparql-processor-0.1.4.tgz#dbe5e663fff5f1c169f965746c18ab5b4a58e329"
+  integrity sha512-pyHmlatvb9sVhJ8LobZcUsbs8fjsHZaDCBDMBUv4crmiCbaGk5vz2A9W/s/TmMzjcUEOUqzm6jksVWi0jEGOOw==
   dependencies:
     "@types/sparqljs" "^3.1.11"
-    "@zazuko/prefixes" "^2.1.0"
-    ts-pattern "^5.2.0"
+    "@zazuko/prefixes" "^2.2.0"
+    ts-pattern "^5.6.0"
 
 "@isaacs/cliui@^8.0.2":
   version "8.0.2"
@@ -2961,7 +2961,14 @@
     "@rdfjs/term-map" "^2.0.0"
     "@rdfjs/term-set" "^2.0.1"
 
-"@rdfjs/types@*", "@rdfjs/types@>=1.0.0", "@rdfjs/types@>=1.0.1", "@rdfjs/types@^1.1.0":
+"@rdfjs/types@*", "@rdfjs/types@>=1.0.0", "@rdfjs/types@>=1.0.1", "@rdfjs/types@^2.0.0":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@rdfjs/types/-/types-2.0.1.tgz#f10b50ceffff00b961c4265e60ac9f74550251da"
+  integrity sha512-uyAzpugX7KekAXAHq26m3JlUIZJOC0uSBhpnefGV5i15bevDyyejoB7I+9MKeUrzXD8OOUI3+4FeV1wwQr5ihA==
+  dependencies:
+    "@types/node" "*"
+
+"@rdfjs/types@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@rdfjs/types/-/types-1.1.0.tgz#098f180b7cccb03bb416c7b4d03baaa9d480e36b"
   integrity sha512-5zm8bN2/CC634dTcn/0AhTRLaQRjXDZs3QfcAsQKNturHT7XVWcKy/8p3P5gXl+YkZTAmy7T5M/LyiT/jbkENw==
@@ -3261,7 +3268,7 @@
     "@tpluscode/rdf-ns-builders" "^2"
     "@zazuko/rdf-vocabularies" ">=2023.01.17"
 
-"@tpluscode/rdf-string@^1.3.1", "@tpluscode/rdf-string@^1.3.3":
+"@tpluscode/rdf-string@^1.3.1", "@tpluscode/rdf-string@^1.3.4":
   version "1.3.4"
   resolved "https://registry.yarnpkg.com/@tpluscode/rdf-string/-/rdf-string-1.3.4.tgz#de007ed202c5455d7805dd188feab0b8cc4ead69"
   integrity sha512-bWdUgsJC84CFYPQ0GCatA7rZqQme12ubogqm81gOd+m/5pK/Ua5yK8iYGLh0ArtPCmYqXm160UCOCLm17h1AUw==
@@ -4956,7 +4963,7 @@
     "@zazuko/env" "^2.1.1"
     "@zazuko/rdf-utils-fs" "^3.3.0"
 
-"@zazuko/env@2.2.0", "@zazuko/env@^2.1.1", "@zazuko/env@^2.4.2":
+"@zazuko/env@2.2.0", "@zazuko/env@^2.1.1", "@zazuko/env@^2.5.1":
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/@zazuko/env/-/env-2.2.0.tgz#090ca10466113428483bfffeedf981b0b411d8e5"
   integrity sha512-73KwqrckawQTmoPAizlkHIRpsqFOaR31LA4XEZUnLM6CbGF/DhmbclfhMtg8GBAiZLIVdgXj6GZAW0lUmA4knQ==
@@ -4982,7 +4989,7 @@
   dependencies:
     whatwg-url "^5.0.0"
 
-"@zazuko/prefixes@>=1", "@zazuko/prefixes@>=2", "@zazuko/prefixes@^2.0.1", "@zazuko/prefixes@^2.1.0":
+"@zazuko/prefixes@>=1", "@zazuko/prefixes@>=2", "@zazuko/prefixes@^2.0.1", "@zazuko/prefixes@^2.1.0", "@zazuko/prefixes@^2.2.0":
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/@zazuko/prefixes/-/prefixes-2.2.0.tgz#5b303596f7b5a2d488f00d91b50b114295bf67d5"
   integrity sha512-mmRS+urGVMcAP5edzFq0V+B2PbbpEklP7BZGVF0+82ClczTwgpIL1tZy2mRfudwRYoAe+WkyWXDnlArPpdzLIg==
@@ -12963,6 +12970,13 @@ rdf-data-factory@^1.1.0, rdf-data-factory@^1.1.2:
   dependencies:
     "@rdfjs/types" "*"
 
+rdf-data-factory@^2.0.0:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/rdf-data-factory/-/rdf-data-factory-2.0.2.tgz#dfac1fdf99502f3b6d61f8e99e97af2490346e32"
+  integrity sha512-WzPoYHwQYWvIP9k+7IBLY1b4nIDitzAK4mA37WumAF/Cjvu/KOtYJH9IPZnUTWNSd5K2+pq4vrcE9WZC4sRHhg==
+  dependencies:
+    "@rdfjs/types" "^2.0.0"
+
 rdf-dataset-ext@^1.0.0, rdf-dataset-ext@^1.0.1, rdf-dataset-ext@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/rdf-dataset-ext/-/rdf-dataset-ext-1.1.0.tgz#bb796bdf50220ced78561ca32ac0eac0b962c723"
@@ -12989,13 +13003,20 @@ rdf-js@*, rdf-js@^4.0.2:
   dependencies:
     "@rdfjs/types" "*"
 
-rdf-literal@^1.2.0, rdf-literal@^1.3.0, rdf-literal@^1.3.1, rdf-literal@^1.3.2:
+rdf-literal@^1.2.0, rdf-literal@^1.3.0, rdf-literal@^1.3.1:
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/rdf-literal/-/rdf-literal-1.3.2.tgz#6f1bd103bcd0be72a3d969115a6343a53c526eb2"
   integrity sha512-79Stlu3sXy0kq9/decHFLf3xNPuY6sfhFPhd/diWErgaFr0Ekyg38Vh9bnVcqDYu48CFRi0t+hrFii49n92Hbw==
   dependencies:
     "@rdfjs/types" "*"
     rdf-data-factory "^1.1.0"
+
+rdf-literal@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/rdf-literal/-/rdf-literal-2.0.0.tgz#a7e0af869236e1ba89ce7c5c6d557b9ce0ba485a"
+  integrity sha512-jlQ+h7EvnXmncmk8OzOYR8T3gNfd4g0LQXbflHkEkancic8dh0Tdt5RiRq8vUFndjIeNHt1RWeA5TAj6rgrtng==
+  dependencies:
+    rdf-data-factory "^2.0.0"
 
 rdf-loader-code@^0.3.0, rdf-loader-code@^0.3.1, rdf-loader-code@^0.3.3:
   version "0.3.3"
@@ -14772,10 +14793,10 @@ ts-node@^9.0.0:
     source-map-support "^0.5.17"
     yn "3.1.1"
 
-ts-pattern@^5.2.0:
-  version "5.6.0"
-  resolved "https://registry.yarnpkg.com/ts-pattern/-/ts-pattern-5.6.0.tgz#831516bbb9041499c5525e8976d8fc6b68ac8bb9"
-  integrity sha512-SL8u60X5+LoEy9tmQHWCdPc2hhb2pKI6I1tU5Jue3v8+iRqZdcT3mWPwKKJy1fMfky6uha82c8ByHAE8PMhKHw==
+ts-pattern@^5.6.0:
+  version "5.6.2"
+  resolved "https://registry.yarnpkg.com/ts-pattern/-/ts-pattern-5.6.2.tgz#aad9b4fe3c3f485dfad46e472e1203b688cc9bb4"
+  integrity sha512-d4IxJUXROL5NCa3amvMg6VQW2HVtZYmUTPfvVtO7zJWGYLJ+mry9v2OmYm+z67aniQoQ8/yFNadiEwtNS9qQiw==
 
 tsconfig-paths@^3.14.1:
   version "3.14.1"

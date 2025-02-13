@@ -6,7 +6,7 @@ import { rdf, schema, sh } from '@tpluscode/rdf-ns-builders/strict'
 import onetime from 'onetime'
 import { isGraphPointer } from 'is-graph-pointer'
 import $rdf from 'rdf-ext'
-import { sparql } from '@tpluscode/rdf-string'
+import { sparql, SparqlTemplateResult } from '@tpluscode/rdf-string'
 import { SharedDimensionsStore } from '../store'
 import shapeToQuery from '../shapeToQuery'
 import { loadShapes } from './shapes'
@@ -43,16 +43,19 @@ export default class implements SharedDimensionsStore {
   }
 
   async save(resource: GraphPointer<NamedNode>): Promise<void> {
-    let updateQuery = INSERT.DATA`
+    let updateQuery: SparqlTemplateResult
+    const insertQuery = INSERT.DATA`
       GRAPH ${this.graph} {
         ${resource.dataset}
       }
-    `._getTemplateResult()
+    `
 
     if (await this.exists(resource.term)) {
       const shape = await this.getShape(resource.term)
       const deleteQuery = await this.deleteQuery(shape, resource.term)
-      updateQuery = sparql`${deleteQuery};\n${updateQuery}`
+      updateQuery = sparql`${deleteQuery};\n${insertQuery}`
+    } else {
+      updateQuery = insertQuery._getTemplateResult()
     }
 
     await this.client.query.update(updateQuery.toString())
@@ -65,7 +68,7 @@ export default class implements SharedDimensionsStore {
 
   private async deleteQuery(shape: GraphPointer, focusNode: NamedNode) {
     const { deleteQuery } = await shapeToQuery()
-    return deleteQuery(shape, { focusNode, graph: this.graph })
+    return deleteQuery(shape, { focusNode, graph: this.graph, extractPrefixes: false })
   }
 
   private async getShape(term: NamedNode) {
