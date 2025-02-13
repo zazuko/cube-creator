@@ -1,4 +1,4 @@
-import type { NamedNode, Quad } from '@rdfjs/types'
+import type { NamedNode } from '@rdfjs/types'
 import express from 'express'
 import clownface, { GraphPointer } from 'clownface'
 import $rdf from 'rdf-ext'
@@ -8,11 +8,6 @@ declare module 'express-serve-static-core' {
   export interface Request {
     resource(): Promise<GraphPointer<NamedNode>>
   }
-}
-
-declare module '@rdfjs/types' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface Stream extends AsyncIterable<Quad> {}
 }
 
 const emptyNamedNode = $rdf.namedNode('')
