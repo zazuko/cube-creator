@@ -8,7 +8,7 @@ import evalTemplateLiteral from 'rdf-loader-code/evalTemplateLiteral.js'
 import namespace from '@rdfjs/namespace'
 import $rdf from 'rdf-ext'
 import type { Literal } from '@rdfjs/types'
-import type { ServicePattern, GroupPattern } from 'sparqljs'
+import type { Pattern, GroupPattern } from 'sparqljs'
 import env from './env'
 
 /*
@@ -116,7 +116,7 @@ async function defineConstraintComponents() {
 
     buildPropertyShapePatterns(args: Parameters) {
       if (this.vendor === 'stardog') {
-        return [this.stardogServiceGroup(args)]
+        return this.stardogServiceGroup(args)
       }
 
       if (this.vendor === 'fuseki') {
@@ -126,7 +126,7 @@ async function defineConstraintComponents() {
       throw new Error('Unsupported vendor')
     }
 
-    stardogServiceGroup({ focusNode, valueNode, propertyPath }: Parameters): ServicePattern {
+    stardogServiceGroup({ focusNode, valueNode, propertyPath }: Parameters): Pattern[] {
       if (!propertyPath || !('value' in propertyPath)) {
         throw new Error('Property path must be a named node')
       }
@@ -137,9 +137,8 @@ async function defineConstraintComponents() {
         .blankNode()
         .addOut(fts.query, $rdf.literal(this.pattern + '*'))
         .addOut(fts.result, valueNode)
-        .node(focusNode).addOut(propertyPath, valueNode)
 
-      return {
+      return [{
         type: 'service',
         name: fts.textMatch,
         silent: false,
@@ -147,7 +146,14 @@ async function defineConstraintComponents() {
           type: 'bgp',
           triples: [...patterns.dataset],
         }],
-      }
+      }, {
+        type: 'bgp',
+        triples: [{
+          subject: focusNode,
+          predicate: propertyPath,
+          object: valueNode,
+        }],
+      }]
     }
 
     fusekiPatterns({ focusNode, valueNode, propertyPath }: Parameters): GroupPattern {
