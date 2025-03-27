@@ -1,5 +1,11 @@
 # @cube-creator/shared-dimensions-api
 
+## 3.3.1
+
+### Patch Changes
+
+- 6267ee8: Searching shared dimension terms was impossible (fixes #1571)
+
 ## 3.3.0
 
 ### Minor Changes
