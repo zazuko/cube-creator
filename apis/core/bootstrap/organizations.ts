@@ -171,8 +171,24 @@ export const organizations = turtle`
     ${cube.observedBy} <https://ld.admin.ch/office/VI.1.5> ;
     
   .
+  
 }
-
+<organization/civi> {
+  <organization/civi>
+    a ${schema.Organization} ;
+    ${cc.publishGraph}  <https://lindas.admin.ch/civi/cube> ;
+    ${cc.namespace} <https://finance.ld.admin.ch/civi/> ;
+    ${schema.dataset} <https://finance.ld.admin.ch/.well-known/void> ;
+    ${rdfs.label} "Federal Office for Civil Service"@en ;
+    ${rdfs.label} "Bundesamt für Zivildienst"@de ;
+    ${rdfs.label} "Ufficio federale del servizio civile"@it ;
+    ${rdfs.label} "Office fédéral du service civil"@fr ;
+    ${dcat.accessURL} <https://finance.ld.admin.ch/sparql> ;
+    ${_void.sparqlEndpoint} <https://finance.ld.admin.ch/query> ;
+    ${cube.observedBy} <https://ld.admin.ch/office/VI.1.9> ;
+    
+  .
+}
 
 
 `
